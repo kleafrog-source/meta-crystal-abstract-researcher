@@ -1,0 +1,3 @@
+# Python requirements for Meta-Crystal application
+# No external dependencies required - uses standard library only
+# The Python engine is self-contained with only built-in modules
