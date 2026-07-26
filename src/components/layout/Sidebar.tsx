@@ -13,6 +13,7 @@ import {
   LayoutDashboard,
   CrystalIcon,
   Cpu,
+  Activity,
 } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +26,7 @@ export type PageId =
   | "enrichment"
   | "chat"
   | "mmss"
+  | "gwcollapser"
   | "settings";
 
 interface NavItem {
@@ -82,6 +84,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "MMSS",
     icon: <Cpu className="h-4 w-4" />,
     description: "MMSS ingest, retrain, eval и результаты",
+  },
+  {
+    id: "gwcollapser",
+    label: "GW-Collapser",
+    icon: <Activity className="h-4 w-4" />,
+    description: "Torus flow analysis over crystal semantic fragments",
   },
   {
     id: "settings",

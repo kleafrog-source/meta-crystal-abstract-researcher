@@ -1,3 +1,7 @@
 # Python requirements for Meta-Crystal application
 # MMSS integration requires PyTorch CPU runtime.
 torch
+numpy
+scikit-learn
+requests
+matplotlib

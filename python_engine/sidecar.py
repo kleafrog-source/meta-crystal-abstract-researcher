@@ -153,6 +153,8 @@ engine_mod = None
 ENGINE_ERROR = None
 mmss_mod = None
 MMSS_ERROR = None
+gw_mod = None
+GW_ERROR = None
 
 def get_engine():
     global engine_mod, ENGINE_ERROR
@@ -178,6 +180,18 @@ def get_mmss(silent=False):
             if not silent:
                 emit_log("error", f"MMSS import failed: {e}")
     return mmss_mod
+
+
+def get_gwcollapser(silent=False):
+    global gw_mod, GW_ERROR
+    if gw_mod is None and GW_ERROR is None:
+        try:
+            gw_mod = importlib.import_module("gwcollapser.torus_flow")
+        except Exception as e:
+            GW_ERROR = str(e)
+            if not silent:
+                emit_log("error", f"GW-Collapser import failed: {e}")
+    return gw_mod
 
 
 def _mmss_store():
@@ -1037,6 +1051,45 @@ def cmd_mmss_eval(params_raw=None):
         emit_error(str(e))
 
 
+def cmd_torus_analyze(params_raw=None):
+    params = parse_json_arg_or_file(params_raw, default={}) or {}
+    module = get_gwcollapser()
+    if module is None:
+        emit_error(GW_ERROR or "GW-Collapser unavailable")
+        return
+
+    docs = params.get("docs")
+    query = params.get("query")
+    if not docs or not query:
+        emit_error("torus_analyze requires docs[] and query")
+        return
+
+    try:
+        emit_log("info", "GW-Collapser torus analysis started")
+        result = module.analyze_torus_flow(
+            docs=docs,
+            query=query,
+            doc_emb=params.get("doc_emb"),
+            query_emb=params.get("query_emb"),
+            n_clusters=int(params.get("n_clusters", 5)),
+            dt=float(params.get("dt", 0.02)),
+            friction=float(params.get("friction", 0.01)),
+            epsilon=float(params.get("epsilon", 0.15)),
+            max_steps=int(params.get("max_steps", 1500)),
+            tol_speed=float(params.get("tol_speed", 1e-3)),
+            geometry_R=float(params.get("geometry_R", 1.2)),
+            geometry_r=float(params.get("geometry_r", 0.6)),
+            embedding_model=str(params.get("embedding_model", "qllama/bge-m3:q8_0")),
+        )
+        payload = module.serialize_torus_for_web(result)
+        emit_data(payload)
+        emit_done(payload)
+    except Exception as e:
+        emit_log("error", f"GW-Collapser analysis failed: {e}")
+        emit_log("error", traceback.format_exc())
+        emit_error(str(e))
+
+
 # ============================================================
 # Main entrypoint
 # ============================================================
@@ -1108,6 +1161,9 @@ def main():
         elif cmd == "mmss_eval":
             raw = sys.argv[2] if len(sys.argv) > 2 else None
             cmd_mmss_eval(raw)
+        elif cmd == "torus_analyze":
+            raw = sys.argv[2] if len(sys.argv) > 2 else None
+            cmd_torus_analyze(raw)
         else:
             emit_error(f"Неизвестная команда: {cmd}")
     except KeyboardInterrupt:

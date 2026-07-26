@@ -9,6 +9,7 @@ import { Import } from "@/components/pages/Import";
 import { Enrichment } from "@/components/pages/Enrichment";
 import { Chat } from "@/components/pages/Chat";
 import { MMSS } from "@/components/pages/MMSS";
+import { GWCollapser } from "@/components/pages/GWCollapser";
 import { Settings } from "@/components/pages/Settings";
 
 export default function Home() {
@@ -32,6 +33,8 @@ export default function Home() {
             return <Chat />;
           case "mmss":
             return <MMSS />;
+          case "gwcollapser":
+            return <GWCollapser />;
           case "settings":
             return <Settings />;
           default:

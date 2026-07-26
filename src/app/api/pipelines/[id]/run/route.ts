@@ -10,6 +10,7 @@ import {
   queryPalette,
   scanIsomorphisms,
 } from "@/lib/manifestation";
+import { runGwCollapserOnCrystal } from "@/lib/gw-collapser";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -58,13 +59,13 @@ export async function POST(
       disabled_patterns: stored.profile?.disabled_patterns ?? [],
     };
 
-    const handle = hasManifestationSteps(stored.steps)
+    const handle = hasLocalSteps(stored.steps)
       ? runLocalTask({
           timeoutMs: 30 * 60 * 1000,
           taskType: "pipeline",
           title: `Пайплайн: ${pipe.name}`,
           onRun: ({ emit, isCancelled }) =>
-            executeManifestationPipeline(stored.steps, emit, isCancelled),
+            executeLocalPipeline(stored.steps, emit, isCancelled),
         })
       : runSidecar({
           command: "run_pipeline",
@@ -131,15 +132,15 @@ export async function POST(
   }
 }
 
-function hasManifestationSteps(steps: unknown[]) {
+function hasLocalSteps(steps: unknown[]) {
   return steps.some((step) => {
     const action =
       step && typeof step === "object" && "action" in step ? String((step as { action?: unknown }).action ?? "") : "";
-    return action.startsWith("manifest_");
+    return action.startsWith("manifest_") || action === "run_torus_analysis" || action === "batch_torus_compare";
   });
 }
 
-async function executeManifestationPipeline(
+async function executeLocalPipeline(
   steps: unknown[],
   emit: (event: SidecarEvent) => void,
   isCancelled: () => boolean,
@@ -170,7 +171,7 @@ async function executeManifestationPipeline(
       ts: new Date().toISOString(),
     });
 
-    const result = await executeManifestationStep(action, params);
+    const result = await executeLocalStep(action, params);
     results.push({ step: name, action, result });
 
     emit({
@@ -190,7 +191,7 @@ async function executeManifestationPipeline(
   return { ok: true, results };
 }
 
-async function executeManifestationStep(action: string, params: Record<string, unknown>) {
+async function executeLocalStep(action: string, params: Record<string, unknown>) {
   switch (action) {
     case "manifest_micro_notes":
       return createMicroNotes({
@@ -233,8 +234,12 @@ async function executeManifestationStep(action: string, params: Record<string, u
         ...(Array.isArray(params.crystal_ids) ? { crystal_ids: toStringArray(params.crystal_ids) } : {}),
         ...(params.threshold != null ? { threshold: Number(params.threshold) } : {}),
       });
+    case "run_torus_analysis":
+      return runTorusAnalysisStep(params);
+    case "batch_torus_compare":
+      return batchTorusCompareStep(params);
     default:
-      throw new Error(`Unsupported manifestation action: ${action}`);
+      throw new Error(`Unsupported local pipeline action: ${action}`);
   }
 }
 
@@ -244,6 +249,78 @@ function toStringArray(value: unknown) {
 
 function toNullableString(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+async function runTorusAnalysisStep(params: Record<string, unknown>) {
+  const crystalIds = toStringArray(params.crystal_ids);
+  const singleId = toNullableString(params.crystal_id);
+  const targetIds = crystalIds.length ? crystalIds : singleId ? [singleId] : [];
+  if (!targetIds.length) {
+    throw new Error("run_torus_analysis requires crystal_ids[] or crystal_id");
+  }
+
+  const options = torusOptionsFromParams(params);
+  const results = [];
+  for (const id of targetIds) {
+    results.push(await runGwCollapserOnCrystal(id, options));
+  }
+
+  return {
+    status: "ok",
+    processed: results.length,
+    results,
+  };
+}
+
+async function batchTorusCompareStep(params: Record<string, unknown>) {
+  const crystalIds = toStringArray(params.crystal_ids);
+  if (crystalIds.length < 2) {
+    throw new Error("batch_torus_compare requires at least two crystal_ids");
+  }
+
+  const options = torusOptionsFromParams(params);
+  const rows = [];
+  for (const id of crystalIds) {
+    const run = await runGwCollapserOnCrystal(id, options);
+    const mmss = (run.result as Record<string, any>)?.mmss ?? {};
+    rows.push({
+      crystalId: run.crystalId,
+      crystalCode: run.crystalCode,
+      query: run.query,
+      Q: Number(mmss.Q ?? 0),
+      QEC: Number(mmss.QEC ?? 0),
+      V: Number(mmss.V ?? 0),
+      S: Number(mmss.S ?? 0),
+      N: Number(mmss.N ?? 0),
+      D_f: Number(mmss.D_f ?? 0),
+      CHSH: Number(mmss.CHSH ?? 0),
+    });
+  }
+
+  rows.sort((a, b) => b.Q - a.Q);
+  return {
+    status: "ok",
+    compared: rows.length,
+    winner: rows[0] ?? null,
+    rows,
+  };
+}
+
+function torusOptionsFromParams(params: Record<string, unknown>) {
+  return {
+    query: toNullableString(params.query),
+    ...(params.n_clusters != null ? { n_clusters: Number(params.n_clusters) } : {}),
+    ...(params.dt != null ? { dt: Number(params.dt) } : {}),
+    ...(params.friction != null ? { friction: Number(params.friction) } : {}),
+    ...(params.epsilon != null ? { epsilon: Number(params.epsilon) } : {}),
+    ...(params.max_steps != null ? { max_steps: Number(params.max_steps) } : {}),
+    ...(params.tol_speed != null ? { tol_speed: Number(params.tol_speed) } : {}),
+    ...(params.geometry_R != null ? { geometry_R: Number(params.geometry_R) } : {}),
+    ...(params.geometry_r != null ? { geometry_r: Number(params.geometry_r) } : {}),
+    ...(typeof params.embedding_model === "string" && params.embedding_model.trim()
+      ? { embedding_model: params.embedding_model.trim() }
+      : {}),
+  };
 }
 
 function parsePipelinePayload(raw: string): { steps: unknown[]; profile: Record<string, any> | null } {
