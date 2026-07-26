@@ -6,9 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { FieldHint, FieldLabel } from "@/components/ui/field-hint";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Brain, Info } from "@/components/icons";
+import { Brain } from "@/components/icons";
 import {
   EditableProfile,
   FLAG_GROUPS,
@@ -124,7 +124,6 @@ export function ProfileConfigurator({
           </CardHeader>
           <CardContent>
             <div className="mb-3 flex items-center justify-between rounded-md border border-border bg-card/40 px-3 py-2">
-              <HintLabel label="Вычислять метрики" hint="Отключает MMSS-оценку в профиле генерации." />
               <Switch
                 checked={profile.metrics.enabled}
                 onCheckedChange={(checked) =>
@@ -144,7 +143,10 @@ export function ProfileConfigurator({
                     : "disabled";
                 return (
                   <div key={metric} className="rounded-md border border-border bg-card/40 px-3 py-2">
-                    <div className="mb-2 font-mono text-sm text-emerald-300">{metric}</div>
+                    <div className="mb-2 flex items-center gap-1 font-mono text-sm text-emerald-300">
+                      <span>{metric}</span>
+                      <FieldHint hint="Режим метрики. influencing влияет на отбор, observational только показывается в отчетах, disabled полностью исключает метрику из профиля." />
+                    </div>
                     <Select value={role} onValueChange={(value: "influencing" | "observational" | "disabled") => updateMetricRole(metric, value)}>
                       <SelectTrigger className="h-8 text-xs">
                         <SelectValue />
@@ -175,7 +177,7 @@ export function ProfileConfigurator({
                 const enabled = !profile.disabled_patterns.includes(pattern);
                 return (
                   <div key={pattern} className="flex items-center justify-between rounded-md border border-border bg-card/40 px-3 py-2">
-                    <Label className="text-xs">{pattern}</Label>
+                    <FieldLabel label={pattern} hint="Структурный паттерн генератора. Включенный паттерн разрешен для сборки новых формул, выключенный исключается из профиля." />
                     <Switch checked={enabled} onCheckedChange={(checked) => updatePattern(pattern, checked)} />
                   </div>
                 );
@@ -204,7 +206,10 @@ export function ProfileConfigurator({
                     <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                       {group.flags.map((flag) => (
                         <div key={flag} className="flex items-center justify-between rounded-md border border-border/60 bg-card/40 px-3 py-2">
-                          <Label className="cursor-pointer text-xs font-mono" htmlFor={flag}>{flag.replace(/^enable_/, "")}</Label>
+                          <div className="flex items-center gap-1">
+                            <Label className="cursor-pointer text-xs font-mono" htmlFor={flag}>{flag.replace(/^enable_/, "")}</Label>
+                            <FieldHint hint={`Флаг ${flag}. Включает или отключает соответствующий домен или режим генерации в текущем профиле.`} />
+                          </div>
                           <Switch id={flag} checked={Boolean(profile.flags[flag])} onCheckedChange={(v) => updateFlag(flag, v)} />
                         </div>
                       ))}
@@ -240,7 +245,7 @@ function mergeFlagGroups(engineFlags: string[]) {
 function NumberField({ label, value, onChange, hint }: { label: string; value: number; onChange: (v: number) => void; hint: string }) {
   return (
     <div className="space-y-1.5">
-      <HintLabel label={label} hint={hint} />
+      <FieldLabel label={label} hint={hint} />
       <Input type="number" value={value} onChange={(e) => onChange(Number(e.target.value) || 0)} className="font-mono" />
     </div>
   );
@@ -266,7 +271,10 @@ function SliderField({
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <Label className="text-xs">{label}</Label>
+        <FieldLabel
+          label={label}
+          hint={`Диапазон: ${min}-${max}. Изменение этого параметра влияет на структуру формулы и объем пространства поиска. Текущее значение: ${format ? format(value) : value}.`}
+        />
         <span className="text-xs font-mono text-emerald-300">{format ? format(value) : value}</span>
       </div>
       <Slider value={[value]} min={min} max={max} step={step} onValueChange={(values) => onChange(values[0])} />
@@ -277,24 +285,8 @@ function SliderField({
 function ToggleField({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
   return (
     <div className="flex items-center justify-between rounded-md border border-border bg-card/40 px-3 py-2.5">
-      <Label className="text-xs">{label}</Label>
+      <FieldLabel label={label} hint="Булевый параметр профиля. Включение активирует режим в генераторе, выключение полностью убирает его из текущего запуска." />
       <Switch checked={value} onCheckedChange={onChange} />
-    </div>
-  );
-}
-
-function HintLabel({ label, hint }: { label: string; hint: string }) {
-  return (
-    <div className="flex items-center gap-1">
-      <Label className="text-xs">{label}</Label>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button type="button" className="text-muted-foreground hover:text-foreground">
-            <Info className="h-3.5 w-3.5" />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent className="max-w-xs text-left">{hint}</TooltipContent>
-      </Tooltip>
     </div>
   );
 }

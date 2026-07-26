@@ -11,19 +11,19 @@ export function AppShell({ children }: AppShellProps) {
   const [activePage, setActivePage] = useState<PageId>("dashboard");
   const [activeRuns, setActiveRuns] = useState(0);
 
-  // Poll active runs count every 5s
   useEffect(() => {
     const update = () => {
-      fetch("/api/dashboard")
+      fetch("/api/tasks")
         .then((r) => r.json())
         .then((d) => {
-          if (d?.ok) setActiveRuns(d.stats?.activeRuns ?? 0);
+          if (d?.ok) setActiveRuns(d.running ?? 0);
         })
         .catch(() => {});
     };
     update();
-    const t = setInterval(update, 5000);
-    return () => clearInterval(t);
+    const handleRefresh = () => update();
+    window.addEventListener("tasks:refresh", handleRefresh as EventListener);
+    return () => window.removeEventListener("tasks:refresh", handleRefresh as EventListener);
   }, []);
 
   return (

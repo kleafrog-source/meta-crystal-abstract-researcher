@@ -34,6 +34,8 @@ export async function POST(req: Request) {
     const handle = runSidecar({
       command: "enrich",
       inputFile: params,
+      taskType: "enrichment",
+      title: "Обогащение базы",
     });
 
     const log = await db.enrichmentLog.create({

@@ -8,6 +8,7 @@ import { Crystals } from "@/components/pages/Crystals";
 import { Import } from "@/components/pages/Import";
 import { Enrichment } from "@/components/pages/Enrichment";
 import { Chat } from "@/components/pages/Chat";
+import { MMSS } from "@/components/pages/MMSS";
 import { Settings } from "@/components/pages/Settings";
 
 export default function Home() {
@@ -29,6 +30,8 @@ export default function Home() {
             return <Enrichment />;
           case "chat":
             return <Chat />;
+          case "mmss":
+            return <MMSS />;
           case "settings":
             return <Settings />;
           default:

@@ -24,11 +24,12 @@ import {
   Square,
   Terminal,
 } from "@/components/icons";
-import { apiPost, useFetch } from "@/hooks/use-fetch";
+import { apiDelete, apiPost, useFetch } from "@/hooks/use-fetch";
 import { useToast } from "@/hooks/use-toast";
 import type { SidecarEvent } from "@/lib/engine/runner";
 import { ProfileConfigurator } from "@/components/profile/ProfileConfigurator";
 import { DEFAULT_PROFILE, type EditableProfile, withDefaultFlags } from "@/lib/profile-presets";
+import { ProfileLibraryBar } from "@/components/profile/ProfileLibraryBar";
 import type { Profile } from "@/types";
 
 interface EngineInfo {
@@ -53,8 +54,10 @@ interface ProfilesList {
 }
 
 export function Generation() {
+  const PROFILE_MODE = "generation";
   const [profile, setProfile] = useState(DEFAULT_PROFILE);
   const [profileName, setProfileName] = useState("default");
+  const [selectedProfileName, setSelectedProfileName] = useState("");
   const [taskId, setTaskId] = useState<string | null>(null);
   const [taskStatus, setTaskStatus] = useState<"idle" | "running" | "done" | "failed" | "cancelled">("idle");
   const [events, setEvents] = useState<SidecarEvent[]>([]);
@@ -63,7 +66,7 @@ export function Generation() {
 
   const { toast } = useToast();
   const { data: engineInfo } = useFetch<EngineInfo>("/api/engine");
-  const { data: profilesList, refresh: refreshProfiles } = useFetch<ProfilesList>("/api/profiles");
+  const { data: profilesList, refresh: refreshProfiles } = useFetch<ProfilesList>(`/api/profiles?mode=${PROFILE_MODE}`);
 
   useEffect(() => {
     if (engineInfo?.engineOk && engineInfo.flags?.length) {
@@ -84,11 +87,17 @@ export function Generation() {
           setTaskStatus("done");
           setProgress(100);
           es.close();
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("tasks:refresh"));
+          }
           toast({ title: "Генерация завершена" });
         }
         if (payload.event === "error") {
           setTaskStatus("failed");
           es.close();
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("tasks:refresh"));
+          }
           toast({ title: "Ошибка генерации", description: payload.msg, variant: "destructive" });
         }
       } catch {}
@@ -110,6 +119,9 @@ export function Generation() {
         disabled_patterns: profile.disabled_patterns,
       });
       setTaskId(result.taskId);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("tasks:refresh"));
+      }
     } catch (error) {
       setTaskStatus("failed");
       toast({ title: "Не удалось запустить", description: (error as Error).message, variant: "destructive" });
@@ -121,23 +133,55 @@ export function Generation() {
     try {
       await apiPost(`/api/generate/stop/${taskId}`, {});
       setTaskStatus("cancelled");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("tasks:refresh"));
+      }
     } catch (error) {
       toast({ title: "Не удалось остановить", description: (error as Error).message, variant: "destructive" });
     }
   };
 
-  const handleSaveProfile = async () => {
+  const saveProfile = async (targetName: string) => {
+    const safeName = targetName.trim();
+    if (!safeName) {
+      toast({ title: "Укажите имя профиля", variant: "destructive" });
+      return;
+    }
     try {
       await apiPost("/api/profiles", {
         ...profile,
-        name: profileName,
+        name: safeName,
+        mode: PROFILE_MODE,
         customPatterns: profile.custom_patterns,
         disabledPatterns: profile.disabled_patterns,
       });
       refreshProfiles();
-      toast({ title: "Профиль сохранен", description: profileName });
+      setSelectedProfileName(safeName);
+      setProfileName(safeName);
+      toast({ title: "Профиль сохранен", description: safeName });
     } catch (error) {
       toast({ title: "Ошибка сохранения", description: (error as Error).message, variant: "destructive" });
+    }
+  };
+
+  const handleSaveProfile = async () => saveProfile(profileName);
+
+  const handleSaveProfileAs = async () => {
+    const fallback = selectedProfileName ? `${selectedProfileName}-copy` : "new-profile";
+    await saveProfile(profileName.trim() || fallback);
+  };
+
+  const handleDeleteProfile = async () => {
+    if (!selectedProfileName) return;
+    try {
+      await apiDelete(`/api/profiles/${encodeURIComponent(selectedProfileName)}?mode=${PROFILE_MODE}`);
+      refreshProfiles();
+      setSelectedProfileName("");
+      setProfileName("default");
+      setProfile(DEFAULT_PROFILE);
+      toast({ title: "Профиль удален", description: selectedProfileName });
+    } catch (error) {
+      toast({ title: "Ошибка удаления", description: (error as Error).message, variant: "destructive" });
     }
   };
 
@@ -154,6 +198,7 @@ export function Generation() {
       disabled_patterns: found.disabledPatterns ?? [],
     };
     setProfile(engineInfo?.flags?.length ? withDefaultFlags(nextProfile, engineInfo.flags) : nextProfile);
+    setSelectedProfileName(found.name);
     setProfileName(found.name);
   };
 
@@ -170,13 +215,6 @@ export function Generation() {
             <p className="mt-1 text-sm text-muted-foreground">Профиль генерации с группами доменов, ролями метрик и паттернами.</p>
           </div>
           <div className="flex items-center gap-2">
-            <Select value={profileName} onValueChange={handleLoadProfile}>
-              <SelectTrigger className="w-48"><SelectValue placeholder="Профиль" /></SelectTrigger>
-              <SelectContent>
-                {profilesList?.items.map((item) => <SelectItem key={item.id} value={item.name}>{item.name}</SelectItem>)}
-              </SelectContent>
-            </Select>
-            <Button variant="outline" size="sm" onClick={handleSaveProfile}><Save className="mr-1.5 h-3.5 w-3.5" />Сохранить</Button>
             {taskStatus === "running" ? (
               <Button variant="destructive" size="sm" onClick={handleStop}><Square className="mr-1.5 h-3.5 w-3.5" />Остановить</Button>
             ) : (
@@ -196,6 +234,19 @@ export function Generation() {
       </header>
 
       <div className="flex-1 overflow-hidden p-6">
+        <div className="mb-4">
+          <ProfileLibraryBar
+            title="Профили генерации"
+            profiles={profilesList?.items ?? []}
+            selectedProfile={selectedProfileName}
+            editableName={profileName}
+            onEditableNameChange={setProfileName}
+            onSelectProfile={handleLoadProfile}
+            onSave={handleSaveProfile}
+            onSaveAs={handleSaveProfileAs}
+            onDelete={handleDeleteProfile}
+          />
+        </div>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex h-full flex-col">
           <TabsList className="mb-4 grid w-full max-w-xl grid-cols-3">
             <TabsTrigger value="params"><Sliders className="mr-1.5 h-3.5 w-3.5" />Параметры</TabsTrigger>

@@ -61,12 +61,16 @@ export async function POST(
     const handle = hasManifestationSteps(stored.steps)
       ? runLocalTask({
           timeoutMs: 30 * 60 * 1000,
+          taskType: "pipeline",
+          title: `Пайплайн: ${pipe.name}`,
           onRun: ({ emit, isCancelled }) =>
             executeManifestationPipeline(stored.steps, emit, isCancelled),
         })
       : runSidecar({
           command: "run_pipeline",
           inputFile: pipelinePayload,
+          taskType: "pipeline",
+          title: `Пайплайн: ${pipe.name}`,
         });
 
     // Subscribe to events to update the DB run record
@@ -105,7 +109,10 @@ export async function POST(
       db.pipelineRun
         .update({
           where: { id: run.id },
-          data: { status: "failed", finishedAt: new Date() },
+          data: {
+            status: handle.status === "cancelled" ? "cancelled" : "failed",
+            finishedAt: new Date(),
+          },
         })
         .catch(() => {});
     });

@@ -38,6 +38,8 @@ import signal
 import hashlib
 import traceback
 import shutil
+import importlib
+import site
 from pathlib import Path
 from datetime import datetime
 
@@ -49,6 +51,10 @@ sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="repla
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent
 sys.path.insert(0, str(BASE_DIR))
+sys.path.insert(0, str(BASE_DIR / "mmss"))
+USER_SITE = site.getusersitepackages()
+if USER_SITE and USER_SITE not in sys.path:
+    sys.path.append(USER_SITE)
 
 # Data directories (live under <project>/data/meta_crystals)
 DATA_DIR = PROJECT_ROOT / "data"
@@ -62,6 +68,22 @@ PIPELINES_DIR = DATA_DIR / "pipelines"
 IMPORTS_DIR = DATA_DIR / "imports"
 SNAPSHOTS_DIR = DATA_DIR / "snapshots"
 TEMP_DIR = DATA_DIR / ".temp"
+MMSS_DIR = BASE_DIR / "mmss"
+MMSS_CHECKPOINT = MMSS_DIR / "v22_hyper_synthetic_distilled.pt"
+OLLAMA_HOST = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
+MMSS_OLLAMA_CHECKPOINT = MMSS_DIR / "v22_hyper_ollama_distilled.pt"
+MMSS_CHAT_MODEL = (
+    os.environ.get("MMSS_OLLAMA_CHAT_MODEL")
+    or os.environ.get("DEFAULT_MODEL_ID")
+    or "qwen2.5-3b"
+)
+MMSS_EMBED_MODEL = (
+    os.environ.get("MMSS_OLLAMA_EMBED_MODEL")
+    or os.environ.get("OLLAMA_EMBED_MODEL")
+    or "embeddinggemma:300m"
+)
+MMSS_EMBED_TIMEOUT_SEC = float(os.environ.get("MMSS_OLLAMA_EMBED_TIMEOUT_SEC", "30"))
+MMSS_CHAT_TIMEOUT_SEC = float(os.environ.get("MMSS_OLLAMA_CHAT_TIMEOUT_SEC", "60"))
 
 for d in (DATA_DIR, CRYSTALS_DIR, META_DIR, PROFILES_DIR, PIPELINES_DIR, IMPORTS_DIR, SNAPSHOTS_DIR, TEMP_DIR):
     d.mkdir(parents=True, exist_ok=True)
@@ -112,11 +134,25 @@ def safe_json_write(path, data):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+def parse_json_arg_or_file(raw, default=None):
+    if raw is None:
+        return default
+    candidate = Path(str(raw))
+    if candidate.exists() and candidate.is_file():
+        return safe_json_read(candidate, default=default)
+    try:
+        return json.loads(raw)
+    except Exception:
+        return default
+
+
 # ============================================================
 # Engine import (lazy)
 # ============================================================
 engine_mod = None
 ENGINE_ERROR = None
+mmss_mod = None
+MMSS_ERROR = None
 
 def get_engine():
     global engine_mod, ENGINE_ERROR
@@ -128,6 +164,107 @@ def get_engine():
             ENGINE_ERROR = str(e)
             emit_log("error", f"Не удалось импортировать движок: {e}")
     return engine_mod
+
+
+def get_mmss(silent=False):
+    global mmss_mod, MMSS_ERROR
+    if mmss_mod is None and MMSS_ERROR is None:
+        try:
+            bridge = importlib.import_module("mmss_meta_crystal_bridge")
+            swap = importlib.import_module("mmss_ollama_swap")
+            mmss_mod = {"bridge": bridge, "swap": swap}
+        except Exception as e:
+            MMSS_ERROR = str(e)
+            if not silent:
+                emit_log("error", f"MMSS import failed: {e}")
+    return mmss_mod
+
+
+def _mmss_store():
+    mods = get_mmss()
+    if mods is None:
+        raise RuntimeError(MMSS_ERROR or "MMSS unavailable")
+    return mods["bridge"].MetaCrystalStore(str(DATA_DIR))
+
+
+def _mmss_session(checkpoint_path=None, prefer_ollama=True):
+    mods = get_mmss()
+    if mods is None:
+        raise RuntimeError(MMSS_ERROR or "MMSS unavailable")
+    checkpoint = Path(checkpoint_path or MMSS_CHECKPOINT)
+    if not checkpoint.exists():
+        raise FileNotFoundError(f"MMSS checkpoint not found: {checkpoint}")
+    encoder, encoder_mode = mods["swap"].make_encoder(
+        prefer_ollama=prefer_ollama,
+        host=OLLAMA_HOST,
+        model=MMSS_EMBED_MODEL,
+        timeout=MMSS_EMBED_TIMEOUT_SEC,
+    )
+    session = mods["bridge"].MetaCrystalRealtimeSession(
+        str(checkpoint),
+        _mmss_store(),
+        encoder=encoder,
+    )
+    return session, encoder_mode
+
+
+def _try_import_torch():
+    try:
+        import torch
+        return torch
+    except Exception:
+        return None
+
+
+def _count_crystal_files():
+    count = 0
+    if not CRYSTALS_DIR.exists():
+        return 0
+    for path in CRYSTALS_DIR.rglob("*.json"):
+        if path.name.lower() == "index.json":
+            continue
+        count += 1
+    return count
+
+
+def _run_mmss_ingest(checkpoint_path=None, prefer_ollama=True, crystal_limit=None):
+    store = _mmss_store()
+    crystals = store.read_all()
+    if crystal_limit:
+        crystals = crystals[: max(0, int(crystal_limit))]
+    total = len(crystals)
+    if total == 0:
+        return {
+            "n_nodes": 0,
+            "n_bridges": 0,
+            "n_manifested_diamonds": 0,
+            "ui_snapshot": {},
+            "encoder_mode": "unknown",
+            "processed": 0,
+        }
+
+    session, encoder_mode = _mmss_session(
+        checkpoint_path=checkpoint_path,
+        prefer_ollama=prefer_ollama,
+    )
+    bridges = 0
+    started = time.perf_counter()
+    for crystal in crystals:
+        ingest_result = session.ingest_crystal(crystal)
+        event = ingest_result.get("event", {})
+        if event.get("is_bridge"):
+            bridges += 1
+
+    elapsed_ms = round((time.perf_counter() - started) * 1000, 2)
+    return {
+        "n_nodes": len(session.nodes),
+        "n_bridges": bridges,
+        "n_manifested_diamonds": len(session.crystals),
+        "ui_snapshot": session.ui_snapshot(),
+        "encoder_mode": encoder_mode,
+        "processed": total,
+        "elapsed_ms": elapsed_ms,
+    }
 
 
 # ============================================================
@@ -658,6 +795,248 @@ def cmd_knowledge_export():
     emit_done({})
 
 
+def cmd_mmss_status():
+    torch_mod = _try_import_torch()
+    mods = get_mmss(silent=True)
+    swap = mods["swap"] if mods else None
+    crystals_count = _count_crystal_files()
+    if mods is not None:
+        try:
+            crystals_count = len(_mmss_store().read_all())
+        except Exception as e:
+            emit_log("warn", f"MMSS status could not read crystal base: {e}")
+    ollama_detected = False
+    if swap is not None:
+        try:
+            ollama_detected = bool(swap.detect_ollama(OLLAMA_HOST))
+        except Exception as e:
+            emit_log("warn", f"MMSS status could not detect Ollama: {e}")
+    payload = {
+        "torch_ok": torch_mod is not None,
+        "checkpoint_loaded": MMSS_CHECKPOINT.exists(),
+        "ollama_detected": ollama_detected,
+        "ollama_mode": "ollama_real" if ollama_detected else "fallback_feature_hash",
+        "n_crystals_in_base": crystals_count,
+    }
+    emit_data(payload)
+    emit_done(payload)
+
+
+def cmd_mmss_ingest_all():
+    emit_log("info", "MMSS ingest_all started")
+    result = _run_mmss_ingest()
+    emit_log(
+        "success",
+        f"MMSS ingest_all finished: nodes={result['n_nodes']} bridges={result['n_bridges']}",
+    )
+    emit_done(result)
+
+
+def cmd_mmss_ingest_code(code):
+    if not code:
+        emit_error("MMSS ingest_code requires a crystal code")
+        return
+    store = _mmss_store()
+    crystals = store.read_all()
+    crystal = next((item for item in crystals if str(item.get("meta", {}).get("code", "")) == code), None)
+    if crystal is None:
+        emit_error(f"Crystal not found for MMSS ingest: {code}")
+        return
+    session, encoder_mode = _mmss_session()
+    result = session.ingest_crystal(crystal)
+    payload = {
+        "code": code,
+        "encoder_mode": encoder_mode,
+        "event": result.get("event", {}),
+        "cycle": result.get("cycle", {}),
+        "ui_snapshot": session.ui_snapshot(),
+    }
+    emit_data(payload)
+    emit_done(payload)
+
+
+def cmd_mmss_retrain(params_raw=None):
+    params = parse_json_arg_or_file(params_raw, default={}) or {}
+    mods = get_mmss()
+    if mods is None:
+        emit_error(MMSS_ERROR or "MMSS unavailable")
+        return
+
+    try:
+        pipeline = importlib.import_module("mmss_ollama_pipeline")
+        swap = mods["swap"]
+        if not swap.detect_ollama(OLLAMA_HOST):
+            emit_error(f"Ollama not detected at {OLLAMA_HOST}. Start `ollama serve` and retry.")
+            return
+
+        encoder, encoder_mode = swap.make_encoder(
+            prefer_ollama=True,
+            host=OLLAMA_HOST,
+            model=MMSS_EMBED_MODEL,
+            target_dim=64,
+            timeout=MMSS_EMBED_TIMEOUT_SEC,
+        )
+        teacher, teacher_mode = swap.make_teacher(
+            prefer_ollama=True,
+            host=OLLAMA_HOST,
+            model=MMSS_CHAT_MODEL,
+            timeout=MMSS_CHAT_TIMEOUT_SEC,
+        )
+        if encoder_mode != "ollama_real" or teacher_mode != "ollama_real":
+            emit_error(
+                f"Real Ollama mode is required for mmss_retrain. "
+                f"encoder={encoder_mode}, teacher={teacher_mode}"
+            )
+            return
+
+        store = _mmss_store()
+        crystals = store.read_all()
+        queries = [mods["bridge"].MetaCrystalStore.crystal_query_text(item) for item in crystals]
+        queries = [q for q in queries if q]
+        n_pairs = int(params.get("n_pairs", min(400, len(queries))))
+        epochs = int(params.get("epochs", 120))
+        lr = float(params.get("lr", 2e-3))
+        batch = int(params.get("batch", 32))
+        out_checkpoint = Path(params.get("out_checkpoint", str(MMSS_OLLAMA_CHECKPOINT)))
+        if n_pairs < 4 or len(queries) < 4:
+            emit_error("Not enough crystal queries for mmss_retrain")
+            return
+
+        queries = queries[: min(n_pairs, len(queries))]
+        cut = max(1, int(len(queries) * 0.8))
+        train_q = queries[:cut]
+        test_q = queries[cut:] or queries[-1:]
+
+        emit_log("info", f"MMSS retrain started on {len(queries)} crystals")
+        emit_data({
+            "encoder_mode": encoder_mode,
+            "teacher_mode": teacher_mode,
+            "embed_model": MMSS_EMBED_MODEL,
+            "chat_model": MMSS_CHAT_MODEL,
+            "train_size": len(train_q),
+            "test_size": len(test_q),
+            "epochs": epochs,
+            "batch": batch,
+            "lr": lr,
+            "chat_timeout_sec": MMSS_CHAT_TIMEOUT_SEC,
+        })
+
+        core = pipeline.build_swappable_core(encoder, emb_dim=64)
+        dist = pipeline.quick_distill(
+            core,
+            teacher,
+            train_q,
+            test_q,
+            epochs=epochs,
+            lr=lr,
+            batch=batch,
+        )
+        checkpoint = {
+            "engine": "MMSS_INVARIANT_MANIFOLD_ENGINE",
+            "version": "v2.2-ollama-distilled",
+            "created_at": datetime.now().isoformat(),
+            "hyper_state_dict": core._hyper.state_dict(),
+            "model_config": {
+                "embedding_dim": core.emb_dim,
+                "invariant_hidden": core.inv_hidden,
+                "invariant_out": core.inv_out,
+                "hypernetwork_hidden": core.hyper_hidden,
+                "param_count": core.model_metrics()["param_count"],
+            },
+            "training_metrics": dist,
+            "teacher_note": "ollama_real teacher over real crystal query text",
+            "encoder_mode": encoder_mode,
+            "teacher_mode": teacher_mode,
+            "ollama_host": OLLAMA_HOST,
+            "embed_model": MMSS_EMBED_MODEL,
+            "chat_model": MMSS_CHAT_MODEL,
+            "chat_timeout_sec": MMSS_CHAT_TIMEOUT_SEC,
+        }
+
+        import torch
+        out_checkpoint.parent.mkdir(parents=True, exist_ok=True)
+        torch.save(checkpoint, out_checkpoint)
+        result = {
+            "checkpoint": str(out_checkpoint),
+            "encoder_mode": encoder_mode,
+            "teacher_mode": teacher_mode,
+            "embed_model": MMSS_EMBED_MODEL,
+            "chat_model": MMSS_CHAT_MODEL,
+            "chat_timeout_sec": MMSS_CHAT_TIMEOUT_SEC,
+            "train_size": len(train_q),
+            "test_size": len(test_q),
+            "metrics": dist,
+        }
+        emit_log("success", f"MMSS retrain finished -> {out_checkpoint}")
+        emit_done(result)
+    except Exception as e:
+        emit_log("error", f"MMSS retrain failed: {e}")
+        emit_log("error", traceback.format_exc())
+        emit_error(str(e))
+
+
+def cmd_mmss_eval(params_raw=None):
+    params = parse_json_arg_or_file(params_raw, default={}) or {}
+    report_path = DATA_DIR / "meta_crystals" / "mmss_eval_report.json"
+    crystal_limit = params.get("crystal_limit")
+    report = {
+        "created_at": datetime.now().isoformat(),
+        "crystal_limit": crystal_limit,
+        "baseline": None,
+        "ollama": None,
+        "comparison": {},
+        "verdict": "insufficient_data",
+        "notes": [],
+    }
+
+    try:
+        emit_log("info", "MMSS eval started")
+
+        baseline = _run_mmss_ingest(
+            checkpoint_path=MMSS_CHECKPOINT,
+            prefer_ollama=False,
+            crystal_limit=crystal_limit,
+        )
+        report["baseline"] = baseline
+
+        if MMSS_OLLAMA_CHECKPOINT.exists():
+            ollama_result = _run_mmss_ingest(
+                checkpoint_path=MMSS_OLLAMA_CHECKPOINT,
+                prefer_ollama=True,
+                crystal_limit=crystal_limit,
+            )
+            report["ollama"] = ollama_result
+            baseline_bridges = baseline.get("n_bridges", 0)
+            ollama_bridges = ollama_result.get("n_bridges", 0)
+            report["comparison"] = {
+                "bridge_delta": ollama_bridges - baseline_bridges,
+                "baseline_encoder_mode": baseline.get("encoder_mode"),
+                "ollama_encoder_mode": ollama_result.get("encoder_mode"),
+                "baseline_elapsed_ms": baseline.get("elapsed_ms"),
+                "ollama_elapsed_ms": ollama_result.get("elapsed_ms"),
+            }
+            if (
+                ollama_result.get("encoder_mode") == "ollama_real"
+                and ollama_bridges != baseline_bridges
+            ):
+                report["verdict"] = "signal_detected"
+            else:
+                report["verdict"] = "no_clear_change"
+        else:
+            report["notes"].append(
+                f"Ollama checkpoint not found: {MMSS_OLLAMA_CHECKPOINT}. Run mmss_retrain first."
+            )
+            report["verdict"] = "baseline_only"
+
+        safe_json_write(report_path, report)
+        emit_data(report)
+        emit_done({"report_path": str(report_path), "verdict": report["verdict"]})
+    except Exception as e:
+        emit_log("error", f"MMSS eval failed: {e}")
+        emit_log("error", traceback.format_exc())
+        emit_error(str(e))
+
+
 # ============================================================
 # Main entrypoint
 # ============================================================
@@ -714,6 +1093,21 @@ def main():
             cmd_knowledge_stats()
         elif cmd == "knowledge_export":
             cmd_knowledge_export()
+        elif cmd == "mmss_status":
+            cmd_mmss_status()
+        elif cmd == "mmss_ingest_all":
+            cmd_mmss_ingest_all()
+        elif cmd == "mmss_ingest_code":
+            if len(sys.argv) < 3:
+                emit_error("Не указан код кристалла для mmss_ingest_code")
+                return
+            cmd_mmss_ingest_code(sys.argv[2])
+        elif cmd == "mmss_retrain":
+            raw = sys.argv[2] if len(sys.argv) > 2 else None
+            cmd_mmss_retrain(raw)
+        elif cmd == "mmss_eval":
+            raw = sys.argv[2] if len(sys.argv) > 2 else None
+            cmd_mmss_eval(raw)
         else:
             emit_error(f"Неизвестная команда: {cmd}")
     except KeyboardInterrupt:

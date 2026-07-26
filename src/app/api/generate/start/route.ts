@@ -34,6 +34,8 @@ export async function POST(req: Request) {
     const handle = runSidecar({
       command: "generate",
       inputFile: profile,
+      taskType: "generation",
+      title: `Генерация: ${profile.name ?? "profile"}`,
     });
 
     // When done, sync the index into the database

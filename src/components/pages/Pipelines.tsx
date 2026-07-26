@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { FieldLabel } from "@/components/ui/field-hint";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -42,6 +43,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useFetch, apiPost, apiDelete, apiPut } from "@/hooks/use-fetch";
 import type { SidecarEvent } from "@/lib/engine/runner";
 import { ProfileConfigurator } from "@/components/profile/ProfileConfigurator";
+import { ProfileLibraryBar } from "@/components/profile/ProfileLibraryBar";
+import { ActiveTasksPanel } from "@/components/tasks/ActiveTasksPanel";
 import {
   DEFAULT_PROFILE,
   normalizeEditableProfile,
@@ -109,6 +112,32 @@ const ACTION_TYPES = [
   { value: "manifest_isomorphisms_scan", label: "Manifest: isomorph scan" },
 ];
 
+const PIPELINE_FIELD_HINTS: Record<string, string> = {
+  "Batch": "Диапазон: 1-10000. Число комбинаций или объектов, которые шаг обрабатывает за проход.",
+  "Top": "Диапазон: 1-1000. Сколько лучших результатов оставить после этапа отбора.",
+  "Generations": "Диапазон: 1-100. Число поколений или итераций генератора на шаге.",
+  "Min V": "Диапазон: 0-1. Минимальный порог метрики V для фильтрации кристаллов.",
+  "Min S": "Диапазон: 0-1. Минимальный порог метрики S для фильтрации.",
+  "Target": "Диапазон: 1-10000. Сколько объектов шаг должен попытаться оставить на выходе.",
+  "Operators through comma": "Список операторов через запятую. Используйте ключи операторов движка, чтобы ограничить transform-шаг конкретными операциями.",
+  "Crystal IDs": "Список кодов кристаллов через запятую. Используется для targeted manifestation и индексных шагов.",
+  "Donor IDs": "Список донорских кристаллов через запятую для diffuse/synthesis.",
+  "Temperature": "Диапазон: 0-2. Более высокое значение делает LLM-часть свободнее, но менее детерминированной.",
+  "Guidance": "Диапазон: 0-1. Управляет силой направляющего сигнала при diffuse.",
+  "Superposition size": "Диапазон: 1-64. Сколько кандидатов участвуют в суперпозиции перед collapse.",
+  "Collapse mode": "best сохраняет лучший результат, diverse возвращает более разнообразные кандидаты, manual оставляет выбор пользователю.",
+  "Threshold": "Диапазон: 0-1. Порог силы связи для поиска изоморфизмов.",
+  "Limit": "Диапазон: 1-10000. Ограничивает число результатов в palette query.",
+  "Micro note contains": "Фильтр по содержимому llm_micro_note. Помогает сузить palette query по текстовым признакам.",
+  "Vector contains": "Фильтр по описанию vector_direction. Полезно для отбора по направлению embedding-вектора.",
+  "Semantic query": "Свободный семантический запрос для palette query поверх embedding-индекса.",
+  "Include isomorphs": "Если включено, manifestation учитывает найденные связи изоморфизма между кристаллами.",
+  "Has micro note": "Фильтр только по кристаллам, у которых уже есть llm_micro_note.",
+  "Has vector": "Фильтр только по кристаллам, у которых есть embedding/vector_direction.",
+  "Include isomorphic donors": "Разрешает diffuse использовать доноров, найденных через граф изоморфизмов.",
+  "Force reindex": "Полностью пересчитывает embedding-индекс для выбранных кристаллов, даже если записи уже существуют.",
+};
+
 export function Pipelines() {
   const { data, loading, refresh } = useFetch<PipelinesList>("/api/pipelines");
   const [editing, setEditing] = useState<PipelineListItem | null>(null);
@@ -131,6 +160,9 @@ export function Pipelines() {
           es.close();
           setRunningId(null);
           refresh();
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("tasks:refresh"));
+          }
           if (evt.event === "done") {
             toast({ title: "Пайплайн завершён" });
           }
@@ -151,6 +183,9 @@ export function Pipelines() {
         {},
       );
       setRunTaskId(r.taskId);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("tasks:refresh"));
+      }
       toast({ title: "Запущен", description: `Task: ${r.taskId.slice(0, 8)}` });
     } catch (e) {
       setRunningId(null);
@@ -177,6 +212,23 @@ export function Pipelines() {
     }
   };
 
+  const handleAddTemplates = async () => {
+    try {
+      const result = await apiPost<{ created: number; names: string[] }>("/api/pipelines/templates/manifestation", {});
+      refresh();
+      toast({
+        title: "Тестовые пайплайны добавлены",
+        description: `${result.created} шт.`,
+      });
+    } catch (e) {
+      toast({
+        title: "Не удалось создать шаблоны",
+        description: (e as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col h-full">
       <header className="px-6 py-5 border-b border-border bg-card/30 backdrop-blur-sm">
@@ -194,15 +246,24 @@ export function Pipelines() {
               Конструктор последовательностей шагов для генерации и обработки
             </p>
           </div>
-          <Button size="sm" onClick={() => setShowNew(true)}>
-            <Plus className="h-3.5 w-3.5 mr-1.5" />
-            Создать
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handleAddTemplates}>
+              <Plus className="h-3.5 w-3.5 mr-1.5" />
+              Добавить тестовые
+            </Button>
+            <Button size="sm" onClick={() => setShowNew(true)}>
+              <Plus className="h-3.5 w-3.5 mr-1.5" />
+              Создать
+            </Button>
+          </div>
         </div>
       </header>
 
       <div className="flex-1 overflow-hidden flex">
         <div className="flex-1 overflow-y-auto p-6">
+          <div className="mb-4">
+            <ActiveTasksPanel />
+          </div>
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -314,13 +375,38 @@ export function Pipelines() {
                   <Loader2 className="h-3 w-3 animate-spin text-emerald-400" />
                 )}
               </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowLog(false)}
-              >
-                ✕
-              </Button>
+              <div className="flex items-center gap-1">
+                {runTaskId && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={async () => {
+                      try {
+                        await apiPost(`/api/tasks/stop/${runTaskId}`, {});
+                        if (typeof window !== "undefined") {
+                          window.dispatchEvent(new CustomEvent("tasks:refresh"));
+                        }
+                        toast({ title: "Остановка отправлена", description: runTaskId.slice(0, 8) });
+                      } catch (error) {
+                        toast({
+                          title: "Не удалось остановить",
+                          description: (error as Error).message,
+                          variant: "destructive",
+                        });
+                      }
+                    }}
+                  >
+                    Stop
+                  </Button>
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowLog(false)}
+                >
+                  ✕
+                </Button>
+              </div>
             </div>
             <ScrollArea className="flex-1">
               <div className="p-3 font-mono text-[11px] space-y-0.5 log-terminal min-h-full">
@@ -395,6 +481,7 @@ function PipelineEditor({
   onClose: () => void;
   onSaved: () => void;
 }) {
+  const PROFILE_MODE = "pipeline_editor";
   const [name, setName] = useState(pipeline?.name ?? "");
   const [description, setDescription] = useState(pipeline?.description ?? "");
   const [steps, setSteps] = useState<PipelineStepData[]>(
@@ -406,10 +493,11 @@ function PipelineEditor({
   );
   const [profile, setProfile] = useState<EditableProfile>(normalizeEditableProfile(pipeline?.profile ?? DEFAULT_PROFILE));
   const [profileName, setProfileName] = useState(pipeline?.profile?.name ?? "default");
+  const [selectedProfileName, setSelectedProfileName] = useState(pipeline?.profile?.name ?? "");
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
   const { data: engineInfo } = useFetch<EngineInfo>("/api/engine");
-  const { data: profilesList } = useFetch<ProfilesList>("/api/profiles");
+  const { data: profilesList, refresh: refreshProfiles } = useFetch<ProfilesList>(`/api/profiles?mode=${PROFILE_MODE}`);
 
   useEffect(() => {
     if (engineInfo?.flags?.length) {
@@ -459,7 +547,6 @@ function PipelineEditor({
   };
 
   const handleLoadProfile = (value: string) => {
-    setProfileName(value);
     const found = profilesList?.items.find((item) => item.name === value);
     if (!found) return;
     const nextProfile = normalizeEditableProfile({
@@ -472,6 +559,53 @@ function PipelineEditor({
       disabledPatterns: found.disabledPatterns ?? [],
     });
     setProfile(engineInfo?.flags?.length ? withDefaultFlags(nextProfile, engineInfo.flags) : nextProfile);
+    setSelectedProfileName(found.name);
+    setProfileName(found.name);
+  };
+
+  const saveProfile = async (targetName: string) => {
+    const safeName = targetName.trim();
+    if (!safeName) {
+      toast({ title: "Укажите имя профиля", variant: "destructive" });
+      return;
+    }
+    try {
+      await apiPost("/api/profiles", {
+        ...profile,
+        name: safeName,
+        mode: PROFILE_MODE,
+        customPatterns: profile.custom_patterns,
+        disabledPatterns: profile.disabled_patterns,
+      });
+      refreshProfiles();
+      setSelectedProfileName(safeName);
+      setProfileName(safeName);
+      toast({ title: "Профиль сохранен", description: safeName });
+    } catch (error) {
+      toast({
+        title: "Ошибка сохранения профиля",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    if (!selectedProfileName) return;
+    try {
+      await apiDelete(`/api/profiles/${encodeURIComponent(selectedProfileName)}?mode=${PROFILE_MODE}`);
+      refreshProfiles();
+      setSelectedProfileName("");
+      setProfileName("default");
+      setProfile(DEFAULT_PROFILE);
+      toast({ title: "Профиль удален", description: selectedProfileName });
+    } catch (error) {
+      toast({
+        title: "Ошибка удаления профиля",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -503,25 +637,17 @@ function PipelineEditor({
               <CardDescription>Этот профиль будет передан в LLM-builder и в runtime пайплайна без ручного JSON.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                <div className="space-y-1.5">
-                  <Label className="text-xs">Имя профиля внутри пайплайна</Label>
-                  <Input value={profileName} onChange={(e) => setProfileName(e.target.value)} />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs">Загрузить сохранённый профиль</Label>
-                  <Select value={profileName} onValueChange={handleLoadProfile}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Выберите профиль" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {profilesList?.items.map((item) => (
-                        <SelectItem key={item.id} value={item.name}>{item.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
+              <ProfileLibraryBar
+                title="Профили pipeline editor"
+                profiles={profilesList?.items ?? []}
+                selectedProfile={selectedProfileName}
+                editableName={profileName}
+                onEditableNameChange={setProfileName}
+                onSelectProfile={handleLoadProfile}
+                onSave={() => saveProfile(profileName)}
+                onSaveAs={() => saveProfile(profileName.trim() || `${selectedProfileName || "pipeline"}-copy`)}
+                onDelete={handleDeleteProfile}
+              />
               <ProfileConfigurator
                 profile={{ ...profile, name: profileName }}
                 onChange={setProfile}
@@ -739,7 +865,7 @@ function buildDefaultParams(action: string) {
 function InlineNumber({ label, value, onChange, step = "1" }: { label: string; value: number; onChange: (value: number) => void; step?: string }) {
   return (
     <div className="space-y-1">
-      <Label className="text-[11px] text-muted-foreground">{label}</Label>
+      <FieldLabel label={label} hint={PIPELINE_FIELD_HINTS[label]} className="text-[11px] text-muted-foreground" />
       <Input type="number" step={step} value={value} onChange={(e) => onChange(Number(e.target.value) || 0)} className="h-8 text-xs font-mono" />
     </div>
   );
@@ -748,7 +874,7 @@ function InlineNumber({ label, value, onChange, step = "1" }: { label: string; v
 function InlineText({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   return (
     <div className="space-y-1">
-      <Label className="text-[11px] text-muted-foreground">{label}</Label>
+      <FieldLabel label={label} hint={PIPELINE_FIELD_HINTS[label]} className="text-[11px] text-muted-foreground" />
       <Input value={value} onChange={(e) => onChange(e.target.value)} className="h-8 text-xs" />
     </div>
   );
@@ -761,7 +887,7 @@ function CsvField({ label, value, onChange }: { label: string; value: unknown; o
 function ToggleRow({ label, checked, onChange }: { label: string; checked: boolean; onChange: (value: boolean) => void }) {
   return (
     <div className="flex items-center justify-between rounded border border-border bg-card/40 px-3 py-2">
-      <Label className="text-[11px] text-muted-foreground">{label}</Label>
+      <FieldLabel label={label} hint={PIPELINE_FIELD_HINTS[label]} className="text-[11px] text-muted-foreground" />
       <Switch checked={checked} onCheckedChange={onChange} />
     </div>
   );

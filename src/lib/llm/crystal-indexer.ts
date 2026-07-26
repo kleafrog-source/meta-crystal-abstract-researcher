@@ -5,6 +5,9 @@ import type { SidecarEvent } from "@/lib/engine/runner";
 
 export interface CrystalIndexTaskHandle {
   taskId: string;
+  taskType?: string;
+  title?: string;
+  startedAt?: string;
   events: SidecarEvent[];
   status: "running" | "done" | "failed" | "cancelled";
   result?: unknown;
@@ -38,6 +41,10 @@ export function getCrystalIndexTask(taskId: string) {
   return TASKS.get(taskId);
 }
 
+export function listCrystalIndexTasks() {
+  return Array.from(TASKS.values());
+}
+
 export function startCrystalIndexingTask(opts: CrystalIndexTaskOptions = {}): CrystalIndexTaskHandle {
   const taskId = randomUUID();
   const events: SidecarEvent[] = [];
@@ -52,6 +59,9 @@ export function startCrystalIndexingTask(opts: CrystalIndexTaskOptions = {}): Cr
 
   const handle: CrystalIndexTaskHandle = {
     taskId,
+    taskType: "crystal_index",
+    title: opts.force ? "Индексация кристаллов (полная)" : "Индексация кристаллов",
+    startedAt: new Date().toISOString(),
     events,
     status: "running",
     result: undefined,

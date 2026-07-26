@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mmss.local/mmss_cycle.schema.json",
+  "title": "MMSS Cycle Contract",
+  "description": "Минимальный JSON-контракт одного цикла MMSS: encode -> hypernet -> compute -> (isomorphism) -> crystal -> render. Ядро v2.2: инвариант вычисляется, а не хранится (matrix-free, O(1)).",
+  "type": "object",
+  "required": ["schema_version", "cycle_id", "source_query", "z_q", "operators", "invariant", "render_outputs", "metrics"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "cycle_id": { "type": "string", "description": "uuid одного прогона цикла" },
+    "source_query": {
+      "type": "object",
+      "required": ["raw", "kind"],
+      "properties": {
+        "raw": { "type": "string", "description": "исходный запрос/слово/seed-текст/узел-графа" },
+        "kind": { "enum": ["query", "word", "seed_text", "graph_node"] }
+      }
+    },
+    "z_q": {
+      "type": "object",
+      "description": "координата на манифолде (выход stage 01 EMBEDDING ENCODER)",
+      "required": ["dim", "values", "norm"],
+      "properties": {
+        "dim": { "type": "integer" },
+        "values": { "type": "array", "items": { "type": "number" } },
+        "norm": { "type": "number" }
+      }
+    },
+    "operators": {
+      "type": "object",
+      "description": "след применённых операторов MMSS",
+      "properties": {
+        "H_hypernet": {
+          "type": "object",
+          "required": ["w_q_hash", "w_q_dim"],
+          "properties": {
+            "w_q_hash": { "type": "string", "description": "хэш сгенерированных весов (веса НЕ хранятся как матрица, только вычисляются)" },
+            "w_q_dim": { "type": "integer", "description": "число параметров W_q, сгенерированных гиперсетью" }
+          }
+        },
+        "invariant_computation": { "type": "boolean" },
+        "counterfactual": {
+          "type": "object",
+          "description": "оператор Δ: z_q + delta, повторный forward-pass",
+          "properties": {
+            "delta": { "type": "number" },
+            "axis": { "type": "integer" },
+            "invariant_divergence_pct": { "type": "number" },
+            "delta_cosine": { "type": "number" },
+            "verdict": { "enum": ["stability_preserved", "stability_broken"] }
+          }
+        },
+        "depth_scaling": {
+          "type": "object",
+          "description": "оператор α: непрерывная шкала глубины (alpha * z_q)",
+          "properties": {
+            "alpha": { "type": "number" },
+            "invariant_divergence_pct": { "type": "number" }
+          }
+        },
+        "fractal_generator": { "type": "object", "description": "⊛ (v3.0): итеративный генератор — зарезервировано", "properties": { "iterations": { "type": "integer" } } },
+        "isomorphism_detection": { "type": "object", "description": "⊘: зарезервировано", "properties": { "found": { "type": "boolean" } } },
+        "phase_transition": { "type": "object", "description": "↯: зарезервировано", "properties": { "triggered": { "type": "boolean" } } }
+      }
+    },
+    "invariant": {
+      "type": "object",
+      "description": "результат компактного forward-pass (stage 03 INVARIANT COMPUTATION). Это значение, а не элемент матрицы.",
+      "required": ["dim", "values", "dominant_axis", "magnitude_pct", "polarity"],
+      "properties": {
+        "dim": { "type": "integer" },
+        "values": { "type": "array", "items": { "type": "number" } },
+        "dominant_axis": { "type": "integer" },
+        "magnitude_pct": { "type": "number" },
+        "polarity": { "enum": ["positive", "negative", "neutral"] }
+      }
+    },
+    "crystal": {
+      "type": "object",
+      "description": "материализация инварианта в RAG-хранилище (Мета-Кристалл). null = не записан.",
+      "properties": {
+        "crystal_id": { "type": ["string", "null"] },
+        "type": { "enum": ["hybrid", "paradox", "cryptography", "other", null] },
+        "stored": { "type": "boolean" }
+      }
+    },
+    "render_outputs": {
+      "type": "object",
+      "description": "stage 04 TEMPLATE RENDERER (℘): мульти-выход — текст + свет + звук как проекции одного инварианта",
+      "required": ["text"],
+      "properties": {
+        "text": { "type": "string" },
+        "light_field": { "type": "object", "properties": { "hue_deg": { "type": "number" }, "intensity": { "type": "number" } } },
+        "audio": { "type": "object", "properties": { "carrier_hz": { "type": "number" }, "modulator_hz": { "type": "number" }, "amplitude": { "type": "number" } } }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["latency_ms", "memory_footprint_bytes", "param_count"],
+      "properties": {
+        "latency_ms": { "type": "number", "description": "время одного цикла (encode->render), мс" },
+        "memory_footprint_bytes": { "type": "number", "description": "размер модели в памяти (параметры * 4 байта). Должен НЕ расти с числом запросов." },
+        "param_count": { "type": "integer", "description": "число параметров модели (гиперсеть + инвариант-сеть). Const => matrix-free." }
+      }
+    }
+  }
+}

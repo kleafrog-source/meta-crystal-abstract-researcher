@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { syncCrystalsFromIndex } from "@/lib/engine/sync";
 import { runningTaskCount } from "@/lib/engine/runner";
+import { runningCrystalIndexTaskCount } from "@/lib/llm/crystal-indexer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -60,7 +61,7 @@ export async function GET(req: Request) {
         totalDiamonds,
         totalFavourites,
         totalPipelines,
-        activeRuns: runningTaskCount(),
+        activeRuns: runningTaskCount() + runningCrystalIndexTaskCount(),
       },
       typeBreakdown,
       recentCrystals: recentCrystals.map((c) => ({

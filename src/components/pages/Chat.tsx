@@ -36,6 +36,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { apiPost, apiDelete, useFetch } from "@/hooks/use-fetch";
 import { ProfileConfigurator } from "@/components/profile/ProfileConfigurator";
+import { ProfileLibraryBar } from "@/components/profile/ProfileLibraryBar";
 import {
   DEFAULT_PROFILE,
   normalizeEditableProfile,
@@ -103,6 +104,7 @@ const SUGGESTED_PROMPTS = [
 ];
 
 export function Chat() {
+  const PROFILE_MODE = "chat_pipeline";
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sending, setSending] = useState(false);
@@ -112,13 +114,14 @@ export function Chat() {
   const [genPipeline, setGenPipeline] = useState(false);
   const [pipelineResult, setPipelineResult] = useState<PipelineResult["pipeline"] | null>(null);
   const [profileName, setProfileName] = useState("default");
+  const [selectedProfileName, setSelectedProfileName] = useState("");
   const [pipelineProfile, setPipelineProfile] = useState<EditableProfile>(DEFAULT_PROFILE);
   const [showProfileDialog, setShowProfileDialog] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { data: history, refresh: refreshHistory } = useFetch<ChatHistory>("/api/llm/messages?limit=50");
   const { data: engineInfo } = useFetch<EngineInfo>("/api/engine");
-  const { data: profilesList } = useFetch<ProfilesList>("/api/profiles");
+  const { data: profilesList, refresh: refreshProfiles } = useFetch<ProfilesList>(`/api/profiles?mode=${PROFILE_MODE}`);
 
   useEffect(() => {
     if (history?.messages) setMessages(history.messages);
@@ -271,7 +274,6 @@ export function Chat() {
   };
 
   const handleLoadProfile = (value: string) => {
-    setProfileName(value);
     const found = profilesList?.items.find((item) => item.name === value);
     if (!found) return;
     const nextProfile = normalizeEditableProfile({
@@ -284,6 +286,53 @@ export function Chat() {
       disabledPatterns: found.disabledPatterns ?? [],
     });
     setPipelineProfile(engineInfo?.flags?.length ? withDefaultFlags(nextProfile, engineInfo.flags) : nextProfile);
+    setSelectedProfileName(found.name);
+    setProfileName(found.name);
+  };
+
+  const saveProfile = async (targetName: string) => {
+    const safeName = targetName.trim();
+    if (!safeName) {
+      toast({ title: "Укажите имя профиля", variant: "destructive" });
+      return;
+    }
+    try {
+      await apiPost("/api/profiles", {
+        ...pipelineProfile,
+        name: safeName,
+        mode: PROFILE_MODE,
+        customPatterns: pipelineProfile.custom_patterns,
+        disabledPatterns: pipelineProfile.disabled_patterns,
+      });
+      refreshProfiles();
+      setSelectedProfileName(safeName);
+      setProfileName(safeName);
+      toast({ title: "Профиль сохранен", description: safeName });
+    } catch (error) {
+      toast({
+        title: "Ошибка сохранения профиля",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    if (!selectedProfileName) return;
+    try {
+      await apiDelete(`/api/profiles/${encodeURIComponent(selectedProfileName)}?mode=${PROFILE_MODE}`);
+      refreshProfiles();
+      setSelectedProfileName("");
+      setProfileName("default");
+      setPipelineProfile(DEFAULT_PROFILE);
+      toast({ title: "Профиль удален", description: selectedProfileName });
+    } catch (error) {
+      toast({
+        title: "Ошибка удаления профиля",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    }
   };
 
   const clearHistory = async () => {
@@ -450,25 +499,17 @@ export function Chat() {
             <DialogTitle>Ограничения для LLM pipeline builder</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <div className="space-y-1.5">
-                <Label className="text-xs">Имя профиля</Label>
-                <Input value={profileName} onChange={(e) => setProfileName(e.target.value)} />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs">Загрузить сохранённый профиль</Label>
-                <Select value={profileName} onValueChange={handleLoadProfile}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Выберите профиль" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {profilesList?.items.map((item) => (
-                      <SelectItem key={item.id} value={item.name}>{item.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+            <ProfileLibraryBar
+              title="Профили LLM pipeline builder"
+              profiles={profilesList?.items ?? []}
+              selectedProfile={selectedProfileName}
+              editableName={profileName}
+              onEditableNameChange={setProfileName}
+              onSelectProfile={handleLoadProfile}
+              onSave={() => saveProfile(profileName)}
+              onSaveAs={() => saveProfile(profileName.trim() || `${selectedProfileName || "chat"}-copy`)}
+              onDelete={handleDeleteProfile}
+            />
             <div className="flex flex-wrap gap-2 text-[11px]">
               <Badge variant="outline">{Object.values(pipelineProfile.flags).filter(Boolean).length} flags</Badge>
               <Badge variant="outline">{pipelineProfile.metrics.influencing.length} влияющих метрик</Badge>

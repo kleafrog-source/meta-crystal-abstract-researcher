@@ -12,6 +12,7 @@ import {
   Settings,
   LayoutDashboard,
   CrystalIcon,
+  Cpu,
 } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,7 @@ export type PageId =
   | "import"
   | "enrichment"
   | "chat"
+  | "mmss"
   | "settings";
 
 interface NavItem {
@@ -74,6 +76,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "LLM-чат",
     icon: <MessageSquare className="h-4 w-4" />,
     description: "RAG-чат с локальной LLM",
+  },
+  {
+    id: "mmss",
+    label: "MMSS",
+    icon: <Cpu className="h-4 w-4" />,
+    description: "MMSS ingest, retrain, eval и результаты",
   },
   {
     id: "settings",

@@ -14,6 +14,7 @@ import { spawn, ChildProcess } from "child_process";
 import { dirname, join, resolve } from "path";
 import { mkdirSync, writeFileSync, existsSync, unlinkSync } from "fs";
 import { randomUUID } from "crypto";
+import { createTaskJournal, finalizeTaskJournal } from "@/lib/task-journal";
 
 function resolveProjectRoot() {
   const candidates = [
@@ -63,6 +64,12 @@ export interface SidecarEvent {
 export interface SidecarRunHandle {
   /** Unique task id */
   taskId: string;
+  /** Task category for UI/status listing */
+  taskType?: string;
+  /** User-facing title */
+  title?: string;
+  /** Start timestamp */
+  startedAt?: string;
   /** The underlying child process */
   child: ChildProcess | null;
   /** Buffered events for late subscribers */
@@ -103,6 +110,9 @@ export interface SidecarCallOptions {
   onEvent?: (e: SidecarEvent) => void;
   /** Timeout in ms (default: 10 minutes) */
   timeoutMs?: number;
+  taskType?: string;
+  title?: string;
+  extraEnv?: Record<string, string>;
 }
 
 export interface LocalTaskOptions {
@@ -111,6 +121,8 @@ export interface LocalTaskOptions {
     isCancelled: () => boolean;
   }) => Promise<unknown>;
   timeoutMs?: number;
+  taskType?: string;
+  title?: string;
 }
 
 /**
@@ -135,6 +147,7 @@ export function runSidecar(opts: SidecarCallOptions): SidecarRunHandle {
     cwd: PROJECT_ROOT,
     env: {
       ...process.env,
+      ...(opts.extraEnv ?? {}),
       PYTHONIOENCODING: "utf-8",
       PYTHONUNBUFFERED: "1",
     },
@@ -145,6 +158,9 @@ export function runSidecar(opts: SidecarCallOptions): SidecarRunHandle {
 
   const handle = {
     taskId,
+    taskType: opts.taskType ?? "sidecar",
+    title: opts.title ?? opts.command,
+    startedAt: new Date().toISOString(),
     child,
     events,
     status: "running" as const,
@@ -162,6 +178,17 @@ export function runSidecar(opts: SidecarCallOptions): SidecarRunHandle {
     },
     result: undefined as unknown,
   };
+
+  const journal = createTaskJournal({
+    taskId,
+    taskType: handle.taskType ?? "sidecar",
+    title: handle.title ?? opts.command,
+    command: opts.command,
+    args: finalArgs,
+    input: opts.inputFile,
+    extraEnv: opts.extraEnv ?? {},
+    startedAt: handle.startedAt ?? new Date().toISOString(),
+  });
 
   TASKS.set(taskId, handle);
 
@@ -190,12 +217,24 @@ export function runSidecar(opts: SidecarCallOptions): SidecarRunHandle {
               resolved = true;
               handle.status = "done";
               handle.result = obj.result;
+              finalizeTaskJournal(journal, {
+                status: "done",
+                finishedAt: new Date().toISOString(),
+                result: obj.result,
+                events,
+              });
               resolve(obj.result);
             }
           } else if (obj.event === "error") {
             if (!resolved) {
               resolved = true;
               handle.status = "failed";
+              finalizeTaskJournal(journal, {
+                status: "failed",
+                finishedAt: new Date().toISOString(),
+                error: obj.msg ?? "sidecar error",
+                events,
+              });
               reject(new Error(obj.msg ?? "sidecar error"));
             }
           }
@@ -220,6 +259,12 @@ export function runSidecar(opts: SidecarCallOptions): SidecarRunHandle {
       if (!resolved) {
         resolved = true;
         handle.status = "failed";
+        finalizeTaskJournal(journal, {
+          status: "failed",
+          finishedAt: new Date().toISOString(),
+          error: `failed to spawn sidecar: ${err.message}`,
+          events,
+        });
         reject(new Error(`failed to spawn sidecar: ${err.message}`));
       }
     });
@@ -229,14 +274,32 @@ export function runSidecar(opts: SidecarCallOptions): SidecarRunHandle {
         if (signal === "SIGTERM" || signal === "SIGKILL") {
           handle.status = "cancelled";
           resolved = true;
+          finalizeTaskJournal(journal, {
+            status: "cancelled",
+            finishedAt: new Date().toISOString(),
+            error: "cancelled",
+            events,
+          });
           reject(new Error("cancelled"));
         } else if (code === 0) {
           handle.status = "done";
           resolved = true;
+          finalizeTaskJournal(journal, {
+            status: "done",
+            finishedAt: new Date().toISOString(),
+            result: { exitCode: 0 },
+            events,
+          });
           resolve({ exitCode: 0 });
         } else {
           handle.status = "failed";
           resolved = true;
+          finalizeTaskJournal(journal, {
+            status: "failed",
+            finishedAt: new Date().toISOString(),
+            error: `sidecar exited with code ${code}`,
+            events,
+          });
           reject(new Error(`sidecar exited with code ${code}`));
         }
       }
@@ -282,6 +345,9 @@ export function runLocalTask(opts: LocalTaskOptions): SidecarRunHandle {
 
   const handle: SidecarRunHandle = {
     taskId,
+    taskType: opts.taskType ?? "local",
+    title: opts.title ?? "local task",
+    startedAt: new Date().toISOString(),
     child: null,
     events,
     status: "running",
@@ -306,6 +372,17 @@ export function runLocalTask(opts: LocalTaskOptions): SidecarRunHandle {
     result: undefined,
   };
 
+  const journal = createTaskJournal({
+    taskId,
+    taskType: handle.taskType ?? "local",
+    title: handle.title ?? "local task",
+    command: handle.title ?? "local task",
+    args: [],
+    input: null,
+    extraEnv: {},
+    startedAt: handle.startedAt ?? new Date().toISOString(),
+  });
+
   TASKS.set(taskId, handle);
 
   handle.done = new Promise((resolve, reject) => {
@@ -316,6 +393,12 @@ export function runLocalTask(opts: LocalTaskOptions): SidecarRunHandle {
         resolved = true;
         const err = new Error("local task timeout");
         emit({ event: "error", level: "error", msg: err.message, ts: new Date().toISOString() });
+        finalizeTaskJournal(journal, {
+          status: "failed",
+          finishedAt: new Date().toISOString(),
+          error: err.message,
+          events,
+        });
         reject(err);
       }
     }, opts.timeoutMs ?? 10 * 60 * 1000);
@@ -337,6 +420,12 @@ export function runLocalTask(opts: LocalTaskOptions): SidecarRunHandle {
         handle.status = "done";
         handle.result = result;
         emit({ event: "done", result, ts: new Date().toISOString() });
+        finalizeTaskJournal(journal, {
+          status: "done",
+          finishedAt: new Date().toISOString(),
+          result,
+          events,
+        });
         resolve(result);
       })
       .catch((error) => {
@@ -345,6 +434,12 @@ export function runLocalTask(opts: LocalTaskOptions): SidecarRunHandle {
         handle.status = cancelled ? "cancelled" : "failed";
         const message = error instanceof Error ? error.message : String(error);
         emit({ event: "error", level: "error", msg: message, ts: new Date().toISOString() });
+        finalizeTaskJournal(journal, {
+          status: cancelled ? "cancelled" : "failed",
+          finishedAt: new Date().toISOString(),
+          error: message,
+          events,
+        });
         reject(error);
       })
       .finally(() => {

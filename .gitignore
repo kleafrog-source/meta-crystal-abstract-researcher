@@ -74,8 +74,13 @@ server.log
 
 # generated runtime outputs
 /python_engine/__pycache__/
+__pycache__/
+*.py[cod]
 /.next/
 /node_modules/
 dev-server*.log
 worklog.md
 .zscripts/*.pid
+/.vendor/
+python_engine/mmss/*_last_test.pt
+python_engine/mmss/*_onecrystal.pt
