@@ -18,7 +18,7 @@ export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
     const refresh = url.searchParams.get("refresh") === "1";
-    let syncInfo = null;
+    let syncInfo: Awaited<ReturnType<typeof syncCrystalsFromIndex>> | null = null;
     if (refresh) {
       syncInfo = await syncCrystalsFromIndex();
     }

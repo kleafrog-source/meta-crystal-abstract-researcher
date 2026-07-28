@@ -156,14 +156,14 @@ export function runSidecar(opts: SidecarCallOptions): SidecarRunHandle {
   let stdoutBuf = "";
   let stderrBuf = "";
 
-  const handle = {
+  const handle: SidecarRunHandle = {
     taskId,
     taskType: opts.taskType ?? "sidecar",
     title: opts.title ?? opts.command,
     startedAt: new Date().toISOString(),
     child,
     events,
-    status: "running" as const,
+    status: "running",
     done: undefined as unknown as Promise<unknown>,
     cancel: () => {
       try {

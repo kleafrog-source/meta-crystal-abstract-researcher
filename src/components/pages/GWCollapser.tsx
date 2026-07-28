@@ -133,7 +133,7 @@ interface ViewPayload {
   mmss: LegacyTorusMetrics;
   top_docs: LegacyTopDoc[];
   query: string;
-  parameters: Record<string, unknown>;
+  parameters: Record<string, unknown> | null;
 }
 
 const DEFAULT_FORM = {
@@ -582,10 +582,10 @@ function MetricsGrid({ metrics }: { metrics: LegacyTorusMetrics | null }) {
   return (
     <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
       {entries.map(([label, value]) => (
-        <Card key={label}>
+        <Card key={String(label)}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between gap-2">
-              <FieldLabel label={label} hint={GW_METRIC_HINTS[label] ?? ""} />
+              <FieldLabel label={String(label)} hint={GW_METRIC_HINTS[String(label)] ?? ""} />
               <Badge variant="outline">{Number(value).toFixed(3)}</Badge>
             </div>
           </CardContent>
@@ -843,7 +843,7 @@ function normalizePayload(
       mmss: analysis.mmss,
       top_docs: analysis.top_docs,
       query: analysis.query,
-      parameters: analysis.parameters,
+      parameters: { ...analysis.parameters },
     };
   }
 

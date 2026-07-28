@@ -199,7 +199,7 @@ export async function semanticSearchCrystals(
     where: { embedding: { not: null } },
     take: 1000,
   });
-  const scored = [];
+  const scored: Array<{ id: string; score: number }> = [];
   for (const c of crystals) {
     try {
       const v = JSON.parse(c.embedding!) as number[];

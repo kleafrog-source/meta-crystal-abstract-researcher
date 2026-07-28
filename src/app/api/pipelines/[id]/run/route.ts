@@ -260,7 +260,7 @@ async function runTorusAnalysisStep(params: Record<string, unknown>) {
   }
 
   const options = torusOptionsFromParams(params);
-  const results = [];
+  const results: Array<Awaited<ReturnType<typeof runGwCollapserOnCrystal>>> = [];
   for (const id of targetIds) {
     results.push(await runGwCollapserOnCrystal(id, options));
   }
@@ -279,7 +279,18 @@ async function batchTorusCompareStep(params: Record<string, unknown>) {
   }
 
   const options = torusOptionsFromParams(params);
-  const rows = [];
+  const rows: Array<{
+    crystalId: string;
+    crystalCode: string;
+    query: string;
+    Q: number;
+    QEC: number;
+    V: number;
+    S: number;
+    N: number;
+    D_f: number;
+    CHSH: number;
+  }> = [];
   for (const id of crystalIds) {
     const run = await runGwCollapserOnCrystal(id, options);
     const mmss = (run.result as Record<string, any>)?.mmss ?? {};

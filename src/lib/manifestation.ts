@@ -248,7 +248,11 @@ export async function queryPalette(query: {
 export async function diffuseCrystals(input: DiffuseRequestData) {
   const donorIds = await expandDonorIds(input.donor_ids, Boolean(input.include_isomorphic_donors));
   const donors = await Promise.all(donorIds.map(resolveCrystal));
-  const candidates = [];
+  const candidates: Array<{
+    crystal: Record<string, any>;
+    guidance_used: number;
+    quality_score: number;
+  }> = [];
   const count = Math.min(20, Math.max(1, input.superposition_size ?? 1));
 
   for (let i = 0; i < count; i++) {
@@ -259,7 +263,6 @@ export async function diffuseCrystals(input: DiffuseRequestData) {
     const candidate = normalizeSyntheticCrystal(parsed, donorIds);
     const qualityScore = estimateQualityScore(candidate, donors.map((item) => item.json));
     candidate.crystal.quality_score = qualityScore;
-    candidate.crystal.qualityScore = qualityScore;
     candidates.push({
       crystal: candidate,
       guidance_used: guidanceCandidate,
@@ -336,7 +339,12 @@ export async function searchManifestEmbeddings(input: EmbeddingsSearchRequestDat
   const { provider, settings } = await getActiveProvider();
   const queryEmbedding = await provider.embed(input.query, settings.embedModel);
   const rows = await db.crystal.findMany({ where: { embedding: { not: null } }, take: 2000 });
-  const results = [];
+  const results: Array<{
+    id: string;
+    micro_note: string | null;
+    vector_direction: string | null;
+    similarity: number;
+  }> = [];
 
   for (const row of rows) {
     const record = await resolveCrystalSafe(row.code);

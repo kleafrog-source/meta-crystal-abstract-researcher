@@ -156,7 +156,7 @@ export function Pipelines() {
       try {
         const evt = JSON.parse(e.data) as SidecarEvent;
         setRunEvents((prev) => [...prev, evt]);
-        if (evt.event === "done" || evt.event === "error" || evt.event === "closed") {
+        if (evt.event === "done" || evt.event === "error") {
           es.close();
           setRunningId(null);
           refresh();
