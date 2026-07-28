@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import type { GwTorusAnalysisResult } from "@/types/gw-collapser";
 import { Activity, Loader2, Play, RefreshCw } from "@/components/icons";
 import { apiPost, useFetch } from "@/hooks/use-fetch";
 import { useToast } from "@/hooks/use-toast";
@@ -30,8 +31,8 @@ interface CrystalDetailResponse {
   };
 }
 
-interface TorusDoc {
-  id: number;
+interface LegacyTorusDoc {
+  id: string | number;
   x: number;
   y: number;
   cluster: number;
@@ -39,14 +40,14 @@ interface TorusDoc {
   text: string;
 }
 
-interface TorusFlow {
+interface LegacyTorusFlow {
   path: number[][];
   final: number[];
   start: number[];
   speeds: number[];
 }
 
-interface TorusMetrics {
+interface LegacyTorusMetrics {
   V: number;
   S: number;
   N: number;
@@ -56,20 +57,22 @@ interface TorusMetrics {
   Q: number;
 }
 
-interface TopDoc {
+interface LegacyTopDoc {
   rank: number;
-  index: number;
+  index?: number;
+  id?: string;
+  title?: string;
   text: string;
   distance: number;
   cluster: number;
 }
 
-interface TorusPayload {
+interface LegacyTorusPayload {
   torus: { R: number; r: number };
-  docs: TorusDoc[];
-  flow: TorusFlow;
-  mmss: TorusMetrics;
-  top_docs: TopDoc[];
+  docs: LegacyTorusDoc[];
+  flow: LegacyTorusFlow;
+  mmss: LegacyTorusMetrics;
+  top_docs: LegacyTopDoc[];
   query: string;
   parameters: Record<string, unknown>;
 }
@@ -81,14 +84,39 @@ interface CrystalTorusRunResponse {
   docsCount: number;
   query: string;
   storedAt: string;
-  result: TorusPayload;
+  analysis?: GwTorusAnalysisResult;
+  result?: LegacyTorusPayload;
 }
 
 interface StoredGwLayer {
   last_run_at?: string;
   query?: string;
   docs_count?: number;
-  result?: TorusPayload;
+  result?: LegacyTorusPayload;
+}
+
+interface ViewDoc {
+  id: string;
+  x: number;
+  y: number;
+  cluster: number;
+  label: string;
+  text: string;
+}
+
+interface ViewPayload {
+  torus: { R: number; r: number };
+  docs: ViewDoc[];
+  flow: {
+    path: [number, number][];
+    final: [number, number];
+    start: [number, number];
+    speeds: number[];
+  };
+  mmss: LegacyTorusMetrics;
+  top_docs: LegacyTopDoc[];
+  query: string;
+  parameters: Record<string, unknown>;
 }
 
 const DEFAULT_FORM = {
@@ -160,7 +188,13 @@ export function GWCollapser() {
   const currentCrystal = filteredCrystals.find((item) => item.id === effectiveSelectedId) ?? null;
   const activeRunResult = result?.crystalId === effectiveSelectedId ? result : null;
   const activeStoredResult = effectiveSelectedId ? storedResult : null;
-  const activePayload = activeRunResult?.result ?? activeStoredResult?.result ?? null;
+  const activePayload = useMemo(
+    () =>
+      normalizePayload(activeRunResult?.analysis, activeRunResult?.result) ??
+      normalizePayload(undefined, activeStoredResult?.result) ??
+      null,
+    [activeRunResult?.analysis, activeRunResult?.result, activeStoredResult?.result],
+  );
 
   const runAnalysis = async () => {
     if (!effectiveSelectedId) {
@@ -253,7 +287,7 @@ export function GWCollapser() {
                     <option value="">Select crystal</option>
                     {filteredCrystals.map((item) => (
                       <option key={item.id} value={item.id}>
-                        {item.code} · {item.type}
+                        {item.code} В· {item.type}
                       </option>
                     ))}
                   </select>
@@ -348,11 +382,11 @@ export function GWCollapser() {
                   <ScrollArea className="h-[320px] pr-4">
                     <div className="space-y-2">
                       {(activePayload?.top_docs ?? []).map((item) => (
-                        <div key={`${item.rank}-${item.index}`} className="rounded-md border border-border bg-card/40 p-3">
+                        <div key={`${item.rank}-${item.id ?? item.title ?? item.text}`} className="rounded-md border border-border bg-card/40 p-3">
                           <div className="mb-1 flex items-center justify-between gap-2 text-xs">
                             <Badge variant="outline">#{item.rank}</Badge>
                             <span className="font-mono text-muted-foreground">
-                              d={item.distance.toFixed(4)} · c{item.cluster}
+                              d={item.distance.toFixed(4)} В· c{item.cluster}
                             </span>
                           </div>
                           <div className="text-sm">{item.text}</div>
@@ -435,7 +469,7 @@ function MiniStat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function MetricsGrid({ metrics }: { metrics: TorusMetrics | null }) {
+function MetricsGrid({ metrics }: { metrics: LegacyTorusMetrics | null }) {
   const entries = metrics
     ? [
         ["Q", metrics.Q],
@@ -471,7 +505,7 @@ function MetricsGrid({ metrics }: { metrics: TorusMetrics | null }) {
   );
 }
 
-function TorusProjection({ payload }: { payload: TorusPayload }) {
+function TorusProjection({ payload }: { payload: ViewPayload }) {
   const width = 760;
   const height = 420;
   const points = payload.docs.map((doc) => projectTorusPoint(doc.x, doc.y, payload.torus));
@@ -512,6 +546,64 @@ function TorusProjection({ payload }: { payload: TorusPayload }) {
       </div>
     </div>
   );
+}
+
+function normalizePayload(
+  analysis?: GwTorusAnalysisResult,
+  legacy?: LegacyTorusPayload,
+): ViewPayload | null {
+  if (analysis) {
+    return {
+      torus: {
+        R: analysis.torus.R,
+        r: analysis.torus.r,
+      },
+      docs: analysis.docs.map((doc) => ({
+        id: doc.id,
+        x: doc.torus.x,
+        y: doc.torus.y,
+        cluster: doc.cluster,
+        label: doc.title,
+        text: doc.text,
+      })),
+      flow: {
+        path: analysis.flow.history,
+        final: analysis.flow.final,
+        start: analysis.flow.start,
+        speeds: analysis.flow.speeds,
+      },
+      mmss: analysis.mmss,
+      top_docs: analysis.top_docs,
+      query: analysis.query,
+      parameters: analysis.parameters,
+    };
+  }
+
+  if (legacy) {
+    return {
+      torus: legacy.torus,
+      docs: legacy.docs.map((doc) => ({
+        id: String(doc.id),
+        x: doc.x,
+        y: doc.y,
+        cluster: doc.cluster,
+        label: doc.label,
+        text: doc.text,
+      })),
+      flow: {
+        path: legacy.flow.path.map((point) => [Number(point[0] ?? 0), Number(point[1] ?? 0)] as [number, number]),
+        final: [Number(legacy.flow.final[0] ?? 0), Number(legacy.flow.final[1] ?? 0)],
+        start: [Number(legacy.flow.start[0] ?? 0), Number(legacy.flow.start[1] ?? 0)],
+        speeds: legacy.flow.speeds.map((item) => Number(item ?? 0)),
+      },
+      mmss: legacy.mmss,
+      top_docs: legacy.top_docs,
+      query: legacy.query,
+      parameters: legacy.parameters,
+    };
+  }
+
+  return null;
 }
 
 function projectTorusPoint(x: number, y: number, torus: { R: number; r: number }) {
