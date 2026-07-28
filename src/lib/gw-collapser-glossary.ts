@@ -1,0 +1,48 @@
+export const GW_METRIC_HINTS: Record<string, string> = {
+  V: "Path volume and traversal intensity of the collapse trajectory.",
+  S: "Motion stability derived from speed variability.",
+  N: "Noise level estimated from trajectory direction changes.",
+  D_f: "Fractal density of visited torus cells.",
+  QEC: "Collapse efficiency near the strongest attractors.",
+  CHSH: "Contrast heuristic for the retrieved semantic region.",
+  Q: "Composite GW-Collapser quality score.",
+};
+
+export const GW_PARAMETER_HINTS: Record<string, string> = {
+  n_clusters: "Number of semantic clusters used when placing source documents on the torus.",
+  dt: "Integration step size. Smaller values produce smoother but longer trajectories.",
+  friction: "Velocity damping. Higher friction collapses faster and suppresses circulation.",
+  epsilon: "Field smoothing factor that prevents singularities near source points.",
+  max_steps: "Maximum number of integration steps for the collapse trajectory.",
+  tol_speed: "Early-stop threshold when the trajectory speed becomes negligible.",
+  geometry_R: "Major torus radius controlling the outer ring scale.",
+  geometry_r: "Minor torus radius controlling the tube thickness.",
+  embedding_model: "Embedding model used to project documents and query into semantic space.",
+};
+
+export const GW_JSON_FIELD_HINTS: Record<string, string> = {
+  analysis: "Top-level persisted torus analysis payload.",
+  crystal_id: "Database identifier of the crystal used for this run.",
+  crystal_code: "Human-readable crystal code.",
+  query: "Resolved query used for the torus collapse run.",
+  source: "Reference back to the original crystal and source JSON file.",
+  docs: "Projected crystal fragments placed on torus coordinates.",
+  torus: "Torus geometry and clustering configuration used to render the layout.",
+  flow: "Collapse trajectory, including every recorded point in time order.",
+  history: "Ordered path of the collapse trajectory on the torus manifold.",
+  final: "Final attractor coordinate reached by the collapse run.",
+  start: "Initial query coordinate before trajectory tracing started.",
+  speeds: "Per-step velocity samples for the collapse trajectory.",
+  mmss: "Computed MMSS metrics for this torus run.",
+  top_docs: "Closest projected fragments to the final attractor.",
+  parameters: "Runtime parameters passed into the GW-Collapser analysis.",
+  stored_at: "Timestamp when this persisted torus snapshot was written.",
+  sourcePath: "Logical path of the fragment inside the crystal source structure.",
+  cluster: "Assigned semantic cluster for a projected fragment.",
+  title: "Short label for the projected document fragment.",
+  text: "Full fragment text sent into GW-Collapser.",
+  id: "Stable fragment identifier within the analysis contract.",
+  x: "Torus X coordinate in angular form.",
+  y: "Torus Y coordinate in angular form.",
+  version: "Persisted file format version.",
+};
