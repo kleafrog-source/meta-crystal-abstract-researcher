@@ -180,6 +180,7 @@ export function GWCollapser() {
 
     let cancelled = false;
     setPersistedAnalysis(null);
+
     fetch(`/api/crystals/${effectiveSelectedId}/torus`)
       .then((response) => (response.ok ? response.json() : null))
       .then((payload: PersistedTorusResponse | null) => {
@@ -437,7 +438,7 @@ export function GWCollapser() {
               </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-sm">Top attractor docs</CardTitle>
@@ -467,6 +468,35 @@ export function GWCollapser() {
                       ) : null}
                     </div>
                   </ScrollArea>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Run summary</CardTitle>
+                  <CardDescription>Resolved query, dynamics and runtime parameters.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <FieldLabel label="Resolved query" />
+                    <div className="mt-2 rounded-md border border-border bg-card/40 p-3 text-sm">
+                      {activeRunResult?.query ?? activeAnalysis?.query ?? storedResult?.query ?? "No query recorded yet."}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <InfoStat label="Path points" value={String(activePayload?.flow.path.length ?? 0)} />
+                    <InfoStat label="Speed samples" value={String(activePayload?.flow.speeds.length ?? 0)} />
+                    <InfoStat label="Docs" value={String(activePayload?.docs.length ?? 0)} />
+                    <InfoStat label="Stored at" value={formatCompactDate(activeRunResult?.storedAt ?? activeAnalysis?.stored_at ?? storedResult?.last_run_at)} />
+                  </div>
+
+                  <div>
+                    <FieldLabel label="Parameters" hint="Runtime parameters used to generate the current torus projection." />
+                    <pre className="mt-2 overflow-x-auto rounded-md border border-border bg-card/40 p-3 text-xs text-muted-foreground">
+                      {JSON.stringify(activePayload?.parameters ?? {}, null, 2)}
+                    </pre>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -606,6 +636,14 @@ function TorusProjection({
   const ring = buildTorusRing(payload.torus);
   const pathData = path.map((point, index) => `${index === 0 ? "M" : "L"} ${point.sx} ${point.sy}`).join(" ");
   const maxFrame = Math.max(0, payload.flow.path.length - 1);
+  const labeledIds = new Set<string>(
+    payload.top_docs
+      .slice(0, 4)
+      .map((item) => item.id)
+      .filter((item): item is string => Boolean(item)),
+  );
+  if (selectedDocId) labeledIds.add(selectedDocId);
+  if (hoveredDocId) labeledIds.add(hoveredDocId);
 
   return (
     <div className="space-y-4">
@@ -620,22 +658,43 @@ function TorusProjection({
           const doc = payload.docs[index];
           const isHovered = hoveredDocId === doc.id;
           const isSelected = selectedDocId === doc.id;
+          const showLabel = labeledIds.has(doc.id);
           return (
             <Tooltip key={doc.id}>
               <TooltipTrigger asChild>
-                <circle
-                  cx={point.sx}
-                  cy={point.sy}
-                  r={isSelected ? 7 : isHovered ? 6 : 3 + point.depth * 1.6}
-                  fill={clusterColor(doc.cluster)}
-                  opacity={isSelected ? 1 : isHovered ? 0.95 : 0.45 + point.depth * 0.45}
-                  stroke={isSelected ? "white" : "transparent"}
-                  strokeWidth={isSelected ? "1.5" : "0"}
-                  className="cursor-pointer transition-all"
+                <g
+                  className="cursor-pointer"
                   onMouseEnter={() => onHoverDoc(doc.id)}
                   onMouseLeave={() => onHoverDoc(null)}
                   onClick={() => onSelectDoc(doc.id)}
-                />
+                >
+                  <circle
+                    cx={point.sx}
+                    cy={point.sy}
+                    r={isSelected ? 7 : isHovered ? 6 : 3 + point.depth * 1.6}
+                    fill={clusterColor(doc.cluster)}
+                    opacity={isSelected ? 1 : isHovered ? 0.95 : 0.45 + point.depth * 0.45}
+                    stroke={isSelected ? "white" : "transparent"}
+                    strokeWidth={isSelected ? "1.5" : "0"}
+                    className="transition-all"
+                  />
+                  {showLabel ? (
+                    <>
+                      <rect
+                        x={point.sx + 8}
+                        y={point.sy - 18}
+                        width={Math.max(56, (truncateLabel(doc.label).length * 6) + 10)}
+                        height={16}
+                        rx={4}
+                        fill="rgba(2, 6, 23, 0.82)"
+                        stroke="rgba(34, 211, 238, 0.45)"
+                      />
+                      <text x={point.sx + 13} y={point.sy - 7} fill="white" fontSize="10">
+                        {truncateLabel(doc.label)}
+                      </text>
+                    </>
+                  ) : null}
+                </g>
               </TooltipTrigger>
               <TooltipContent sideOffset={8} className="max-w-xs text-left">
                 <div className="space-y-1">
@@ -679,7 +738,9 @@ function TorusProjection({
           <button type="button" className="underline-offset-4 hover:underline" onClick={() => onFrameChange(-1)}>
             Show full path
           </button>
-          <span>{payload.torus.R.toFixed(1)} / {payload.torus.r.toFixed(1)}</span>
+          <span>
+            {payload.torus.R.toFixed(1)} / {payload.torus.r.toFixed(1)}
+          </span>
         </div>
       </div>
     </div>
@@ -876,4 +937,8 @@ function valueColor(value: unknown) {
   if (typeof value === "string") return "text-emerald-300 text-xs";
   if (typeof value === "boolean") return "text-fuchsia-300 text-xs";
   return "text-muted-foreground text-xs";
+}
+
+function truncateLabel(value: string, max = 18) {
+  return value.length > max ? `${value.slice(0, max - 1)}…` : value;
 }
