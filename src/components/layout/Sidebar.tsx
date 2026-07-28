@@ -14,6 +14,7 @@ import {
   CrystalIcon,
   Cpu,
   Activity,
+  Database,
 } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +28,7 @@ export type PageId =
   | "chat"
   | "mmss"
   | "gwcollapser"
+  | "crystalpool"
   | "settings";
 
 interface NavItem {
@@ -90,6 +92,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "GW-Collapser",
     icon: <Activity className="h-4 w-4" />,
     description: "Torus flow analysis over crystal semantic fragments",
+  },
+  {
+    id: "crystalpool",
+    label: "Crystal Pool",
+    icon: <Database className="h-4 w-4" />,
+    description: "Bulk operations and action orchestration for GW-Collapser crystal pools",
   },
   {
     id: "settings",

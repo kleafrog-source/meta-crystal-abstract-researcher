@@ -311,7 +311,12 @@ export async function runTorusAnalysisForCrystal(id: string, options: CrystalGwA
 
   const payload = result as JsonRecord;
   const payloadDocs = Array.isArray(payload.docs) ? payload.docs : [];
-  const payloadDocCoords = Array.isArray(payload.doc_coords) ? payload.doc_coords : [];
+  const payloadDocCoords =
+    Array.isArray(payload.doc_coords) && payload.doc_coords.length
+      ? payload.doc_coords
+      : Array.isArray(payloadDocs)
+        ? payloadDocs.map((item) => (item && typeof item === "object" ? [(item as JsonRecord).x, (item as JsonRecord).y] : null))
+        : [];
   const payloadLabels = Array.isArray(payload.labels) ? payload.labels : [];
   const payloadTorus = payload.torus ?? payload.torus_geometry ?? {};
   const payloadFlow = payload.flow ?? {};
@@ -319,11 +324,18 @@ export async function runTorusAnalysisForCrystal(id: string, options: CrystalGwA
 
   const mappedDocs: GwTorusDocPoint[] = docs.map((doc, index) => {
     const coord = Array.isArray(payloadDocCoords[index]) ? payloadDocCoords[index] : [0, 0];
+    const payloadDoc = payloadDocs[index];
+    const payloadDocRecord = payloadDoc && typeof payloadDoc === "object" ? (payloadDoc as JsonRecord) : null;
     return {
       id: doc.id,
-      title: doc.title,
-      text: typeof payloadDocs[index] === "string" ? payloadDocs[index] : doc.text,
-      cluster: Number(payloadLabels[index] ?? 0),
+      title: typeof payloadDocRecord?.label === "string" ? String(payloadDocRecord.label) : doc.title,
+      text:
+        typeof payloadDoc === "string"
+          ? payloadDoc
+          : typeof payloadDocRecord?.text === "string"
+            ? String(payloadDocRecord.text)
+            : doc.text,
+      cluster: Number(payloadLabels[index] ?? payloadDocRecord?.cluster ?? 0),
       torus: {
         x: Number(coord[0] ?? 0),
         y: Number(coord[1] ?? 0),

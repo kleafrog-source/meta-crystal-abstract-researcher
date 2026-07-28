@@ -10,6 +10,7 @@ import { Enrichment } from "@/components/pages/Enrichment";
 import { Chat } from "@/components/pages/Chat";
 import { MMSS } from "@/components/pages/MMSS";
 import { GWCollapser } from "@/components/pages/GWCollapser";
+import { GWCollapserCrystalPool } from "@/components/pages/GWCollapserCrystalPool";
 import { Settings } from "@/components/pages/Settings";
 
 export default function Home() {
@@ -35,6 +36,8 @@ export default function Home() {
             return <MMSS />;
           case "gwcollapser":
             return <GWCollapser />;
+          case "crystalpool":
+            return <GWCollapserCrystalPool />;
           case "settings":
             return <Settings />;
           default:
