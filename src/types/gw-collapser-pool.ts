@@ -74,3 +74,15 @@ export interface GwCrystalPoolVisualizationPoint {
   sourcePath?: string;
   sourceIndex?: number;
 }
+
+export interface GwMmssComparisonRow {
+  crystalId: string;
+  crystalCode: string;
+  V: number;
+  S: number;
+  N: number;
+  D_f: number;
+  QEC: number;
+  CHSH: number;
+  Q: number;
+}

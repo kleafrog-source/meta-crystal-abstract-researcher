@@ -1,32 +1,35 @@
 import { existsSync, readFileSync } from "fs";
 import { db } from "@/lib/db";
 import { buildGwTorusFilepath, readPersistedTorusAnalysisResult, runTorusAnalysisForCrystal } from "@/lib/gw-collapser";
-import { createMicroNotes, resolveCrystal, searchManifestEmbeddings } from "@/lib/manifestation";
 import { getActiveProvider } from "@/lib/llm/factory";
+import { cosineSimilarity } from "@/lib/llm/types";
+import { atomicWriteJson, createMicroNotes, resolveCrystal, searchManifestEmbeddings } from "@/lib/manifestation";
 import type {
   GwCrystalPoolActionDefinition,
   GwCrystalPoolActionId,
   GwCrystalPoolActionResponse,
   GwCrystalPoolListItem,
   GwCrystalPoolVisualizationPoint,
+  GwMmssComparisonRow,
 } from "@/types/gw-collapser-pool";
 
 type JsonRecord = Record<string, any>;
+type CrystalRecord = Awaited<ReturnType<typeof resolveCrystal>>;
 
 export const GW_CRYSTAL_POOL_ACTIONS: GwCrystalPoolActionDefinition[] = [
   { id: "torus_flow", name: "TorusFlow GWCollapser", description: "Recompute torus analysis for selected crystals.", category: "analysis", availability: "ready" },
   { id: "micro_notes", name: "Micro notes", description: "Generate LLM micro-notes for selected crystals.", category: "generation", availability: "ready" },
-  { id: "manifest_donors", name: "Manifest donors", description: "Reveal major donor relationships for the selected crystals.", category: "analysis", availability: "scaffold" },
+  { id: "manifest_donors", name: "Manifest donors", description: "Reveal major donor relationships for the selected crystals.", category: "analysis", availability: "ready" },
   { id: "diffuse_manual", name: "Diffuse manual", description: "Manual coordinate adjustments for selected crystals.", category: "manual", availability: "scaffold" },
   { id: "fill_missing", name: "Заполнение полей", description: "Fill missing descriptive fields with rules or LLM assistance.", category: "generation", availability: "ready" },
   { id: "detect_emeralds", name: "Выявление изумрудов", description: "Detect outliers and candidate emeralds in the selected set.", category: "analysis", availability: "scaffold" },
-  { id: "refine_metrics", name: "Уточнение метрик", description: "Recompute MMSS metrics in the context of the selected pool.", category: "analysis", availability: "scaffold" },
+  { id: "refine_metrics", name: "Уточнение метрик", description: "Recompute MMSS metrics in the context of the selected pool.", category: "analysis", availability: "ready" },
   { id: "translation", name: "Расшифровка", description: "Generate or refine interpretation text for selected crystals.", category: "generation", availability: "ready" },
   { id: "mmss_real_data", name: "MMSS real-data gate", description: "Run real-data MMSS checks for selected crystals.", category: "analysis", availability: "scaffold" },
   { id: "evolve_trajectory", name: "Эволюция траектории", description: "Simulate trajectory evolution across multiple torus runs.", category: "visualization", availability: "scaffold" },
   { id: "cluster_formulas", name: "Кластер формул", description: "Cluster selected crystals by formula semantics.", category: "visualization", availability: "scaffold" },
   { id: "generate_report", name: "Отчёт по пулу", description: "Build a compact report for the selected crystal pool.", category: "generation", availability: "scaffold" },
-  { id: "compare_mmss", name: "Сравнение MMSS", description: "Compare MMSS profiles for the selected crystals.", category: "visualization", availability: "scaffold" },
+  { id: "compare_mmss", name: "Сравнение MMSS", description: "Compare MMSS profiles for the selected crystals.", category: "visualization", availability: "ready" },
   { id: "semantic_twins", name: "Семантические двойники", description: "Find nearest semantic neighbors outside the current selection.", category: "analysis", availability: "ready" },
   { id: "auto_annotation", name: "Авто-аннотация", description: "Generate enriched annotations from torus neighborhood and metadata.", category: "generation", availability: "ready" },
 ];
@@ -90,13 +93,10 @@ export async function runCrystalPoolAction(
   params: Record<string, unknown> = {},
 ): Promise<GwCrystalPoolActionResponse> {
   const action = ACTIONS_BY_ID.get(actionId);
-  if (!action) {
-    throw new Error(`Unknown crystal pool action: ${actionId}`);
-  }
+  if (!action) throw new Error(`Unknown crystal pool action: ${actionId}`);
+
   const ids = [...new Set(crystalIds.map((item) => item.trim()).filter(Boolean))];
-  if (!ids.length) {
-    throw new Error("Crystal pool action requires at least one crystal id");
-  }
+  if (!ids.length) throw new Error("Crystal pool action requires at least one crystal id");
 
   if (action.availability === "scaffold") {
     return {
@@ -117,10 +117,16 @@ export async function runCrystalPoolAction(
       return runTorusFlowAction(ids, params);
     case "micro_notes":
       return runMicroNotesAction(ids, params);
+    case "manifest_donors":
+      return runManifestDonorsAction(ids, params);
     case "fill_missing":
       return runFillMissingAction(ids, params);
+    case "refine_metrics":
+      return runRefineMetricsAction(ids, params);
     case "translation":
       return runTranslationAction(ids, params);
+    case "compare_mmss":
+      return runCompareMmssAction(ids);
     case "semantic_twins":
       return runSemanticTwinsAction(ids, params);
     case "auto_annotation":
@@ -130,10 +136,7 @@ export async function runCrystalPoolAction(
   }
 }
 
-export async function buildCrystalPoolVisualization(
-  crystalIds: string[],
-  limit = 100,
-) {
+export async function buildCrystalPoolVisualization(crystalIds: string[], limit = 100) {
   const ids = [...new Set(crystalIds.map((item) => item.trim()).filter(Boolean))];
   const points: GwCrystalPoolVisualizationPoint[] = [];
   let torus = { R: 1.2, r: 0.6 };
@@ -143,8 +146,14 @@ export async function buildCrystalPoolVisualization(
     if (!crystal?.filepath) continue;
     const persisted = readPersistedTorusAnalysisResult(crystal.filepath);
     if (!persisted?.analysis) continue;
+
     torus = { R: persisted.analysis.torus.R, r: persisted.analysis.torus.r };
-    for (const doc of persisted.analysis.docs) {
+    const combinationDocs = persisted.analysis.docs.filter((doc) =>
+      doc.id === "crystal-combination" || doc.id === "row-combination" || doc.sourcePath?.includes("combination"),
+    );
+    const docs = combinationDocs.length ? combinationDocs : persisted.analysis.docs.slice(0, 1);
+
+    for (const doc of docs) {
       if (points.length >= limit) break;
       points.push({
         crystalId: persisted.analysis.crystal_id,
@@ -187,16 +196,19 @@ async function runTorusFlowAction(ids: string[], params: Record<string, unknown>
       ...(typeof params.embedding_model === "string" && params.embedding_model.trim()
         ? { embedding_model: params.embedding_model.trim() }
         : {}),
+      ...(params.document_mode === "full" ? { document_mode: "full" as const } : { document_mode: "combination_only" as const }),
     });
+
     results.push({
       id: analysis.crystal_id,
       code: analysis.crystal_code,
-      status: "updated" as const,
+      status: "updated",
       summary: `Updated torus snapshot with ${analysis.docs.length} docs and ${analysis.top_docs.length} top docs.`,
       data: {
         stored_at: analysis.stored_at,
         query: analysis.query,
         docs_count: analysis.docs.length,
+        document_mode: params.document_mode === "full" ? "full" : "combination_only",
       },
     });
   }
@@ -223,18 +235,58 @@ async function runMicroNotesAction(ids: string[], params: Record<string, unknown
     codeToDbId.set(crystal.code, crystal.dbId);
   }
 
-  const results = response.results.map((item) => ({
-    id: codeToDbId.get(item.id) ?? item.id,
-    code: item.id,
-    status: "updated" as const,
-    summary: item.note,
-    data: { micro_note: item.note },
-  }));
-
   return {
     ok: true,
     action: "micro_notes",
     actionName: "Micro notes",
+    availability: "ready",
+    affectedCount: response.results.length,
+    results: response.results.map((item) => ({
+      id: codeToDbId.get(item.id) ?? item.id,
+      code: item.id,
+      status: "updated",
+      summary: item.note,
+      data: { micro_note: item.note },
+    })),
+  };
+}
+
+async function runManifestDonorsAction(ids: string[], params: Record<string, unknown>): Promise<GwCrystalPoolActionResponse> {
+  const { provider, settings } = await getActiveProvider();
+  const rows = await Promise.all(ids.map((id) => resolveCrystal(id)));
+  const embeddings = new Map<string, number[]>();
+
+  for (const row of rows) {
+    const text = crystalCombination(row);
+    embeddings.set(row.code, await provider.embed(text, settings.embedModel));
+  }
+
+  const donorCount = Math.min(5, Math.max(2, Number(params.limit ?? 3)));
+  const results: GwCrystalPoolActionResponse["results"] = rows.map((row) => {
+    const source = embeddings.get(row.code) ?? [];
+    const donors = rows
+      .filter((other) => other.code !== row.code)
+      .map((other) => ({
+        code: other.code,
+        similarity: cosineSimilarity(source, embeddings.get(other.code) ?? []),
+        combination: crystalCombination(other),
+      }))
+      .sort((a, b) => b.similarity - a.similarity)
+      .slice(0, donorCount);
+
+    return {
+      id: row.dbId,
+      code: row.code,
+      status: "computed",
+      summary: donors.length ? `Top donor: ${donors[0].code}` : "No donor candidates found.",
+      data: { donors },
+    };
+  });
+
+  return {
+    ok: true,
+    action: "manifest_donors",
+    actionName: "Manifest donors",
     availability: "ready",
     affectedCount: results.length,
     results,
@@ -244,6 +296,7 @@ async function runMicroNotesAction(ids: string[], params: Record<string, unknown
 async function runFillMissingAction(ids: string[], params: Record<string, unknown>): Promise<GwCrystalPoolActionResponse> {
   const results: GwCrystalPoolActionResponse["results"] = [];
   const temperature = Number(params.temperature ?? 0.35);
+
   for (const id of ids) {
     const crystal = await resolveCrystal(id);
     const json = crystal.json;
@@ -252,6 +305,7 @@ async function runFillMissingAction(ids: string[], params: Record<string, unknow
       category: !String(json?.meta?.category ?? "").trim(),
       auto_tags: !Array.isArray(json?.auto_tags) || json.auto_tags.length === 0,
     };
+
     if (!missing.pattern && !missing.category && !missing.auto_tags) {
       results.push({
         id: crystal.dbId,
@@ -264,19 +318,8 @@ async function runFillMissingAction(ids: string[], params: Record<string, unknow
     }
 
     const payload = await callCrystalLlmJson(
-      `Заполни только отсутствующие поля для кристалла. Верни строгий JSON с ключами pattern, category, auto_tags.
-Пустые или уже существующие поля не перепридумывай агрессивно.
-Кристалл:
-${JSON.stringify(json, null, 2)}
-Флаги отсутствия:
-${JSON.stringify(missing, null, 2)}`,
-      `Ты помогаешь обогащать мета-кристаллы.
-Верни только JSON:
-{
-  "pattern": "string or empty",
-  "category": "string or empty",
-  "auto_tags": ["tag1", "tag2"]
-}`,
+      `Fill only the missing fields for this crystal and return strict JSON with keys pattern, category, auto_tags.\nCrystal:\n${JSON.stringify(json, null, 2)}\nMissing:\n${JSON.stringify(missing, null, 2)}`,
+      `Return only JSON:\n{"pattern":"string or empty","category":"string or empty","auto_tags":["tag1","tag2"]}`,
       temperature,
     );
 
@@ -292,7 +335,7 @@ ${JSON.stringify(missing, null, 2)}`,
       json.auto_tags = payload.auto_tags.map(String).filter(Boolean).slice(0, 12);
     }
 
-    writeCrystalJson(crystal.filepath, json);
+    atomicWriteJson(crystal.filepath, json);
     results.push({
       id: crystal.dbId,
       code: crystal.code,
@@ -316,35 +359,68 @@ ${JSON.stringify(missing, null, 2)}`,
   };
 }
 
+async function runRefineMetricsAction(ids: string[], params: Record<string, unknown>): Promise<GwCrystalPoolActionResponse> {
+  const results: GwCrystalPoolActionResponse["results"] = [];
+
+  for (const id of ids) {
+    const analysis = await runTorusAnalysisForCrystal(id, {
+      ...(params.document_mode === "full" ? { document_mode: "full" as const } : { document_mode: "combination_only" as const }),
+      ...(params.n_clusters !== undefined ? { n_clusters: Number(params.n_clusters) } : {}),
+      ...(params.max_steps !== undefined ? { max_steps: Number(params.max_steps) } : {}),
+      ...(params.dt !== undefined ? { dt: Number(params.dt) } : {}),
+      ...(params.friction !== undefined ? { friction: Number(params.friction) } : {}),
+      ...(params.epsilon !== undefined ? { epsilon: Number(params.epsilon) } : {}),
+      ...(params.tol_speed !== undefined ? { tol_speed: Number(params.tol_speed) } : {}),
+      ...(params.geometry_R !== undefined ? { geometry_R: Number(params.geometry_R) } : {}),
+      ...(params.geometry_r !== undefined ? { geometry_r: Number(params.geometry_r) } : {}),
+    });
+
+    results.push({
+      id: analysis.crystal_id,
+      code: analysis.crystal_code,
+      status: "updated",
+      summary: `Recomputed MMSS profile. Q=${analysis.mmss.Q.toFixed(3)}`,
+      data: {
+        ...analysis.mmss,
+        document_mode: params.document_mode === "full" ? "full" : "combination_only",
+      },
+    });
+  }
+
+  return {
+    ok: true,
+    action: "refine_metrics",
+    actionName: "Уточнение метрик",
+    availability: "ready",
+    affectedCount: results.length,
+    results,
+  };
+}
+
 async function runTranslationAction(ids: string[], params: Record<string, unknown>): Promise<GwCrystalPoolActionResponse> {
   const results: GwCrystalPoolActionResponse["results"] = [];
   const temperature = Number(params.temperature ?? 0.45);
+
   for (const id of ids) {
     const crystal = await resolveCrystal(id);
     const json = crystal.json;
     const persisted = readPersistedTorusAnalysisResult(crystal.filepath);
     const context = {
       code: crystal.code,
-      combination: json?.crystal?.combination ?? json?.combination ?? "",
+      combination: crystalCombination(crystal),
       focus: json?.crystal?.focus ?? null,
       pattern: json?.crystal?.pattern ?? null,
       top_docs: persisted?.analysis?.top_docs?.slice(0, 5) ?? [],
     };
+
     const payload = await callCrystalLlmJson(
-      `Сделай краткую расшифровку кристалла на русском языке на основе структуры и ближайших torus-фрагментов.
-Верни строгий JSON с одним ключом translation.
-Контекст:
-${JSON.stringify(context, null, 2)}`,
-      `Ты интерпретируешь абстрактные кристаллы.
-Верни только JSON:
-{
-  "translation": "2-4 предложения, без markdown"
-}`,
+      `Generate a short Russian interpretation for this crystal from its structure and nearby torus fragments.\nContext:\n${JSON.stringify(context, null, 2)}`,
+      `Return only JSON:\n{"translation":"2-4 sentences, no markdown"}`,
       temperature,
     );
 
     json.translation = String(payload?.translation ?? "").trim();
-    writeCrystalJson(crystal.filepath, json);
+    atomicWriteJson(crystal.filepath, json);
     results.push({
       id: crystal.dbId,
       code: crystal.code,
@@ -364,9 +440,57 @@ ${JSON.stringify(context, null, 2)}`,
   };
 }
 
+async function runCompareMmssAction(ids: string[]): Promise<GwCrystalPoolActionResponse> {
+  const comparison: GwMmssComparisonRow[] = [];
+  const results: GwCrystalPoolActionResponse["results"] = [];
+
+  for (const id of ids) {
+    const crystal = await resolveCrystal(id);
+    const persisted = readPersistedTorusAnalysisResult(crystal.filepath);
+    if (!persisted?.analysis) {
+      results.push({
+        id: crystal.dbId,
+        code: crystal.code,
+        status: "skipped",
+        summary: "Skipped because no persisted torus analysis exists.",
+        data: null,
+      });
+      continue;
+    }
+
+    const mmss = persisted.analysis.mmss;
+    comparison.push({
+      crystalId: persisted.analysis.crystal_id,
+      crystalCode: persisted.analysis.crystal_code,
+      ...mmss,
+    });
+    results.push({
+      id: crystal.dbId,
+      code: crystal.code,
+      status: "computed",
+      summary: `Q=${mmss.Q.toFixed(3)}, CHSH=${mmss.CHSH.toFixed(3)}`,
+      data: { ...mmss },
+    });
+  }
+
+  return {
+    ok: true,
+    action: "compare_mmss",
+    actionName: "Сравнение MMSS",
+    availability: "ready",
+    affectedCount: results.length,
+    results,
+    extra: {
+      comparison,
+      maxQ: comparison.length ? Math.max(...comparison.map((row) => row.Q)) : 0,
+    },
+  };
+}
+
 async function runSemanticTwinsAction(ids: string[], params: Record<string, unknown>): Promise<GwCrystalPoolActionResponse> {
   const selectedCodes = new Set<string>();
-  const selected: Array<Awaited<ReturnType<typeof resolveCrystal>>> = [];
+  const selected: CrystalRecord[] = [];
+
   for (const id of ids) {
     const crystal = await resolveCrystal(id);
     selected.push(crystal);
@@ -375,17 +499,18 @@ async function runSemanticTwinsAction(ids: string[], params: Record<string, unkn
 
   const limit = Math.min(10, Math.max(3, Number(params.limit ?? 5)));
   const results: GwCrystalPoolActionResponse["results"] = [];
+
   for (const crystal of selected) {
     const query =
       String(crystal.json?.llm_micro_note ?? "").trim() ||
       String(crystal.json?.vector_direction ?? "").trim() ||
-      String(crystal.json?.crystal?.combination ?? crystal.json?.combination ?? "").trim();
+      crystalCombination(crystal);
 
     if (!query) {
       results.push({
         id: crystal.dbId,
         code: crystal.code,
-        status: "skipped" as const,
+        status: "skipped",
         summary: "Skipped because the crystal has no usable semantic text.",
         data: null,
       });
@@ -399,14 +524,11 @@ async function runSemanticTwinsAction(ids: string[], params: Record<string, unkn
     results.push({
       id: crystal.dbId,
       code: crystal.code,
-      status: "computed" as const,
+      status: "computed",
       summary: twins.length
         ? `Found ${twins.length} semantic twins for ${crystal.code}.`
         : `No external semantic twins found for ${crystal.code}.`,
-      data: {
-        query,
-        twins,
-      },
+      data: { query, twins },
     });
   }
 
@@ -423,6 +545,7 @@ async function runSemanticTwinsAction(ids: string[], params: Record<string, unkn
 async function runAutoAnnotationAction(ids: string[], params: Record<string, unknown>): Promise<GwCrystalPoolActionResponse> {
   const results: GwCrystalPoolActionResponse["results"] = [];
   const temperature = Number(params.temperature ?? 0.5);
+
   for (const id of ids) {
     const crystal = await resolveCrystal(id);
     const json = crystal.json;
@@ -432,25 +555,18 @@ async function runAutoAnnotationAction(ids: string[], params: Record<string, unk
       micro_note: json?.llm_micro_note ?? null,
       vector_direction: json?.vector_direction ?? null,
       translation: json?.translation ?? null,
-      torus: persisted?.analysis?.torus ?? null,
       top_docs: persisted?.analysis?.top_docs?.slice(0, 3) ?? [],
       mmss: persisted?.analysis?.mmss ?? null,
     };
+
     const payload = await callCrystalLlmJson(
-      `Сгенерируй авто-аннотацию для кристалла на основе torus-окрестности и имеющихся метаданных.
-Верни строгий JSON с ключом auto_annotation.
-Контекст:
-${JSON.stringify(context, null, 2)}`,
-      `Ты пишешь краткие технические аннотации для GW-Collapser Crystal Pool.
-Верни только JSON:
-{
-  "auto_annotation": "2-5 предложений, конкретно о поведении кристалла и его соседях"
-}`,
+      `Generate a short technical annotation for this crystal from torus neighborhood and metadata.\nContext:\n${JSON.stringify(context, null, 2)}`,
+      `Return only JSON:\n{"auto_annotation":"2-5 sentences"}`,
       temperature,
     );
 
     json.auto_annotation = String(payload?.auto_annotation ?? "").trim();
-    writeCrystalJson(crystal.filepath, json);
+    atomicWriteJson(crystal.filepath, json);
     results.push({
       id: crystal.dbId,
       code: crystal.code,
@@ -479,9 +595,8 @@ function safeReadCrystalFile(filepath: string) {
   }
 }
 
-function writeCrystalJson(filepath: string, json: JsonRecord) {
-  const { atomicWriteJson } = require("@/lib/manifestation") as typeof import("@/lib/manifestation");
-  atomicWriteJson(filepath, json);
+function crystalCombination(crystal: CrystalRecord) {
+  return String(crystal.json?.crystal?.combination ?? crystal.json?.combination ?? "").trim();
 }
 
 async function callCrystalLlmJson(prompt: string, system: string, temperature: number) {

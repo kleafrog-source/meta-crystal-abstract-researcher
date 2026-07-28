@@ -12,7 +12,6 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Slider } from "@/components/ui/slider";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type {
   GwCrystalPoolActionDefinition,
@@ -59,6 +58,7 @@ export function GWCollapserCrystalPool() {
   const [torusDialogOpen, setTorusDialogOpen] = useState(false);
   const [visualizationHover, setVisualizationHover] = useState<string | null>(null);
   const [torusParams, setTorusParams] = useState({
+    document_mode: "combination_only" as "combination_only" | "full",
     n_clusters: 5,
     max_steps: 100,
     dt: 0.02,
@@ -69,10 +69,12 @@ export function GWCollapserCrystalPool() {
     geometry_r: 0.6,
   });
   const { toast } = useToast();
+
   const { data, loading, refresh } = useFetch<CrystalPoolResponse>(
     `/api/gw-collapser/pool?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(search)}`,
   );
-  const selectionQuery = useMemo(() => selectedIds.slice(0, 24).join(","), [selectedIds]);
+
+  const selectionQuery = useMemo(() => selectedIds.slice(0, 40).join(","), [selectedIds]);
   const { data: visualization } = useFetch<PoolVisualizationResponse>(
     selectionQuery ? `/api/gw-collapser/pool/visualization?crystalIds=${encodeURIComponent(selectionQuery)}&limit=100` : null,
   );
@@ -122,11 +124,17 @@ export function GWCollapserCrystalPool() {
       setTorusDialogOpen(true);
       return;
     }
+
     setRunningAction(action.id);
     try {
       const response = await apiPost<GwCrystalPoolActionResponse>(
         `/api/gw-collapser/pool/actions/${action.id}`,
-        { crystalIds: selectedIds, params: {} },
+        {
+          crystalIds: selectedIds,
+          params: {
+            document_mode: torusParams.document_mode,
+          },
+        },
       );
       setActionResult(response);
       refresh();
@@ -153,7 +161,10 @@ export function GWCollapserCrystalPool() {
     try {
       const response = await apiPost<GwCrystalPoolActionResponse>(
         "/api/gw-collapser/pool/actions/torus_flow",
-        { crystalIds: selectedIds, params: torusParams },
+        {
+          crystalIds: selectedIds,
+          params: torusParams,
+        },
       );
       setActionResult(response);
       setTorusDialogOpen(false);
@@ -184,7 +195,7 @@ export function GWCollapserCrystalPool() {
                 GW-Collapser Crystal Pool
               </CardTitle>
               <CardDescription>
-                Bulk selection and action orchestration over the crystal library. Demo structure replaced with typed production API.
+                Bulk selection and action orchestration over the crystal library with combination-first torus exploration.
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
@@ -224,9 +235,7 @@ export function GWCollapserCrystalPool() {
           </div>
 
           <div className="flex items-center justify-between gap-3 text-sm text-muted-foreground">
-            <div>
-              Page {page} / {totalPages}
-            </div>
+            <div>Page {page} / {totalPages}</div>
             <div className="flex items-center gap-2">
               <Button size="sm" variant="outline" disabled={page <= 1} onClick={() => setPage((prev) => Math.max(1, prev - 1))}>
                 <ChevronLeft className="mr-1 h-4 w-4" />
@@ -244,7 +253,7 @@ export function GWCollapserCrystalPool() {
               <CardHeader className="pb-3">
                 <CardTitle className="text-base">Crystal Pool</CardTitle>
                 <CardDescription>
-                  Current scaffold keeps bulk operations typed and evolvable without mutating the old GW-Collapser flow.
+                  Selection drives both the bulk actions and the aggregate torus projection.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -318,12 +327,12 @@ export function GWCollapserCrystalPool() {
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Crystal Pool Torus Projection</CardTitle>
           <CardDescription>
-            Aggregated visualization over persisted torus docs for the current selection, capped at 100 points.
+            Aggregated visualization over persisted combination formulas for the current selection, capped at 100 points.
           </CardDescription>
         </CardHeader>
         <CardContent>
           {!selectionQuery ? (
-            <div className="text-sm text-muted-foreground">Select crystals in the pool to render their persisted torus fragments.</div>
+            <div className="text-sm text-muted-foreground">Select crystals in the pool to render their persisted combination formulas.</div>
           ) : !(visualization?.points?.length) ? (
             <div className="text-sm text-muted-foreground">No persisted torus points found for the current selection.</div>
           ) : (
@@ -341,36 +350,38 @@ export function GWCollapserCrystalPool() {
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Last action result</CardTitle>
           <CardDescription>
-            Ready actions already return structured production output; scaffolded actions expose their contract early without fake side effects.
+            Results are laid out in two columns to keep long formula text and JSON payloads readable.
           </CardDescription>
         </CardHeader>
         <CardContent>
           {!actionResult ? (
             <div className="text-sm text-muted-foreground">Run an action from the Crystal Pool to inspect its typed result.</div>
           ) : (
-            <ScrollArea className="max-h-[360px]">
+            <ScrollArea className="max-h-[420px]">
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline">{actionResult.actionName}</Badge>
                   <Badge variant="outline">{actionResult.availability}</Badge>
                   <Badge variant="outline">{actionResult.affectedCount} affected</Badge>
                 </div>
-                {actionResult.results.map((item) => (
-                  <div key={`${item.id}-${item.code ?? "row"}`} className="rounded-lg border border-border/60 p-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="font-mono text-sm">{item.code ?? item.id}</div>
-                      <Badge variant="outline">{item.status}</Badge>
+                <div className="grid gap-3 xl:grid-cols-2">
+                  {actionResult.results.map((item) => (
+                    <div key={`${item.id}-${item.code ?? "row"}`} className="min-w-0 rounded-lg border border-border/60 p-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="font-mono text-sm break-all">{item.code ?? item.id}</div>
+                        <Badge variant="outline">{item.status}</Badge>
+                      </div>
+                      <div className="mt-2 break-words whitespace-pre-wrap text-sm text-muted-foreground">{item.summary}</div>
+                      {item.data && (
+                        <pre className="mt-3 overflow-x-auto whitespace-pre-wrap break-words rounded-md bg-muted/40 p-3 text-xs">
+                          {JSON.stringify(item.data, null, 2)}
+                        </pre>
+                      )}
                     </div>
-                    <div className="mt-2 text-sm text-muted-foreground">{item.summary}</div>
-                    {item.data && (
-                      <pre className="mt-3 overflow-x-auto rounded-md bg-muted/40 p-3 text-xs">
-                        {JSON.stringify(item.data, null, 2)}
-                      </pre>
-                    )}
-                  </div>
-                ))}
+                  ))}
+                </div>
                 {actionResult.extra && (
-                  <pre className="overflow-x-auto rounded-md bg-muted/40 p-3 text-xs">
+                  <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-md bg-muted/40 p-3 text-xs">
                     {JSON.stringify(actionResult.extra, null, 2)}
                   </pre>
                 )}
@@ -399,15 +410,11 @@ export function GWCollapserCrystalPool() {
               </div>
               <div>
                 <div className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">Micro note</div>
-                <div className="rounded-md border border-border/60 bg-muted/30 p-3 leading-6">
-                  {detailItem.llmMicroNote ?? "—"}
-                </div>
+                <div className="rounded-md border border-border/60 bg-muted/30 p-3 leading-6">{detailItem.llmMicroNote ?? "—"}</div>
               </div>
               <div>
                 <div className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">Vector direction</div>
-                <div className="rounded-md border border-border/60 bg-muted/30 p-3 leading-6">
-                  {detailItem.vectorDirection ?? "—"}
-                </div>
+                <div className="rounded-md border border-border/60 bg-muted/30 p-3 leading-6">{detailItem.vectorDirection ?? "—"}</div>
               </div>
             </div>
           )}
@@ -422,6 +429,20 @@ export function GWCollapserCrystalPool() {
               Review runtime parameters before launching the torus analysis for the selected crystals.
             </DialogDescription>
           </DialogHeader>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant={torusParams.document_mode === "combination_only" ? "default" : "outline"}
+              onClick={() => setTorusParams((prev) => ({ ...prev, document_mode: "combination_only" }))}
+            >
+              Combination-only
+            </Button>
+            <Button
+              variant={torusParams.document_mode === "full" ? "default" : "outline"}
+              onClick={() => setTorusParams((prev) => ({ ...prev, document_mode: "full" }))}
+            >
+              Full
+            </Button>
+          </div>
           <div className="grid gap-4 md:grid-cols-2">
             <NumericField label="Clusters" value={torusParams.n_clusters} onChange={(value) => setTorusParams((prev) => ({ ...prev, n_clusters: value }))} />
             <NumericField label="Max steps" value={torusParams.max_steps} onChange={(value) => setTorusParams((prev) => ({ ...prev, max_steps: value }))} />
@@ -514,12 +535,7 @@ function NumericField({
   return (
     <label className="space-y-2 text-sm">
       <div className="text-muted-foreground">{label}</div>
-      <Input
-        type="number"
-        value={String(value)}
-        step={step}
-        onChange={(event) => onChange(Number(event.target.value))}
-      />
+      <Input type="number" value={String(value)} step={step} onChange={(event) => onChange(Number(event.target.value))} />
     </label>
   );
 }
@@ -547,6 +563,7 @@ function PoolProjection({
         <Badge variant="outline">{points.length} points</Badge>
         <Badge variant="outline">R {torus.R.toFixed(1)}</Badge>
         <Badge variant="outline">r {torus.r.toFixed(1)}</Badge>
+        <Badge variant="outline">combination-only</Badge>
       </div>
       <div className="overflow-x-auto rounded-xl border border-border/70 bg-card/40 p-3">
         <svg viewBox="0 0 760 420" className="h-[420px] w-full min-w-[760px]">
@@ -556,25 +573,10 @@ function PoolProjection({
             const active = hoveredKey === point.key;
             const color = clusterColor(point.cluster);
             return (
-              <g
-                key={point.key}
-                onMouseEnter={() => onHover(point.key)}
-                onMouseLeave={() => onHover(null)}
-              >
-                <circle
-                  cx={point.projected.sx}
-                  cy={point.projected.sy}
-                  r={active ? 6.5 : 4.2}
-                  fill={color}
-                  opacity={active ? 1 : 0.85}
-                />
+              <g key={point.key} onMouseEnter={() => onHover(point.key)} onMouseLeave={() => onHover(null)}>
+                <circle cx={point.projected.sx} cy={point.projected.sy} r={active ? 6.5 : 4.2} fill={color} opacity={active ? 1 : 0.85} />
                 {(active || point.projected.depth > 0.88) && (
-                  <text
-                    x={point.projected.sx + 8}
-                    y={point.projected.sy - 8}
-                    fill="#d5f6ff"
-                    fontSize="11"
-                  >
+                  <text x={point.projected.sx + 8} y={point.projected.sy - 8} fill="#d5f6ff" fontSize="11">
                     {truncatePoolLabel(`${point.crystalCode}:${point.title}`, 30)}
                   </text>
                 )}
@@ -583,7 +585,7 @@ function PoolProjection({
           })}
         </svg>
       </div>
-      <ScrollArea className="max-h-[200px] rounded-lg border border-border/70 p-3">
+      <ScrollArea className="max-h-[220px] rounded-lg border border-border/70 p-3">
         <div className="space-y-2 text-sm">
           {projected
             .filter((point) => !hoveredKey || hoveredKey === point.key)
@@ -595,7 +597,7 @@ function PoolProjection({
                   <Badge variant="outline">cluster {point.cluster}</Badge>
                 </div>
                 <div className="mt-2 font-medium">{point.title}</div>
-                <div className="mt-1 text-muted-foreground">{point.text}</div>
+                <div className="mt-1 break-words text-muted-foreground">{point.text}</div>
               </div>
             ))}
         </div>
@@ -622,5 +624,5 @@ function clusterColor(cluster: number) {
 }
 
 function truncatePoolLabel(value: string, max = 20) {
-  return value.length > max ? `${value.slice(0, max - 1)}…` : value;
+  return value.length > max ? `${value.slice(0, max - 1)}...` : value;
 }

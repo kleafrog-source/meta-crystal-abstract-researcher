@@ -24,6 +24,7 @@ export interface CrystalGwAnalysisOptions {
   geometry_R?: number;
   geometry_r?: number;
   embedding_model?: string;
+  document_mode?: "combination_only" | "full";
 }
 
 export interface CrystalGwResolved {
@@ -198,7 +199,10 @@ export function buildCrystalQuery(
 
 export async function runGwCollapserOnCrystal(id: string, options: CrystalGwAnalysisOptions = {}) {
   const resolved = await resolveCrystalWithFile(id);
-  const docs = buildCrystalDocs(resolved.fullFile, resolved.crystal ?? undefined);
+  const docs =
+    options.document_mode === "combination_only"
+      ? docsToLegacyTexts(selectCombinationDocs(crystalToDocs(resolved.fullFile, resolved.crystal ?? undefined)))
+      : buildCrystalDocs(resolved.fullFile, resolved.crystal ?? undefined);
   if (!docs.length) {
     throw new Error("Не удалось извлечь текстовые фрагменты из кристалла");
   }
@@ -279,7 +283,10 @@ export function readPersistedTorusAnalysisResult(crystalFilepath: string) {
 
 export async function runTorusAnalysisForCrystal(id: string, options: CrystalGwAnalysisOptions = {}) {
   const resolved = await resolveCrystalWithFile(id);
-  const docs = crystalToDocs(resolved.fullFile, resolved.crystal ?? undefined);
+  const docs =
+    options.document_mode === "combination_only"
+      ? selectCombinationDocs(crystalToDocs(resolved.fullFile, resolved.crystal ?? undefined))
+      : crystalToDocs(resolved.fullFile, resolved.crystal ?? undefined);
   const docTexts = docsToLegacyTexts(docs);
   if (!docTexts.length) {
     throw new Error("Не удалось извлечь текстовые фрагменты из кристалла");
@@ -426,6 +433,13 @@ function uniqueCrystalDocs(values: GwCrystalDoc[]) {
     result.push(doc);
   }
   return result;
+}
+
+function selectCombinationDocs(values: GwCrystalDoc[]) {
+  const filtered = values.filter((doc) =>
+    doc.id === "crystal-combination" || doc.id === "row-combination" || doc.kind === "combination",
+  );
+  return filtered.length ? uniqueCrystalDocs(filtered) : values.slice(0, 1);
 }
 
 function buildFocusDoc(focus: unknown) {
