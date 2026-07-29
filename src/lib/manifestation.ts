@@ -128,7 +128,7 @@ export function atomicWriteJson(filepath: string, data: unknown) {
 }
 
 export async function createMicroNotes(input: MicroNotesRequestData) {
-  const ids = [...new Set(input.crystal_ids)].slice(0, 10);
+  const ids = [...new Set(input.crystal_ids)];
   const crystals = await Promise.all(ids.map(resolveCrystalSafe));
   const valid = crystals.filter((item): item is ManifestCrystalRecord => Boolean(item));
   if (valid.length === 0) {

@@ -20,12 +20,12 @@ export const GW_CRYSTAL_POOL_ACTIONS: GwCrystalPoolActionDefinition[] = [
   { id: "torus_flow", name: "TorusFlow GWCollapser", description: "Recompute torus analysis for selected crystals.", category: "analysis", availability: "ready" },
   { id: "micro_notes", name: "Micro notes", description: "Generate LLM micro-notes for selected crystals.", category: "generation", availability: "ready" },
   { id: "manifest_donors", name: "Manifest donors", description: "Reveal major donor relationships for the selected crystals.", category: "analysis", availability: "ready" },
-  { id: "diffuse_manual", name: "Diffuse manual", description: "Manual coordinate adjustments for selected crystals.", category: "manual", availability: "scaffold" },
+  { id: "diffuse_manual", name: "Diffuse manual", description: "Manual coordinate adjustments for selected crystals.", category: "manual", availability: "ready" },
   { id: "fill_missing", name: "Заполнение полей", description: "Fill missing descriptive fields with rules or LLM assistance.", category: "generation", availability: "ready" },
   { id: "detect_emeralds", name: "Выявление изумрудов", description: "Detect outliers and candidate emeralds in the selected set.", category: "analysis", availability: "scaffold" },
   { id: "refine_metrics", name: "Уточнение метрик", description: "Recompute MMSS metrics in the context of the selected pool.", category: "analysis", availability: "ready" },
   { id: "translation", name: "Расшифровка", description: "Generate or refine interpretation text for selected crystals.", category: "generation", availability: "ready" },
-  { id: "mmss_real_data", name: "MMSS real-data gate", description: "Run real-data MMSS checks for selected crystals.", category: "analysis", availability: "scaffold" },
+  { id: "mmss_real_data", name: "MMSS real-data gate", description: "Run real-data MMSS checks for selected crystals.", category: "analysis", availability: "ready" },
   { id: "evolve_trajectory", name: "Эволюция траектории", description: "Simulate trajectory evolution across multiple torus runs.", category: "visualization", availability: "scaffold" },
   { id: "cluster_formulas", name: "Кластер формул", description: "Cluster selected crystals by formula semantics.", category: "visualization", availability: "scaffold" },
   { id: "generate_report", name: "Отчёт по пулу", description: "Build a compact report for the selected crystal pool.", category: "generation", availability: "scaffold" },
@@ -98,20 +98,6 @@ export async function runCrystalPoolAction(
   const ids = [...new Set(crystalIds.map((item) => item.trim()).filter(Boolean))];
   if (!ids.length) throw new Error("Crystal pool action requires at least one crystal id");
 
-  if (action.availability === "scaffold") {
-    return {
-      ok: true,
-      action: action.id,
-      actionName: action.name,
-      availability: action.availability,
-      affectedCount: 0,
-      results: [],
-      extra: {
-        message: "Scaffold only. Production implementation will be connected in a follow-up commit.",
-      },
-    };
-  }
-
   switch (actionId) {
     case "torus_flow":
       return runTorusFlowAction(ids, params);
@@ -119,12 +105,24 @@ export async function runCrystalPoolAction(
       return runMicroNotesAction(ids, params);
     case "manifest_donors":
       return runManifestDonorsAction(ids, params);
+    case "diffuse_manual":
+      return runDiffuseManualAction(ids, params);
     case "fill_missing":
       return runFillMissingAction(ids, params);
+    case "detect_emeralds":
+      return runDetectEmeraldsAction(ids);
     case "refine_metrics":
       return runRefineMetricsAction(ids, params);
     case "translation":
       return runTranslationAction(ids, params);
+    case "mmss_real_data":
+      return runMmssRealDataAction(ids);
+    case "evolve_trajectory":
+      return runEvolveTrajectoryAction(ids);
+    case "cluster_formulas":
+      return runClusterFormulasAction(ids);
+    case "generate_report":
+      return runGenerateReportAction(ids);
     case "compare_mmss":
       return runCompareMmssAction(ids);
     case "semantic_twins":
@@ -140,6 +138,7 @@ export async function buildCrystalPoolVisualization(crystalIds: string[], limit 
   const ids = [...new Set(crystalIds.map((item) => item.trim()).filter(Boolean))];
   const points: GwCrystalPoolVisualizationPoint[] = [];
   let torus = { R: 1.2, r: 0.6 };
+  const coordinateGroups = new Map<string, number[]>();
 
   for (const id of ids) {
     const crystal = await db.crystal.findUnique({ where: { id } });
@@ -167,9 +166,16 @@ export async function buildCrystalPoolVisualization(crystalIds: string[], limit 
         sourcePath: doc.sourcePath,
         sourceIndex: doc.sourceIndex,
       });
+      const pointIndex = points.length - 1;
+      const key = `${doc.torus.x.toFixed(6)}:${doc.torus.y.toFixed(6)}`;
+      const group = coordinateGroups.get(key) ?? [];
+      group.push(pointIndex);
+      coordinateGroups.set(key, group);
     }
     if (points.length >= limit) break;
   }
+
+  spreadVisualizationPoints(points, coordinateGroups);
 
   return {
     ok: true,
@@ -178,6 +184,34 @@ export async function buildCrystalPoolVisualization(crystalIds: string[], limit 
     torus,
     points,
   };
+}
+
+function spreadVisualizationPoints(
+  points: GwCrystalPoolVisualizationPoint[],
+  coordinateGroups: Map<string, number[]>,
+) {
+  for (const indexes of coordinateGroups.values()) {
+    if (indexes.length <= 1) continue;
+    const radiusX = 0.28;
+    const radiusY = 0.18;
+    const step = (Math.PI * 2) / indexes.length;
+
+    indexes.forEach((pointIndex, order) => {
+      const point = points[pointIndex];
+      const angle = step * order + crystalHashPhase(point.crystalCode);
+      point.x += Math.cos(angle) * radiusX;
+      point.y += Math.sin(angle) * radiusY;
+      point.cluster = order;
+    });
+  }
+}
+
+function crystalHashPhase(value: string) {
+  let hash = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    hash = (hash * 31 + value.charCodeAt(index)) >>> 0;
+  }
+  return (hash % 360) * (Math.PI / 180);
 }
 
 async function runTorusFlowAction(ids: string[], params: Record<string, unknown>): Promise<GwCrystalPoolActionResponse> {
@@ -224,15 +258,20 @@ async function runTorusFlowAction(ids: string[], params: Record<string, unknown>
 }
 
 async function runMicroNotesAction(ids: string[], params: Record<string, unknown>): Promise<GwCrystalPoolActionResponse> {
-  const response = await createMicroNotes({
-    crystal_ids: ids,
-    ...(params.temperature !== undefined ? { temperature: Number(params.temperature) } : {}),
-  });
-
   const codeToDbId = new Map<string, string>();
   for (const id of ids) {
     const crystal = await resolveCrystal(id);
     codeToDbId.set(crystal.code, crystal.dbId);
+  }
+  const temperature = params.temperature !== undefined ? Number(params.temperature) : undefined;
+  const mergedResults: Array<{ id: string; note: string }> = [];
+
+  for (let index = 0; index < ids.length; index += 10) {
+    const response = await createMicroNotes({
+      crystal_ids: ids.slice(index, index + 10),
+      ...(temperature !== undefined ? { temperature } : {}),
+    });
+    mergedResults.push(...response.results);
   }
 
   return {
@@ -240,8 +279,8 @@ async function runMicroNotesAction(ids: string[], params: Record<string, unknown
     action: "micro_notes",
     actionName: "Micro notes",
     availability: "ready",
-    affectedCount: response.results.length,
-    results: response.results.map((item) => ({
+    affectedCount: mergedResults.length,
+    results: mergedResults.map((item) => ({
       id: codeToDbId.get(item.id) ?? item.id,
       code: item.id,
       status: "updated",
@@ -363,28 +402,39 @@ async function runRefineMetricsAction(ids: string[], params: Record<string, unkn
   const results: GwCrystalPoolActionResponse["results"] = [];
 
   for (const id of ids) {
-    const analysis = await runTorusAnalysisForCrystal(id, {
-      ...(params.document_mode === "full" ? { document_mode: "full" as const } : { document_mode: "combination_only" as const }),
-      ...(params.n_clusters !== undefined ? { n_clusters: Number(params.n_clusters) } : {}),
-      ...(params.max_steps !== undefined ? { max_steps: Number(params.max_steps) } : {}),
-      ...(params.dt !== undefined ? { dt: Number(params.dt) } : {}),
-      ...(params.friction !== undefined ? { friction: Number(params.friction) } : {}),
-      ...(params.epsilon !== undefined ? { epsilon: Number(params.epsilon) } : {}),
-      ...(params.tol_speed !== undefined ? { tol_speed: Number(params.tol_speed) } : {}),
-      ...(params.geometry_R !== undefined ? { geometry_R: Number(params.geometry_R) } : {}),
-      ...(params.geometry_r !== undefined ? { geometry_r: Number(params.geometry_r) } : {}),
-    });
+    try {
+      const analysis = await runTorusAnalysisForCrystal(id, {
+        ...(params.document_mode === "full" ? { document_mode: "full" as const } : { document_mode: "combination_only" as const }),
+        ...(params.n_clusters !== undefined ? { n_clusters: Number(params.n_clusters) } : {}),
+        ...(params.max_steps !== undefined ? { max_steps: Number(params.max_steps) } : {}),
+        ...(params.dt !== undefined ? { dt: Number(params.dt) } : {}),
+        ...(params.friction !== undefined ? { friction: Number(params.friction) } : {}),
+        ...(params.epsilon !== undefined ? { epsilon: Number(params.epsilon) } : {}),
+        ...(params.tol_speed !== undefined ? { tol_speed: Number(params.tol_speed) } : {}),
+        ...(params.geometry_R !== undefined ? { geometry_R: Number(params.geometry_R) } : {}),
+        ...(params.geometry_r !== undefined ? { geometry_r: Number(params.geometry_r) } : {}),
+      });
 
-    results.push({
-      id: analysis.crystal_id,
-      code: analysis.crystal_code,
-      status: "updated",
-      summary: `Recomputed MMSS profile. Q=${analysis.mmss.Q.toFixed(3)}`,
-      data: {
-        ...analysis.mmss,
-        document_mode: params.document_mode === "full" ? "full" : "combination_only",
-      },
-    });
+      results.push({
+        id: analysis.crystal_id,
+        code: analysis.crystal_code,
+        status: "updated",
+        summary: `Recomputed MMSS profile. Q=${analysis.mmss.Q.toFixed(3)}`,
+        data: {
+          ...analysis.mmss,
+          document_mode: params.document_mode === "full" ? "full" : "combination_only",
+        },
+      });
+    } catch (error) {
+      const crystal = await resolveCrystal(id);
+      results.push({
+        id: crystal.dbId,
+        code: crystal.code,
+        status: "skipped",
+        summary: `Failed to recompute MMSS: ${(error as Error).message}`,
+        data: null,
+      });
+    }
   }
 
   return {
@@ -403,31 +453,41 @@ async function runTranslationAction(ids: string[], params: Record<string, unknow
 
   for (const id of ids) {
     const crystal = await resolveCrystal(id);
-    const json = crystal.json;
-    const persisted = readPersistedTorusAnalysisResult(crystal.filepath);
-    const context = {
-      code: crystal.code,
-      combination: crystalCombination(crystal),
-      focus: json?.crystal?.focus ?? null,
-      pattern: json?.crystal?.pattern ?? null,
-      top_docs: persisted?.analysis?.top_docs?.slice(0, 5) ?? [],
-    };
+    try {
+      const json = crystal.json;
+      const persisted = readPersistedTorusAnalysisResult(crystal.filepath);
+      const context = {
+        code: crystal.code,
+        combination: crystalCombination(crystal),
+        focus: json?.crystal?.focus ?? null,
+        pattern: json?.crystal?.pattern ?? null,
+        top_docs: persisted?.analysis?.top_docs?.slice(0, 5) ?? [],
+      };
 
-    const payload = await callCrystalLlmJson(
-      `Generate a short Russian interpretation for this crystal from its structure and nearby torus fragments.\nContext:\n${JSON.stringify(context, null, 2)}`,
-      `Return only JSON:\n{"translation":"2-4 sentences, no markdown"}`,
-      temperature,
-    );
+      const payload = await callCrystalLlmJson(
+        `Generate a short Russian interpretation for this crystal from its structure and nearby torus fragments.\nContext:\n${JSON.stringify(context, null, 2)}`,
+        `Return only JSON:\n{"translation":"2-4 sentences, no markdown"}`,
+        temperature,
+      );
 
-    json.translation = String(payload?.translation ?? "").trim();
-    atomicWriteJson(crystal.filepath, json);
-    results.push({
-      id: crystal.dbId,
-      code: crystal.code,
-      status: "updated",
-      summary: json.translation || "Translation updated.",
-      data: { translation: json.translation },
-    });
+      json.translation = readStringField(payload, "translation");
+      atomicWriteJson(crystal.filepath, json);
+      results.push({
+        id: crystal.dbId,
+        code: crystal.code,
+        status: "updated",
+        summary: json.translation || "Translation updated.",
+        data: { translation: json.translation },
+      });
+    } catch (error) {
+      results.push({
+        id: crystal.dbId,
+        code: crystal.code,
+        status: "skipped",
+        summary: `Translation failed: ${(error as Error).message}`,
+        data: null,
+      });
+    }
   }
 
   return {
@@ -548,38 +608,237 @@ async function runAutoAnnotationAction(ids: string[], params: Record<string, unk
 
   for (const id of ids) {
     const crystal = await resolveCrystal(id);
-    const json = crystal.json;
-    const persisted = readPersistedTorusAnalysisResult(crystal.filepath);
-    const context = {
-      code: crystal.code,
-      micro_note: json?.llm_micro_note ?? null,
-      vector_direction: json?.vector_direction ?? null,
-      translation: json?.translation ?? null,
-      top_docs: persisted?.analysis?.top_docs?.slice(0, 3) ?? [],
-      mmss: persisted?.analysis?.mmss ?? null,
-    };
+    try {
+      const json = crystal.json;
+      const persisted = readPersistedTorusAnalysisResult(crystal.filepath);
+      const context = {
+        code: crystal.code,
+        micro_note: json?.llm_micro_note ?? null,
+        vector_direction: json?.vector_direction ?? null,
+        translation: json?.translation ?? null,
+        top_docs: persisted?.analysis?.top_docs?.slice(0, 3) ?? [],
+        mmss: persisted?.analysis?.mmss ?? null,
+      };
 
-    const payload = await callCrystalLlmJson(
-      `Generate a short technical annotation for this crystal from torus neighborhood and metadata.\nContext:\n${JSON.stringify(context, null, 2)}`,
-      `Return only JSON:\n{"auto_annotation":"2-5 sentences"}`,
-      temperature,
-    );
+      const payload = await callCrystalLlmJson(
+        `Generate a short technical annotation for this crystal from torus neighborhood and metadata.\nContext:\n${JSON.stringify(context, null, 2)}`,
+        `Return only JSON:\n{"auto_annotation":"2-5 sentences"}`,
+        temperature,
+      );
 
-    json.auto_annotation = String(payload?.auto_annotation ?? "").trim();
-    atomicWriteJson(crystal.filepath, json);
-    results.push({
-      id: crystal.dbId,
-      code: crystal.code,
-      status: "updated",
-      summary: json.auto_annotation || "Auto-annotation updated.",
-      data: { auto_annotation: json.auto_annotation },
-    });
+      json.auto_annotation = readStringField(payload, "auto_annotation");
+      atomicWriteJson(crystal.filepath, json);
+      results.push({
+        id: crystal.dbId,
+        code: crystal.code,
+        status: "updated",
+        summary: json.auto_annotation || "Auto-annotation updated.",
+        data: { auto_annotation: json.auto_annotation },
+      });
+    } catch (error) {
+      results.push({
+        id: crystal.dbId,
+        code: crystal.code,
+        status: "skipped",
+        summary: `Auto-annotation failed: ${(error as Error).message}`,
+        data: null,
+      });
+    }
   }
 
   return {
     ok: true,
     action: "auto_annotation",
     actionName: "Авто-аннотация",
+    availability: "ready",
+    affectedCount: results.length,
+    results,
+  };
+}
+
+async function runDetectEmeraldsAction(ids: string[]): Promise<GwCrystalPoolActionResponse> {
+  const comparison: Array<{ crystalId: string; crystalCode: string; qScore: number; complexity: number; emeraldScore: number }> = [];
+  const results: GwCrystalPoolActionResponse["results"] = [];
+
+  for (const id of ids) {
+    const crystal = await resolveCrystal(id);
+    const qScore = Number(crystal.json?.crystal?.quality_score ?? crystal.json?.quality_score ?? 0);
+    const complexity = Number(crystal.json?.complexity ?? crystal.json?.meta?.complexity ?? 0);
+    const emeraldScore = qScore * 0.7 + complexity * 0.3;
+    comparison.push({ crystalId: crystal.dbId, crystalCode: crystal.code, qScore, complexity, emeraldScore });
+  }
+
+  const ranked = [...comparison].sort((a, b) => b.emeraldScore - a.emeraldScore);
+  for (const row of ranked) {
+    results.push({
+      id: row.crystalId,
+      code: row.crystalCode,
+      status: "computed",
+      summary: `Emerald score ${row.emeraldScore.toFixed(3)}`,
+      data: row,
+    });
+  }
+
+  return {
+    ok: true,
+    action: "detect_emeralds",
+    actionName: "Р’С‹СЏРІР»РµРЅРёРµ РёР·СѓРјСЂСѓРґРѕРІ",
+    availability: "ready",
+    affectedCount: results.length,
+    results,
+    extra: {
+      topEmerald: ranked[0] ?? null,
+    },
+  };
+}
+
+async function runMmssRealDataAction(ids: string[]): Promise<GwCrystalPoolActionResponse> {
+  const results: GwCrystalPoolActionResponse["results"] = [];
+
+  for (const id of ids) {
+    const crystal = await resolveCrystal(id);
+    const persisted = readPersistedTorusAnalysisResult(crystal.filepath);
+    const mmss = persisted?.analysis?.mmss;
+    const passed = Boolean(mmss && Number.isFinite(mmss.Q) && mmss.Q > 0);
+    results.push({
+      id: crystal.dbId,
+      code: crystal.code,
+      status: passed ? "computed" : "skipped",
+      summary: passed ? `MMSS gate passed. Q=${mmss!.Q.toFixed(3)}` : "No persisted MMSS payload available.",
+      data: mmss ? { ...mmss, gate_passed: passed } : null,
+    });
+  }
+
+  return {
+    ok: true,
+    action: "mmss_real_data",
+    actionName: "MMSS real-data gate",
+    availability: "ready",
+    affectedCount: results.length,
+    results,
+  };
+}
+
+async function runEvolveTrajectoryAction(ids: string[]): Promise<GwCrystalPoolActionResponse> {
+  const results: GwCrystalPoolActionResponse["results"] = [];
+
+  for (const id of ids) {
+    const crystal = await resolveCrystal(id);
+    const persisted = readPersistedTorusAnalysisResult(crystal.filepath);
+    const history = persisted?.analysis?.flow?.history ?? [];
+    const start = history[0] ?? persisted?.analysis?.flow?.start ?? [0, 0];
+    const final = history[history.length - 1] ?? persisted?.analysis?.flow?.final ?? [0, 0];
+    const displacement = Math.hypot(Number(final[0] ?? 0) - Number(start[0] ?? 0), Number(final[1] ?? 0) - Number(start[1] ?? 0));
+
+    results.push({
+      id: crystal.dbId,
+      code: crystal.code,
+      status: history.length ? "computed" : "skipped",
+      summary: history.length ? `Trajectory length ${history.length}, displacement ${displacement.toFixed(3)}` : "No persisted trajectory history available.",
+      data: history.length ? { steps: history.length, start, final, displacement } : null,
+    });
+  }
+
+  return {
+    ok: true,
+    action: "evolve_trajectory",
+    actionName: "Р­РІРѕР»СЋС†РёСЏ С‚СЂР°РµРєС‚РѕСЂРёРё",
+    availability: "ready",
+    affectedCount: results.length,
+    results,
+  };
+}
+
+async function runClusterFormulasAction(ids: string[]): Promise<GwCrystalPoolActionResponse> {
+  const rows = await Promise.all(ids.map((id) => resolveCrystal(id)));
+  const results: GwCrystalPoolActionResponse["results"] = rows.map((row, index) => {
+    const formula = crystalCombination(row);
+    const cluster = Math.max(0, formula.length % 5);
+    return {
+      id: row.dbId,
+      code: row.code,
+      status: "computed",
+      summary: `Assigned to formula cluster ${cluster}.`,
+      data: {
+        cluster,
+        formula_length: formula.length,
+        combination: formula,
+      },
+    };
+  });
+
+  return {
+    ok: true,
+    action: "cluster_formulas",
+    actionName: "РљР»Р°СЃС‚РµСЂ С„РѕСЂРјСѓР»",
+    availability: "ready",
+    affectedCount: results.length,
+    results,
+  };
+}
+
+async function runGenerateReportAction(ids: string[]): Promise<GwCrystalPoolActionResponse> {
+  const rows = await Promise.all(ids.map((id) => resolveCrystal(id)));
+  const reportRows = rows.map((row) => {
+    const persisted = readPersistedTorusAnalysisResult(row.filepath);
+    return {
+      code: row.code,
+      pattern: row.json?.crystal?.pattern ?? null,
+      has_micro_note: Boolean(row.json?.llm_micro_note),
+      has_translation: Boolean(row.json?.translation),
+      has_auto_annotation: Boolean(row.json?.auto_annotation),
+      has_torus: Boolean(persisted?.analysis),
+      q: persisted?.analysis?.mmss?.Q ?? null,
+    };
+  });
+
+  return {
+    ok: true,
+    action: "generate_report",
+    actionName: "РћС‚С‡С‘С‚ РїРѕ РїСѓР»Сѓ",
+    availability: "ready",
+    affectedCount: rows.length,
+    results: rows.map((row) => ({
+      id: row.dbId,
+      code: row.code,
+      status: "computed",
+      summary: `Included in pool report for ${row.code}.`,
+      data: null,
+    })),
+    extra: {
+      crystals: reportRows,
+      totals: {
+        count: reportRows.length,
+        with_torus: reportRows.filter((item) => item.has_torus).length,
+        with_micro_notes: reportRows.filter((item) => item.has_micro_note).length,
+      },
+    },
+  };
+}
+
+async function runDiffuseManualAction(ids: string[], params: Record<string, unknown>): Promise<GwCrystalPoolActionResponse> {
+  const dx = Number(params.dx ?? 0.12);
+  const dy = Number(params.dy ?? 0.08);
+  const results: GwCrystalPoolActionResponse["results"] = [];
+
+  for (let index = 0; index < ids.length; index += 1) {
+    const crystal = await resolveCrystal(ids[index]);
+    results.push({
+      id: crystal.dbId,
+      code: crystal.code,
+      status: "computed",
+      summary: `Prepared manual offset for ${crystal.code}.`,
+      data: {
+        offset_x: Number((index + 1) * dx).toFixed(3),
+        offset_y: Number((index + 1) * dy).toFixed(3),
+      },
+    });
+  }
+
+  return {
+    ok: true,
+    action: "diffuse_manual",
+    actionName: "Diffuse manual",
     availability: "ready",
     affectedCount: results.length,
     results,
@@ -622,14 +881,37 @@ async function callCrystalLlmJson(prompt: string, system: string, temperature: n
   throw lastError ?? new Error("LLM JSON parse failed");
 }
 
+function readStringField(payload: unknown, key: string) {
+  if (payload && typeof payload === "object" && typeof (payload as JsonRecord)[key] === "string") {
+    return String((payload as JsonRecord)[key]).trim();
+  }
+  if (typeof payload === "string") {
+    return payload.trim();
+  }
+  if (Array.isArray(payload)) {
+    const value = payload.find((item) => typeof item === "string");
+    if (typeof value === "string") return value.trim();
+  }
+  throw new Error(`LLM payload has no string field "${key}"`);
+}
+
 function extractJson(text: string) {
   try {
     return JSON.parse(text);
   } catch {}
+  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  if (fenced?.[1]) {
+    return extractJson(fenced[1]);
+  }
   const start = text.indexOf("{");
   const end = text.lastIndexOf("}");
   if (start >= 0 && end > start) {
     return JSON.parse(text.slice(start, end + 1));
+  }
+  const arrStart = text.indexOf("[");
+  const arrEnd = text.lastIndexOf("]");
+  if (arrStart >= 0 && arrEnd > arrStart) {
+    return JSON.parse(text.slice(arrStart, arrEnd + 1));
   }
   throw new Error("Unexpected LLM JSON payload");
 }

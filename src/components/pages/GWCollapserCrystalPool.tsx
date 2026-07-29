@@ -366,14 +366,14 @@ export function GWCollapserCrystalPool() {
                 </div>
                 <div className="grid gap-3 xl:grid-cols-2">
                   {actionResult.results.map((item) => (
-                    <div key={`${item.id}-${item.code ?? "row"}`} className="min-w-0 rounded-lg border border-border/60 p-3">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="font-mono text-sm break-all">{item.code ?? item.id}</div>
+                    <div key={`${item.id}-${item.code ?? "row"}`} className="min-w-0 overflow-hidden rounded-lg border border-border/60 p-3">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1 font-mono text-sm break-all">{item.code ?? item.id}</div>
                         <Badge variant="outline">{item.status}</Badge>
                       </div>
                       <div className="mt-2 break-words whitespace-pre-wrap text-sm text-muted-foreground">{item.summary}</div>
                       {item.data && (
-                        <pre className="mt-3 overflow-x-auto whitespace-pre-wrap break-words rounded-md bg-muted/40 p-3 text-xs">
+                        <pre className="mt-3 max-w-full overflow-x-auto whitespace-pre-wrap break-words rounded-md bg-muted/40 p-3 text-xs leading-5">
                           {JSON.stringify(item.data, null, 2)}
                         </pre>
                       )}
@@ -381,9 +381,12 @@ export function GWCollapserCrystalPool() {
                   ))}
                 </div>
                 {actionResult.extra && (
-                  <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-md bg-muted/40 p-3 text-xs">
-                    {JSON.stringify(actionResult.extra, null, 2)}
-                  </pre>
+                  <div className="rounded-lg border border-border/60 p-3">
+                    <div className="mb-2 text-sm font-medium">Aggregate payload</div>
+                    <pre className="max-w-full overflow-x-auto whitespace-pre-wrap break-words rounded-md bg-muted/40 p-3 text-xs leading-5">
+                      {JSON.stringify(actionResult.extra, null, 2)}
+                    </pre>
+                  </div>
                 )}
               </div>
             </ScrollArea>
@@ -556,6 +559,7 @@ function PoolProjection({
     key: `${point.crystalId}:${point.docId}`,
     projected: projectPoolTorusPoint(point.x, point.y, torus),
   }));
+  const hoveredPoint = projected.find((point) => point.key === hoveredKey) ?? null;
 
   return (
     <div className="space-y-4">
@@ -565,7 +569,7 @@ function PoolProjection({
         <Badge variant="outline">r {torus.r.toFixed(1)}</Badge>
         <Badge variant="outline">combination-only</Badge>
       </div>
-      <div className="overflow-x-auto rounded-xl border border-border/70 bg-card/40 p-3">
+      <div className="relative overflow-x-auto rounded-xl border border-border/70 bg-card/40 p-3">
         <svg viewBox="0 0 760 420" className="h-[420px] w-full min-w-[760px]">
           <ellipse cx="380" cy="210" rx={(torus.R + torus.r) * 118} ry={(torus.R + torus.r) * 46} fill="none" stroke="rgba(34,211,238,0.25)" strokeWidth="1.5" />
           <ellipse cx="380" cy="210" rx={Math.max(12, (torus.R - torus.r) * 118)} ry={Math.max(8, (torus.R - torus.r) * 46)} fill="none" stroke="rgba(56,189,248,0.18)" strokeWidth="1.2" />
@@ -584,22 +588,29 @@ function PoolProjection({
             );
           })}
         </svg>
+        {hoveredPoint && (
+          <div className="pointer-events-none absolute right-4 top-4 w-[320px] rounded-lg border border-cyan-400/30 bg-slate-950/92 p-3 shadow-2xl">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="outline">{hoveredPoint.crystalCode}</Badge>
+              <Badge variant="outline">cluster {hoveredPoint.cluster}</Badge>
+            </div>
+            <div className="mt-2 text-sm font-medium break-words">{hoveredPoint.title}</div>
+            <div className="mt-2 text-xs text-muted-foreground break-words whitespace-pre-wrap">{hoveredPoint.text}</div>
+          </div>
+        )}
       </div>
       <ScrollArea className="max-h-[220px] rounded-lg border border-border/70 p-3">
-        <div className="space-y-2 text-sm">
-          {projected
-            .filter((point) => !hoveredKey || hoveredKey === point.key)
-            .slice(0, hoveredKey ? 1 : 12)
-            .map((point) => (
+        <div className="grid gap-2 xl:grid-cols-2 text-sm">
+          {projected.slice(0, 12).map((point) => (
               <div key={`meta-${point.key}`} className="rounded-md border border-border/60 p-3">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline">{point.crystalCode}</Badge>
                   <Badge variant="outline">cluster {point.cluster}</Badge>
                 </div>
-                <div className="mt-2 font-medium">{point.title}</div>
-                <div className="mt-1 break-words text-muted-foreground">{point.text}</div>
+                <div className="mt-2 font-medium break-words">{point.title}</div>
+                <div className="mt-1 break-words whitespace-pre-wrap text-muted-foreground">{point.text}</div>
               </div>
-            ))}
+          ))}
         </div>
       </ScrollArea>
     </div>

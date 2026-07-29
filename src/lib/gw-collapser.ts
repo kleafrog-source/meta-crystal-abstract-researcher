@@ -208,10 +208,11 @@ export async function runGwCollapserOnCrystal(id: string, options: CrystalGwAnal
   }
 
   const query = buildCrystalQuery(resolved.fullFile, resolved.crystal ?? undefined, options.query ?? null);
+  const effectiveClusters = Math.max(1, Math.min(options.n_clusters ?? 5, docs.length));
   const input = {
     docs,
     query,
-    n_clusters: options.n_clusters ?? 5,
+    n_clusters: effectiveClusters,
     dt: options.dt ?? 0.02,
     friction: options.friction ?? 0.01,
     epsilon: options.epsilon ?? 0.15,
@@ -293,7 +294,7 @@ export async function runTorusAnalysisForCrystal(id: string, options: CrystalGwA
   }
 
   const parameters: GwTorusParameters = {
-    n_clusters: options.n_clusters ?? 5,
+    n_clusters: Math.max(1, Math.min(options.n_clusters ?? 5, docTexts.length)),
     dt: options.dt ?? 0.02,
     friction: options.friction ?? 0.01,
     epsilon: options.epsilon ?? 0.15,
