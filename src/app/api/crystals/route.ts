@@ -91,21 +91,7 @@ export async function GET(req: Request) {
       page,
       pageSize,
       items: items.map((c: any) => ({
-        id: c.id,
-        code: c.code,
-        type: c.type,
-        category: c.category,
-        focus: c.focus,
-        pattern: c.pattern,
-        combination: c.combination,
-        combinationShort: c.combination.slice(0, 200),
-        qualityScore: c.qualityScore,
-        complexity: c.complexity,
-        counter: c.counter,
-        step: c.step,
-        isFavourite: c.isFavourite,
-        createdAt: c.createdAt,
-        similarity: c.similarity,
+        ...withGhostFields(c),
       })),
     });
   } catch (e) {
@@ -113,6 +99,40 @@ export async function GET(req: Request) {
       { ok: false, error: (e as Error).message },
       { status: 500 },
     );
+  }
+}
+
+function withGhostFields(c: any) {
+  const metadata = safeParse(c.metadataJson, {});
+  return {
+    id: c.id,
+    code: c.code,
+    type: c.type,
+    category: c.category,
+    focus: c.focus,
+    pattern: c.pattern,
+    combination: c.combination,
+    combinationShort: c.combination.slice(0, 200),
+    qualityScore: c.qualityScore,
+    complexity: c.complexity,
+    counter: c.counter,
+    step: c.step,
+    isFavourite: c.isFavourite,
+    ghostCoordinate:
+      metadata && typeof metadata === "object" && "ghostCoordinate" in metadata
+        ? (metadata as Record<string, unknown>).ghostCoordinate
+        : null,
+    createdAt: c.createdAt,
+    similarity: c.similarity,
+  };
+}
+
+function safeParse<T>(s: string | null, fallback: T): T {
+  if (!s) return fallback;
+  try {
+    return JSON.parse(s) as T;
+  } catch {
+    return fallback;
   }
 }
 

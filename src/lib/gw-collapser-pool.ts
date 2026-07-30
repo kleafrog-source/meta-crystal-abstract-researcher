@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "fs";
 import { db } from "@/lib/db";
-import { buildGwTorusFilepath, readPersistedTorusAnalysisResult, runTorusAnalysisForCrystal } from "@/lib/gw-collapser";
+import { callSidecar } from "@/lib/engine/runner";
+import { buildGwTorusFilepath, crystalToDocs, readPersistedTorusAnalysisResult, resolveCrystalWithFile, runTorusAnalysisForCrystal } from "@/lib/gw-collapser";
 import { getActiveProvider } from "@/lib/llm/factory";
 import { cosineSimilarity } from "@/lib/llm/types";
 import { atomicWriteJson, createMicroNotes, resolveCrystal, searchManifestEmbeddings } from "@/lib/manifestation";
@@ -9,6 +10,7 @@ import type {
   GwCrystalPoolActionId,
   GwCrystalPoolActionResponse,
   GwCrystalPoolListItem,
+  GwCrystalPoolVisualizationModeSummary,
   GwCrystalPoolVisualizationPoint,
   GwMmssComparisonRow,
 } from "@/types/gw-collapser-pool";
@@ -134,56 +136,148 @@ export async function runCrystalPoolAction(
   }
 }
 
-export async function buildCrystalPoolVisualization(crystalIds: string[], limit = 100) {
+export async function buildCrystalPoolVisualization(
+  crystalIds: string[],
+  limit = 100,
+  modes: Array<"combination_only" | "full"> = ["combination_only"],
+) {
   const ids = [...new Set(crystalIds.map((item) => item.trim()).filter(Boolean))];
-  const points: GwCrystalPoolVisualizationPoint[] = [];
-  let torus = { R: 1.2, r: 0.6 };
-  const coordinateGroups = new Map<string, number[]>();
-
-  for (const id of ids) {
-    const crystal = await db.crystal.findUnique({ where: { id } });
-    if (!crystal?.filepath) continue;
-    const persisted = readPersistedTorusAnalysisResult(crystal.filepath);
-    if (!persisted?.analysis) continue;
-
-    torus = { R: persisted.analysis.torus.R, r: persisted.analysis.torus.r };
-    const combinationDocs = persisted.analysis.docs.filter((doc) =>
-      doc.id === "crystal-combination" || doc.id === "row-combination" || doc.sourcePath?.includes("combination"),
-    );
-    const docs = combinationDocs.length ? combinationDocs : persisted.analysis.docs.slice(0, 1);
-
-    for (const doc of docs) {
-      if (points.length >= limit) break;
-      points.push({
-        crystalId: persisted.analysis.crystal_id,
-        crystalCode: persisted.analysis.crystal_code,
-        docId: doc.id,
-        title: doc.title,
-        text: doc.text,
-        cluster: doc.cluster,
-        x: doc.torus.x,
-        y: doc.torus.y,
-        sourcePath: doc.sourcePath,
-        sourceIndex: doc.sourceIndex,
-      });
-      const pointIndex = points.length - 1;
-      const key = `${doc.torus.x.toFixed(6)}:${doc.torus.y.toFixed(6)}`;
-      const group = coordinateGroups.get(key) ?? [];
-      group.push(pointIndex);
-      coordinateGroups.set(key, group);
-    }
-    if (points.length >= limit) break;
+  const effectiveModes = [...new Set(modes.length ? modes : ["combination_only"])] as Array<"combination_only" | "full">;
+  const sourceDocs = await buildVisualizationSourceDocs(ids, effectiveModes, limit);
+  if (!sourceDocs.length) {
+    return {
+      ok: true,
+      total: 0,
+      limit,
+      torus: { R: 1.2, r: 0.6 },
+      modes: effectiveModes.map((mode) => ({ mode, count: 0, color: visualizationModeColor(mode) })),
+      points: [],
+    };
   }
 
+  const query = `Aggregate torus projection for ${ids.length} selected crystals`;
+  const nClusters = Math.max(1, Math.min(8, Math.round(Math.sqrt(sourceDocs.length))));
+  const { result } = await callSidecar<Record<string, unknown>>("torus_analyze", {
+    inputFile: {
+      docs: sourceDocs.map((doc) => doc.text),
+      query,
+      n_clusters: nClusters,
+      dt: 0.02,
+      friction: 0.01,
+      epsilon: 0.15,
+      max_steps: 100,
+      tol_speed: 1e-3,
+      geometry_R: 1.2,
+      geometry_r: 0.6,
+    },
+    taskType: "torus_analyze",
+    title: `Crystal Pool aggregate visualization (${sourceDocs.length} docs)`,
+    timeoutMs: 10 * 60 * 1000,
+  });
+
+  const payload = result as JsonRecord;
+  const payloadDocs = Array.isArray(payload.docs) ? payload.docs : [];
+  const payloadDocCoords =
+    Array.isArray(payload.doc_coords) && payload.doc_coords.length
+      ? payload.doc_coords
+      : Array.isArray(payloadDocs)
+        ? payloadDocs.map((item) => (item && typeof item === "object" ? [(item as JsonRecord).x, (item as JsonRecord).y] : null))
+        : [];
+  const payloadLabels = Array.isArray(payload.labels) ? payload.labels : [];
+  const payloadTorus = (payload.torus ?? payload.torus_geometry ?? {}) as JsonRecord;
+  const points: GwCrystalPoolVisualizationPoint[] = sourceDocs.map((doc, index) => {
+    const coord = Array.isArray(payloadDocCoords[index]) ? payloadDocCoords[index] : [0, 0];
+    return {
+      crystalId: doc.crystalId,
+      crystalCode: doc.crystalCode,
+      docId: doc.docId,
+      mode: doc.mode,
+      title: doc.title,
+      text: doc.text,
+      cluster: Number(payloadLabels[index] ?? 0),
+      x: Number(coord[0] ?? 0),
+      y: Number(coord[1] ?? 0),
+      sourcePath: doc.sourcePath,
+      sourceIndex: doc.sourceIndex,
+    };
+  });
+  const torus = {
+    R: Number(payloadTorus.R ?? 1.2),
+    r: Number(payloadTorus.r ?? 0.6),
+  };
+  const coordinateGroups = new Map<string, number[]>();
+  const modeCounts = new Map<"combination_only" | "full", number>();
+
+  points.forEach((point, index) => {
+    modeCounts.set(point.mode, (modeCounts.get(point.mode) ?? 0) + 1);
+    const key = `${point.mode}:${point.x.toFixed(6)}:${point.y.toFixed(6)}`;
+    const group = coordinateGroups.get(key) ?? [];
+    group.push(index);
+    coordinateGroups.set(key, group);
+  });
+
   spreadVisualizationPoints(points, coordinateGroups);
+  const modeSummary: GwCrystalPoolVisualizationModeSummary[] = effectiveModes.map((mode) => ({
+    mode,
+    count: modeCounts.get(mode) ?? 0,
+    color: visualizationModeColor(mode),
+  }));
 
   return {
     ok: true,
     total: points.length,
     limit,
     torus,
+    modes: modeSummary,
     points,
   };
+}
+
+async function buildVisualizationSourceDocs(
+  ids: string[],
+  modes: Array<"combination_only" | "full">,
+  limit: number,
+) {
+  const sourceDocs: Array<{
+    crystalId: string;
+    crystalCode: string;
+    docId: string;
+    mode: "combination_only" | "full";
+    title: string;
+    text: string;
+    sourcePath?: string;
+    sourceIndex?: number;
+  }> = [];
+
+  for (const id of ids) {
+    const resolved = await resolveCrystalWithFile(id);
+    const docs = crystalToDocs(resolved.fullFile, resolved.crystal ?? undefined);
+    const combinationDocs = docs.filter((doc) =>
+      doc.id === "crystal-combination" || doc.id === "row-combination" || doc.sourcePath?.includes("combination"),
+    );
+
+    for (const mode of modes) {
+      const activeDocs = mode === "combination_only"
+        ? (combinationDocs.length ? combinationDocs : docs.slice(0, 1))
+        : docs;
+      for (const doc of activeDocs) {
+        if (sourceDocs.length >= limit) return sourceDocs;
+        sourceDocs.push({
+          crystalId: resolved.crystal!.id,
+          crystalCode: resolved.crystal!.code,
+          docId: doc.id,
+          mode,
+          title: doc.title,
+          text: doc.text,
+          sourcePath: doc.sourcePath,
+          sourceIndex: doc.sourceIndex,
+        });
+      }
+      if (sourceDocs.length >= limit) return sourceDocs;
+    }
+  }
+
+  return sourceDocs;
 }
 
 function spreadVisualizationPoints(
@@ -201,7 +295,9 @@ function spreadVisualizationPoints(
       const angle = step * order + crystalHashPhase(point.crystalCode);
       point.x += Math.cos(angle) * radiusX;
       point.y += Math.sin(angle) * radiusY;
-      point.cluster = order;
+      if (point.mode === "combination_only") {
+        point.cluster = order;
+      }
     });
   }
 }
@@ -212,6 +308,10 @@ function crystalHashPhase(value: string) {
     hash = (hash * 31 + value.charCodeAt(index)) >>> 0;
   }
   return (hash % 360) * (Math.PI / 180);
+}
+
+function visualizationModeColor(mode: "combination_only" | "full") {
+  return mode === "combination_only" ? "#38bdf8" : "#34d399";
 }
 
 async function runTorusFlowAction(ids: string[], params: Record<string, unknown>): Promise<GwCrystalPoolActionResponse> {
@@ -274,6 +374,13 @@ async function runMicroNotesAction(ids: string[], params: Record<string, unknown
     mergedResults.push(...response.results);
   }
 
+  for (const item of mergedResults) {
+    const dbId = codeToDbId.get(item.id);
+    if (dbId) {
+      await patchCrystalMetadata(dbId, { llmMicroNote: item.note });
+    }
+  }
+
   return {
     ok: true,
     action: "micro_notes",
@@ -321,6 +428,12 @@ async function runManifestDonorsAction(ids: string[], params: Record<string, unk
       data: { donors },
     };
   });
+
+  for (const item of results) {
+    await patchCrystalMetadata(item.id, {
+      manifestDonors: Array.isArray(item.data?.donors) ? item.data.donors : [],
+    });
+  }
 
   return {
     ok: true,
@@ -472,6 +585,7 @@ async function runTranslationAction(ids: string[], params: Record<string, unknow
 
       json.translation = readStringField(payload, "translation");
       atomicWriteJson(crystal.filepath, json);
+      await patchCrystalMetadata(crystal.dbId, { translation: json.translation ?? "" });
       results.push({
         id: crystal.dbId,
         code: crystal.code,
@@ -628,6 +742,7 @@ async function runAutoAnnotationAction(ids: string[], params: Record<string, unk
 
       json.auto_annotation = readStringField(payload, "auto_annotation");
       atomicWriteJson(crystal.filepath, json);
+      await patchCrystalMetadata(crystal.dbId, { autoAnnotation: json.auto_annotation ?? "" });
       results.push({
         id: crystal.dbId,
         code: crystal.code,
@@ -669,7 +784,12 @@ async function runDetectEmeraldsAction(ids: string[]): Promise<GwCrystalPoolActi
   }
 
   const ranked = [...comparison].sort((a, b) => b.emeraldScore - a.emeraldScore);
+  const threshold = ranked.length ? ranked[Math.max(0, Math.ceil(ranked.length * 0.2) - 1)]!.emeraldScore : Number.POSITIVE_INFINITY;
   for (const row of ranked) {
+    await patchCrystalMetadata(row.crystalId, {
+      isEmerald: row.emeraldScore >= threshold,
+      emeraldScore: row.emeraldScore,
+    });
     results.push({
       id: row.crystalId,
       code: row.crystalCode,
@@ -730,6 +850,15 @@ async function runEvolveTrajectoryAction(ids: string[]): Promise<GwCrystalPoolAc
     const final = history[history.length - 1] ?? persisted?.analysis?.flow?.final ?? [0, 0];
     const displacement = Math.hypot(Number(final[0] ?? 0) - Number(start[0] ?? 0), Number(final[1] ?? 0) - Number(start[1] ?? 0));
 
+    const snapshot = history.map((point, index) => ({
+      step: index,
+      u: Number(point[0] ?? 0),
+      v: Number(point[1] ?? 0),
+    }));
+    await patchCrystalMetadata(crystal.dbId, {
+      evolutionHistory: snapshot,
+    });
+
     results.push({
       id: crystal.dbId,
       code: crystal.code,
@@ -747,6 +876,31 @@ async function runEvolveTrajectoryAction(ids: string[]): Promise<GwCrystalPoolAc
     affectedCount: results.length,
     results,
   };
+}
+
+async function patchCrystalMetadata(crystalId: string, patch: Record<string, unknown>) {
+  const crystal = await db.crystal.findUnique({
+    where: { id: crystalId },
+    select: { metadataJson: true },
+  });
+  const metadata = safeParseRecord(crystal?.metadataJson ?? null);
+  Object.assign(metadata, patch);
+  await db.crystal.update({
+    where: { id: crystalId },
+    data: {
+      metadataJson: JSON.stringify(metadata),
+    },
+  });
+}
+
+function safeParseRecord(value: string | null) {
+  if (!value) return {} as Record<string, unknown>;
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    return parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : {};
+  } catch {
+    return {} as Record<string, unknown>;
+  }
 }
 
 async function runClusterFormulasAction(ids: string[]): Promise<GwCrystalPoolActionResponse> {

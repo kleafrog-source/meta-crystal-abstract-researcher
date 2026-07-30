@@ -29,6 +29,7 @@ export type PageId =
   | "mmss"
   | "gwcollapser"
   | "crystalpool"
+  | "torusatlas"
   | "settings";
 
 interface NavItem {
@@ -98,6 +99,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "Crystal Pool",
     icon: <Database className="h-4 w-4" />,
     description: "Bulk operations and action orchestration for GW-Collapser crystal pools",
+  },
+  {
+    id: "torusatlas",
+    label: "Torus Atlas",
+    icon: <Database className="h-4 w-4" />,
+    description: "Canvas-first atlas view for torus placement, formulas and fast visual exploration",
   },
   {
     id: "settings",

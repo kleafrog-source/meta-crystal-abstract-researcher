@@ -66,6 +66,7 @@ export interface GwCrystalPoolVisualizationPoint {
   crystalId: string;
   crystalCode: string;
   docId: string;
+  mode: "combination_only" | "full";
   title: string;
   text: string;
   cluster: number;
@@ -73,6 +74,12 @@ export interface GwCrystalPoolVisualizationPoint {
   y: number;
   sourcePath?: string;
   sourceIndex?: number;
+}
+
+export interface GwCrystalPoolVisualizationModeSummary {
+  mode: "combination_only" | "full";
+  count: number;
+  color: string;
 }
 
 export interface GwMmssComparisonRow {

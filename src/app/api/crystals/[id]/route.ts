@@ -44,6 +44,8 @@ export async function GET(
           typeof fullFile?.llm_micro_note === "string" ? fullFile.llm_micro_note : null,
         vectorDirection:
           typeof fullFile?.vector_direction === "string" ? fullFile.vector_direction : null,
+        ghostCoordinate: readGhostMetadata(crystal.metadataJson).ghostCoordinate,
+        ghostTrajectory: readGhostMetadata(crystal.metadataJson).ghostTrajectory,
         mutationProbabilities: Array.isArray(fullFile?.mutation_probabilities)
           ? fullFile.mutation_probabilities.map(String)
           : [],
@@ -107,4 +109,12 @@ function safeParse<T>(s: string | null, fallback: T): T {
   } catch {
     return fallback;
   }
+}
+
+function readGhostMetadata(metadataJson: string | null) {
+  const parsed = safeParse<Record<string, unknown>>(metadataJson, {});
+  return {
+    ghostCoordinate: parsed.ghostCoordinate ?? null,
+    ghostTrajectory: parsed.ghostTrajectory ?? null,
+  };
 }

@@ -13,6 +13,7 @@ from .torus_flow import (
     serialize_torus_for_web,
     visualize_torus_flow_matplotlib,
 )
+from .torus_flow_ghost import continue_trajectory, detect_oscillation
 
 __all__ = [
     "FlowSource",
@@ -27,5 +28,7 @@ __all__ = [
     "get_texts",
     "print_detailed_report",
     "serialize_torus_for_web",
+    "continue_trajectory",
+    "detect_oscillation",
     "visualize_torus_flow_matplotlib",
 ]

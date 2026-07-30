@@ -40,6 +40,7 @@ import traceback
 import shutil
 import importlib
 import site
+import numpy as np
 from pathlib import Path
 from datetime import datetime
 
@@ -155,6 +156,8 @@ mmss_mod = None
 MMSS_ERROR = None
 gw_mod = None
 GW_ERROR = None
+gw_ghost_mod = None
+GW_GHOST_ERROR = None
 
 def get_engine():
     global engine_mod, ENGINE_ERROR
@@ -192,6 +195,18 @@ def get_gwcollapser(silent=False):
             if not silent:
                 emit_log("error", f"GW-Collapser import failed: {e}")
     return gw_mod
+
+
+def get_gwcollapser_ghost(silent=False):
+    global gw_ghost_mod, GW_GHOST_ERROR
+    if gw_ghost_mod is None and GW_GHOST_ERROR is None:
+        try:
+            gw_ghost_mod = importlib.import_module("gwcollapser.torus_flow_ghost")
+        except Exception as e:
+            GW_GHOST_ERROR = str(e)
+            if not silent:
+                emit_log("error", f"GW-Ghost import failed: {e}")
+    return gw_ghost_mod
 
 
 def _mmss_store():
@@ -1086,6 +1101,85 @@ def cmd_torus_analyze(params_raw=None):
         emit_done(payload)
     except Exception as e:
         emit_log("error", f"GW-Collapser analysis failed: {e}")
+        emit_log("error", traceback.format_exc())
+        emit_error(str(e))
+
+
+def cmd_ghost_continue(params_raw=None):
+    params = parse_json_arg_or_file(params_raw, default={}) or {}
+    module = get_gwcollapser_ghost()
+    if module is None:
+        emit_error(GW_GHOST_ERROR or "GW-Ghost unavailable")
+        return
+
+    analysis = params.get("analysis") or {}
+    flow = analysis.get("flow") or {}
+    torus = analysis.get("torus") or {}
+    parameters = analysis.get("parameters") or {}
+    docs = analysis.get("docs") or []
+    history = flow.get("history") or []
+    start_frame = max(0, int(params.get("start_frame", 0)))
+    steps = max(1, int(params.get("steps", 100)))
+
+    if not history:
+        emit_error("ghost_continue requires persisted analysis.flow.history")
+        return
+
+    base_history = history[: start_frame + 1] if start_frame < len(history) else history
+    start_xy = base_history[-1]
+    sources = [
+        {
+            "x": float((doc.get("torus") or {}).get("x", 0.0)),
+            "y": float((doc.get("torus") or {}).get("y", 0.0)),
+            "mass": 1.0,
+            "spin": 1.0 if index % 2 == 0 else -1.0,
+        }
+        for index, doc in enumerate(docs)
+    ]
+
+    try:
+        emit_log("info", "GW-Ghost continuation started")
+        oscillation_frame = module.detect_oscillation(
+            history,
+            window_size=5,
+            speed_threshold=float(parameters.get("tol_speed", 1e-3)),
+        )
+        ghost = module.continue_trajectory(
+            start_xy=start_xy,
+            sources=sources,
+            geometry_R=float(torus.get("R", parameters.get("geometry_R", 1.2))),
+            geometry_r=float(torus.get("r", parameters.get("geometry_r", 0.6))),
+            epsilon=float(torus.get("epsilon", parameters.get("epsilon", 0.15))),
+            dt=float(parameters.get("dt", 0.02)),
+            friction=float(parameters.get("friction", 0.01)),
+            steps=steps,
+            tol_speed=float(parameters.get("tol_speed", 1e-3)),
+        )
+        payload = {
+            "crystal_id": params.get("crystal_id"),
+            "crystal_code": params.get("crystal_code"),
+            "start_frame": start_frame,
+            "steps": steps,
+            "oscillation_frame": oscillation_frame,
+            "base_history": base_history,
+            "ghost_history": np.asarray(ghost["history"]).tolist(),
+            "final_point": np.asarray(ghost["final"]).tolist(),
+            "parameters": {
+                "dt": float(parameters.get("dt", 0.02)),
+                "friction": float(parameters.get("friction", 0.01)),
+                "epsilon": float(torus.get("epsilon", parameters.get("epsilon", 0.15))),
+                "geometry_R": float(torus.get("R", parameters.get("geometry_R", 1.2))),
+                "geometry_r": float(torus.get("r", parameters.get("geometry_r", 0.6))),
+                "max_steps": int(parameters.get("max_steps", 1500)),
+                "tol_speed": float(parameters.get("tol_speed", 1e-3)),
+                "n_clusters": int(torus.get("clusters", parameters.get("n_clusters", 1))),
+                "embedding_model": parameters.get("embedding_model"),
+            },
+        }
+        emit_data(payload)
+        emit_done(payload)
+    except Exception as e:
+        emit_log("error", f"GW-Ghost continuation failed: {e}")
         emit_log("error", traceback.format_exc())
         emit_error(str(e))
 

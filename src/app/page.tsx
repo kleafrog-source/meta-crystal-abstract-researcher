@@ -11,6 +11,7 @@ import { Chat } from "@/components/pages/Chat";
 import { MMSS } from "@/components/pages/MMSS";
 import { GWCollapser } from "@/components/pages/GWCollapser";
 import { GWCollapserCrystalPool } from "@/components/pages/GWCollapserCrystalPool";
+import { TorusAtlas } from "@/components/pages/TorusAtlas";
 import { Settings } from "@/components/pages/Settings";
 
 export default function Home() {
@@ -38,6 +39,8 @@ export default function Home() {
             return <GWCollapser />;
           case "crystalpool":
             return <GWCollapserCrystalPool />;
+          case "torusatlas":
+            return <TorusAtlas />;
           case "settings":
             return <Settings />;
           default:

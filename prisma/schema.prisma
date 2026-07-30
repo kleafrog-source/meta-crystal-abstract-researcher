@@ -41,6 +41,8 @@ model Crystal {
   /// Vector(384) stored as JSON array of floats (prototype substitute for pgvector)
   embedding     String?
   isFavourite   Boolean  @default(false)
+  ghostCoordinate Json?
+  ghostTrajectory Json?
   metadataJson  String?
   createdAt     DateTime @default(now())
 

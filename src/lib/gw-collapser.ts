@@ -403,6 +403,7 @@ export async function runTorusAnalysisForCrystal(id: string, options: CrystalGwA
   };
 
   persistTorusAnalysisResult(resolved.crystal!.filepath, analysis);
+  await persistCrystalAtlasSnapshot(resolved.crystal!.id, resolved.crystal!.metadataJson, analysis);
   return analysis;
 }
 
@@ -457,6 +458,100 @@ function buildFocusDoc(focus: unknown) {
 function toPair(value: unknown): [number, number] {
   if (!Array.isArray(value) || value.length < 2) return [0, 0];
   return [Number(value[0] ?? 0), Number(value[1] ?? 0)];
+}
+
+async function persistCrystalAtlasSnapshot(
+  crystalId: string,
+  metadataJson: string | null,
+  analysis: GwTorusAnalysisResult,
+) {
+  const metadata = safeParseRecord(metadataJson);
+  const representative = buildAtlasRepresentative(analysis);
+  metadata.torusAnalysis = {
+    stored_at: analysis.stored_at,
+    docs: analysis.docs.map((doc) => ({
+      id: doc.id,
+      title: doc.title,
+      cluster: doc.cluster,
+      torus: doc.torus,
+    })),
+    flow: {
+      final: analysis.flow.final,
+      start: analysis.flow.start,
+    },
+  };
+  metadata.torusAtlas = representative;
+  metadata.torusX = representative.torusX;
+  metadata.torusY = representative.torusY;
+  metadata.torusZ = representative.torusZ;
+  metadata.clusterLabel = representative.clusterLabel;
+
+  await db.crystal.update({
+    where: { id: crystalId },
+    data: {
+      metadataJson: JSON.stringify(metadata),
+    },
+  });
+}
+
+function buildAtlasRepresentative(analysis: GwTorusAnalysisResult) {
+  const flowPoint = analysis.flow.final ?? [0, 0];
+  const clusterLabel = dominantCluster(analysis.docs);
+  const point3d = torusParam(
+    Number(flowPoint[0] ?? 0),
+    Number(flowPoint[1] ?? 0),
+    analysis.torus.R,
+    analysis.torus.r,
+    0,
+  );
+
+  return {
+    torusU: Number(flowPoint[0] ?? 0),
+    torusV: Number(flowPoint[1] ?? 0),
+    torusX: point3d.x,
+    torusY: point3d.y,
+    torusZ: point3d.z,
+    clusterLabel,
+  };
+}
+
+function dominantCluster(docs: GwTorusDocPoint[]) {
+  const counts = new Map<number, number>();
+  for (const doc of docs) {
+    counts.set(doc.cluster, (counts.get(doc.cluster) ?? 0) + 1);
+  }
+  let bestCluster = 0;
+  let bestCount = -1;
+  for (const [cluster, count] of counts.entries()) {
+    if (count > bestCount) {
+      bestCluster = cluster;
+      bestCount = count;
+    }
+  }
+  return bestCluster;
+}
+
+function torusParam(u: number, v: number, R: number, r: number, twist: number) {
+  const vt = v + twist * u;
+  const cv = Math.cos(vt);
+  const sv = Math.sin(vt);
+  const cu = Math.cos(u);
+  const su = Math.sin(u);
+  return {
+    x: (R + r * cv) * cu,
+    y: (R + r * cv) * su,
+    z: r * sv,
+  };
+}
+
+function safeParseRecord(value: string | null) {
+  if (!value) return {} as Record<string, unknown>;
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    return parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : {};
+  } catch {
+    return {} as Record<string, unknown>;
+  }
 }
 
 function toPairList(value: unknown): [number, number][] {
