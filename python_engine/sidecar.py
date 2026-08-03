@@ -1095,6 +1095,7 @@ def cmd_torus_analyze(params_raw=None):
             geometry_R=float(params.get("geometry_R", 1.2)),
             geometry_r=float(params.get("geometry_r", 0.6)),
             embedding_model=str(params.get("embedding_model", "qllama/bge-m3:q8_0")),
+            progress_callback=emit_progress,
         )
         payload = module.serialize_torus_for_web(result)
         emit_data(payload)

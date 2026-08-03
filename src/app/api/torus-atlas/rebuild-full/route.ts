@@ -1,5 +1,12 @@
 import { NextResponse } from "next/server";
-import { getFullTorusAtlasRebuildJob, startFullTorusAtlasRebuild } from "@/lib/torus-atlas";
+import {
+  discardFullTorusAtlasCheckpoint,
+  getFullTorusAtlasRebuildJob,
+  pauseFullTorusAtlasRebuild,
+  restartFullTorusAtlasRebuild,
+  resumeFullTorusAtlasRebuild,
+  startFullTorusAtlasRebuild,
+} from "@/lib/torus-atlas";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,7 +22,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => ({}));
-    const result = await startFullTorusAtlasRebuild({
+    const params = {
       ...(body?.n_clusters !== undefined ? { n_clusters: Number(body.n_clusters) } : {}),
       ...(body?.dt !== undefined ? { dt: Number(body.dt) } : {}),
       ...(body?.friction !== undefined ? { friction: Number(body.friction) } : {}),
@@ -28,8 +35,23 @@ export async function POST(req: Request) {
       ...(typeof body?.embedding_model === "string" && body.embedding_model.trim()
         ? { embedding_model: body.embedding_model.trim() }
         : {}),
-    });
-    return NextResponse.json({ ok: true, job: result });
+    };
+    const action = typeof body?.action === "string" ? body.action : "start";
+
+    if (action === "pause") {
+      return NextResponse.json({ ok: true, job: await pauseFullTorusAtlasRebuild() });
+    }
+    if (action === "resume") {
+      return NextResponse.json({ ok: true, job: await resumeFullTorusAtlasRebuild() });
+    }
+    if (action === "restart") {
+      return NextResponse.json({ ok: true, job: await restartFullTorusAtlasRebuild(params) });
+    }
+    if (action === "discard") {
+      return NextResponse.json({ ok: true, job: await discardFullTorusAtlasCheckpoint() });
+    }
+
+    return NextResponse.json({ ok: true, job: await startFullTorusAtlasRebuild(params) });
   } catch (error) {
     return NextResponse.json({ ok: false, error: (error as Error).message }, { status: 500 });
   }

@@ -18,6 +18,8 @@ export interface TorusAtlasCrystal {
   category: string;
   type: string;
   clusterLabel: number;
+  semanticClusterLabel: number;
+  torusClusterLabel: number;
   formulaCluster: number;
   torusX: number;
   torusY: number;
@@ -53,16 +55,45 @@ export interface TorusAtlasListResponse {
   items: TorusAtlasCrystal[];
 }
 
+export interface TorusAtlasSelectionResponse {
+  ok: boolean;
+  total: number;
+  selectedCount: number;
+  ids: string[];
+  truncated: boolean;
+}
+
+export interface TorusAtlasWorkingSet {
+  id: string;
+  name: string;
+  ids: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TorusAtlasAppendResult {
+  ok: true;
+  baseLayoutKey: string;
+  appended: number;
+  totalLayoutSize: number;
+}
+
 export interface TorusAtlasFullRebuildJob {
   id: string;
-  status: "idle" | "preparing" | "analyzing" | "persisting" | "completed" | "failed";
+  status: "idle" | "preparing" | "analyzing" | "analysis_ready" | "persisting" | "paused" | "completed" | "failed";
   total: number;
   processed: number;
+  analysisProcessed: number;
+  analysisPercent: number;
+  analysisStep: string;
   batchSize: number;
   currentBatch: number;
   totalBatches: number;
   layoutKey: string;
   clusters: number;
+  nextOffset: number;
+  snapshotReady: boolean;
+  paramsJson: string;
   startedAt: string;
   updatedAt: string;
   completedAt: string;
@@ -77,7 +108,12 @@ export interface TorusAtlasDiagnosticResult {
   duplicateCombinations: number;
   clustersRequested: number;
   uniqueLabels: number;
+  uniqueTorusLabels: number;
   labelHistogram: Array<{
+    label: number;
+    count: number;
+  }>;
+  torusLabelHistogram: Array<{
     label: number;
     count: number;
   }>;
@@ -88,6 +124,7 @@ export interface TorusAtlasDiagnosticResult {
     code: string;
     formula: string;
     clusterLabel: number;
+    torusClusterLabel: number;
     torusU: number;
     torusV: number;
   }>;

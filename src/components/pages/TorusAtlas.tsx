@@ -10,13 +10,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { TorusCanvas } from "@/components/torus/TorusCanvas";
 import { COLOR_PRESETS, META_PRESETS, SHAPE_PRESETS, WARP_PRESETS, type SurfaceType, type TorusData } from "@/lib/torus/TorusCanvasRenderer";
-import type { TorusAtlasCrystal, TorusAtlasDiagnosticResult, TorusAtlasFullRebuildJob, TorusAtlasListResponse } from "@/types/torus-atlas";
+import type { TorusAtlasAppendResult, TorusAtlasCrystal, TorusAtlasDiagnosticResult, TorusAtlasFullRebuildJob, TorusAtlasListResponse, TorusAtlasSelectionResponse, TorusAtlasWorkingSet } from "@/types/torus-atlas";
 import type { GwCrystalPoolActionDefinition, GwCrystalPoolActionId, GwCrystalPoolActionResponse } from "@/types/gw-collapser-pool";
 
 const CLUSTER_COLORS = [
@@ -32,6 +33,23 @@ const CLUSTER_COLORS = [
   "#DAA520",
 ];
 
+function formatDuration(ms: number) {
+  if (!Number.isFinite(ms) || ms <= 0) {
+    return "0s";
+  }
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  }
+  if (minutes > 0) {
+    return `${minutes}m ${seconds}s`;
+  }
+  return `${seconds}s`;
+}
+
 export function TorusAtlas() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(24);
@@ -46,9 +64,15 @@ export function TorusAtlas() {
   const [torusDialogOpen, setTorusDialogOpen] = useState(false);
   const [rebuildDialogOpen, setRebuildDialogOpen] = useState(false);
   const [fullRebuildDialogOpen, setFullRebuildDialogOpen] = useState(false);
+  const [bulkSelectDialogOpen, setBulkSelectDialogOpen] = useState(false);
+  const [jobLogsDialogOpen, setJobLogsDialogOpen] = useState(false);
+  const [selectedDrawerOpen, setSelectedDrawerOpen] = useState(false);
   const [rebuildRunning, setRebuildRunning] = useState(false);
   const [fullRebuildStarting, setFullRebuildStarting] = useState(false);
+  const [fullRebuildMutating, setFullRebuildMutating] = useState<null | "pause" | "resume" | "restart" | "discard">(null);
   const [diagnosticRunning, setDiagnosticRunning] = useState(false);
+  const [bulkSelecting, setBulkSelecting] = useState(false);
+  const [appendRunning, setAppendRunning] = useState(false);
   const [rebuildResult, setRebuildResult] = useState<{
     total: number;
     scope: "all" | "selected";
@@ -57,6 +81,17 @@ export function TorusAtlas() {
   } | null>(null);
   const [diagnosticResult, setDiagnosticResult] = useState<TorusAtlasDiagnosticResult | null>(null);
   const [layoutFilterKey, setLayoutFilterKey] = useState("__auto__");
+  const [showOnlySelected, setShowOnlySelected] = useState(false);
+  const [selectedViewPage, setSelectedViewPage] = useState(1);
+  const [selectedViewData, setSelectedViewData] = useState<TorusAtlasListResponse | null>(null);
+  const [selectedViewLoading, setSelectedViewLoading] = useState(false);
+  const [torusItemsData, setTorusItemsData] = useState<TorusAtlasListResponse | null>(null);
+  const [torusItemsLoading, setTorusItemsLoading] = useState(false);
+  const [bulkLimit, setBulkLimit] = useState<100 | 200 | 1000 | "all">(100);
+  const [bulkRuleMode, setBulkRuleMode] = useState<"filter" | "layout" | "semantic" | "torus" | "duplicates">("filter");
+  const [workingSetName, setWorkingSetName] = useState("");
+  const [workingSetMutating, setWorkingSetMutating] = useState(false);
+  const [jobLogs, setJobLogs] = useState<{ progress: string; errors: string }>({ progress: "", errors: "" });
   const [metaPreset, setMetaPreset] = useState("Aurora Horn");
   const [shapePreset, setShapePreset] = useState("Horn Torus");
   const [colorPreset, setColorPreset] = useState("Aurora Borealis");
@@ -73,6 +108,13 @@ export function TorusAtlas() {
   const [showCanvasControls, setShowCanvasControls] = useState(true);
   const [showEdges, setShowEdges] = useState(true);
   const [showLabels, setShowLabels] = useState(false);
+  const [clusterMode, setClusterMode] = useState<"torus" | "semantic">("torus");
+  const [enabledClusters, setEnabledClusters] = useState<number[]>([]);
+  const [torusWindowSize, setTorusWindowSize] = useState<number | "all">("all");
+  const [torusOffset, setTorusOffset] = useState(0);
+  const [expandRelatedNodes, setExpandRelatedNodes] = useState(false);
+  const [showSearchMatchesOnly, setShowSearchMatchesOnly] = useState(false);
+  const [showSearchMatchesWithNeighbors, setShowSearchMatchesWithNeighbors] = useState(false);
   const [rebuildScope, setRebuildScope] = useState<"all" | "selected">("all");
   const [torusParams, setTorusParams] = useState({
     document_mode: "combination_only" as "combination_only" | "full",
@@ -96,7 +138,7 @@ export function TorusAtlas() {
     geometry_r: 0.6,
   });
   const [fullRebuildParams, setFullRebuildParams] = useState({
-    n_clusters: 64,
+    n_clusters: 32,
     max_steps: 100,
     dt: 0.02,
     friction: 0.01,
@@ -104,21 +146,27 @@ export function TorusAtlas() {
     tol_speed: 0.001,
     geometry_R: 1.2,
     geometry_r: 0.6,
-    batch_size: 200,
+    batch_size: 10,
   });
   const { toast } = useToast();
 
-  const atlasUrl = `/api/torus-atlas/crystals?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(search)}&emeralds=${emeraldsOnly ? "1" : "0"}`;
+  const atlasUrl = showOnlySelected
+    ? null
+    : `/api/torus-atlas/crystals?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(search)}&emeralds=${emeraldsOnly ? "1" : "0"}`;
   const { data, loading, refresh } = useFetch<TorusAtlasListResponse>(atlasUrl);
   const { data: actionsData } = useFetch<{ ok: boolean; actions: GwCrystalPoolActionDefinition[] }>("/api/torus-atlas/actions");
+  const { data: workingSetsData, refresh: refreshWorkingSets } = useFetch<{ ok: boolean; items: TorusAtlasWorkingSet[] }>("/api/torus-atlas/working-sets");
+  const { data: logsData, refresh: refreshLogs } = useFetch<{ ok: boolean; progress: string; errors: string }>(jobLogsDialogOpen ? "/api/torus-atlas/rebuild-full/logs" : null);
   const {
     data: fullRebuildJob,
     refresh: refreshFullRebuildJob,
   } = useFetch<TorusAtlasFullRebuildJob>("/api/torus-atlas/rebuild-full");
 
-  const items = data?.items ?? [];
+  const activeData = showOnlySelected ? selectedViewData : data;
+  const items = activeData?.items ?? [];
   const actions = actionsData?.actions ?? [];
-  const totalPages = data?.totalPages ?? 1;
+  const workingSets = workingSetsData?.items ?? [];
+  const totalPages = activeData?.totalPages ?? 1;
   const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
   const allVisibleSelected = items.length > 0 && items.every((item) => selectedSet.has(item.id));
   const visibleLayoutKeys = useMemo(
@@ -153,23 +201,164 @@ export function TorusAtlas() {
     return visibleLayoutKeys[0] ?? "";
   }, [selectedVisibleLayoutKeys, rebuildResult, fullRebuildJob, visibleLayoutKeys, dominantVisibleLayoutKey]);
   const activeLayoutKey = layoutFilterKey === "__auto__" ? autoLayoutKey : layoutFilterKey;
+  const torusSourceItems = torusItemsData?.items ?? items;
   const compatibleItems = useMemo(
-    () => (activeLayoutKey ? items.filter((item) => item.layoutKey === activeLayoutKey) : items),
-    [items, activeLayoutKey],
+    () => (activeLayoutKey ? torusSourceItems.filter((item) => item.layoutKey === activeLayoutKey) : torusSourceItems),
+    [torusSourceItems, activeLayoutKey],
   );
-  const hiddenIncompatibleCount = items.length - compatibleItems.length;
+  const availableClusters = useMemo(
+    () => [...new Set(compatibleItems.map((item) => (clusterMode === "torus" ? item.torusClusterLabel : item.semanticClusterLabel)))].sort((a, b) => a - b),
+    [clusterMode, compatibleItems],
+  );
+  const effectiveClusters = enabledClusters.length > 0 ? enabledClusters : availableClusters;
+  const clusterFilteredItems = useMemo(
+    () => compatibleItems.filter((item) => effectiveClusters.includes(clusterMode === "torus" ? item.torusClusterLabel : item.semanticClusterLabel)),
+    [clusterMode, compatibleItems, effectiveClusters],
+  );
+  const normalizedTorusSearch = search.trim().toLowerCase();
+  const searchFilteredItems = useMemo(() => {
+    if (!showSearchMatchesOnly || !normalizedTorusSearch) {
+      return clusterFilteredItems;
+    }
+    return clusterFilteredItems.filter((item) =>
+      [item.code, item.name, item.formula, item.category, item.pattern]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(normalizedTorusSearch)),
+    );
+  }, [clusterFilteredItems, normalizedTorusSearch, showSearchMatchesOnly]);
+  const searchMatchesWithNeighborsItems = useMemo(() => {
+    if (!showSearchMatchesWithNeighbors || !normalizedTorusSearch) {
+      return clusterFilteredItems;
+    }
+    const matches = clusterFilteredItems.filter((item) =>
+      [item.code, item.name, item.formula, item.category, item.pattern]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(normalizedTorusSearch)),
+    );
+    const visibleIds = new Set(matches.map((item) => item.id));
+    const expanded = [...matches];
+    const byCluster = new Map<number, TorusAtlasCrystal[]>();
+    for (const item of clusterFilteredItems) {
+      const label = clusterMode === "torus" ? item.torusClusterLabel : item.semanticClusterLabel;
+      const bucket = byCluster.get(label) ?? [];
+      bucket.push(item);
+      byCluster.set(label, bucket);
+    }
+    for (const item of matches) {
+      const label = clusterMode === "torus" ? item.torusClusterLabel : item.semanticClusterLabel;
+      const neighbor = (byCluster.get(label) ?? []).find((candidate) => !visibleIds.has(candidate.id));
+      if (!neighbor) {
+        continue;
+      }
+      visibleIds.add(neighbor.id);
+      expanded.push(neighbor);
+    }
+    return expanded;
+  }, [clusterFilteredItems, clusterMode, normalizedTorusSearch, showSearchMatchesWithNeighbors]);
+  const torusBaseItems = showSearchMatchesWithNeighbors ? searchMatchesWithNeighborsItems : searchFilteredItems;
+  const slicedTorusItems = useMemo(() => {
+    if (torusWindowSize === "all") {
+      return torusBaseItems;
+    }
+    return torusBaseItems.slice(torusOffset, torusOffset + torusWindowSize);
+  }, [torusBaseItems, torusOffset, torusWindowSize]);
+  const torusDisplayItems = useMemo(() => {
+    if (!expandRelatedNodes) {
+      return slicedTorusItems;
+    }
+    const byCluster = new Map<number, TorusAtlasCrystal[]>();
+    for (const item of torusBaseItems) {
+      const label = clusterMode === "torus" ? item.torusClusterLabel : item.semanticClusterLabel;
+      const bucket = byCluster.get(label) ?? [];
+      bucket.push(item);
+      byCluster.set(label, bucket);
+    }
+    const visibleIds = new Set(slicedTorusItems.map((item) => item.id));
+    const expanded = [...slicedTorusItems];
+    for (const item of slicedTorusItems) {
+      const label = clusterMode === "torus" ? item.torusClusterLabel : item.semanticClusterLabel;
+      const related = (byCluster.get(label) ?? []).find((candidate) => !visibleIds.has(candidate.id));
+      if (!related) {
+        continue;
+      }
+      visibleIds.add(related.id);
+      expanded.push(related);
+    }
+    return expanded;
+  }, [clusterMode, expandRelatedNodes, slicedTorusItems, torusBaseItems]);
+  const hiddenIncompatibleCount = torusSourceItems.length - compatibleItems.length;
   const actionGroups = useMemo(() => ({
     analysis: actions.filter((item) => item.category === "analysis"),
     generation: actions.filter((item) => item.category === "generation"),
     visualization: actions.filter((item) => item.category === "visualization"),
   }), [actions]);
+  const fullRebuildTiming = useMemo(() => {
+    if (!fullRebuildJob?.startedAt) {
+      return null;
+    }
+    const startedAt = Date.parse(fullRebuildJob.startedAt);
+    const updatedAt = Date.parse(fullRebuildJob.updatedAt || fullRebuildJob.startedAt);
+    if (!Number.isFinite(startedAt) || !Number.isFinite(updatedAt)) {
+      return null;
+    }
+    const completedAt = fullRebuildJob.completedAt ? Date.parse(fullRebuildJob.completedAt) : NaN;
+    const referenceTime = Number.isFinite(completedAt) ? completedAt : Date.now();
+    const elapsedMs = Math.max(0, referenceTime - startedAt);
+    const activeMs = Math.max(0, updatedAt - startedAt);
+    let etaLabel = "estimating";
+    if (fullRebuildJob.status === "completed") {
+      etaLabel = "done";
+    } else if (fullRebuildJob.status === "failed") {
+      etaLabel = "n/a";
+    } else if (fullRebuildJob.status === "paused") {
+      etaLabel = "paused";
+    } else if (fullRebuildJob.processed > 0 && activeMs > 0 && fullRebuildJob.total > fullRebuildJob.processed) {
+      const rate = fullRebuildJob.processed / activeMs;
+      if (rate > 0) {
+        etaLabel = formatDuration((fullRebuildJob.total - fullRebuildJob.processed) / rate);
+      }
+    }
+    return {
+      elapsedLabel: formatDuration(elapsedMs),
+      etaLabel,
+    };
+  }, [fullRebuildJob]);
+  const fullRebuildProgress = useMemo(() => {
+    if (!fullRebuildJob) return 0;
+    if (fullRebuildJob.status === "analyzing") {
+      return fullRebuildJob.analysisPercent;
+    }
+    if (fullRebuildJob.total > 0) {
+      return Math.max(0, Math.min(100, (fullRebuildJob.processed / fullRebuildJob.total) * 100));
+    }
+    return 0;
+  }, [fullRebuildJob]);
+  const nextCheckpointRemaining = useMemo(() => {
+    if (!fullRebuildJob || fullRebuildJob.status !== "persisting" || fullRebuildJob.batchSize <= 0) {
+      return 0;
+    }
+    const remainder = fullRebuildJob.processed % fullRebuildJob.batchSize;
+    return remainder === 0 ? fullRebuildJob.batchSize : fullRebuildJob.batchSize - remainder;
+  }, [fullRebuildJob]);
+  const selectionSummary = useMemo(() => {
+    const selectionItems = items.filter((item) => selectedSet.has(item.id));
+    const distribution = new Map<string, number>();
+    for (const item of selectionItems) {
+      const key = item.layoutKey || "no-layout";
+      distribution.set(key, (distribution.get(key) ?? 0) + 1);
+    }
+    return {
+      selectedCount: selectedIds.length,
+      layoutDistribution: [...distribution.entries()].map(([key, count]) => ({ key, count })).sort((a, b) => b.count - a.count),
+    };
+  }, [items, selectedIds.length, selectedSet]);
 
   const torusData = useMemo<TorusData>(() => {
-    const nodes = compatibleItems.map((item) => ({
+    const nodes = torusDisplayItems.map((item) => ({
       id: item.id,
       u: item.torusU,
       v: item.torusV,
-      color: CLUSTER_COLORS[item.clusterLabel % CLUSTER_COLORS.length] ?? "#ffffff",
+      color: CLUSTER_COLORS[(clusterMode === "torus" ? item.torusClusterLabel : item.semanticClusterLabel) % CLUSTER_COLORS.length] ?? "#ffffff",
       size: item.isEmerald ? 5 : 3,
       label: item.name,
       mass: 1,
@@ -177,10 +366,11 @@ export function TorusAtlas() {
     }));
 
     const byCluster = new Map<number, TorusAtlasCrystal[]>();
-    for (const item of compatibleItems) {
-      const bucket = byCluster.get(item.clusterLabel) ?? [];
+    for (const item of torusDisplayItems) {
+      const activeCluster = clusterMode === "torus" ? item.torusClusterLabel : item.semanticClusterLabel;
+      const bucket = byCluster.get(activeCluster) ?? [];
       bucket.push(item);
-      byCluster.set(item.clusterLabel, bucket);
+      byCluster.set(activeCluster, bucket);
     }
 
     const edges: TorusData["edges"] = [];
@@ -194,20 +384,144 @@ export function TorusAtlas() {
       }
     }
 
-  return {
+    return {
       nodes,
       edges,
-      torus_state: { R: 200, r: 80, collapse_factor: collapseFactor, twist: 0.02 },
+      torus_state: {
+        R: torusDisplayItems[0]?.torusGeometryR ?? compatibleItems[0]?.torusGeometryR ?? 1.2,
+        r: torusDisplayItems[0]?.torusGeometryr ?? compatibleItems[0]?.torusGeometryr ?? 0.6,
+        collapse_factor: collapseFactor,
+        twist: 0.02,
+      },
     };
-  }, [compatibleItems, collapseFactor]);
+  }, [compatibleItems, collapseFactor, clusterMode, torusDisplayItems]);
 
-  const hoveredCrystal = items.find((item) => item.id === hoveredId) ?? null;
+  const hoveredCrystal = torusSourceItems.find((item) => item.id === hoveredId) ?? null;
+
+  useEffect(() => {
+    if (!showOnlySelected) return;
+    let cancelled = false;
+    setSelectedViewLoading(true);
+    apiPost<TorusAtlasListResponse>("/api/torus-atlas/selection-items", {
+      ids: selectedIds,
+      page: selectedViewPage,
+      pageSize,
+    }).then((response) => {
+      if (!cancelled) setSelectedViewData(response);
+    }).catch(() => {
+      if (!cancelled) setSelectedViewData({ ok: true, total: 0, page: 1, pageSize, totalPages: 1, items: [] });
+    }).finally(() => {
+      if (!cancelled) setSelectedViewLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [showOnlySelected, selectedIds, selectedViewPage, pageSize]);
+
+  useEffect(() => {
+    if (showOnlySelected) {
+      if (!selectedIds.length) {
+        setTorusItemsData(selectedViewData);
+        return;
+      }
+      let cancelled = false;
+      setTorusItemsLoading(true);
+      fetch(
+        `/api/torus-atlas/crystals?all=1&page=1&pageSize=20000&ids=${encodeURIComponent(selectedIds.join(","))}`
+      )
+        .then(async (response) => {
+          if (!response.ok) {
+            const text = await response.text().catch(() => "");
+            throw new Error(text || `HTTP ${response.status}`);
+          }
+          return response.json() as Promise<TorusAtlasListResponse>;
+        })
+        .then((payload) => {
+          if (!cancelled) setTorusItemsData(payload);
+        })
+        .catch(() => {
+          if (!cancelled) setTorusItemsData(selectedViewData);
+        })
+        .finally(() => {
+          if (!cancelled) setTorusItemsLoading(false);
+        });
+      return () => {
+        cancelled = true;
+      };
+    }
+    if (!activeLayoutKey) {
+      setTorusItemsData(data ?? null);
+      return;
+    }
+    let cancelled = false;
+    setTorusItemsLoading(true);
+    fetch(
+      `/api/torus-atlas/crystals?all=1&page=1&pageSize=20000&layoutKey=${encodeURIComponent(activeLayoutKey)}&emeralds=${emeraldsOnly ? "1" : "0"}`
+    )
+      .then(async (response) => {
+        if (!response.ok) {
+          const text = await response.text().catch(() => "");
+          throw new Error(text || `HTTP ${response.status}`);
+        }
+        return response.json() as Promise<TorusAtlasListResponse>;
+      })
+      .then((payload) => {
+        if (!cancelled) setTorusItemsData(payload);
+      })
+      .catch(() => {
+        if (!cancelled) setTorusItemsData(data ?? null);
+      })
+      .finally(() => {
+        if (!cancelled) setTorusItemsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeLayoutKey, data, emeraldsOnly, selectedIds, selectedViewData, showOnlySelected]);
+
+  useEffect(() => {
+    if (!logsData) return;
+    setJobLogs({
+      progress: logsData.progress ?? "",
+      errors: logsData.errors ?? "",
+    });
+  }, [logsData]);
 
   useEffect(() => {
     if (layoutFilterKey !== "__auto__" && layoutFilterKey && !visibleLayoutKeys.includes(layoutFilterKey)) {
       setLayoutFilterKey("__auto__");
     }
   }, [layoutFilterKey, visibleLayoutKeys]);
+
+  useEffect(() => {
+    setEnabledClusters((prev) => {
+      const next = prev.filter((label) => availableClusters.includes(label));
+      if (next.length > 0) {
+        return next;
+      }
+      return availableClusters;
+    });
+  }, [availableClusters]);
+
+  useEffect(() => {
+    if (torusWindowSize === "all") {
+      if (torusOffset !== 0) {
+        setTorusOffset(0);
+      }
+      return;
+    }
+    const maxOffset = Math.max(0, torusBaseItems.length - torusWindowSize);
+    if (torusOffset > maxOffset) {
+      setTorusOffset(maxOffset);
+    }
+  }, [torusBaseItems.length, torusOffset, torusWindowSize]);
+
+  useEffect(() => {
+    if (!normalizedTorusSearch && (showSearchMatchesOnly || showSearchMatchesWithNeighbors)) {
+      setShowSearchMatchesOnly(false);
+      setShowSearchMatchesWithNeighbors(false);
+    }
+  }, [normalizedTorusSearch, showSearchMatchesOnly, showSearchMatchesWithNeighbors]);
 
   useEffect(() => {
     if (!fullRebuildJob) return;
@@ -233,6 +547,114 @@ export function TorusAtlas() {
       return;
     }
     setSelectedIds((prev) => [...new Set([...prev, ...items.map((item) => item.id)])]);
+  };
+
+  const toggleCluster = (cluster: number, checked: boolean) => {
+    setEnabledClusters((prev) => {
+      if (checked) {
+        return prev.includes(cluster) ? prev : [...prev, cluster].sort((a, b) => a - b);
+      }
+      return prev.filter((item) => item !== cluster);
+    });
+    setTorusOffset(0);
+  };
+
+  const shiftTorusOffset = (delta: number, forceWindow?: number) => {
+    const nextWindow = forceWindow ?? torusWindowSize;
+    const effectiveWindow = nextWindow === "all" ? searchFilteredItems.length || 1 : nextWindow;
+    const maxOffset = Math.max(0, searchFilteredItems.length - effectiveWindow);
+    const nextOffset = Math.max(0, Math.min(torusOffset + delta, maxOffset));
+    if (forceWindow) {
+      setTorusWindowSize(forceWindow);
+    }
+    setTorusOffset(nextOffset);
+  };
+
+  const applyBulkSelection = async (mode: "replace" | "append") => {
+    setBulkSelecting(true);
+    try {
+      const response = await apiPost<TorusAtlasSelectionResponse>("/api/torus-atlas/selection", {
+        search,
+        emeralds: emeraldsOnly,
+        limit: bulkLimit,
+        ...(bulkRuleMode === "layout" && activeLayoutKey ? { layoutKey: activeLayoutKey } : {}),
+        ...(bulkRuleMode === "semantic" ? { semanticClusterLabel: compatibleItems[0]?.semanticClusterLabel ?? 0 } : {}),
+        ...(bulkRuleMode === "torus" ? { torusClusterLabel: compatibleItems[0]?.torusClusterLabel ?? 0 } : {}),
+        ...(bulkRuleMode === "duplicates" ? { duplicatesOnly: true } : {}),
+      });
+      setSelectedIds((prev) => {
+        if (mode === "replace") return response.ids;
+        return [...new Set([...prev, ...response.ids])];
+      });
+      setBulkSelectDialogOpen(false);
+      toast({
+        title: "Bulk Selection",
+        description: `Selected ${response.selectedCount} of ${response.total} matching crystals.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Bulk Selection",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    } finally {
+      setBulkSelecting(false);
+    }
+  };
+
+  const saveWorkingSet = async () => {
+    setWorkingSetMutating(true);
+    try {
+      await apiPost("/api/torus-atlas/working-sets", {
+        name: workingSetName,
+        ids: selectedIds,
+      });
+      setWorkingSetName("");
+      refreshWorkingSets();
+      toast({
+        title: "Working Set",
+        description: "Selection saved.",
+      });
+    } catch (error) {
+      toast({
+        title: "Working Set",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    } finally {
+      setWorkingSetMutating(false);
+    }
+  };
+
+  const deleteWorkingSet = async (id: string) => {
+    setWorkingSetMutating(true);
+    try {
+      await fetch(`/api/torus-atlas/working-sets?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      refreshWorkingSets();
+    } finally {
+      setWorkingSetMutating(false);
+    }
+  };
+
+  const runIncrementalAppend = async () => {
+    setAppendRunning(true);
+    try {
+      const response = await apiPost<TorusAtlasAppendResult>("/api/torus-atlas/append", {});
+      refresh();
+      refreshFullRebuildJob();
+      toast({
+        title: "Incremental Atlas Append",
+        description: `Appended ${response.appended} crystals to ${response.baseLayoutKey}.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Incremental Atlas Append",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    } finally {
+      setAppendRunning(false);
+    }
   };
 
   const runAction = async (action: GwCrystalPoolActionDefinition) => {
@@ -352,6 +774,69 @@ export function TorusAtlas() {
     }
   };
 
+  const runQuickFullAtlas = async () => {
+    setFullRebuildStarting(true);
+    try {
+      await apiPost<{ ok: true; job: TorusAtlasFullRebuildJob }>("/api/torus-atlas/rebuild-full", {
+        n_clusters: 32,
+        max_steps: 100,
+        dt: 0.02,
+        friction: 0.01,
+        epsilon: 0.15,
+        tol_speed: 0.001,
+        geometry_R: 1.2,
+        geometry_r: 0.6,
+        batch_size: 10,
+      });
+      refreshFullRebuildJob();
+      toast({
+        title: "Quick Full Atlas",
+        description: "Started full atlas in combination-only mode with checkpoint batches of 10.",
+      });
+    } catch (error) {
+      toast({
+        title: "Quick Full Atlas",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    } finally {
+      setFullRebuildStarting(false);
+    }
+  };
+
+  const controlFullAtlasRebuild = async (action: "pause" | "resume" | "restart" | "discard") => {
+    setFullRebuildMutating(action);
+    try {
+      await apiPost<{ ok: true; job: TorusAtlasFullRebuildJob }>("/api/torus-atlas/rebuild-full", {
+        action,
+        ...fullRebuildParams,
+      });
+      refreshFullRebuildJob();
+      if (action === "restart") {
+        refresh();
+      }
+      toast({
+        title: "Full Atlas Control",
+        description:
+          action === "pause"
+            ? "Full atlas rebuild paused."
+            : action === "resume"
+              ? "Full atlas rebuild resumed from checkpoint."
+              : action === "restart"
+                ? "Full atlas rebuild restarted."
+                : "Checkpoint discarded.",
+      });
+    } catch (error) {
+      toast({
+        title: "Full Atlas Control",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    } finally {
+      setFullRebuildMutating(null);
+    }
+  };
+
   const runAtlasDiagnostic = async () => {
     if (!selectedIds.length) {
       toast({
@@ -404,6 +889,22 @@ export function TorusAtlas() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <Button size="sm" variant="outline" onClick={() => setBulkSelectDialogOpen(true)}>
+              Bulk Select
+            </Button>
+            <Button size="sm" variant="outline" onClick={runIncrementalAppend} disabled={appendRunning || !fullRebuildJob?.snapshotReady}>
+              {appendRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Append New
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={runQuickFullAtlas}
+              disabled={fullRebuildStarting || ["preparing", "analyzing", "analysis_ready", "persisting"].includes(fullRebuildJob?.status ?? "")}
+            >
+              {fullRebuildStarting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Quick Full Atlas
+            </Button>
             <Button size="sm" variant="outline" onClick={runAtlasDiagnostic} disabled={diagnosticRunning || !selectedIds.length}>
               {diagnosticRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Diagnose Slice
@@ -414,7 +915,7 @@ export function TorusAtlas() {
             <Button size="sm" variant="outline" onClick={() => setRebuildDialogOpen(true)}>
               Rebuild Global Atlas
             </Button>
-            <Badge variant="outline">{data?.total ?? 0} crystals</Badge>
+            <Badge variant="outline">{activeData?.total ?? data?.total ?? 0} crystals</Badge>
             <Badge variant="outline">{selectedIds.length} selected</Badge>
           </div>
         </div>
@@ -425,7 +926,7 @@ export function TorusAtlas() {
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Atlas List</CardTitle>
             <CardDescription>
-              First migration slice: read-only list, selection and detail panel over the new canvas renderer.
+              Compact browse list for inspection. Bulk selection is handled separately to avoid large-list overhead near the canvas.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex min-h-0 flex-1 flex-col gap-4">
@@ -448,14 +949,20 @@ export function TorusAtlas() {
                   <Sparkles className="mr-2 h-4 w-4" />
                   Emeralds
                 </Button>
+                <Button size="sm" variant={showSearchMatchesWithNeighbors ? "default" : "outline"} onClick={() => { setShowSearchMatchesWithNeighbors((prev) => { const next = !prev; if (next) setShowSearchMatchesOnly(false); return next; }); setTorusOffset(0); }} disabled={!normalizedTorusSearch}>
+                  Найденное + соседи
+                </Button>
               </div>
             </div>
 
             <div className="flex items-center justify-between gap-2 text-sm text-muted-foreground">
-              <div>Page {page} / {totalPages}</div>
+              <div>Page {showOnlySelected ? selectedViewPage : page} / {totalPages}</div>
               <div className="flex items-center gap-2">
+                <Button size="sm" variant={showOnlySelected ? "default" : "outline"} onClick={() => { setShowOnlySelected((prev) => !prev); setSelectedViewPage(1); }}>
+                  {showOnlySelected ? "Selected View" : "Browse View"}
+                </Button>
                 {[12, 24, 48].map((value) => (
-                  <Button key={value} size="sm" variant={pageSize === value ? "default" : "outline"} onClick={() => { setPage(1); setPageSize(value); }}>
+                  <Button key={value} size="sm" variant={pageSize === value ? "default" : "outline"} onClick={() => { setPage(1); setSelectedViewPage(1); setPageSize(value); }}>
                     {value}
                   </Button>
                 ))}
@@ -476,7 +983,7 @@ export function TorusAtlas() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {loading && (
+                  {(showOnlySelected ? selectedViewLoading : loading) && (
                     <TableRow>
                       <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
                         <Loader2 className="mx-auto mb-2 h-4 w-4 animate-spin" />
@@ -484,7 +991,7 @@ export function TorusAtlas() {
                       </TableCell>
                     </TableRow>
                   )}
-                  {!loading && items.length === 0 && (
+                  {!(showOnlySelected ? selectedViewLoading : loading) && items.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
                         No atlas rows for the current filter.
@@ -509,8 +1016,11 @@ export function TorusAtlas() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: CLUSTER_COLORS[item.clusterLabel % CLUSTER_COLORS.length] }} />
-                          <span>{item.clusterLabel}</span>
+                          <span
+                            className="inline-block h-2.5 w-2.5 rounded-full"
+                            style={{ backgroundColor: CLUSTER_COLORS[(clusterMode === "torus" ? item.torusClusterLabel : item.semanticClusterLabel) % CLUSTER_COLORS.length] }}
+                          />
+                          <span>{clusterMode === "torus" ? item.torusClusterLabel : item.semanticClusterLabel}</span>
                         </div>
                       </TableCell>
                       <TableCell>{formatMetric(item.metrics.V)}</TableCell>
@@ -522,11 +1032,25 @@ export function TorusAtlas() {
             </ScrollArea>
 
             <div className="flex items-center justify-between gap-2">
-              <Button size="sm" variant="outline" disabled={page <= 1} onClick={() => setPage((prev) => Math.max(1, prev - 1))}>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={(showOnlySelected ? selectedViewPage : page) <= 1}
+                onClick={() => showOnlySelected
+                  ? setSelectedViewPage((prev) => Math.max(1, prev - 1))
+                  : setPage((prev) => Math.max(1, prev - 1))}
+              >
                 <ChevronLeft className="mr-1 h-4 w-4" />
                 Prev
               </Button>
-              <Button size="sm" variant="outline" disabled={page >= totalPages} onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={(showOnlySelected ? selectedViewPage : page) >= totalPages}
+                onClick={() => showOnlySelected
+                  ? setSelectedViewPage((prev) => Math.min(totalPages, prev + 1))
+                  : setPage((prev) => Math.min(totalPages, prev + 1))}
+              >
                 Next
                 <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
@@ -535,6 +1059,72 @@ export function TorusAtlas() {
         </Card>
 
         <div className="min-h-0 space-y-4">
+          {selectionSummary && (
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Selection Summary</CardTitle>
+                <CardDescription>
+                  Working selection is independent from the currently rendered page.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="outline">{selectionSummary.selectedCount} selected</Badge>
+                  <Badge variant="outline">{showOnlySelected ? "selected-only view" : "browse view"}</Badge>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {selectionSummary.layoutDistribution.length ? selectionSummary.layoutDistribution.slice(0, 6).map((item) => (
+                    <Badge key={`layout-summary-${item.key}`} variant="outline">
+                      {item.key}: {item.count}
+                    </Badge>
+                  )) : <span className="text-muted-foreground">No selected items on the current list snapshot.</span>}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button size="sm" variant="outline" disabled={!selectedIds.length} onClick={() => setShowOnlySelected(true)}>
+                    Show Only Selected
+                  </Button>
+                  <Button size="sm" variant="outline" disabled={!selectedIds.length} onClick={() => setSelectedDrawerOpen(true)}>
+                    Open Drawer
+                  </Button>
+                  <Button size="sm" variant="outline" disabled={!selectedIds.length} onClick={() => setSelectedIds([])}>
+                    Clear Selection
+                  </Button>
+                </div>
+                <div className="flex gap-2">
+                  <Input value={workingSetName} onChange={(event) => setWorkingSetName(event.target.value)} placeholder="Save selection as working set" />
+                  <Button size="sm" variant="outline" disabled={!selectedIds.length || !workingSetName.trim() || workingSetMutating} onClick={saveWorkingSet}>
+                    Save Set
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Working Sets</CardTitle>
+              <CardDescription>
+                Persist and reload large selections without depending on current paging.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {!workingSets.length ? (
+                <div className="text-sm text-muted-foreground">No saved working sets.</div>
+              ) : (
+                workingSets.map((item) => (
+                  <div key={item.id} className="flex items-center justify-between gap-2 rounded-md border border-border/60 p-3 text-sm">
+                    <div className="min-w-0">
+                      <div className="font-medium">{item.name}</div>
+                      <div className="text-xs text-muted-foreground">{item.ids.length} items</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button size="sm" variant="outline" onClick={() => setSelectedIds(item.ids)}>Load</Button>
+                      <Button size="sm" variant="outline" disabled={workingSetMutating} onClick={() => deleteWorkingSet(item.id)}>Delete</Button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between gap-2">
@@ -563,6 +1153,12 @@ export function TorusAtlas() {
                   <NumericField label="Collapse" value={collapseFactor} onChange={setCollapseFactor} step="0.01" />
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  <Button size="sm" variant={clusterMode === "torus" ? "default" : "outline"} onClick={() => setClusterMode("torus")}>
+                    Torus Clusters
+                  </Button>
+                  <Button size="sm" variant={clusterMode === "semantic" ? "default" : "outline"} onClick={() => setClusterMode("semantic")}>
+                    Semantic Clusters
+                  </Button>
                   <Button size="sm" variant={mouseRotation ? "default" : "outline"} onClick={() => setMouseRotation((prev) => !prev)}>
                     Mouse Rotation
                   </Button>
@@ -593,12 +1189,33 @@ export function TorusAtlas() {
               <CardContent className="space-y-3 text-sm">
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="outline">{fullRebuildJob.status}</Badge>
-                  <Badge variant="outline">{fullRebuildJob.processed} / {fullRebuildJob.total}</Badge>
+                  <Badge variant="outline">
+                    {fullRebuildJob.status === "analyzing"
+                      ? `${fullRebuildJob.analysisProcessed} / ${fullRebuildJob.total}`
+                      : `${fullRebuildJob.processed} / ${fullRebuildJob.total}`}
+                  </Badge>
                   <Badge variant="outline">{fullRebuildJob.clusters} clusters</Badge>
+                  <Badge variant="outline">checkpoint {fullRebuildJob.batchSize}</Badge>
+                  <Badge variant="outline">next offset {fullRebuildJob.nextOffset}</Badge>
+                  <Badge variant="outline">{fullRebuildJob.snapshotReady ? "snapshot present" : "snapshot pending"}</Badge>
+                  {fullRebuildTiming && <Badge variant="outline">elapsed {fullRebuildTiming.elapsedLabel}</Badge>}
+                  {fullRebuildTiming && <Badge variant="outline">eta {fullRebuildTiming.etaLabel}</Badge>}
+                  {fullRebuildJob.status === "persisting" && <Badge variant="outline">to checkpoint {nextCheckpointRemaining}</Badge>}
                   {fullRebuildJob.totalBatches > 0 && (
                     <Badge variant="outline">batch {fullRebuildJob.currentBatch} / {fullRebuildJob.totalBatches}</Badge>
                   )}
                 </div>
+                <Progress value={fullRebuildProgress} className="h-2" />
+                {fullRebuildJob.status === "analyzing" && (
+                  <div className="text-xs text-muted-foreground">
+                    Analysis stage: {fullRebuildJob.analysisPercent}%{fullRebuildJob.analysisStep ? ` • ${fullRebuildJob.analysisStep}` : ""}
+                  </div>
+                )}
+                {fullRebuildJob.status === "persisting" && (
+                  <div className="text-xs text-muted-foreground">
+                    Persist stage: batch {fullRebuildJob.currentBatch} of {fullRebuildJob.totalBatches}, next checkpoint after {nextCheckpointRemaining} items.
+                  </div>
+                )}
                 <div className="text-muted-foreground">{fullRebuildJob.phaseMessage || "Waiting for updates."}</div>
                 {fullRebuildJob.layoutKey && (
                   <div className="break-all text-xs text-muted-foreground">{fullRebuildJob.layoutKey}</div>
@@ -608,6 +1225,47 @@ export function TorusAtlas() {
                     {fullRebuildJob.error}
                   </div>
                 )}
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={Boolean(fullRebuildMutating) || !["analysis_ready", "persisting"].includes(fullRebuildJob.status)}
+                    onClick={() => controlFullAtlasRebuild("pause")}
+                  >
+                    {fullRebuildMutating === "pause" ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    Pause
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={Boolean(fullRebuildMutating) || !["paused", "analysis_ready", "failed"].includes(fullRebuildJob.status)}
+                    onClick={() => controlFullAtlasRebuild("resume")}
+                  >
+                    {fullRebuildMutating === "resume" ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    Resume
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={Boolean(fullRebuildMutating)}
+                    onClick={() => controlFullAtlasRebuild("restart")}
+                  >
+                    {fullRebuildMutating === "restart" ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    Restart
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={Boolean(fullRebuildMutating) || !fullRebuildJob.id}
+                    onClick={() => controlFullAtlasRebuild("discard")}
+                  >
+                    {fullRebuildMutating === "discard" ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    Discard
+                  </Button>
+                  <Button size="sm" variant="outline" disabled={!fullRebuildJob.id} onClick={() => { refreshLogs(); setJobLogsDialogOpen(true); }}>
+                    View Logs
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           )}
@@ -625,7 +1283,8 @@ export function TorusAtlas() {
                   <Badge variant="outline">{diagnosticResult.uniqueCombinations} unique</Badge>
                   <Badge variant="outline">{diagnosticResult.duplicateCombinations} duplicates</Badge>
                   <Badge variant="outline">{diagnosticResult.clustersRequested} requested</Badge>
-                  <Badge variant="outline">{diagnosticResult.uniqueLabels} labels returned</Badge>
+                  <Badge variant="outline">{diagnosticResult.uniqueLabels} semantic labels</Badge>
+                  <Badge variant="outline">{diagnosticResult.uniqueTorusLabels} torus labels</Badge>
                 </div>
                 <div className="grid gap-2 md:grid-cols-2">
                   <div className="rounded-md border border-border/60 p-3">
@@ -639,7 +1298,7 @@ export function TorusAtlas() {
                     </div>
                   </div>
                   <div className="rounded-md border border-border/60 p-3">
-                    <div className="text-xs uppercase tracking-wide text-muted-foreground">Label Histogram</div>
+                    <div className="text-xs uppercase tracking-wide text-muted-foreground">Semantic Histogram</div>
                     <div className="mt-2 flex flex-wrap gap-2">
                       {diagnosticResult.labelHistogram.length ? diagnosticResult.labelHistogram.map((item) => (
                         <Badge key={`label-${item.label}`} variant="outline">
@@ -649,13 +1308,24 @@ export function TorusAtlas() {
                     </div>
                   </div>
                 </div>
+                <div className="rounded-md border border-border/60 p-3">
+                  <div className="text-xs uppercase tracking-wide text-muted-foreground">Torus Histogram</div>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {diagnosticResult.torusLabelHistogram.length ? diagnosticResult.torusLabelHistogram.map((item) => (
+                      <Badge key={`torus-label-${item.label}`} variant="outline">
+                        {item.label}: {item.count}
+                      </Badge>
+                    )) : <span className="text-xs text-muted-foreground">No torus labels generated.</span>}
+                  </div>
+                </div>
                 <ScrollArea className="h-[220px] rounded-md border border-border/60">
                   <div className="space-y-2 p-3">
                     {diagnosticResult.layoutPreview.map((item) => (
                       <div key={`diag-${item.id}`} className="rounded-md border border-border/60 p-3">
                         <div className="flex flex-wrap items-center gap-2">
                           <Badge variant="outline">{item.code}</Badge>
-                          <Badge variant="outline">cluster {item.clusterLabel}</Badge>
+                          <Badge variant="outline">semantic {item.clusterLabel}</Badge>
+                          <Badge variant="outline">torus {item.torusClusterLabel}</Badge>
                           <Badge variant="outline">u {item.torusU.toFixed(3)}</Badge>
                           <Badge variant="outline">v {item.torusV.toFixed(3)}</Badge>
                         </div>
@@ -684,6 +1354,7 @@ export function TorusAtlas() {
                     <Badge variant="outline">{rebuildResult.scope}</Badge>
                     <Badge variant="outline">{rebuildResult.total} crystals</Badge>
                     <Badge variant="outline">{rebuildResult.clusters} clusters</Badge>
+                    <Badge variant="outline">topology clustering enabled</Badge>
                   </div>
                   <div className="mt-2 text-xs text-muted-foreground break-all">{rebuildResult.layoutKey}</div>
                 </div>
@@ -731,16 +1402,19 @@ export function TorusAtlas() {
               <div className="flex items-center gap-2">
                 <Badge variant="outline">
                   <Database className="mr-2 h-3.5 w-3.5" />
-                  {compatibleItems.length} nodes
+                  {torusDisplayItems.length} shown
                 </Badge>
+                <Badge variant="outline">{torusBaseItems.length} filtered</Badge>
+                <Badge variant="outline">{compatibleItems.length} compatible</Badge>
                 <Badge variant="outline">
                   <Activity className="mr-2 h-3.5 w-3.5" />
                   {activeLayoutKey ? "layout-locked" : "read-only"}
                 </Badge>
+                <Badge variant="outline">{clusterMode === "torus" ? "torus clusters" : "semantic clusters"}</Badge>
               </div>
             </div>
           </CardHeader>
-          <CardContent className="flex h-[calc(100vh-220px)] min-h-[520px] flex-col gap-3">
+          <CardContent className="flex h-[calc(100vh-120px)] min-h-[760px] flex-col gap-3">
             <div className="flex flex-wrap items-center gap-2">
               <Select value={layoutFilterKey} onValueChange={setLayoutFilterKey}>
                 <SelectTrigger className="w-[360px]">
@@ -762,12 +1436,90 @@ export function TorusAtlas() {
               {selectedVisibleLayoutKeys.length > 1 && (
                 <Badge variant="destructive">selected rows span multiple layoutKey snapshots</Badge>
               )}
+              {torusItemsLoading && (
+                <Badge variant="outline">
+                  <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                  loading full atlas slice
+                </Badge>
+              )}
             </div>
-            <div className="relative min-h-0 flex-1 overflow-hidden rounded-xl border border-border/70 bg-black/80">
+            <div className="rounded-xl border border-border/70 bg-muted/20 p-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <Button size="sm" variant={torusWindowSize === "all" ? "default" : "outline"} onClick={() => { setTorusWindowSize("all"); setTorusOffset(0); }}>
+                  Все
+                </Button>
+                <Button size="sm" variant={torusWindowSize === 1000 ? "default" : "outline"} onClick={() => { setTorusWindowSize(1000); setTorusOffset(0); }}>
+                  Показать 1000
+                </Button>
+                <Button size="sm" variant={torusWindowSize === 500 ? "default" : "outline"} onClick={() => { setTorusWindowSize(500); setTorusOffset(0); }}>
+                  Показать 500
+                </Button>
+                <Button size="sm" variant="outline" disabled={torusOffset <= 0} onClick={() => shiftTorusOffset(-1000, 1000)}>
+                  Прошлые 1000
+                </Button>
+                <Button size="sm" variant="outline" disabled={torusOffset <= 0} onClick={() => shiftTorusOffset(-500)}>
+                  Прошлые 500
+                </Button>
+                <Button size="sm" variant="outline" disabled={torusBaseItems.length === 0 || torusOffset >= Math.max(0, torusBaseItems.length - (torusWindowSize === "all" ? torusBaseItems.length || 1 : torusWindowSize))} onClick={() => shiftTorusOffset(500)}>
+                  Следующие 500
+                </Button>
+                <Button size="sm" variant="outline" disabled={torusBaseItems.length === 0 || torusOffset >= Math.max(0, torusBaseItems.length - 1000)} onClick={() => shiftTorusOffset(1000, 1000)}>
+                  Следующие 1000
+                </Button>
+                <Button size="sm" variant={expandRelatedNodes ? "default" : "outline"} onClick={() => setExpandRelatedNodes((prev) => !prev)} disabled={slicedTorusItems.length === 0}>
+                  Показать взаимосвязанные
+                </Button>
+                <Button size="sm" variant={showSearchMatchesOnly ? "default" : "outline"} onClick={() => { setShowSearchMatchesOnly((prev) => { const next = !prev; if (next) setShowSearchMatchesWithNeighbors(false); return next; }); setTorusOffset(0); }} disabled={!normalizedTorusSearch}>
+                  Поиск на торе
+                </Button>
+              </div>
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                <span>Окно: {torusWindowSize === "all" ? "все" : torusWindowSize}</span>
+                <span>Смещение: {torusOffset}</span>
+                <span>Кластеров активно: {effectiveClusters.length} / {availableClusters.length}</span>
+                {showSearchMatchesOnly && normalizedTorusSearch && <span>Поисковый фокус: {search}</span>}
+                {expandRelatedNodes && <span>Связи: +1 сосед из активного кластера на каждый показанный узел</span>}
+              </div>
+            </div>
+            <div className="rounded-xl border border-border/70 bg-muted/20 p-3">
+              <div className="mb-2 text-sm font-medium">Кластеры</div>
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <Button size="sm" variant="outline" onClick={() => { setEnabledClusters(availableClusters); setTorusOffset(0); }}>
+                  Все кластеры
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => { setEnabledClusters([]); setTorusOffset(0); }}>
+                  Авто
+                </Button>
+              </div>
+              <ScrollArea className="w-full whitespace-nowrap">
+                <div className="flex flex-wrap gap-3 pb-2">
+                  {availableClusters.map((cluster) => {
+                    const checked = effectiveClusters.includes(cluster);
+                    return (
+                      <label key={`torus-cluster-${cluster}`} className="flex items-center gap-2 rounded-md border border-border/60 px-3 py-2 text-sm">
+                        <Checkbox checked={checked} onCheckedChange={(value) => toggleCluster(cluster, value === true)} />
+                        <span
+                          className="inline-block h-2.5 w-2.5 rounded-full"
+                          style={{ backgroundColor: CLUSTER_COLORS[cluster % CLUSTER_COLORS.length] ?? "#ffffff" }}
+                        />
+                        <span>Cluster {cluster}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </ScrollArea>
+            </div>
+            <div className="relative min-h-[520px] flex-1 overflow-hidden rounded-xl border border-border/70 bg-black/80">
               <TorusCanvas
                 data={torusData}
                 selectedId={selectedIds[0] ?? null}
-                onSelect={(id) => id && toggleId(id)}
+                onSelect={(id) => {
+                  if (!id) return;
+                  const item = torusSourceItems.find((node) => node.id === id);
+                  if (item) {
+                    setDetailCrystal(item);
+                  }
+                }}
                 onHover={setHoveredId}
                 autoRotate={false}
                 showEdges={showEdges}
@@ -790,7 +1542,8 @@ export function TorusAtlas() {
                 <div className="pointer-events-none absolute right-4 top-4 w-[320px] rounded-lg border border-cyan-400/30 bg-slate-950/92 p-3 shadow-2xl">
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="outline">{hoveredCrystal.code}</Badge>
-                    <Badge variant="outline">cluster {hoveredCrystal.clusterLabel}</Badge>
+                    <Badge variant="outline">torus {hoveredCrystal.torusClusterLabel}</Badge>
+                    <Badge variant="outline">semantic {hoveredCrystal.semanticClusterLabel}</Badge>
                     {hoveredCrystal.isEmerald && <Badge variant="outline">emerald</Badge>}
                   </div>
                   <div className="mt-2 text-sm font-medium break-words">{hoveredCrystal.name}</div>
@@ -933,7 +1686,7 @@ export function TorusAtlas() {
           <DialogHeader>
             <DialogTitle>Rebuild Full Atlas</DialogTitle>
             <DialogDescription>
-              Runs one atlas analysis across the full crystal base and then writes coordinates back in persistence batches for large datasets.
+              Runs one atlas analysis across the full crystal base in combination-only mode and then writes coordinates back in persistence batches for large datasets.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 md:grid-cols-2">
@@ -949,13 +1702,139 @@ export function TorusAtlas() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setFullRebuildDialogOpen(false)}>Cancel</Button>
-            <Button onClick={runFullAtlasRebuild} disabled={fullRebuildStarting || ["preparing", "analyzing", "persisting"].includes(fullRebuildJob?.status ?? "")}>
+            <Button onClick={runFullAtlasRebuild} disabled={fullRebuildStarting || ["preparing", "analyzing", "analysis_ready", "persisting"].includes(fullRebuildJob?.status ?? "")}>
               {fullRebuildStarting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Database className="mr-2 h-4 w-4" />}
               Run full rebuild
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={bulkSelectDialogOpen} onOpenChange={setBulkSelectDialogOpen}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Bulk Select</DialogTitle>
+            <DialogDescription>
+              Select crystals by current filter without rendering large lists next to the canvas.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-2">
+              <Button variant={bulkRuleMode === "filter" ? "default" : "outline"} onClick={() => setBulkRuleMode("filter")}>
+                Current Filter
+              </Button>
+              <Button variant={bulkRuleMode === "layout" ? "default" : "outline"} onClick={() => setBulkRuleMode("layout")} disabled={!activeLayoutKey}>
+                LayoutKey
+              </Button>
+              <Button variant={bulkRuleMode === "semantic" ? "default" : "outline"} onClick={() => setBulkRuleMode("semantic")} disabled={!compatibleItems.length}>
+                Semantic Cluster
+              </Button>
+              <Button variant={bulkRuleMode === "torus" ? "default" : "outline"} onClick={() => setBulkRuleMode("torus")} disabled={!compatibleItems.length}>
+                Torus Cluster
+              </Button>
+              <Button variant={bulkRuleMode === "duplicates" ? "default" : "outline"} onClick={() => setBulkRuleMode("duplicates")}>
+                Duplicates
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {[100, 200, 1000].map((value) => (
+                <Button key={value} variant={bulkLimit === value ? "default" : "outline"} onClick={() => setBulkLimit(value as 100 | 200 | 1000)}>
+                  First {value}
+                </Button>
+              ))}
+              <Button variant={bulkLimit === "all" ? "default" : "outline"} onClick={() => setBulkLimit("all")}>
+                All Filtered
+              </Button>
+            </div>
+            <div className="rounded-md border border-border/60 p-3 text-sm text-muted-foreground">
+              Current filter:
+              {" "}
+              {search ? `search="${search}"` : "no search"}
+              {" | "}
+              {emeraldsOnly ? "emeralds only" : "all types"}
+              {" | "}
+              {bulkRuleMode === "filter"
+                ? "mode=current filter"
+                : bulkRuleMode === "layout"
+                  ? `mode=layoutKey:${activeLayoutKey || "n/a"}`
+                  : bulkRuleMode === "semantic"
+                    ? `mode=semantic cluster:${compatibleItems[0]?.semanticClusterLabel ?? 0}`
+                    : bulkRuleMode === "torus"
+                      ? `mode=torus cluster:${compatibleItems[0]?.torusClusterLabel ?? 0}`
+                      : "mode=duplicates"}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBulkSelectDialogOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => applyBulkSelection("append")} disabled={bulkSelecting}>
+              {bulkSelecting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Add
+            </Button>
+            <Button onClick={() => applyBulkSelection("replace")} disabled={bulkSelecting}>
+              {bulkSelecting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Replace
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={jobLogsDialogOpen} onOpenChange={setJobLogsDialogOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Full Atlas Logs</DialogTitle>
+            <DialogDescription>
+              File-backed progress and error logs for the current full rebuild job.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <div className="text-sm text-muted-foreground">Progress Log</div>
+              <ScrollArea className="h-[320px] rounded-md border border-border/60 bg-muted/20 p-3">
+                <pre className="whitespace-pre-wrap break-words text-xs leading-5">{jobLogs.progress || "No progress log yet."}</pre>
+              </ScrollArea>
+            </div>
+            <div className="space-y-2">
+              <div className="text-sm text-muted-foreground">Error Log</div>
+              <ScrollArea className="h-[320px] rounded-md border border-border/60 bg-muted/20 p-3">
+                <pre className="whitespace-pre-wrap break-words text-xs leading-5">{jobLogs.errors || "No error log entries."}</pre>
+              </ScrollArea>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => refreshLogs()}>Refresh Logs</Button>
+            <Button onClick={() => setJobLogsDialogOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Sheet open={selectedDrawerOpen} onOpenChange={setSelectedDrawerOpen}>
+        <SheetContent className="w-full overflow-y-auto sm:max-w-2xl">
+          <SheetHeader>
+            <SheetTitle>Selected Crystals</SheetTitle>
+            <SheetDescription>{selectedIds.length} items in current working selection.</SheetDescription>
+          </SheetHeader>
+          <div className="mt-6 space-y-3">
+            {!selectedIds.length ? (
+              <div className="text-sm text-muted-foreground">No selected crystals.</div>
+            ) : (
+              items.filter((item) => selectedSet.has(item.id)).map((item) => (
+                <div key={`drawer-${item.id}`} className="rounded-md border border-border/60 p-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline">{item.code}</Badge>
+                    <Badge variant="outline">torus {item.torusClusterLabel}</Badge>
+                    <Badge variant="outline">semantic {item.semanticClusterLabel}</Badge>
+                    {item.layoutKey && <Badge variant="outline">{item.layoutKey}</Badge>}
+                  </div>
+                  <div className="mt-2 font-medium break-words">{item.name}</div>
+                  <div className="mt-2 text-xs text-muted-foreground break-words whitespace-pre-wrap">
+                    {truncate(item.formula, 260)}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

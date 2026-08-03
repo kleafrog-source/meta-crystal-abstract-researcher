@@ -26,8 +26,14 @@ def get_ollama_embedding(text: str, model: str = "qllama/bge-m3:q8_0") -> np.nda
     return emb
 
 
-def get_embeddings_ollama(docs, query, model="qllama/bge-m3:q8_0"):
-    doc_emb = np.array([get_ollama_embedding(doc, model) for doc in docs], dtype=float)
+def get_embeddings_ollama(docs, query, model="qllama/bge-m3:q8_0", progress_callback=None):
+    total = max(len(docs), 1)
+    vectors = []
+    for index, doc in enumerate(docs, start=1):
+        vectors.append(get_ollama_embedding(doc, model))
+        if progress_callback is not None and (index == total or index == 1 or index % 10 == 0):
+            progress_callback(index, total)
+    doc_emb = np.array(vectors, dtype=float)
     query_emb = get_ollama_embedding(query, model)
     doc_emb = normalize(doc_emb, norm="l2")
     query_emb = normalize(query_emb.reshape(1, -1), norm="l2").reshape(-1)
@@ -473,6 +479,7 @@ def analyze_torus_flow(
     geometry_R: float = 1.2,
     geometry_r: float = 0.6,
     embedding_model: str = "qllama/bge-m3:q8_0",
+    progress_callback=None,
 ):
     """Чистое ядро GW-Collapser: вычисляет layout, flow, top-k и MMSS."""
     if not docs:
@@ -483,16 +490,34 @@ def analyze_torus_flow(
     docs = [str(doc) for doc in docs]
     query = str(query)
 
+    if progress_callback is not None:
+        progress_callback(1, "Preparing embeddings")
+
     if doc_emb is None or query_emb is None:
-        doc_vectors, query_vector = get_embeddings_ollama(docs, query, model=embedding_model)
+        doc_vectors, query_vector = get_embeddings_ollama(
+            docs,
+            query,
+            model=embedding_model,
+            progress_callback=(
+                None
+                if progress_callback is None
+                else lambda done, total: progress_callback(5 + int((done / max(total, 1)) * 55), f"Embeddings {done}/{total}")
+            ),
+        )
     else:
         doc_vectors, query_vector = _coerce_embeddings(doc_emb, query_emb)
+        if progress_callback is not None:
+            progress_callback(60, "Using provided embeddings")
 
+    if progress_callback is not None:
+        progress_callback(68, "Building torus layout")
     geometry = TorusGeometry(R=geometry_R, r=geometry_r)
     adapter = HFieldAdapter(n_clusters=n_clusters)
     doc_coords, labels = adapter.build_layout(doc_vectors)
     query_x, query_y = adapter.project_query(query_vector)
 
+    if progress_callback is not None:
+        progress_callback(78, "Tracing torus flow")
     field = TorusFlowField(geometry, epsilon=epsilon)
     for source in build_flow_sources(doc_coords, docs):
         field.add_source(source)
@@ -506,11 +531,16 @@ def analyze_torus_flow(
         tol_speed=tol_speed,
         friction=friction,
     )
+    if progress_callback is not None:
+        progress_callback(90, "Computing MMSS and top docs")
     mmss_metrics = MMSSMetrics(docs, doc_vectors, doc_coords, labels, traj, query)
     top_docs = [
         {"rank": rank, "index": idx, "text": docs[idx], "distance": dist, "cluster": int(labels[idx])}
         for rank, (dist, idx) in enumerate(compute_topk_attractor_docs(doc_coords, traj["final"], top_k=10), start=1)
     ]
+
+    if progress_callback is not None:
+        progress_callback(100, "Analysis payload ready")
 
     return {
         "docs": docs,

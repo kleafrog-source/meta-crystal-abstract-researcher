@@ -63,15 +63,25 @@ export function TorusCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rendererRef = useRef<TorusCanvasRenderer | null>(null);
   const generatorRef = useRef<TorusDataGenerator | null>(null);
+  const onSelectRef = useRef(onSelect);
+  const onHoverRef = useRef(onHover);
   const [internalFps, setInternalFps] = useState(0);
+
+  useEffect(() => {
+    onSelectRef.current = onSelect;
+  }, [onSelect]);
+
+  useEffect(() => {
+    onHoverRef.current = onHover;
+  }, [onHover]);
 
   // Инициализация рендерера
   useEffect(() => {
     if (!canvasRef.current) return;
     const renderer = new TorusCanvasRenderer(canvasRef.current, {
       autoRotate,
-      onSelect,
-      onHover,
+      onSelect: (id) => onSelectRef.current(id),
+      onHover: (id) => onHoverRef.current(id),
       onFps: (fps) => {
         setInternalFps(fps);
         if (onFps) onFps(fps);
@@ -92,7 +102,7 @@ export function TorusCanvas({
       const mx = e.clientX - rect.left;
       const my = e.clientY - rect.top;
       const id = renderer.pickNode(mx, my);
-      onSelect(id);
+      onSelectRef.current(id);
     };
     canvasRef.current.addEventListener('click', handleClick);
 
