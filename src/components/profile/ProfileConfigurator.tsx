@@ -172,6 +172,14 @@ export function ProfileConfigurator({
             <CardDescription>Снятая галочка означает, что паттерн исключается из профиля генерации.</CardDescription>
           </CardHeader>
           <CardContent>
+            <div className="mb-4 flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => {
+                onChange({ ...profile, disabled_patterns: [] });
+              }}>Включить все</Button>
+              <Button variant="outline" size="sm" onClick={() => {
+                onChange({ ...profile, disabled_patterns: patternList });
+              }}>Выключить все</Button>
+            </div>
             <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
               {patternList.map((pattern) => {
                 const enabled = !profile.disabled_patterns.includes(pattern);

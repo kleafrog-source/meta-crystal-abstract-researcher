@@ -49,6 +49,9 @@ interface CrystalListItem {
   counter: number;
   step: number | null;
   isFavourite: boolean;
+  metisImported?: boolean;
+  metisEnriched?: boolean;
+  metisNodeId?: string | null;
   createdAt: string;
   similarity?: number;
 }
@@ -376,6 +379,20 @@ export function Crystals() {
                         <td className="px-3 py-2"><CrystalTypeBadge type={item.type} /></td>
                         <td className="px-3 py-2">
                           <code className="text-xs font-mono">{item.code}</code>
+                          {(item.metisImported || item.metisEnriched) && (
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {item.metisImported && (
+                                <Badge variant="outline" className="border-cyan-500/30 bg-cyan-500/10 text-[10px] text-cyan-200">
+                                  imported
+                                </Badge>
+                              )}
+                              {item.metisEnriched && (
+                                <Badge variant="outline" className="border-emerald-500/30 bg-emerald-500/10 text-[10px] text-emerald-200">
+                                  metis-enriched
+                                </Badge>
+                              )}
+                            </div>
+                          )}
                           {item.similarity != null && (
                             <div className="text-[10px] text-violet-300 font-mono">sim: {item.similarity.toFixed(3)}</div>
                           )}

@@ -9,8 +9,10 @@ import { Import } from "@/components/pages/Import";
 import { Enrichment } from "@/components/pages/Enrichment";
 import { Chat } from "@/components/pages/Chat";
 import { MMSS } from "@/components/pages/MMSS";
+import { MetisLab } from "@/components/pages/MetisLab";
 import { GWCollapser } from "@/components/pages/GWCollapser";
 import { GWCollapserCrystalPool } from "@/components/pages/GWCollapserCrystalPool";
+import { Map } from "@/components/pages/Map";
 import { TorusAtlas } from "@/components/pages/TorusAtlas";
 import { Settings } from "@/components/pages/Settings";
 
@@ -35,12 +37,16 @@ export default function Home() {
             return <Chat />;
           case "mmss":
             return <MMSS />;
+          case "metis":
+            return <MetisLab />;
           case "gwcollapser":
             return <GWCollapser />;
           case "crystalpool":
             return <GWCollapserCrystalPool />;
           case "torusatlas":
             return <TorusAtlas />;
+          case "map":
+            return <Map />;
           case "settings":
             return <Settings />;
           default:

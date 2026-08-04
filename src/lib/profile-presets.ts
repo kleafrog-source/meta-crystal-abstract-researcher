@@ -49,6 +49,7 @@ export const PATTERN_PRESETS = [
 
 export const FLAG_GROUPS: Array<{ name: string; flags: string[] }> = [
   { name: "Базовые", flags: ["enable_linguistics", "enable_morpheme_generation", "enable_linguistic_principles", "enable_quantum", "enable_fractal", "enable_psychology", "enable_metrics", "enable_auto_correction", "enable_learning", "enable_saving", "enable_cataloging"] },
+  { name: "Операторы", flags: ["enable_derivative_first", "enable_derivative_second"] },
   { name: "v7.0 домены", flags: ["enable_eqgft", "enable_ethical_archon", "enable_bell_nonlocality", "enable_context_weaver", "enable_garden_between", "enable_meta_fractal_craft", "enable_json_prompt", "enable_quantum_geometry", "enable_research", "enable_fair_division"] },
   { name: "Математика/Алгебра", flags: ["enable_category_theory", "enable_algebra", "enable_knot_theory", "enable_number_theory", "enable_measure_probability", "enable_graph_combinatorics", "enable_optimization"] },
   { name: "Физика", flags: ["enable_thermodynamics", "enable_stat_mechanics", "enable_relativity", "enable_string_theory", "enable_cosmology", "enable_qft", "enable_condensed_matter"] },

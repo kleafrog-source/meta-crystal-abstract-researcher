@@ -5,3 +5,4 @@ numpy
 scikit-learn
 requests
 matplotlib
+umap-learn

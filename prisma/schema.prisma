@@ -44,6 +44,8 @@ model Crystal {
   ghostCoordinate Json?
   ghostTrajectory Json?
   metadataJson  String?
+  umapX         Float?
+  umapY         Float?
   createdAt     DateTime @default(now())
 
   @@index([type])
@@ -151,4 +153,29 @@ model ImportBatch {
   diffJson    String
   status      String // pending | applied | discarded
   createdAt DateTime @default(now())
+}
+
+/// Persisted Metis nodes imported from the main crystal library or created inside Metis Lab.
+model MetisNode {
+  id                  String   @id @default(cuid())
+  nodeId              String   @unique
+  crystalId           String
+  sourceCrystalId     String?
+  sourceCrystalCode   String?
+  content             String
+  importance          Float
+  torusU              Float
+  torusV              Float
+  atlasChart          String
+  svdRank             Int
+  overflowFlag        Boolean  @default(false)
+  embeddingPreviewJson String
+  metadataJson        String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([sourceCrystalId])
+  @@index([sourceCrystalCode])
+  @@index([atlasChart])
+  @@index([updatedAt])
 }

@@ -77,12 +77,16 @@ class EngineConfig:
         "enable_learning": True,
         "enable_saving": True,
         "enable_cataloging": True,
-        
+
+        # Операторы (отдельные флаги для часто используемых)
+        "enable_derivative_first": False,   # ∂/∂t
+        "enable_derivative_second": False,  # ∂²/∂t²
+
         # Новые домены (v7.0)
         "enable_eqgft": True,
         "enable_ethical_archon": True,
         "enable_bell_nonlocality": True,
-        "enable_context_weaver": False,
+        "enable_context_weaver": True,
         "enable_garden_between": True,
         "enable_meta_fractal_craft": True,
         "enable_json_prompt": True,
@@ -92,7 +96,7 @@ class EngineConfig:
 
         # === Расширение v7.1 "Гипер-Космос" ===
         "enable_category_theory":      True,
-        "enable_algebra":              True,
+        "enable_algebra":              False,
         "enable_knot_theory":          True,
         "enable_number_theory":        True,
         "enable_measure_probability":  True,
@@ -127,7 +131,7 @@ class EngineConfig:
         "enable_philosophy":           True,
         "enable_eastern_phil":         True,
         "enable_hermeticism":          True,
-        "enable_process_phil":         True,
+        "enable_process_phil":         False,
 
         "enable_alchemy":              True,
         "enable_kabbalah":             True,
@@ -1744,9 +1748,9 @@ OPERATORS = {
     "возведение_в_степень": {"symbol": "^", "type": "math", "arity": 2, "priority": 3},
     "извлечение_корня": {"symbol": "√", "type": "math", "arity": 1, "priority": 4},
     "интегрирование": {"symbol": "∫", "type": "math", "arity": 1, "priority": 4},
-    "дифференцирование": {"symbol": "∂/∂t", "type": "math", "arity": 1, "priority": 4},
+    "дифференцирование": {"symbol": "∂/∂t", "type": "math", "arity": 1, "priority": 9},
     "предел": {"symbol": "lim", "type": "math", "arity": 1, "priority": 4},
-    "производная_второго_порядка": {"symbol": "∂²/∂t²", "type": "math", "arity": 1, "priority": 4},
+    "производная_второго_порядка": {"symbol": "∂²/∂t²", "type": "math", "arity": 1, "priority": 9},
     "двойной_интеграл": {"symbol": "∫∫", "type": "math", "arity": 1, "priority": 4},
 
     # --- Логические ---
@@ -3030,6 +3034,14 @@ class MetaGenerator:
             available_operators = [op for op in available_operators
                                   if self.operators[op]["type"] != "fair"]
 
+        # Фильтрация конкретных операторов
+        if not self.config.flags.get("enable_derivative_first", False):
+            available_operators = [op for op in available_operators
+                                  if op != "дифференцирование"]
+        if not self.config.flags.get("enable_derivative_second", False):
+            available_operators = [op for op in available_operators
+                                  if op != "производная_второго_порядка"]
+
         # Новые
         if not self.config.flags["enable_eqgft"]:
             available_operators = [op for op in available_operators
@@ -3317,6 +3329,26 @@ class MetaGenerator:
                 for p in available_patterns:
                     if p["name"] == pattern_name:
                         return p.copy()
+
+        # Взвешенный выбор для разнообразия: паттерны с низкой сложностью имеют больший вес
+        if not available_patterns:
+            return {"name": "линейный", "template": "{A} {op} {B}", "complexity": 1}
+
+        # Создаем веса: обратная сложность для разнообразия
+        weights = []
+        for p in available_patterns:
+            complexity = p.get("complexity", 3)
+            # Паттерны с низкой сложностью имеют больший вес
+            weight = 1.0 / max(complexity, 1)
+            # Добавляем небольшую случайность для избежания повторений
+            weight *= (0.5 + random.random())
+            weights.append(weight)
+
+        # Нормализация весов
+        total_weight = sum(weights)
+        if total_weight > 0:
+            weights = [w / total_weight for w in weights]
+            return random.choices(available_patterns, weights=weights, k=1)[0].copy()
 
         return random.choice(available_patterns).copy()
 
@@ -4896,16 +4928,57 @@ class MetaEngine:
         return ", ".join(blocks) or "Базовый"
 
     def _create_diamond(self, emeralds: List[Dict]) -> Dict:
-        a = emeralds[0]
-        b = emeralds[1] if len(emeralds) > 1 else emeralds[0]
+        # Выбираем случайные изумруды для разнообразия (не только первые 2)
+        import random
+        num_emeralds_to_use = min(len(emeralds), random.randint(2, 5))
+        selected_emeralds = random.sample(emeralds, num_emeralds_to_use)
+
+        # Случайный выбор паттерна для алмаза
+        diamond_patterns = ["гибридный", "фрактальный", "квантовый", "голографический", "многомерный"]
+        diamond_pattern = random.choice(diamond_patterns)
+
+        # Варианты формул слияния для разнообразия
+        merge_templates = [
+            lambda a, b: f"({a['combination']}) ^ (i * π * φ * ∞) ⊗ ({b['combination']})",
+            lambda a, b: f"({a['combination']}) ⊗ ({b['combination']}) ^ (φ^∞)",
+            lambda a, b: f"∫({a['combination']}) ⊗ ∂/∂t({b['combination']})",
+            lambda a, b: f"({a['combination']}) ⇛ᶠ ({b['combination']}) ⊗ (Ψ_SUP)",
+            lambda a, b: f"lim(t→∞)[({a['combination']}) ⊗ ({b['combination']})]",
+        ]
+
+        # Случайный выбор шаблона слияния
+        merge_template = random.choice(merge_templates)
+
+        # Объединяем элементы и операторы из всех выбранных изумрудов
+        all_elements = []
+        all_operators = []
+        for emerald in selected_emeralds:
+            all_elements.extend(emerald["elements"][:2])
+            all_operators.extend(emerald["operators"][:2])
+
+        # Ограничиваем количество элементов и операторов
+        all_elements = all_elements[:6]
+        all_operators = all_operators[:5]
+
+        # Создаем фокус как комбинацию фокусов выбранных изумрудов
+        focus_words = [e['focus']['word'] for e in selected_emeralds]
+        if len(focus_words) == 1:
+            focus_word = focus_words[0]
+        elif len(focus_words) == 2:
+            focus_word = f"{focus_words[0]} ⊕ {focus_words[1]}"
+        else:
+            focus_word = f"{focus_words[0]} ⊕ {focus_words[1]} ⊕ ... ⊕ {focus_words[-1]}"
+
+        a = selected_emeralds[0]
+        b = selected_emeralds[1] if len(selected_emeralds) > 1 else selected_emeralds[0]
 
         diamond_combo = {
-            "focus": {"type": "hybrid", "word": f"{a['focus']['word']} ⊕ {b['focus']['word']}"},
-            "pattern": "гибридный",
-            "elements": a["elements"][:2] + b["elements"][:2],
-            "operators": a["operators"][:2] + b["operators"][:2],
-            "combination": f"({a['combination']}) ^ (i * π * φ * ∞) ⊗ ({b['combination']})",
-            "complexity": a["complexity"] + b["complexity"] + 25,
+            "focus": {"type": "hybrid", "word": focus_word},
+            "pattern": diamond_pattern,
+            "elements": all_elements,
+            "operators": all_operators,
+            "combination": merge_template(a, b),
+            "complexity": sum(e["complexity"] for e in selected_emeralds) + random.randint(15, 35),
             "generation": "diamond"
         }
         diamond_combo["code"] = self.encoder.encode(diamond_combo)

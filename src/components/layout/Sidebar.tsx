@@ -15,6 +15,7 @@ import {
   Cpu,
   Activity,
   Database,
+  CircleDot,
 } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
@@ -27,9 +28,11 @@ export type PageId =
   | "enrichment"
   | "chat"
   | "mmss"
+  | "metis"
   | "gwcollapser"
   | "crystalpool"
   | "torusatlas"
+  | "map"
   | "settings";
 
 interface NavItem {
@@ -89,6 +92,12 @@ const NAV_ITEMS: NavItem[] = [
     description: "MMSS ingest, retrain, eval и результаты",
   },
   {
+    id: "metis",
+    label: "Metis Lab",
+    icon: <Cpu className="h-4 w-4" />,
+    description: "Isolated Metis memory stack with torus atlas and provider runtime switch",
+  },
+  {
     id: "gwcollapser",
     label: "GW-Collapser",
     icon: <Activity className="h-4 w-4" />,
@@ -105,6 +114,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "Torus Atlas",
     icon: <Database className="h-4 w-4" />,
     description: "Canvas-first atlas view for torus placement, formulas and fast visual exploration",
+  },
+  {
+    id: "map",
+    label: "Map",
+    icon: <CircleDot className="h-4 w-4" />,
+    description: "2D UMAP field over crystal embeddings for neighborhood exploration",
   },
   {
     id: "settings",

@@ -71,6 +71,8 @@ server.log
 /upload/
 /.agents/
 /.vscode/
+/backups/
+backups/
 
 # generated runtime outputs
 /python_engine/__pycache__/
@@ -85,3 +87,6 @@ worklog.md
 python_engine/mmss/*_last_test.pt
 python_engine/mmss/*_onecrystal.pt
 z-ai-reference-crystal-pool-demo/
+python_engine/alchemy-meta-engine-2/*
+backups/*
+*mmss-meta-crystal/python_engine/alchemy-meta-engine-2/metacrystals_v7/*

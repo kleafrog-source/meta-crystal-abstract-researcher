@@ -33,6 +33,8 @@ export async function GET(req: Request) {
     const search = url.searchParams.get("search")?.trim();
     const semantic = url.searchParams.get("semantic") === "1";
     const favourite = url.searchParams.get("favourite") === "1";
+    const metisImported = url.searchParams.get("metisImported") === "1";
+    const metisEnriched = url.searchParams.get("metisEnriched") === "1";
     const refresh = url.searchParams.get("refresh") === "1";
 
     if (refresh) {
@@ -41,11 +43,14 @@ export async function GET(req: Request) {
 
     // Build where clause
     const where: any = {};
+    const metadataFilters: Array<{ metadataJson: { contains: string } }> = [];
     if (type) {
       const variants = expandCrystalTypeFilter(type);
       where.type = variants.length === 1 ? variants[0] : { in: variants };
     }
     if (favourite) where.isFavourite = true;
+    if (metisImported) metadataFilters.push({ metadataJson: { contains: "\"imported\":true" } });
+    if (metisEnriched) metadataFilters.push({ metadataJson: { contains: "\"enriched\":true" } });
     if (minQuality) where.qualityScore = { gte: parseFloat(minQuality) };
     if (maxComplexity) where.complexity = { lte: parseInt(maxComplexity, 10) };
     if (search && !semantic) {
@@ -55,6 +60,11 @@ export async function GET(req: Request) {
         { code: { contains: search } },
         { searchText: { contains: search } },
       ];
+    }
+    if (metadataFilters.length === 1) {
+      Object.assign(where, metadataFilters[0]);
+    } else if (metadataFilters.length > 1) {
+      where.AND = [...(where.AND ?? []), ...metadataFilters];
     }
 
     const [total, aggregate] = await Promise.all([
@@ -104,6 +114,10 @@ export async function GET(req: Request) {
 
 function withGhostFields(c: any) {
   const metadata = safeParse(c.metadataJson, {});
+  const metis =
+    metadata && typeof metadata === "object" && "metis" in metadata && metadata.metis && typeof metadata.metis === "object"
+      ? (metadata.metis as Record<string, unknown>)
+      : null;
   return {
     id: c.id,
     code: c.code,
@@ -122,6 +136,9 @@ function withGhostFields(c: any) {
       metadata && typeof metadata === "object" && "ghostCoordinate" in metadata
         ? (metadata as Record<string, unknown>).ghostCoordinate
         : null,
+    metisImported: Boolean(metis?.imported),
+    metisEnriched: Boolean(metis?.enriched),
+    metisNodeId: typeof metis?.nodeId === "string" ? metis.nodeId : null,
     createdAt: c.createdAt,
     similarity: c.similarity,
   };
