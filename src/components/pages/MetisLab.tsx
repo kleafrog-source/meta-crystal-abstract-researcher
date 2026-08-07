@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
-import { MemoryMatrixHeatmap } from "@/components/metis/MemoryMatrixHeatmap";
+import { MemoryMatrixHeatmap, type MetisVizMode } from "@/components/metis/MemoryMatrixHeatmap";
 import { TorusAtlasViz, type MetisPaletteMode } from "@/components/metis/TorusAtlasViz";
 import type { ChatResponse, MemoryOp, MetisProviderConfig, OllamaModelInfo, SystemState } from "@/lib/metis/types";
 
@@ -45,6 +45,11 @@ const PALETTE_OPTIONS: Array<{ value: MetisPaletteMode; label: string }> = [
   { value: "contrast", label: "Contrast" },
   { value: "warm", label: "Warm" },
   { value: "mono", label: "Mono" },
+];
+const VIZ_MODE_OPTIONS: Array<{ value: MetisVizMode; label: string }> = [
+  { value: "auto", label: "Auto" },
+  { value: "quality", label: "Quality" },
+  { value: "density", label: "Density" },
 ];
 
 const DEFAULT_CONFIG: MetisProviderConfig = {
@@ -87,6 +92,10 @@ export function MetisLab() {
   const [manualImportance, setManualImportance] = useState([0.85]);
   const [metricsTick, setMetricsTick] = useState(0);
   const [paletteMode, setPaletteMode] = useState<MetisPaletteMode>("signal");
+  const [torusEnabled, setTorusEnabled] = useState(true);
+  const [matrixEnabled, setMatrixEnabled] = useState(true);
+  const [torusMode, setTorusMode] = useState<MetisVizMode>("auto");
+  const [matrixMode, setMatrixMode] = useState<MetisVizMode>("auto");
   const [batchBusy, setBatchBusy] = useState(false);
   const [batchOp, setBatchOp] = useState<MemoryOp>("REMEMBER");
   const [batchInput, setBatchInput] = useState("");
@@ -808,36 +817,117 @@ export function MetisLab() {
                   </CardTitle>
                   <CardDescription>{state?.torus.charts.length ?? 0} charts, active {state?.torus.active_chart || "chart_A"}.</CardDescription>
                 </div>
-                <div className="w-[180px] space-y-2">
-                  <Label>Palette</Label>
-                  <Select value={paletteMode} onValueChange={(value) => setPaletteMode(value as MetisPaletteMode)}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {PALETTE_OPTIONS.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <div className="grid w-full max-w-[420px] gap-3 md:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label>Visibility</Label>
+                    <Select value={torusEnabled ? "on" : "off"} onValueChange={(value) => setTorusEnabled(value === "on")}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="on">On</SelectItem>
+                        <SelectItem value="off">Off</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Mode</Label>
+                    <Select value={torusMode} onValueChange={(value) => setTorusMode(value as MetisVizMode)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {VIZ_MODE_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Palette</Label>
+                    <Select value={paletteMode} onValueChange={(value) => setPaletteMode(value as MetisPaletteMode)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PALETTE_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
             </CardHeader>
-            <CardContent>{state && <TorusAtlasViz charts={state.torus.charts} nodes={state.crystal.nodes} activeChart={state.torus.active_chart} palette={paletteMode} />}</CardContent>
+            <CardContent>
+              {state && (
+                <TorusAtlasViz
+                  charts={state.torus.charts}
+                  nodes={state.crystal.nodes}
+                  activeChart={state.torus.active_chart}
+                  palette={paletteMode}
+                  enabled={torusEnabled}
+                  mode={torusMode}
+                />
+              )}
+            </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Brain className="h-4 w-4 text-primary" />
-                Memory matrix
-              </CardTitle>
-              <CardDescription>rank {state?.metis.matrix.rank ?? 0} x dim {state?.metis.matrix.dim ?? 0}, overflow {fmt(state?.metis.matrix.overflow_risk ?? 0)}</CardDescription>
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Brain className="h-4 w-4 text-primary" />
+                    Memory matrix
+                  </CardTitle>
+                  <CardDescription>rank {state?.metis.matrix.rank ?? 0} x dim {state?.metis.matrix.dim ?? 0}, overflow {fmt(state?.metis.matrix.overflow_risk ?? 0)}</CardDescription>
+                </div>
+                <div className="grid w-full max-w-[280px] gap-3 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label>Visibility</Label>
+                    <Select value={matrixEnabled ? "on" : "off"} onValueChange={(value) => setMatrixEnabled(value === "on")}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="on">On</SelectItem>
+                        <SelectItem value="off">Off</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Mode</Label>
+                    <Select value={matrixMode} onValueChange={(value) => setMatrixMode(value as MetisVizMode)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {VIZ_MODE_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              {state && <MemoryMatrixHeatmap flat={state.metis.matrix.flat} rank={state.metis.matrix.rank} dim={state.metis.matrix.dim} />}
+              {state && (
+                <MemoryMatrixHeatmap
+                  flat={state.metis.matrix.flat}
+                  rank={state.metis.matrix.rank}
+                  dim={state.metis.matrix.dim}
+                  enabled={matrixEnabled}
+                  mode={matrixMode}
+                />
+              )}
               <Separator />
               <div className="grid gap-2 text-sm md:grid-cols-2">
                 <Stat label="matrix updates" value={state?.performance_log.memory_matrix_updates ?? 0} />
