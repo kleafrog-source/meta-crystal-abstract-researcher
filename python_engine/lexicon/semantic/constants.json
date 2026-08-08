@@ -1,0 +1,254 @@
+[
+  {
+    "id": "constant.золотое_сечение",
+    "entity_type": "constant",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "золотое_сечение",
+      "short_description": "Константа золотого сечения",
+      "description": "Константа золотого сечения",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "constant.темпоральный_параметр",
+    "entity_type": "constant",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "темпоральный_параметр",
+      "short_description": "Временной параметр",
+      "description": "Временной параметр",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "constant.zitter_частота",
+    "entity_type": "constant",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "zitter_частота",
+      "short_description": "Частота zitterbewegung",
+      "description": "Частота zitterbewegung",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "constant.критическое_поле",
+    "entity_type": "constant",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "критическое_поле",
+      "short_description": "Критическое поле для нелинейности массы",
+      "description": "Критическое поле для нелинейности массы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "constant.семантическая_гравитация",
+    "entity_type": "constant",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "семантическая_гравитация",
+      "short_description": "Сила притяжения к S=0",
+      "description": "Сила притяжения к S=0",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "constant.конфликт_коэффициент",
+    "entity_type": "constant",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "конфликт_коэффициент",
+      "short_description": "Мера семантического конфликта",
+      "description": "Мера семантического конфликта",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "constant.чистая_ценность",
+    "entity_type": "constant",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "чистая_ценность",
+      "short_description": "Чистая ценность (Pure Value)",
+      "description": "Чистая ценность (Pure Value)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "constant.скрытая_переменная",
+    "entity_type": "constant",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "скрытая_переменная",
+      "short_description": "Скрытая локальная переменная",
+      "description": "Скрытая локальная переменная",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "constant.космологическая_постоянная",
+    "entity_type": "constant",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "космологическая_постоянная",
+      "short_description": "Космологическая постоянная Эйнштейна",
+      "description": "Космологическая постоянная Эйнштейна",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  }
+]

@@ -1,0 +1,97 @@
+{
+  "report_timestamp": "2026-08-08T16:15:54.469812",
+  "summary": {
+    "total_entries": 708,
+    "duplicate_ids": 0,
+    "duplicate_symbols": 0,
+    "shared_symbols": 4,
+    "source_conflicts": 0
+  },
+  "duplicate_ids": {},
+  "duplicate_symbols": {},
+  "shared_symbols": {
+    "→": [
+      {
+        "id": "operator.импликация",
+        "name": "импликация",
+        "namespace": "operator",
+        "operator_type": "logic",
+        "description": "Оператор импликация(→) — тип: logic, арность: 2",
+        "formula": null
+      },
+      {
+        "id": "operator.суффиксация",
+        "name": "суффиксация",
+        "namespace": "operator",
+        "operator_type": "linguistic",
+        "description": "Добавление суффикса",
+        "formula": null
+      }
+    ],
+    "S": [
+      {
+        "id": "operator.функционал_действия",
+        "name": "функционал_действия",
+        "namespace": "operator",
+        "operator_type": "physics",
+        "description": "Оператор функционал действия(S) — тип: physics, арность: 1",
+        "formula": null
+      },
+      {
+        "id": "operator.CHSH_оператор",
+        "name": "CHSH_оператор",
+        "namespace": "operator",
+        "operator_type": "nonlocal",
+        "description": "Неравенство Белла (CHSH)",
+        "formula": "S = |⟨A(a)B(b)⟩ - ⟨A(a)B(b')⟩ + ⟨A(a')B(b)⟩ + ⟨A(a')B(b')⟩|"
+      }
+    ],
+    "E": [
+      {
+        "id": "operator.фибровый_пучок",
+        "name": "фибровый_пучок",
+        "namespace": "operator",
+        "operator_type": "qgeom",
+        "description": "Фибровое расслоение",
+        "formula": null
+      },
+      {
+        "id": "operator.эксперимент",
+        "name": "эксперимент",
+        "namespace": "operator",
+        "operator_type": "research",
+        "description": "Экспериментальный дизайн",
+        "formula": null
+      }
+    ],
+    "🔍": [
+      {
+        "id": "operator.паттерн_рекурсия",
+        "name": "паттерн_рекурсия",
+        "namespace": "operator",
+        "operator_type": "meta",
+        "description": "Рекурсивное извлечение паттернов",
+        "formula": "Π_rec = ∂(Ψ × ∇S)/∂t + G_S × log(1 + D_f/9.0)"
+      },
+      {
+        "id": "operator.этическая_линза",
+        "name": "этическая_линза",
+        "namespace": "operator",
+        "operator_type": "meta",
+        "description": "Этическая верификация",
+        "formula": "Ε_verify = sign(V−0.999) × ∫(N×(1−S))dt × R_T"
+      }
+    ]
+  },
+  "source_conflicts": [],
+  "entity_type_counts": {
+    "generation_parameter": 10,
+    "domain": 76,
+    "structural_pattern": 103,
+    "metric": 8,
+    "operator": 196,
+    "formula": 135,
+    "constant": 9,
+    "lexical_category": 171
+  }
+}

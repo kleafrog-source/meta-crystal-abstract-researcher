@@ -1,0 +1,4842 @@
+[
+  {
+    "id": "operator.сложение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "сложение",
+      "short_description": "Оператор сложение(+) — тип: math, арность: 2",
+      "description": "Оператор сложение(+) — тип: math, арность: 2",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.умножение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "умножение",
+      "short_description": "Оператор умножение(⊗) — тип: math, арность: 2",
+      "description": "Оператор умножение(⊗) — тип: math, арность: 2",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.возведение_в_степень",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "возведение в степень",
+      "short_description": "Оператор возведение в степень(^) — тип: math, арность: 2",
+      "description": "Оператор возведение в степень(^) — тип: math, арность: 2",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.извлечение_корня",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "извлечение корня",
+      "short_description": "Оператор извлечение корня(√) — тип: math, арность: 1",
+      "description": "Оператор извлечение корня(√) — тип: math, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.интегрирование",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "интегрирование",
+      "short_description": "Оператор интегрирование(∫) — тип: math, арность: 1",
+      "description": "Оператор интегрирование(∫) — тип: math, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.дифференцирование",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "дифференцирование",
+      "short_description": "Оператор дифференцирование(∂/∂t) — тип: math, арность: 1",
+      "description": "Оператор дифференцирование(∂/∂t) — тип: math, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.предел",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "предел",
+      "short_description": "Оператор предел(lim) — тип: math, арность: 1",
+      "description": "Оператор предел(lim) — тип: math, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.производная_второго_порядка",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "производная второго порядка",
+      "short_description": "Оператор производная второго порядка(∂²/∂t²) — тип: math, арность: 1",
+      "description": "Оператор производная второго порядка(∂²/∂t²) — тип: math, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.двойной_интеграл",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "двойной интеграл",
+      "short_description": "Оператор двойной интеграл(∫∫) — тип: math, арность: 1",
+      "description": "Оператор двойной интеграл(∫∫) — тип: math, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.отрицание",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "отрицание",
+      "short_description": "Оператор отрицание(¬) — тип: logic, арность: 1",
+      "description": "Оператор отрицание(¬) — тип: logic, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.конъюнкция",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "конъюнкция",
+      "short_description": "Оператор конъюнкция(∧) — тип: logic, арность: 2",
+      "description": "Оператор конъюнкция(∧) — тип: logic, арность: 2",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.дизъюнкция",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "дизъюнкция",
+      "short_description": "Оператор дизъюнкция(∨) — тип: logic, арность: 2",
+      "description": "Оператор дизъюнкция(∨) — тип: logic, арность: 2",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.импликация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "импликация",
+      "short_description": "Оператор импликация(→) — тип: logic, арность: 2",
+      "description": "Оператор импликация(→) — тип: logic, арность: 2",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.волновой_оператор",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "волновой оператор",
+      "short_description": "Оператор волновой оператор(∇²) — тип: physics, арность: 1",
+      "description": "Оператор волновой оператор(∇²) — тип: physics, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.оператор_эволюции",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "оператор эволюции",
+      "short_description": "Оператор оператор эволюции(Û) — тип: physics, арность: 1",
+      "description": "Оператор оператор эволюции(Û) — тип: physics, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.функционал_действия",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "функционал действия",
+      "short_description": "Оператор функционал действия(S) — тип: physics, арность: 1",
+      "description": "Оператор функционал действия(S) — тип: physics, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.гамильтониан",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "гамильтониан",
+      "short_description": "Оператор гамильтониан(Ĥ) — тип: physics, арность: 1",
+      "description": "Оператор гамильтониан(Ĥ) — тип: physics, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.усилить_сомнением",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "усилить сомнением",
+      "short_description": "Оператор усилить сомнением(ₛ) — тип: psych, арность: 1",
+      "description": "Оператор усилить сомнением(ₛ) — тип: psych, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.ослабить_уверенностью",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "ослабить уверенностью",
+      "short_description": "Оператор ослабить уверенностью(ᵤ) — тип: psych, арность: 1",
+      "description": "Оператор ослабить уверенностью(ᵤ) — тип: psych, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.инвертировать_восприятие",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "инвертировать восприятие",
+      "short_description": "Оператор инвертировать восприятие(ᵢ) — тип: psych, арность: 1",
+      "description": "Оператор инвертировать восприятие(ᵢ) — тип: psych, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.спроецировать_интуицию",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "спроецировать интуицию",
+      "short_description": "Оператор спроецировать интуицию(ₙ) — тип: psych, арность: 1",
+      "description": "Оператор спроецировать интуицию(ₙ) — тип: psych, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.рефлексия",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "рефлексия",
+      "short_description": "Оператор рефлексия(ᵣ) — тип: psych, арность: 1",
+      "description": "Оператор рефлексия(ᵣ) — тип: psych, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.вызвать_диссонанс",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "вызвать диссонанс",
+      "short_description": "Оператор вызвать диссонанс(ᵈ) — тип: psych, арность: 1",
+      "description": "Оператор вызвать диссонанс(ᵈ) — тип: psych, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.морфемный_синтез",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "морфемный синтез",
+      "short_description": "Склеивание корней с интерфиксами",
+      "description": "Склеивание корней с интерфиксами",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.префиксация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "префиксация",
+      "short_description": "Добавление приставки",
+      "description": "Добавление приставки",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.суффиксация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "суффиксация",
+      "short_description": "Добавление суффикса",
+      "description": "Добавление суффикса",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.контаминация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "контаминация",
+      "short_description": "Слияние слов",
+      "description": "Слияние слов",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.двойная_префиксация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "двойная префиксация",
+      "short_description": "Два предлога подряд",
+      "description": "Два предлога подряд",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.квантовая_суперпозиция",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантовая суперпозиция",
+      "short_description": "Подготовка суперпозиции",
+      "description": "Подготовка суперпозиции",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.квантовая_запутанность",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантовая запутанность",
+      "short_description": "Создание запутанности",
+      "description": "Создание запутанности",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.квантовое_измерение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантовое измерение",
+      "short_description": "Проективное измерение",
+      "description": "Проективное измерение",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.фрактальный_вывод",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "фрактальный вывод",
+      "short_description": "Масштабно-инвариантный вывод",
+      "description": "Масштабно-инвариантный вывод",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.временная_эволюция",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "временная эволюция",
+      "short_description": "Гамильтонова эволюция",
+      "description": "Гамильтонова эволюция",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.квантово-фрактальный_оператор",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантово-фрактальный оператор",
+      "short_description": "Квантовое преобразование",
+      "description": "Квантовое преобразование",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.золотое_сечение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "золотое сечение",
+      "short_description": "Константа золотого сечения",
+      "description": "Константа золотого сечения",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.схема_валидация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "схема валидация",
+      "short_description": "Валидация JSON схемы",
+      "description": "Валидация JSON схемы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.темпоральный_параметр",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "темпоральный параметр",
+      "short_description": "Временной параметр",
+      "description": "Временной параметр",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.генерация_промпта",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "генерация промпта",
+      "short_description": "Генерация промпта из схемы",
+      "description": "Генерация промпта из схемы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.перекрытие",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "перекрытие",
+      "short_description": "Интеграл перекрытия",
+      "description": "Интеграл перекрытия",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.берри_фаза",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "берри фаза",
+      "short_description": "Геометрическая фаза Берри",
+      "description": "Геометрическая фаза Берри",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.фибровый_пучок",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "фибровый пучок",
+      "short_description": "Фибровое расслоение",
+      "description": "Фибровое расслоение",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.неадиабатический_переход",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "неадиабатический переход",
+      "short_description": "Неадиабатический переход",
+      "description": "Неадиабатический переход",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.гипотеза",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "гипотеза",
+      "short_description": "Научная гипотеза",
+      "description": "Научная гипотеза",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.эксперимент",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "эксперимент",
+      "short_description": "Экспериментальный дизайн",
+      "description": "Экспериментальный дизайн",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.валидация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "валидация",
+      "short_description": "Проверка гипотезы",
+      "description": "Проверка гипотезы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.MMS",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "MMS",
+      "short_description": "Maximin share guarantee",
+      "description": "Maximin share guarantee",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.EF1",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "EF1",
+      "short_description": "Envy-freeness up to one item",
+      "description": "Envy-freeness up to one item",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.EFX",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "EFX",
+      "short_description": "Envy-freeness up to any item",
+      "description": "Envy-freeness up to any item",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.топ_трейдинг",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "топ трейдинг",
+      "short_description": "Top trading cycles algorithm",
+      "description": "Top trading cycles algorithm",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.Q_ротор",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Q ротор",
+      "short_description": "Физический ротор поля (S³)",
+      "description": "Физический ротор поля (S³)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.Hopf_заряд",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Hopf заряд",
+      "short_description": "Оператор Hopf заряд(N_H) — тип: topology, арность: 1",
+      "description": "Оператор Hopf заряд(N_H) — тип: topology, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.геометрический_ток",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "геометрический ток",
+      "short_description": "Ток Noether из S³-вращений",
+      "description": "Ток Noether из S³-вращений",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.zitter_частота",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "zitter частота",
+      "short_description": "Частота zitterbewegung",
+      "description": "Частота zitterbewegung",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.критическое_поле",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "критическое поле",
+      "short_description": "Критическое поле для нелинейности массы",
+      "description": "Критическое поле для нелинейности массы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.семантическая_гравитация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "семантическая гравитация",
+      "short_description": "Сила притяжения к S=0",
+      "description": "Сила притяжения к S=0",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.QEC_оценка",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "QEC оценка",
+      "short_description": "Квантово-этический критерий",
+      "description": "Квантово-этический критерий",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.конфликт_коэффициент",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "конфликт коэффициент",
+      "short_description": "Мера семантического конфликта",
+      "description": "Мера семантического конфликта",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.архонт_состояние",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "архонт состояние",
+      "short_description": "Состояние Этического Архонта",
+      "description": "Состояние Этического Архонта",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.этическая_стоимость",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "этическая стоимость",
+      "short_description": "Оператор этическая стоимость(Cost_eth) — тип: ethical, арность: 1",
+      "description": "Оператор этическая стоимость(Cost_eth) — тип: ethical, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.чистая_ценность",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "чистая ценность",
+      "short_description": "Чистая ценность (Pure Value)",
+      "description": "Чистая ценность (Pure Value)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.CHSH_оператор",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "CHSH оператор",
+      "short_description": "Неравенство Белла (CHSH)",
+      "description": "Неравенство Белла (CHSH)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.проекция_спина",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "проекция спина",
+      "short_description": "Проекция спина на ось a",
+      "description": "Проекция спина на ось a",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.корреляционная_функция",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "корреляционная функция",
+      "short_description": "Вероятность совпадения спинов",
+      "description": "Вероятность совпадения спинов",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.скрытая_переменная",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "скрытая переменная",
+      "short_description": "Скрытая локальная переменная",
+      "description": "Скрытая локальная переменная",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.EPR_состояние",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "EPR состояние",
+      "short_description": "Состояние Белла",
+      "description": "Состояние Белла",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.фрактальная_резка",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "фрактальная резка",
+      "short_description": "Селективное удаление ветвей",
+      "description": "Селективное удаление ветвей",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.семантическое_шитьё",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "семантическое шитьё",
+      "short_description": "Ткачество семантических связей",
+      "description": "Ткачество семантических связей",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.этическое_встраивание",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "этическое встраивание",
+      "short_description": "Этическое встраивание в ткань",
+      "description": "Этическое встраивание в ткань",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.петля_резонанса",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "петля резонанса",
+      "short_description": "Резонансная петля",
+      "description": "Резонансная петля",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.ткачество_реальности",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "ткачество реальности",
+      "short_description": "Оператор ткачества реальностей",
+      "description": "Оператор ткачества реальностей",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.хаос_интегратор",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "хаос интегратор",
+      "short_description": "Интеграция хаоса через резонанс",
+      "description": "Интеграция хаоса через резонанс",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.паттерн_рекурсия",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "паттерн рекурсия",
+      "short_description": "Рекурсивное извлечение паттернов",
+      "description": "Рекурсивное извлечение паттернов",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.причинная_конденсация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "причинная конденсация",
+      "short_description": "Сгущение причинно-следственных связей",
+      "description": "Сгущение причинно-следственных связей",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.контекст_сжатие",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "контекст сжатие",
+      "short_description": "Сжатие контекста с сохранением плотности",
+      "description": "Сжатие контекста с сохранением плотности",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.многомерная_фузия",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "многомерная фузия",
+      "short_description": "Спектральное слияние измерений",
+      "description": "Спектральное слияние измерений",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.этическая_линза",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "этическая линза",
+      "short_description": "Этическая верификация",
+      "description": "Этическая верификация",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.временная_петля",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "временная петля",
+      "short_description": "Замыкание временных петель",
+      "description": "Замыкание временных петель",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.резонансный_баланс",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "резонансный баланс",
+      "short_description": "Балансировка резонансных состояний",
+      "description": "Балансировка резонансных состояний",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.мета_контекст_интегратор",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "мета контекст интегратор",
+      "short_description": "Интеграция мета-контекстов",
+      "description": "Интеграция мета-контекстов",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.функтор_мап",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "функтор мап",
+      "short_description": "Ковариантный функтор",
+      "description": "Ковариантный функтор",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.контравариантный_функтор",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "контравариантный функтор",
+      "short_description": "Контравариантный функтор",
+      "description": "Контравариантный функтор",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.естественное_преобразование",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "естественное преобразование",
+      "short_description": "Естественное преобразование",
+      "description": "Естественное преобразование",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.монада_bind",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "монада bind",
+      "short_description": "Монадическое связывание",
+      "description": "Монадическое связывание",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.сопряжение_левое_правое",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "сопряжение левое правое",
+      "short_description": "Сопряжённые функторы",
+      "description": "Сопряжённые функторы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.Yoneda_вложение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Yoneda вложение",
+      "short_description": "Вложение Йонеды",
+      "description": "Вложение Йонеды",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.предел_категорный",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "предел категорный",
+      "short_description": "Категорный предел",
+      "description": "Категорный предел",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.групповое_умножение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "групповое умножение",
+      "short_description": "Групповая операция",
+      "description": "Групповая операция",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.обратный_элемент",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "обратный элемент",
+      "short_description": "Обратный элемент группы",
+      "description": "Обратный элемент группы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.коммутатор_Ли",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "коммутатор Ли",
+      "short_description": "Коммутатор алгебры Ли",
+      "description": "Коммутатор алгебры Ли",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.факторгруппа",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "факторгруппа",
+      "short_description": "Оператор факторгруппа(G/H) — тип: alg, арность: 1",
+      "description": "Оператор факторгруппа(G/H) — тип: alg, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.Райдемейстер_I",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Райдемейстер I",
+      "short_description": "Движение Райдемейстера I",
+      "description": "Движение Райдемейстера I",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.Райдемейстер_II",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Райдемейстер II",
+      "short_description": "Движение Райдемейстера II",
+      "description": "Движение Райдемейстера II",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.Райдемейстер_III",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Райдемейстер III",
+      "short_description": "Движение Райдемейстера III",
+      "description": "Движение Райдемейстера III",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.полином_Джонса",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "полином Джонса",
+      "short_description": "Полиномиальный инвариант Джонса",
+      "description": "Полиномиальный инвариант Джонса",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.хиральность_узла",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "хиральность узла",
+      "short_description": "Мера хиральности узла",
+      "description": "Мера хиральности узла",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.символ_Лежандра",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "символ Лежандра",
+      "short_description": "Символ Лежандра",
+      "description": "Символ Лежандра",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.дзета_Римана",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "дзета Римана",
+      "short_description": "Дзета-функция Римана",
+      "description": "Дзета-функция Римана",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.эйлерова_функция",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "эйлерова функция",
+      "short_description": "Оператор эйлерова функция(φ(n)) — тип: numtheory, арность: 1",
+      "description": "Оператор эйлерова функция(φ(n)) — тип: numtheory, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.китайский_остаток",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "китайский остаток",
+      "short_description": "Китайская теорема об остатках",
+      "description": "Китайская теорема об остатках",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.хроматическое_число",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "хроматическое число",
+      "short_description": "Хроматическое число графа",
+      "description": "Хроматическое число графа",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.гамильтонов_цикл",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "гамильтонов цикл",
+      "short_description": "Гамильтонов цикл",
+      "description": "Гамильтонов цикл",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.число_Каталана",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "число Каталана",
+      "short_description": "Числа Каталана",
+      "description": "Числа Каталана",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.матроид_ранг",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "матроид ранг",
+      "short_description": "Функция ранга матроида",
+      "description": "Функция ранга матроида",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.градиентный_шаг",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "градиентный шаг",
+      "short_description": "Оператор градиентный шаг(∇⁻) — тип: opt, арность: 1",
+      "description": "Оператор градиентный шаг(∇⁻) — тип: opt, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.KKT_условие",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "KKT условие",
+      "short_description": "Условия Каруша-Куна-Таккера",
+      "description": "Условия Каруша-Куна-Таккера",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.Лагранжиан_опт",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Лагранжиан опт",
+      "short_description": "Лагранжиан оптимизации",
+      "description": "Лагранжиан оптимизации",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.энтропийный_градиент",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "энтропийный градиент",
+      "short_description": "Градиент энтропии",
+      "description": "Градиент энтропии",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.свободная_энергия",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "свободная энергия",
+      "short_description": "Свободная энергия Гельмгольца",
+      "description": "Свободная энергия Гельмгольца",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.статсумма",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "статсумма",
+      "short_description": "Статистическая сумма",
+      "description": "Статистическая сумма",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.больцмановский_вес",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "больцмановский вес",
+      "short_description": "Больцмановский вес",
+      "description": "Больцмановский вес",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.преобразование_Лоренца",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "преобразование Лоренца",
+      "short_description": "Преобразование Лоренца",
+      "description": "Преобразование Лоренца",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.метрика_Шварцшильда",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "метрика Шварцшильда",
+      "short_description": "Метрика Шварцшильда",
+      "description": "Метрика Шварцшильда",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.инфляционный_параметр",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "инфляционный параметр",
+      "short_description": "Масштабный фактор инфляции",
+      "description": "Масштабный фактор инфляции",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.космологическая_постоянная",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "космологическая постоянная",
+      "short_description": "Космологическая постоянная Эйнштейна",
+      "description": "Космологическая постоянная Эйнштейна",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.фейнмановская_диаграмма",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "фейнмановская диаграмма",
+      "short_description": "Диаграмма Фейнмана",
+      "description": "Диаграмма Фейнмана",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.перенормировка_группа",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "перенормировка группа",
+      "short_description": "Ренормгрупповой поток",
+      "description": "Ренормгрупповой поток",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.калибровочная_связность",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "калибровочная связность",
+      "short_description": "Калибровочное поле Янга-Миллса",
+      "description": "Калибровочное поле Янга-Миллса",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.BCS_купирование",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "BCS купирование",
+      "short_description": "Щель сверхпроводимости BCS",
+      "description": "Щель сверхпроводимости BCS",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.топологический_инвариант_Z2",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "топологический инвариант Z2",
+      "short_description": "Оператор топологический инвариант Z2(ν_Z2) — тип: cond, арность: 1",
+      "description": "Оператор топологический инвариант Z2(ν_Z2) — тип: cond, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.сведение_Карпа",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "сведение Карпа",
+      "short_description": "Полиномиальное сведение Карпа",
+      "description": "Полиномиальное сведение Карпа",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.BQP_схема",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "BQP схема",
+      "short_description": "Квантовая полиномиальная схема",
+      "description": "Квантовая полиномиальная схема",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.хэш_функция",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "хэш функция",
+      "short_description": "Оператор хэш функция(H#) — тип: crypto, арность: 1",
+      "description": "Оператор хэш функция(H#) — тип: crypto, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.RSA_шифр",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "RSA шифр",
+      "short_description": "RSA шифрование",
+      "description": "RSA шифрование",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.нуль_разглашение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "нуль разглашение",
+      "short_description": "Доказательство с нулевым разглашением",
+      "description": "Доказательство с нулевым разглашением",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.шаг_Жизни_Конвея",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "шаг Жизни Конвея",
+      "short_description": "Шаг игры Жизни Конвея",
+      "description": "Шаг игры Жизни Конвея",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.Вольфрам_правило",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Вольфрам правило",
+      "short_description": "Оператор Вольфрам правило(W_r) — тип: automaton, арность: 1",
+      "description": "Оператор Вольфрам правило(W_r) — тип: automaton, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.механизм_внимания",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "механизм внимания",
+      "short_description": "Механизм внимания (scaled dot-product)",
+      "description": "Механизм внимания (scaled dot-product)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.обратное_распространение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "обратное распространение",
+      "short_description": "Обратное распространение ошибки",
+      "description": "Обратное распространение ошибки",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.softmax_активация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "softmax активация",
+      "short_description": "Оператор softmax активация(σ_sm) — тип: nn, арность: 1",
+      "description": "Оператор softmax активация(σ_sm) — тип: nn, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.ReLU_активация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "ReLU активация",
+      "short_description": "ReLU-активация",
+      "description": "ReLU-активация",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.кроссовер_ген",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "кроссовер ген",
+      "short_description": "Генетический кроссовер",
+      "description": "Генетический кроссовер",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.мутация_ген",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "мутация ген",
+      "short_description": "Генетическая мутация",
+      "description": "Генетическая мутация",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.фитнес_оценка",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "фитнес оценка",
+      "short_description": "Функция приспособленности",
+      "description": "Функция приспособленности",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.петля_обратной_связи",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "петля обратной связи",
+      "short_description": "Обратная связь (feedback loop)",
+      "description": "Обратная связь (feedback loop)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.гомеостаз_стабилизация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "гомеостаз стабилизация",
+      "short_description": "Гомеостатический регулятор",
+      "description": "Гомеостатический регулятор",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.необходимое_разнообразие",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "необходимое разнообразие",
+      "short_description": "Закон необходимого разнообразия Эшби",
+      "description": "Закон необходимого разнообразия Эшби",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.означивание_знака",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "означивание знака",
+      "short_description": "Соссюровское означивание",
+      "description": "Соссюровское означивание",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.миф_Бартса_2",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "миф Бартса 2",
+      "short_description": "Миф как вторичная семиотическая система",
+      "description": "Миф как вторичная семиотическая система",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.денотация_коннотация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "денотация коннотация",
+      "short_description": "Денотация + коннотация",
+      "description": "Денотация + коннотация",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.интеграция_тени",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "интеграция тени",
+      "short_description": "Интеграция тени (индивидуация)",
+      "description": "Интеграция тени (индивидуация)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.проекция_анимы",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "проекция анимы",
+      "short_description": "Проекция анимы/анимуса",
+      "description": "Проекция анимы/анимуса",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.ИИТ_интеграция",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "ИИТ интеграция",
+      "short_description": "Интегрированная информация (Тономони)",
+      "description": "Интегрированная информация (Тономони)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.GWT_вещание",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "GWT вещание",
+      "short_description": "Глобальное рабочее пространство (Барс)",
+      "description": "Глобальное рабочее пространство (Барс)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.мета_осознание",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "мета осознание",
+      "short_description": "Метакогнитивное наблюдение",
+      "description": "Метакогнитивное наблюдение",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.гамма_синхронизация",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "гамма синхронизация",
+      "short_description": "Гамма-ритм связывания",
+      "description": "Гамма-ритм связывания",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.прунинг_синапсов",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "прунинг синапсов",
+      "short_description": "Синаптический прунинг",
+      "description": "Синаптический прунинг",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.эпохе_Гуссерля",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "эпохе Гуссерля",
+      "short_description": "Феноменологическая редукция",
+      "description": "Феноменологическая редукция",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.Dasein_проект",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Dasein проект",
+      "short_description": "Экзистенциальная структура Dasein",
+      "description": "Экзистенциальная структура Dasein",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.у_вэй_недеяние",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "у вэй недеяние",
+      "short_description": "Даосское у-вэй",
+      "description": "Даосское у-вэй",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.шуньята_пустота",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "шуньята пустота",
+      "short_description": "Пустотность шуньята",
+      "description": "Пустотность шуньята",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.нигредо_разложение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "нигредо разложение",
+      "short_description": "Стадия нигредо (чёрное делание)",
+      "description": "Стадия нигредо (чёрное делание)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.альбедо_очищение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "альбедо очищение",
+      "short_description": "Стадия альбедо (белое делание)",
+      "description": "Стадия альбедо (белое делание)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.рубедо_соединение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "рубедо соединение",
+      "short_description": "Стадия рубедо (красное делание)",
+      "description": "Стадия рубедо (красное делание)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.alchemical_свадьба",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "alchemical свадьба",
+      "short_description": "Алхимическая свадьба Солнца и Луны",
+      "description": "Алхимическая свадьба Солнца и Луны",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.цимцум_сокрытие",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "цимцум сокрытие",
+      "short_description": "Цимцум (сокращение Бесконечного)",
+      "description": "Цимцум (сокращение Бесконечного)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.нисхождение_сфирот",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "нисхождение сфирот",
+      "short_description": "Нисхождение 10 сфирот",
+      "description": "Нисхождение 10 сфирот",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.бросание_гексаграммы",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "бросание гексаграммы",
+      "short_description": "Бросание монет/мелкостей для гексаграммы",
+      "description": "Бросание монет/мелкостей для гексаграммы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.изменяющаяся_линия",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "изменяющаяся линия",
+      "short_description": "Изменяющиеся линии гексаграммы",
+      "description": "Изменяющиеся линии гексаграммы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.расклад_таро",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "расклад таро",
+      "short_description": "Расклад карт Таро",
+      "description": "Расклад карт Таро",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.перевёрнутая_карта",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "перевёрнутая карта",
+      "short_description": "Перевёрнутое значение аркана",
+      "description": "Перевёрнутое значение аркана",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.цветок_жизни_сборка",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "цветок жизни сборка",
+      "short_description": "Цветок жизни (19 кругов)",
+      "description": "Цветок жизни (19 кругов)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.платоново_тело_свёртка",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "платоново тело свёртка",
+      "short_description": "Свёртка платоновых тел",
+      "description": "Свёртка платоновых тел",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.эмерджентный_каскад",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "эмерджентный каскад",
+      "short_description": "Эмерджентность системы",
+      "description": "Эмерджентность системы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.симбиоз_сопряжение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "симбиоз сопряжение",
+      "short_description": "Симбиотическая связь",
+      "description": "Симбиотическая связь",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.сукцессия_экологическая",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "сукцессия экологическая",
+      "short_description": "Экологическая сукцессия",
+      "description": "Экологическая сукцессия",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.бифуркация_удвоения",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "бифуркация удвоения",
+      "short_description": "Бифуркация удвоения периода",
+      "description": "Бифуркация удвоения периода",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.показатель_Ляпунова",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "показатель Ляпунова",
+      "short_description": "Старший показатель Ляпунова",
+      "description": "Старший показатель Ляпунова",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.странный_аттрактор_Лоренц",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "странный аттрактор Лоренц",
+      "short_description": "Аттрактор Лоренца",
+      "description": "Аттрактор Лоренца",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.small_world_степень",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "small world степень",
+      "short_description": "Длина пути малого мира",
+      "description": "Длина пути малого мира",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.scale_free_распределение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "scale free распределение",
+      "short_description": "Степенное распределение Барабаси",
+      "description": "Степенное распределение Барабаси",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.гармонический_ряд_обертонов",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "гармонический ряд обертонов",
+      "short_description": "Натуральный обертоновый ряд",
+      "description": "Натуральный обертоновый ряд",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.ракоход_обращение",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "ракоход обращение",
+      "short_description": "Ракоход и обращение темы",
+      "description": "Ракоход и обращение темы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.контрапункт_двойной",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "контрапункт двойной",
+      "short_description": "Двойной контрапункт в октаву",
+      "description": "Двойной контрапункт в октаву",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.тенсегрити_баланс",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "тенсегрити баланс",
+      "short_description": "Баланс тенсегрити Фуллера",
+      "description": "Баланс тенсегрити Фуллера",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.геодезический_узел",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "геодезический узел",
+      "short_description": "Геодезический купол (Фуллер)",
+      "description": "Геодезический купол (Фуллер)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.равновесие_Нэша_опер",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "равновесие Нэша опер",
+      "short_description": "Оператор равновесие Нэша опер(N_eq) — тип: game, арность: 1",
+      "description": "Оператор равновесие Нэша опер(N_eq) — тип: game, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.ESS_стратегия",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "ESS стратегия",
+      "short_description": "Эволюционно стабильная стратегия",
+      "description": "Эволюционно стабильная стратегия",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.минимакс_Неймана",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "минимакс Неймана",
+      "short_description": "Минимакс фон Неймана",
+      "description": "Минимакс фон Неймана",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.байесовское_обновление",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "байесовское обновление",
+      "short_description": "Байесовское обновление",
+      "description": "Байесовское обновление",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.expected_utility",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "expected utility",
+      "short_description": "Ожидаемая полезность",
+      "description": "Ожидаемая полезность",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.antifragile_Талеб",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "antifragile Талеб",
+      "short_description": "Антихрупкость",
+      "description": "Антихрупкость",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.вентиль_Адамара",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "вентиль Адамара",
+      "short_description": "Вентиль Адамара",
+      "description": "Вентиль Адамара",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.CNOT_вентиль",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "CNOT вентиль",
+      "short_description": "Controlled-NOT вентиль",
+      "description": "Controlled-NOT вентиль",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.алгоритм_Шора",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "алгоритм Шора",
+      "short_description": "Алгоритм Шора факторизации",
+      "description": "Алгоритм Шора факторизации",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.алгоритм_Гровера",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "алгоритм Гровера",
+      "short_description": "Алгоритм Гровера",
+      "description": "Алгоритм Гровера",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.телепортация_кубита",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "телепортация кубита",
+      "short_description": "Квантовая телепортация",
+      "description": "Квантовая телепортация",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.бритва_Оккама_опер",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "бритва Оккама опер",
+      "short_description": "Бритва Оккама как оператор",
+      "description": "Бритва Оккама как оператор",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.принцип_Парето_опер",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "принцип Парето опер",
+      "short_description": "Принцип Парето",
+      "description": "Принцип Парето",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.антропный_принцип_опер",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "антропный принцип опер",
+      "short_description": "Антропный принцип",
+      "description": "Антропный принцип",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.AdS_CFT_соответствие",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "AdS CFT соответствие",
+      "short_description": "Оператор AdS CFT соответствие(AdS/CFT) — тип: holographic, арность: 1",
+      "description": "Оператор AdS CFT соответствие(AdS/CFT) — тип: holographic, арность: 1",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.энтропия_Бекенштейна_Хокинга",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "энтропия Бекенштейна Хокинга",
+      "short_description": "Энтропия чёрной дыры",
+      "description": "Энтропия чёрной дыры",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.морфический_резонанс_опер",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "морфический резонанс опер",
+      "short_description": "Морфический резонанс Шелдрейка",
+      "description": "Морфический резонанс Шелдрейка",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.морфогенез_Тьюринга",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "морфогенез Тьюринга",
+      "short_description": "Реакция-диффузия Тьюринга",
+      "description": "Реакция-диффузия Тьюринга",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.Orch_OR_опер",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Orch OR опер",
+      "short_description": "Оркестрированная объективная редукция",
+      "description": "Оркестрированная объективная редукция",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.fork_симуляции_опер",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "fork симуляции опер",
+      "short_description": "Ветвление (fork) симуляции",
+      "description": "Ветвление (fork) симуляции",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "operator.render_наблюдателя",
+    "entity_type": "operator",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "render наблюдателя",
+      "short_description": "Рендеринг наблюдателя",
+      "description": "Рендеринг наблюдателя",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [],
+      "source_symbols": [],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  }
+]

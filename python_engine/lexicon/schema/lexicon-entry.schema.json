@@ -12,7 +12,7 @@
     },
     "entity_type": {
       "type": "string",
-      "enum": ["generation_parameter", "domain", "structural_pattern", "operator", "invariant", "metric", "constraint"],
+      "enum": ["generation_parameter", "domain", "structural_pattern", "operator", "invariant", "metric", "constraint", "formula", "constant", "lexical_category"],
       "description": "Type of entity this entry represents"
     },
     "namespace": {

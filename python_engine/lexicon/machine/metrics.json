@@ -18,7 +18,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "V",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -65,7 +65,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857214",
+      "last_verified_at": "2026-08-08T15:42:30.090780",
       "notes": "Extracted from METRIC_KEYS"
     }
   },
@@ -88,7 +88,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "S",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -135,7 +135,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857233",
+      "last_verified_at": "2026-08-08T15:42:30.090789",
       "notes": "Extracted from METRIC_KEYS"
     }
   },
@@ -158,7 +158,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "N",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -205,7 +205,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857249",
+      "last_verified_at": "2026-08-08T15:42:30.090796",
       "notes": "Extracted from METRIC_KEYS"
     }
   },
@@ -228,7 +228,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "D_f",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -275,7 +275,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857270",
+      "last_verified_at": "2026-08-08T15:42:30.090802",
       "notes": "Extracted from METRIC_KEYS"
     }
   },
@@ -298,7 +298,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "G_S",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -345,7 +345,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857282",
+      "last_verified_at": "2026-08-08T15:42:30.090808",
       "notes": "Extracted from METRIC_KEYS"
     }
   },
@@ -368,7 +368,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "QEC",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -415,7 +415,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857294",
+      "last_verified_at": "2026-08-08T15:42:30.090814",
       "notes": "Extracted from METRIC_KEYS"
     }
   },
@@ -438,7 +438,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "CHSH",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -485,7 +485,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857311",
+      "last_verified_at": "2026-08-08T15:42:30.090821",
       "notes": "Extracted from METRIC_KEYS"
     }
   },
@@ -508,7 +508,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "C_val",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -555,7 +555,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857325",
+      "last_verified_at": "2026-08-08T15:42:30.090827",
       "notes": "Extracted from METRIC_KEYS"
     }
   }

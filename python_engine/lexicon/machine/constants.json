@@ -1,0 +1,416 @@
+[
+  {
+    "id": "constant.золотое_сечение",
+    "entity_type": "constant",
+    "namespace": "constant",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "золотое_сечение",
+      "value_or_formula": null,
+      "symbol": "φ",
+      "domain": "fractal"
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Константа золотого сечения",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "verified_in_source": true,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "constant.темпоральный_параметр",
+    "entity_type": "constant",
+    "namespace": "constant",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "темпоральный_параметр",
+      "value_or_formula": null,
+      "symbol": "τ",
+      "domain": "json"
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Временной параметр",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "verified_in_source": true,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "constant.zitter_частота",
+    "entity_type": "constant",
+    "namespace": "constant",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "zitter_частота",
+      "value_or_formula": "ω_z = 2 m0",
+      "symbol": "ω_z",
+      "domain": "physics"
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Частота zitterbewegung",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "verified_in_source": true,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "constant.критическое_поле",
+    "entity_type": "constant",
+    "namespace": "constant",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "критическое_поле",
+      "value_or_formula": "E_crit = M² / e",
+      "symbol": "E_crit",
+      "domain": "physics"
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Критическое поле для нелинейности массы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "verified_in_source": true,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "constant.семантическая_гравитация",
+    "entity_type": "constant",
+    "namespace": "constant",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "семантическая_гравитация",
+      "value_or_formula": "G_S = 1/(R_T²) * S/Ξ_topo * 1/(1-N)²",
+      "symbol": "G_S",
+      "domain": "ethical"
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Сила притяжения к S=0",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "verified_in_source": true,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "constant.конфликт_коэффициент",
+    "entity_type": "constant",
+    "namespace": "constant",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "конфликт_коэффициент",
+      "value_or_formula": "C_val = Σ(S_idea,i * W_ethical,i)",
+      "symbol": "C_val",
+      "domain": "ethical"
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Мера семантического конфликта",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "verified_in_source": true,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "constant.чистая_ценность",
+    "entity_type": "constant",
+    "namespace": "constant",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "чистая_ценность",
+      "value_or_formula": "V = 1 - C_val/(G_S·R_T) → 1",
+      "symbol": "V",
+      "domain": "ethical"
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Чистая ценность (Pure Value)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "verified_in_source": true,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "constant.скрытая_переменная",
+    "entity_type": "constant",
+    "namespace": "constant",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "скрытая_переменная",
+      "value_or_formula": null,
+      "symbol": "λ",
+      "domain": "nonlocal"
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Скрытая локальная переменная",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "verified_in_source": true,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "constant.космологическая_постоянная",
+    "entity_type": "constant",
+    "namespace": "constant",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "космологическая_постоянная",
+      "value_or_formula": "Λ_косм = 8πG ρ_вак",
+      "symbol": "Λ_косм",
+      "domain": "cosmo"
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Космологическая постоянная Эйнштейна",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "verified_in_source": true,
+      "needs_human_review": true
+    }
+  }
+]

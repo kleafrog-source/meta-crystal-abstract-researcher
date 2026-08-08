@@ -137,7 +137,11 @@ def main():
         "generation-parameters.json": "generation_parameter",
         "domain-flags.json": "domain",
         "structural-patterns.json": "structural_pattern",
-        "metrics.json": "metric"
+        "metrics.json": "metric",
+        "operators.json": "operator",
+        "formulas.json": "formula",
+        "constants.json": "constant",
+        "lexical-categories.json": "lexical_category"
     }
     
     machine_data = {}

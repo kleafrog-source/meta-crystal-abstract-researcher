@@ -15,11 +15,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  Brain,
   CheckCircle2,
   Layers,
   Loader2,
   Play,
-  Save,
   Sliders,
   Square,
   Terminal,
@@ -28,6 +28,7 @@ import { apiDelete, apiPost, useFetch } from "@/hooks/use-fetch";
 import { useToast } from "@/hooks/use-toast";
 import type { SidecarEvent } from "@/lib/engine/runner";
 import { ProfileConfigurator } from "@/components/profile/ProfileConfigurator";
+import { SemanticConfigPanel } from "@/components/profile/SemanticConfigPanel";
 import { DEFAULT_PROFILE, type EditableProfile, withDefaultFlags } from "@/lib/profile-presets";
 import { ProfileLibraryBar } from "@/components/profile/ProfileLibraryBar";
 import type { Profile } from "@/types";
@@ -248,9 +249,10 @@ export function Generation() {
           />
         </div>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex h-full flex-col">
-          <TabsList className="mb-4 grid w-full max-w-xl grid-cols-3">
+          <TabsList className="mb-4 grid w-full max-w-3xl grid-cols-4">
             <TabsTrigger value="params"><Sliders className="mr-1.5 h-3.5 w-3.5" />Параметры</TabsTrigger>
             <TabsTrigger value="domains"><Layers className="mr-1.5 h-3.5 w-3.5" />Домены</TabsTrigger>
+            <TabsTrigger value="semantic"><Brain className="mr-1.5 h-3.5 w-3.5" />Semantic</TabsTrigger>
             <TabsTrigger value="log"><Terminal className="mr-1.5 h-3.5 w-3.5" />Лог</TabsTrigger>
           </TabsList>
 
@@ -270,6 +272,15 @@ export function Generation() {
               onChange={setProfile}
               engineFlags={engineInfo?.flags}
               sections={["domains"]}
+            />
+          </TabsContent>
+
+          <TabsContent value="semantic" className="mt-0 flex-1 overflow-y-auto">
+            <SemanticConfigPanel
+              profile={profile}
+              onApplyProposal={(nextProfile) =>
+                setProfile(engineInfo?.flags?.length ? withDefaultFlags(nextProfile, engineInfo.flags) : nextProfile)
+              }
             />
           </TabsContent>
 

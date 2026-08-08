@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://meta-crystal.org/schemas/formula-entry.schema.json",
+  "title": "Formula Entry",
+  "description": "Schema for mathematical/scientific formulas (e.g., N_H = (1/(32π²)) ∫ ε^{μνρσ} Tr(Q†∂μQ ... ) d⁴x)",
+  "allOf": [
+    {
+      "$ref": "lexicon-entry.schema.json"
+    },
+    {
+      "properties": {
+        "entity_type": {
+          "const": "formula"
+        },
+        "namespace": {
+          "const": "formula"
+        },
+        "technical": {
+          "properties": {
+            "formula": {
+              "type": ["string", "null"],
+              "description": "The formula string as it appears in source"
+            },
+            "symbol": {
+              "type": ["string", "null"],
+              "description": "Mathematical symbol for the formula"
+            },
+            "formula_type": {
+              "type": ["string", "null"],
+              "description": "Type of formula (e.g., topological, physical, ethical)"
+            },
+            "domain": {
+              "type": ["string", "null"],
+              "description": "Scientific domain (e.g., physics, topology, ethics)"
+            },
+            "variables": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Variables used in the formula"
+            }
+          }
+        },
+        "audit": {
+          "properties": {
+            "formula_found_verbatim": {
+              "type": "boolean",
+              "description": "Whether formula was found verbatim in source"
+            },
+            "scientific_validity_checked": {
+              "type": "boolean",
+              "description": "Whether scientific validity has been checked"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

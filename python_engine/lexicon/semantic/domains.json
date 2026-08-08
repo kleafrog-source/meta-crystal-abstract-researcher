@@ -1,0 +1,2130 @@
+[
+  {
+    "id": "domain.enable_linguistics",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_linguistics",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_morpheme_generation",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_morpheme_generation",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_linguistic_principles",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_linguistic_principles",
+      "short_description": "Квантово-фрактальный",
+      "description": "Квантово-фрактальный",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_quantum",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_quantum",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_fractal",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_fractal",
+      "short_description": "Психология",
+      "description": "Психология",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_psychology",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_psychology",
+      "short_description": "MMSS-метрики",
+      "description": "MMSS-метрики",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_metrics",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_metrics",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_auto_correction",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_auto_correction",
+      "short_description": "Обучение и сохранение",
+      "description": "Обучение и сохранение",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_learning",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_learning",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_saving",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_saving",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_cataloging",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_cataloging",
+      "short_description": "Операторы (отдельные флаги для часто используемых)",
+      "description": "Операторы (отдельные флаги для часто используемых)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_derivative_first",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_derivative_first",
+      "short_description": "∂/∂t",
+      "description": "∂/∂t",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_derivative_second",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_derivative_second",
+      "short_description": "∂²/∂t²",
+      "description": "∂²/∂t²",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_eqgft",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_eqgft",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_ethical_archon",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_ethical_archon",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_bell_nonlocality",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_bell_nonlocality",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_context_weaver",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_context_weaver",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_garden_between",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_garden_between",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_meta_fractal_craft",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_meta_fractal_craft",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_json_prompt",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_json_prompt",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_quantum_geometry",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_quantum_geometry",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_research",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_research",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_fair_division",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_fair_division",
+      "short_description": "=== Расширение v7.1 \"Гипер-Космос\" ===",
+      "description": "=== Расширение v7.1 \"Гипер-Космос\" ===",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_category_theory",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_category_theory",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_algebra",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_algebra",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_knot_theory",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_knot_theory",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_number_theory",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_number_theory",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_measure_probability",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_measure_probability",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_graph_combinatorics",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_graph_combinatorics",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_optimization",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_optimization",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_thermodynamics",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_thermodynamics",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_stat_mechanics",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_stat_mechanics",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_relativity",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_relativity",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_string_theory",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_string_theory",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_cosmology",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_cosmology",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_qft",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_qft",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_condensed_matter",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_condensed_matter",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_complexity",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_complexity",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_cryptography",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_cryptography",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_automata",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_automata",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_neural_nets",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_neural_nets",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_evolutionary",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_evolutionary",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_cybernetics",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_cybernetics",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_semiotics",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_semiotics",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_phonology_typology",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_phonology_typology",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_writing_systems",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_writing_systems",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_jungian",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_jungian",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_cognitive_bias",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_cognitive_bias",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_consciousness",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_consciousness",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_mindfulness",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_mindfulness",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_neuroscience",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_neuroscience",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_philosophy",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_philosophy",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_eastern_phil",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_eastern_phil",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_hermeticism",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_hermeticism",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_process_phil",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_process_phil",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_alchemy",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_alchemy",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_kabbalah",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_kabbalah",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_iching",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_iching",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_tarot",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_tarot",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_sacred_geometry",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_sacred_geometry",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_vedic",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_vedic",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_systems_ecology",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_systems_ecology",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_permaculture",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_permaculture",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_biomimicry",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_biomimicry",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_chaos_dynamics",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_chaos_dynamics",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_network_science",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_network_science",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_music_art",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_music_art",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_architecture",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_architecture",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_game_theory",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_game_theory",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_decision_theory",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_decision_theory",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_holographic",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_holographic",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_morphic_resonance",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_morphic_resonance",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_orch_or",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_orch_or",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_simulation_hyp",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_simulation_hyp",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_quantum_info",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_quantum_info",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "domain.enable_metaprinciples",
+    "entity_type": "domain",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "enable_metaprinciples",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "EngineConfig.flags"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  }
+]

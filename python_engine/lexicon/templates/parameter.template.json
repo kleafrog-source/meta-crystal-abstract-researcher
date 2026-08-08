@@ -7,7 +7,7 @@
   "technical": {
     "name": "<parameter_name>",
     "type": "<int|bool|float|string>",
-    "default_value": <default>,
+    "default_value": "<default>",
     "allowed_values": [],
     "min_value": null,
     "max_value": null,

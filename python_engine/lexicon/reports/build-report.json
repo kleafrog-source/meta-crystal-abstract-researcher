@@ -1,13 +1,17 @@
 {
-  "build_timestamp": "2026-08-08T05:17:33.159847",
-  "snapshot": "lexicon_snapshot_20260808_051733",
+  "build_timestamp": "2026-08-08T16:33:56.651950",
+  "snapshot": "lexicon_snapshot_20260808_163355",
   "summary": {
-    "total_entries": 197,
+    "total_entries": 708,
     "entity_types": [
       "generation_parameter",
       "domain",
       "structural_pattern",
-      "metric"
+      "metric",
+      "operator",
+      "formula",
+      "constant",
+      "lexical_category"
     ]
   },
   "machine_layer": {
@@ -15,18 +19,35 @@
       "generation-parameters.json",
       "domain-flags.json",
       "structural-patterns.json",
-      "metrics.json"
+      "metrics.json",
+      "operators.json",
+      "formulas.json",
+      "constants.json",
+      "lexical-categories.json"
     ],
     "entries_count": {
       "generation_parameter": 10,
       "domain": 76,
       "structural_pattern": 103,
-      "metric": 8
+      "metric": 8,
+      "operator": 196,
+      "formula": 135,
+      "constant": 9,
+      "lexical_category": 171
     }
   },
   "semantic_layer": {
-    "has_data": false,
-    "entries_count": {}
+    "has_data": true,
+    "entries_count": {
+      "generation_parameter": 10,
+      "domain": 76,
+      "structural_pattern": 103,
+      "metric": 8,
+      "operator": 196,
+      "formula": 135,
+      "constant": 9,
+      "lexical_category": 171
+    }
   },
   "relations": {
     "has_data": false

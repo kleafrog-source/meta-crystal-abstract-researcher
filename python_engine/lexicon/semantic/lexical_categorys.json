@@ -1,0 +1,4790 @@
+[
+  {
+    "id": "category.математика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "математика",
+      "short_description": "Category with 14 terms",
+      "description": "Category with 14 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.логика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "логика",
+      "short_description": "Category with 12 terms",
+      "description": "Category with 12 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.геометрия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "геометрия",
+      "short_description": "Category with 13 terms",
+      "description": "Category with 13 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.физика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "физика",
+      "short_description": "Category with 13 terms",
+      "description": "Category with 13 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.психология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "психология",
+      "short_description": "Category with 12 terms",
+      "description": "Category with 12 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.мышление",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "мышление",
+      "short_description": "Category with 12 terms",
+      "description": "Category with 12 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.операции_данных",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "операции_данных",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.информация",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "информация",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.время_пространство",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "время_пространство",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.методы_словообразования",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "методы_словообразования",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.принципы_словообразования",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "принципы_словообразования",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.правила_словообразования",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "правила_словообразования",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.мета-правила_словообразования",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "мета-правила_словообразования",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.квантовые_состояния",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантовые_состояния",
+      "short_description": "Category with 12 terms",
+      "description": "Category with 12 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.фрактальные_структуры",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "фрактальные_структуры",
+      "short_description": "Category with 12 terms",
+      "description": "Category with 12 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.json_схемы",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "json_схемы",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.промпт_параметры",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "промпт_параметры",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.квантовая_геометрия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантовая_геометрия",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.молекулярная_динамика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "молекулярная_динамика",
+      "short_description": "Category with 6 terms",
+      "description": "Category with 6 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.исследовательские_гипотезы",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "исследовательские_гипотезы",
+      "short_description": "Category with 7 terms",
+      "description": "Category with 7 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.методология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "методология",
+      "short_description": "Category with 7 terms",
+      "description": "Category with 7 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.ресурсы",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "ресурсы",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.агенты",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "агенты",
+      "short_description": "Category with 5 terms",
+      "description": "Category with 5 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.полезности",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "полезности",
+      "short_description": "Category with 5 terms",
+      "description": "Category with 5 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.справедливость",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "справедливость",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.quaternion_rotor",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "quaternion_rotor",
+      "short_description": "Category with 6 terms",
+      "description": "Category with 6 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.топологический_заряд",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "топологический_заряд",
+      "short_description": "Category with 5 terms",
+      "description": "Category with 5 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.zitterbewegung",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "zitterbewegung",
+      "short_description": "Category with 5 terms",
+      "description": "Category with 5 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.hopfion",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "hopfion",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.семантическая_гравитация",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "семантическая_гравитация",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.этическая_ценность",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "этическая_ценность",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.qec_метрика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "qec_метрика",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.конфликт",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "конфликт",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.архонт",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "архонт",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.нелокальность",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "нелокальность",
+      "short_description": "Category with 5 terms",
+      "description": "Category with 5 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.скрытая_переменная",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "скрытая_переменная",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.epr_пара",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "epr_пара",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.контекстное_ткачество",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "контекстное_ткачество",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.оператор_символ",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "оператор_символ",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.phi_поле",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "phi_поле",
+      "short_description": "Category with 29 terms",
+      "description": "Category with 29 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.универсальная_когеренция",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "универсальная_когеренция",
+      "short_description": "Category with 3 terms",
+      "description": "Category with 3 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.hyperloop",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "hyperloop",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.фрактальный_кластер",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "фрактальный_кластер",
+      "short_description": "Category with 4 terms",
+      "description": "Category with 4 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.трансценденция",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "трансценденция",
+      "short_description": "Category with 3 terms",
+      "description": "Category with 3 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_категорий",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_категорий",
+      "short_description": "Category with 14 terms",
+      "description": "Category with 14 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.алгебраические_структуры",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "алгебраические_структуры",
+      "short_description": "Category with 13 terms",
+      "description": "Category with 13 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_узлов",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_узлов",
+      "short_description": "Category with 11 terms",
+      "description": "Category with 11 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_чисел",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_чисел",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_меры_и_вероятностей",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_меры_и_вероятностей",
+      "short_description": "Category with 14 terms",
+      "description": "Category with 14 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_графов",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_графов",
+      "short_description": "Category with 12 terms",
+      "description": "Category with 12 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.комбинаторика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "комбинаторика",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.оптимизация",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "оптимизация",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.термодинамика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "термодинамика",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.статистическая_механика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "статистическая_механика",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_относительности",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_относительности",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_струн",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_струн",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.космология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "космология",
+      "short_description": "Category with 11 terms",
+      "description": "Category with 11 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.квантовая_теория_поля",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантовая_теория_поля",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.физика_конденсированного_состояния",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "физика_конденсированного_состояния",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_сложности",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_сложности",
+      "short_description": "Category with 11 terms",
+      "description": "Category with 11 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.криптография",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "криптография",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.клеточные_автоматы",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "клеточные_автоматы",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.нейронные_сети",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "нейронные_сети",
+      "short_description": "Category with 11 terms",
+      "description": "Category with 11 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.генетические_алгоритмы",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "генетические_алгоритмы",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.кибернетика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "кибернетика",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_автоматов",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_автоматов",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.семиотика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "семиотика",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.структурализм",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "структурализм",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.прагматика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "прагматика",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.фонология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "фонология",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.лингвистическая_типология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "лингвистическая_типология",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.системы_письма",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "системы_письма",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.архетипы_Юнга",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "архетипы_Юнга",
+      "short_description": "Category with 13 terms",
+      "description": "Category with 13 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.когнитивные_искажения",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "когнитивные_искажения",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.сознание_исследования",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "сознание_исследования",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.осознанность",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "осознанность",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.нейронаука",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "нейронаука",
+      "short_description": "Category with 12 terms",
+      "description": "Category with 12 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.феноменология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "феноменология",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.экзистенциализм",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "экзистенциализм",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.восточная_философия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "восточная_философия",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.герметизм",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "герметизм",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.процессуальная_философия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "процессуальная_философия",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.алхимия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "алхимия",
+      "short_description": "Category with 11 terms",
+      "description": "Category with 11 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.каббала",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "каббала",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.и_цзин",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "и_цзин",
+      "short_description": "Category with 12 terms",
+      "description": "Category with 12 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.таро",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "таро",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.сакральная_геометрия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "сакральная_геометрия",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.ведическая_философия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "ведическая_философия",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_систем",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_систем",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.экология_систем",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "экология_систем",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.пермакультура",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "пермакультура",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.биомимикрия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "биомимикрия",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_хаоса_и_динамики",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_хаоса_и_динамики",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.динамические_системы",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "динамические_системы",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.сетевая_наука",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "сетевая_наука",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.гармония_музыка",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "гармония_музыка",
+      "short_description": "Category with 9 terms",
+      "description": "Category with 9 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.контрапункт",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "контрапункт",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.золотое_сечение_искусство",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "золотое_сечение_искусство",
+      "short_description": "Category with 6 terms",
+      "description": "Category with 6 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.тенсегрити",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "тенсегрити",
+      "short_description": "Category with 8 terms",
+      "description": "Category with 8 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.биомиметическая_архитектура",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "биомиметическая_архитектура",
+      "short_description": "Category with 6 terms",
+      "description": "Category with 6 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_игр",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_игр",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_решений",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_решений",
+      "short_description": "Category with 7 terms",
+      "description": "Category with 7 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.квантовая_информация",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантовая_информация",
+      "short_description": "Category with 10 terms",
+      "description": "Category with 10 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.метапринципы_эвристики",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "метапринципы_эвристики",
+      "short_description": "Category with 12 terms",
+      "description": "Category with 12 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.голографический_принцип",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "голографический_принцип",
+      "short_description": "Category with 7 terms",
+      "description": "Category with 7 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.морфический_резонанс",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "морфический_резонанс",
+      "short_description": "Category with 6 terms",
+      "description": "Category with 6 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.орх_ОР_Пенроуз_Хамерофф",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "орх_ОР_Пенроуз_Хамерофф",
+      "short_description": "Category with 6 terms",
+      "description": "Category with 6 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.гипотеза_симуляции",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "гипотеза_симуляции",
+      "short_description": "Category with 6 terms",
+      "description": "Category with 6 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.дифференциальная_геометрия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "дифференциальная_геометрия",
+      "short_description": "Category with 20 terms",
+      "description": "Category with 20 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.алгебраическая_геометрия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "алгебраическая_геометрия",
+      "short_description": "Category with 19 terms",
+      "description": "Category with 19 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_множеств",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_множеств",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_доказательств",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_доказательств",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_моделей",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_моделей",
+      "short_description": "Category with 12 terms",
+      "description": "Category with 12 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.вычислимость",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "вычислимость",
+      "short_description": "Category with 14 terms",
+      "description": "Category with 14 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.информация_теория_Шеннона",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "информация_теория_Шеннона",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.байесовские_сети",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "байесовские_сети",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.квантовая_гравитация",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантовая_гравитация",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.стандартная_модель_физики",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "стандартная_модель_физики",
+      "short_description": "Category with 21 terms",
+      "description": "Category with 21 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.оптика_и_лазеры",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "оптика_и_лазеры",
+      "short_description": "Category with 17 terms",
+      "description": "Category with 17 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.физика_плазмы",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "физика_плазмы",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.астрофизика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "астрофизика",
+      "short_description": "Category with 18 terms",
+      "description": "Category with 18 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.молекулярная_биология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "молекулярная_биология",
+      "short_description": "Category with 17 terms",
+      "description": "Category with 17 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.эволюционная_биология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "эволюционная_биология",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.нейробиология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "нейробиология",
+      "short_description": "Category with 19 terms",
+      "description": "Category with 19 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.иммунология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "иммунология",
+      "short_description": "Category with 17 terms",
+      "description": "Category with 17 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.когнитивная_психология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "когнитивная_психология",
+      "short_description": "Category with 17 terms",
+      "description": "Category with 17 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.поведенческая_экономика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "поведенческая_экономика",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.психология_личности",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "психология_личности",
+      "short_description": "Category with 13 terms",
+      "description": "Category with 13 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.социология_теории",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "социология_теории",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.антропология_культурная",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "антропология_культурная",
+      "short_description": "Category with 14 terms",
+      "description": "Category with 14 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.археология_и_мифы",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "археология_и_мифы",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.стоицизм",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "стоицизм",
+      "short_description": "Category with 14 terms",
+      "description": "Category with 14 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.прагматизм_философия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "прагматизм_философия",
+      "short_description": "Category with 13 terms",
+      "description": "Category with 13 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.философия_науки",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "философия_науки",
+      "short_description": "Category with 14 terms",
+      "description": "Category with 14 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.философия_сознания",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "философия_сознания",
+      "short_description": "Category with 14 terms",
+      "description": "Category with 14 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.корпусная_лингвистика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "корпусная_лингвистика",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.семантика_формальная",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "семантика_формальная",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.кино_и_нарратология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "кино_и_нарратология",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.архитектура_теория",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "архитектура_теория",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.этномузыкология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "этномузыкология",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.компьютерное_зрение",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "компьютерное_зрение",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.обработка_естественного_языка",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "обработка_естественного_языка",
+      "short_description": "Category with 17 terms",
+      "description": "Category with 17 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.обучение_с_подкреплением",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "обучение_с_подкреплением",
+      "short_description": "Category with 18 terms",
+      "description": "Category with 18 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.базы_данных",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "базы_данных",
+      "short_description": "Category with 17 terms",
+      "description": "Category with 17 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.распределённые_системы",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "распределённые_системы",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.квантовые_вычисления_расширенное",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантовые_вычисления_расширенное",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.солитоны_и_интегрируемые_системы",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "солитоны_и_интегрируемые_системы",
+      "short_description": "Category with 14 terms",
+      "description": "Category with 14 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_стохастических_процессов",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_стохастических_процессов",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.руны_и_огам",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "руны_и_огам",
+      "short_description": "Category with 13 terms",
+      "description": "Category with 13 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.И_Цзин_расширенное",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "И_Цзин_расширенное",
+      "short_description": "Category with 22 terms",
+      "description": "Category with 22 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.геральдика_и_символика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "геральдика_и_символика",
+      "short_description": "Category with 17 terms",
+      "description": "Category with 17 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.геология_тектоника",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "геология_тектоника",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.океанография",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "океанография",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.климатология",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "климатология",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.органическая_химия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "органическая_химия",
+      "short_description": "Category with 18 terms",
+      "description": "Category with 18 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.биохимия",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "биохимия",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.медицинская_диагностика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "медицинская_диагностика",
+      "short_description": "Category with 17 terms",
+      "description": "Category with 17 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.педагогика_теория",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "педагогика_теория",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_права",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_права",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.макроэкономика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "макроэкономика",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.микроэкономика",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "микроэкономика",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.управление_проектами",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "управление_проектами",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.геомантия_и_гадания",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "геомантия_и_гадания",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.астрология_западная",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "астрология_западная",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.нейроинтерфейсы",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "нейроинтерфейсы",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.робототехника_и_ИИ",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "робототехника_и_ИИ",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.квантовая_механика_углублённая",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантовая_механика_углублённая",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.квантовая_теория_поля_углублённая",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантовая_теория_поля_углублённая",
+      "short_description": "Category with 17 terms",
+      "description": "Category with 17 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.теория_музыки_продвинутая",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "теория_музыки_продвинутая",
+      "short_description": "Category with 15 terms",
+      "description": "Category with 15 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.программирование_функциональное",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "программирование_функциональное",
+      "short_description": "Category with 16 terms",
+      "description": "Category with 16 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "category.программирование_логическое",
+    "entity_type": "lexical_category",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "программирование_логическое",
+      "short_description": "Category with 14 terms",
+      "description": "Category with 14 terms",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+      ],
+      "source_symbols": [
+        "lexicon"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "json"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  }
+]

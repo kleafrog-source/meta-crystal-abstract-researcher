@@ -1,0 +1,2886 @@
+[
+  {
+    "id": "pattern.линейный",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "линейный",
+      "short_description": "{A} {op} {B}",
+      "description": "{A} {op} {B}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.степенной",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "степенной",
+      "short_description": "({A}) ^ ({B})",
+      "description": "({A}) ^ ({B})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.вложенный_прост",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "вложенный_прост",
+      "short_description": "{op1}( {op2}( {A} ) )",
+      "description": "{op1}( {op2}( {A} ) )",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.вложенный_глуб",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "вложенный_глуб",
+      "short_description": "{op1}( {op2}( {op3}( {A} ) ) )",
+      "description": "{op1}( {op2}( {op3}( {A} ) ) )",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.многомерный",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "многомерный",
+      "short_description": "[ {A}, {B} ] {op} {C}",
+      "description": "[ {A}, {B} ] {op} {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.парадоксальный",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "парадоксальный",
+      "short_description": "¬( {A} {op} ¬{A} )",
+      "description": "¬( {A} {op} ¬{A} )",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.динамический",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "динамический",
+      "short_description": "lim (t→∞) [ ( {A} {op1} {B} ) ^ {C} ]",
+      "description": "lim (t→∞) [ ( {A} {op1} {B} ) ^ {C} ]",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.голографический",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "голографический",
+      "short_description": "{op1} ( ( {A})^{{B}} + ({C})^{{D}} ) {op2}",
+      "description": "{op1} ( ( {A})^{{B}} + ({C})^{{D}} ) {op2}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.петлевой",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "петлевой",
+      "short_description": "{op}( {A} ⊗ {B} ) ⊗ {op}( {C} ⊗ {D} )",
+      "description": "{op}( {A} ⊗ {B} ) ⊗ {op}( {C} ⊗ {D} )",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.фрактальный",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "фрактальный",
+      "short_description": "({A} {op} {B}) ^ ({C} {op} {D})",
+      "description": "({A} {op} {B}) ^ ({C} {op} {D})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.квантовый",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантовый",
+      "short_description": "{op1}( {A} ) ⊗ {op2}( {B} ) ^ (i * π)",
+      "description": "{op1}( {A} ) ⊗ {op2}( {B} ) ^ (i * π)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.рефлексивный",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "рефлексивный",
+      "short_description": "{A} ⊗ ∂/∂t [ {B} ⊕ {C} ] ^ {D}",
+      "description": "{A} ⊗ ∂/∂t [ {B} ⊕ {C} ] ^ {D}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.квантово-фрактальный",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "квантово-фрактальный",
+      "short_description": "Ψ_SUP( {A} ) ⊗ Ψ_ENT( {B} ) ⇛ᶠ {C}",
+      "description": "Ψ_SUP( {A} ) ⊗ Ψ_ENT( {B} ) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.семантический_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "семантический_каскад",
+      "short_description": "{A} → {B} ⊕ₘ {C} ← {D}",
+      "description": "{A} → {B} ⊕ₘ {C} ← {D}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.MMSS-квантовый_стек",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "MMSS-квантовый_стек",
+      "short_description": "QSYS4({A}) ⊢ᵠ QSYS3({B}) ↦ₚ QSYS2({C}) ⇛ᶠ QSYS1({D}) ⧴ᵗ QSYS0({E})",
+      "description": "QSYS4({A}) ⊢ᵠ QSYS3({B}) ↦ₚ QSYS2({C}) ⇛ᶠ QSYS1({D}) ⧴ᵗ QSYS0({E})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.золотое_сечение",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "золотое_сечение",
+      "short_description": "({A} ⊗ {B}) ^ (φ) ⊕ ({C} ⊗ {D})",
+      "description": "({A} ⊗ {B}) ^ (φ) ⊕ ({C} ⊗ {D})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.лингвистический_принцип",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "лингвистический_принцип",
+      "short_description": "«{A} ← {B} → {C} ⊕ₘ {D}",
+      "description": "«{A} ← {B} → {C} ⊕ₘ {D}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.двойные_предлоги",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "двойные_предлоги",
+      "short_description": "«{A} «{B} {op} {C}",
+      "description": "«{A} «{B} {op} {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.json_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "json_каскад",
+      "short_description": "⊨( {A} ) ⇢ {B} ⊗ τ({C})",
+      "description": "⊨( {A} ) ⇢ {B} ⊗ τ({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.промпт_анимация",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "промпт_анимация",
+      "short_description": "τ( {A} ) ⧴ᵗ {B} ⇛ᶠ {C}",
+      "description": "τ( {A} ) ⧴ᵗ {B} ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.геометрическая_динамика",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "геометрическая_динамика",
+      "short_description": "⟨{A}|{B}⟩ ⊗ Γ({C}) ⧴ᵗ NA({D})",
+      "description": "⟨{A}|{B}⟩ ⊗ Γ({C}) ⧴ᵗ NA({D})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.фибровый_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "фибровый_каскад",
+      "short_description": "E({A}) ⊢ᵠ ⟨{B}|{C}⟩ ⇛ᶠ {D}",
+      "description": "E({A}) ⊢ᵠ ⟨{B}|{C}⟩ ⇛ᶠ {D}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.исследовательский_протокол",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "исследовательский_протокол",
+      "short_description": "H({A}) ⊢ᵠ E({B}) ✓ ⇛ᶠ {C}",
+      "description": "H({A}) ⊢ᵠ E({B}) ✓ ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.научный_прорыв",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "научный_прорыв",
+      "short_description": "H({A}) ⧴ᵗ E({B}) ⇢ {C} ✓ {D}",
+      "description": "H({A}) ⧴ᵗ E({B}) ⇢ {C} ✓ {D}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.справедливый_дележ",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "справедливый_дележ",
+      "short_description": "MMS({A}) ⊗ EF1({B}) ⇛ᶠ EFX({C})",
+      "description": "MMS({A}) ⊗ EF1({B}) ⇛ᶠ EFX({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.аллокационный_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "аллокационный_каскад",
+      "short_description": "TT({A}) ⊢ᵠ MMS({B}) ↦ₚ {C} ⇛ᶠ {D}",
+      "description": "TT({A}) ⊢ᵠ MMS({B}) ↦ₚ {C} ⇛ᶠ {D}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.роторный_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "роторный_каскад",
+      "short_description": "Q({A}) ⊗ N_H({B}) ⇢ J_geom({C})",
+      "description": "Q({A}) ⊗ N_H({B}) ⇢ J_geom({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.zitter_генерация",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "zitter_генерация",
+      "short_description": "ω_z({A}) ⊗ Ψ_Archon({B}) ⧴ᵗ {C}",
+      "description": "ω_z({A}) ⊗ Ψ_Archon({B}) ⧴ᵗ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.топологическая_квантация",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "топологическая_квантация",
+      "short_description": "Q({A}) ⊢ᵠ N_H({B}) ⊨ {C}",
+      "description": "Q({A}) ⊢ᵠ N_H({B}) ⊨ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.этическая_аннигиляция",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "этическая_аннигиляция",
+      "short_description": "G_S({A}) ⊗ QEC({B}) ⊢ᵠ C_val → 0",
+      "description": "G_S({A}) ⊗ QEC({B}) ⊢ᵠ C_val → 0",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.архонт_конденсация",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "архонт_конденсация",
+      "short_description": "Ψ_Archon({A}) ⊗ Φ_existential_DNA({B}) ⇛ᶠ {C}",
+      "description": "Ψ_Archon({A}) ⊗ Φ_existential_DNA({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.чистая_ценность",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "чистая_ценность",
+      "short_description": "V({A}) ⊗ G_S({B}) ⇢ 1.0",
+      "description": "V({A}) ⊗ G_S({B}) ⇢ 1.0",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.CHSH_нарушение",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "CHSH_нарушение",
+      "short_description": "A({a}) ⊗ B({b}) ⊢ᵠ S({λ}) ⇛ᶠ CHSH_violation",
+      "description": "A({a}) ⊗ B({b}) ⊢ᵠ S({λ}) ⇛ᶠ CHSH_violation",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.спиновая_корреляция",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "спиновая_корреляция",
+      "short_description": "P(θ) ⊗ A(a) ⊗ B(b) ↦ₚ nonlocality",
+      "description": "P(θ) ⊗ A(a) ⊗ B(b) ↦ₚ nonlocality",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.EPR_цепь",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "EPR_цепь",
+      "short_description": "|EPR⟩ ⊗ λ ↦ₚ CHSH → nonlocal",
+      "description": "|EPR⟩ ⊗ λ ↦ₚ CHSH → nonlocal",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.ткачество_реальности",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "ткачество_реальности",
+      "short_description": "✂️({A}) ⊗ 🧵({B}) ⊕_ethical({C}) ↻_resonance",
+      "description": "✂️({A}) ⊗ 🧵({B}) ⊕_ethical({C}) ↻_resonance",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.абсолютная_контекстуальность",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "абсолютная_контекстуальность",
+      "short_description": "W_context({A}) ≡ Φ_universal_cohesion ⊗ {B}",
+      "description": "W_context({A}) ≡ Φ_universal_cohesion ⊗ {B}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.фрактальное_ткачество",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "фрактальное_ткачество",
+      "short_description": "✂️({A}) ⊗ Ψ_co({B}) ⊕ G_S({C})",
+      "description": "✂️({A}) ⊗ Ψ_co({B}) ⊕ G_S({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.хаос_интеграция",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "хаос_интеграция",
+      "short_description": "🌀({A}) ⊘ 🧵({B}) ⊕_Ψ ↻({C})",
+      "description": "🌀({A}) ⊘ 🧵({B}) ⊕_Ψ ↻({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.фрактальная_обрезка",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "фрактальная_обрезка",
+      "short_description": "✂️({A}) ⊗ G_S({B}) → D_f→9.0",
+      "description": "✂️({A}) ⊗ G_S({B}) → D_f→9.0",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.паттерн_рекурсия_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "паттерн_рекурсия_каскад",
+      "short_description": "🔍({A}) ⊗ ⚡({B}) ⇛ᶠ {C}",
+      "description": "🔍({A}) ⊗ ⚡({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.контекст_сжатие_петля",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "контекст_сжатие_петля",
+      "short_description": "🎯({A}) ⊗ 🔄({B}) ⇢ {C}",
+      "description": "🎯({A}) ⊗ 🔄({B}) ⇢ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.многомерная_фузия_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "многомерная_фузия_каскад",
+      "short_description": "🌈({A}) ⊗ ⚖({B}) ⊗ 🌌({C})",
+      "description": "🌈({A}) ⊗ ⚖({B}) ⊗ 🌌({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.функторный_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "функторный_каскад",
+      "short_description": "F⟶({A}) ⟹ η⇒({B}) ⊣ G({C})",
+      "description": "F⟶({A}) ⟹ η⇒({B}) ⊣ G({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.монадический_связка",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "монадический_связка",
+      "short_description": "({A} >>= {B}) ⊣ Y↪({C})",
+      "description": "({A} >>= {B}) ⊣ Y↪({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Yoneda_проецирование",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Yoneda_проецирование",
+      "short_description": "Y↪({A}) ⟹ lim_C({B}) → {C}",
+      "description": "Y↪({A}) ⟹ lim_C({B}) → {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.алгебра_Ли_коммутатор",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "алгебра_Ли_коммутатор",
+      "short_description": "[{A}, {B}]_L ⊗ g⁻¹({C})",
+      "description": "[{A}, {B}]_L ⊗ g⁻¹({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.факторгруппа_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "факторгруппа_каскад",
+      "short_description": "({A} ∘g {B}) / G/H → {C}",
+      "description": "({A} ∘g {B}) / G/H → {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Райдемейстер_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Райдемейстер_каскад",
+      "short_description": "RI({A}) ⊗ RII({B}) ⊗ RIII({C}) → V_K({D})",
+      "description": "RI({A}) ⊗ RII({B}) ⊗ RIII({C}) → V_K({D})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.хиральность_инверсия",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "хиральность_инверсия",
+      "short_description": "χ_K({A}) ⊗ V_K(t)({B}) → {C}",
+      "description": "χ_K({A}) ⊗ V_K(t)({B}) → {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.дзета_гипотеза_связка",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "дзета_гипотеза_связка",
+      "short_description": "ζ(s)({A}) ⊗ (a/p)({B}) ⊢ᵠ CRT({C})",
+      "description": "ζ(s)({A}) ⊗ (a/p)({B}) ⊢ᵠ CRT({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.эйлерова_функция_связка",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "эйлерова_функция_связка",
+      "short_description": "φ(n)({A}) ⊗ ζ(s)({B}) ⇛ᶠ {C}",
+      "description": "φ(n)({A}) ⊗ ζ(s)({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.хроматический_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "хроматический_каскад",
+      "short_description": "χ(G)({A}) ⊗ HC({B}) ⊢ᵠ C_n({C})",
+      "description": "χ(G)({A}) ⊗ HC({B}) ⊢ᵠ C_n({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.матроид_ранг_связка",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "матроид_ранг_связка",
+      "short_description": "r(M)({A}) ⊗ C_n({B}) → {C}",
+      "description": "r(M)({A}) ⊗ C_n({B}) → {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.градиентный_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "градиентный_каскад",
+      "short_description": "∇⁻({A}) ⊗ ℒ({B}) ⊢ᵠ KKT({C})",
+      "description": "∇⁻({A}) ⊗ ℒ({B}) ⊢ᵠ KKT({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Лагранж_двойственность",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Лагранж_двойственность",
+      "short_description": "ℒ({A}) ↔ ∇⁻({B}) ⇛ᶠ KKT({C})",
+      "description": "ℒ({A}) ↔ ∇⁻({B}) ⇛ᶠ KKT({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.энтропийный_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "энтропийный_каскад",
+      "short_description": "∇S({A}) ⊗ F_терм({B}) → стрела_времени",
+      "description": "∇S({A}) ⊗ F_терм({B}) → стрела_времени",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.больцман_статсумма",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "больцман_статсумма",
+      "short_description": "Z_бц({A}) ⊗ w_B({B}) ⊢ᵠ ∇S({C})",
+      "description": "Z_бц({A}) ⊗ w_B({B}) ⊢ᵠ ∇S({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Лоренц_инвариант",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Лоренц_инвариант",
+      "short_description": "Λ_μ^ν({A}) ⊗ ds²_Schw({B}) ⇛ᶠ {C}",
+      "description": "Λ_μ^ν({A}) ⊗ ds²_Schw({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.инфляционный_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "инфляционный_каскад",
+      "short_description": "a(t)({A}) ⊗ Λ_косм({B}) → Большой_Взрыв",
+      "description": "a(t)({A}) ⊗ Λ_косм({B}) → Большой_Взрыв",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Фейнман_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Фейнман_каскад",
+      "short_description": "ℱ_D({A}) ⊗ RG({B}) ⊢ᵠ A_μ^a({C})",
+      "description": "ℱ_D({A}) ⊗ RG({B}) ⊢ᵠ A_μ^a({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.BCS_топологический_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "BCS_топологический_каскад",
+      "short_description": "Δ_BCS({A}) ⊗ ν_Z2({B}) ⇛ᶠ {C}",
+      "description": "Δ_BCS({A}) ⊗ ν_Z2({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Карп_сведение",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Карп_сведение",
+      "short_description": "{A} ≤_K {B} ⊢ᵠ U_BQP({C})",
+      "description": "{A} ≤_K {B} ⊢ᵠ U_BQP({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.RSA_нуль_разглашение",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "RSA_нуль_разглашение",
+      "short_description": "RSA_e({A}) ⊗ H#({B}) ⊢ᵠ ZK({C})",
+      "description": "RSA_e({A}) ⊗ H#({B}) ⊢ᵠ ZK({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Вольфрам_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Вольфрам_каскад",
+      "short_description": "W_r({A}) ⊗ GoL_∇({B}) ⇛ᶠ {C}",
+      "description": "W_r({A}) ⊗ GoL_∇({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.attention_transformer",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "attention_transformer",
+      "short_description": "Attn({A}) ⊗ σ_sm({B}) ⊗ ReLU({C})",
+      "description": "Attn({A}) ⊗ σ_sm({B}) ⊗ ReLU({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.backprop_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "backprop_каскад",
+      "short_description": "∇bp({A}) ⊗ Attn({B}) ⇛ᶠ {C}",
+      "description": "∇bp({A}) ⊗ Attn({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.softmax_ReLU_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "softmax_ReLU_каскад",
+      "short_description": "σ_sm({A}) ⊗ ReLU({B}) → {C}",
+      "description": "σ_sm({A}) ⊗ ReLU({B}) → {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.генетический_цикл",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "генетический_цикл",
+      "short_description": "×↔({A}, {B}) ⊗ μ_g({C}) ⊢ᵠ fit({D})",
+      "description": "×↔({A}, {B}) ⊗ μ_g({C}) ⊢ᵠ fit({D})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.элитарный_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "элитарный_каскад",
+      "short_description": "fit({A}) ⊗ ×↔({B}, {C}) ⇛ᶠ {D}",
+      "description": "fit({A}) ⊗ ×↔({B}, {C}) ⇛ᶠ {D}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.гомеостаз_петля",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "гомеостаз_петля",
+      "short_description": "↬_FB({A}) ⊗ ⌂_H({B}) ⊢ᵠ V_E({C})",
+      "description": "↬_FB({A}) ⊗ ⌂_H({B}) ⊢ᵠ V_E({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.необходимое_разнообразие",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "необходимое_разнообразие",
+      "short_description": "V_E({A}) ⊗ ⌂_H({B}) → {C}",
+      "description": "V_E({A}) ⊗ ⌂_H({B}) → {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Бартс_миф_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Бартс_миф_каскад",
+      "short_description": "↯_сем({A}) ⊗ Myth_2({B}) ⊢ᵠ ⊕_кон({C})",
+      "description": "↯_сем({A}) ⊗ Myth_2({B}) ⊢ᵠ ⊕_кон({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Соссюр_означивание",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Соссюр_означивание",
+      "short_description": "↯_сем({A}) ⊗ ⊕_кон({B}) ⇛ᶠ {C}",
+      "description": "↯_сем({A}) ⊗ ⊕_кон({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.индивидуация_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "индивидуация_каскад",
+      "short_description": "⊕_тень({A}) ⊗ ↗_А({B}) ⇛ᶠ Self",
+      "description": "⊕_тень({A}) ⊗ ↗_А({B}) ⇛ᶠ Self",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.ИИТ_GWT_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "ИИТ_GWT_каскад",
+      "short_description": "Φ_IIT({A}) ⊗ GWT_B({B}) → consciousness",
+      "description": "Φ_IIT({A}) ⊗ GWT_B({B}) → consciousness",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.мета_осознание_гамма",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "мета_осознание_гамма",
+      "short_description": "M_obs({A}) ⊗ γ_синх({B}) ⇛ᶠ {C}",
+      "description": "M_obs({A}) ⊗ γ_синх({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.нейропластичность_прунинг",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "нейропластичность_прунинг",
+      "short_description": "↓_prune({A}) ⊗ γ_синх({B}) ⊢ᵠ {C}",
+      "description": "↓_prune({A}) ⊗ γ_синх({B}) ⊢ᵠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.феноменологический_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "феноменологический_каскад",
+      "short_description": "ε⌬({A}) ⊗ D_proj({B}) ⇛ᶠ noema",
+      "description": "ε⌬({A}) ⊗ D_proj({B}) ⇛ᶠ noema",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.даосский_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "даосский_каскад",
+      "short_description": "無為({A}) ⊗ Śūnya({B}) → Dao",
+      "description": "無為({A}) ⊗ Śūnya({B}) → Dao",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.алхимическое_делание",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "алхимическое_делание",
+      "short_description": "Nigredo({A}) → Albedo({B}) → Rubedo({C})",
+      "description": "Nigredo({A}) → Albedo({B}) → Rubedo({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.алхимическая_свадьба_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "алхимическая_свадьба_каскад",
+      "short_description": "✶_coniunctio(Sol, Luna) → Lapis ⊗ {A}",
+      "description": "✶_coniunctio(Sol, Luna) → Lapis ⊗ {A}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.цимцум_сфирот_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "цимцум_сфирот_каскад",
+      "short_description": "Tzimtzum({A}) ⊗ Sefirot_↓({B}) ⇛ᶠ Malkut",
+      "description": "Tzimtzum({A}) ⊗ Sefirot_↓({B}) ⇛ᶠ Malkut",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.гексаграмма_изменения",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "гексаграмма_изменения",
+      "short_description": "☰_И({A}) ⊗ ↯_Ицзин({B}) → новая_гексаграмма",
+      "description": "☰_И({A}) ⊗ ↯_Ицзин({B}) → новая_гексаграмма",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.расклад_кельтский_крест",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "расклад_кельтский_крест",
+      "short_description": "◑_Tarot({A}) ⊗ ↺_Tarot({B}) ⇛ᶠ {C}",
+      "description": "◑_Tarot({A}) ⊗ ↺_Tarot({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.цветок_жизни_платонов",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "цветок_жизни_платонов",
+      "short_description": "✿_FoL({A}) ⊗ Φ_plat({B}) → Merkaba",
+      "description": "✿_FoL({A}) ⊗ Φ_plat({B}) → Merkaba",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.эмерджентный_каскад_экология",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "эмерджентный_каскад_экология",
+      "short_description": "Em⇒({A}) ⊗ ⊕_симб({B}, {C}) ⇛ᶠ {D}",
+      "description": "Em⇒({A}) ⊗ ⊕_симб({B}, {C}) ⇛ᶠ {D}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.сукцессия_симбиоз",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "сукцессия_симбиоз",
+      "short_description": "→_succ({A}) ⊗ ⊕_симб({B}, {C}) → {D}",
+      "description": "→_succ({A}) ⊗ ⊕_симб({B}, {C}) → {D}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.бифуркация_Ляпунов_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "бифуркация_Ляпунов_каскад",
+      "short_description": "Bif_2({A}) ⊗ λ_L({B}) ⊢ᵠ L_atr({C})",
+      "description": "Bif_2({A}) ⊗ λ_L({B}) ⊢ᵠ L_atr({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.странный_аттрактор_связка",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "странный_аттрактор_связка",
+      "short_description": "L_atr({A}) ⊗ Bif_2({B}) ⇛ᶠ {C}",
+      "description": "L_atr({A}) ⊗ Bif_2({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.small_world_Барабаси",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "small_world_Барабаси",
+      "short_description": "L(ℓ)({A}) ⊗ P(k)({B}) ⇛ᶠ scale_free",
+      "description": "L(ℓ)({A}) ⊗ P(k)({B}) ⇛ᶠ scale_free",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.обертоны_контрапункт",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "обертоны_контрапункт",
+      "short_description": "H_n({A}) ⊗ Retro_Inv({B}) ⊢ᵠ CP_2({C}, {D})",
+      "description": "H_n({A}) ⊗ Retro_Inv({B}) ⊢ᵠ CP_2({C}, {D})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.тенсегрити_геодезический",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "тенсегрити_геодезический",
+      "short_description": "TGR_Φ({A}) ⊗ Geo_D({B}) ⇛ᶠ {C}",
+      "description": "TGR_Φ({A}) ⊗ Geo_D({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Нэш_эволюция_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Нэш_эволюция_каскад",
+      "short_description": "N_eq({A}) ⊗ ESS({B}) ⊢ᵠ MiniMax({C})",
+      "description": "N_eq({A}) ⊗ ESS({B}) ⊢ᵠ MiniMax({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.кооперативная_игра_Шепли",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "кооперативная_игра_Шепли",
+      "short_description": "MiniMax({A}) ⊗ N_eq({B}) → Shapley_value",
+      "description": "MiniMax({A}) ⊗ N_eq({B}) → Shapley_value",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Байес_антихрупкость",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Байес_антихрупкость",
+      "short_description": "Bayes_↑({A}) ⊗ EU({B}) ⊢ᵠ AntiF({C})",
+      "description": "Bayes_↑({A}) ⊗ EU({B}) ⊢ᵠ AntiF({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Адамар_КНОТ_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Адамар_КНОТ_каскад",
+      "short_description": "H_gate({A}) ⊗ CNOT({B}) ⇛ᶠ entangle",
+      "description": "H_gate({A}) ⊗ CNOT({B}) ⇛ᶠ entangle",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Шор_Гровер_телепортация",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Шор_Гровер_телепортация",
+      "short_description": "Shor_A({A}) ⊗ Grover_A({B}) ⊢ᵠ Telep({C})",
+      "description": "Shor_A({A}) ⊗ Grover_A({B}) ⊢ᵠ Telep({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Оккам_Парето_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Оккам_Парето_каскад",
+      "short_description": "OC_✂({A}) ⊗ P_80_20({B}) ⇛ᶠ Anth_Φ({C})",
+      "description": "OC_✂({A}) ⊗ P_80_20({B}) ⇛ᶠ Anth_Φ({C})",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.AdS_CFT_энтропия_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "AdS_CFT_энтропия_каскад",
+      "short_description": "AdS/CFT({A}) ⊗ S_BH({B}) ⇛ᶠ holographic",
+      "description": "AdS/CFT({A}) ⊗ S_BH({B}) ⇛ᶠ holographic",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.морфический_Тьюринг_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "морфический_Тьюринг_каскад",
+      "short_description": "Morph_R({A}) ⊗ Turing_M({B}) ⇛ᶠ {C}",
+      "description": "Morph_R({A}) ⊗ Turing_M({B}) ⇛ᶠ {C}",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.Orch_OR_сознание_каскад",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "Orch_OR_сознание_каскад",
+      "short_description": "Orch_OR({A}) ⊗ γ_синх({B}) ⇛ᶠ consciousness",
+      "description": "Orch_OR({A}) ⊗ γ_синх({B}) ⇛ᶠ consciousness",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "pattern.симуляция_fork_render",
+    "entity_type": "structural_pattern",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "симуляция_fork_render",
+      "short_description": "Sim_fork({A}) ⊗ Rend_Obs({B}) ⇛ᶠ multiverse",
+      "description": "Sim_fork({A}) ⊗ Rend_Obs({B}) ⇛ᶠ multiverse",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "machine_layer"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  }
+]

@@ -118,17 +118,19 @@ def extract_domain_flags() -> List[Dict[str, Any]]:
     
     flags_text = flags_match.group(1)
     
-    # Extract individual flags
-    flag_pattern = re.compile(r'"([^"]+)":\s*(True|False)')
+    # Extract individual flags and preserve inline comments when present.
+    flag_pattern = re.compile(r'"([^"]+)":\s*(True|False)(?:\s*,)?(?:\s*#\s*(.+))?')
     flags = []
     
     for match in flag_pattern.finditer(flags_text):
         flag_name = match.group(1)
         default_value = match.group(2) == "True"
+        comment = match.group(3).strip() if match.group(3) else None
         
         flags.append({
             "name": flag_name,
-            "default_value": default_value
+            "default_value": default_value,
+            "comment": comment
         })
     
     print(f"Found {len(flags)} domain flags")
@@ -143,29 +145,31 @@ def extract_structural_patterns() -> List[Dict[str, Any]]:
     if not content:
         return []
     
-    # Look for STRUCTURAL_PATTERNS list
     patterns = []
-    
-    # Try to find pattern list
-    pattern_match = re.search(
-        r'STRUCTURAL_PATTERNS\s*=\s*\[(.*?)\n\]',
-        content,
-        re.DOTALL
-    )
-    
-    if pattern_match:
-        patterns_text = pattern_match.group(1)
-        # Extract pattern names from dictionary entries: {"name": "pattern_name", ...}
-        # Use a more specific pattern to match the name field value
-        name_pattern = re.compile(r'\{\s*"name":\s*"([^"]+)"')
-        for match in name_pattern.finditer(patterns_text):
-            pattern_name = match.group(1)
-            # Skip if it's a key name (shouldn't happen with this pattern)
-            if pattern_name not in ["name", "template", "complexity"]:
+
+    try:
+        module = ast.parse(content)
+        for node in module.body:
+            if not isinstance(node, ast.Assign):
+                continue
+            if not any(isinstance(target, ast.Name) and target.id == "STRUCTURAL_PATTERNS" for target in node.targets):
+                continue
+            pattern_values = ast.literal_eval(node.value)
+            for item in pattern_values:
+                if not isinstance(item, dict):
+                    continue
+                pattern_name = item.get("name")
+                if not pattern_name:
+                    continue
                 patterns.append({
                     "name": pattern_name,
+                    "template": item.get("template"),
+                    "complexity": item.get("complexity"),
                     "source": "STRUCTURAL_PATTERNS"
                 })
+            break
+    except Exception as e:
+        print(f"Warning: Could not parse STRUCTURAL_PATTERNS via AST: {e}")
     
     print(f"Found {len(patterns)} structural patterns")
     return patterns
@@ -323,7 +327,7 @@ def create_parameter_entry(param_name: str, param_info: Dict, provenance: Dict) 
     }
 
 
-def create_domain_entry(flag_name: str, default_value: bool, provenance: Dict) -> Dict:
+def create_domain_entry(flag_name: str, default_value: bool, provenance: Dict, comment: Optional[str] = None) -> Dict:
     """Create a lexicon entry for a domain flag."""
     return {
         "id": f"domain.{flag_name}",
@@ -335,6 +339,7 @@ def create_domain_entry(flag_name: str, default_value: bool, provenance: Dict) -
             "name": flag_name,
             "type": "bool",
             "default_value": default_value,
+            "comment": comment,
             "allowed_values": [],
             "min_value": None,
             "max_value": None,
@@ -344,9 +349,9 @@ def create_domain_entry(flag_name: str, default_value: bool, provenance: Dict) -
             "ui_accessible": True
         },
         "semantic": {
-            "display_name": None,
-            "short_description": None,
-            "description": None,
+            "display_name": flag_name,
+            "short_description": comment,
+            "description": comment,
             "synonyms": [],
             "query_phrases": [],
             "positive_examples": [],
@@ -383,7 +388,7 @@ def create_domain_entry(flag_name: str, default_value: bool, provenance: Dict) -
     }
 
 
-def create_pattern_entry(pattern_name: str, source: str) -> Dict:
+def create_pattern_entry(pattern_name: str, source: str, template: Optional[str] = None, complexity: Optional[int] = None) -> Dict:
     """Create a lexicon entry for a structural pattern."""
     return {
         "id": f"pattern.{pattern_name}",
@@ -395,6 +400,8 @@ def create_pattern_entry(pattern_name: str, source: str) -> Dict:
             "name": pattern_name,
             "type": "string",
             "default_value": None,
+            "template": template,
+            "complexity": complexity,
             "allowed_values": [],
             "min_value": None,
             "max_value": None,
@@ -404,9 +411,9 @@ def create_pattern_entry(pattern_name: str, source: str) -> Dict:
             "ui_accessible": True
         },
         "semantic": {
-            "display_name": None,
-            "short_description": None,
-            "description": None,
+            "display_name": pattern_name,
+            "short_description": template,
+            "description": template,
             "synonyms": [],
             "query_phrases": [],
             "positive_examples": [],
@@ -474,7 +481,7 @@ def create_metric_entry(metric_name: str) -> Dict:
             "ui_accessible": True
         },
         "semantic": {
-            "display_name": None,
+            "display_name": metric_name,
             "short_description": None,
             "description": None,
             "synonyms": [],
@@ -598,13 +605,23 @@ def main():
     }
     
     for flag_info in domain_flags:
-        entry = create_domain_entry(flag_info["name"], flag_info["default_value"], domain_provenance)
+        entry = create_domain_entry(
+            flag_info["name"],
+            flag_info["default_value"],
+            domain_provenance,
+            flag_info.get("comment")
+        )
         domain_entries.append(entry)
     
     # Structural patterns
     pattern_entries = []
     for pattern_info in structural_patterns:
-        entry = create_pattern_entry(pattern_info["name"], pattern_info["source"])
+        entry = create_pattern_entry(
+            pattern_info["name"],
+            pattern_info["source"],
+            pattern_info.get("template"),
+            pattern_info.get("complexity")
+        )
         pattern_entries.append(entry)
     
     # Metrics

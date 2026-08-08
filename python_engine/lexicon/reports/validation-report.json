@@ -1,11 +1,11 @@
 {
-  "validation_timestamp": "2026-08-08T05:17:13.983941",
+  "validation_timestamp": "2026-08-08T08:31:14.676418",
   "summary": {
-    "total_files": 4,
-    "valid_files": 4,
+    "total_files": 8,
+    "valid_files": 8,
     "invalid_files": 0,
-    "total_entries": 197,
-    "valid_entries": 197,
+    "total_entries": 708,
+    "valid_entries": 708,
     "invalid_entries": 0
   },
   "cross_file_issues": {
@@ -1027,6 +1027,2597 @@
         },
         {
           "id": "metric.C_val",
+          "valid": true,
+          "errors": []
+        }
+      ],
+      "duplicate_ids": [],
+      "unresolved_relations": {}
+    },
+    {
+      "file": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\lexicon\\machine\\operators.json",
+      "entity_type": "operator",
+      "valid": true,
+      "entries": [
+        {
+          "id": "operator.сложение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.умножение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.возведение_в_степень",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.извлечение_корня",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.интегрирование",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.дифференцирование",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.предел",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.производная_второго_порядка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.двойной_интеграл",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.отрицание",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.конъюнкция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.дизъюнкция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.импликация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.волновой_оператор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.оператор_эволюции",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.функционал_действия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.гамильтониан",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.усилить_сомнением",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.ослабить_уверенностью",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.инвертировать_восприятие",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.спроецировать_интуицию",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.рефлексия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.вызвать_диссонанс",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.морфемный_синтез",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.префиксация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.суффиксация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.контаминация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.двойная_префиксация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.квантовая_суперпозиция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.квантовая_запутанность",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.квантовое_измерение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.фрактальный_вывод",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.временная_эволюция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.квантово-фрактальный_оператор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.золотое_сечение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.схема_валидация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.темпоральный_параметр",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.генерация_промпта",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.перекрытие",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.берри_фаза",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.фибровый_пучок",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.неадиабатический_переход",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.гипотеза",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.эксперимент",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.валидация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.MMS",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.EF1",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.EFX",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.топ_трейдинг",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.Q_ротор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.Hopf_заряд",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.геометрический_ток",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.zitter_частота",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.критическое_поле",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.семантическая_гравитация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.QEC_оценка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.конфликт_коэффициент",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.архонт_состояние",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.этическая_стоимость",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.чистая_ценность",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.CHSH_оператор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.проекция_спина",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.корреляционная_функция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.скрытая_переменная",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.EPR_состояние",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.фрактальная_резка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.семантическое_шитьё",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.этическое_встраивание",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.петля_резонанса",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.ткачество_реальности",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.хаос_интегратор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.паттерн_рекурсия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.причинная_конденсация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.контекст_сжатие",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.многомерная_фузия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.этическая_линза",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.временная_петля",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.резонансный_баланс",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.мета_контекст_интегратор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.функтор_мап",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.контравариантный_функтор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.естественное_преобразование",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.монада_bind",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.сопряжение_левое_правое",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.Yoneda_вложение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.предел_категорный",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.групповое_умножение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.обратный_элемент",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.коммутатор_Ли",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.факторгруппа",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.Райдемейстер_I",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.Райдемейстер_II",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.Райдемейстер_III",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.полином_Джонса",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.хиральность_узла",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.символ_Лежандра",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.дзета_Римана",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.эйлерова_функция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.китайский_остаток",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.хроматическое_число",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.гамильтонов_цикл",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.число_Каталана",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.матроид_ранг",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.градиентный_шаг",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.KKT_условие",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.Лагранжиан_опт",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.энтропийный_градиент",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.свободная_энергия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.статсумма",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.больцмановский_вес",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.преобразование_Лоренца",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.метрика_Шварцшильда",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.инфляционный_параметр",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.космологическая_постоянная",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.фейнмановская_диаграмма",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.перенормировка_группа",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.калибровочная_связность",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.BCS_купирование",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.топологический_инвариант_Z2",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.сведение_Карпа",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.BQP_схема",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.хэш_функция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.RSA_шифр",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.нуль_разглашение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.шаг_Жизни_Конвея",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.Вольфрам_правило",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.механизм_внимания",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.обратное_распространение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.softmax_активация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.ReLU_активация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.кроссовер_ген",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.мутация_ген",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.фитнес_оценка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.петля_обратной_связи",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.гомеостаз_стабилизация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.необходимое_разнообразие",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.означивание_знака",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.миф_Бартса_2",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.денотация_коннотация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.интеграция_тени",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.проекция_анимы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.ИИТ_интеграция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.GWT_вещание",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.мета_осознание",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.гамма_синхронизация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.прунинг_синапсов",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.эпохе_Гуссерля",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.Dasein_проект",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.у_вэй_недеяние",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.шуньята_пустота",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.нигредо_разложение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.альбедо_очищение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.рубедо_соединение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.alchemical_свадьба",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.цимцум_сокрытие",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.нисхождение_сфирот",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.бросание_гексаграммы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.изменяющаяся_линия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.расклад_таро",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.перевёрнутая_карта",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.цветок_жизни_сборка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.платоново_тело_свёртка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.эмерджентный_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.симбиоз_сопряжение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.сукцессия_экологическая",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.бифуркация_удвоения",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.показатель_Ляпунова",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.странный_аттрактор_Лоренц",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.small_world_степень",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.scale_free_распределение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.гармонический_ряд_обертонов",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.ракоход_обращение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.контрапункт_двойной",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.тенсегрити_баланс",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.геодезический_узел",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.равновесие_Нэша_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.ESS_стратегия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.минимакс_Неймана",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.байесовское_обновление",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.expected_utility",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.antifragile_Талеб",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.вентиль_Адамара",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.CNOT_вентиль",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.алгоритм_Шора",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.алгоритм_Гровера",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.телепортация_кубита",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.бритва_Оккама_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.принцип_Парето_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.антропный_принцип_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.AdS_CFT_соответствие",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.энтропия_Бекенштейна_Хокинга",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.морфический_резонанс_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.морфогенез_Тьюринга",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.Orch_OR_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.fork_симуляции_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "operator.render_наблюдателя",
+          "valid": true,
+          "errors": []
+        }
+      ],
+      "duplicate_ids": [],
+      "unresolved_relations": {}
+    },
+    {
+      "file": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\lexicon\\machine\\formulas.json",
+      "entity_type": "formula",
+      "valid": true,
+      "entries": [
+        {
+          "id": "formula.Q_ротор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.геометрический_ток",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.zitter_частота",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.критическое_поле",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.семантическая_гравитация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.QEC_оценка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.конфликт_коэффициент",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.архонт_состояние",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.чистая_ценность",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.CHSH_оператор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.проекция_спина",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.корреляционная_функция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.EPR_состояние",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.фрактальная_резка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.семантическое_шитьё",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.этическое_встраивание",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.петля_резонанса",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.ткачество_реальности",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.хаос_интегратор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.паттерн_рекурсия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.причинная_конденсация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.контекст_сжатие",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.многомерная_фузия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.этическая_линза",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.временная_петля",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.резонансный_баланс",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.мета_контекст_интегратор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.функтор_мап",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.контравариантный_функтор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.естественное_преобразование",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.монада_bind",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.сопряжение_левое_правое",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.Yoneda_вложение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.предел_категорный",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.групповое_умножение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.обратный_элемент",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.коммутатор_Ли",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.Райдемейстер_I",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.Райдемейстер_II",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.Райдемейстер_III",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.полином_Джонса",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.хиральность_узла",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.символ_Лежандра",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.дзета_Римана",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.китайский_остаток",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.хроматическое_число",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.гамильтонов_цикл",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.число_Каталана",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.матроид_ранг",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.KKT_условие",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.Лагранжиан_опт",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.энтропийный_градиент",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.свободная_энергия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.статсумма",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.больцмановский_вес",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.преобразование_Лоренца",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.метрика_Шварцшильда",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.инфляционный_параметр",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.космологическая_постоянная",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.фейнмановская_диаграмма",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.перенормировка_группа",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.калибровочная_связность",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.BCS_купирование",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.сведение_Карпа",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.BQP_схема",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.RSA_шифр",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.нуль_разглашение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.шаг_Жизни_Конвея",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.механизм_внимания",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.обратное_распространение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.ReLU_активация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.кроссовер_ген",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.мутация_ген",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.фитнес_оценка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.петля_обратной_связи",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.гомеостаз_стабилизация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.необходимое_разнообразие",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.означивание_знака",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.миф_Бартса_2",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.денотация_коннотация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.интеграция_тени",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.проекция_анимы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.ИИТ_интеграция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.GWT_вещание",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.мета_осознание",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.гамма_синхронизация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.прунинг_синапсов",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.эпохе_Гуссерля",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.Dasein_проект",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.у_вэй_недеяние",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.шуньята_пустота",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.нигредо_разложение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.альбедо_очищение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.рубедо_соединение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.alchemical_свадьба",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.цимцум_сокрытие",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.нисхождение_сфирот",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.бросание_гексаграммы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.изменяющаяся_линия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.расклад_таро",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.перевёрнутая_карта",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.цветок_жизни_сборка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.платоново_тело_свёртка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.эмерджентный_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.симбиоз_сопряжение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.сукцессия_экологическая",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.бифуркация_удвоения",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.показатель_Ляпунова",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.странный_аттрактор_Лоренц",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.small_world_степень",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.scale_free_распределение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.гармонический_ряд_обертонов",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.ракоход_обращение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.контрапункт_двойной",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.тенсегрити_баланс",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.геодезический_узел",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.ESS_стратегия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.минимакс_Неймана",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.байесовское_обновление",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.expected_utility",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.antifragile_Талеб",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.вентиль_Адамара",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.CNOT_вентиль",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.алгоритм_Шора",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.алгоритм_Гровера",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.телепортация_кубита",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.бритва_Оккама_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.принцип_Парето_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.антропный_принцип_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.энтропия_Бекенштейна_Хокинга",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.морфический_резонанс_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.морфогенез_Тьюринга",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.Orch_OR_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.fork_симуляции_опер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "formula.render_наблюдателя",
+          "valid": true,
+          "errors": []
+        }
+      ],
+      "duplicate_ids": [],
+      "unresolved_relations": {}
+    },
+    {
+      "file": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\lexicon\\machine\\constants.json",
+      "entity_type": "constant",
+      "valid": true,
+      "entries": [
+        {
+          "id": "constant.золотое_сечение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "constant.темпоральный_параметр",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "constant.zitter_частота",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "constant.критическое_поле",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "constant.семантическая_гравитация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "constant.конфликт_коэффициент",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "constant.чистая_ценность",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "constant.скрытая_переменная",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "constant.космологическая_постоянная",
+          "valid": true,
+          "errors": []
+        }
+      ],
+      "duplicate_ids": [],
+      "unresolved_relations": {}
+    },
+    {
+      "file": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\lexicon\\machine\\lexical-categories.json",
+      "entity_type": "lexical_category",
+      "valid": true,
+      "entries": [
+        {
+          "id": "category.математика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.логика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.геометрия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.физика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.психология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.мышление",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.операции_данных",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.информация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.время_пространство",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.методы_словообразования",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.принципы_словообразования",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.правила_словообразования",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.мета-правила_словообразования",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.квантовые_состояния",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.фрактальные_структуры",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.json_схемы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.промпт_параметры",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.квантовая_геометрия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.молекулярная_динамика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.исследовательские_гипотезы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.методология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.ресурсы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.агенты",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.полезности",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.справедливость",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.quaternion_rotor",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.топологический_заряд",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.zitterbewegung",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.hopfion",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.семантическая_гравитация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.этическая_ценность",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.qec_метрика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.конфликт",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.архонт",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.нелокальность",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.скрытая_переменная",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.epr_пара",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.контекстное_ткачество",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.оператор_символ",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.phi_поле",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.универсальная_когеренция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.hyperloop",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.фрактальный_кластер",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.трансценденция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_категорий",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.алгебраические_структуры",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_узлов",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_чисел",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_меры_и_вероятностей",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_графов",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.комбинаторика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.оптимизация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.термодинамика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.статистическая_механика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_относительности",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_струн",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.космология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.квантовая_теория_поля",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.физика_конденсированного_состояния",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_сложности",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.криптография",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.клеточные_автоматы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.нейронные_сети",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.генетические_алгоритмы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.кибернетика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_автоматов",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.семиотика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.структурализм",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.прагматика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.фонология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.лингвистическая_типология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.системы_письма",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.архетипы_Юнга",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.когнитивные_искажения",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.сознание_исследования",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.осознанность",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.нейронаука",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.феноменология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.экзистенциализм",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.восточная_философия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.герметизм",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.процессуальная_философия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.алхимия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.каббала",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.и_цзин",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.таро",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.сакральная_геометрия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.ведическая_философия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_систем",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.экология_систем",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.пермакультура",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.биомимикрия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_хаоса_и_динамики",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.динамические_системы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.сетевая_наука",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.гармония_музыка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.контрапункт",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.золотое_сечение_искусство",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.тенсегрити",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.биомиметическая_архитектура",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_игр",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_решений",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.квантовая_информация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.метапринципы_эвристики",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.голографический_принцип",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.морфический_резонанс",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.орх_ОР_Пенроуз_Хамерофф",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.гипотеза_симуляции",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.дифференциальная_геометрия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.алгебраическая_геометрия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_множеств",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_доказательств",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_моделей",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.вычислимость",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.информация_теория_Шеннона",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.байесовские_сети",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.квантовая_гравитация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.стандартная_модель_физики",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.оптика_и_лазеры",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.физика_плазмы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.астрофизика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.молекулярная_биология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.эволюционная_биология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.нейробиология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.иммунология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.когнитивная_психология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.поведенческая_экономика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.психология_личности",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.социология_теории",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.антропология_культурная",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.археология_и_мифы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.стоицизм",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.прагматизм_философия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.философия_науки",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.философия_сознания",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.корпусная_лингвистика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.семантика_формальная",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.кино_и_нарратология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.архитектура_теория",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.этномузыкология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.компьютерное_зрение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.обработка_естественного_языка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.обучение_с_подкреплением",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.базы_данных",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.распределённые_системы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.квантовые_вычисления_расширенное",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.солитоны_и_интегрируемые_системы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_стохастических_процессов",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.руны_и_огам",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.И_Цзин_расширенное",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.геральдика_и_символика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.геология_тектоника",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.океанография",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.климатология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.органическая_химия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.биохимия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.медицинская_диагностика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.педагогика_теория",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_права",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.макроэкономика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.микроэкономика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.управление_проектами",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.геомантия_и_гадания",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.астрология_западная",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.нейроинтерфейсы",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.робототехника_и_ИИ",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.квантовая_механика_углублённая",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.квантовая_теория_поля_углублённая",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.теория_музыки_продвинутая",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.программирование_функциональное",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "category.программирование_логическое",
           "valid": true,
           "errors": []
         }

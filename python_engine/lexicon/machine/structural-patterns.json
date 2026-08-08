@@ -9,6 +9,8 @@
       "name": "линейный",
       "type": "string",
       "default_value": null,
+      "template": "{A} {op} {B}",
+      "complexity": 1,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -18,9 +20,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "линейный",
+      "short_description": "{A} {op} {B}",
+      "description": "{A} {op} {B}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -65,7 +67,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855222",
+      "last_verified_at": "2026-08-08T15:42:30.089857",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -79,6 +81,8 @@
       "name": "степенной",
       "type": "string",
       "default_value": null,
+      "template": "({A}) ^ ({B})",
+      "complexity": 2,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -88,9 +92,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "степенной",
+      "short_description": "({A}) ^ ({B})",
+      "description": "({A}) ^ ({B})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -135,7 +139,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855243",
+      "last_verified_at": "2026-08-08T15:42:30.089869",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -149,6 +153,8 @@
       "name": "вложенный_прост",
       "type": "string",
       "default_value": null,
+      "template": "{op1}( {op2}( {A} ) )",
+      "complexity": 2,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -158,9 +164,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "вложенный_прост",
+      "short_description": "{op1}( {op2}( {A} ) )",
+      "description": "{op1}( {op2}( {A} ) )",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -205,7 +211,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855261",
+      "last_verified_at": "2026-08-08T15:42:30.089878",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -219,6 +225,8 @@
       "name": "вложенный_глуб",
       "type": "string",
       "default_value": null,
+      "template": "{op1}( {op2}( {op3}( {A} ) ) )",
+      "complexity": 3,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -228,9 +236,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "вложенный_глуб",
+      "short_description": "{op1}( {op2}( {op3}( {A} ) ) )",
+      "description": "{op1}( {op2}( {op3}( {A} ) ) )",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -275,7 +283,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855283",
+      "last_verified_at": "2026-08-08T15:42:30.089890",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -289,6 +297,8 @@
       "name": "многомерный",
       "type": "string",
       "default_value": null,
+      "template": "[ {A}, {B} ] {op} {C}",
+      "complexity": 2,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -298,9 +308,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "многомерный",
+      "short_description": "[ {A}, {B} ] {op} {C}",
+      "description": "[ {A}, {B} ] {op} {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -345,7 +355,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855300",
+      "last_verified_at": "2026-08-08T15:42:30.089904",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -359,6 +369,8 @@
       "name": "парадоксальный",
       "type": "string",
       "default_value": null,
+      "template": "¬( {A} {op} ¬{A} )",
+      "complexity": 3,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -368,9 +380,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "парадоксальный",
+      "short_description": "¬( {A} {op} ¬{A} )",
+      "description": "¬( {A} {op} ¬{A} )",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -415,7 +427,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855318",
+      "last_verified_at": "2026-08-08T15:42:30.089919",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -429,6 +441,8 @@
       "name": "динамический",
       "type": "string",
       "default_value": null,
+      "template": "lim (t→∞) [ ( {A} {op1} {B} ) ^ {C} ]",
+      "complexity": 3,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -438,9 +452,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "динамический",
+      "short_description": "lim (t→∞) [ ( {A} {op1} {B} ) ^ {C} ]",
+      "description": "lim (t→∞) [ ( {A} {op1} {B} ) ^ {C} ]",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -485,7 +499,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855336",
+      "last_verified_at": "2026-08-08T15:42:30.089935",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -499,6 +513,8 @@
       "name": "голографический",
       "type": "string",
       "default_value": null,
+      "template": "{op1} ( ( {A})^{{B}} + ({C})^{{D}} ) {op2}",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -508,9 +524,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "голографический",
+      "short_description": "{op1} ( ( {A})^{{B}} + ({C})^{{D}} ) {op2}",
+      "description": "{op1} ( ( {A})^{{B}} + ({C})^{{D}} ) {op2}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -555,7 +571,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855350",
+      "last_verified_at": "2026-08-08T15:42:30.089944",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -569,6 +585,8 @@
       "name": "петлевой",
       "type": "string",
       "default_value": null,
+      "template": "{op}( {A} ⊗ {B} ) ⊗ {op}( {C} ⊗ {D} )",
+      "complexity": 3,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -578,9 +596,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "петлевой",
+      "short_description": "{op}( {A} ⊗ {B} ) ⊗ {op}( {C} ⊗ {D} )",
+      "description": "{op}( {A} ⊗ {B} ) ⊗ {op}( {C} ⊗ {D} )",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -625,7 +643,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855364",
+      "last_verified_at": "2026-08-08T15:42:30.089952",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -639,6 +657,8 @@
       "name": "фрактальный",
       "type": "string",
       "default_value": null,
+      "template": "({A} {op} {B}) ^ ({C} {op} {D})",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -648,9 +668,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "фрактальный",
+      "short_description": "({A} {op} {B}) ^ ({C} {op} {D})",
+      "description": "({A} {op} {B}) ^ ({C} {op} {D})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -695,7 +715,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855389",
+      "last_verified_at": "2026-08-08T15:42:30.089960",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -709,6 +729,8 @@
       "name": "квантовый",
       "type": "string",
       "default_value": null,
+      "template": "{op1}( {A} ) ⊗ {op2}( {B} ) ^ (i * π)",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -718,9 +740,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "квантовый",
+      "short_description": "{op1}( {A} ) ⊗ {op2}( {B} ) ^ (i * π)",
+      "description": "{op1}( {A} ) ⊗ {op2}( {B} ) ^ (i * π)",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -765,7 +787,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855406",
+      "last_verified_at": "2026-08-08T15:42:30.089968",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -779,6 +801,8 @@
       "name": "рефлексивный",
       "type": "string",
       "default_value": null,
+      "template": "{A} ⊗ ∂/∂t [ {B} ⊕ {C} ] ^ {D}",
+      "complexity": 3,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -788,9 +812,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "рефлексивный",
+      "short_description": "{A} ⊗ ∂/∂t [ {B} ⊕ {C} ] ^ {D}",
+      "description": "{A} ⊗ ∂/∂t [ {B} ⊕ {C} ] ^ {D}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -835,7 +859,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855421",
+      "last_verified_at": "2026-08-08T15:42:30.089975",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -849,6 +873,8 @@
       "name": "квантово-фрактальный",
       "type": "string",
       "default_value": null,
+      "template": "Ψ_SUP( {A} ) ⊗ Ψ_ENT( {B} ) ⇛ᶠ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -858,9 +884,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "квантово-фрактальный",
+      "short_description": "Ψ_SUP( {A} ) ⊗ Ψ_ENT( {B} ) ⇛ᶠ {C}",
+      "description": "Ψ_SUP( {A} ) ⊗ Ψ_ENT( {B} ) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -905,7 +931,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855444",
+      "last_verified_at": "2026-08-08T15:42:30.089983",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -919,6 +945,8 @@
       "name": "семантический_каскад",
       "type": "string",
       "default_value": null,
+      "template": "{A} → {B} ⊕ₘ {C} ← {D}",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -928,9 +956,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "семантический_каскад",
+      "short_description": "{A} → {B} ⊕ₘ {C} ← {D}",
+      "description": "{A} → {B} ⊕ₘ {C} ← {D}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -975,7 +1003,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855458",
+      "last_verified_at": "2026-08-08T15:42:30.089990",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -989,6 +1017,8 @@
       "name": "MMSS-квантовый_стек",
       "type": "string",
       "default_value": null,
+      "template": "QSYS4({A}) ⊢ᵠ QSYS3({B}) ↦ₚ QSYS2({C}) ⇛ᶠ QSYS1({D}) ⧴ᵗ QSYS0({E})",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -998,9 +1028,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "MMSS-квантовый_стек",
+      "short_description": "QSYS4({A}) ⊢ᵠ QSYS3({B}) ↦ₚ QSYS2({C}) ⇛ᶠ QSYS1({D}) ⧴ᵗ QSYS0({E})",
+      "description": "QSYS4({A}) ⊢ᵠ QSYS3({B}) ↦ₚ QSYS2({C}) ⇛ᶠ QSYS1({D}) ⧴ᵗ QSYS0({E})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1045,7 +1075,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855474",
+      "last_verified_at": "2026-08-08T15:42:30.089997",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1059,6 +1089,8 @@
       "name": "золотое_сечение",
       "type": "string",
       "default_value": null,
+      "template": "({A} ⊗ {B}) ^ (φ) ⊕ ({C} ⊗ {D})",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1068,9 +1100,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "золотое_сечение",
+      "short_description": "({A} ⊗ {B}) ^ (φ) ⊕ ({C} ⊗ {D})",
+      "description": "({A} ⊗ {B}) ^ (φ) ⊕ ({C} ⊗ {D})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1115,7 +1147,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855495",
+      "last_verified_at": "2026-08-08T15:42:30.090003",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1129,6 +1161,8 @@
       "name": "лингвистический_принцип",
       "type": "string",
       "default_value": null,
+      "template": "«{A} ← {B} → {C} ⊕ₘ {D}",
+      "complexity": 3,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1138,9 +1172,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "лингвистический_принцип",
+      "short_description": "«{A} ← {B} → {C} ⊕ₘ {D}",
+      "description": "«{A} ← {B} → {C} ⊕ₘ {D}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1185,7 +1219,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855509",
+      "last_verified_at": "2026-08-08T15:42:30.090010",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1199,6 +1233,8 @@
       "name": "двойные_предлоги",
       "type": "string",
       "default_value": null,
+      "template": "«{A} «{B} {op} {C}",
+      "complexity": 3,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1208,9 +1244,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "двойные_предлоги",
+      "short_description": "«{A} «{B} {op} {C}",
+      "description": "«{A} «{B} {op} {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1255,7 +1291,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855523",
+      "last_verified_at": "2026-08-08T15:42:30.090017",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1269,6 +1305,8 @@
       "name": "json_каскад",
       "type": "string",
       "default_value": null,
+      "template": "⊨( {A} ) ⇢ {B} ⊗ τ({C})",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1278,9 +1316,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "json_каскад",
+      "short_description": "⊨( {A} ) ⇢ {B} ⊗ τ({C})",
+      "description": "⊨( {A} ) ⇢ {B} ⊗ τ({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1325,7 +1363,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855540",
+      "last_verified_at": "2026-08-08T15:42:30.090023",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1339,6 +1377,8 @@
       "name": "промпт_анимация",
       "type": "string",
       "default_value": null,
+      "template": "τ( {A} ) ⧴ᵗ {B} ⇛ᶠ {C}",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1348,9 +1388,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "промпт_анимация",
+      "short_description": "τ( {A} ) ⧴ᵗ {B} ⇛ᶠ {C}",
+      "description": "τ( {A} ) ⧴ᵗ {B} ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1395,7 +1435,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855557",
+      "last_verified_at": "2026-08-08T15:42:30.090030",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1409,6 +1449,8 @@
       "name": "геометрическая_динамика",
       "type": "string",
       "default_value": null,
+      "template": "⟨{A}|{B}⟩ ⊗ Γ({C}) ⧴ᵗ NA({D})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1418,9 +1460,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "геометрическая_динамика",
+      "short_description": "⟨{A}|{B}⟩ ⊗ Γ({C}) ⧴ᵗ NA({D})",
+      "description": "⟨{A}|{B}⟩ ⊗ Γ({C}) ⧴ᵗ NA({D})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1465,7 +1507,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855574",
+      "last_verified_at": "2026-08-08T15:42:30.090037",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1479,6 +1521,8 @@
       "name": "фибровый_каскад",
       "type": "string",
       "default_value": null,
+      "template": "E({A}) ⊢ᵠ ⟨{B}|{C}⟩ ⇛ᶠ {D}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1488,9 +1532,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "фибровый_каскад",
+      "short_description": "E({A}) ⊢ᵠ ⟨{B}|{C}⟩ ⇛ᶠ {D}",
+      "description": "E({A}) ⊢ᵠ ⟨{B}|{C}⟩ ⇛ᶠ {D}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1535,7 +1579,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855590",
+      "last_verified_at": "2026-08-08T15:42:30.090044",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1549,6 +1593,8 @@
       "name": "исследовательский_протокол",
       "type": "string",
       "default_value": null,
+      "template": "H({A}) ⊢ᵠ E({B}) ✓ ⇛ᶠ {C}",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1558,9 +1604,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "исследовательский_протокол",
+      "short_description": "H({A}) ⊢ᵠ E({B}) ✓ ⇛ᶠ {C}",
+      "description": "H({A}) ⊢ᵠ E({B}) ✓ ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1605,7 +1651,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855602",
+      "last_verified_at": "2026-08-08T15:42:30.090050",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1619,6 +1665,8 @@
       "name": "научный_прорыв",
       "type": "string",
       "default_value": null,
+      "template": "H({A}) ⧴ᵗ E({B}) ⇢ {C} ✓ {D}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1628,9 +1676,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "научный_прорыв",
+      "short_description": "H({A}) ⧴ᵗ E({B}) ⇢ {C} ✓ {D}",
+      "description": "H({A}) ⧴ᵗ E({B}) ⇢ {C} ✓ {D}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1675,7 +1723,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855614",
+      "last_verified_at": "2026-08-08T15:42:30.090057",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1689,6 +1737,8 @@
       "name": "справедливый_дележ",
       "type": "string",
       "default_value": null,
+      "template": "MMS({A}) ⊗ EF1({B}) ⇛ᶠ EFX({C})",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1698,9 +1748,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "справедливый_дележ",
+      "short_description": "MMS({A}) ⊗ EF1({B}) ⇛ᶠ EFX({C})",
+      "description": "MMS({A}) ⊗ EF1({B}) ⇛ᶠ EFX({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1745,7 +1795,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855634",
+      "last_verified_at": "2026-08-08T15:42:30.090063",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1759,6 +1809,8 @@
       "name": "аллокационный_каскад",
       "type": "string",
       "default_value": null,
+      "template": "TT({A}) ⊢ᵠ MMS({B}) ↦ₚ {C} ⇛ᶠ {D}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1768,9 +1820,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "аллокационный_каскад",
+      "short_description": "TT({A}) ⊢ᵠ MMS({B}) ↦ₚ {C} ⇛ᶠ {D}",
+      "description": "TT({A}) ⊢ᵠ MMS({B}) ↦ₚ {C} ⇛ᶠ {D}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1815,7 +1867,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855654",
+      "last_verified_at": "2026-08-08T15:42:30.090070",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1829,6 +1881,8 @@
       "name": "роторный_каскад",
       "type": "string",
       "default_value": null,
+      "template": "Q({A}) ⊗ N_H({B}) ⇢ J_geom({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1838,9 +1892,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "роторный_каскад",
+      "short_description": "Q({A}) ⊗ N_H({B}) ⇢ J_geom({C})",
+      "description": "Q({A}) ⊗ N_H({B}) ⇢ J_geom({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1885,7 +1939,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855668",
+      "last_verified_at": "2026-08-08T15:42:30.090076",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1899,6 +1953,8 @@
       "name": "zitter_генерация",
       "type": "string",
       "default_value": null,
+      "template": "ω_z({A}) ⊗ Ψ_Archon({B}) ⧴ᵗ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1908,9 +1964,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "zitter_генерация",
+      "short_description": "ω_z({A}) ⊗ Ψ_Archon({B}) ⧴ᵗ {C}",
+      "description": "ω_z({A}) ⊗ Ψ_Archon({B}) ⧴ᵗ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1955,7 +2011,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855682",
+      "last_verified_at": "2026-08-08T15:42:30.090082",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -1969,6 +2025,8 @@
       "name": "топологическая_квантация",
       "type": "string",
       "default_value": null,
+      "template": "Q({A}) ⊢ᵠ N_H({B}) ⊨ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1978,9 +2036,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "топологическая_квантация",
+      "short_description": "Q({A}) ⊢ᵠ N_H({B}) ⊨ {C}",
+      "description": "Q({A}) ⊢ᵠ N_H({B}) ⊨ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2025,7 +2083,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855714",
+      "last_verified_at": "2026-08-08T15:42:30.090089",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2039,6 +2097,8 @@
       "name": "этическая_аннигиляция",
       "type": "string",
       "default_value": null,
+      "template": "G_S({A}) ⊗ QEC({B}) ⊢ᵠ C_val → 0",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2048,9 +2108,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "этическая_аннигиляция",
+      "short_description": "G_S({A}) ⊗ QEC({B}) ⊢ᵠ C_val → 0",
+      "description": "G_S({A}) ⊗ QEC({B}) ⊢ᵠ C_val → 0",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2095,7 +2155,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855731",
+      "last_verified_at": "2026-08-08T15:42:30.090095",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2109,6 +2169,8 @@
       "name": "архонт_конденсация",
       "type": "string",
       "default_value": null,
+      "template": "Ψ_Archon({A}) ⊗ Φ_existential_DNA({B}) ⇛ᶠ {C}",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2118,9 +2180,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "архонт_конденсация",
+      "short_description": "Ψ_Archon({A}) ⊗ Φ_existential_DNA({B}) ⇛ᶠ {C}",
+      "description": "Ψ_Archon({A}) ⊗ Φ_existential_DNA({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2165,7 +2227,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855750",
+      "last_verified_at": "2026-08-08T15:42:30.090101",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2179,6 +2241,8 @@
       "name": "чистая_ценность",
       "type": "string",
       "default_value": null,
+      "template": "V({A}) ⊗ G_S({B}) ⇢ 1.0",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2188,9 +2252,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "чистая_ценность",
+      "short_description": "V({A}) ⊗ G_S({B}) ⇢ 1.0",
+      "description": "V({A}) ⊗ G_S({B}) ⇢ 1.0",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2235,7 +2299,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855771",
+      "last_verified_at": "2026-08-08T15:42:30.090108",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2249,6 +2313,8 @@
       "name": "CHSH_нарушение",
       "type": "string",
       "default_value": null,
+      "template": "A({a}) ⊗ B({b}) ⊢ᵠ S({λ}) ⇛ᶠ CHSH_violation",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2258,9 +2324,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "CHSH_нарушение",
+      "short_description": "A({a}) ⊗ B({b}) ⊢ᵠ S({λ}) ⇛ᶠ CHSH_violation",
+      "description": "A({a}) ⊗ B({b}) ⊢ᵠ S({λ}) ⇛ᶠ CHSH_violation",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2305,7 +2371,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855786",
+      "last_verified_at": "2026-08-08T15:42:30.090284",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2319,6 +2385,8 @@
       "name": "спиновая_корреляция",
       "type": "string",
       "default_value": null,
+      "template": "P(θ) ⊗ A(a) ⊗ B(b) ↦ₚ nonlocality",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2328,9 +2396,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "спиновая_корреляция",
+      "short_description": "P(θ) ⊗ A(a) ⊗ B(b) ↦ₚ nonlocality",
+      "description": "P(θ) ⊗ A(a) ⊗ B(b) ↦ₚ nonlocality",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2375,7 +2443,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855809",
+      "last_verified_at": "2026-08-08T15:42:30.090291",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2389,6 +2457,8 @@
       "name": "EPR_цепь",
       "type": "string",
       "default_value": null,
+      "template": "|EPR⟩ ⊗ λ ↦ₚ CHSH → nonlocal",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2398,9 +2468,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "EPR_цепь",
+      "short_description": "|EPR⟩ ⊗ λ ↦ₚ CHSH → nonlocal",
+      "description": "|EPR⟩ ⊗ λ ↦ₚ CHSH → nonlocal",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2445,7 +2515,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855827",
+      "last_verified_at": "2026-08-08T15:42:30.090298",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2459,6 +2529,8 @@
       "name": "ткачество_реальности",
       "type": "string",
       "default_value": null,
+      "template": "✂️({A}) ⊗ 🧵({B}) ⊕_ethical({C}) ↻_resonance",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2468,9 +2540,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "ткачество_реальности",
+      "short_description": "✂️({A}) ⊗ 🧵({B}) ⊕_ethical({C}) ↻_resonance",
+      "description": "✂️({A}) ⊗ 🧵({B}) ⊕_ethical({C}) ↻_resonance",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2515,7 +2587,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855847",
+      "last_verified_at": "2026-08-08T15:42:30.090304",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2529,6 +2601,8 @@
       "name": "абсолютная_контекстуальность",
       "type": "string",
       "default_value": null,
+      "template": "W_context({A}) ≡ Φ_universal_cohesion ⊗ {B}",
+      "complexity": 7,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2538,9 +2612,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "абсолютная_контекстуальность",
+      "short_description": "W_context({A}) ≡ Φ_universal_cohesion ⊗ {B}",
+      "description": "W_context({A}) ≡ Φ_universal_cohesion ⊗ {B}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2585,7 +2659,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855861",
+      "last_verified_at": "2026-08-08T15:42:30.090311",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2599,6 +2673,8 @@
       "name": "фрактальное_ткачество",
       "type": "string",
       "default_value": null,
+      "template": "✂️({A}) ⊗ Ψ_co({B}) ⊕ G_S({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2608,9 +2684,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "фрактальное_ткачество",
+      "short_description": "✂️({A}) ⊗ Ψ_co({B}) ⊕ G_S({C})",
+      "description": "✂️({A}) ⊗ Ψ_co({B}) ⊕ G_S({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2655,7 +2731,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855878",
+      "last_verified_at": "2026-08-08T15:42:30.090318",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2669,6 +2745,8 @@
       "name": "хаос_интеграция",
       "type": "string",
       "default_value": null,
+      "template": "🌀({A}) ⊘ 🧵({B}) ⊕_Ψ ↻({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2678,9 +2756,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "хаос_интеграция",
+      "short_description": "🌀({A}) ⊘ 🧵({B}) ⊕_Ψ ↻({C})",
+      "description": "🌀({A}) ⊘ 🧵({B}) ⊕_Ψ ↻({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2725,7 +2803,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855895",
+      "last_verified_at": "2026-08-08T15:42:30.090324",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2739,6 +2817,8 @@
       "name": "фрактальная_обрезка",
       "type": "string",
       "default_value": null,
+      "template": "✂️({A}) ⊗ G_S({B}) → D_f→9.0",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2748,9 +2828,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "фрактальная_обрезка",
+      "short_description": "✂️({A}) ⊗ G_S({B}) → D_f→9.0",
+      "description": "✂️({A}) ⊗ G_S({B}) → D_f→9.0",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2795,7 +2875,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855909",
+      "last_verified_at": "2026-08-08T15:42:30.090330",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2809,6 +2889,8 @@
       "name": "паттерн_рекурсия_каскад",
       "type": "string",
       "default_value": null,
+      "template": "🔍({A}) ⊗ ⚡({B}) ⇛ᶠ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2818,9 +2900,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "паттерн_рекурсия_каскад",
+      "short_description": "🔍({A}) ⊗ ⚡({B}) ⇛ᶠ {C}",
+      "description": "🔍({A}) ⊗ ⚡({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2865,7 +2947,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855931",
+      "last_verified_at": "2026-08-08T15:42:30.090337",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2879,6 +2961,8 @@
       "name": "контекст_сжатие_петля",
       "type": "string",
       "default_value": null,
+      "template": "🎯({A}) ⊗ 🔄({B}) ⇢ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2888,9 +2972,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "контекст_сжатие_петля",
+      "short_description": "🎯({A}) ⊗ 🔄({B}) ⇢ {C}",
+      "description": "🎯({A}) ⊗ 🔄({B}) ⇢ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -2935,7 +3019,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855944",
+      "last_verified_at": "2026-08-08T15:42:30.090344",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -2949,6 +3033,8 @@
       "name": "многомерная_фузия_каскад",
       "type": "string",
       "default_value": null,
+      "template": "🌈({A}) ⊗ ⚖({B}) ⊗ 🌌({C})",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2958,9 +3044,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "многомерная_фузия_каскад",
+      "short_description": "🌈({A}) ⊗ ⚖({B}) ⊗ 🌌({C})",
+      "description": "🌈({A}) ⊗ ⚖({B}) ⊗ 🌌({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3005,7 +3091,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855957",
+      "last_verified_at": "2026-08-08T15:42:30.090350",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3019,6 +3105,8 @@
       "name": "функторный_каскад",
       "type": "string",
       "default_value": null,
+      "template": "F⟶({A}) ⟹ η⇒({B}) ⊣ G({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3028,9 +3116,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "функторный_каскад",
+      "short_description": "F⟶({A}) ⟹ η⇒({B}) ⊣ G({C})",
+      "description": "F⟶({A}) ⟹ η⇒({B}) ⊣ G({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3075,7 +3163,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855984",
+      "last_verified_at": "2026-08-08T15:42:30.090356",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3089,6 +3177,8 @@
       "name": "монадический_связка",
       "type": "string",
       "default_value": null,
+      "template": "({A} >>= {B}) ⊣ Y↪({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3098,9 +3188,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "монадический_связка",
+      "short_description": "({A} >>= {B}) ⊣ Y↪({C})",
+      "description": "({A} >>= {B}) ⊣ Y↪({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3145,7 +3235,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855999",
+      "last_verified_at": "2026-08-08T15:42:30.090363",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3159,6 +3249,8 @@
       "name": "Yoneda_проецирование",
       "type": "string",
       "default_value": null,
+      "template": "Y↪({A}) ⟹ lim_C({B}) → {C}",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3168,9 +3260,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Yoneda_проецирование",
+      "short_description": "Y↪({A}) ⟹ lim_C({B}) → {C}",
+      "description": "Y↪({A}) ⟹ lim_C({B}) → {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3215,7 +3307,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856018",
+      "last_verified_at": "2026-08-08T15:42:30.090369",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3229,6 +3321,8 @@
       "name": "алгебра_Ли_коммутатор",
       "type": "string",
       "default_value": null,
+      "template": "[{A}, {B}]_L ⊗ g⁻¹({C})",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3238,9 +3332,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "алгебра_Ли_коммутатор",
+      "short_description": "[{A}, {B}]_L ⊗ g⁻¹({C})",
+      "description": "[{A}, {B}]_L ⊗ g⁻¹({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3285,7 +3379,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856034",
+      "last_verified_at": "2026-08-08T15:42:30.090376",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3299,6 +3393,8 @@
       "name": "факторгруппа_каскад",
       "type": "string",
       "default_value": null,
+      "template": "({A} ∘g {B}) / G/H → {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3308,9 +3404,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "факторгруппа_каскад",
+      "short_description": "({A} ∘g {B}) / G/H → {C}",
+      "description": "({A} ∘g {B}) / G/H → {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3355,7 +3451,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856046",
+      "last_verified_at": "2026-08-08T15:42:30.090382",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3369,6 +3465,8 @@
       "name": "Райдемейстер_каскад",
       "type": "string",
       "default_value": null,
+      "template": "RI({A}) ⊗ RII({B}) ⊗ RIII({C}) → V_K({D})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3378,9 +3476,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Райдемейстер_каскад",
+      "short_description": "RI({A}) ⊗ RII({B}) ⊗ RIII({C}) → V_K({D})",
+      "description": "RI({A}) ⊗ RII({B}) ⊗ RIII({C}) → V_K({D})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3425,7 +3523,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856068",
+      "last_verified_at": "2026-08-08T15:42:30.090388",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3439,6 +3537,8 @@
       "name": "хиральность_инверсия",
       "type": "string",
       "default_value": null,
+      "template": "χ_K({A}) ⊗ V_K(t)({B}) → {C}",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3448,9 +3548,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "хиральность_инверсия",
+      "short_description": "χ_K({A}) ⊗ V_K(t)({B}) → {C}",
+      "description": "χ_K({A}) ⊗ V_K(t)({B}) → {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3495,7 +3595,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856083",
+      "last_verified_at": "2026-08-08T15:42:30.090395",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3509,6 +3609,8 @@
       "name": "дзета_гипотеза_связка",
       "type": "string",
       "default_value": null,
+      "template": "ζ(s)({A}) ⊗ (a/p)({B}) ⊢ᵠ CRT({C})",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3518,9 +3620,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "дзета_гипотеза_связка",
+      "short_description": "ζ(s)({A}) ⊗ (a/p)({B}) ⊢ᵠ CRT({C})",
+      "description": "ζ(s)({A}) ⊗ (a/p)({B}) ⊢ᵠ CRT({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3565,7 +3667,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856101",
+      "last_verified_at": "2026-08-08T15:42:30.090402",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3579,6 +3681,8 @@
       "name": "эйлерова_функция_связка",
       "type": "string",
       "default_value": null,
+      "template": "φ(n)({A}) ⊗ ζ(s)({B}) ⇛ᶠ {C}",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3588,9 +3692,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "эйлерова_функция_связка",
+      "short_description": "φ(n)({A}) ⊗ ζ(s)({B}) ⇛ᶠ {C}",
+      "description": "φ(n)({A}) ⊗ ζ(s)({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3635,7 +3739,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856114",
+      "last_verified_at": "2026-08-08T15:42:30.090408",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3649,6 +3753,8 @@
       "name": "хроматический_каскад",
       "type": "string",
       "default_value": null,
+      "template": "χ(G)({A}) ⊗ HC({B}) ⊢ᵠ C_n({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3658,9 +3764,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "хроматический_каскад",
+      "short_description": "χ(G)({A}) ⊗ HC({B}) ⊢ᵠ C_n({C})",
+      "description": "χ(G)({A}) ⊗ HC({B}) ⊢ᵠ C_n({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3705,7 +3811,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856130",
+      "last_verified_at": "2026-08-08T15:42:30.090415",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3719,6 +3825,8 @@
       "name": "матроид_ранг_связка",
       "type": "string",
       "default_value": null,
+      "template": "r(M)({A}) ⊗ C_n({B}) → {C}",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3728,9 +3836,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "матроид_ранг_связка",
+      "short_description": "r(M)({A}) ⊗ C_n({B}) → {C}",
+      "description": "r(M)({A}) ⊗ C_n({B}) → {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3775,7 +3883,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856148",
+      "last_verified_at": "2026-08-08T15:42:30.090422",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3789,6 +3897,8 @@
       "name": "градиентный_каскад",
       "type": "string",
       "default_value": null,
+      "template": "∇⁻({A}) ⊗ ℒ({B}) ⊢ᵠ KKT({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3798,9 +3908,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "градиентный_каскад",
+      "short_description": "∇⁻({A}) ⊗ ℒ({B}) ⊢ᵠ KKT({C})",
+      "description": "∇⁻({A}) ⊗ ℒ({B}) ⊢ᵠ KKT({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3845,7 +3955,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856165",
+      "last_verified_at": "2026-08-08T15:42:30.090428",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3859,6 +3969,8 @@
       "name": "Лагранж_двойственность",
       "type": "string",
       "default_value": null,
+      "template": "ℒ({A}) ↔ ∇⁻({B}) ⇛ᶠ KKT({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3868,9 +3980,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Лагранж_двойственность",
+      "short_description": "ℒ({A}) ↔ ∇⁻({B}) ⇛ᶠ KKT({C})",
+      "description": "ℒ({A}) ↔ ∇⁻({B}) ⇛ᶠ KKT({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3915,7 +4027,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856185",
+      "last_verified_at": "2026-08-08T15:42:30.090435",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3929,6 +4041,8 @@
       "name": "энтропийный_каскад",
       "type": "string",
       "default_value": null,
+      "template": "∇S({A}) ⊗ F_терм({B}) → стрела_времени",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3938,9 +4052,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "энтропийный_каскад",
+      "short_description": "∇S({A}) ⊗ F_терм({B}) → стрела_времени",
+      "description": "∇S({A}) ⊗ F_терм({B}) → стрела_времени",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -3985,7 +4099,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856199",
+      "last_verified_at": "2026-08-08T15:42:30.090441",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -3999,6 +4113,8 @@
       "name": "больцман_статсумма",
       "type": "string",
       "default_value": null,
+      "template": "Z_бц({A}) ⊗ w_B({B}) ⊢ᵠ ∇S({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4008,9 +4124,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "больцман_статсумма",
+      "short_description": "Z_бц({A}) ⊗ w_B({B}) ⊢ᵠ ∇S({C})",
+      "description": "Z_бц({A}) ⊗ w_B({B}) ⊢ᵠ ∇S({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4055,7 +4171,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856215",
+      "last_verified_at": "2026-08-08T15:42:30.090447",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4069,6 +4185,8 @@
       "name": "Лоренц_инвариант",
       "type": "string",
       "default_value": null,
+      "template": "Λ_μ^ν({A}) ⊗ ds²_Schw({B}) ⇛ᶠ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4078,9 +4196,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Лоренц_инвариант",
+      "short_description": "Λ_μ^ν({A}) ⊗ ds²_Schw({B}) ⇛ᶠ {C}",
+      "description": "Λ_μ^ν({A}) ⊗ ds²_Schw({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4125,7 +4243,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856235",
+      "last_verified_at": "2026-08-08T15:42:30.090456",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4139,6 +4257,8 @@
       "name": "инфляционный_каскад",
       "type": "string",
       "default_value": null,
+      "template": "a(t)({A}) ⊗ Λ_косм({B}) → Большой_Взрыв",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4148,9 +4268,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "инфляционный_каскад",
+      "short_description": "a(t)({A}) ⊗ Λ_косм({B}) → Большой_Взрыв",
+      "description": "a(t)({A}) ⊗ Λ_косм({B}) → Большой_Взрыв",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4195,7 +4315,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856248",
+      "last_verified_at": "2026-08-08T15:42:30.090462",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4209,6 +4329,8 @@
       "name": "Фейнман_каскад",
       "type": "string",
       "default_value": null,
+      "template": "ℱ_D({A}) ⊗ RG({B}) ⊢ᵠ A_μ^a({C})",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4218,9 +4340,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Фейнман_каскад",
+      "short_description": "ℱ_D({A}) ⊗ RG({B}) ⊢ᵠ A_μ^a({C})",
+      "description": "ℱ_D({A}) ⊗ RG({B}) ⊢ᵠ A_μ^a({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4265,7 +4387,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856264",
+      "last_verified_at": "2026-08-08T15:42:30.090468",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4279,6 +4401,8 @@
       "name": "BCS_топологический_каскад",
       "type": "string",
       "default_value": null,
+      "template": "Δ_BCS({A}) ⊗ ν_Z2({B}) ⇛ᶠ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4288,9 +4412,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "BCS_топологический_каскад",
+      "short_description": "Δ_BCS({A}) ⊗ ν_Z2({B}) ⇛ᶠ {C}",
+      "description": "Δ_BCS({A}) ⊗ ν_Z2({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4335,7 +4459,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856282",
+      "last_verified_at": "2026-08-08T15:42:30.090475",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4349,6 +4473,8 @@
       "name": "Карп_сведение",
       "type": "string",
       "default_value": null,
+      "template": "{A} ≤_K {B} ⊢ᵠ U_BQP({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4358,9 +4484,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Карп_сведение",
+      "short_description": "{A} ≤_K {B} ⊢ᵠ U_BQP({C})",
+      "description": "{A} ≤_K {B} ⊢ᵠ U_BQP({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4405,7 +4531,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856297",
+      "last_verified_at": "2026-08-08T15:42:30.090481",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4419,6 +4545,8 @@
       "name": "RSA_нуль_разглашение",
       "type": "string",
       "default_value": null,
+      "template": "RSA_e({A}) ⊗ H#({B}) ⊢ᵠ ZK({C})",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4428,9 +4556,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "RSA_нуль_разглашение",
+      "short_description": "RSA_e({A}) ⊗ H#({B}) ⊢ᵠ ZK({C})",
+      "description": "RSA_e({A}) ⊗ H#({B}) ⊢ᵠ ZK({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4475,7 +4603,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856315",
+      "last_verified_at": "2026-08-08T15:42:30.090488",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4489,6 +4617,8 @@
       "name": "Вольфрам_каскад",
       "type": "string",
       "default_value": null,
+      "template": "W_r({A}) ⊗ GoL_∇({B}) ⇛ᶠ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4498,9 +4628,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Вольфрам_каскад",
+      "short_description": "W_r({A}) ⊗ GoL_∇({B}) ⇛ᶠ {C}",
+      "description": "W_r({A}) ⊗ GoL_∇({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4545,7 +4675,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856336",
+      "last_verified_at": "2026-08-08T15:42:30.090495",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4559,6 +4689,8 @@
       "name": "attention_transformer",
       "type": "string",
       "default_value": null,
+      "template": "Attn({A}) ⊗ σ_sm({B}) ⊗ ReLU({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4568,9 +4700,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "attention_transformer",
+      "short_description": "Attn({A}) ⊗ σ_sm({B}) ⊗ ReLU({C})",
+      "description": "Attn({A}) ⊗ σ_sm({B}) ⊗ ReLU({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4615,7 +4747,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856356",
+      "last_verified_at": "2026-08-08T15:42:30.090503",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4629,6 +4761,8 @@
       "name": "backprop_каскад",
       "type": "string",
       "default_value": null,
+      "template": "∇bp({A}) ⊗ Attn({B}) ⇛ᶠ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4638,9 +4772,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "backprop_каскад",
+      "short_description": "∇bp({A}) ⊗ Attn({B}) ⇛ᶠ {C}",
+      "description": "∇bp({A}) ⊗ Attn({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4685,7 +4819,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856370",
+      "last_verified_at": "2026-08-08T15:42:30.090510",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4699,6 +4833,8 @@
       "name": "softmax_ReLU_каскад",
       "type": "string",
       "default_value": null,
+      "template": "σ_sm({A}) ⊗ ReLU({B}) → {C}",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4708,9 +4844,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "softmax_ReLU_каскад",
+      "short_description": "σ_sm({A}) ⊗ ReLU({B}) → {C}",
+      "description": "σ_sm({A}) ⊗ ReLU({B}) → {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4755,7 +4891,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856395",
+      "last_verified_at": "2026-08-08T15:42:30.090517",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4769,6 +4905,8 @@
       "name": "генетический_цикл",
       "type": "string",
       "default_value": null,
+      "template": "×↔({A}, {B}) ⊗ μ_g({C}) ⊢ᵠ fit({D})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4778,9 +4916,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "генетический_цикл",
+      "short_description": "×↔({A}, {B}) ⊗ μ_g({C}) ⊢ᵠ fit({D})",
+      "description": "×↔({A}, {B}) ⊗ μ_g({C}) ⊢ᵠ fit({D})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4825,7 +4963,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856408",
+      "last_verified_at": "2026-08-08T15:42:30.090523",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4839,6 +4977,8 @@
       "name": "элитарный_каскад",
       "type": "string",
       "default_value": null,
+      "template": "fit({A}) ⊗ ×↔({B}, {C}) ⇛ᶠ {D}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4848,9 +4988,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "элитарный_каскад",
+      "short_description": "fit({A}) ⊗ ×↔({B}, {C}) ⇛ᶠ {D}",
+      "description": "fit({A}) ⊗ ×↔({B}, {C}) ⇛ᶠ {D}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4895,7 +5035,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856422",
+      "last_verified_at": "2026-08-08T15:42:30.090530",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4909,6 +5049,8 @@
       "name": "гомеостаз_петля",
       "type": "string",
       "default_value": null,
+      "template": "↬_FB({A}) ⊗ ⌂_H({B}) ⊢ᵠ V_E({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4918,9 +5060,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "гомеостаз_петля",
+      "short_description": "↬_FB({A}) ⊗ ⌂_H({B}) ⊢ᵠ V_E({C})",
+      "description": "↬_FB({A}) ⊗ ⌂_H({B}) ⊢ᵠ V_E({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -4965,7 +5107,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856625",
+      "last_verified_at": "2026-08-08T15:42:30.090536",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -4979,6 +5121,8 @@
       "name": "необходимое_разнообразие",
       "type": "string",
       "default_value": null,
+      "template": "V_E({A}) ⊗ ⌂_H({B}) → {C}",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4988,9 +5132,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "необходимое_разнообразие",
+      "short_description": "V_E({A}) ⊗ ⌂_H({B}) → {C}",
+      "description": "V_E({A}) ⊗ ⌂_H({B}) → {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5035,7 +5179,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856646",
+      "last_verified_at": "2026-08-08T15:42:30.090543",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5049,6 +5193,8 @@
       "name": "Бартс_миф_каскад",
       "type": "string",
       "default_value": null,
+      "template": "↯_сем({A}) ⊗ Myth_2({B}) ⊢ᵠ ⊕_кон({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5058,9 +5204,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Бартс_миф_каскад",
+      "short_description": "↯_сем({A}) ⊗ Myth_2({B}) ⊢ᵠ ⊕_кон({C})",
+      "description": "↯_сем({A}) ⊗ Myth_2({B}) ⊢ᵠ ⊕_кон({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5105,7 +5251,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856662",
+      "last_verified_at": "2026-08-08T15:42:30.090549",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5119,6 +5265,8 @@
       "name": "Соссюр_означивание",
       "type": "string",
       "default_value": null,
+      "template": "↯_сем({A}) ⊗ ⊕_кон({B}) ⇛ᶠ {C}",
+      "complexity": 4,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5128,9 +5276,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Соссюр_означивание",
+      "short_description": "↯_сем({A}) ⊗ ⊕_кон({B}) ⇛ᶠ {C}",
+      "description": "↯_сем({A}) ⊗ ⊕_кон({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5175,7 +5323,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856679",
+      "last_verified_at": "2026-08-08T15:42:30.090556",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5189,6 +5337,8 @@
       "name": "индивидуация_каскад",
       "type": "string",
       "default_value": null,
+      "template": "⊕_тень({A}) ⊗ ↗_А({B}) ⇛ᶠ Self",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5198,9 +5348,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "индивидуация_каскад",
+      "short_description": "⊕_тень({A}) ⊗ ↗_А({B}) ⇛ᶠ Self",
+      "description": "⊕_тень({A}) ⊗ ↗_А({B}) ⇛ᶠ Self",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5245,7 +5395,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856715",
+      "last_verified_at": "2026-08-08T15:42:30.090562",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5259,6 +5409,8 @@
       "name": "ИИТ_GWT_каскад",
       "type": "string",
       "default_value": null,
+      "template": "Φ_IIT({A}) ⊗ GWT_B({B}) → consciousness",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5268,9 +5420,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "ИИТ_GWT_каскад",
+      "short_description": "Φ_IIT({A}) ⊗ GWT_B({B}) → consciousness",
+      "description": "Φ_IIT({A}) ⊗ GWT_B({B}) → consciousness",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5315,7 +5467,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856732",
+      "last_verified_at": "2026-08-08T15:42:30.090569",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5329,6 +5481,8 @@
       "name": "мета_осознание_гамма",
       "type": "string",
       "default_value": null,
+      "template": "M_obs({A}) ⊗ γ_синх({B}) ⇛ᶠ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5338,9 +5492,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "мета_осознание_гамма",
+      "short_description": "M_obs({A}) ⊗ γ_синх({B}) ⇛ᶠ {C}",
+      "description": "M_obs({A}) ⊗ γ_синх({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5385,7 +5539,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856749",
+      "last_verified_at": "2026-08-08T15:42:30.090575",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5399,6 +5553,8 @@
       "name": "нейропластичность_прунинг",
       "type": "string",
       "default_value": null,
+      "template": "↓_prune({A}) ⊗ γ_синх({B}) ⊢ᵠ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5408,9 +5564,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "нейропластичность_прунинг",
+      "short_description": "↓_prune({A}) ⊗ γ_синх({B}) ⊢ᵠ {C}",
+      "description": "↓_prune({A}) ⊗ γ_синх({B}) ⊢ᵠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5455,7 +5611,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856770",
+      "last_verified_at": "2026-08-08T15:42:30.090586",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5469,6 +5625,8 @@
       "name": "феноменологический_каскад",
       "type": "string",
       "default_value": null,
+      "template": "ε⌬({A}) ⊗ D_proj({B}) ⇛ᶠ noema",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5478,9 +5636,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "феноменологический_каскад",
+      "short_description": "ε⌬({A}) ⊗ D_proj({B}) ⇛ᶠ noema",
+      "description": "ε⌬({A}) ⊗ D_proj({B}) ⇛ᶠ noema",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5525,7 +5683,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856785",
+      "last_verified_at": "2026-08-08T15:42:30.090594",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5539,6 +5697,8 @@
       "name": "даосский_каскад",
       "type": "string",
       "default_value": null,
+      "template": "無為({A}) ⊗ Śūnya({B}) → Dao",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5548,9 +5708,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "даосский_каскад",
+      "short_description": "無為({A}) ⊗ Śūnya({B}) → Dao",
+      "description": "無為({A}) ⊗ Śūnya({B}) → Dao",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5595,7 +5755,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856802",
+      "last_verified_at": "2026-08-08T15:42:30.090600",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5609,6 +5769,8 @@
       "name": "алхимическое_делание",
       "type": "string",
       "default_value": null,
+      "template": "Nigredo({A}) → Albedo({B}) → Rubedo({C})",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5618,9 +5780,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "алхимическое_делание",
+      "short_description": "Nigredo({A}) → Albedo({B}) → Rubedo({C})",
+      "description": "Nigredo({A}) → Albedo({B}) → Rubedo({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5665,7 +5827,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856823",
+      "last_verified_at": "2026-08-08T15:42:30.090607",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5679,6 +5841,8 @@
       "name": "алхимическая_свадьба_каскад",
       "type": "string",
       "default_value": null,
+      "template": "✶_coniunctio(Sol, Luna) → Lapis ⊗ {A}",
+      "complexity": 7,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5688,9 +5852,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "алхимическая_свадьба_каскад",
+      "short_description": "✶_coniunctio(Sol, Luna) → Lapis ⊗ {A}",
+      "description": "✶_coniunctio(Sol, Luna) → Lapis ⊗ {A}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5735,7 +5899,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856837",
+      "last_verified_at": "2026-08-08T15:42:30.090613",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5749,6 +5913,8 @@
       "name": "цимцум_сфирот_каскад",
       "type": "string",
       "default_value": null,
+      "template": "Tzimtzum({A}) ⊗ Sefirot_↓({B}) ⇛ᶠ Malkut",
+      "complexity": 7,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5758,9 +5924,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "цимцум_сфирот_каскад",
+      "short_description": "Tzimtzum({A}) ⊗ Sefirot_↓({B}) ⇛ᶠ Malkut",
+      "description": "Tzimtzum({A}) ⊗ Sefirot_↓({B}) ⇛ᶠ Malkut",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5805,7 +5971,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856857",
+      "last_verified_at": "2026-08-08T15:42:30.090619",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5819,6 +5985,8 @@
       "name": "гексаграмма_изменения",
       "type": "string",
       "default_value": null,
+      "template": "☰_И({A}) ⊗ ↯_Ицзин({B}) → новая_гексаграмма",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5828,9 +5996,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "гексаграмма_изменения",
+      "short_description": "☰_И({A}) ⊗ ↯_Ицзин({B}) → новая_гексаграмма",
+      "description": "☰_И({A}) ⊗ ↯_Ицзин({B}) → новая_гексаграмма",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5875,7 +6043,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856871",
+      "last_verified_at": "2026-08-08T15:42:30.090627",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5889,6 +6057,8 @@
       "name": "расклад_кельтский_крест",
       "type": "string",
       "default_value": null,
+      "template": "◑_Tarot({A}) ⊗ ↺_Tarot({B}) ⇛ᶠ {C}",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5898,9 +6068,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "расклад_кельтский_крест",
+      "short_description": "◑_Tarot({A}) ⊗ ↺_Tarot({B}) ⇛ᶠ {C}",
+      "description": "◑_Tarot({A}) ⊗ ↺_Tarot({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -5945,7 +6115,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856884",
+      "last_verified_at": "2026-08-08T15:42:30.090647",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -5959,6 +6129,8 @@
       "name": "цветок_жизни_платонов",
       "type": "string",
       "default_value": null,
+      "template": "✿_FoL({A}) ⊗ Φ_plat({B}) → Merkaba",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5968,9 +6140,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "цветок_жизни_платонов",
+      "short_description": "✿_FoL({A}) ⊗ Φ_plat({B}) → Merkaba",
+      "description": "✿_FoL({A}) ⊗ Φ_plat({B}) → Merkaba",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6015,7 +6187,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856905",
+      "last_verified_at": "2026-08-08T15:42:30.090655",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6029,6 +6201,8 @@
       "name": "эмерджентный_каскад_экология",
       "type": "string",
       "default_value": null,
+      "template": "Em⇒({A}) ⊗ ⊕_симб({B}, {C}) ⇛ᶠ {D}",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6038,9 +6212,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "эмерджентный_каскад_экология",
+      "short_description": "Em⇒({A}) ⊗ ⊕_симб({B}, {C}) ⇛ᶠ {D}",
+      "description": "Em⇒({A}) ⊗ ⊕_симб({B}, {C}) ⇛ᶠ {D}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6085,7 +6259,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856919",
+      "last_verified_at": "2026-08-08T15:42:30.090662",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6099,6 +6273,8 @@
       "name": "сукцессия_симбиоз",
       "type": "string",
       "default_value": null,
+      "template": "→_succ({A}) ⊗ ⊕_симб({B}, {C}) → {D}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6108,9 +6284,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "сукцессия_симбиоз",
+      "short_description": "→_succ({A}) ⊗ ⊕_симб({B}, {C}) → {D}",
+      "description": "→_succ({A}) ⊗ ⊕_симб({B}, {C}) → {D}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6155,7 +6331,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856936",
+      "last_verified_at": "2026-08-08T15:42:30.090669",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6169,6 +6345,8 @@
       "name": "бифуркация_Ляпунов_каскад",
       "type": "string",
       "default_value": null,
+      "template": "Bif_2({A}) ⊗ λ_L({B}) ⊢ᵠ L_atr({C})",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6178,9 +6356,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "бифуркация_Ляпунов_каскад",
+      "short_description": "Bif_2({A}) ⊗ λ_L({B}) ⊢ᵠ L_atr({C})",
+      "description": "Bif_2({A}) ⊗ λ_L({B}) ⊢ᵠ L_atr({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6225,7 +6403,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856954",
+      "last_verified_at": "2026-08-08T15:42:30.090676",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6239,6 +6417,8 @@
       "name": "странный_аттрактор_связка",
       "type": "string",
       "default_value": null,
+      "template": "L_atr({A}) ⊗ Bif_2({B}) ⇛ᶠ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6248,9 +6428,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "странный_аттрактор_связка",
+      "short_description": "L_atr({A}) ⊗ Bif_2({B}) ⇛ᶠ {C}",
+      "description": "L_atr({A}) ⊗ Bif_2({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6295,7 +6475,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856968",
+      "last_verified_at": "2026-08-08T15:42:30.090682",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6309,6 +6489,8 @@
       "name": "small_world_Барабаси",
       "type": "string",
       "default_value": null,
+      "template": "L(ℓ)({A}) ⊗ P(k)({B}) ⇛ᶠ scale_free",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6318,9 +6500,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "small_world_Барабаси",
+      "short_description": "L(ℓ)({A}) ⊗ P(k)({B}) ⇛ᶠ scale_free",
+      "description": "L(ℓ)({A}) ⊗ P(k)({B}) ⇛ᶠ scale_free",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6365,7 +6547,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.856985",
+      "last_verified_at": "2026-08-08T15:42:30.090689",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6379,6 +6561,8 @@
       "name": "обертоны_контрапункт",
       "type": "string",
       "default_value": null,
+      "template": "H_n({A}) ⊗ Retro_Inv({B}) ⊢ᵠ CP_2({C}, {D})",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6388,9 +6572,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "обертоны_контрапункт",
+      "short_description": "H_n({A}) ⊗ Retro_Inv({B}) ⊢ᵠ CP_2({C}, {D})",
+      "description": "H_n({A}) ⊗ Retro_Inv({B}) ⊢ᵠ CP_2({C}, {D})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6435,7 +6619,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857010",
+      "last_verified_at": "2026-08-08T15:42:30.090695",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6449,6 +6633,8 @@
       "name": "тенсегрити_геодезический",
       "type": "string",
       "default_value": null,
+      "template": "TGR_Φ({A}) ⊗ Geo_D({B}) ⇛ᶠ {C}",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6458,9 +6644,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "тенсегрити_геодезический",
+      "short_description": "TGR_Φ({A}) ⊗ Geo_D({B}) ⇛ᶠ {C}",
+      "description": "TGR_Φ({A}) ⊗ Geo_D({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6505,7 +6691,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857027",
+      "last_verified_at": "2026-08-08T15:42:30.090702",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6519,6 +6705,8 @@
       "name": "Нэш_эволюция_каскад",
       "type": "string",
       "default_value": null,
+      "template": "N_eq({A}) ⊗ ESS({B}) ⊢ᵠ MiniMax({C})",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6528,9 +6716,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Нэш_эволюция_каскад",
+      "short_description": "N_eq({A}) ⊗ ESS({B}) ⊢ᵠ MiniMax({C})",
+      "description": "N_eq({A}) ⊗ ESS({B}) ⊢ᵠ MiniMax({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6575,7 +6763,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857044",
+      "last_verified_at": "2026-08-08T15:42:30.090709",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6589,6 +6777,8 @@
       "name": "кооперативная_игра_Шепли",
       "type": "string",
       "default_value": null,
+      "template": "MiniMax({A}) ⊗ N_eq({B}) → Shapley_value",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6598,9 +6788,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "кооперативная_игра_Шепли",
+      "short_description": "MiniMax({A}) ⊗ N_eq({B}) → Shapley_value",
+      "description": "MiniMax({A}) ⊗ N_eq({B}) → Shapley_value",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6645,7 +6835,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857061",
+      "last_verified_at": "2026-08-08T15:42:30.090716",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6659,6 +6849,8 @@
       "name": "Байес_антихрупкость",
       "type": "string",
       "default_value": null,
+      "template": "Bayes_↑({A}) ⊗ EU({B}) ⊢ᵠ AntiF({C})",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6668,9 +6860,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Байес_антихрупкость",
+      "short_description": "Bayes_↑({A}) ⊗ EU({B}) ⊢ᵠ AntiF({C})",
+      "description": "Bayes_↑({A}) ⊗ EU({B}) ⊢ᵠ AntiF({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6715,7 +6907,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857081",
+      "last_verified_at": "2026-08-08T15:42:30.090722",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6729,6 +6921,8 @@
       "name": "Адамар_КНОТ_каскад",
       "type": "string",
       "default_value": null,
+      "template": "H_gate({A}) ⊗ CNOT({B}) ⇛ᶠ entangle",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6738,9 +6932,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Адамар_КНОТ_каскад",
+      "short_description": "H_gate({A}) ⊗ CNOT({B}) ⇛ᶠ entangle",
+      "description": "H_gate({A}) ⊗ CNOT({B}) ⇛ᶠ entangle",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6785,7 +6979,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857095",
+      "last_verified_at": "2026-08-08T15:42:30.090729",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6799,6 +6993,8 @@
       "name": "Шор_Гровер_телепортация",
       "type": "string",
       "default_value": null,
+      "template": "Shor_A({A}) ⊗ Grover_A({B}) ⊢ᵠ Telep({C})",
+      "complexity": 7,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6808,9 +7004,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Шор_Гровер_телепортация",
+      "short_description": "Shor_A({A}) ⊗ Grover_A({B}) ⊢ᵠ Telep({C})",
+      "description": "Shor_A({A}) ⊗ Grover_A({B}) ⊢ᵠ Telep({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6855,7 +7051,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857115",
+      "last_verified_at": "2026-08-08T15:42:30.090735",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6869,6 +7065,8 @@
       "name": "Оккам_Парето_каскад",
       "type": "string",
       "default_value": null,
+      "template": "OC_✂({A}) ⊗ P_80_20({B}) ⇛ᶠ Anth_Φ({C})",
+      "complexity": 5,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6878,9 +7076,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Оккам_Парето_каскад",
+      "short_description": "OC_✂({A}) ⊗ P_80_20({B}) ⇛ᶠ Anth_Φ({C})",
+      "description": "OC_✂({A}) ⊗ P_80_20({B}) ⇛ᶠ Anth_Φ({C})",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6925,7 +7123,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857129",
+      "last_verified_at": "2026-08-08T15:42:30.090741",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -6939,6 +7137,8 @@
       "name": "AdS_CFT_энтропия_каскад",
       "type": "string",
       "default_value": null,
+      "template": "AdS/CFT({A}) ⊗ S_BH({B}) ⇛ᶠ holographic",
+      "complexity": 7,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -6948,9 +7148,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "AdS_CFT_энтропия_каскад",
+      "short_description": "AdS/CFT({A}) ⊗ S_BH({B}) ⇛ᶠ holographic",
+      "description": "AdS/CFT({A}) ⊗ S_BH({B}) ⇛ᶠ holographic",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -6995,7 +7195,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857143",
+      "last_verified_at": "2026-08-08T15:42:30.090748",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -7009,6 +7209,8 @@
       "name": "морфический_Тьюринг_каскад",
       "type": "string",
       "default_value": null,
+      "template": "Morph_R({A}) ⊗ Turing_M({B}) ⇛ᶠ {C}",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -7018,9 +7220,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "морфический_Тьюринг_каскад",
+      "short_description": "Morph_R({A}) ⊗ Turing_M({B}) ⇛ᶠ {C}",
+      "description": "Morph_R({A}) ⊗ Turing_M({B}) ⇛ᶠ {C}",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -7065,7 +7267,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857164",
+      "last_verified_at": "2026-08-08T15:42:30.090754",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -7079,6 +7281,8 @@
       "name": "Orch_OR_сознание_каскад",
       "type": "string",
       "default_value": null,
+      "template": "Orch_OR({A}) ⊗ γ_синх({B}) ⇛ᶠ consciousness",
+      "complexity": 7,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -7088,9 +7292,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "Orch_OR_сознание_каскад",
+      "short_description": "Orch_OR({A}) ⊗ γ_синх({B}) ⇛ᶠ consciousness",
+      "description": "Orch_OR({A}) ⊗ γ_синх({B}) ⇛ᶠ consciousness",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -7135,7 +7339,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857177",
+      "last_verified_at": "2026-08-08T15:42:30.090761",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   },
@@ -7149,6 +7353,8 @@
       "name": "симуляция_fork_render",
       "type": "string",
       "default_value": null,
+      "template": "Sim_fork({A}) ⊗ Rend_Obs({B}) ⇛ᶠ multiverse",
+      "complexity": 6,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -7158,9 +7364,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "симуляция_fork_render",
+      "short_description": "Sim_fork({A}) ⊗ Rend_Obs({B}) ⇛ᶠ multiverse",
+      "description": "Sim_fork({A}) ⊗ Rend_Obs({B}) ⇛ᶠ multiverse",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -7205,7 +7411,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.857193",
+      "last_verified_at": "2026-08-08T15:42:30.090769",
       "notes": "Extracted from STRUCTURAL_PATTERNS"
     }
   }

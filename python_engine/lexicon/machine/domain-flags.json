@@ -9,6 +9,7 @@
       "name": "enable_linguistics",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -18,7 +19,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_linguistics",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -65,7 +66,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850065",
+      "last_verified_at": "2026-08-08T15:42:30.089209",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -79,6 +80,7 @@
       "name": "enable_morpheme_generation",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -88,7 +90,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_morpheme_generation",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -135,7 +137,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850088",
+      "last_verified_at": "2026-08-08T15:42:30.089220",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -149,6 +151,7 @@
       "name": "enable_linguistic_principles",
       "type": "bool",
       "default_value": true,
+      "comment": "Квантово-фрактальный",
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -158,9 +161,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "enable_linguistic_principles",
+      "short_description": "Квантово-фрактальный",
+      "description": "Квантово-фрактальный",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -205,7 +208,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850100",
+      "last_verified_at": "2026-08-08T15:42:30.089228",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -219,6 +222,7 @@
       "name": "enable_quantum",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -228,7 +232,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_quantum",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -275,7 +279,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850115",
+      "last_verified_at": "2026-08-08T15:42:30.089235",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -289,6 +293,7 @@
       "name": "enable_fractal",
       "type": "bool",
       "default_value": true,
+      "comment": "Психология",
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -298,9 +303,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "enable_fractal",
+      "short_description": "Психология",
+      "description": "Психология",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -345,7 +350,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850130",
+      "last_verified_at": "2026-08-08T15:42:30.089242",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -359,6 +364,7 @@
       "name": "enable_psychology",
       "type": "bool",
       "default_value": true,
+      "comment": "MMSS-метрики",
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -368,9 +374,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "enable_psychology",
+      "short_description": "MMSS-метрики",
+      "description": "MMSS-метрики",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -415,7 +421,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850143",
+      "last_verified_at": "2026-08-08T15:42:30.089249",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -429,6 +435,7 @@
       "name": "enable_metrics",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -438,7 +445,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_metrics",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -485,7 +492,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850161",
+      "last_verified_at": "2026-08-08T15:42:30.089256",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -499,6 +506,7 @@
       "name": "enable_auto_correction",
       "type": "bool",
       "default_value": true,
+      "comment": "Обучение и сохранение",
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -508,9 +516,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "enable_auto_correction",
+      "short_description": "Обучение и сохранение",
+      "description": "Обучение и сохранение",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -555,7 +563,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850173",
+      "last_verified_at": "2026-08-08T15:42:30.089263",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -569,6 +577,7 @@
       "name": "enable_learning",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -578,7 +587,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_learning",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -625,7 +634,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850184",
+      "last_verified_at": "2026-08-08T15:42:30.089270",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -639,6 +648,7 @@
       "name": "enable_saving",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -648,7 +658,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_saving",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -695,7 +705,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850195",
+      "last_verified_at": "2026-08-08T15:42:30.089277",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -709,6 +719,7 @@
       "name": "enable_cataloging",
       "type": "bool",
       "default_value": true,
+      "comment": "Операторы (отдельные флаги для часто используемых)",
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -718,9 +729,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "enable_cataloging",
+      "short_description": "Операторы (отдельные флаги для часто используемых)",
+      "description": "Операторы (отдельные флаги для часто используемых)",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -765,7 +776,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850213",
+      "last_verified_at": "2026-08-08T15:42:30.089284",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -779,6 +790,7 @@
       "name": "enable_derivative_first",
       "type": "bool",
       "default_value": false,
+      "comment": "∂/∂t",
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -788,9 +800,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "enable_derivative_first",
+      "short_description": "∂/∂t",
+      "description": "∂/∂t",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -835,7 +847,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850231",
+      "last_verified_at": "2026-08-08T15:42:30.089291",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -849,6 +861,7 @@
       "name": "enable_derivative_second",
       "type": "bool",
       "default_value": false,
+      "comment": "∂²/∂t²",
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -858,9 +871,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "enable_derivative_second",
+      "short_description": "∂²/∂t²",
+      "description": "∂²/∂t²",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -905,7 +918,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850243",
+      "last_verified_at": "2026-08-08T15:42:30.089298",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -919,6 +932,7 @@
       "name": "enable_eqgft",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -928,7 +942,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_eqgft",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -975,7 +989,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850257",
+      "last_verified_at": "2026-08-08T15:42:30.089305",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -989,6 +1003,7 @@
       "name": "enable_ethical_archon",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -998,7 +1013,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_ethical_archon",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1045,7 +1060,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850269",
+      "last_verified_at": "2026-08-08T15:42:30.089312",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1059,6 +1074,7 @@
       "name": "enable_bell_nonlocality",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1068,7 +1084,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_bell_nonlocality",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1115,7 +1131,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850280",
+      "last_verified_at": "2026-08-08T15:42:30.089319",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1129,6 +1145,7 @@
       "name": "enable_context_weaver",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1138,7 +1155,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_context_weaver",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1185,7 +1202,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850295",
+      "last_verified_at": "2026-08-08T15:42:30.089326",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1199,6 +1216,7 @@
       "name": "enable_garden_between",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1208,7 +1226,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_garden_between",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1255,7 +1273,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850313",
+      "last_verified_at": "2026-08-08T15:42:30.089333",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1269,6 +1287,7 @@
       "name": "enable_meta_fractal_craft",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1278,7 +1297,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_meta_fractal_craft",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1325,7 +1344,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850325",
+      "last_verified_at": "2026-08-08T15:42:30.089340",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1339,6 +1358,7 @@
       "name": "enable_json_prompt",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1348,7 +1368,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_json_prompt",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1395,7 +1415,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850337",
+      "last_verified_at": "2026-08-08T15:42:30.089347",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1409,6 +1429,7 @@
       "name": "enable_quantum_geometry",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1418,7 +1439,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_quantum_geometry",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1465,7 +1486,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850348",
+      "last_verified_at": "2026-08-08T15:42:30.089353",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1479,6 +1500,7 @@
       "name": "enable_research",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1488,7 +1510,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_research",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1535,7 +1557,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850369",
+      "last_verified_at": "2026-08-08T15:42:30.089361",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1549,6 +1571,7 @@
       "name": "enable_fair_division",
       "type": "bool",
       "default_value": true,
+      "comment": "=== Расширение v7.1 \"Гипер-Космос\" ===",
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1558,9 +1581,9 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
-      "short_description": null,
-      "description": null,
+      "display_name": "enable_fair_division",
+      "short_description": "=== Расширение v7.1 \"Гипер-Космос\" ===",
+      "description": "=== Расширение v7.1 \"Гипер-Космос\" ===",
       "synonyms": [],
       "query_phrases": [],
       "positive_examples": [],
@@ -1605,7 +1628,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850380",
+      "last_verified_at": "2026-08-08T15:42:30.089368",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1619,6 +1642,7 @@
       "name": "enable_category_theory",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1628,7 +1652,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_category_theory",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1675,7 +1699,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850396",
+      "last_verified_at": "2026-08-08T15:42:30.089375",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1689,6 +1713,7 @@
       "name": "enable_algebra",
       "type": "bool",
       "default_value": false,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1698,7 +1723,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_algebra",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1745,7 +1770,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850408",
+      "last_verified_at": "2026-08-08T15:42:30.089384",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1759,6 +1784,7 @@
       "name": "enable_knot_theory",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1768,7 +1794,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_knot_theory",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1815,7 +1841,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850423",
+      "last_verified_at": "2026-08-08T15:42:30.089396",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1829,6 +1855,7 @@
       "name": "enable_number_theory",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1838,7 +1865,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_number_theory",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1885,7 +1912,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850438",
+      "last_verified_at": "2026-08-08T15:42:30.089407",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1899,6 +1926,7 @@
       "name": "enable_measure_probability",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1908,7 +1936,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_measure_probability",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -1955,7 +1983,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850449",
+      "last_verified_at": "2026-08-08T15:42:30.089417",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -1969,6 +1997,7 @@
       "name": "enable_graph_combinatorics",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -1978,7 +2007,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_graph_combinatorics",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2025,7 +2054,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850464",
+      "last_verified_at": "2026-08-08T15:42:30.089456",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2039,6 +2068,7 @@
       "name": "enable_optimization",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2048,7 +2078,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_optimization",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2095,7 +2125,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850475",
+      "last_verified_at": "2026-08-08T15:42:30.089464",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2109,6 +2139,7 @@
       "name": "enable_thermodynamics",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2118,7 +2149,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_thermodynamics",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2165,7 +2196,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850490",
+      "last_verified_at": "2026-08-08T15:42:30.089470",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2179,6 +2210,7 @@
       "name": "enable_stat_mechanics",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2188,7 +2220,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_stat_mechanics",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2235,7 +2267,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850504",
+      "last_verified_at": "2026-08-08T15:42:30.089477",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2249,6 +2281,7 @@
       "name": "enable_relativity",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2258,7 +2291,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_relativity",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2305,7 +2338,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850519",
+      "last_verified_at": "2026-08-08T15:42:30.089484",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2319,6 +2352,7 @@
       "name": "enable_string_theory",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2328,7 +2362,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_string_theory",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2375,7 +2409,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850530",
+      "last_verified_at": "2026-08-08T15:42:30.089492",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2389,6 +2423,7 @@
       "name": "enable_cosmology",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2398,7 +2433,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_cosmology",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2445,7 +2480,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850540",
+      "last_verified_at": "2026-08-08T15:42:30.089500",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2459,6 +2494,7 @@
       "name": "enable_qft",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2468,7 +2504,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_qft",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2515,7 +2551,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850549",
+      "last_verified_at": "2026-08-08T15:42:30.089508",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2529,6 +2565,7 @@
       "name": "enable_condensed_matter",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2538,7 +2575,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_condensed_matter",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2585,7 +2622,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850569",
+      "last_verified_at": "2026-08-08T15:42:30.089517",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2599,6 +2636,7 @@
       "name": "enable_complexity",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2608,7 +2646,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_complexity",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2655,7 +2693,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850580",
+      "last_verified_at": "2026-08-08T15:42:30.089523",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2669,6 +2707,7 @@
       "name": "enable_cryptography",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2678,7 +2717,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_cryptography",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2725,7 +2764,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850590",
+      "last_verified_at": "2026-08-08T15:42:30.089530",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2739,6 +2778,7 @@
       "name": "enable_automata",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2748,7 +2788,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_automata",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2795,7 +2835,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850604",
+      "last_verified_at": "2026-08-08T15:42:30.089537",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2809,6 +2849,7 @@
       "name": "enable_neural_nets",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2818,7 +2859,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_neural_nets",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2865,7 +2906,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850614",
+      "last_verified_at": "2026-08-08T15:42:30.089543",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2879,6 +2920,7 @@
       "name": "enable_evolutionary",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2888,7 +2930,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_evolutionary",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -2935,7 +2977,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850627",
+      "last_verified_at": "2026-08-08T15:42:30.089550",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -2949,6 +2991,7 @@
       "name": "enable_cybernetics",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -2958,7 +3001,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_cybernetics",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3005,7 +3048,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850638",
+      "last_verified_at": "2026-08-08T15:42:30.089557",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3019,6 +3062,7 @@
       "name": "enable_semiotics",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3028,7 +3072,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_semiotics",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3075,7 +3119,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850657",
+      "last_verified_at": "2026-08-08T15:42:30.089564",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3089,6 +3133,7 @@
       "name": "enable_phonology_typology",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3098,7 +3143,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_phonology_typology",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3145,7 +3190,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.850669",
+      "last_verified_at": "2026-08-08T15:42:30.089570",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3159,6 +3204,7 @@
       "name": "enable_writing_systems",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3168,7 +3214,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_writing_systems",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3215,7 +3261,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854610",
+      "last_verified_at": "2026-08-08T15:42:30.089577",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3229,6 +3275,7 @@
       "name": "enable_jungian",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3238,7 +3285,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_jungian",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3285,7 +3332,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854639",
+      "last_verified_at": "2026-08-08T15:42:30.089585",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3299,6 +3346,7 @@
       "name": "enable_cognitive_bias",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3308,7 +3356,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_cognitive_bias",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3355,7 +3403,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854655",
+      "last_verified_at": "2026-08-08T15:42:30.089592",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3369,6 +3417,7 @@
       "name": "enable_consciousness",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3378,7 +3427,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_consciousness",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3425,7 +3474,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854666",
+      "last_verified_at": "2026-08-08T15:42:30.089598",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3439,6 +3488,7 @@
       "name": "enable_mindfulness",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3448,7 +3498,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_mindfulness",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3495,7 +3545,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854700",
+      "last_verified_at": "2026-08-08T15:42:30.089606",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3509,6 +3559,7 @@
       "name": "enable_neuroscience",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3518,7 +3569,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_neuroscience",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3565,7 +3616,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854713",
+      "last_verified_at": "2026-08-08T15:42:30.089614",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3579,6 +3630,7 @@
       "name": "enable_philosophy",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3588,7 +3640,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_philosophy",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3635,7 +3687,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854730",
+      "last_verified_at": "2026-08-08T15:42:30.089621",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3649,6 +3701,7 @@
       "name": "enable_eastern_phil",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3658,7 +3711,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_eastern_phil",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3705,7 +3758,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854739",
+      "last_verified_at": "2026-08-08T15:42:30.089630",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3719,6 +3772,7 @@
       "name": "enable_hermeticism",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3728,7 +3782,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_hermeticism",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3775,7 +3829,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854750",
+      "last_verified_at": "2026-08-08T15:42:30.089650",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3789,6 +3843,7 @@
       "name": "enable_process_phil",
       "type": "bool",
       "default_value": false,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3798,7 +3853,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_process_phil",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3845,7 +3900,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854765",
+      "last_verified_at": "2026-08-08T15:42:30.089657",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3859,6 +3914,7 @@
       "name": "enable_alchemy",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3868,7 +3924,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_alchemy",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3915,7 +3971,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854775",
+      "last_verified_at": "2026-08-08T15:42:30.089663",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3929,6 +3985,7 @@
       "name": "enable_kabbalah",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -3938,7 +3995,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_kabbalah",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -3985,7 +4042,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854849",
+      "last_verified_at": "2026-08-08T15:42:30.089668",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -3999,6 +4056,7 @@
       "name": "enable_iching",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4008,7 +4066,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_iching",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4055,7 +4113,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854870",
+      "last_verified_at": "2026-08-08T15:42:30.089675",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4069,6 +4127,7 @@
       "name": "enable_tarot",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4078,7 +4137,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_tarot",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4125,7 +4184,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854887",
+      "last_verified_at": "2026-08-08T15:42:30.089681",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4139,6 +4198,7 @@
       "name": "enable_sacred_geometry",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4148,7 +4208,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_sacred_geometry",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4195,7 +4255,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854961",
+      "last_verified_at": "2026-08-08T15:42:30.089686",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4209,6 +4269,7 @@
       "name": "enable_vedic",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4218,7 +4279,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_vedic",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4265,7 +4326,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.854982",
+      "last_verified_at": "2026-08-08T15:42:30.089692",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4279,6 +4340,7 @@
       "name": "enable_systems_ecology",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4288,7 +4350,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_systems_ecology",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4335,7 +4397,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855002",
+      "last_verified_at": "2026-08-08T15:42:30.089697",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4349,6 +4411,7 @@
       "name": "enable_permaculture",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4358,7 +4421,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_permaculture",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4405,7 +4468,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855021",
+      "last_verified_at": "2026-08-08T15:42:30.089703",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4419,6 +4482,7 @@
       "name": "enable_biomimicry",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4428,7 +4492,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_biomimicry",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4475,7 +4539,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855032",
+      "last_verified_at": "2026-08-08T15:42:30.089710",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4489,6 +4553,7 @@
       "name": "enable_chaos_dynamics",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4498,7 +4563,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_chaos_dynamics",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4545,7 +4610,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855042",
+      "last_verified_at": "2026-08-08T15:42:30.089722",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4559,6 +4624,7 @@
       "name": "enable_network_science",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4568,7 +4634,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_network_science",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4615,7 +4681,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855060",
+      "last_verified_at": "2026-08-08T15:42:30.089737",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4629,6 +4695,7 @@
       "name": "enable_music_art",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4638,7 +4705,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_music_art",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4685,7 +4752,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855074",
+      "last_verified_at": "2026-08-08T15:42:30.089747",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4699,6 +4766,7 @@
       "name": "enable_architecture",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4708,7 +4776,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_architecture",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4755,7 +4823,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855085",
+      "last_verified_at": "2026-08-08T15:42:30.089758",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4769,6 +4837,7 @@
       "name": "enable_game_theory",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4778,7 +4847,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_game_theory",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4825,7 +4894,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855096",
+      "last_verified_at": "2026-08-08T15:42:30.089767",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4839,6 +4908,7 @@
       "name": "enable_decision_theory",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4848,7 +4918,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_decision_theory",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4895,7 +4965,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855118",
+      "last_verified_at": "2026-08-08T15:42:30.089778",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4909,6 +4979,7 @@
       "name": "enable_holographic",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4918,7 +4989,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_holographic",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -4965,7 +5036,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855128",
+      "last_verified_at": "2026-08-08T15:42:30.089785",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -4979,6 +5050,7 @@
       "name": "enable_morphic_resonance",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -4988,7 +5060,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_morphic_resonance",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -5035,7 +5107,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855142",
+      "last_verified_at": "2026-08-08T15:42:30.089791",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -5049,6 +5121,7 @@
       "name": "enable_orch_or",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5058,7 +5131,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_orch_or",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -5105,7 +5178,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855151",
+      "last_verified_at": "2026-08-08T15:42:30.089798",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -5119,6 +5192,7 @@
       "name": "enable_simulation_hyp",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5128,7 +5202,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_simulation_hyp",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -5175,7 +5249,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855164",
+      "last_verified_at": "2026-08-08T15:42:30.089804",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -5189,6 +5263,7 @@
       "name": "enable_quantum_info",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5198,7 +5273,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_quantum_info",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -5245,7 +5320,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855175",
+      "last_verified_at": "2026-08-08T15:42:30.089825",
       "notes": "Extracted from EngineConfig.flags"
     }
   },
@@ -5259,6 +5334,7 @@
       "name": "enable_metaprinciples",
       "type": "bool",
       "default_value": true,
+      "comment": null,
       "allowed_values": [],
       "min_value": null,
       "max_value": null,
@@ -5268,7 +5344,7 @@
       "ui_accessible": true
     },
     "semantic": {
-      "display_name": null,
+      "display_name": "enable_metaprinciples",
       "short_description": null,
       "description": null,
       "synonyms": [],
@@ -5315,7 +5391,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T05:17:00.855192",
+      "last_verified_at": "2026-08-08T15:42:30.089839",
       "notes": "Extracted from EngineConfig.flags"
     }
   }

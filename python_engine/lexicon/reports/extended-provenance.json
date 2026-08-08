@@ -1,0 +1,19 @@
+{
+  "extraction_timestamp": "2026-08-08T16:10:37.611379",
+  "source_files": {
+    "engine": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py",
+    "import_json": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\data\\imports\\177150e9-36fd-4e47-84b9-4b37ff58918f__snap_20260716_213148_manual9.json"
+  },
+  "extraction_summary": {
+    "operators": 196,
+    "formulas": 135,
+    "constants": 9,
+    "lexical_categories": 171
+  },
+  "source_breakdown": {
+    "python_operators": 196,
+    "python_categories": 171,
+    "import_categories": 171,
+    "merged_categories": 171
+  }
+}

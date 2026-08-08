@@ -1,0 +1,282 @@
+[
+  {
+    "id": "generation.generations",
+    "entity_type": "generation_parameter",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "generations",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "typescript"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "generation.batch",
+    "entity_type": "generation_parameter",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "batch",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "typescript"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "generation.top",
+    "entity_type": "generation_parameter",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "top",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "typescript"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "generation.max_depth",
+    "entity_type": "generation_parameter",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "max_depth",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "typescript"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "generation.max_elements",
+    "entity_type": "generation_parameter",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "max_elements",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "typescript"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "generation.use_irrational",
+    "entity_type": "generation_parameter",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "use_irrational",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "typescript"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "generation.use_imaginary",
+    "entity_type": "generation_parameter",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "use_imaginary",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "typescript"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "generation.use_infinity",
+    "entity_type": "generation_parameter",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "use_infinity",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "typescript"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "generation.invert_probability",
+    "entity_type": "generation_parameter",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "invert_probability",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "typescript"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  },
+  {
+    "id": "generation.psychology_probability",
+    "entity_type": "generation_parameter",
+    "status": "source_extracted",
+    "version": "1.0.0",
+    "semantic": {
+      "display_name": "psychology_probability",
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "source_extracted"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "typescript"
+    },
+    "audit": {
+      "needs_human_review": true,
+      "source_description_found": true
+    }
+  }
+]

@@ -57,19 +57,30 @@ def validate_required_fields(entry: Dict, schema_name: str) -> List[str]:
         if field not in entry:
             errors.append(f"Missing required field: {field}")
     
-    # Validate technical fields
+    # Validate technical fields based on entity_type
     if "technical" in entry:
         tech = entry["technical"]
-        tech_required = ["name", "runtime_used", "ui_accessible"]
-        for field in tech_required:
-            if field not in tech:
-                errors.append(f"Missing technical field: {field}")
+        entity_type = entry.get("entity_type")
+        
+        if entity_type in ["generation_parameter", "domain", "structural_pattern", "metric"]:
+            tech_required = ["name", "runtime_used", "ui_accessible"]
+            for field in tech_required:
+                if field not in tech:
+                    errors.append(f"Missing technical field: {field}")
+        elif entity_type in ["operator", "formula", "constant", "lexical_category"]:
+            # These don't require runtime_used/ui_accessible
+            if "name" not in tech:
+                errors.append("Missing technical field: name")
     
     # Validate semantic fields
     if "semantic" in entry:
         sem = entry["semantic"]
-        if "needs_human_review" not in sem:
-            errors.append("Missing semantic field: needs_human_review")
+        # needs_human_review is optional for new entity types
+        # Only check for original entity types
+        entity_type = entry.get("entity_type")
+        if entity_type in ["generation_parameter", "domain", "structural_pattern", "metric"]:
+            if "needs_human_review" not in sem:
+                errors.append("Missing semantic field: needs_human_review")
     
     # Validate provenance fields
     if "provenance" in entry:
@@ -83,13 +94,17 @@ def validate_required_fields(entry: Dict, schema_name: str) -> List[str]:
         if "risk_level" not in safety:
             errors.append("Missing safety field: risk_level")
     
-    # Validate audit fields
+    # Validate audit fields based on entity_type
     if "audit" in entry:
         audit = entry["audit"]
-        audit_required = ["verified_in_runtime", "verified_in_ui", "verified_in_sidecar"]
-        for field in audit_required:
-            if field not in audit:
-                errors.append(f"Missing audit field: {field}")
+        entity_type = entry.get("entity_type")
+        
+        if entity_type in ["generation_parameter", "domain", "structural_pattern", "metric"]:
+            audit_required = ["verified_in_runtime", "verified_in_ui", "verified_in_sidecar"]
+            for field in audit_required:
+                if field not in audit:
+                    errors.append(f"Missing audit field: {field}")
+        # Other entity types have different audit fields
     
     return errors
 
@@ -100,7 +115,8 @@ def validate_entity_type(entry: Dict) -> List[str]:
     
     allowed_types = [
         "generation_parameter", "domain", "structural_pattern",
-        "operator", "invariant", "metric", "constraint"
+        "operator", "invariant", "metric", "constraint",
+        "formula", "constant", "lexical_category"
     ]
     
     entity_type = entry.get("entity_type")
@@ -140,7 +156,10 @@ def validate_namespace(entry: Dict) -> List[str]:
         "operator": "operator",
         "invariant": "invariant",
         "metric": "metric",
-        "constraint": "constraint"
+        "constraint": "constraint",
+        "formula": "formula",
+        "constant": "constant",
+        "lexical_category": "category"
     }
     
     expected_namespace = namespace_map.get(entity_type)
@@ -351,6 +370,10 @@ def main():
         (MACHINE_DIR / "domain-flags.json", "domain"),
         (MACHINE_DIR / "structural-patterns.json", "structural_pattern"),
         (MACHINE_DIR / "metrics.json", "metric"),
+        (MACHINE_DIR / "operators.json", "operator"),
+        (MACHINE_DIR / "formulas.json", "formula"),
+        (MACHINE_DIR / "constants.json", "constant"),
+        (MACHINE_DIR / "lexical-categories.json", "lexical_category"),
     ]
     
     all_results = []

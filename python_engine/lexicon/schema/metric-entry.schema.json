@@ -14,6 +14,53 @@
         },
         "namespace": {
           "const": "metric"
+        },
+        "technical": {
+          "properties": {
+            "symbol": {
+              "type": ["string", "null"],
+              "description": "Metric symbol (e.g., G_S, QEC, CHSH)"
+            },
+            "metric_type": {
+              "type": ["string", "null"],
+              "enum": ["ethical", "topological", "physical", "research", "unknown"],
+              "description": "Type of metric"
+            },
+            "formula": {
+              "type": ["string", "null"],
+              "description": "Formula for calculating the metric"
+            },
+            "inputs": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Input parameters for the metric"
+            },
+            "outputs": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Output values from the metric"
+            },
+            "default_value": {
+              "type": ["string", "null"],
+              "description": "Default value if applicable"
+            }
+          }
+        },
+        "audit": {
+          "properties": {
+            "exists_in_runtime": {
+              "type": "boolean",
+              "description": "Whether metric exists in runtime code"
+            },
+            "exists_in_import": {
+              "type": "boolean",
+              "description": "Whether metric exists in import JSON"
+            },
+            "formula_found": {
+              "type": "boolean",
+              "description": "Whether formula was found in source"
+            }
+          }
         }
       }
     }

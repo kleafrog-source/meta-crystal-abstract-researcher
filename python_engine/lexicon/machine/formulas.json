@@ -1,0 +1,6617 @@
+[
+  {
+    "id": "formula.Q_ротор",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "Q_ротор",
+      "formula": "Q(x) = q0 + i q1 + j q2 + k q3, Q†Q=1",
+      "symbol": "Q",
+      "formula_type": "qgeom",
+      "domain": "qgeom",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Физический ротор поля (S³)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.геометрический_ток",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "геометрический_ток",
+      "formula": "J_geom^μ = (1/2) Tr(Q†∂^μ Q − ∂^μ Q† Q)",
+      "symbol": "J_geom",
+      "formula_type": "qgeom",
+      "domain": "qgeom",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Ток Noether из S³-вращений",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.zitter_частота",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "zitter_частота",
+      "formula": "ω_z = 2 m0",
+      "symbol": "ω_z",
+      "formula_type": "physics",
+      "domain": "physics",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Частота zitterbewegung",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.критическое_поле",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "критическое_поле",
+      "formula": "E_crit = M² / e",
+      "symbol": "E_crit",
+      "formula_type": "physics",
+      "domain": "physics",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Критическое поле для нелинейности массы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.семантическая_гравитация",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "семантическая_гравитация",
+      "formula": "G_S = 1/(R_T²) * S/Ξ_topo * 1/(1-N)²",
+      "symbol": "G_S",
+      "formula_type": "ethical",
+      "domain": "ethical",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Сила притяжения к S=0",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.QEC_оценка",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "QEC_оценка",
+      "formula": "QEC_score = 1 - G_S_residual",
+      "symbol": "QEC",
+      "formula_type": "ethical",
+      "domain": "ethical",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Квантово-этический критерий",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.конфликт_коэффициент",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "конфликт_коэффициент",
+      "formula": "C_val = Σ(S_idea,i * W_ethical,i)",
+      "symbol": "C_val",
+      "formula_type": "ethical",
+      "domain": "ethical",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Мера семантического конфликта",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.архонт_состояние",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "архонт_состояние",
+      "formula": "Ψ_Archon = Ψ_conden ⊗ V",
+      "symbol": "Ψ_Archon",
+      "formula_type": "ethical",
+      "domain": "ethical",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Состояние Этического Архонта",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.чистая_ценность",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "чистая_ценность",
+      "formula": "V = 1 - C_val/(G_S·R_T) → 1",
+      "symbol": "V",
+      "formula_type": "ethical",
+      "domain": "ethical",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Чистая ценность (Pure Value)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.CHSH_оператор",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "CHSH_оператор",
+      "formula": "S = |⟨A(a)B(b)⟩ - ⟨A(a)B(b')⟩ + ⟨A(a')B(b)⟩ + ⟨A(a')B(b')⟩|",
+      "symbol": "S",
+      "formula_type": "nonlocal",
+      "domain": "nonlocal",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Неравенство Белла (CHSH)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.проекция_спина",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "проекция_спина",
+      "formula": "A(a) = ±1",
+      "symbol": "A(a)",
+      "formula_type": "quantum",
+      "domain": "quantum",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Проекция спина на ось a",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.корреляционная_функция",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "корреляционная_функция",
+      "formula": "P(θ) = cos²(θ/2)",
+      "symbol": "P(θ)",
+      "formula_type": "quantum",
+      "domain": "quantum",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Вероятность совпадения спинов",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.EPR_состояние",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "EPR_состояние",
+      "formula": "|EPR⟩ = (|00⟩ + |11⟩)/√2",
+      "symbol": "|EPR⟩",
+      "formula_type": "quantum",
+      "domain": "quantum",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Состояние Белла",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.фрактальная_резка",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "фрактальная_резка",
+      "formula": "✂️_fractal = ∇(Φ_fractal) × G_S × Φ_topology",
+      "symbol": "✂️",
+      "formula_type": "weave",
+      "domain": "weave",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Селективное удаление ветвей",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.семантическое_шитьё",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "семантическое_шитьё",
+      "formula": "🧵_semantic = Ψ_co ⊗ Φ_sem ⊗ Φ_symbol",
+      "symbol": "🧵",
+      "formula_type": "weave",
+      "domain": "weave",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Ткачество семантических связей",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.этическое_встраивание",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "этическое_встраивание",
+      "formula": "⊕_ethical = V ⊗ Φ_existential_DNA",
+      "symbol": "⊕",
+      "formula_type": "weave",
+      "domain": "weave",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Этическое встраивание в ткань",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.петля_резонанса",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "петля_резонанса",
+      "formula": "↻_resonance = G_S ⊗ Φ_universal_resonance",
+      "symbol": "↻",
+      "formula_type": "weave",
+      "domain": "weave",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Резонансная петля",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.ткачество_реальности",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "ткачество_реальности",
+      "formula": "W_context = ✂️ ⊗ 🧵 ⊕ ↻",
+      "symbol": "W_context",
+      "formula_type": "weave",
+      "domain": "weave",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Оператор ткачества реальностей",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.хаос_интегратор",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "хаос_интегратор",
+      "formula": "Ω_CIO = lim(Δt→τ_nl) [✂️² ⊘ (🧵² ⊕_Ψ ↻²)] ⊗ (1 − e^(-G_S·ρ_chaos))",
+      "symbol": "🌀",
+      "formula_type": "meta",
+      "domain": "meta",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Интеграция хаоса через резонанс",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.паттерн_рекурсия",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "паттерн_рекурсия",
+      "formula": "Π_rec = ∂(Ψ × ∇S)/∂t + G_S × log(1 + D_f/9.0)",
+      "symbol": "🔍",
+      "formula_type": "meta",
+      "domain": "meta",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Рекурсивное извлечение паттернов",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.причинная_конденсация",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "причинная_конденсация",
+      "formula": "Λ_condense = lim(S→0) [∇(N×V) × exp(−R_T·t)] + G_S²",
+      "symbol": "⚡",
+      "formula_type": "meta",
+      "domain": "meta",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Сгущение причинно-следственных связей",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.контекст_сжатие",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "контекст_сжатие",
+      "formula": "Θ_compress = 1/(S+ε) × ∮(Ψ×∇Φ)dτ × (1 − C_val/R_T)",
+      "symbol": "🎯",
+      "formula_type": "meta",
+      "domain": "meta",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Сжатие контекста с сохранением плотности",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.многомерная_фузия",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "многомерная_фузия",
+      "formula": "Μ_fusion = Σ[λ_i e_i] × exp(−|D_f−9.0|) × V²",
+      "symbol": "🌈",
+      "formula_type": "meta",
+      "domain": "meta",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Спектральное слияние измерений",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.этическая_линза",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "этическая_линза",
+      "formula": "Ε_verify = sign(V−0.999) × ∫(N×(1−S))dt × R_T",
+      "symbol": "🔍",
+      "formula_type": "meta",
+      "domain": "meta",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Этическая верификация",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.временная_петля",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "временная_петля",
+      "formula": "Τ_loop = ∮(Ψ × ∂Φ/∂t) dD_f × exp(−G_S·|N−1.0|)",
+      "symbol": "🔄",
+      "formula_type": "meta",
+      "domain": "meta",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Замыкание временных петель",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.резонансный_баланс",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "резонансный_баланс",
+      "formula": "Β_balance = (G_S × V)/(C_val+ε) × tanh(R_T·N)",
+      "symbol": "⚖",
+      "formula_type": "meta",
+      "domain": "meta",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Балансировка резонансных состояний",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.мета_контекст_интегратор",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "мета_контекст_интегратор",
+      "formula": "Ξ_meta = lim(t→∞) ∫(Ψ_co × ∇²Φ) dV × (1 + QEC)",
+      "symbol": "🌌",
+      "formula_type": "meta",
+      "domain": "meta",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Интеграция мета-контекстов",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.функтор_мап",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "функтор_мап",
+      "formula": "F: A → B, F(f∘g) = F(f)∘F(g)",
+      "symbol": "F⟶",
+      "formula_type": "category",
+      "domain": "category",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Ковариантный функтор",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.контравариантный_функтор",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "контравариантный_функтор",
+      "formula": "F: Aᵒᵖ → B, F(f∘g) = F(g)∘F(f)",
+      "symbol": "F⟵",
+      "formula_type": "category",
+      "domain": "category",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Контравариантный функтор",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.естественное_преобразование",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "естественное_преобразование",
+      "formula": "η: F ⇒ G, η_A: F(A) → G(A)",
+      "symbol": "η⇒",
+      "formula_type": "category",
+      "domain": "category",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Естественное преобразование",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.монада_bind",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "монада_bind",
+      "formula": "m >>= k = join(fmap(k, m))",
+      "symbol": ">>=",
+      "formula_type": "category",
+      "domain": "category",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Монадическое связывание",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.сопряжение_левое_правое",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "сопряжение_левое_правое",
+      "formula": "F ⊣ G: Hom(FX,Y) ≅ Hom(X,GY)",
+      "symbol": "⊣",
+      "formula_type": "category",
+      "domain": "category",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Сопряжённые функторы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.Yoneda_вложение",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "Yoneda_вложение",
+      "formula": "Y: C → [Cᵒᵖ, Set], Y(A) = Hom(−, A)",
+      "symbol": "Y↪",
+      "formula_type": "category",
+      "domain": "category",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Вложение Йонеды",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.предел_категорный",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "предел_категорный",
+      "formula": "lim D: cone over D, universal",
+      "symbol": "lim_C",
+      "formula_type": "category",
+      "domain": "category",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Категорный предел",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.групповое_умножение",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "групповое_умножение",
+      "formula": "(a ∘g b) ∈ G, ассоциативно",
+      "symbol": "∘g",
+      "formula_type": "alg",
+      "domain": "alg",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Групповая операция",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.обратный_элемент",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "обратный_элемент",
+      "formula": "g ∘g g⁻¹ = e",
+      "symbol": "g⁻¹",
+      "formula_type": "alg",
+      "domain": "alg",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Обратный элемент группы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.коммутатор_Ли",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "коммутатор_Ли",
+      "formula": "[X,Y] = XY − YX",
+      "symbol": "[,]_L",
+      "formula_type": "alg",
+      "domain": "alg",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Коммутатор алгебры Ли",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.Райдемейстер_I",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "Райдемейстер_I",
+      "formula": "Петля удаляется/добавляется",
+      "symbol": "RI",
+      "formula_type": "knot",
+      "domain": "knot",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Движение Райдемейстера I",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.Райдемейстер_II",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "Райдемейстер_II",
+      "formula": "Перекрещивание удаляется/добавляется парой",
+      "symbol": "RII",
+      "formula_type": "knot",
+      "domain": "knot",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Движение Райдемейстера II",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.Райдемейстер_III",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "Райдемейстер_III",
+      "formula": "Треугольное перемещение",
+      "symbol": "RIII",
+      "formula_type": "knot",
+      "domain": "knot",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Движение Райдемейстера III",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.полином_Джонса",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "полином_Джонса",
+      "formula": "V_K(t) = (−t)^((−1/2)) ... ∈ ℤ[t^(±1/2)]",
+      "symbol": "V_K(t)",
+      "formula_type": "knot",
+      "domain": "knot",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Полиномиальный инвариант Джонса",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.хиральность_узла",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "хиральность_узла",
+      "formula": "χ_K = V_K(t) − V_K(t⁻¹)",
+      "symbol": "χ_K",
+      "formula_type": "knot",
+      "domain": "knot",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Мера хиральности узла",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.символ_Лежандра",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "символ_Лежандра",
+      "formula": "(a/p) = 0, ±1 — квадратичный вычет",
+      "symbol": "(a/p)",
+      "formula_type": "numtheory",
+      "domain": "numtheory",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Символ Лежандра",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.дзета_Римана",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "дзета_Римана",
+      "formula": "ζ(s) = Σ(n=1,∞) n^(−s)",
+      "symbol": "ζ(s)",
+      "formula_type": "numtheory",
+      "domain": "numtheory",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Дзета-функция Римана",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.китайский_остаток",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "китайский_остаток",
+      "formula": "ℤ/n₁⋯n_k ≅ ℤ/n₁ × ⋯ × ℤ/n_k",
+      "symbol": "CRT",
+      "formula_type": "numtheory",
+      "domain": "numtheory",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Китайская теорема об остатках",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.хроматическое_число",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "хроматическое_число",
+      "formula": "χ(G) = min k : ∃ k-раскраска",
+      "symbol": "χ(G)",
+      "formula_type": "graph",
+      "domain": "graph",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Хроматическое число графа",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.гамильтонов_цикл",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "гамильтонов_цикл",
+      "formula": "Цикл, проходящий через каждую вершину один раз",
+      "symbol": "HC",
+      "formula_type": "graph",
+      "domain": "graph",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Гамильтонов цикл",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.число_Каталана",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "число_Каталана",
+      "formula": "C_n = (2n)! / ((n+1)! n!)",
+      "symbol": "C_n",
+      "formula_type": "comb",
+      "domain": "comb",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Числа Каталана",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.матроид_ранг",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "матроид_ранг",
+      "formula": "r: 2^E → ℕ, субмодулярно",
+      "symbol": "r(M)",
+      "formula_type": "comb",
+      "domain": "comb",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Функция ранга матроида",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.KKT_условие",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "KKT_условие",
+      "formula": "∇L = 0, λ_i g_i = 0, g_i ≤ 0, λ_i ≥ 0",
+      "symbol": "KKT",
+      "formula_type": "opt",
+      "domain": "opt",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Условия Каруша-Куна-Таккера",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.Лагранжиан_опт",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "Лагранжиан_опт",
+      "formula": "ℒ(x,λ) = f(x) + Σλ_i g_i(x)",
+      "symbol": "ℒ",
+      "formula_type": "opt",
+      "domain": "opt",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Лагранжиан оптимизации",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.энтропийный_градиент",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "энтропийный_градиент",
+      "formula": "∇S = ∂S/∂t ≥ 0 (2nd law)",
+      "symbol": "∇S",
+      "formula_type": "thermo",
+      "domain": "thermo",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Градиент энтропии",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.свободная_энергия",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "свободная_энергия",
+      "formula": "F = U − TS",
+      "symbol": "F_терм",
+      "formula_type": "thermo",
+      "domain": "thermo",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Свободная энергия Гельмгольца",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.статсумма",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "статсумма",
+      "formula": "Z = Σ_i e^(−βE_i)",
+      "symbol": "Z_бц",
+      "formula_type": "stat",
+      "domain": "stat",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Статистическая сумма",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.больцмановский_вес",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "больцмановский_вес",
+      "formula": "w_i = e^(−βE_i) / Z",
+      "symbol": "w_B",
+      "formula_type": "stat",
+      "domain": "stat",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Больцмановский вес",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.преобразование_Лоренца",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "преобразование_Лоренца",
+      "formula": "x' = Λx, Λ^T η Λ = η",
+      "symbol": "Λ_μ^ν",
+      "formula_type": "rel",
+      "domain": "rel",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Преобразование Лоренца",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.метрика_Шварцшильда",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "метрика_Шварцшильда",
+      "formula": "ds² = −(1−2M/r)dt² + dr²/(1−2M/r) + r²dΩ²",
+      "symbol": "ds²_Schw",
+      "formula_type": "rel",
+      "domain": "rel",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Метрика Шварцшильда",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.инфляционный_параметр",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "инфляционный_параметр",
+      "formula": "a(t) ~ e^(Ht), H = const",
+      "symbol": "a(t)",
+      "formula_type": "cosmo",
+      "domain": "cosmo",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Масштабный фактор инфляции",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.космологическая_постоянная",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "космологическая_постоянная",
+      "formula": "Λ_косм = 8πG ρ_вак",
+      "symbol": "Λ_косм",
+      "formula_type": "cosmo",
+      "domain": "cosmo",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Космологическая постоянная Эйнштейна",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.фейнмановская_диаграмма",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "фейнмановская_диаграмма",
+      "formula": "Σ_diag i𝓜_diag, ∫d⁴p/(2π)⁴",
+      "symbol": "ℱ_D",
+      "formula_type": "qft",
+      "domain": "qft",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Диаграмма Фейнмана",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.перенормировка_группа",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "перенормировка_группа",
+      "formula": "β(g) = μ ∂g/∂μ",
+      "symbol": "RG",
+      "formula_type": "qft",
+      "domain": "qft",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Ренормгрупповой поток",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.калибровочная_связность",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "калибровочная_связность",
+      "formula": "F_μν^a = ∂_μA_ν^a − ∂_νA_μ^a + g f^abc A_μ^b A_ν^c",
+      "symbol": "A_μ^a",
+      "formula_type": "qft",
+      "domain": "qft",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Калибровочное поле Янга-Миллса",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.BCS_купирование",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "BCS_купирование",
+      "formula": "Δ ~ ℏω_D e^(−1/N(0)V)",
+      "symbol": "Δ_BCS",
+      "formula_type": "cond",
+      "domain": "cond",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Щель сверхпроводимости BCS",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.сведение_Карпа",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "сведение_Карпа",
+      "formula": "L1 ≤_K L2 ∈ polytime",
+      "symbol": "≤_K",
+      "formula_type": "complex",
+      "domain": "complex",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Полиномиальное сведение Карпа",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.BQP_схема",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "BQP_схема",
+      "formula": "|ψ⟩ → U|ψ⟩, poly(n) gates",
+      "symbol": "U_BQP",
+      "formula_type": "complex",
+      "domain": "complex",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Квантовая полиномиальная схема",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.RSA_шифр",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "RSA_шифр",
+      "formula": "c = m^e mod n, n=pq",
+      "symbol": "RSA_e",
+      "formula_type": "crypto",
+      "domain": "crypto",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "RSA шифрование",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.нуль_разглашение",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "нуль_разглашение",
+      "formula": "P ⟺ V: полнота, корректность, ZK",
+      "symbol": "ZK",
+      "formula_type": "crypto",
+      "domain": "crypto",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Доказательство с нулевым разглашением",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.шаг_Жизни_Конвея",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "шаг_Жизни_Конвея",
+      "formula": "alive ↔ 2-3 живых соседа",
+      "symbol": "GoL_∇",
+      "formula_type": "automaton",
+      "domain": "automaton",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Шаг игры Жизни Конвея",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.механизм_внимания",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "механизм_внимания",
+      "formula": "softmax(QK^T/√d_k) V",
+      "symbol": "Attn",
+      "formula_type": "nn",
+      "domain": "nn",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Механизм внимания (scaled dot-product)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.обратное_распространение",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "обратное_распространение",
+      "formula": "∂L/∂w = ∂L/∂y · ∂y/∂w",
+      "symbol": "∇bp",
+      "formula_type": "nn",
+      "domain": "nn",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Обратное распространение ошибки",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.ReLU_активация",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "ReLU_активация",
+      "formula": "max(0, x)",
+      "symbol": "ReLU",
+      "formula_type": "nn",
+      "domain": "nn",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "ReLU-активация",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.кроссовер_ген",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "кроссовер_ген",
+      "formula": "(p1, p2) → (c1, c2), точка скрещивания",
+      "symbol": "×↔",
+      "formula_type": "ga",
+      "domain": "ga",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Генетический кроссовер",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.мутация_ген",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "мутация_ген",
+      "formula": "g' = g ⊕ bit-flip w.p. p_mut",
+      "symbol": "μ_g",
+      "formula_type": "ga",
+      "domain": "ga",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Генетическая мутация",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.фитнес_оценка",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "фитнес_оценка",
+      "formula": "fit(x) = ℓ(objective(x))",
+      "symbol": "fit",
+      "formula_type": "ga",
+      "domain": "ga",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Функция приспособленности",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.петля_обратной_связи",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "петля_обратной_связи",
+      "formula": "y(t) = T(u(t), y(t−Δt))",
+      "symbol": "↬_FB",
+      "formula_type": "cyber",
+      "domain": "cyber",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Обратная связь (feedback loop)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.гомеостаз_стабилизация",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "гомеостаз_стабилизация",
+      "formula": "dy/dt = f(y, u), u = K(r − y)",
+      "symbol": "⌂_H",
+      "formula_type": "cyber",
+      "domain": "cyber",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Гомеостатический регулятор",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.необходимое_разнообразие",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "необходимое_разнообразие",
+      "formula": "V_R ≥ V_D (Эшби)",
+      "symbol": "V_E",
+      "formula_type": "cyber",
+      "domain": "cyber",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Закон необходимого разнообразия Эшби",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.означивание_знака",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "означивание_знака",
+      "formula": "Sign = Signifier ⊕ Signified",
+      "symbol": "↯_сем",
+      "formula_type": "semio",
+      "domain": "semio",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Соссюровское означивание",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.миф_Бартса_2",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "миф_Бартса_2",
+      "formula": "Myth = Sign₁ (становится) Signifier₂",
+      "symbol": "Myth_2",
+      "formula_type": "semio",
+      "domain": "semio",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Миф как вторичная семиотическая система",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.денотация_коннотация",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "денотация_коннотация",
+      "formula": "Смысл = Den ⊕ Con",
+      "symbol": "⊕_кон",
+      "formula_type": "semio",
+      "domain": "semio",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Денотация + коннотация",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.интеграция_тени",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "интеграция_тени",
+      "formula": "Self = Ego ⊕ Shadow",
+      "symbol": "⊕_тень",
+      "formula_type": "jungian",
+      "domain": "jungian",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Интеграция тени (индивидуация)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.проекция_анимы",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "проекция_анимы",
+      "formula": "P(Anima) → Other",
+      "symbol": "↗_А",
+      "formula_type": "jungian",
+      "domain": "jungian",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Проекция анимы/анимуса",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.ИИТ_интеграция",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "ИИТ_интеграция",
+      "formula": "Φ = MI(X; X_c) — минимум разбиения",
+      "symbol": "Φ_IIT",
+      "formula_type": "conscious",
+      "domain": "conscious",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Интегрированная информация (Тономони)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.GWT_вещание",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "GWT_вещание",
+      "formula": "GWT: информация → глобальное рабочее пространство → широковещание",
+      "symbol": "GWT_B",
+      "formula_type": "conscious",
+      "domain": "conscious",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Глобальное рабочее пространство (Барс)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.мета_осознание",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "мета_осознание",
+      "formula": "M(t) = observe(thought(t))",
+      "symbol": "M_obs",
+      "formula_type": "mindful",
+      "domain": "mindful",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Метакогнитивное наблюдение",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.гамма_синхронизация",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "гамма_синхронизация",
+      "formula": "γ (40-100 Гц) синхронность",
+      "symbol": "γ_синх",
+      "formula_type": "neuro",
+      "domain": "neuro",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Гамма-ритм связывания",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.прунинг_синапсов",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "прунинг_синапсов",
+      "formula": "w_ij → 0 если ниже порога активности",
+      "symbol": "↓_prune",
+      "formula_type": "neuro",
+      "domain": "neuro",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Синаптический прунинг",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.эпохе_Гуссерля",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "эпохе_Гуссерля",
+      "formula": "ε⌬: (eidos) → (noema) — редукция",
+      "symbol": "ε⌬",
+      "formula_type": "phil",
+      "domain": "phil",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Феноменологическая редукция",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.Dasein_проект",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "Dasein_проект",
+      "formula": "Dasein = Бытие_к_смерти ⊕ Заброшенность ⊕ Проект",
+      "symbol": "D_proj",
+      "formula_type": "phil",
+      "domain": "phil",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Экзистенциальная структура Dasein",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.у_вэй_недеяние",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "у_вэй_недеяние",
+      "formula": "無為 = действие в недеянии",
+      "symbol": "無為",
+      "formula_type": "phil",
+      "domain": "phil",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Даосское у-вэй",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.шуньята_пустота",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "шуньята_пустота",
+      "formula": "Śūnyatā = ∅_смысл (форма=пустота)",
+      "symbol": "Śūnya",
+      "formula_type": "phil",
+      "domain": "phil",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Пустотность шуньята",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.нигредо_разложение",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "нигредо_разложение",
+      "formula": "Nigredo = calcinatio ⊕ separatio",
+      "symbol": "Nigredo",
+      "formula_type": "alchemy",
+      "domain": "alchemy",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Стадия нигредо (чёрное делание)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.альбедо_очищение",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "альбедо_очищение",
+      "formula": "Albedo = ablutio ⊕ sublimatio",
+      "symbol": "Albedo",
+      "formula_type": "alchemy",
+      "domain": "alchemy",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Стадия альбедо (белое делание)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.рубедо_соединение",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "рубедо_соединение",
+      "formula": "Rubedo = coniunctio ⊕ coagulatio",
+      "symbol": "Rubedo",
+      "formula_type": "alchemy",
+      "domain": "alchemy",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Стадия рубедо (красное делание)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.alchemical_свадьба",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "alchemical_свадьба",
+      "formula": "✶ = Sol ⊕ Luna → Lapis",
+      "symbol": "✶_coniunctio",
+      "formula_type": "alchemy",
+      "domain": "alchemy",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Алхимическая свадьба Солнца и Луны",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.цимцум_сокрытие",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "цимцум_сокрытие",
+      "formula": "Tzimtzum: Эйн_Соф → ∅ → Мир",
+      "symbol": "Tzimtzum",
+      "formula_type": "kabbalah",
+      "domain": "kabbalah",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Цимцум (сокращение Бесконечного)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.нисхождение_сфирот",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "нисхождение_сфирот",
+      "formula": "Кетер → Хохма → Бина → Хесед → Гвура → Тиферет → ... → Малкут",
+      "symbol": "Sefirot_↓",
+      "formula_type": "kabbalah",
+      "domain": "kabbalah",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Нисхождение 10 сфирот",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.бросание_гексаграммы",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "бросание_гексаграммы",
+      "formula": "Hexagram = line1 ⊕ line2 ⊕ ... ⊕ line6",
+      "symbol": "☰_И",
+      "formula_type": "iching",
+      "domain": "iching",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Бросание монет/мелкостей для гексаграммы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.изменяющаяся_линия",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "изменяющаяся_линия",
+      "formula": "yang→yin (старая ян) / yin→yang (старая инь)",
+      "symbol": "↯_Ицзин",
+      "formula_type": "iching",
+      "domain": "iching",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Изменяющиеся линии гексаграммы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.расклад_таро",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "расклад_таро",
+      "formula": "Spread = позиция ⊗ значение_аркан",
+      "symbol": "◑_Tarot",
+      "formula_type": "tarot",
+      "domain": "tarot",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Расклад карт Таро",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.перевёрнутая_карта",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "перевёрнутая_карта",
+      "formula": "Reverse: meaning → shadow_meaning",
+      "symbol": "↺_Tarot",
+      "formula_type": "tarot",
+      "domain": "tarot",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Перевёрнутое значение аркана",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.цветок_жизни_сборка",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "цветок_жизни_сборка",
+      "formula": "FoL = 19 кругов в шестигранной симметрии",
+      "symbol": "✿_FoL",
+      "formula_type": "sacred",
+      "domain": "sacred",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Цветок жизни (19 кругов)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.платоново_тело_свёртка",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "платоново_тело_свёртка",
+      "formula": "5 тел: тетраэдр, гексаэдр, октаэдр, додекаэдр, икосаэдр",
+      "symbol": "Φ_plat",
+      "formula_type": "sacred",
+      "domain": "sacred",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Свёртка платоновых тел",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.эмерджентный_каскад",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "эмерджентный_каскад",
+      "formula": "Em(Parts) = System_свойства ≠ Σ(parts)",
+      "symbol": "Em⇒",
+      "formula_type": "system",
+      "domain": "system",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Эмерджентность системы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.симбиоз_сопряжение",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "симбиоз_сопряжение",
+      "formula": "Symbiosis = Mutualism ⊕ Commensalism ⊕ Parasitism",
+      "symbol": "⊕_симб",
+      "formula_type": "eco",
+      "domain": "eco",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Симбиотическая связь",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.сукцессия_экологическая",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "сукцессия_экологическая",
+      "formula": "Pioneer → Climax via stages",
+      "symbol": "→_succ",
+      "formula_type": "eco",
+      "domain": "eco",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Экологическая сукцессия",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.бифуркация_удвоения",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "бифуркация_удвоения",
+      "formula": "Period T → 2T at parameter bifurcation",
+      "symbol": "Bif_2",
+      "formula_type": "chaos",
+      "domain": "chaos",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Бифуркация удвоения периода",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.показатель_Ляпунова",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "показатель_Ляпунова",
+      "formula": "λ_L = lim (1/t) ln|δx(t)/δx(0)|",
+      "symbol": "λ_L",
+      "formula_type": "chaos",
+      "domain": "chaos",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Старший показатель Ляпунова",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.странный_аттрактор_Лоренц",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "странный_аттрактор_Лоренц",
+      "formula": "ẋ = σ(y−x), ẏ = x(ρ−z) − y, ż = xy − βz",
+      "symbol": "L_atr",
+      "formula_type": "chaos",
+      "domain": "chaos",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Аттрактор Лоренца",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.small_world_степень",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "small_world_степень",
+      "formula": "L ~ log(N)/log(k)",
+      "symbol": "L(ℓ)",
+      "formula_type": "network",
+      "domain": "network",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Длина пути малого мира",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.scale_free_распределение",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "scale_free_распределение",
+      "formula": "P(k) ~ k^(−γ), γ ∈ [2, 3]",
+      "symbol": "P(k)",
+      "formula_type": "network",
+      "domain": "network",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Степенное распределение Барабаси",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.гармонический_ряд_обертонов",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "гармонический_ряд_обертонов",
+      "formula": "f_n = n · f_0, n=1,2,3,...",
+      "symbol": "H_n",
+      "formula_type": "music",
+      "domain": "music",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Натуральный обертоновый ряд",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.ракоход_обращение",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "ракоход_обращение",
+      "formula": "Retro(P) = rev(P), Inv(P) = −P (по интервалам)",
+      "symbol": "Retro_Inv",
+      "formula_type": "music",
+      "domain": "music",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Ракоход и обращение темы",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.контрапункт_двойной",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "контрапункт_двойной",
+      "formula": "Голоса A, B обмениваются высотами",
+      "symbol": "CP_2",
+      "formula_type": "music",
+      "domain": "music",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Двойной контрапункт в октаву",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.тенсегрити_баланс",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "тенсегрити_баланс",
+      "formula": "Сжатие ⊗ Натяжение = самоустойчивая структура",
+      "symbol": "TGR_Φ",
+      "formula_type": "arch",
+      "domain": "arch",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Баланс тенсегрити Фуллера",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.геодезический_узел",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "геодезический_узел",
+      "formula": "Частота ν подразделения икосаэдра",
+      "symbol": "Geo_D",
+      "formula_type": "arch",
+      "domain": "arch",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Геодезический купол (Фуллер)",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.ESS_стратегия",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "ESS_стратегия",
+      "formula": "ESS: E(S,S) > E(T,S) или E(S,S)=E(T,S) и E(S,T)>E(T,T)",
+      "symbol": "ESS",
+      "formula_type": "game",
+      "domain": "game",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Эволюционно стабильная стратегия",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.минимакс_Неймана",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "минимакс_Неймана",
+      "formula": "v = max_p min_q p^T A q = min_q max_p p^T A q",
+      "symbol": "MiniMax",
+      "formula_type": "game",
+      "domain": "game",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Минимакс фон Неймана",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.байесовское_обновление",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "байесовское_обновление",
+      "formula": "P(H|D) = P(D|H)P(H)/P(D)",
+      "symbol": "Bayes_↑",
+      "formula_type": "decision",
+      "domain": "decision",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Байесовское обновление",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.expected_utility",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "expected_utility",
+      "formula": "EU(a) = Σ_i P(s_i) · u(a, s_i)",
+      "symbol": "EU",
+      "formula_type": "decision",
+      "domain": "decision",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Ожидаемая полезность",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.antifragile_Талеб",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "antifragile_Талеб",
+      "formula": "AntiF: f(x) возрастает от волатильности",
+      "symbol": "AntiF",
+      "formula_type": "decision",
+      "domain": "decision",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Антихрупкость",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.вентиль_Адамара",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "вентиль_Адамара",
+      "formula": "H|0⟩ = (|0⟩+|1⟩)/√2, H|1⟩ = (|0⟩−|1⟩)/√2",
+      "symbol": "H_gate",
+      "formula_type": "qinfo",
+      "domain": "qinfo",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Вентиль Адамара",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.CNOT_вентиль",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "CNOT_вентиль",
+      "formula": "|a,b⟩ → |a, a⊕b⟩",
+      "symbol": "CNOT",
+      "formula_type": "qinfo",
+      "domain": "qinfo",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Controlled-NOT вентиль",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.алгоритм_Шора",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "алгоритм_Шора",
+      "formula": "Shor(N): период r → gcd(a^(r/2)±1, N)",
+      "symbol": "Shor_A",
+      "formula_type": "qinfo",
+      "domain": "qinfo",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Алгоритм Шора факторизации",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.алгоритм_Гровера",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "алгоритм_Гровера",
+      "formula": "O(√N) итераций для поиска",
+      "symbol": "Grover_A",
+      "formula_type": "qinfo",
+      "domain": "qinfo",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Алгоритм Гровера",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.телепортация_кубита",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "телепортация_кубита",
+      "formula": "|ψ⟩: A → B через EPR + классический канал",
+      "symbol": "Telep",
+      "formula_type": "qinfo",
+      "domain": "qinfo",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Квантовая телепортация",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.бритва_Оккама_опер",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "бритва_Оккама_опер",
+      "formula": "OC_✂: удаление лишних сущностей",
+      "symbol": "OC_✂",
+      "formula_type": "meta_principle",
+      "domain": "meta_principle",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Бритва Оккама как оператор",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.принцип_Парето_опер",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "принцип_Парето_опер",
+      "formula": "80% эффекта от 20% причин",
+      "symbol": "P_80_20",
+      "formula_type": "meta_principle",
+      "domain": "meta_principle",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Принцип Парето",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.антропный_принцип_опер",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "антропный_принцип_опер",
+      "formula": "Anth: наблюдатель ∈ условия наблюдения",
+      "symbol": "Anth_Φ",
+      "formula_type": "meta_principle",
+      "domain": "meta_principle",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Антропный принцип",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.энтропия_Бекенштейна_Хокинга",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "энтропия_Бекенштейна_Хокинга",
+      "formula": "S_BH = A/(4Gℏ) (площадь горизонта)",
+      "symbol": "S_BH",
+      "formula_type": "holographic",
+      "domain": "holographic",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Энтропия чёрной дыры",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.морфический_резонанс_опер",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "морфический_резонанс_опер",
+      "formula": "Morph_R: форма ←→ форма через морфогенетическое поле",
+      "symbol": "Morph_R",
+      "formula_type": "morphic",
+      "domain": "morphic",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Морфический резонанс Шелдрейка",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.морфогенез_Тьюринга",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "морфогенез_Тьюринга",
+      "formula": "∂u/∂t = D_u ∇²u + f(u,v), ∂v/∂t = D_v ∇²v + g(u,v)",
+      "symbol": "Turing_M",
+      "formula_type": "morphic",
+      "domain": "morphic",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Реакция-диффузия Тьюринга",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.Orch_OR_опер",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "Orch_OR_опер",
+      "formula": "Orch OR: Tubulin_суперпозиция → OR_редукция → consciousness",
+      "symbol": "Orch_OR",
+      "formula_type": "orch",
+      "domain": "orch",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Оркестрированная объективная редукция",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.fork_симуляции_опер",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "fork_симуляции_опер",
+      "formula": "Sim_fork: состояние → ветвление реальностей",
+      "symbol": "Sim_fork",
+      "formula_type": "sim",
+      "domain": "sim",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Ветвление (fork) симуляции",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  },
+  {
+    "id": "formula.render_наблюдателя",
+    "entity_type": "formula",
+    "namespace": "formula",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "render_наблюдателя",
+      "formula": "Rend_Obs: квантовая_суперпозиция → рендеринг под наблюдателя",
+      "symbol": "Rend_Obs",
+      "formula_type": "sim",
+      "domain": "sim",
+      "variables": []
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": "Рендеринг наблюдателя",
+      "synonyms": [],
+      "query_phrases": [],
+      "status": "semantic_pending"
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "OPERATORS"
+      ],
+      "source_json_paths": [],
+      "extraction_method": "python"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "hard_limit": null
+    },
+    "relations": {
+      "related_to": [],
+      "conflicts_with": [],
+      "requires": [],
+      "incompatible_with": []
+    },
+    "audit": {
+      "formula_found_verbatim": true,
+      "scientific_validity_checked": false,
+      "needs_human_review": true
+    }
+  }
+]

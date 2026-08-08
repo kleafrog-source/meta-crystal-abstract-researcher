@@ -1,0 +1,62 @@
+{
+  "report_timestamp": "2026-08-08T16:16:04.498047",
+  "total_entries": 708,
+  "entity_types": {
+    "generation_parameter": {
+      "total": 10,
+      "source_description_found": 10,
+      "semantic_pending": 0,
+      "not_available": 0,
+      "needs_human_review": 10
+    },
+    "domain": {
+      "total": 76,
+      "source_description_found": 76,
+      "semantic_pending": 0,
+      "not_available": 0,
+      "needs_human_review": 76
+    },
+    "structural_pattern": {
+      "total": 103,
+      "source_description_found": 103,
+      "semantic_pending": 0,
+      "not_available": 0,
+      "needs_human_review": 103
+    },
+    "metric": {
+      "total": 8,
+      "source_description_found": 8,
+      "semantic_pending": 0,
+      "not_available": 0,
+      "needs_human_review": 8
+    },
+    "operator": {
+      "total": 196,
+      "source_description_found": 196,
+      "semantic_pending": 0,
+      "not_available": 0,
+      "needs_human_review": 196
+    },
+    "formula": {
+      "total": 135,
+      "source_description_found": 135,
+      "semantic_pending": 0,
+      "not_available": 0,
+      "needs_human_review": 135
+    },
+    "constant": {
+      "total": 9,
+      "source_description_found": 9,
+      "semantic_pending": 0,
+      "not_available": 0,
+      "needs_human_review": 9
+    },
+    "lexical_category": {
+      "total": 171,
+      "source_description_found": 171,
+      "semantic_pending": 0,
+      "not_available": 0,
+      "needs_human_review": 171
+    }
+  }
+}

@@ -65,6 +65,7 @@ export {
   Cog,
   Sliders,
   GitBranch,
+  Clock,
   type LucideProps,
 } from "lucide-react";
 
