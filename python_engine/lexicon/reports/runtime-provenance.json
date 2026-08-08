@@ -1,5 +1,5 @@
 {
-  "extraction_timestamp": "2026-08-08T04:32:39.806607",
+  "extraction_timestamp": "2026-08-08T05:17:01.179330",
   "source_files": {
     "engine": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py",
     "sidecar": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\sidecar.py",
@@ -9,7 +9,7 @@
   "extraction_summary": {
     "generation_parameters": 10,
     "domain_flags": 76,
-    "structural_patterns": 23,
+    "structural_patterns": 103,
     "metrics": 8
   },
   "runtime_chain": [

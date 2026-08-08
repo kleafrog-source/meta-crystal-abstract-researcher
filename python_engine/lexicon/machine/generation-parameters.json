@@ -1,6 +1,6 @@
 [
   {
-    "id": "param.generations",
+    "id": "generation.generations",
     "entity_type": "generation_parameter",
     "namespace": "generation",
     "status": "machine_extracted",
@@ -13,6 +13,7 @@
       "min_value": null,
       "max_value": null,
       "hard_limit": null,
+      "limit_status": "not_found_in_code",
       "unit": null,
       "runtime_used": true,
       "ui_accessible": true
@@ -67,12 +68,12 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T04:32:39.686070",
+      "last_verified_at": "2026-08-08T05:17:00.849399",
       "notes": "Extracted from runtime code"
     }
   },
   {
-    "id": "param.batch",
+    "id": "generation.batch",
     "entity_type": "generation_parameter",
     "namespace": "generation",
     "status": "machine_extracted",
@@ -85,6 +86,7 @@
       "min_value": null,
       "max_value": null,
       "hard_limit": null,
+      "limit_status": "not_found_in_code",
       "unit": null,
       "runtime_used": true,
       "ui_accessible": true
@@ -139,12 +141,12 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T04:32:39.686146",
+      "last_verified_at": "2026-08-08T05:17:00.849474",
       "notes": "Extracted from runtime code"
     }
   },
   {
-    "id": "param.top",
+    "id": "generation.top",
     "entity_type": "generation_parameter",
     "namespace": "generation",
     "status": "machine_extracted",
@@ -157,6 +159,7 @@
       "min_value": null,
       "max_value": null,
       "hard_limit": null,
+      "limit_status": "not_found_in_code",
       "unit": null,
       "runtime_used": true,
       "ui_accessible": true
@@ -211,12 +214,12 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T04:32:39.686166",
+      "last_verified_at": "2026-08-08T05:17:00.849498",
       "notes": "Extracted from runtime code"
     }
   },
   {
-    "id": "param.max_depth",
+    "id": "generation.max_depth",
     "entity_type": "generation_parameter",
     "namespace": "generation",
     "status": "machine_extracted",
@@ -229,6 +232,7 @@
       "min_value": null,
       "max_value": null,
       "hard_limit": null,
+      "limit_status": "not_found_in_code",
       "unit": null,
       "runtime_used": true,
       "ui_accessible": true
@@ -283,12 +287,12 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T04:32:39.686177",
+      "last_verified_at": "2026-08-08T05:17:00.849512",
       "notes": "Extracted from runtime code"
     }
   },
   {
-    "id": "param.max_elements",
+    "id": "generation.max_elements",
     "entity_type": "generation_parameter",
     "namespace": "generation",
     "status": "machine_extracted",
@@ -301,6 +305,7 @@
       "min_value": null,
       "max_value": null,
       "hard_limit": null,
+      "limit_status": "not_found_in_code",
       "unit": null,
       "runtime_used": true,
       "ui_accessible": true
@@ -355,12 +360,12 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T04:32:39.686193",
+      "last_verified_at": "2026-08-08T05:17:00.849530",
       "notes": "Extracted from runtime code"
     }
   },
   {
-    "id": "param.use_irrational",
+    "id": "generation.use_irrational",
     "entity_type": "generation_parameter",
     "namespace": "generation",
     "status": "machine_extracted",
@@ -373,6 +378,7 @@
       "min_value": null,
       "max_value": null,
       "hard_limit": null,
+      "limit_status": "not_found_in_code",
       "unit": null,
       "runtime_used": true,
       "ui_accessible": true
@@ -427,12 +433,12 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T04:32:39.686209",
+      "last_verified_at": "2026-08-08T05:17:00.849548",
       "notes": "Extracted from runtime code"
     }
   },
   {
-    "id": "param.use_imaginary",
+    "id": "generation.use_imaginary",
     "entity_type": "generation_parameter",
     "namespace": "generation",
     "status": "machine_extracted",
@@ -445,6 +451,7 @@
       "min_value": null,
       "max_value": null,
       "hard_limit": null,
+      "limit_status": "not_found_in_code",
       "unit": null,
       "runtime_used": true,
       "ui_accessible": true
@@ -499,12 +506,12 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T04:32:39.686225",
+      "last_verified_at": "2026-08-08T05:17:00.849564",
       "notes": "Extracted from runtime code"
     }
   },
   {
-    "id": "param.use_infinity",
+    "id": "generation.use_infinity",
     "entity_type": "generation_parameter",
     "namespace": "generation",
     "status": "machine_extracted",
@@ -517,6 +524,7 @@
       "min_value": null,
       "max_value": null,
       "hard_limit": null,
+      "limit_status": "not_found_in_code",
       "unit": null,
       "runtime_used": true,
       "ui_accessible": true
@@ -571,12 +579,12 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T04:32:39.686236",
+      "last_verified_at": "2026-08-08T05:17:00.849580",
       "notes": "Extracted from runtime code"
     }
   },
   {
-    "id": "param.invert_probability",
+    "id": "generation.invert_probability",
     "entity_type": "generation_parameter",
     "namespace": "generation",
     "status": "machine_extracted",
@@ -589,6 +597,7 @@
       "min_value": null,
       "max_value": null,
       "hard_limit": null,
+      "limit_status": "not_found_in_code",
       "unit": null,
       "runtime_used": true,
       "ui_accessible": true
@@ -643,12 +652,12 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T04:32:39.690332",
+      "last_verified_at": "2026-08-08T05:17:00.849995",
       "notes": "Extracted from runtime code"
     }
   },
   {
-    "id": "param.psychology_probability",
+    "id": "generation.psychology_probability",
     "entity_type": "generation_parameter",
     "namespace": "generation",
     "status": "machine_extracted",
@@ -661,6 +670,7 @@
       "min_value": null,
       "max_value": null,
       "hard_limit": null,
+      "limit_status": "not_found_in_code",
       "unit": null,
       "runtime_used": true,
       "ui_accessible": true
@@ -715,7 +725,7 @@
       "verified_in_runtime": true,
       "verified_in_ui": true,
       "verified_in_sidecar": true,
-      "last_verified_at": "2026-08-08T04:32:39.690394",
+      "last_verified_at": "2026-08-08T05:17:00.850041",
       "notes": "Extracted from runtime code"
     }
   }

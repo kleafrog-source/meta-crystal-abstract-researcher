@@ -143,42 +143,28 @@ def extract_structural_patterns() -> List[Dict[str, Any]]:
     if not content:
         return []
     
-    # Look for STRUCTURAL_PATTERNS or similar pattern lists
+    # Look for STRUCTURAL_PATTERNS list
     patterns = []
     
     # Try to find pattern list
     pattern_match = re.search(
-        r'STRUCTURAL_PATTERNS\s*=\s*\[(.*?)\]',
+        r'STRUCTURAL_PATTERNS\s*=\s*\[(.*?)\n\]',
         content,
         re.DOTALL
     )
     
     if pattern_match:
         patterns_text = pattern_match.group(1)
-        # Extract pattern names (strings)
-        string_pattern = re.compile(r'"([^"]+)"')
-        for match in string_pattern.finditer(patterns_text):
-            patterns.append({
-                "name": match.group(1),
-                "source": "STRUCTURAL_PATTERNS"
-            })
-    
-    # Also check for pattern definitions in get_random_pattern
-    if not patterns:
-        # Look for pattern dictionaries
-        pattern_dict_match = re.search(
-            r'patterns\s*=\s*\[(.*?)\]',
-            content,
-            re.DOTALL
-        )
-        if pattern_dict_match:
-            patterns_text = pattern_dict_match.group(1)
-            # Extract pattern names from dictionaries
-            name_pattern = re.compile(r'"name":\s*"([^"]+)"')
-            for match in name_pattern.finditer(patterns_text):
+        # Extract pattern names from dictionary entries: {"name": "pattern_name", ...}
+        # Use a more specific pattern to match the name field value
+        name_pattern = re.compile(r'\{\s*"name":\s*"([^"]+)"')
+        for match in name_pattern.finditer(patterns_text):
+            pattern_name = match.group(1)
+            # Skip if it's a key name (shouldn't happen with this pattern)
+            if pattern_name not in ["name", "template", "complexity"]:
                 patterns.append({
-                    "name": match.group(1),
-                    "source": "pattern_dict"
+                    "name": pattern_name,
+                    "source": "STRUCTURAL_PATTERNS"
                 })
     
     print(f"Found {len(patterns)} structural patterns")
@@ -279,7 +265,7 @@ def extract_metrics() -> List[Dict[str, Any]]:
 def create_parameter_entry(param_name: str, param_info: Dict, provenance: Dict) -> Dict:
     """Create a lexicon entry for a generation parameter."""
     return {
-        "id": f"param.{param_name}",
+        "id": f"generation.{param_name}",
         "entity_type": "generation_parameter",
         "namespace": "generation",
         "status": "machine_extracted",
@@ -292,6 +278,7 @@ def create_parameter_entry(param_name: str, param_info: Dict, provenance: Dict) 
             "min_value": None,
             "max_value": None,
             "hard_limit": None,
+            "limit_status": "not_found_in_code",
             "unit": None,
             "runtime_used": True,
             "ui_accessible": True

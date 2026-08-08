@@ -1,0 +1,1038 @@
+{
+  "validation_timestamp": "2026-08-08T05:17:13.983941",
+  "summary": {
+    "total_files": 4,
+    "valid_files": 4,
+    "invalid_files": 0,
+    "total_entries": 197,
+    "valid_entries": 197,
+    "invalid_entries": 0
+  },
+  "cross_file_issues": {
+    "duplicate_ids": [],
+    "unresolved_relations": {}
+  },
+  "file_results": [
+    {
+      "file": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\lexicon\\machine\\generation-parameters.json",
+      "entity_type": "generation_parameter",
+      "valid": true,
+      "entries": [
+        {
+          "id": "generation.generations",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "generation.batch",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "generation.top",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "generation.max_depth",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "generation.max_elements",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "generation.use_irrational",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "generation.use_imaginary",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "generation.use_infinity",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "generation.invert_probability",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "generation.psychology_probability",
+          "valid": true,
+          "errors": []
+        }
+      ],
+      "duplicate_ids": [],
+      "unresolved_relations": {}
+    },
+    {
+      "file": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\lexicon\\machine\\domain-flags.json",
+      "entity_type": "domain",
+      "valid": true,
+      "entries": [
+        {
+          "id": "domain.enable_linguistics",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_morpheme_generation",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_linguistic_principles",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_quantum",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_fractal",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_psychology",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_metrics",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_auto_correction",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_learning",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_saving",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_cataloging",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_derivative_first",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_derivative_second",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_eqgft",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_ethical_archon",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_bell_nonlocality",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_context_weaver",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_garden_between",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_meta_fractal_craft",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_json_prompt",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_quantum_geometry",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_research",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_fair_division",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_category_theory",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_algebra",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_knot_theory",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_number_theory",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_measure_probability",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_graph_combinatorics",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_optimization",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_thermodynamics",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_stat_mechanics",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_relativity",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_string_theory",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_cosmology",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_qft",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_condensed_matter",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_complexity",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_cryptography",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_automata",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_neural_nets",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_evolutionary",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_cybernetics",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_semiotics",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_phonology_typology",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_writing_systems",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_jungian",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_cognitive_bias",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_consciousness",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_mindfulness",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_neuroscience",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_philosophy",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_eastern_phil",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_hermeticism",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_process_phil",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_alchemy",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_kabbalah",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_iching",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_tarot",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_sacred_geometry",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_vedic",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_systems_ecology",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_permaculture",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_biomimicry",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_chaos_dynamics",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_network_science",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_music_art",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_architecture",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_game_theory",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_decision_theory",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_holographic",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_morphic_resonance",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_orch_or",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_simulation_hyp",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_quantum_info",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "domain.enable_metaprinciples",
+          "valid": true,
+          "errors": []
+        }
+      ],
+      "duplicate_ids": [],
+      "unresolved_relations": {}
+    },
+    {
+      "file": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\lexicon\\machine\\structural-patterns.json",
+      "entity_type": "structural_pattern",
+      "valid": true,
+      "entries": [
+        {
+          "id": "pattern.линейный",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.степенной",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.вложенный_прост",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.вложенный_глуб",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.многомерный",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.парадоксальный",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.динамический",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.голографический",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.петлевой",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.фрактальный",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.квантовый",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.рефлексивный",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.квантово-фрактальный",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.семантический_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.MMSS-квантовый_стек",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.золотое_сечение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.лингвистический_принцип",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.двойные_предлоги",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.json_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.промпт_анимация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.геометрическая_динамика",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.фибровый_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.исследовательский_протокол",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.научный_прорыв",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.справедливый_дележ",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.аллокационный_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.роторный_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.zitter_генерация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.топологическая_квантация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.этическая_аннигиляция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.архонт_конденсация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.чистая_ценность",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.CHSH_нарушение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.спиновая_корреляция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.EPR_цепь",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.ткачество_реальности",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.абсолютная_контекстуальность",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.фрактальное_ткачество",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.хаос_интеграция",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.фрактальная_обрезка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.паттерн_рекурсия_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.контекст_сжатие_петля",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.многомерная_фузия_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.функторный_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.монадический_связка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Yoneda_проецирование",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.алгебра_Ли_коммутатор",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.факторгруппа_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Райдемейстер_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.хиральность_инверсия",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.дзета_гипотеза_связка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.эйлерова_функция_связка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.хроматический_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.матроид_ранг_связка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.градиентный_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Лагранж_двойственность",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.энтропийный_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.больцман_статсумма",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Лоренц_инвариант",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.инфляционный_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Фейнман_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.BCS_топологический_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Карп_сведение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.RSA_нуль_разглашение",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Вольфрам_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.attention_transformer",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.backprop_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.softmax_ReLU_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.генетический_цикл",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.элитарный_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.гомеостаз_петля",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.необходимое_разнообразие",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Бартс_миф_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Соссюр_означивание",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.индивидуация_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.ИИТ_GWT_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.мета_осознание_гамма",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.нейропластичность_прунинг",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.феноменологический_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.даосский_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.алхимическое_делание",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.алхимическая_свадьба_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.цимцум_сфирот_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.гексаграмма_изменения",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.расклад_кельтский_крест",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.цветок_жизни_платонов",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.эмерджентный_каскад_экология",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.сукцессия_симбиоз",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.бифуркация_Ляпунов_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.странный_аттрактор_связка",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.small_world_Барабаси",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.обертоны_контрапункт",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.тенсегрити_геодезический",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Нэш_эволюция_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.кооперативная_игра_Шепли",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Байес_антихрупкость",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Адамар_КНОТ_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Шор_Гровер_телепортация",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Оккам_Парето_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.AdS_CFT_энтропия_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.морфический_Тьюринг_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.Orch_OR_сознание_каскад",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "pattern.симуляция_fork_render",
+          "valid": true,
+          "errors": []
+        }
+      ],
+      "duplicate_ids": [],
+      "unresolved_relations": {}
+    },
+    {
+      "file": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\lexicon\\machine\\metrics.json",
+      "entity_type": "metric",
+      "valid": true,
+      "entries": [
+        {
+          "id": "metric.V",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "metric.S",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "metric.N",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "metric.D_f",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "metric.G_S",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "metric.QEC",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "metric.CHSH",
+          "valid": true,
+          "errors": []
+        },
+        {
+          "id": "metric.C_val",
+          "valid": true,
+          "errors": []
+        }
+      ],
+      "duplicate_ids": [],
+      "unresolved_relations": {}
+    }
+  ]
+}

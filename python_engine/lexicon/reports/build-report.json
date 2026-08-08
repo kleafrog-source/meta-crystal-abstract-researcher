@@ -1,0 +1,34 @@
+{
+  "build_timestamp": "2026-08-08T05:17:33.159847",
+  "snapshot": "lexicon_snapshot_20260808_051733",
+  "summary": {
+    "total_entries": 197,
+    "entity_types": [
+      "generation_parameter",
+      "domain",
+      "structural_pattern",
+      "metric"
+    ]
+  },
+  "machine_layer": {
+    "files": [
+      "generation-parameters.json",
+      "domain-flags.json",
+      "structural-patterns.json",
+      "metrics.json"
+    ],
+    "entries_count": {
+      "generation_parameter": 10,
+      "domain": 76,
+      "structural_pattern": 103,
+      "metric": 8
+    }
+  },
+  "semantic_layer": {
+    "has_data": false,
+    "entries_count": {}
+  },
+  "relations": {
+    "has_data": false
+  }
+}

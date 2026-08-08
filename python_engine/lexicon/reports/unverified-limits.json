@@ -1,0 +1,3570 @@
+{
+  "report_timestamp": "2026-08-08T05:18:51.511433",
+  "summary": {
+    "total_entries_checked": 197,
+    "unverified_entries": 197,
+    "verified_entries": 0,
+    "limit_status_breakdown": {
+      "not_found_in_code": 10,
+      "unknown": 187
+    }
+  },
+  "unverified_entries": [
+    {
+      "id": "generation.generations",
+      "entity_type": "generation_parameter",
+      "name": "generations",
+      "limit_status": "not_found_in_code",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "generation.batch",
+      "entity_type": "generation_parameter",
+      "name": "batch",
+      "limit_status": "not_found_in_code",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "generation.top",
+      "entity_type": "generation_parameter",
+      "name": "top",
+      "limit_status": "not_found_in_code",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "generation.max_depth",
+      "entity_type": "generation_parameter",
+      "name": "max_depth",
+      "limit_status": "not_found_in_code",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "generation.max_elements",
+      "entity_type": "generation_parameter",
+      "name": "max_elements",
+      "limit_status": "not_found_in_code",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "generation.use_irrational",
+      "entity_type": "generation_parameter",
+      "name": "use_irrational",
+      "limit_status": "not_found_in_code",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "generation.use_imaginary",
+      "entity_type": "generation_parameter",
+      "name": "use_imaginary",
+      "limit_status": "not_found_in_code",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "generation.use_infinity",
+      "entity_type": "generation_parameter",
+      "name": "use_infinity",
+      "limit_status": "not_found_in_code",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "generation.invert_probability",
+      "entity_type": "generation_parameter",
+      "name": "invert_probability",
+      "limit_status": "not_found_in_code",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "generation.psychology_probability",
+      "entity_type": "generation_parameter",
+      "name": "psychology_probability",
+      "limit_status": "not_found_in_code",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_linguistics",
+      "entity_type": "domain",
+      "name": "enable_linguistics",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_morpheme_generation",
+      "entity_type": "domain",
+      "name": "enable_morpheme_generation",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_linguistic_principles",
+      "entity_type": "domain",
+      "name": "enable_linguistic_principles",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_quantum",
+      "entity_type": "domain",
+      "name": "enable_quantum",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_fractal",
+      "entity_type": "domain",
+      "name": "enable_fractal",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_psychology",
+      "entity_type": "domain",
+      "name": "enable_psychology",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_metrics",
+      "entity_type": "domain",
+      "name": "enable_metrics",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_auto_correction",
+      "entity_type": "domain",
+      "name": "enable_auto_correction",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_learning",
+      "entity_type": "domain",
+      "name": "enable_learning",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_saving",
+      "entity_type": "domain",
+      "name": "enable_saving",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_cataloging",
+      "entity_type": "domain",
+      "name": "enable_cataloging",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_derivative_first",
+      "entity_type": "domain",
+      "name": "enable_derivative_first",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_derivative_second",
+      "entity_type": "domain",
+      "name": "enable_derivative_second",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_eqgft",
+      "entity_type": "domain",
+      "name": "enable_eqgft",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_ethical_archon",
+      "entity_type": "domain",
+      "name": "enable_ethical_archon",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_bell_nonlocality",
+      "entity_type": "domain",
+      "name": "enable_bell_nonlocality",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_context_weaver",
+      "entity_type": "domain",
+      "name": "enable_context_weaver",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_garden_between",
+      "entity_type": "domain",
+      "name": "enable_garden_between",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_meta_fractal_craft",
+      "entity_type": "domain",
+      "name": "enable_meta_fractal_craft",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_json_prompt",
+      "entity_type": "domain",
+      "name": "enable_json_prompt",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_quantum_geometry",
+      "entity_type": "domain",
+      "name": "enable_quantum_geometry",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_research",
+      "entity_type": "domain",
+      "name": "enable_research",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_fair_division",
+      "entity_type": "domain",
+      "name": "enable_fair_division",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_category_theory",
+      "entity_type": "domain",
+      "name": "enable_category_theory",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_algebra",
+      "entity_type": "domain",
+      "name": "enable_algebra",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_knot_theory",
+      "entity_type": "domain",
+      "name": "enable_knot_theory",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_number_theory",
+      "entity_type": "domain",
+      "name": "enable_number_theory",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_measure_probability",
+      "entity_type": "domain",
+      "name": "enable_measure_probability",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_graph_combinatorics",
+      "entity_type": "domain",
+      "name": "enable_graph_combinatorics",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_optimization",
+      "entity_type": "domain",
+      "name": "enable_optimization",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_thermodynamics",
+      "entity_type": "domain",
+      "name": "enable_thermodynamics",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_stat_mechanics",
+      "entity_type": "domain",
+      "name": "enable_stat_mechanics",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_relativity",
+      "entity_type": "domain",
+      "name": "enable_relativity",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_string_theory",
+      "entity_type": "domain",
+      "name": "enable_string_theory",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_cosmology",
+      "entity_type": "domain",
+      "name": "enable_cosmology",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_qft",
+      "entity_type": "domain",
+      "name": "enable_qft",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_condensed_matter",
+      "entity_type": "domain",
+      "name": "enable_condensed_matter",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_complexity",
+      "entity_type": "domain",
+      "name": "enable_complexity",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_cryptography",
+      "entity_type": "domain",
+      "name": "enable_cryptography",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_automata",
+      "entity_type": "domain",
+      "name": "enable_automata",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_neural_nets",
+      "entity_type": "domain",
+      "name": "enable_neural_nets",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_evolutionary",
+      "entity_type": "domain",
+      "name": "enable_evolutionary",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_cybernetics",
+      "entity_type": "domain",
+      "name": "enable_cybernetics",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_semiotics",
+      "entity_type": "domain",
+      "name": "enable_semiotics",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_phonology_typology",
+      "entity_type": "domain",
+      "name": "enable_phonology_typology",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_writing_systems",
+      "entity_type": "domain",
+      "name": "enable_writing_systems",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_jungian",
+      "entity_type": "domain",
+      "name": "enable_jungian",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_cognitive_bias",
+      "entity_type": "domain",
+      "name": "enable_cognitive_bias",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_consciousness",
+      "entity_type": "domain",
+      "name": "enable_consciousness",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_mindfulness",
+      "entity_type": "domain",
+      "name": "enable_mindfulness",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_neuroscience",
+      "entity_type": "domain",
+      "name": "enable_neuroscience",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_philosophy",
+      "entity_type": "domain",
+      "name": "enable_philosophy",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_eastern_phil",
+      "entity_type": "domain",
+      "name": "enable_eastern_phil",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_hermeticism",
+      "entity_type": "domain",
+      "name": "enable_hermeticism",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_process_phil",
+      "entity_type": "domain",
+      "name": "enable_process_phil",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_alchemy",
+      "entity_type": "domain",
+      "name": "enable_alchemy",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_kabbalah",
+      "entity_type": "domain",
+      "name": "enable_kabbalah",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_iching",
+      "entity_type": "domain",
+      "name": "enable_iching",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_tarot",
+      "entity_type": "domain",
+      "name": "enable_tarot",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_sacred_geometry",
+      "entity_type": "domain",
+      "name": "enable_sacred_geometry",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_vedic",
+      "entity_type": "domain",
+      "name": "enable_vedic",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_systems_ecology",
+      "entity_type": "domain",
+      "name": "enable_systems_ecology",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_permaculture",
+      "entity_type": "domain",
+      "name": "enable_permaculture",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_biomimicry",
+      "entity_type": "domain",
+      "name": "enable_biomimicry",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_chaos_dynamics",
+      "entity_type": "domain",
+      "name": "enable_chaos_dynamics",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_network_science",
+      "entity_type": "domain",
+      "name": "enable_network_science",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_music_art",
+      "entity_type": "domain",
+      "name": "enable_music_art",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_architecture",
+      "entity_type": "domain",
+      "name": "enable_architecture",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_game_theory",
+      "entity_type": "domain",
+      "name": "enable_game_theory",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_decision_theory",
+      "entity_type": "domain",
+      "name": "enable_decision_theory",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_holographic",
+      "entity_type": "domain",
+      "name": "enable_holographic",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_morphic_resonance",
+      "entity_type": "domain",
+      "name": "enable_morphic_resonance",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_orch_or",
+      "entity_type": "domain",
+      "name": "enable_orch_or",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_simulation_hyp",
+      "entity_type": "domain",
+      "name": "enable_simulation_hyp",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_quantum_info",
+      "entity_type": "domain",
+      "name": "enable_quantum_info",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "domain.enable_metaprinciples",
+      "entity_type": "domain",
+      "name": "enable_metaprinciples",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.линейный",
+      "entity_type": "structural_pattern",
+      "name": "линейный",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.степенной",
+      "entity_type": "structural_pattern",
+      "name": "степенной",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.вложенный_прост",
+      "entity_type": "structural_pattern",
+      "name": "вложенный_прост",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.вложенный_глуб",
+      "entity_type": "structural_pattern",
+      "name": "вложенный_глуб",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.многомерный",
+      "entity_type": "structural_pattern",
+      "name": "многомерный",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.парадоксальный",
+      "entity_type": "structural_pattern",
+      "name": "парадоксальный",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.динамический",
+      "entity_type": "structural_pattern",
+      "name": "динамический",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.голографический",
+      "entity_type": "structural_pattern",
+      "name": "голографический",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.петлевой",
+      "entity_type": "structural_pattern",
+      "name": "петлевой",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.фрактальный",
+      "entity_type": "structural_pattern",
+      "name": "фрактальный",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.квантовый",
+      "entity_type": "structural_pattern",
+      "name": "квантовый",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.рефлексивный",
+      "entity_type": "structural_pattern",
+      "name": "рефлексивный",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.квантово-фрактальный",
+      "entity_type": "structural_pattern",
+      "name": "квантово-фрактальный",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.семантический_каскад",
+      "entity_type": "structural_pattern",
+      "name": "семантический_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.MMSS-квантовый_стек",
+      "entity_type": "structural_pattern",
+      "name": "MMSS-квантовый_стек",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.золотое_сечение",
+      "entity_type": "structural_pattern",
+      "name": "золотое_сечение",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.лингвистический_принцип",
+      "entity_type": "structural_pattern",
+      "name": "лингвистический_принцип",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.двойные_предлоги",
+      "entity_type": "structural_pattern",
+      "name": "двойные_предлоги",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.json_каскад",
+      "entity_type": "structural_pattern",
+      "name": "json_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.промпт_анимация",
+      "entity_type": "structural_pattern",
+      "name": "промпт_анимация",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.геометрическая_динамика",
+      "entity_type": "structural_pattern",
+      "name": "геометрическая_динамика",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.фибровый_каскад",
+      "entity_type": "structural_pattern",
+      "name": "фибровый_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.исследовательский_протокол",
+      "entity_type": "structural_pattern",
+      "name": "исследовательский_протокол",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.научный_прорыв",
+      "entity_type": "structural_pattern",
+      "name": "научный_прорыв",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.справедливый_дележ",
+      "entity_type": "structural_pattern",
+      "name": "справедливый_дележ",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.аллокационный_каскад",
+      "entity_type": "structural_pattern",
+      "name": "аллокационный_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.роторный_каскад",
+      "entity_type": "structural_pattern",
+      "name": "роторный_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.zitter_генерация",
+      "entity_type": "structural_pattern",
+      "name": "zitter_генерация",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.топологическая_квантация",
+      "entity_type": "structural_pattern",
+      "name": "топологическая_квантация",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.этическая_аннигиляция",
+      "entity_type": "structural_pattern",
+      "name": "этическая_аннигиляция",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.архонт_конденсация",
+      "entity_type": "structural_pattern",
+      "name": "архонт_конденсация",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.чистая_ценность",
+      "entity_type": "structural_pattern",
+      "name": "чистая_ценность",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.CHSH_нарушение",
+      "entity_type": "structural_pattern",
+      "name": "CHSH_нарушение",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.спиновая_корреляция",
+      "entity_type": "structural_pattern",
+      "name": "спиновая_корреляция",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.EPR_цепь",
+      "entity_type": "structural_pattern",
+      "name": "EPR_цепь",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.ткачество_реальности",
+      "entity_type": "structural_pattern",
+      "name": "ткачество_реальности",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.абсолютная_контекстуальность",
+      "entity_type": "structural_pattern",
+      "name": "абсолютная_контекстуальность",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.фрактальное_ткачество",
+      "entity_type": "structural_pattern",
+      "name": "фрактальное_ткачество",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.хаос_интеграция",
+      "entity_type": "structural_pattern",
+      "name": "хаос_интеграция",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.фрактальная_обрезка",
+      "entity_type": "structural_pattern",
+      "name": "фрактальная_обрезка",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.паттерн_рекурсия_каскад",
+      "entity_type": "structural_pattern",
+      "name": "паттерн_рекурсия_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.контекст_сжатие_петля",
+      "entity_type": "structural_pattern",
+      "name": "контекст_сжатие_петля",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.многомерная_фузия_каскад",
+      "entity_type": "structural_pattern",
+      "name": "многомерная_фузия_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.функторный_каскад",
+      "entity_type": "structural_pattern",
+      "name": "функторный_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.монадический_связка",
+      "entity_type": "structural_pattern",
+      "name": "монадический_связка",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Yoneda_проецирование",
+      "entity_type": "structural_pattern",
+      "name": "Yoneda_проецирование",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.алгебра_Ли_коммутатор",
+      "entity_type": "structural_pattern",
+      "name": "алгебра_Ли_коммутатор",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.факторгруппа_каскад",
+      "entity_type": "structural_pattern",
+      "name": "факторгруппа_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Райдемейстер_каскад",
+      "entity_type": "structural_pattern",
+      "name": "Райдемейстер_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.хиральность_инверсия",
+      "entity_type": "structural_pattern",
+      "name": "хиральность_инверсия",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.дзета_гипотеза_связка",
+      "entity_type": "structural_pattern",
+      "name": "дзета_гипотеза_связка",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.эйлерова_функция_связка",
+      "entity_type": "structural_pattern",
+      "name": "эйлерова_функция_связка",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.хроматический_каскад",
+      "entity_type": "structural_pattern",
+      "name": "хроматический_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.матроид_ранг_связка",
+      "entity_type": "structural_pattern",
+      "name": "матроид_ранг_связка",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.градиентный_каскад",
+      "entity_type": "structural_pattern",
+      "name": "градиентный_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Лагранж_двойственность",
+      "entity_type": "structural_pattern",
+      "name": "Лагранж_двойственность",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.энтропийный_каскад",
+      "entity_type": "structural_pattern",
+      "name": "энтропийный_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.больцман_статсумма",
+      "entity_type": "structural_pattern",
+      "name": "больцман_статсумма",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Лоренц_инвариант",
+      "entity_type": "structural_pattern",
+      "name": "Лоренц_инвариант",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.инфляционный_каскад",
+      "entity_type": "structural_pattern",
+      "name": "инфляционный_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Фейнман_каскад",
+      "entity_type": "structural_pattern",
+      "name": "Фейнман_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.BCS_топологический_каскад",
+      "entity_type": "structural_pattern",
+      "name": "BCS_топологический_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Карп_сведение",
+      "entity_type": "structural_pattern",
+      "name": "Карп_сведение",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.RSA_нуль_разглашение",
+      "entity_type": "structural_pattern",
+      "name": "RSA_нуль_разглашение",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Вольфрам_каскад",
+      "entity_type": "structural_pattern",
+      "name": "Вольфрам_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.attention_transformer",
+      "entity_type": "structural_pattern",
+      "name": "attention_transformer",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.backprop_каскад",
+      "entity_type": "structural_pattern",
+      "name": "backprop_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.softmax_ReLU_каскад",
+      "entity_type": "structural_pattern",
+      "name": "softmax_ReLU_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.генетический_цикл",
+      "entity_type": "structural_pattern",
+      "name": "генетический_цикл",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.элитарный_каскад",
+      "entity_type": "structural_pattern",
+      "name": "элитарный_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.гомеостаз_петля",
+      "entity_type": "structural_pattern",
+      "name": "гомеостаз_петля",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.необходимое_разнообразие",
+      "entity_type": "structural_pattern",
+      "name": "необходимое_разнообразие",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Бартс_миф_каскад",
+      "entity_type": "structural_pattern",
+      "name": "Бартс_миф_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Соссюр_означивание",
+      "entity_type": "structural_pattern",
+      "name": "Соссюр_означивание",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.индивидуация_каскад",
+      "entity_type": "structural_pattern",
+      "name": "индивидуация_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.ИИТ_GWT_каскад",
+      "entity_type": "structural_pattern",
+      "name": "ИИТ_GWT_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.мета_осознание_гамма",
+      "entity_type": "structural_pattern",
+      "name": "мета_осознание_гамма",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.нейропластичность_прунинг",
+      "entity_type": "structural_pattern",
+      "name": "нейропластичность_прунинг",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.феноменологический_каскад",
+      "entity_type": "structural_pattern",
+      "name": "феноменологический_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.даосский_каскад",
+      "entity_type": "structural_pattern",
+      "name": "даосский_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.алхимическое_делание",
+      "entity_type": "structural_pattern",
+      "name": "алхимическое_делание",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.алхимическая_свадьба_каскад",
+      "entity_type": "structural_pattern",
+      "name": "алхимическая_свадьба_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.цимцум_сфирот_каскад",
+      "entity_type": "structural_pattern",
+      "name": "цимцум_сфирот_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.гексаграмма_изменения",
+      "entity_type": "structural_pattern",
+      "name": "гексаграмма_изменения",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.расклад_кельтский_крест",
+      "entity_type": "structural_pattern",
+      "name": "расклад_кельтский_крест",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.цветок_жизни_платонов",
+      "entity_type": "structural_pattern",
+      "name": "цветок_жизни_платонов",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.эмерджентный_каскад_экология",
+      "entity_type": "structural_pattern",
+      "name": "эмерджентный_каскад_экология",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.сукцессия_симбиоз",
+      "entity_type": "structural_pattern",
+      "name": "сукцессия_симбиоз",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.бифуркация_Ляпунов_каскад",
+      "entity_type": "structural_pattern",
+      "name": "бифуркация_Ляпунов_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.странный_аттрактор_связка",
+      "entity_type": "structural_pattern",
+      "name": "странный_аттрактор_связка",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.small_world_Барабаси",
+      "entity_type": "structural_pattern",
+      "name": "small_world_Барабаси",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.обертоны_контрапункт",
+      "entity_type": "structural_pattern",
+      "name": "обертоны_контрапункт",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.тенсегрити_геодезический",
+      "entity_type": "structural_pattern",
+      "name": "тенсегрити_геодезический",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Нэш_эволюция_каскад",
+      "entity_type": "structural_pattern",
+      "name": "Нэш_эволюция_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.кооперативная_игра_Шепли",
+      "entity_type": "structural_pattern",
+      "name": "кооперативная_игра_Шепли",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Байес_антихрупкость",
+      "entity_type": "structural_pattern",
+      "name": "Байес_антихрупкость",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Адамар_КНОТ_каскад",
+      "entity_type": "structural_pattern",
+      "name": "Адамар_КНОТ_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Шор_Гровер_телепортация",
+      "entity_type": "structural_pattern",
+      "name": "Шор_Гровер_телепортация",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Оккам_Парето_каскад",
+      "entity_type": "structural_pattern",
+      "name": "Оккам_Парето_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.AdS_CFT_энтропия_каскад",
+      "entity_type": "structural_pattern",
+      "name": "AdS_CFT_энтропия_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.морфический_Тьюринг_каскад",
+      "entity_type": "structural_pattern",
+      "name": "морфический_Тьюринг_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.Orch_OR_сознание_каскад",
+      "entity_type": "structural_pattern",
+      "name": "Orch_OR_сознание_каскад",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "pattern.симуляция_fork_render",
+      "entity_type": "structural_pattern",
+      "name": "симуляция_fork_render",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "metric.V",
+      "entity_type": "metric",
+      "name": "V",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "metric.S",
+      "entity_type": "metric",
+      "name": "S",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "metric.N",
+      "entity_type": "metric",
+      "name": "N",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "metric.D_f",
+      "entity_type": "metric",
+      "name": "D_f",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "metric.G_S",
+      "entity_type": "metric",
+      "name": "G_S",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "metric.QEC",
+      "entity_type": "metric",
+      "name": "QEC",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "metric.CHSH",
+      "entity_type": "metric",
+      "name": "CHSH",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    },
+    {
+      "id": "metric.C_val",
+      "entity_type": "metric",
+      "name": "C_val",
+      "limit_status": "unknown",
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null
+    }
+  ],
+  "by_entity_type": {
+    "generation_parameter": [
+      {
+        "id": "generation.generations",
+        "entity_type": "generation_parameter",
+        "name": "generations",
+        "limit_status": "not_found_in_code",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "generation.batch",
+        "entity_type": "generation_parameter",
+        "name": "batch",
+        "limit_status": "not_found_in_code",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "generation.top",
+        "entity_type": "generation_parameter",
+        "name": "top",
+        "limit_status": "not_found_in_code",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "generation.max_depth",
+        "entity_type": "generation_parameter",
+        "name": "max_depth",
+        "limit_status": "not_found_in_code",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "generation.max_elements",
+        "entity_type": "generation_parameter",
+        "name": "max_elements",
+        "limit_status": "not_found_in_code",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "generation.use_irrational",
+        "entity_type": "generation_parameter",
+        "name": "use_irrational",
+        "limit_status": "not_found_in_code",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "generation.use_imaginary",
+        "entity_type": "generation_parameter",
+        "name": "use_imaginary",
+        "limit_status": "not_found_in_code",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "generation.use_infinity",
+        "entity_type": "generation_parameter",
+        "name": "use_infinity",
+        "limit_status": "not_found_in_code",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "generation.invert_probability",
+        "entity_type": "generation_parameter",
+        "name": "invert_probability",
+        "limit_status": "not_found_in_code",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "generation.psychology_probability",
+        "entity_type": "generation_parameter",
+        "name": "psychology_probability",
+        "limit_status": "not_found_in_code",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      }
+    ],
+    "domain": [
+      {
+        "id": "domain.enable_linguistics",
+        "entity_type": "domain",
+        "name": "enable_linguistics",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_morpheme_generation",
+        "entity_type": "domain",
+        "name": "enable_morpheme_generation",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_linguistic_principles",
+        "entity_type": "domain",
+        "name": "enable_linguistic_principles",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_quantum",
+        "entity_type": "domain",
+        "name": "enable_quantum",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_fractal",
+        "entity_type": "domain",
+        "name": "enable_fractal",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_psychology",
+        "entity_type": "domain",
+        "name": "enable_psychology",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_metrics",
+        "entity_type": "domain",
+        "name": "enable_metrics",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_auto_correction",
+        "entity_type": "domain",
+        "name": "enable_auto_correction",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_learning",
+        "entity_type": "domain",
+        "name": "enable_learning",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_saving",
+        "entity_type": "domain",
+        "name": "enable_saving",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_cataloging",
+        "entity_type": "domain",
+        "name": "enable_cataloging",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_derivative_first",
+        "entity_type": "domain",
+        "name": "enable_derivative_first",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_derivative_second",
+        "entity_type": "domain",
+        "name": "enable_derivative_second",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_eqgft",
+        "entity_type": "domain",
+        "name": "enable_eqgft",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_ethical_archon",
+        "entity_type": "domain",
+        "name": "enable_ethical_archon",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_bell_nonlocality",
+        "entity_type": "domain",
+        "name": "enable_bell_nonlocality",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_context_weaver",
+        "entity_type": "domain",
+        "name": "enable_context_weaver",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_garden_between",
+        "entity_type": "domain",
+        "name": "enable_garden_between",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_meta_fractal_craft",
+        "entity_type": "domain",
+        "name": "enable_meta_fractal_craft",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_json_prompt",
+        "entity_type": "domain",
+        "name": "enable_json_prompt",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_quantum_geometry",
+        "entity_type": "domain",
+        "name": "enable_quantum_geometry",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_research",
+        "entity_type": "domain",
+        "name": "enable_research",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_fair_division",
+        "entity_type": "domain",
+        "name": "enable_fair_division",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_category_theory",
+        "entity_type": "domain",
+        "name": "enable_category_theory",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_algebra",
+        "entity_type": "domain",
+        "name": "enable_algebra",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_knot_theory",
+        "entity_type": "domain",
+        "name": "enable_knot_theory",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_number_theory",
+        "entity_type": "domain",
+        "name": "enable_number_theory",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_measure_probability",
+        "entity_type": "domain",
+        "name": "enable_measure_probability",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_graph_combinatorics",
+        "entity_type": "domain",
+        "name": "enable_graph_combinatorics",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_optimization",
+        "entity_type": "domain",
+        "name": "enable_optimization",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_thermodynamics",
+        "entity_type": "domain",
+        "name": "enable_thermodynamics",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_stat_mechanics",
+        "entity_type": "domain",
+        "name": "enable_stat_mechanics",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_relativity",
+        "entity_type": "domain",
+        "name": "enable_relativity",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_string_theory",
+        "entity_type": "domain",
+        "name": "enable_string_theory",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_cosmology",
+        "entity_type": "domain",
+        "name": "enable_cosmology",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_qft",
+        "entity_type": "domain",
+        "name": "enable_qft",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_condensed_matter",
+        "entity_type": "domain",
+        "name": "enable_condensed_matter",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_complexity",
+        "entity_type": "domain",
+        "name": "enable_complexity",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_cryptography",
+        "entity_type": "domain",
+        "name": "enable_cryptography",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_automata",
+        "entity_type": "domain",
+        "name": "enable_automata",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_neural_nets",
+        "entity_type": "domain",
+        "name": "enable_neural_nets",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_evolutionary",
+        "entity_type": "domain",
+        "name": "enable_evolutionary",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_cybernetics",
+        "entity_type": "domain",
+        "name": "enable_cybernetics",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_semiotics",
+        "entity_type": "domain",
+        "name": "enable_semiotics",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_phonology_typology",
+        "entity_type": "domain",
+        "name": "enable_phonology_typology",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_writing_systems",
+        "entity_type": "domain",
+        "name": "enable_writing_systems",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_jungian",
+        "entity_type": "domain",
+        "name": "enable_jungian",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_cognitive_bias",
+        "entity_type": "domain",
+        "name": "enable_cognitive_bias",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_consciousness",
+        "entity_type": "domain",
+        "name": "enable_consciousness",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_mindfulness",
+        "entity_type": "domain",
+        "name": "enable_mindfulness",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_neuroscience",
+        "entity_type": "domain",
+        "name": "enable_neuroscience",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_philosophy",
+        "entity_type": "domain",
+        "name": "enable_philosophy",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_eastern_phil",
+        "entity_type": "domain",
+        "name": "enable_eastern_phil",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_hermeticism",
+        "entity_type": "domain",
+        "name": "enable_hermeticism",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_process_phil",
+        "entity_type": "domain",
+        "name": "enable_process_phil",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_alchemy",
+        "entity_type": "domain",
+        "name": "enable_alchemy",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_kabbalah",
+        "entity_type": "domain",
+        "name": "enable_kabbalah",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_iching",
+        "entity_type": "domain",
+        "name": "enable_iching",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_tarot",
+        "entity_type": "domain",
+        "name": "enable_tarot",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_sacred_geometry",
+        "entity_type": "domain",
+        "name": "enable_sacred_geometry",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_vedic",
+        "entity_type": "domain",
+        "name": "enable_vedic",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_systems_ecology",
+        "entity_type": "domain",
+        "name": "enable_systems_ecology",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_permaculture",
+        "entity_type": "domain",
+        "name": "enable_permaculture",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_biomimicry",
+        "entity_type": "domain",
+        "name": "enable_biomimicry",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_chaos_dynamics",
+        "entity_type": "domain",
+        "name": "enable_chaos_dynamics",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_network_science",
+        "entity_type": "domain",
+        "name": "enable_network_science",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_music_art",
+        "entity_type": "domain",
+        "name": "enable_music_art",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_architecture",
+        "entity_type": "domain",
+        "name": "enable_architecture",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_game_theory",
+        "entity_type": "domain",
+        "name": "enable_game_theory",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_decision_theory",
+        "entity_type": "domain",
+        "name": "enable_decision_theory",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_holographic",
+        "entity_type": "domain",
+        "name": "enable_holographic",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_morphic_resonance",
+        "entity_type": "domain",
+        "name": "enable_morphic_resonance",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_orch_or",
+        "entity_type": "domain",
+        "name": "enable_orch_or",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_simulation_hyp",
+        "entity_type": "domain",
+        "name": "enable_simulation_hyp",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_quantum_info",
+        "entity_type": "domain",
+        "name": "enable_quantum_info",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "domain.enable_metaprinciples",
+        "entity_type": "domain",
+        "name": "enable_metaprinciples",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      }
+    ],
+    "structural_pattern": [
+      {
+        "id": "pattern.линейный",
+        "entity_type": "structural_pattern",
+        "name": "линейный",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.степенной",
+        "entity_type": "structural_pattern",
+        "name": "степенной",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.вложенный_прост",
+        "entity_type": "structural_pattern",
+        "name": "вложенный_прост",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.вложенный_глуб",
+        "entity_type": "structural_pattern",
+        "name": "вложенный_глуб",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.многомерный",
+        "entity_type": "structural_pattern",
+        "name": "многомерный",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.парадоксальный",
+        "entity_type": "structural_pattern",
+        "name": "парадоксальный",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.динамический",
+        "entity_type": "structural_pattern",
+        "name": "динамический",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.голографический",
+        "entity_type": "structural_pattern",
+        "name": "голографический",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.петлевой",
+        "entity_type": "structural_pattern",
+        "name": "петлевой",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.фрактальный",
+        "entity_type": "structural_pattern",
+        "name": "фрактальный",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.квантовый",
+        "entity_type": "structural_pattern",
+        "name": "квантовый",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.рефлексивный",
+        "entity_type": "structural_pattern",
+        "name": "рефлексивный",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.квантово-фрактальный",
+        "entity_type": "structural_pattern",
+        "name": "квантово-фрактальный",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.семантический_каскад",
+        "entity_type": "structural_pattern",
+        "name": "семантический_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.MMSS-квантовый_стек",
+        "entity_type": "structural_pattern",
+        "name": "MMSS-квантовый_стек",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.золотое_сечение",
+        "entity_type": "structural_pattern",
+        "name": "золотое_сечение",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.лингвистический_принцип",
+        "entity_type": "structural_pattern",
+        "name": "лингвистический_принцип",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.двойные_предлоги",
+        "entity_type": "structural_pattern",
+        "name": "двойные_предлоги",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.json_каскад",
+        "entity_type": "structural_pattern",
+        "name": "json_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.промпт_анимация",
+        "entity_type": "structural_pattern",
+        "name": "промпт_анимация",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.геометрическая_динамика",
+        "entity_type": "structural_pattern",
+        "name": "геометрическая_динамика",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.фибровый_каскад",
+        "entity_type": "structural_pattern",
+        "name": "фибровый_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.исследовательский_протокол",
+        "entity_type": "structural_pattern",
+        "name": "исследовательский_протокол",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.научный_прорыв",
+        "entity_type": "structural_pattern",
+        "name": "научный_прорыв",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.справедливый_дележ",
+        "entity_type": "structural_pattern",
+        "name": "справедливый_дележ",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.аллокационный_каскад",
+        "entity_type": "structural_pattern",
+        "name": "аллокационный_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.роторный_каскад",
+        "entity_type": "structural_pattern",
+        "name": "роторный_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.zitter_генерация",
+        "entity_type": "structural_pattern",
+        "name": "zitter_генерация",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.топологическая_квантация",
+        "entity_type": "structural_pattern",
+        "name": "топологическая_квантация",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.этическая_аннигиляция",
+        "entity_type": "structural_pattern",
+        "name": "этическая_аннигиляция",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.архонт_конденсация",
+        "entity_type": "structural_pattern",
+        "name": "архонт_конденсация",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.чистая_ценность",
+        "entity_type": "structural_pattern",
+        "name": "чистая_ценность",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.CHSH_нарушение",
+        "entity_type": "structural_pattern",
+        "name": "CHSH_нарушение",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.спиновая_корреляция",
+        "entity_type": "structural_pattern",
+        "name": "спиновая_корреляция",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.EPR_цепь",
+        "entity_type": "structural_pattern",
+        "name": "EPR_цепь",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.ткачество_реальности",
+        "entity_type": "structural_pattern",
+        "name": "ткачество_реальности",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.абсолютная_контекстуальность",
+        "entity_type": "structural_pattern",
+        "name": "абсолютная_контекстуальность",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.фрактальное_ткачество",
+        "entity_type": "structural_pattern",
+        "name": "фрактальное_ткачество",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.хаос_интеграция",
+        "entity_type": "structural_pattern",
+        "name": "хаос_интеграция",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.фрактальная_обрезка",
+        "entity_type": "structural_pattern",
+        "name": "фрактальная_обрезка",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.паттерн_рекурсия_каскад",
+        "entity_type": "structural_pattern",
+        "name": "паттерн_рекурсия_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.контекст_сжатие_петля",
+        "entity_type": "structural_pattern",
+        "name": "контекст_сжатие_петля",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.многомерная_фузия_каскад",
+        "entity_type": "structural_pattern",
+        "name": "многомерная_фузия_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.функторный_каскад",
+        "entity_type": "structural_pattern",
+        "name": "функторный_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.монадический_связка",
+        "entity_type": "structural_pattern",
+        "name": "монадический_связка",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Yoneda_проецирование",
+        "entity_type": "structural_pattern",
+        "name": "Yoneda_проецирование",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.алгебра_Ли_коммутатор",
+        "entity_type": "structural_pattern",
+        "name": "алгебра_Ли_коммутатор",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.факторгруппа_каскад",
+        "entity_type": "structural_pattern",
+        "name": "факторгруппа_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Райдемейстер_каскад",
+        "entity_type": "structural_pattern",
+        "name": "Райдемейстер_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.хиральность_инверсия",
+        "entity_type": "structural_pattern",
+        "name": "хиральность_инверсия",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.дзета_гипотеза_связка",
+        "entity_type": "structural_pattern",
+        "name": "дзета_гипотеза_связка",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.эйлерова_функция_связка",
+        "entity_type": "structural_pattern",
+        "name": "эйлерова_функция_связка",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.хроматический_каскад",
+        "entity_type": "structural_pattern",
+        "name": "хроматический_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.матроид_ранг_связка",
+        "entity_type": "structural_pattern",
+        "name": "матроид_ранг_связка",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.градиентный_каскад",
+        "entity_type": "structural_pattern",
+        "name": "градиентный_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Лагранж_двойственность",
+        "entity_type": "structural_pattern",
+        "name": "Лагранж_двойственность",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.энтропийный_каскад",
+        "entity_type": "structural_pattern",
+        "name": "энтропийный_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.больцман_статсумма",
+        "entity_type": "structural_pattern",
+        "name": "больцман_статсумма",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Лоренц_инвариант",
+        "entity_type": "structural_pattern",
+        "name": "Лоренц_инвариант",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.инфляционный_каскад",
+        "entity_type": "structural_pattern",
+        "name": "инфляционный_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Фейнман_каскад",
+        "entity_type": "structural_pattern",
+        "name": "Фейнман_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.BCS_топологический_каскад",
+        "entity_type": "structural_pattern",
+        "name": "BCS_топологический_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Карп_сведение",
+        "entity_type": "structural_pattern",
+        "name": "Карп_сведение",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.RSA_нуль_разглашение",
+        "entity_type": "structural_pattern",
+        "name": "RSA_нуль_разглашение",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Вольфрам_каскад",
+        "entity_type": "structural_pattern",
+        "name": "Вольфрам_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.attention_transformer",
+        "entity_type": "structural_pattern",
+        "name": "attention_transformer",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.backprop_каскад",
+        "entity_type": "structural_pattern",
+        "name": "backprop_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.softmax_ReLU_каскад",
+        "entity_type": "structural_pattern",
+        "name": "softmax_ReLU_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.генетический_цикл",
+        "entity_type": "structural_pattern",
+        "name": "генетический_цикл",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.элитарный_каскад",
+        "entity_type": "structural_pattern",
+        "name": "элитарный_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.гомеостаз_петля",
+        "entity_type": "structural_pattern",
+        "name": "гомеостаз_петля",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.необходимое_разнообразие",
+        "entity_type": "structural_pattern",
+        "name": "необходимое_разнообразие",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Бартс_миф_каскад",
+        "entity_type": "structural_pattern",
+        "name": "Бартс_миф_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Соссюр_означивание",
+        "entity_type": "structural_pattern",
+        "name": "Соссюр_означивание",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.индивидуация_каскад",
+        "entity_type": "structural_pattern",
+        "name": "индивидуация_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.ИИТ_GWT_каскад",
+        "entity_type": "structural_pattern",
+        "name": "ИИТ_GWT_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.мета_осознание_гамма",
+        "entity_type": "structural_pattern",
+        "name": "мета_осознание_гамма",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.нейропластичность_прунинг",
+        "entity_type": "structural_pattern",
+        "name": "нейропластичность_прунинг",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.феноменологический_каскад",
+        "entity_type": "structural_pattern",
+        "name": "феноменологический_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.даосский_каскад",
+        "entity_type": "structural_pattern",
+        "name": "даосский_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.алхимическое_делание",
+        "entity_type": "structural_pattern",
+        "name": "алхимическое_делание",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.алхимическая_свадьба_каскад",
+        "entity_type": "structural_pattern",
+        "name": "алхимическая_свадьба_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.цимцум_сфирот_каскад",
+        "entity_type": "structural_pattern",
+        "name": "цимцум_сфирот_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.гексаграмма_изменения",
+        "entity_type": "structural_pattern",
+        "name": "гексаграмма_изменения",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.расклад_кельтский_крест",
+        "entity_type": "structural_pattern",
+        "name": "расклад_кельтский_крест",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.цветок_жизни_платонов",
+        "entity_type": "structural_pattern",
+        "name": "цветок_жизни_платонов",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.эмерджентный_каскад_экология",
+        "entity_type": "structural_pattern",
+        "name": "эмерджентный_каскад_экология",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.сукцессия_симбиоз",
+        "entity_type": "structural_pattern",
+        "name": "сукцессия_симбиоз",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.бифуркация_Ляпунов_каскад",
+        "entity_type": "structural_pattern",
+        "name": "бифуркация_Ляпунов_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.странный_аттрактор_связка",
+        "entity_type": "structural_pattern",
+        "name": "странный_аттрактор_связка",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.small_world_Барабаси",
+        "entity_type": "structural_pattern",
+        "name": "small_world_Барабаси",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.обертоны_контрапункт",
+        "entity_type": "structural_pattern",
+        "name": "обертоны_контрапункт",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.тенсегрити_геодезический",
+        "entity_type": "structural_pattern",
+        "name": "тенсегрити_геодезический",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Нэш_эволюция_каскад",
+        "entity_type": "structural_pattern",
+        "name": "Нэш_эволюция_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.кооперативная_игра_Шепли",
+        "entity_type": "structural_pattern",
+        "name": "кооперативная_игра_Шепли",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Байес_антихрупкость",
+        "entity_type": "structural_pattern",
+        "name": "Байес_антихрупкость",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Адамар_КНОТ_каскад",
+        "entity_type": "structural_pattern",
+        "name": "Адамар_КНОТ_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Шор_Гровер_телепортация",
+        "entity_type": "structural_pattern",
+        "name": "Шор_Гровер_телепортация",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Оккам_Парето_каскад",
+        "entity_type": "structural_pattern",
+        "name": "Оккам_Парето_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.AdS_CFT_энтропия_каскад",
+        "entity_type": "structural_pattern",
+        "name": "AdS_CFT_энтропия_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.морфический_Тьюринг_каскад",
+        "entity_type": "structural_pattern",
+        "name": "морфический_Тьюринг_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.Orch_OR_сознание_каскад",
+        "entity_type": "structural_pattern",
+        "name": "Orch_OR_сознание_каскад",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "pattern.симуляция_fork_render",
+        "entity_type": "structural_pattern",
+        "name": "симуляция_fork_render",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      }
+    ],
+    "metric": [
+      {
+        "id": "metric.V",
+        "entity_type": "metric",
+        "name": "V",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "metric.S",
+        "entity_type": "metric",
+        "name": "S",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "metric.N",
+        "entity_type": "metric",
+        "name": "N",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "metric.D_f",
+        "entity_type": "metric",
+        "name": "D_f",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "metric.G_S",
+        "entity_type": "metric",
+        "name": "G_S",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "metric.QEC",
+        "entity_type": "metric",
+        "name": "QEC",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "metric.CHSH",
+        "entity_type": "metric",
+        "name": "CHSH",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      },
+      {
+        "id": "metric.C_val",
+        "entity_type": "metric",
+        "name": "C_val",
+        "limit_status": "unknown",
+        "min_value": null,
+        "max_value": null,
+        "hard_limit": null
+      }
+    ]
+  }
+}

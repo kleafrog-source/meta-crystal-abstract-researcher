@@ -60,6 +60,11 @@
         "hard_limit": {
           "description": "Hard limit (if different from max_value)"
         },
+        "limit_status": {
+          "type": ["string", "null"],
+          "enum": ["verified_in_code", "verified_in_tests", "measured", "user_warning_only", "not_found_in_code", "unknown"],
+          "description": "Status of limit verification"
+        },
         "unit": {
           "type": ["string", "null"],
           "description": "Unit of measurement (if applicable)"
