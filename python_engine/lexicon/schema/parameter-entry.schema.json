@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://meta-crystal.org/schemas/parameter-entry.schema.json",
+  "title": "Generation Parameter Entry",
+  "description": "Schema for generation parameters (e.g., generations, batch, top, max_depth)",
+  "allOf": [
+    {
+      "$ref": "lexicon-entry.schema.json"
+    },
+    {
+      "properties": {
+        "entity_type": {
+          "const": "generation_parameter"
+        },
+        "namespace": {
+          "const": "generation"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "extraction_timestamp": "2026-08-08T04:32:39.806607",
+  "source_files": {
+    "engine": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py",
+    "sidecar": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\sidecar.py",
+    "profile_presets": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts",
+    "generation": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\components\\pages\\Generation.tsx"
+  },
+  "extraction_summary": {
+    "generation_parameters": 10,
+    "domain_flags": 76,
+    "structural_patterns": 23,
+    "metrics": 8
+  },
+  "runtime_chain": [
+    "src/components/pages/Generation.tsx",
+    "src/app/api/generate/start/route.ts",
+    "src/lib/engine/runner.ts",
+    "python_engine/sidecar.py",
+    "python_engine/metacrystal_engine_v7.py",
+    "data/meta_crystals"
+  ]
+}

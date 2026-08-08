@@ -1,0 +1,1612 @@
+[
+  {
+    "id": "pattern.name",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "name",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691767",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.линейный",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "линейный",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691786",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.template",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "template",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691801",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.{A} {op} {B}",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "{A} {op} {B}",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691814",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.complexity",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "complexity",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691827",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.name",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "name",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691840",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.степенной",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "степенной",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691853",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.template",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "template",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691866",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.({A}) ^ ({B})",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "({A}) ^ ({B})",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691880",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.complexity",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "complexity",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691892",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.name",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "name",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691915",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.вложенный_прост",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "вложенный_прост",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691930",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.template",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "template",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691943",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.{op1}( {op2}( {A} ) )",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "{op1}( {op2}( {A} ) )",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691955",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.complexity",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "complexity",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691969",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.name",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "name",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.691995",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.вложенный_глуб",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "вложенный_глуб",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692010",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.template",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "template",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692024",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.{op1}( {op2}( {op3}( {A} ) ) )",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "{op1}( {op2}( {op3}( {A} ) ) )",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692038",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.complexity",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "complexity",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692051",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.name",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "name",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692064",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.многомерный",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "многомерный",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692078",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  },
+  {
+    "id": "pattern.template",
+    "entity_type": "structural_pattern",
+    "namespace": "pattern",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "template",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "STRUCTURAL_PATTERNS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "disabled_patterns",
+      "api_field": "disabled_patterns",
+      "sidecar_field": "disabled_patterns",
+      "python_field": "patterns",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692091",
+      "notes": "Extracted from STRUCTURAL_PATTERNS"
+    }
+  }
+]

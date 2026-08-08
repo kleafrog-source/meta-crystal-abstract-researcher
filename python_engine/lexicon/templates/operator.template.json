@@ -1,0 +1,66 @@
+{
+  "id": "operator.<operator_name>",
+  "entity_type": "operator",
+  "namespace": "operator",
+  "status": "semantic_pending",
+  "version": "1.0.0",
+  "technical": {
+    "name": "<operator_name>",
+    "type": "string",
+    "default_value": null,
+    "allowed_values": [],
+    "min_value": null,
+    "max_value": null,
+    "hard_limit": null,
+    "unit": null,
+    "runtime_used": true,
+    "ui_accessible": false
+  },
+  "semantic": {
+    "display_name": null,
+    "short_description": null,
+    "description": null,
+    "synonyms": [],
+    "query_phrases": [],
+    "positive_examples": [],
+    "negative_examples": [],
+    "effect_on_generation": null,
+    "effect_on_randomness": null,
+    "confidence": null,
+    "needs_human_review": true
+  },
+  "provenance": {
+    "source_files": [],
+    "source_symbols": [],
+    "source_lines": [],
+    "ui_component": null,
+    "frontend_field": null,
+    "api_field": null,
+    "sidecar_field": null,
+    "python_field": null,
+    "extraction_method": "unknown"
+  },
+  "safety": {
+    "risk_level": "unknown",
+    "warning_threshold": null,
+    "estimated_cost": "unknown",
+    "output_size_effect": "unknown",
+    "runtime_effect": "unknown",
+    "persistent_data_effect": "unknown"
+  },
+  "relations": {
+    "compatible_with": [],
+    "incompatible_with": [],
+    "requires": [],
+    "excludes": [],
+    "related_to": [],
+    "aliases": []
+  },
+  "audit": {
+    "verified_in_runtime": false,
+    "verified_in_ui": false,
+    "verified_in_sidecar": false,
+    "last_verified_at": null,
+    "notes": ""
+  }
+}

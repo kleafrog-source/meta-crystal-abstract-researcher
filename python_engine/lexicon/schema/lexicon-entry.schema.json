@@ -1,0 +1,280 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://meta-crystal.org/schemas/lexicon-entry.schema.json",
+  "title": "Lexicon Entry",
+  "description": "Unified schema for all lexicon entries (parameters, domains, patterns, operators, invariants, metrics, constraints)",
+  "type": "object",
+  "required": ["id", "entity_type", "namespace", "status", "version", "technical", "semantic", "provenance", "safety", "relations", "audit"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable unique identifier (e.g., 'param.generations', 'domain.enable_quantum')"
+    },
+    "entity_type": {
+      "type": "string",
+      "enum": ["generation_parameter", "domain", "structural_pattern", "operator", "invariant", "metric", "constraint"],
+      "description": "Type of entity this entry represents"
+    },
+    "namespace": {
+      "type": "string",
+      "description": "Namespace for grouping (e.g., 'generation', 'domain', 'pattern', 'operator')"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["machine_extracted", "semantic_pending", "draft", "validated", "deprecated", "unknown"],
+      "description": "Current status of this entry"
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of this entry (e.g., '1.0.0')"
+    },
+    "technical": {
+      "type": "object",
+      "description": "Technical facts extracted from runtime code",
+      "required": ["name", "runtime_used", "ui_accessible"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Technical name in code (e.g., 'generations', 'enable_quantum')"
+        },
+        "type": {
+          "type": ["string", "null"],
+          "description": "Data type (e.g., 'int', 'bool', 'float', 'string', 'string[]')"
+        },
+        "default_value": {
+          "description": "Default value from runtime code"
+        },
+        "allowed_values": {
+          "type": "array",
+          "description": "Allowed enum values (if applicable)",
+          "items": {}
+        },
+        "min_value": {
+          "type": ["number", "null"],
+          "description": "Minimum allowed value"
+        },
+        "max_value": {
+          "type": ["number", "null"],
+          "description": "Maximum allowed value"
+        },
+        "hard_limit": {
+          "description": "Hard limit (if different from max_value)"
+        },
+        "unit": {
+          "type": ["string", "null"],
+          "description": "Unit of measurement (if applicable)"
+        },
+        "runtime_used": {
+          "type": "boolean",
+          "description": "Whether this parameter is used in runtime generator"
+        },
+        "ui_accessible": {
+          "type": "boolean",
+          "description": "Whether this parameter is accessible through UI"
+        }
+      }
+    },
+    "semantic": {
+      "type": "object",
+      "description": "Human-readable descriptions (filled by LLM or manually)",
+      "required": ["needs_human_review"],
+      "properties": {
+        "display_name": {
+          "type": ["string", "null"],
+          "description": "Human-readable display name"
+        },
+        "short_description": {
+          "type": ["string", "null"],
+          "description": "Short one-line description"
+        },
+        "description": {
+          "type": ["string", "null"],
+          "description": "Full detailed description"
+        },
+        "synonyms": {
+          "type": "array",
+          "description": "Alternative names or synonyms",
+          "items": {"type": "string"}
+        },
+        "query_phrases": {
+          "type": "array",
+          "description": "Natural language phrases for retrieval",
+          "items": {"type": "string"}
+        },
+        "positive_examples": {
+          "type": "array",
+          "description": "Positive examples of usage",
+          "items": {"type": "string"}
+        },
+        "negative_examples": {
+          "type": "array",
+          "description": "Negative examples or anti-patterns",
+          "items": {"type": "string"}
+        },
+        "effect_on_generation": {
+          "type": ["string", "null"],
+          "description": "How this parameter affects generation output"
+        },
+        "effect_on_randomness": {
+          "type": ["string", "null"],
+          "description": "How this parameter affects randomness/diversity"
+        },
+        "confidence": {
+          "type": ["string", "null"],
+          "enum": ["high", "medium", "low"],
+          "description": "Confidence level of semantic information"
+        },
+        "needs_human_review": {
+          "type": "boolean",
+          "description": "Whether semantic information needs human review"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Source code provenance information",
+      "required": ["extraction_method"],
+      "properties": {
+        "source_files": {
+          "type": "array",
+          "description": "Source files where this entity is defined",
+          "items": {"type": "string"}
+        },
+        "source_symbols": {
+          "type": "array",
+          "description": "Symbols/functions/classes in source code",
+          "items": {"type": "string"}
+        },
+        "source_lines": {
+          "type": "array",
+          "description": "Line numbers in source files",
+          "items": {"type": "integer"}
+        },
+        "ui_component": {
+          "type": ["string", "null"],
+          "description": "UI component that uses this parameter"
+        },
+        "frontend_field": {
+          "type": ["string", "null"],
+          "description": "Field name in frontend request"
+        },
+        "api_field": {
+          "type": ["string", "null"],
+          "description": "Field name in API route"
+        },
+        "sidecar_field": {
+          "type": ["string", "null"],
+          "description": " field name in sidecar"
+        },
+        "python_field": {
+          "type": ["string", "null"],
+          "description": "Field name in Python config"
+        },
+        "extraction_method": {
+          "type": "string",
+          "enum": ["ast", "config", "enum", "manual", "unknown"],
+          "description": "How this information was extracted"
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "description": "Safety and risk assessment",
+      "required": ["risk_level"],
+      "properties": {
+        "risk_level": {
+          "type": "string",
+          "enum": ["safe", "warning", "restricted", "requires_confirmation", "unknown"],
+          "description": "Risk level of this parameter"
+        },
+        "warning_threshold": {
+          "description": "Threshold at which warning should be shown"
+        },
+        "estimated_cost": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "unknown"],
+          "description": "Estimated computational cost"
+        },
+        "output_size_effect": {
+          "type": "string",
+          "enum": ["none", "low", "medium", "high", "unknown"],
+          "description": "Effect on output size"
+        },
+        "runtime_effect": {
+          "type": "string",
+          "enum": ["none", "low", "medium", "high", "unknown"],
+          "description": "Effect on runtime performance"
+        },
+        "persistent_data_effect": {
+          "type": "string",
+          "enum": ["none", "possible", "yes", "unknown"],
+          "description": "Effect on persistent data storage"
+        }
+      }
+    },
+    "relations": {
+      "type": "object",
+      "description": "Relations to other entries",
+      "required": ["compatible_with", "incompatible_with", "requires", "excludes", "related_to", "aliases"],
+      "properties": {
+        "compatible_with": {
+          "type": "array",
+          "description": "IDs of compatible entries",
+          "items": {"type": "string"}
+        },
+        "incompatible_with": {
+          "type": "array",
+          "description": "IDs of incompatible entries",
+          "items": {"type": "string"}
+        },
+        "requires": {
+          "type": "array",
+          "description": "IDs of required entries",
+          "items": {"type": "string"}
+        },
+        "excludes": {
+          "type": "array",
+          "description": "IDs of excluded entries",
+          "items": {"type": "string"}
+        },
+        "related_to": {
+          "type": "array",
+          "description": "IDs of related entries",
+          "items": {"type": "string"}
+        },
+        "aliases": {
+          "type": "array",
+          "description": "IDs of alias entries",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "description": "Audit and verification information",
+      "required": ["verified_in_runtime", "verified_in_ui", "verified_in_sidecar"],
+      "properties": {
+        "verified_in_runtime": {
+          "type": "boolean",
+          "description": "Verified to exist in runtime generator"
+        },
+        "verified_in_ui": {
+          "type": "boolean",
+          "description": "Verified to exist in UI"
+        },
+        "verified_in_sidecar": {
+          "type": "boolean",
+          "description": "Verified to exist in sidecar"
+        },
+        "last_verified_at": {
+          "type": ["string", "null"],
+          "description": "ISO timestamp of last verification"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Audit notes"
+        }
+      }
+    }
+  }
+}

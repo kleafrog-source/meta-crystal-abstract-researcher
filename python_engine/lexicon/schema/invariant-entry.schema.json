@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://meta-crystal.org/schemas/invariant-entry.schema.json",
+  "title": "Invariant Entry",
+  "description": "Schema for invariants (e.g., conservation laws, symmetry constraints)",
+  "allOf": [
+    {
+      "$ref": "lexicon-entry.schema.json"
+    },
+    {
+      "properties": {
+        "entity_type": {
+          "const": "invariant"
+        },
+        "namespace": {
+          "const": "invariant"
+        }
+      }
+    }
+  ]
+}

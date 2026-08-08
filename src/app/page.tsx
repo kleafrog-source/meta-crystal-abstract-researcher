@@ -10,6 +10,7 @@ import { Enrichment } from "@/components/pages/Enrichment";
 import { Chat } from "@/components/pages/Chat";
 import { MMSS } from "@/components/pages/MMSS";
 import { MetisLab } from "@/components/pages/MetisLab";
+import { MetisResearchLab } from "@/components/pages/MetisResearchLab";
 import { GWCollapser } from "@/components/pages/GWCollapser";
 import { GWCollapserCrystalPool } from "@/components/pages/GWCollapserCrystalPool";
 import { Map } from "@/components/pages/Map";
@@ -39,6 +40,8 @@ export default function Home() {
             return <MMSS />;
           case "metis":
             return <MetisLab />;
+          case "metisresearch":
+            return <MetisResearchLab />;
           case "gwcollapser":
             return <GWCollapser />;
           case "crystalpool":

@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://meta-crystal.org/schemas/pattern-entry.schema.json",
+  "title": "Structural Pattern Entry",
+  "description": "Schema for structural patterns (e.g., linear, fractal, quantum, recursive)",
+  "allOf": [
+    {
+      "$ref": "lexicon-entry.schema.json"
+    },
+    {
+      "properties": {
+        "entity_type": {
+          "const": "structural_pattern"
+        },
+        "namespace": {
+          "const": "pattern"
+        }
+      }
+    }
+  ]
+}

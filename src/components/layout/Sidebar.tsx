@@ -29,6 +29,7 @@ export type PageId =
   | "chat"
   | "mmss"
   | "metis"
+  | "metisresearch"
   | "gwcollapser"
   | "crystalpool"
   | "torusatlas"
@@ -96,6 +97,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "Metis Lab",
     icon: <Cpu className="h-4 w-4" />,
     description: "Isolated Metis memory stack with torus atlas and provider runtime switch",
+  },
+  {
+    id: "metisresearch",
+    label: "Metis Research",
+    icon: <Database className="h-4 w-4" />,
+    description: "Separate research workspace for candidate-pool comparison, run history and atlas-centered retrieval analysis",
   },
   {
     id: "gwcollapser",

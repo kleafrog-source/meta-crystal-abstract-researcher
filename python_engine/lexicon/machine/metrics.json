@@ -1,0 +1,562 @@
+[
+  {
+    "id": "metric.V",
+    "entity_type": "metric",
+    "namespace": "metric",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "V",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "METRIC_KEYS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "metrics.influencing, metrics.observational",
+      "api_field": "metrics",
+      "sidecar_field": "metrics",
+      "python_field": "metric_influencing, metric_observational",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692109",
+      "notes": "Extracted from METRIC_KEYS"
+    }
+  },
+  {
+    "id": "metric.S",
+    "entity_type": "metric",
+    "namespace": "metric",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "S",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "METRIC_KEYS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "metrics.influencing, metrics.observational",
+      "api_field": "metrics",
+      "sidecar_field": "metrics",
+      "python_field": "metric_influencing, metric_observational",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692124",
+      "notes": "Extracted from METRIC_KEYS"
+    }
+  },
+  {
+    "id": "metric.N",
+    "entity_type": "metric",
+    "namespace": "metric",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "N",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "METRIC_KEYS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "metrics.influencing, metrics.observational",
+      "api_field": "metrics",
+      "sidecar_field": "metrics",
+      "python_field": "metric_influencing, metric_observational",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692136",
+      "notes": "Extracted from METRIC_KEYS"
+    }
+  },
+  {
+    "id": "metric.D_f",
+    "entity_type": "metric",
+    "namespace": "metric",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "D_f",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "METRIC_KEYS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "metrics.influencing, metrics.observational",
+      "api_field": "metrics",
+      "sidecar_field": "metrics",
+      "python_field": "metric_influencing, metric_observational",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692148",
+      "notes": "Extracted from METRIC_KEYS"
+    }
+  },
+  {
+    "id": "metric.G_S",
+    "entity_type": "metric",
+    "namespace": "metric",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "G_S",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "METRIC_KEYS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "metrics.influencing, metrics.observational",
+      "api_field": "metrics",
+      "sidecar_field": "metrics",
+      "python_field": "metric_influencing, metric_observational",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692160",
+      "notes": "Extracted from METRIC_KEYS"
+    }
+  },
+  {
+    "id": "metric.QEC",
+    "entity_type": "metric",
+    "namespace": "metric",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "QEC",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "METRIC_KEYS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "metrics.influencing, metrics.observational",
+      "api_field": "metrics",
+      "sidecar_field": "metrics",
+      "python_field": "metric_influencing, metric_observational",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692171",
+      "notes": "Extracted from METRIC_KEYS"
+    }
+  },
+  {
+    "id": "metric.CHSH",
+    "entity_type": "metric",
+    "namespace": "metric",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "CHSH",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "METRIC_KEYS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "metrics.influencing, metrics.observational",
+      "api_field": "metrics",
+      "sidecar_field": "metrics",
+      "python_field": "metric_influencing, metric_observational",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692182",
+      "notes": "Extracted from METRIC_KEYS"
+    }
+  },
+  {
+    "id": "metric.C_val",
+    "entity_type": "metric",
+    "namespace": "metric",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "C_val",
+      "type": "string",
+      "default_value": null,
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts"
+      ],
+      "source_symbols": [
+        "METRIC_KEYS"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "metrics.influencing, metrics.observational",
+      "api_field": "metrics",
+      "sidecar_field": "metrics",
+      "python_field": "metric_influencing, metric_observational",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.692194",
+      "notes": "Extracted from METRIC_KEYS"
+    }
+  }
+]

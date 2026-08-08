@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://meta-crystal.org/schemas/domain-entry.schema.json",
+  "title": "Domain Entry",
+  "description": "Schema for domain flags (e.g., enable_quantum, enable_linguistics, enable_psychology)",
+  "allOf": [
+    {
+      "$ref": "lexicon-entry.schema.json"
+    },
+    {
+      "properties": {
+        "entity_type": {
+          "const": "domain"
+        },
+        "namespace": {
+          "const": "domain"
+        }
+      }
+    }
+  ]
+}

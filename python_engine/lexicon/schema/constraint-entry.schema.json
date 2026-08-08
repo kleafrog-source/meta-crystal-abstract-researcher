@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://meta-crystal.org/schemas/constraint-entry.schema.json",
+  "title": "Constraint Entry",
+  "description": "Schema for constraints and safety rules (e.g., max_depth limits, batch size limits)",
+  "allOf": [
+    {
+      "$ref": "lexicon-entry.schema.json"
+    },
+    {
+      "properties": {
+        "entity_type": {
+          "const": "constraint"
+        },
+        "namespace": {
+          "const": "constraint"
+        }
+      }
+    }
+  ]
+}

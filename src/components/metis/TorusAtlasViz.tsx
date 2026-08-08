@@ -14,6 +14,8 @@ interface TorusAtlasVizProps {
   palette?: MetisPaletteMode;
   enabled?: boolean;
   mode?: MetisVizMode;
+  selectedNodeId?: string | null;
+  onSelectNode?: (node: CrystalNode) => void;
 }
 
 interface ProjectedNode {
@@ -85,6 +87,8 @@ function TorusAtlasVizComponent({
   palette = "signal",
   enabled = true,
   mode = "auto",
+  selectedNodeId = null,
+  onSelectNode,
 }: TorusAtlasVizProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -138,8 +142,9 @@ function TorusAtlasVizComponent({
         ctx.fill();
       }
 
-      if (hovered) {
-        const point = projectedNodes.find((item) => item.node.node_id === hovered.node.node_id);
+      const highlightedNodeId = hovered?.node.node_id ?? selectedNodeId;
+      if (highlightedNodeId) {
+        const point = projectedNodes.find((item) => item.node.node_id === highlightedNodeId);
         if (point) {
           ctx.strokeStyle = "oklch(0.92 0.04 280)";
           ctx.lineWidth = 1;
@@ -151,27 +156,33 @@ function TorusAtlasVizComponent({
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [enabled, hovered, projectedNodes, size, useCanvas]);
+  }, [enabled, hovered, projectedNodes, selectedNodeId, size, useCanvas]);
 
-  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
-    if (!enabled || !useCanvas || !size.width || !size.height || !projectedNodes.length) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+  function findNearestNode(clientX: number, clientY: number, rect: DOMRect) {
     let best: ProjectedNode | null = null;
     let bestDistance = 144;
 
     for (const point of projectedNodes) {
       const px = point.x * rect.width;
       const py = point.y * rect.height;
-      const dx = px - x;
-      const dy = py - y;
+      const dx = px - clientX;
+      const dy = py - clientY;
       const distance = dx * dx + dy * dy;
       if (distance < bestDistance) {
         best = point;
         bestDistance = distance;
       }
     }
+
+    return best;
+  }
+
+  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    if (!enabled || !useCanvas || !size.width || !size.height || !projectedNodes.length) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const best = findNearestNode(x, y, rect);
 
     if (!best) {
       setHovered(null);
@@ -182,6 +193,17 @@ function TorusAtlasVizComponent({
 
   function handlePointerLeave() {
     setHovered(null);
+  }
+
+  function handleClick(event: React.PointerEvent<HTMLDivElement>) {
+    if (!onSelectNode || !enabled || !projectedNodes.length) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const best = findNearestNode(x, y, rect);
+    if (best) {
+      onSelectNode(best.node);
+    }
   }
 
   if (!enabled) {
@@ -198,6 +220,7 @@ function TorusAtlasVizComponent({
       className="relative h-[420px] overflow-hidden rounded-xl border border-border/60 bg-background/40"
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
+      onClick={handleClick}
     >
       <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full">
         <defs>
@@ -241,6 +264,16 @@ function TorusAtlasVizComponent({
           projectedNodes.map((point) => (
             <g key={point.node.node_id}>
               <circle cx={point.x * 100} cy={point.y * 100} r={point.radius * 0.22} fill={point.fill} />
+              {selectedNodeId === point.node.node_id && (
+                <circle
+                  cx={point.x * 100}
+                  cy={point.y * 100}
+                  r={Math.max(1.4, point.radius * 0.3 + 0.55)}
+                  fill="none"
+                  stroke="oklch(0.92 0.04 280)"
+                  strokeWidth="0.25"
+                />
+              )}
               <title>{`${point.node.node_id}: ${point.node.content.slice(0, 60)}...`}</title>
             </g>
           ))}

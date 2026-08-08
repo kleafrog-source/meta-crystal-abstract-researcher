@@ -1,0 +1,722 @@
+[
+  {
+    "id": "param.generations",
+    "entity_type": "generation_parameter",
+    "namespace": "generation",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "generations",
+      "type": "int",
+      "default_value": "2",
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts",
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params",
+        "EngineConfig"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "params",
+      "api_field": "params",
+      "sidecar_field": "params",
+      "python_field": "cfg",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.686070",
+      "notes": "Extracted from runtime code"
+    }
+  },
+  {
+    "id": "param.batch",
+    "entity_type": "generation_parameter",
+    "namespace": "generation",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "batch",
+      "type": "int",
+      "default_value": "100",
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts",
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params",
+        "EngineConfig"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "params",
+      "api_field": "params",
+      "sidecar_field": "params",
+      "python_field": "cfg",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.686146",
+      "notes": "Extracted from runtime code"
+    }
+  },
+  {
+    "id": "param.top",
+    "entity_type": "generation_parameter",
+    "namespace": "generation",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "top",
+      "type": "int",
+      "default_value": "3",
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts",
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params",
+        "EngineConfig"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "params",
+      "api_field": "params",
+      "sidecar_field": "params",
+      "python_field": "cfg",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.686166",
+      "notes": "Extracted from runtime code"
+    }
+  },
+  {
+    "id": "param.max_depth",
+    "entity_type": "generation_parameter",
+    "namespace": "generation",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "max_depth",
+      "type": "int",
+      "default_value": "7",
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts",
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params",
+        "EngineConfig"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "params",
+      "api_field": "params",
+      "sidecar_field": "params",
+      "python_field": "cfg",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.686177",
+      "notes": "Extracted from runtime code"
+    }
+  },
+  {
+    "id": "param.max_elements",
+    "entity_type": "generation_parameter",
+    "namespace": "generation",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "max_elements",
+      "type": "int",
+      "default_value": "12",
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts",
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params",
+        "EngineConfig"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "params",
+      "api_field": "params",
+      "sidecar_field": "params",
+      "python_field": "cfg",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.686193",
+      "notes": "Extracted from runtime code"
+    }
+  },
+  {
+    "id": "param.use_irrational",
+    "entity_type": "generation_parameter",
+    "namespace": "generation",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "use_irrational",
+      "type": "bool",
+      "default_value": "true",
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts",
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params",
+        "EngineConfig"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "params",
+      "api_field": "params",
+      "sidecar_field": "params",
+      "python_field": "cfg",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.686209",
+      "notes": "Extracted from runtime code"
+    }
+  },
+  {
+    "id": "param.use_imaginary",
+    "entity_type": "generation_parameter",
+    "namespace": "generation",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "use_imaginary",
+      "type": "bool",
+      "default_value": "true",
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts",
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params",
+        "EngineConfig"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "params",
+      "api_field": "params",
+      "sidecar_field": "params",
+      "python_field": "cfg",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.686225",
+      "notes": "Extracted from runtime code"
+    }
+  },
+  {
+    "id": "param.use_infinity",
+    "entity_type": "generation_parameter",
+    "namespace": "generation",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "use_infinity",
+      "type": "bool",
+      "default_value": "true",
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts",
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params",
+        "EngineConfig"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "params",
+      "api_field": "params",
+      "sidecar_field": "params",
+      "python_field": "cfg",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.686236",
+      "notes": "Extracted from runtime code"
+    }
+  },
+  {
+    "id": "param.invert_probability",
+    "entity_type": "generation_parameter",
+    "namespace": "generation",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "invert_probability",
+      "type": "float",
+      "default_value": "0.4",
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts",
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params",
+        "EngineConfig"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "params",
+      "api_field": "params",
+      "sidecar_field": "params",
+      "python_field": "cfg",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.690332",
+      "notes": "Extracted from runtime code"
+    }
+  },
+  {
+    "id": "param.psychology_probability",
+    "entity_type": "generation_parameter",
+    "namespace": "generation",
+    "status": "machine_extracted",
+    "version": "1.0.0",
+    "technical": {
+      "name": "psychology_probability",
+      "type": "float",
+      "default_value": "0.6",
+      "allowed_values": [],
+      "min_value": null,
+      "max_value": null,
+      "hard_limit": null,
+      "unit": null,
+      "runtime_used": true,
+      "ui_accessible": true
+    },
+    "semantic": {
+      "display_name": null,
+      "short_description": null,
+      "description": null,
+      "synonyms": [],
+      "query_phrases": [],
+      "positive_examples": [],
+      "negative_examples": [],
+      "effect_on_generation": null,
+      "effect_on_randomness": null,
+      "confidence": null,
+      "needs_human_review": true
+    },
+    "provenance": {
+      "source_files": [
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\lib\\profile-presets.ts",
+        "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\python_engine\\metacrystal_engine_v7.py"
+      ],
+      "source_symbols": [
+        "DEFAULT_PROFILE.params",
+        "EngineConfig"
+      ],
+      "source_lines": [],
+      "ui_component": "ProfileConfigurator",
+      "frontend_field": "params",
+      "api_field": "params",
+      "sidecar_field": "params",
+      "python_field": "cfg",
+      "extraction_method": "config"
+    },
+    "safety": {
+      "risk_level": "unknown",
+      "warning_threshold": null,
+      "estimated_cost": "unknown",
+      "output_size_effect": "unknown",
+      "runtime_effect": "unknown",
+      "persistent_data_effect": "unknown"
+    },
+    "relations": {
+      "compatible_with": [],
+      "incompatible_with": [],
+      "requires": [],
+      "excludes": [],
+      "related_to": [],
+      "aliases": []
+    },
+    "audit": {
+      "verified_in_runtime": true,
+      "verified_in_ui": true,
+      "verified_in_sidecar": true,
+      "last_verified_at": "2026-08-08T04:32:39.690394",
+      "notes": "Extracted from runtime code"
+    }
+  }
+]
