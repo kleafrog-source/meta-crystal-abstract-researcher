@@ -9,6 +9,7 @@ import {
   Download,
   Sparkles,
   MessageSquare,
+  Brain,
   Settings,
   LayoutDashboard,
   CrystalIcon,
@@ -27,6 +28,7 @@ export type PageId =
   | "import"
   | "enrichment"
   | "chat"
+  | "semanticplane"
   | "mmss"
   | "metis"
   | "metisresearch"
@@ -85,6 +87,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "LLM-чат",
     icon: <MessageSquare className="h-4 w-4" />,
     description: "RAG-чат с локальной LLM",
+  },
+  {
+    id: "semanticplane",
+    label: "Semantic Plane",
+    icon: <Brain className="h-4 w-4" />,
+    description: "Separate semantic settings control plane over generation profiles",
   },
   {
     id: "mmss",

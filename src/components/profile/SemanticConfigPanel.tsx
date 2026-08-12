@@ -47,7 +47,7 @@ type ConfigDiffEntry = {
   reason: string;
 };
 
-type SemanticConfigProposal = {
+export type SemanticConfigProposal = {
   query: string;
   retrievalMode: "dense";
   profile: EditableProfile;
@@ -69,29 +69,48 @@ type SemanticConfigProposal = {
   configurationDiff: ConfigDiffEntry[];
 };
 
+export type SemanticConfigPanelState = {
+  query: string;
+  proposal: SemanticConfigProposal | null;
+  error: string | null;
+};
+
 export function SemanticConfigPanel({
   profile,
   onApplyProposal,
+  state,
+  onStateChange,
 }: {
   profile: EditableProfile;
   onApplyProposal: (profile: EditableProfile) => void;
+  state?: SemanticConfigPanelState;
+  onStateChange?: (state: SemanticConfigPanelState) => void;
 }) {
-  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const [proposal, setProposal] = useState<SemanticConfigProposal | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const query = state?.query ?? "";
+  const proposal = state?.proposal ?? null;
+  const error = state?.error ?? null;
+
+  const setPanelState = (next: Partial<SemanticConfigPanelState>) => {
+    onStateChange?.({
+      query,
+      proposal,
+      error,
+      ...next,
+    });
+  };
 
   const handleSuggest = async () => {
     setLoading(true);
-    setError(null);
+    setPanelState({ error: null });
     try {
       const result = await apiPost<{ proposal: SemanticConfigProposal }>("/api/lexicon/propose", {
         query,
         profile,
       });
-      setProposal(result.proposal);
+      setPanelState({ proposal: result.proposal, error: null });
     } catch (requestError) {
-      setError((requestError as Error).message);
+      setPanelState({ error: (requestError as Error).message });
     } finally {
       setLoading(false);
     }
@@ -122,7 +141,7 @@ export function SemanticConfigPanel({
             />
             <Textarea
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={(event) => setPanelState({ query: event.target.value })}
               className="min-h-[120px]"
               placeholder="Generate complex mathematical and biomimetic crystals using a genetic cycle and topological cascade..."
             />
@@ -135,9 +154,7 @@ export function SemanticConfigPanel({
             <Button
               variant="outline"
               onClick={() => {
-                setProposal(null);
-                setError(null);
-                setQuery("");
+                setPanelState({ proposal: null, error: null, query: "" });
               }}
             >
               <RotateCcw className="mr-1.5 h-3.5 w-3.5" />

@@ -299,26 +299,20 @@ function compileProposal(
   const matchedByType = groupMatches(matches);
   const defaults = DEFAULT_PROFILE.params;
   const queryLower = query.toLowerCase();
+  const knownDomainFlags = getKnownTechnicalNames("domain");
+  const knownPatternNames = getKnownTechnicalNames("structural_pattern");
+  const paramReasons = new Map<keyof EditableProfile["params"], ProposedParameterValue>();
 
   for (const key of Object.keys(defaults) as Array<keyof EditableProfile["params"]>) {
     const explicitValue = explicit.params[key];
-    if (explicitValue !== undefined) {
-      nextProfile.params[key] = explicitValue as never;
-      generation[key] = {
-        value: explicitValue,
-        source: "query_explicit",
-        confidence: 1,
-        reason: "Explicitly provided in query",
-      };
-    } else {
-      generation[key] = {
-        value: nextProfile.params[key],
-        source: nextProfile.params[key] === profile.params[key] ? "current_profile" : "default",
-        confidence: "default",
-        reason: nextProfile.params[key] === profile.params[key] ? "Preserved from current profile" : "Default value",
-      };
-      defaultedParameters.push(key);
-    }
+    if (explicitValue === undefined) continue;
+    nextProfile.params[key] = explicitValue as never;
+    paramReasons.set(key, {
+      value: explicitValue,
+      source: "query_explicit",
+      confidence: 1,
+      reason: "Explicitly provided in query",
+    });
   }
 
   for (const toggleKey of ["use_irrational", "use_imaginary", "use_infinity"] as const) {
@@ -336,36 +330,49 @@ function compileProposal(
     }
   }
 
+  const semanticParamOverrides = inferSemanticParameterOverrides({
+    queryLower,
+    currentParams: profile.params,
+    matchedParameters: matchedByType.generation_parameter,
+    explicitParams: explicit.params,
+  });
+
+  for (const [key, proposed] of Object.entries(semanticParamOverrides) as Array<
+    [keyof EditableProfile["params"], ProposedParameterValue]
+  >) {
+    nextProfile.params[key] = proposed.value as never;
+    paramReasons.set(key, proposed);
+    inferredParameters.push(`params.${key}`);
+  }
+
+  if (matchedByType.domain.length > 0) {
+    for (const flagName of knownDomainFlags) {
+      nextProfile.flags[flagName] = false;
+    }
+  }
+
   for (const domain of matchedByType.domain) {
     const flagName = domain.technicalName;
     const isExcluded = explicit.excludedTerms.has(flagName) || explicit.excludedIds.has(domain.id);
     if (isExcluded) {
-      if (nextProfile.flags[flagName] !== false) {
-        nextProfile.flags[flagName] = false;
-        inferredParameters.push(`flags.${flagName}`);
-        configurationDiff.push({
-          scope: "flags",
-          key: flagName,
-          before: profile.flags[flagName],
-          after: false,
-          source: "semantic_retrieval",
-          reason: domain.reason,
-        });
-      }
+      nextProfile.flags[flagName] = false;
+      inferredParameters.push(`flags.${flagName}`);
       continue;
     }
-    if (domain.confidence >= 0.45 && nextProfile.flags[flagName] !== true) {
+    if (domain.confidence >= 0.35) {
       nextProfile.flags[flagName] = true;
       inferredParameters.push(`flags.${flagName}`);
-      configurationDiff.push({
-        scope: "flags",
-        key: flagName,
-        before: profile.flags[flagName],
-        after: true,
-        source: "semantic_retrieval",
-        reason: domain.reason,
-      });
     }
+  }
+
+  if (matchedByType.structural_pattern.length > 0) {
+    const disabled = new Set(
+      nextProfile.disabled_patterns.filter((patternName) => !knownPatternNames.includes(patternName)),
+    );
+    for (const patternName of knownPatternNames) {
+      disabled.add(patternName);
+    }
+    nextProfile.disabled_patterns = [...disabled];
   }
 
   for (const pattern of matchedByType.structural_pattern) {
@@ -381,45 +388,67 @@ function compileProposal(
         disabled.add(patternName);
         nextProfile.disabled_patterns = [...disabled];
         inferredParameters.push(`disabled_patterns.${patternName}`);
-        configurationDiff.push({
-          scope: "patterns",
-          key: patternName,
-          before: profile.disabled_patterns.includes(patternName),
-          after: true,
-          source: "semantic_retrieval",
-          reason: pattern.reason,
-        });
       }
       continue;
     }
 
-    if (disabled.has(patternName) && pattern.confidence >= 0.45) {
+    if (disabled.has(patternName) && pattern.confidence >= 0.35) {
       disabled.delete(patternName);
       nextProfile.disabled_patterns = [...disabled];
       inferredParameters.push(`disabled_patterns.${patternName}`);
-      configurationDiff.push({
-        scope: "patterns",
-        key: patternName,
-        before: true,
-        after: false,
-        source: "semantic_retrieval",
-        reason: pattern.reason,
-      });
     }
   }
 
   const paramKeys = Object.keys(profile.params) as Array<keyof EditableProfile["params"]>;
   for (const key of paramKeys) {
-    if (profile.params[key] !== nextProfile.params[key] && !configurationDiff.find((entry) => entry.scope === "params" && entry.key === key)) {
+    const source = paramReasons.get(key);
+    generation[key] = source ?? {
+      value: nextProfile.params[key],
+      source: nextProfile.params[key] === profile.params[key] ? "current_profile" : "default",
+      confidence: "default",
+      reason: nextProfile.params[key] === profile.params[key] ? "Preserved from current profile" : "Default value",
+    };
+    if (!source) {
+      defaultedParameters.push(key);
+    }
+    if (profile.params[key] !== nextProfile.params[key]) {
       configurationDiff.push({
         scope: "params",
         key,
         before: profile.params[key],
         after: nextProfile.params[key],
-        source: explicit.params[key] !== undefined ? "query_explicit" : "semantic_retrieval",
-        reason: explicit.params[key] !== undefined ? "Explicitly provided in query" : "Updated during proposal compilation",
+        source: source?.source === "query_explicit" ? "query_explicit" : "semantic_retrieval",
+        reason: source?.reason ?? "Updated during proposal compilation",
       });
     }
+  }
+
+  for (const flagName of knownDomainFlags) {
+    const before = Boolean(profile.flags[flagName]);
+    const after = Boolean(nextProfile.flags[flagName]);
+    if (before === after) continue;
+    configurationDiff.push({
+      scope: "flags",
+      key: flagName,
+      before,
+      after,
+      source: "semantic_retrieval",
+      reason: after ? "Enabled by semantic domain retrieval" : "Disabled because it was not selected by the semantic query",
+    });
+  }
+
+  for (const patternName of knownPatternNames) {
+    const before = profile.disabled_patterns.includes(patternName);
+    const after = nextProfile.disabled_patterns.includes(patternName);
+    if (before === after) continue;
+    configurationDiff.push({
+      scope: "patterns",
+      key: patternName,
+      before,
+      after,
+      source: "semantic_retrieval",
+      reason: after ? "Disabled because it was not selected by the semantic query" : "Enabled by semantic pattern retrieval",
+    });
   }
 
   if (matchedByType.domain.length === 0) {
@@ -604,6 +633,150 @@ function validateProposedProfile(profile: EditableProfile, queryLower: string) {
   return { warnings, hardErrors };
 }
 
+function inferSemanticParameterOverrides(input: {
+  queryLower: string;
+  currentParams: EditableProfile["params"];
+  matchedParameters: SemanticMatchedEntry[];
+  explicitParams: Partial<EditableProfile["params"]>;
+}): Partial<Record<keyof EditableProfile["params"], ProposedParameterValue>> {
+  const overrides: Partial<Record<keyof EditableProfile["params"], ProposedParameterValue>> = {};
+  const matchedKeys = new Set(
+    input.matchedParameters
+      .map((entry) => entry.technicalName)
+      .filter((value): value is keyof EditableProfile["params"] => value in input.currentParams),
+  );
+
+  const applyNumberFloor = (
+    key: keyof EditableProfile["params"],
+    value: number,
+    reason: string,
+    confidence = 0.62,
+  ) => {
+    if (input.explicitParams[key] !== undefined) return;
+    const current = Number(input.currentParams[key]);
+    if (Number.isFinite(current) && current >= value) return;
+    overrides[key] = { value, source: "semantic_retrieval", confidence, reason };
+  };
+
+  const applyNumberCeil = (
+    key: keyof EditableProfile["params"],
+    value: number,
+    reason: string,
+    confidence = 0.58,
+  ) => {
+    if (input.explicitParams[key] !== undefined) return;
+    const current = Number(input.currentParams[key]);
+    if (Number.isFinite(current) && current <= value) return;
+    overrides[key] = { value, source: "semantic_retrieval", confidence, reason };
+  };
+
+  const applyBoolean = (
+    key: keyof EditableProfile["params"],
+    value: boolean,
+    reason: string,
+    confidence = 0.74,
+  ) => {
+    if (input.explicitParams[key] !== undefined) return;
+    if (input.currentParams[key] === value) return;
+    overrides[key] = { value, source: "semantic_retrieval", confidence, reason };
+  };
+
+  const q = input.queryLower;
+  const hasAny = (...needles: string[]) => needles.some((needle) => q.includes(needle));
+
+  if (
+    hasAny(
+      "complex",
+      "deep",
+      "recursive",
+      "fractal",
+      "topological",
+      "topology",
+      "hybrid",
+      "biomimetic",
+      "cascade",
+      "многослой",
+      "глубок",
+      "сложн",
+      "каскад",
+      "фракт",
+      "тополог",
+      "гибрид",
+      "биомим",
+    ) ||
+    matchedKeys.has("generations") ||
+    matchedKeys.has("max_depth") ||
+    matchedKeys.has("max_elements")
+  ) {
+    applyNumberFloor("generations", 3, "Raised for a semantically complex / multi-stage query");
+    applyNumberFloor("max_depth", 9, "Raised for a semantically deep / recursive query");
+    applyNumberFloor("max_elements", 14, "Raised for a semantically rich query");
+    applyNumberFloor("top", 4, "Raised to keep more semantic candidates for a rich query", 0.57);
+  }
+
+  if (
+    hasAny(
+      "diverse",
+      "broad",
+      "explore",
+      "varied",
+      "search",
+      "palette",
+      "wide",
+      "divers",
+      "широк",
+      "разнообраз",
+      "вариатив",
+      "поиск",
+      "палитр",
+    ) ||
+    matchedKeys.has("batch") ||
+    matchedKeys.has("top")
+  ) {
+    applyNumberFloor("batch", 160, "Raised to widen semantic search and candidate coverage");
+    applyNumberFloor("top", 5, "Raised to keep a broader top set for exploration", 0.61);
+  }
+
+  if (
+    hasAny(
+      "focused",
+      "strict",
+      "minimal",
+      "compact",
+      "precise",
+      "точн",
+      "миним",
+      "компакт",
+      "строг",
+      "сфокус",
+    )
+  ) {
+    applyNumberCeil("batch", 64, "Lowered for a focused / narrow query");
+    applyNumberCeil("top", 2, "Lowered for a focused / narrow query");
+    applyNumberCeil("max_elements", 8, "Lowered for a compact result shape");
+  }
+
+  if (hasAny("paradox", "contradiction", "inversion", "dissonance", "парадокс", "инверс", "диссонанс")) {
+    applyNumberFloor("invert_probability", 0.6, "Raised because the query implies inversion / paradox");
+  }
+
+  if (hasAny("psychology", "jung", "archetype", "reflection", "cognitive", "психолог", "юнг", "архетип", "рефлекс", "когнит")) {
+    applyNumberFloor("psychology_probability", 0.8, "Raised because the query implies psychological modulation");
+  }
+
+  if (hasAny("without irrational", "без иррацион")) {
+    applyBoolean("use_irrational", false, "Disabled because the query excludes irrational constants");
+  }
+  if (hasAny("without imaginary", "без мним")) {
+    applyBoolean("use_imaginary", false, "Disabled because the query excludes imaginary constants");
+  }
+  if (hasAny("without infinity", "без бесконеч")) {
+    applyBoolean("use_infinity", false, "Disabled because the query excludes infinity");
+  }
+
+  return overrides;
+}
+
 function groupMatches(matches: SemanticMatchedEntry[]) {
   return {
     generation_parameter: matches.filter((entry) => entry.entityType === "generation_parameter"),
@@ -615,6 +788,17 @@ function groupMatches(matches: SemanticMatchedEntry[]) {
     constant: matches.filter((entry) => entry.entityType === "constant"),
     lexical_category: matches.filter((entry) => entry.entityType === "lexical_category"),
   };
+}
+
+function getKnownTechnicalNames(entityType: LexiconEntityType): string[] {
+  const entries = loadValidatedLexiconEntries([entityType]);
+  return Array.from(
+    new Set(
+      entries
+        .map((entry) => entry.technical?.name)
+        .filter((value): value is string => typeof value === "string" && value.trim().length > 0),
+    ),
+  );
 }
 
 function toMatchedEntry(
