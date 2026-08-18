@@ -19,9 +19,16 @@ export type StrudelSearchResult = {
   matched_phrase?: string | null;
 };
 
+// Alias for backward compatibility and Crystal Bridge usage
+export type StrudelSuggestion = StrudelSearchResult;
+
 export type SemanticStrudelState = {
   query: string;
   results: StrudelSearchResult[];
   error: string | null;
   isLoading: boolean;
+};
+
+export type StrudelParamDBItem = StrudelParam & {
+  vector: number[];
 };
