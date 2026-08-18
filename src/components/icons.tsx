@@ -66,6 +66,7 @@ export {
   Sliders,
   GitBranch,
   Clock,
+  PlusCircle,
   type LucideProps,
 } from "lucide-react";
 

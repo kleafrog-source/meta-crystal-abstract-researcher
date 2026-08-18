@@ -1,0 +1,212 @@
+[
+  {
+    "id": "gain",
+    "name": "Gain",
+    "description": "Adjusts the amplitude/volume of the audio signal",
+    "category": "Audio Effects",
+    "vector": []
+  },
+  {
+    "id": "lpf",
+    "name": "Low-Pass Filter",
+    "description": "Removes high frequencies based on cutoff frequency, creates muffled sound",
+    "category": "Audio Effects",
+    "vector": []
+  },
+  {
+    "id": "hpf",
+    "name": "High-Pass Filter",
+    "description": "Removes low frequencies, creates thin, bright sound",
+    "category": "Audio Effects",
+    "vector": []
+  },
+  {
+    "id": "crush",
+    "name": "Crush",
+    "description": "Bit-crushing effect for retro, lo-fi digital distortion and glitchy sounds",
+    "category": "Audio Effects",
+    "vector": []
+  },
+  {
+    "id": "distort",
+    "name": "Distortion",
+    "description": "Adds harmonic distortion for aggressive, overdriven sound",
+    "category": "Audio Effects",
+    "vector": []
+  },
+  {
+    "id": "delay",
+    "name": "Delay",
+    "description": "Creates echo/repeat effects by delaying the audio signal",
+    "category": "Audio Effects",
+    "vector": []
+  },
+  {
+    "id": "reverb",
+    "name": "Reverb",
+    "description": "Simulates room/space acoustics for ambient, spacious sound",
+    "category": "Audio Effects",
+    "vector": []
+  },
+  {
+    "id": "pan",
+    "name": "Pan",
+    "description": "Positions sound in stereo field from left to right",
+    "category": "Audio Effects",
+    "vector": []
+  },
+  {
+    "id": "sine",
+    "name": "Sine Wave",
+    "description": "Pure sine wave oscillator, smooth and fundamental tone",
+    "category": "Oscillators",
+    "vector": []
+  },
+  {
+    "id": "sawtooth",
+    "name": "Sawtooth Wave",
+    "description": "Rich, bright waveform with harmonics, classic synth sound",
+    "category": "Oscillators",
+    "vector": []
+  },
+  {
+    "id": "square",
+    "name": "Square Wave",
+    "description": "Hollow, woody waveform with odd harmonics, classic chiptune sound",
+    "category": "Oscillators",
+    "vector": []
+  },
+  {
+    "id": "triangle",
+    "name": "Triangle Wave",
+    "description": "Soft, flute-like waveform with gentle harmonics",
+    "category": "Oscillators",
+    "vector": []
+  },
+  {
+    "id": "noise",
+    "name": "Noise",
+    "description": "White noise generator for percussion, wind, or texture effects",
+    "category": "Oscillators",
+    "vector": []
+  },
+  {
+    "id": "fm",
+    "name": "FM Synthesis",
+    "description": "Frequency modulation synthesis for metallic, bell-like tones",
+    "category": "Synthesis",
+    "vector": []
+  },
+  {
+    "id": "am",
+    "name": "AM Synthesis",
+    "description": "Amplitude modulation synthesis for tremolo and ring modulation effects",
+    "category": "Synthesis",
+    "vector": []
+  },
+  {
+    "id": "arp",
+    "name": "Arpeggiator",
+    "description": "Automatically plays notes in sequence, creates running patterns",
+    "category": "Sequencing",
+    "vector": []
+  },
+  {
+    "id": "seq",
+    "name": "Sequencer",
+    "description": "Programs note patterns and rhythms in steps",
+    "category": "Sequencing",
+    "vector": []
+  },
+  {
+    "id": "slow",
+    "name": "Slow",
+    "description": "Slows down the pattern by repeating each step multiple times",
+    "category": "Time Manipulation",
+    "vector": []
+  },
+  {
+    "id": "fast",
+    "name": "Fast",
+    "description": "Speeds up the pattern by dividing each step",
+    "category": "Time Manipulation",
+    "vector": []
+  },
+  {
+    "id": "stretch",
+    "name": "Stretch",
+    "description": "Stretches pattern across multiple cycles",
+    "category": "Time Manipulation",
+    "vector": []
+  },
+  {
+    "id": "loop",
+    "name": "Loop",
+    "description": "Repeats a pattern for specified number of cycles",
+    "category": "Sequencing",
+    "vector": []
+  },
+  {
+    "id": "rand",
+    "name": "Random",
+    "description": "Randomly selects values from provided options for generative patterns",
+    "category": "Generative",
+    "vector": []
+  },
+  {
+    "id": "euclid",
+    "name": "Euclidean Rhythm",
+    "description": "Generates rhythmic patterns using Euclidean algorithm for world music rhythms",
+    "category": "Generative",
+    "vector": []
+  },
+  {
+    "id": "mute",
+    "name": "Mute",
+    "description": "Silences specific steps or tracks in the pattern",
+    "category": "Sequencing",
+    "vector": []
+  },
+  {
+    "id": "density",
+    "name": "Density",
+    "description": "Increases note density by adding random notes to pattern",
+    "category": "Generative",
+    "vector": []
+  },
+  {
+    "id": "chunk",
+    "name": "Chunk",
+    "description": "Groups pattern elements into chunks for polyrhythmic effects",
+    "category": "Sequencing",
+    "vector": []
+  },
+  {
+    "id": "note",
+    "name": "Note",
+    "description": "Specifies musical notes with octave information",
+    "category": "Music Theory",
+    "vector": []
+  },
+  {
+    "id": "scale",
+    "name": "Scale",
+    "description": "Constrains notes to a specific musical scale",
+    "category": "Music Theory",
+    "vector": []
+  },
+  {
+    "id": "chord",
+    "name": "Chord",
+    "description": "Plays multiple notes simultaneously as chords",
+    "category": "Music Theory",
+    "vector": []
+  },
+  {
+    "id": "transp",
+    "name": "Transpose",
+    "description": "Shifts all notes up or down by semitones",
+    "category": "Music Theory",
+    "vector": []
+  }
+]
