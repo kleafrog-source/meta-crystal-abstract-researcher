@@ -29,6 +29,8 @@ export type PageId =
   | "enrichment"
   | "chat"
   | "semanticplane"
+  | "strudel"
+  | "strudelflow"
   | "mmss"
   | "metis"
   | "metisresearch"
@@ -93,6 +95,18 @@ const NAV_ITEMS: NavItem[] = [
     label: "Semantic Plane",
     icon: <Brain className="h-4 w-4" />,
     description: "Separate semantic settings control plane over generation profiles",
+  },
+  {
+    id: "strudel",
+    label: "Strudel Lab",
+    icon: <Sparkles className="h-4 w-4" />,
+    description: "Semantic Strudel parameter search and crystal-to-audio bridge",
+  },
+  {
+    id: "strudelflow",
+    label: "Strudel Flow",
+    icon: <Workflow className="h-4 w-4" />,
+    description: "Full upstream-style Strudel Flow editor with drag-and-drop nodes, playback, save/load and shareable project JSON",
   },
   {
     id: "mmss",

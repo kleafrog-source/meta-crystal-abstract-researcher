@@ -25,6 +25,7 @@ export {
   Send,
   Loader2,
   CheckCircle2,
+  AlertCircle,
   XCircle,
   AlertTriangle,
   Info,
@@ -43,6 +44,7 @@ export {
   Copy,
   X,
   Filter,
+  ArrowRight,
   ArrowUpRight,
   ArrowDownRight,
   CircleDot,
@@ -66,6 +68,7 @@ export {
   Sliders,
   GitBranch,
   Clock,
+  PlusCircle,
   type LucideProps,
 } from "lucide-react";
 

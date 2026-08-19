@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@xyflow/react/dist/style.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -171,5 +172,17 @@
     font-family: var(--font-geist-mono), monospace;
     background: oklch(0.09 0.012 250);
     border: 1px solid oklch(0.28 0.02 250 / 60%);
+  }
+
+  .strudel-flow-editor-shell,
+  .reactflow-wrapper {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .reactflow-wrapper .react-flow {
+    width: 100%;
+    height: 100%;
   }
 }

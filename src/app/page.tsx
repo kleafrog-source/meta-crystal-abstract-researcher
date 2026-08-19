@@ -9,6 +9,8 @@ import { Import } from "@/components/pages/Import";
 import { Enrichment } from "@/components/pages/Enrichment";
 import { Chat } from "@/components/pages/Chat";
 import { SemanticPlane } from "@/components/pages/SemanticPlane";
+import { StrudelLab } from "@/components/pages/StrudelLab";
+import { StrudelFlowEditor } from "@/components/pages/StrudelFlowEditor";
 import { MMSS } from "@/components/pages/MMSS";
 import { MetisLab } from "@/components/pages/MetisLab";
 import { MetisResearchLab } from "@/components/pages/MetisResearchLab";
@@ -39,6 +41,10 @@ export default function Home() {
             return <Chat />;
           case "semanticplane":
             return <SemanticPlane />;
+          case "strudel":
+            return <StrudelLab />;
+          case "strudelflow":
+            return <StrudelFlowEditor />;
           case "mmss":
             return <MMSS />;
           case "metis":

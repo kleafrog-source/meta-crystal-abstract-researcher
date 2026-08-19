@@ -1,0 +1,126 @@
+import { Edge } from '@xyflow/react';
+import { AppNode } from "@/strudel-editor/components/nodes";
+import nodesConfig, { nodeTypes } from "@/strudel-editor/components/nodes";
+import { findConnectedComponents } from './graph-utils';
+
+type NodeWithStrudelOutput = {
+  strudelOutput?: (node: AppNode, strudelString: string) => string;
+};
+
+export function getNodeStrudelOutput(nodeType: string) {
+  const NodeComponent = nodeTypes[nodeType as keyof typeof nodeTypes] as NodeWithStrudelOutput;
+  return NodeComponent?.strudelOutput;
+}
+
+function optimizeSoundCalls(strudelString: string): string {
+  let optimized = strudelString;
+  let previousLength = 0;
+
+  // Keep applying optimization until no more changes are made
+  while (optimized.length !== previousLength) {
+    previousLength = optimized.length;
+    // Replace consecutive .sound() calls with combined ones
+    // This regex matches: .sound("something").sound("something else")
+    optimized = optimized.replace(
+      /\.sound\("([^"]+)"\)\.sound\("([^"]+)"\)/g,
+      '.sound("$1 $2")'
+    );
+  }
+
+  return optimized;
+}
+function isSoundSource(node: AppNode): boolean {
+  const category = nodesConfig[node.type]?.category;
+  return category === 'Instruments';
+}
+
+export function generateOutput(
+  nodes: AppNode[],
+  edges: Edge[],
+  cpm: string,
+  bpc: string
+): string {
+  const nodePatterns: Record<string, string> = {};
+  for (const node of nodes) {
+    const strudelOutput = getNodeStrudelOutput(node.type);
+    if (!strudelOutput) continue;
+
+    try {
+      const pattern = strudelOutput(node, '');
+      if (pattern?.trim()) {
+        nodePatterns[node.id] = pattern;
+      }
+    } catch (err) {
+      console.warn(`Error generating pattern for node ${node.type}:`, err);
+    }
+  }
+
+  const components = findConnectedComponents(nodes, edges);
+  const finalPatterns: { pattern: string; paused: boolean }[] = [];
+
+  for (const componentNodeIds of components) {
+    const componentNodes = componentNodeIds
+      .map((id) => nodes.find((n) => n.id === id))
+      .filter(Boolean) as AppNode[];
+
+    const [sources, effects] = componentNodes.reduce<[AppNode[], AppNode[]]>(
+      ([src, eff], node) => {
+        isSoundSource(node) ? src.push(node) : eff.push(node);
+        return [src, eff];
+      },
+      [[], []]
+    );
+
+    if (sources.length === 0) continue;
+
+    const allSourcesPaused = sources.every(
+      (node) => node.data.state === 'paused'
+    );
+    const activePatterns = (
+      allSourcesPaused
+        ? sources
+        : sources.filter((node) => node.data.state !== 'paused')
+    )
+      .map((node) => nodePatterns[node.id])
+      .filter(Boolean);
+
+    if (activePatterns.length === 0) continue;
+
+    let pattern =
+      activePatterns.length === 1
+        ? activePatterns[0]
+        : `stack(${activePatterns.join(', ')})`;
+
+    for (const effect of effects) {
+      const strudelOutput = getNodeStrudelOutput(effect.type);
+      if (strudelOutput && pattern) {
+        pattern = strudelOutput(effect, pattern);
+      }
+    }
+
+    if (pattern) {
+      finalPatterns.push({
+        pattern: optimizeSoundCalls(pattern),
+        paused: allSourcesPaused,
+      });
+    }
+  }
+
+  if (finalPatterns.length === 0) return '';
+
+  const result = finalPatterns
+    .map(({ pattern, paused }) => {
+      const line = `$: ${pattern}`;
+      return paused ? `// ${line}` : line;
+    })
+    .join('\n');
+
+  // Always add setcpm if there's sound (like other node outputs)
+  if (result) {
+    const bpm = parseInt(cpm) || 120;
+    const beatsPerCycle = parseInt(bpc) || 4;
+    return `setcpm(${bpm}/${beatsPerCycle})\n${result}`;
+  }
+
+  return result;
+}

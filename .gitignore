@@ -91,3 +91,7 @@ metis-torus-atlas-demo-v2/
 python_engine/alchemy-meta-engine-2/*
 backups/*
 *mmss-meta-crystal/python_engine/alchemy-meta-engine-2/metacrystals_v7/*
+.tmp/
+python_engine/strudel_rag/plugin-reference/
+python_engine/src/
+src/strudel-editor/doc-with-links-repos-and-links-for collecting-all-data-we-need.md
