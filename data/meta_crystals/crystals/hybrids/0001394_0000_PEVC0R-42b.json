@@ -1,0 +1,73 @@
+{
+  "meta": {
+    "code": "PEVC0R-42b",
+    "type": "hybrid",
+    "category": "hybrids",
+    "counter": 1394,
+    "step": 0,
+    "datetime": "2026-07-14T19:24:01.053534",
+    "generation": 0
+  },
+  "crystal": {
+    "focus": {
+      "type": "fair_division",
+      "word": "справедливость",
+      "category": "focus"
+    },
+    "pattern": "рефлексивный",
+    "elements": [
+      "Φ_universal_cohesion",
+      "истина",
+      "Тиферет_Йесод_Малкут",
+      "⚖",
+      "число"
+    ],
+    "operators": [
+      {
+        "key": "этическое_встраивание",
+        "symbol": "⊕",
+        "type": "weave",
+        "arity": 1,
+        "priority": 4,
+        "formula": "⊕_ethical = V ⊗ Φ_existential_DNA",
+        "description": "Этическое встраивание в ткань"
+      },
+      {
+        "key": "Q_ротор",
+        "symbol": "Q",
+        "type": "qgeom",
+        "arity": 1,
+        "priority": 4,
+        "formula": "Q(x) = q0 + i q1 + j q2 + k q3, Q†Q=1",
+        "description": "Физический ротор поля (S³)"
+      },
+      {
+        "key": "MMS",
+        "symbol": "MMS",
+        "type": "fair",
+        "arity": 1,
+        "priority": 4,
+        "description": "Maximin share guarantee"
+      },
+      {
+        "key": "резонансный_баланс",
+        "symbol": "⚖",
+        "type": "meta",
+        "arity": 1,
+        "priority": 4,
+        "formula": "Β_balance = (G_S × V)/(C_val+ε) × tanh(R_T·N)",
+        "description": "Балансировка резонансных состояний"
+      }
+    ],
+    "combination": "Φ_universal_cohesion ⊗ ∂/∂t [ истина ⊕ Тиферет_Йесод_Малкут ] ^ ⚖",
+    "complexity": 21,
+    "quality_score": 0,
+    "metrics": {}
+  },
+  "classification": {
+    "type": "hybrid",
+    "reasons": [
+      "Автоматическая классификация"
+    ]
+  }
+}
