@@ -1,0 +1,143 @@
+{
+  "meta": {
+    "code": "MFOAN0Y-412",
+    "type": "sacred_geometry",
+    "category": "sacred_geometry",
+    "counter": 2844,
+    "step": 0,
+    "datetime": "2026-07-23T01:11:02.053519",
+    "generation": 0
+  },
+  "crystal": {
+    "focus": {
+      "type": "kabbalistic",
+      "word": "сфирот_десять",
+      "category": "focus"
+    },
+    "pattern": "голографический",
+    "elements": [
+      "Древний_Египет_Маат",
+      "вероятность",
+      "сечение_золотое_Ле_Корбюзье",
+      "tDCS_постоянный_ток",
+      "Cassandra_широкий_столбец",
+      "НАД_никотинамидадениндинуклеотид",
+      "perplexity_перплексия",
+      "W_state_запутанность",
+      "парадокс_Рассела",
+      "эпистемология_бихевиоризма_Куайн",
+      "a_pattern_language",
+      "интуиция"
+    ],
+    "operators": [
+      {
+        "key": "цветок_жизни_сборка",
+        "symbol": "✿_FoL",
+        "type": "sacred",
+        "arity": 1,
+        "priority": 4,
+        "formula": "FoL = 19 кругов в шестигранной симметрии",
+        "description": "Цветок жизни (19 кругов)"
+      },
+      {
+        "key": "отрицание",
+        "symbol": "¬",
+        "type": "logic",
+        "arity": 1,
+        "priority": 5
+      },
+      {
+        "key": "волновой_оператор",
+        "symbol": "∇²",
+        "type": "physics",
+        "arity": 1,
+        "priority": 4
+      },
+      {
+        "key": "ракоход_обращение",
+        "symbol": "Retro_Inv",
+        "type": "music",
+        "arity": 1,
+        "priority": 4,
+        "formula": "Retro(P) = rev(P), Inv(P) = −P (по интервалам)",
+        "description": "Ракоход и обращение темы"
+      },
+      {
+        "key": "двойной_интеграл",
+        "symbol": "∫∫",
+        "type": "math",
+        "arity": 1,
+        "priority": 4
+      },
+      {
+        "key": "возведение_в_степень",
+        "symbol": "^",
+        "type": "math",
+        "arity": 2,
+        "priority": 3
+      },
+      {
+        "key": "импликация",
+        "symbol": "→",
+        "type": "logic",
+        "arity": 2,
+        "priority": 1
+      },
+      {
+        "key": "нисхождение_сфирот",
+        "symbol": "Sefirot_↓",
+        "type": "kabbalah",
+        "arity": 1,
+        "priority": 4,
+        "formula": "Кетер → Хохма → Бина → Хесед → Гвура → Тиферет → ... → Малкут",
+        "description": "Нисхождение 10 сфирот"
+      },
+      {
+        "key": "гармонический_ряд_обертонов",
+        "symbol": "H_n",
+        "type": "music",
+        "arity": 1,
+        "priority": 4,
+        "formula": "f_n = n · f_0, n=1,2,3,...",
+        "description": "Натуральный обертоновый ряд"
+      },
+      {
+        "key": "отрицание",
+        "symbol": "¬",
+        "type": "logic",
+        "arity": 1,
+        "priority": 5
+      },
+      {
+        "key": "платоново_тело_свёртка",
+        "symbol": "Φ_plat",
+        "type": "sacred",
+        "arity": 1,
+        "priority": 4,
+        "formula": "5 тел: тетраэдр, гексаэдр, октаэдр, додекаэдр, икосаэдр",
+        "description": "Свёртка платоновых тел"
+      }
+    ],
+    "combination": "✿_FoL ( ( Древний_Египет_Маат)^{вероятность} + (сечение_золотое_Ле_Корбюзье)^{tDCS_постоянный_ток} ) ¬",
+    "complexity": 17,
+    "quality_score": 0.596379663651908,
+    "metrics": {
+      "V": 0.6500000000000001,
+      "S": 0.004215686274509804,
+      "N": 0.9957843137254901,
+      "D_f": 3.4,
+      "G_S": 0.0005638918265156223,
+      "R_T": 2.61803,
+      "QEC": 0.00032969080855939814,
+      "CHSH": 2.0,
+      "C_val": 0.1,
+      "quality_score": 0.596379663651908
+    }
+  },
+  "classification": {
+    "type": "sacred_geometry",
+    "reasons": [
+      "Автоматическая классификация"
+    ]
+  }
+}
