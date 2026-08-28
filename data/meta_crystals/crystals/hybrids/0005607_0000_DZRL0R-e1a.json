@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "code": "DZRL0R-e1a",
+    "type": "hybrid",
+    "category": "hybrids",
+    "counter": 5607,
+    "step": 0,
+    "datetime": "2026-08-23T15:15:36.627946",
+    "generation": 0
+  },
+  "crystal": {
+    "focus": {
+      "type": "relation",
+      "word": "взаимодействие",
+      "category": "focus"
+    },
+    "pattern": "рефлексивный",
+    "elements": [
+      "алкан_углеводород_насыщенный",
+      "правило_Байеса_решений",
+      "семантические_примитивы_Вежбицкая",
+      "изокоста_изокванта",
+      "самость",
+      "бета_функция_асимптотическая_свобода_Гросс",
+      "free_jazz_Колтрейн"
+    ],
+    "operators": [
+      {
+        "key": "дзета_Римана",
+        "symbol": "ζ(s)",
+        "type": "numtheory",
+        "arity": 1,
+        "priority": 4,
+        "formula": "ζ(s) = Σ(n=1,∞) n^(−s)",
+        "description": "Дзета-функция Римана"
+      },
+      {
+        "key": "сложение",
+        "symbol": "+",
+        "type": "math",
+        "arity": 2,
+        "priority": 1
+      },
+      {
+        "key": "контравариантный_функтор",
+        "symbol": "F⟵",
+        "type": "category",
+        "arity": 1,
+        "priority": 4,
+        "formula": "F: Aᵒᵖ → B, F(f∘g) = F(g)∘F(f)",
+        "description": "Контравариантный функтор"
+      },
+      {
+        "key": "двойной_интеграл",
+        "symbol": "∫∫",
+        "type": "math",
+        "arity": 1,
+        "priority": 4
+      },
+      {
+        "key": "контекст_сжатие",
+        "symbol": "🎯",
+        "type": "meta",
+        "arity": 1,
+        "priority": 4,
+        "formula": "Θ_compress = 1/(S+ε) × ∮(Ψ×∇Φ)dτ × (1 − C_val/R_T)",
+        "description": "Сжатие контекста с сохранением плотности"
+      },
+      {
+        "key": "zitter_частота",
+        "symbol": "ω_z",
+        "type": "physics",
+        "arity": 0,
+        "priority": 0,
+        "formula": "ω_z = 2 m0",
+        "description": "Частота zitterbewegung"
+      }
+    ],
+    "combination": "(алкан_углеводород_насыщенный ⊗ ∂/∂t [ правило_Байеса_решений ⊕ семантические_примитивы_Вежбицкая ] ^ изокоста_изокванта) ^ (√(-1))",
+    "complexity": 17,
+    "quality_score": 0.6107564065105071,
+    "metrics": {
+      "V": 0.7200000000000001,
+      "S": 0.003282442748091603,
+      "N": 0.9967175572519084,
+      "D_f": 3.4,
+      "G_S": 0.0004820628958865024,
+      "R_T": 2.61803,
+      "QEC": 0.0003469180487191537,
+      "CHSH": 2.0,
+      "C_val": 0.0,
+      "quality_score": 0.6107564065105071
+    }
+  },
+  "classification": {
+    "type": "hybrid",
+    "reasons": [
+      "Автоматическая классификация"
+    ]
+  }
+}
