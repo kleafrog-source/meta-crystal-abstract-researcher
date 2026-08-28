@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "code": "GLCIP-d3b",
+    "type": "paradox",
+    "category": "paradoxes",
+    "counter": 4917,
+    "step": 0,
+    "datetime": "2026-08-12T03:52:30.002475",
+    "generation": 0
+  },
+  "crystal": {
+    "focus": {
+      "type": "algorithmic",
+      "word": "последовательность",
+      "category": "focus"
+    },
+    "pattern": "парадоксальный",
+    "elements": [
+      "reinforcement_learning_робот_обучение",
+      "Минойская_цивилизация",
+      "внутренний_крепостный",
+      "многообразие",
+      "миметическое_желание_Жирар",
+      "билинейное_отображение"
+    ],
+    "operators": [
+      {
+        "key": "предел",
+        "symbol": "lim",
+        "type": "math",
+        "arity": 1,
+        "priority": 4
+      },
+      {
+        "key": "инвертировать_восприятие",
+        "symbol": "ᵢ",
+        "type": "psych",
+        "arity": 1,
+        "priority": 0
+      },
+      {
+        "key": "вызвать_диссонанс",
+        "symbol": "ᵈ",
+        "type": "psych",
+        "arity": 1,
+        "priority": 0
+      },
+      {
+        "key": "возведение_в_степень",
+        "symbol": "^",
+        "type": "math",
+        "arity": 2,
+        "priority": 3
+      },
+      {
+        "key": "топологический_инвариант_Z2",
+        "symbol": "ν_Z2",
+        "type": "cond",
+        "arity": 1,
+        "priority": 4,
+        "formula": "ν = (−1)^Σ_i ∫_{BZ} F_i/2π",
+        "description": "Z2-топологический инвариант"
+      },
+      {
+        "key": "вызвать_диссонанс",
+        "symbol": "ᵈ",
+        "type": "psych",
+        "arity": 1,
+        "priority": 0
+      }
+    ],
+    "combination": "(¬( reinforcement_learning_робот_обучение lim ¬reinforcement_learning_робот_обучение )) ^ (√(-1))",
+    "complexity": 30,
+    "quality_score": 0.5988078192142869,
+    "metrics": {
+      "V": 0.66,
+      "S": 0.0030927835051546395,
+      "N": 0.9969072164948454,
+      "D_f": 3.4,
+      "G_S": 0.0003783637813419177,
+      "R_T": 2.61803,
+      "QEC": 0.00022466308174396303,
+      "CHSH": 2.0,
+      "C_val": 0.1,
+      "quality_score": 0.5988078192142869
+    }
+  },
+  "classification": {
+    "type": "paradox",
+    "reasons": [
+      "Автоматическая классификация"
+    ]
+  }
+}
