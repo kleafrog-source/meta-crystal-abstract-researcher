@@ -1,0 +1,147 @@
+{
+  "meta": {
+    "code": "CQCDY-c7c",
+    "type": "knot_theory",
+    "category": "knot_theory",
+    "counter": 1479,
+    "step": 0,
+    "datetime": "2026-07-14T21:32:05.476062",
+    "generation": 0
+  },
+  "crystal": {
+    "focus": {
+      "type": "transform",
+      "word": "отражение",
+      "category": "focus"
+    },
+    "pattern": "голографический",
+    "elements": [
+      "абсолютная_контекстуальность",
+      "Φ_fractal_field",
+      "гамма_ритм",
+      "числа_Каталана",
+      "морфогенетическое_поле_Шелдрейка",
+      "мифология_Бартса",
+      "изолирующий_язык",
+      "чистый_смысл",
+      "грамматикализация",
+      "локальный_реализм",
+      "протокол_Диффи_Хеллмана"
+    ],
+    "operators": [
+      {
+        "key": "производная_второго_порядка",
+        "symbol": "∂²/∂t²",
+        "type": "math",
+        "arity": 1,
+        "priority": 4
+      },
+      {
+        "key": "полином_Джонса",
+        "symbol": "V_K(t)",
+        "type": "knot",
+        "arity": 1,
+        "priority": 4,
+        "formula": "V_K(t) = (−t)^((−1/2)) ... ∈ ℤ[t^(±1/2)]",
+        "description": "Полиномиальный инвариант Джонса"
+      },
+      {
+        "key": "умножение",
+        "symbol": "⊗",
+        "type": "math",
+        "arity": 2,
+        "priority": 2
+      },
+      {
+        "key": "перенормировка_группа",
+        "symbol": "RG",
+        "type": "qft",
+        "arity": 1,
+        "priority": 4,
+        "formula": "β(g) = μ ∂g/∂μ",
+        "description": "Ренормгрупповой поток"
+      },
+      {
+        "key": "коммутатор_Ли",
+        "symbol": "[,]_L",
+        "type": "alg",
+        "arity": 2,
+        "priority": 3,
+        "formula": "[X,Y] = XY − YX",
+        "description": "Коммутатор алгебры Ли"
+      },
+      {
+        "key": "паттерн_рекурсия",
+        "symbol": "🔍",
+        "type": "meta",
+        "arity": 1,
+        "priority": 4,
+        "formula": "Π_rec = ∂(Ψ × ∇S)/∂t + G_S × log(1 + D_f/9.0)",
+        "description": "Рекурсивное извлечение паттернов"
+      },
+      {
+        "key": "неадиабатический_переход",
+        "symbol": "NA",
+        "type": "qgeom",
+        "arity": 1,
+        "priority": 4,
+        "description": "Неадиабатический переход"
+      },
+      {
+        "key": "преобразование_Лоренца",
+        "symbol": "Λ_μ^ν",
+        "type": "rel",
+        "arity": 1,
+        "priority": 4,
+        "formula": "x' = Λx, Λ^T η Λ = η",
+        "description": "Преобразование Лоренца"
+      },
+      {
+        "key": "scale_free_распределение",
+        "symbol": "P(k)",
+        "type": "network",
+        "arity": 1,
+        "priority": 4,
+        "formula": "P(k) ~ k^(−γ), γ ∈ [2, 3]",
+        "description": "Степенное распределение Барабаси"
+      },
+      {
+        "key": "групповое_умножение",
+        "symbol": "∘g",
+        "type": "alg",
+        "arity": 2,
+        "priority": 2,
+        "formula": "(a ∘g b) ∈ G, ассоциативно",
+        "description": "Групповая операция"
+      },
+      {
+        "key": "вызвать_диссонанс",
+        "symbol": "ᵈ",
+        "type": "psych",
+        "arity": 1,
+        "priority": 0
+      }
+    ],
+    "combination": "∂²/∂t² ( ( абсолютная_контекстуальность)^{Φ_fractal_field} + (гамма_ритм)^{числа_Каталана} ) V_K(t)",
+    "complexity": 29,
+    "quality_score": 0.7183978569041761,
+    "metrics": {
+      "V": 0.7599999999999999,
+      "S": 0.004242424242424243,
+      "N": 0.9957575757575757,
+      "D_f": 8.4,
+      "G_S": 0.0006242486613456754,
+      "R_T": 2.61803,
+      "QEC": 0.00047413300572860965,
+      "CHSH": 2.0,
+      "C_val": 0.0,
+      "quality_score": 0.7183978569041761
+    }
+  },
+  "classification": {
+    "type": "knot_theory",
+    "reasons": [
+      "Автоматическая классификация"
+    ]
+  }
+}
