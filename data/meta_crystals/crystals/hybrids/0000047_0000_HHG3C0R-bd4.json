@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "code": "HHG3C0R-bd4",
+    "type": "hybrid",
+    "category": "hybrids",
+    "counter": 47,
+    "step": 0,
+    "datetime": "2026-07-14T12:44:36.453644",
+    "generation": 0
+  },
+  "crystal": {
+    "focus": {
+      "type": "holographic",
+      "word": "парадокс_Хокинга",
+      "category": "focus"
+    },
+    "pattern": "рефлексивный",
+    "elements": [
+      "как_вверху_так_и_внизу",
+      "теорема_Кука_Левина",
+      "скрытый_параметр",
+      "эстетика_форм_Томпсон",
+      "мартингал",
+      "оператор"
+    ],
+    "operators": [
+      {
+        "key": "вентиль_Адамара",
+        "symbol": "H_gate",
+        "type": "qinfo",
+        "arity": 1,
+        "priority": 4,
+        "formula": "H|0⟩ = (|0⟩+|1⟩)/√2, H|1⟩ = (|0⟩−|1⟩)/√2",
+        "description": "Вентиль Адамара"
+      },
+      {
+        "key": "морфемный_синтез",
+        "symbol": "⊕ₘ",
+        "type": "linguistic",
+        "arity": 2,
+        "priority": 2,
+        "description": "Склеивание корней с интерфиксами",
+        "rules": {
+          "interfix": [
+            "о",
+            "е"
+          ],
+          "mutations": {
+            "г": "ж",
+            "к": "ч",
+            "х": "ш"
+          }
+        }
+      },
+      {
+        "key": "AdS_CFT_соответствие",
+        "symbol": "AdS/CFT",
+        "type": "holographic",
+        "arity": 1,
+        "priority": 4,
+        "formula": "Гравитация в AdS_{d+1} ≡ CFT_d",
+        "description": "AdS/CFT соответствие Малдасены"
+      },
+      {
+        "key": "факторгруппа",
+        "symbol": "G/H",
+        "type": "alg",
+        "arity": 1,
+        "priority": 4,
+        "formula": "G/H = {gH : g ∈ G}",
+        "description": "Факторгруппа по нормальному делителю"
+      },
+      {
+        "key": "петля_резонанса",
+        "symbol": "↻",
+        "type": "weave",
+        "arity": 1,
+        "priority": 4,
+        "formula": "↻_resonance = G_S ⊗ Φ_universal_resonance",
+        "description": "Резонансная петля"
+      }
+    ],
+    "combination": "(как_вверху_так_и_внизу ⊗ ∂/∂t [ теорема_Кука_Левина ⊕ скрытый_параметр ] ^ эстетика_форм_Томпсон) ^ (π^∞)",
+    "complexity": 24,
+    "quality_score": 0.7087143106425493,
+    "metrics": {
+      "V": 0.73,
+      "S": 0.0033962264150943396,
+      "N": 0.9966037735849057,
+      "D_f": 8.2,
+      "G_S": 0.0004988871792914405,
+      "R_T": 2.61803,
+      "QEC": 0.0003640060429347447,
+      "CHSH": 2.0,
+      "C_val": 0.0,
+      "quality_score": 0.7087143106425493
+    }
+  },
+  "classification": {
+    "type": "hybrid",
+    "reasons": [
+      "Автоматическая классификация"
+    ]
+  }
+}
