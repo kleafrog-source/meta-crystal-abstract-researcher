@@ -52,18 +52,50 @@
 
 ---
 
-### **5. VOICE/PHONETIC LAYER (Optional for Instrumental)**
-**Core**: Voice = psychoacoustic FX marker, not pop lead. Short spoken/chant/alien fragments; text may repeat, fragment, dissolve into delay/noise.
-**Survival**: `P_survive = (Novelty×0.4 + Coherence×0.3 + Emotional_Impact×0.3) × Mode_Fusion`
-**Formulas**:
-- `MFS` = Σ(mode_i × weight_i) / mode_count
-- `NC` = 1 - (fragmentation × 0.6 + meltdown × 0.4)
-- `ED` = Σ(impact_scores) × drama_intensification
-**Rules**:
+## 5. VOCAL FUSION ENGINE (VFE) — Phonetic Rasa Mapping
+**Definition**: "Vocal" in this context = **phonetic spectral events**, NOT singing parts. Includes whispers, screams, glottal impulses, glossolalia, deconstructed phonemes, synthetic voice textures. Optimized for spectral impact, not lyrical clarity.
+
+**Core**: `P_survive = (Novelty×number + Coherence×number + Emotional_Impact×number) × Mode_Fusion`
+**VFE Phonetic Rules**:
 - IF `drama_peak` THEN: `[word, silence_Δt, word]` (tihaī pattern).
 - IF `narrative_collapse` THEN: `Σ(Word_i(t + τ_i) × Noise_i)` (spectral blur).
-- IF `ambient_layer` THEN: `Whisper(Text, pan(t), filter(f))` (cosmic echoes).
-**Constraints**: MAX 3 dominant modes. MIN 1 traditional_anchor phoneme (Om, Akash, Nada, or synthetic syllable). BALANCE: fragmentation vs coherence > 0.4. NO pop verse-chorus structures. Lyrics are phonetic/spectral events.
+- IF `ambient_layer` THEN: `Whisper(Text, pan(t), filter(f))` (haveli echoes).
+- IF `rhythmic_base` THEN: `Syllable[i] → Drum_event[j]` (percussive consonants mapped to mridangam/timbale).
+**Constraints**: MAX number dominant modes. MIN number traditional_anchor phoneme (Om, Swaram, Akash, Nada). BALANCE: fragmentation vs coherence > number. NO standard pop verse-chorus structures.
+
+### 5.1. VOCAL META-TAGGING SYSTEM (VMTS v4.0)
+**Syntax**: `[iso_lang]-[TECH4]-[FX4]_[I][S][E][A]`
+- **`iso_lang`**: STRICTLY LOWERCASE. **ISO 639-1** (2-letter) for modern languages; **ISO 639-3** (3-letter) **ONLY** for ancient, extinct, or constructed languages.
+- **`TECH4`**: `VRIT` (Ritual), `VCHO` (Choral), `VWSP` (Whisper), `VSCR` (Scream), `VDRN` (Drone-Chant).
+- **`FX4`**: `PSH1` (Pitch-Shift), `FMT1` (Formant), `RVB1` (Reverb), `DRV1` (Drive), `CHO1` (Chorus), `GRN1` (Granular).
+- **Vector**: **I** (Impact number-number), **S** (Spatial number-number), **E** (Entropy number-number), **A** (Adaptive Alignment number-number).
+#### 📜 Indian Languages Reference (ISO Registry)
+| Language | ISO Code | Type | Language | ISO Code | Type |
+|---|---|---|---|---|---|
+| **Hindi** | `hi` | 639-1 | **Sanskrit** (Classical) | `san` | **639-3** |
+| **Bengali** | `bn` | 639-1 | **Pali** | `pli` | 639-2/3 |
+| **Tamil** | `ta` | 639-1 | **Prakrit** (general) | `pra` | 639-2 |
+| **Telugu** | `te` | 639-1 | **Ardhamagadhi** | `adh` | 639-3 |
+| **Marathi** | `mr` | 639-1 | **Vedic Sanskrit** | `san` | **639-3** |
+| **Gujarati** | `gu` | 639-1 | **Old Tamil** (Sangam)| `ta` | 639-1 |
+| **Kannada** | `kn` | 639-1 | **Bhojpuri** | `bho` | 639-3 |
+| **Malayalam** | `ml` | 639-1 | **Magahi** | `mag` | 639-3 |
+| **Punjabi** | `pa` | 639-1 | **Chhattisgarhi** | `hne` | 639-3 |
+| **Odia** | `or` | 639-1 | **Rajasthani** (Marwari)| `mwr` | 639-3 |
+| **Assamese** | `as` | 639-1 | **Awadhi** | `awa` | 639-3 |
+| **Maithili** | `mai` | 639-1 | **Kashmiri** | `ks` | 639-1 |
+| **Nepali** | `mr` | 639-1 | **Santali** | `sat` | 639-3 |
+| **Sindhi** | `sd` | 639-1 | **Tulu** | `tcy` | 639-3 |
+| **Konkani** | `gom` | 639-3 | **Gondi** | `gon` | 639-2 |
+| **Dogri** | `doi` | 639-1 | **Khasi** | `kha` | 639-1 |
+| **Bodo** | `brx` | 639-3 | **Mizo** | `lus` | 639-1 |
+| **Manipuri** | `mni` | 639-3 | **Tibetan** (Ladakh) | `bo` | 639-1 |
+| **Urdu** | `ur` | 639-1 | | | |
+
+### 5.2. LYRIC BINDING MODE (`lyrics_lang_mode`)
+-**STRICT** (default): exclusive [iso_lang]. **POLYGLOT_MIX**: cross-layer blend/glossolalia.
+- **`POLYGLOT_MIX`**: VFE generates a cross-layer polyglot blend. Text fragments are drawn from the union of all `[iso_lang]` values in the `vocal_allocation_matrix` and distributed freely, creating glossolalia / spectral multilingual texture.
+
 
 ---
 
