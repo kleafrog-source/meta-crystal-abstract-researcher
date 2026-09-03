@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "description": "Степени отклонения δ в долях диапазона (max-min). direction-слово без слова степени → default=0.30. Несколько direction-слов с разными знаками: суммируем signed-δ, итог δ=clamp(|Σ|,0.15,0.60), знак=sign(Σ).",
+    "version": 1
+  },
+  "levels": [
+    {
+      "delta": 0.20,
+      "words": [
+        "чуть", "слегка", "немного", "капельку", "капельку сильнее",
+        "немножко", "еле-еле", "самую малость", "мизерно",
+        "slightly", "a bit", "a touch", "subtle", "marginally",
+        "a hair", "a shade", "barely", "just a little"
+      ]
+    },
+    {
+      "delta": 0.30,
+      "words": [
+        "заметно", "умеренно", "в меру", "нормально", "средне",
+        "moderately", "noticeably", "somewhat", "fairly",
+        "moderately", "reasonably", "a fair bit", "modestly"
+      ]
+    },
+    {
+      "delta": 0.45,
+      "words": [
+        "сильно", "существенно", "значительно", "крепко", "явно",
+        "круто", "солидно",
+        "strongly", "much", "significantly", "considerably",
+        "markedly", "clearly", "a lot", "heavily", "substantially"
+      ]
+    },
+    {
+      "delta": 0.60,
+      "words": [
+        "очень", "максимально", "радикально", "экстремально", "предельно",
+        "до предела", "мощнейше", "капитально", "тотально",
+        "extremely", "as much as possible", "radically", "maximally",
+        "completely", "utterly", "intensely", "fully", "all the way"
+      ]
+    }
+  ],
+  "default": 0.30
+}

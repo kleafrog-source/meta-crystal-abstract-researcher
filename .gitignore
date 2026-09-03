@@ -95,3 +95,8 @@ backups/*
 python_engine/strudel_rag/plugin-reference/
 python_engine/src/
 src/strudel-editor/doc-with-links-repos-and-links-for collecting-all-data-we-need.md
+src/strudel-editor/data/datasets/parsed_patterns/
+src/strudel-editor/data/datasets/strudel_patterns.jsonl
+src/strudel-editor/data/datasets/strudel_patterns.parquet
+src/strudel-editor/data/datasets/strudel_patterns_manifest.json
+src/strudel-editor/data/datasets/strudel_pattern_index/

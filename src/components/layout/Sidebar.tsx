@@ -17,6 +17,7 @@ import {
   Activity,
   Database,
   CircleDot,
+  Sliders,
 } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
@@ -38,6 +39,8 @@ export type PageId =
   | "crystalpool"
   | "torusatlas"
   | "map"
+  | "ragparameters"
+  | "ragparametersv2"
   | "settings";
 
 interface NavItem {
@@ -155,6 +158,18 @@ const NAV_ITEMS: NavItem[] = [
     label: "Настройки",
     icon: <Settings className="h-4 w-4" />,
     description: "LLM-провайдер и параметры",
+  },
+  {
+    id: "ragparameters",
+    label: "Flowmusic Genesis",
+    icon: <Sliders className="h-4 w-4" />,
+    description: "RAG Parameters UI with local Ollama embeddings and Flowmusic macro generation",
+  },
+  {
+    id: "ragparametersv2",
+    label: "Flowmusic Genesis V2",
+    icon: <Sliders className="h-4 w-4" />,
+    description: "Isolated Semantic Value Anchoring v2 page with scoped retrieval and Python runtime anchoring",
   },
 ];
 

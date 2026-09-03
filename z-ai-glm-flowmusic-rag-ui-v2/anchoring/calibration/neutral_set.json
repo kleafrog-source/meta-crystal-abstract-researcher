@@ -1,0 +1,1137 @@
+{
+  "_meta": {
+    "description": "Neutral-set: запросы без direction-слов. Ожидание: 0 движений. Лексический слой даёт это структурно; осевой — через ε_axis-гейт. False-movement rate — главный acceptance-критерий.",
+    "count": 188,
+    "vibe_names_total": 99
+  },
+  "items": [
+    {
+      "query": "поставь вайб punishing whip",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб abyssal bioluminescence",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб acid wonderland",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб alchemical lab",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб alien abduction",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб alien microtonal",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб amber resin",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб ancient frostbite",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб antimatter bloom",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб arctic cathedral",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб ash and bone",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб atmospheric noir",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб aurora drift",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб banshee wail",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб basalt hum",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб black sun ritual",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб blood moon sonata",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб blue hour stillness",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб bone cathedral",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб brass serpent",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб broken clockwork",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб burning library",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб cave reverb",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб celestial tide",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб chernobyl garden",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб chrome labyrinth",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб city under glass",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб crimson decay",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб crystal cavern",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб dark matter bloom",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб deep sea meditation",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб desert mirage",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб distant thunder",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб drowned choir",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб dust and myrrh",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб ebon tide",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб echoing monastery",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб electric swamp",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб ember procession",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб ethereal mist",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб feral choir",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб forgotten lullaby",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб frozen cathedral",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб ghost in the shell",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб glass forest",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб golden hour drift",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб hollow earth",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб ice garden",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб indigo dream",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб iron blossom",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб jade pavilion",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб lava lullaby",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб lunar tide",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб magnetic north",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб marble halls",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб midnight garden",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб molten core",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб mossy grove",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб neon cathedral",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб obsidian rain",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб phantom procession",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб quartz dream",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб raven song",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб scarlet veil",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб shadow bazaar",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб silk and smoke",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб silver undertow",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб smoke and mercury",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб solar flare",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб spider silk",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб stone circle",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб storm glass",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб sulphur bloom",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб temple of rust",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб tide pool",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб twilight circus",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб underwater bell",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб velvet cavern",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб verdant void",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб whispering archive",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб withered bloom",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб xenon haze",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб yellowed parchment",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "поставь вайб zenith bloom",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб палач whip",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб бездна биолюминесценция",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб кислотная страна чудес",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб алхимическая лаборатория",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб инопланетное похищение",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб янтарная смола",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб древний frostbite",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб костяной собор",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб чёрное солнце",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб лунный прилив",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб молёное ядро",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб затопленный хор",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб забытая колыбельная",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб мраморные залы",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой вайб обсидиановый дождь",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "vibe_name_setup"
+    },
+    {
+      "query": "настрой пресет",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "bare_instruction"
+    },
+    {
+      "query": "поставь вайб",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "bare_instruction"
+    },
+    {
+      "query": "сделай звучание",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "bare_instruction"
+    },
+    {
+      "query": "выбери профиль",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "bare_instruction"
+    },
+    {
+      "query": "prepare the preset",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "bare_instruction"
+    },
+    {
+      "query": "setup the vibe",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "bare_instruction"
+    },
+    {
+      "query": "establish the sound",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "bare_instruction"
+    },
+    {
+      "query": "configure the patch",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "bare_instruction"
+    },
+    {
+      "query": "настрой вайб punishing whip",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "настрой вайб abyssal bioluminescence",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "настрой вайб acid wonderland",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "поставь вайб punishing whip",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "поставь вайб abyssal bioluminescence",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "поставь вайб acid wonderland",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "сделай пресет в стиле punishing whip",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "сделай пресет в стиле abyssal bioluminescence",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "сделай пресет в стиле acid wonderland",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "сделай звучание вайба punishing whip",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "сделай звучание вайба abyssal bioluminescence",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "сделай звучание вайба acid wonderland",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "оформи профиль punishing whip",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "оформи профиль abyssal bioluminescence",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "оформи профиль acid wonderland",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "prepare the punishing whip preset",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "prepare the abyssal bioluminescence preset",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "prepare the acid wonderland preset",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "setup the punishing whip vibe",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "setup the abyssal bioluminescence vibe",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "setup the acid wonderland vibe",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "establish a punishing whip sound",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "establish a abyssal bioluminescence sound",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "establish a acid wonderland sound",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "configure the punishing whip patch",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "configure the abyssal bioluminescence patch",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "configure the acid wonderland patch",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "make a punishing whip atmosphere",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "make a abyssal bioluminescence atmosphere",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "make a acid wonderland atmosphere",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "build a punishing whip profile",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "build a abyssal bioluminescence profile",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "build a acid wonderland profile",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "make me a punishing whip preset",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "make me a abyssal bioluminescence preset",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "make me a acid wonderland preset",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "настрой атмосферу punishing whip",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "настрой атмосферу abyssal bioluminescence",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "настрой атмосферу acid wonderland",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "сделай punishing whip",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "сделай abyssal bioluminescence",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "сделай acid wonderland",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "поставь punishing whip",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "поставь abyssal bioluminescence",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "поставь acid wonderland",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "build the punishing whip sound",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "build the abyssal bioluminescence sound",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "build the acid wonderland sound",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "configure punishing whip",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "configure abyssal bioluminescence",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "configure acid wonderland",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "make a preset called punishing whip",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "make a preset called abyssal bioluminescence",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "make a preset called acid wonderland",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "назови пресет punishing whip и настрой его",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "назови пресет abyssal bioluminescence и настрой его",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "назови пресет acid wonderland и настрой его",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "set up the punishing whip configuration",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "set up the abyssal bioluminescence configuration",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "set up the acid wonderland configuration",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "просто настрой вайб punishing whip без изменений",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "просто настрой вайб abyssal bioluminescence без изменений",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "просто настрой вайб acid wonderland без изменений",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "выбери пресет punishing whip как есть",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "выбери пресет abyssal bioluminescence как есть",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "выбери пресет acid wonderland как есть",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "keep the punishing whip preset as is",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "keep the abyssal bioluminescence preset as is",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "keep the acid wonderland preset as is",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "load the punishing whip patch",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "load the abyssal bioluminescence patch",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "load the acid wonderland patch",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "activate the punishing whip profile",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "activate the abyssal bioluminescence profile",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "activate the acid wonderland profile",
+      "language": "en",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "включи пресет punishing whip",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "включи пресет abyssal bioluminescence",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "включи пресет acid wonderland",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "загрузи патч punishing whip",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "загрузи патч abyssal bioluminescence",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    },
+    {
+      "query": "загрузи патч acid wonderland",
+      "language": "ru",
+      "expected_movement": 0,
+      "category": "instruction_template"
+    }
+  ]
+}

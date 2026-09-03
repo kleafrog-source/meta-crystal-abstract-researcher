@@ -16,7 +16,7 @@ import { apiPost, useFetch } from "@/hooks/use-fetch";
 import { CrystalBridgePanel } from "@/components/strudel-flow/crystal-bridge/CrystalBridgePanel";
 import { SemanticStrudelSuggester } from "@/components/strudel-flow/SemanticStrudelSuggester";
 import { upstreamPreviewNodeTypes } from "@/components/strudel-flow/upstream-preview-nodes";
-import type { StrudelSearchResult } from "@/components/strudel-flow/types";
+import type { StrudelSearchResult, StrudelTrackPlan, StrudelTransportPlan } from "@/components/strudel-flow/types";
 import { useStrudelFlowStore } from "@/lib/strudel/strudel-flow-store";
 import type { MetaCrystalState } from "@/lib/strudel/types-crystal-bridge";
 import {
@@ -35,6 +35,20 @@ interface StrudelParamsResponse {
   ok: boolean;
   total: number;
   categories: string[];
+  patternIndex?: {
+    ready: boolean;
+    rows: number;
+    dimension: number;
+    backend: string | null;
+    model: string | null;
+  };
+  roleBlockIndex?: {
+    ready: boolean;
+    rows: number;
+    dimension: number;
+    backend: string | null;
+    model: string | null;
+  };
   params?: Array<{
     package?: string;
   }>;
@@ -78,12 +92,14 @@ const EMPTY_DRAFT: CrystalDraft = {
 
 export function StrudelLab() {
   const { data: paramsInfo } = useFetch<StrudelParamsResponse>("/api/strudel/params");
-  const { data: crystals } = useFetch<CrystalsResponse>("/api/crystals?pageSize=24");
+  const { data: crystals } = useFetch<CrystalsResponse>("/api/crystals?pageSize=200");
   const nodes = useStrudelFlowStore((state) => state.nodes);
   const removeNode = useStrudelFlowStore((state) => state.removeNode);
   const clearFlow = useStrudelFlowStore((state) => state.clearFlow);
 
   const [selectedCode, setSelectedCode] = useState<string>("manual");
+  const [crystalCodeLookup, setCrystalCodeLookup] = useState("");
+  const [crystalLookupError, setCrystalLookupError] = useState<string | null>(null);
   const [draft, setDraft] = useState<CrystalDraft>(EMPTY_DRAFT);
   const [playerState, setPlayerState] = useState<"idle" | "loading" | "playing" | "error">("idle");
   const [playerError, setPlayerError] = useState<string | null>(null);
@@ -120,12 +136,20 @@ export function StrudelLab() {
   }), [draft]);
 
   const handleSearch = async (query: string) => {
-    const response = await apiPost<{ results: StrudelSearchResult[] }>("/api/strudel/search", {
+    const response = await apiPost<{
+      results: StrudelSearchResult[];
+      assembly_stack?: StrudelSearchResult[];
+      transport_plan?: StrudelTransportPlan;
+      track_plan?: StrudelTrackPlan;
+    }>("/api/strudel/search", {
       query,
-      top_k: 6,
-      min_score: 0.1,
+      top_k: 10,
     });
-    return response.results ?? [];
+    if (response.transport_plan) {
+      setCpm(String(response.transport_plan.cpm));
+      setBeatsPerCycle(String(response.transport_plan.bpc));
+    }
+    return response.assembly_stack?.length ? response.assembly_stack : (response.results ?? []);
   };
 
   const draftTransport = useMemo(
@@ -241,7 +265,29 @@ export function StrudelLab() {
   };
 
   const handleQueueForEditor = () => {
-    saveStrudelEditorSeed(flowState);
+    saveStrudelEditorSeed(compiledFlowState ?? strudelFlowExport.state);
+  };
+
+  const handleSearchResolved = (meta: { transportPlan?: StrudelTransportPlan; trackPlan?: StrudelTrackPlan }) => {
+    if (meta.transportPlan) {
+      setCpm(String(meta.transportPlan.cpm));
+      setBeatsPerCycle(String(meta.transportPlan.bpc));
+    }
+  };
+
+  const handleLoadCrystalByCode = async () => {
+    const code = crystalCodeLookup.trim();
+    if (!code) return;
+    setCrystalLookupError(null);
+    const response = await fetch(`/api/crystals?search=${encodeURIComponent(code)}&pageSize=50`);
+    const payload = (await response.json()) as CrystalsResponse;
+    const match = payload.items.find((item) => item.code.toLowerCase() === code.toLowerCase());
+    if (!match) {
+      setCrystalLookupError(`Crystal code not found: ${code}`);
+      return;
+    }
+    setSelectedCode(match.code);
+    setDraft(buildDraftFromCrystal(match));
   };
 
   return (
@@ -254,13 +300,21 @@ export function StrudelLab() {
               <Badge variant="outline">Qwen branch integration</Badge>
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Semantic Strudel parameter search plus crystal-to-audio bridge, isolated from the main generation flow.
+              Semantic Strudel search now runs against the role-block retrieval layer; catalog params, pattern rows, and role-block rows are shown separately so retrieval progress is visible in UI.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="outline">{paramsInfo?.total ?? 0} params</Badge>
+            <Badge variant="outline">{paramsInfo?.total ?? 0} catalog params</Badge>
+            <Badge variant="outline">{paramsInfo?.patternIndex?.rows ?? 0} pattern rows</Badge>
+            <Badge variant="outline">{paramsInfo?.roleBlockIndex?.rows ?? 0} role block rows</Badge>
             <Badge variant="outline">{paramsInfo?.categories?.length ?? 0} categories</Badge>
             <Badge variant="outline">{packageCount} packages</Badge>
+            <Badge variant="outline">
+              pattern index: {paramsInfo?.patternIndex?.ready ? `${paramsInfo.patternIndex.backend ?? "unknown"}` : "not ready"}
+            </Badge>
+            <Badge variant="outline">
+              role blocks: {paramsInfo?.roleBlockIndex?.ready ? `${paramsInfo.roleBlockIndex.backend ?? "unknown"}` : "not ready"}
+            </Badge>
             <Badge variant="outline">{nodes.length} selected nodes</Badge>
           </div>
         </div>
@@ -291,7 +345,7 @@ export function StrudelLab() {
               </CardContent>
             </Card>
 
-            <SemanticStrudelSuggester />
+            <SemanticStrudelSuggester onSearchResolved={handleSearchResolved} />
 
             <Card>
               <CardHeader>
@@ -584,6 +638,17 @@ export function StrudelLab() {
                       ))}
                     </SelectContent>
                   </Select>
+                  <div className="flex gap-2">
+                    <Input
+                      value={crystalCodeLookup}
+                      onChange={(event) => setCrystalCodeLookup(event.target.value)}
+                      placeholder="Load any crystal by exact code"
+                    />
+                    <Button variant="outline" onClick={handleLoadCrystalByCode}>
+                      Load code
+                    </Button>
+                  </div>
+                  {crystalLookupError ? <div className="text-xs text-rose-300">{crystalLookupError}</div> : null}
                 </div>
 
                 <div className="space-y-1.5">

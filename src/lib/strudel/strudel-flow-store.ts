@@ -33,6 +33,7 @@ interface StrudelFlowState {
   nodes: StrudelNode[];
   edges: StrudelEdge[];
   addNode: (node: Omit<StrudelNode, "id">) => void;
+  replaceNodes: (nodes: Array<Omit<StrudelNode, "id">>) => void;
   removeNode: (nodeId: string) => void;
   updateNode: (nodeId: string, data: Partial<StrudelNodeData>) => void;
   addEdge: (edge: Omit<StrudelEdge, "id">) => void;
@@ -58,6 +59,18 @@ export const useStrudelFlowStore = create<StrudelFlowState>((set) => ({
     set((state) => ({
       nodes: [...state.nodes, newNode],
     }));
+  },
+
+  replaceNodes: (nodes) => {
+    nodeIdCounter = 0;
+    edgeIdCounter = 0;
+    set({
+      nodes: nodes.map((node) => ({
+        ...node,
+        id: generateNodeId(),
+      })),
+      edges: [],
+    });
   },
   
   removeNode: (nodeId) => {
@@ -108,7 +121,7 @@ export const useStore = useStrudelFlowStore;
 export function getNodeTypeForParam(paramId: string): StrudelNodeType {
   const oscillatorParams = ["sine", "sawtooth", "square", "triangle", "noise", "fm", "am"];
   const effectParams = ["gain", "lpf", "hpf", "crush", "distort", "delay", "reverb", "pan"];
-  const sequencerParams = ["arp", "seq", "loop", "euclid", "mute", "chunk"];
+  const sequencerParams = ["arp", "seq", "loop", "euclid", "mute", "chunk", "beat"];
   const modifierParams = ["slow", "fast", "stretch", "rand", "density", "transp", "scale", "chord", "note"];
   
   if (oscillatorParams.includes(paramId)) return "oscillator";
@@ -123,13 +136,34 @@ export function getNodeTypeForParam(paramId: string): StrudelNodeType {
  * Create a node from a semantic search result
  */
 export function createNodeFromSearchResult(
-  result: { id: string; name: string; description: string; category: string; score?: number; matched_phrase?: string | null }
+  result: {
+    id: string;
+    name: string;
+    description: string;
+    category: string;
+    score?: number;
+    matched_phrase?: string | null;
+    role?: string | null;
+    priority?: number | null;
+    sourceBlockId?: string | null;
+    sourceBlockType?: string | null;
+    sectionHints?: string[] | null;
+  }
 ): Omit<StrudelNode, "id"> {
+  const roleColumn: Record<string, number> = {
+    drums: 0,
+    bass: 1,
+    harmony: 2,
+    melody: 3,
+    texture: 4,
+  };
+  const column = result.role ? (roleColumn[result.role] ?? 5) : 5;
+  const priority = result.priority ?? nodeIdCounter;
   return {
     type: getNodeTypeForParam(result.id),
     position: {
-      x: Math.random() * 400 + 100,
-      y: Math.random() * 300 + 50,
+      x: 120 + column * 180,
+      y: 60 + (priority % 8) * 88,
     },
     data: {
       label: result.name,
@@ -138,6 +172,11 @@ export function createNodeFromSearchResult(
       settings: {
         score: result.score ?? null,
         matchedPhrase: result.matched_phrase ?? null,
+        role: result.role ?? null,
+        priority: result.priority ?? null,
+        sourceBlockId: result.sourceBlockId ?? null,
+        sourceBlockType: result.sourceBlockType ?? null,
+        sectionHints: result.sectionHints ?? null,
         addedAt: Date.now(),
       },
       category: result.category,

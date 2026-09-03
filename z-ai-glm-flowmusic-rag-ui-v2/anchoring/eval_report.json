@@ -1,0 +1,122 @@
+{
+  "stub_mode": true,
+  "axes_enabled": false,
+  "neutral": {
+    "total_param_decisions": 1823,
+    "false_movements": 0,
+    "false_movement_rate": 0.0,
+    "sample_false_movements": [],
+    "acceptance": true
+  },
+  "directional": {
+    "total_directional_evaluated": 312,
+    "correct_direction": 6,
+    "in_delta_range": 2,
+    "wrong_direction": 0,
+    "no_movement": 306,
+    "direction_accuracy": 0.0192,
+    "delta_range_rate": 0.0064,
+    "acceptance_dir": false,
+    "samples_wrong_or_no_move": [
+      {
+        "query": "сделай звучание чуть лихорадочно возбуждённым",
+        "param": "affective_arousal_change_rate",
+        "expected": 1,
+        "actual": 0,
+        "norm": 0.0,
+        "source": "default",
+        "detail": "no signal"
+      },
+      {
+        "query": "make the sound slightly feverishly intense",
+        "param": "affective_arousal_change_rate",
+        "expected": 1,
+        "actual": 0,
+        "norm": 0.0,
+        "source": "default",
+        "detail": "no signal"
+      },
+      {
+        "query": "сделай звучание заметно предельно возбуждённым",
+        "param": "affective_arousal_change_rate",
+        "expected": 1,
+        "actual": 0,
+        "norm": 0.0,
+        "source": "default",
+        "detail": "no signal"
+      },
+      {
+        "query": "make the sound noticeably extremely aroused",
+        "param": "affective_arousal_change_rate",
+        "expected": 1,
+        "actual": 0,
+        "norm": 0.0,
+        "source": "default",
+        "detail": "no signal"
+      },
+      {
+        "query": "сделай звучание сильно лихорадочно возбуждённым",
+        "param": "affective_arousal_change_rate",
+        "expected": 1,
+        "actual": 0,
+        "norm": 0.0,
+        "source": "default",
+        "detail": "no signal"
+      },
+      {
+        "query": "make the sound strongly feverishly intense",
+        "param": "affective_arousal_change_rate",
+        "expected": 1,
+        "actual": 0,
+        "norm": 0.0,
+        "source": "default",
+        "detail": "no signal"
+      },
+      {
+        "query": "сделай звучание чуть глубоко медитативным",
+        "param": "affective_arousal_change_rate",
+        "expected": -1,
+        "actual": 0,
+        "norm": 0.0,
+        "source": "default",
+        "detail": "no signal"
+      },
+      {
+        "query": "make the sound slightly profoundly meditative",
+        "param": "affective_arousal_change_rate",
+        "expected": -1,
+        "actual": 0,
+        "norm": 0.0,
+        "source": "default",
+        "detail": "no signal"
+      },
+      {
+        "query": "сделай звучание заметно спокойным и медитативным",
+        "param": "affective_arousal_change_rate",
+        "expected": -1,
+        "actual": 0,
+        "norm": 0.0,
+        "source": "default",
+        "detail": "no signal"
+      },
+      {
+        "query": "make the sound noticeably calm and meditative",
+        "param": "affective_arousal_change_rate",
+        "expected": -1,
+        "actual": 0,
+        "norm": 0.0,
+        "source": "default",
+        "detail": "no signal"
+      }
+    ]
+  },
+  "holistic": {
+    "evaluated": false,
+    "note": "stub mode — axis profile eval skipped (осевой слой выключен). Holistic-оценка применяется после build_anchors."
+  },
+  "acceptance": {
+    "neutral_false_movement_lt_5pct": true,
+    "directional_accuracy_gt_85pct": false,
+    "holistic_mae_evaluated": false
+  }
+}

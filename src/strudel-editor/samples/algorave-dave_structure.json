@@ -1,0 +1,117 @@
+[
+  {
+    "path": "README.md",
+    "type": "blob",
+    "size": 1506
+  },
+  {
+    "path": "cocaina",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "cocaina/cocaina.wav",
+    "type": "blob",
+    "size": 3769380
+  },
+  {
+    "path": "ecotone",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "ecotone/ecotone.wav",
+    "type": "blob",
+    "size": 3634806
+  },
+  {
+    "path": "failsafe",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "failsafe/BG_VOX.wav",
+    "type": "blob",
+    "size": 2
+  },
+  {
+    "path": "failsafe/CHOPS.wav",
+    "type": "blob",
+    "size": 909562
+  },
+  {
+    "path": "failsafe/FX.wav",
+    "type": "blob",
+    "size": 141280
+  },
+  {
+    "path": "failsafe/GANG_VOX.wav",
+    "type": "blob",
+    "size": 2
+  },
+  {
+    "path": "failsafe/VERSE1.wav",
+    "type": "blob",
+    "size": 2
+  },
+  {
+    "path": "failsafe/VERSE2.wav",
+    "type": "blob",
+    "size": 2
+  },
+  {
+    "path": "forget",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "forget/forget.wav",
+    "type": "blob",
+    "size": 455344
+  },
+  {
+    "path": "overgame",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "overgame/overgame.wav",
+    "type": "blob",
+    "size": 1170072
+  },
+  {
+    "path": "strudel.json",
+    "type": "blob",
+    "size": 509
+  },
+  {
+    "path": "technologic",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "technologic/technologic_vox.wav",
+    "type": "blob",
+    "size": 4070820
+  },
+  {
+    "path": "whatuneed",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "whatuneed/beat.wav",
+    "type": "blob",
+    "size": 994710
+  },
+  {
+    "path": "whatuneed/noise.wav",
+    "type": "blob",
+    "size": 994710
+  },
+  {
+    "path": "whatuneed/vox.wav",
+    "type": "blob",
+    "size": 7949762
+  }
+]

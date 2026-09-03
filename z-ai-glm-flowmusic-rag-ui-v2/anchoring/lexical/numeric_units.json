@@ -1,0 +1,108 @@
+{
+  "_meta": {
+    "description": "Синонимы единиц для L0-парсера (RU/EN/сокращения) и паттерны относительных выражений. L0-препарсинг: «120 BPM», «+6 dB», «7/16», «на 2 dB громче», «−3 ms короче». Точный хит опции Select — тоже L0, эмбеддинги не нужны.",
+    "version": 1
+  },
+  "unit_synonyms": {
+    "bpm": {
+      "aliases": ["bpm", "уд/мин", "ударов в минуту", "beats per minute", "темп"],
+      "canonical": "bpm",
+      "quantity_kind": "tempo"
+    },
+    "hz": {
+      "aliases": ["hz", "гц", "hertz", "герц", "cycle per second"],
+      "canonical": "Hz",
+      "quantity_kind": "rate"
+    },
+    "khz": {
+      "aliases": ["khz", "кгц", "kilohertz", "килогерц"],
+      "canonical": "kHz",
+      "quantity_kind": "rate",
+      "scale": 1000
+    },
+    "ms": {
+      "aliases": ["ms", "мс", "миллисекунд", "миллисекунда", "millisecond", "milliseconds"],
+      "canonical": "ms",
+      "quantity_kind": "duration"
+    },
+    "sec": {
+      "aliases": ["s", "sec", "с", "сек", "секунд", "секунда", "second", "seconds"],
+      "canonical": "seconds",
+      "quantity_kind": "duration",
+      "scale": 1000
+    },
+    "db": {
+      "aliases": ["db", "дб", "децибел", "децибелы", "decibel", "decibels"],
+      "canonical": "dB",
+      "quantity_kind": "level"
+    },
+    "cents": {
+      "aliases": ["cents", "цент", "центов", "cent"],
+      "canonical": "cents",
+      "quantity_kind": "detune"
+    },
+    "semitones": {
+      "aliases": ["semitones", "st", "полутонов", "полутон", "semitone"],
+      "canonical": "semitones",
+      "quantity_kind": "detune"
+    },
+    "percent": {
+      "aliases": ["%", "процент", "процентов", "percent", "pct"],
+      "canonical": "percent",
+      "quantity_kind": "amount"
+    },
+    "ratio": {
+      "aliases": ["ratio", "соотношение", "пропорция", "proportion"],
+      "canonical": "ratio",
+      "quantity_kind": "length"
+    },
+    "bars": {
+      "aliases": ["bars", "тактов", "такт", "bar", "bars"],
+      "canonical": "bars",
+      "quantity_kind": "length"
+    },
+    "grains": {
+      "aliases": ["grains", "зёрен", "зерно", "grain", "particles", "частиц"],
+      "canonical": "grains_per_sec",
+      "quantity_kind": "density"
+    },
+    "degrees": {
+      "aliases": ["degrees", "градусов", "градус", "degree"],
+      "canonical": "degrees",
+      "quantity_kind": "length"
+    }
+  },
+  "fraction_pattern": {
+    "description": "Дроби вида N/M — для ordinal Select (нот-дивижн: 7/16, 3/8, 1/4, 1/32) и ratio-параметров. Если значение парсится как N/M → возвращается float N/M.",
+    "regex": "\\b(\\d+)/(\\d+)\\b",
+    "quantity_kind_hint": ["length", "rate", "ratio"]
+  },
+  "relative_patterns": [
+    {
+      "description": "«на X <единица> громче/тише/больше/меньше» → signed delta в абсолютных единицах, приводится к нормализованному через min/max параметра.",
+      "regex_ru": "на\\s+(\\d+(?:[.,]\\d+)?)\\s*(\\w+)?\\s*(громче|тише|больше|меньше|выше|ниже|длиннее|короче|быстрее|медленнее|ярче|темнее)",
+      "regex_en": "(\\d+(?:[.,]\\d+)?)\\s*(\\w+)?\\s*(louder|quieter|more|less|higher|lower|longer|shorter|faster|slower|brighter|darker)\\b",
+      "sign_map": {
+        "громче": 1, "louder": 1, "больше": 1, "more": 1,
+        "выше": 1, "higher": 1, "длиннее": 1, "longer": 1,
+        "быстрее": 1, "faster": 1, "ярче": 1, "brighter": 1,
+        "тише": -1, "quieter": -1, "меньше": -1, "less": -1,
+        "ниже": -1, "lower": -1, "короче": -1, "shorter": -1,
+        "медленнее": -1, "slower": -1, "темнее": -1, "darker": -1
+      }
+    },
+    {
+      "description": "«+X db» / «−X db» / «+X» / «-X» с явным знаком и опциональной единицей → absolute offset.",
+      "regex": "([+\\-−])\\s*(\\d+(?:[.,]\\d+)?)\\s*(\\w+)?"
+    },
+    {
+      "description": "«X раз громче/меньше» → multiplicative; применяется через log-преобразование для dB-like и linear для ratio-like.",
+      "regex_ru": "(\\d+(?:[.,]\\d+)?)\\s*раз\\s*(громче|тише|больше|меньше)",
+      "regex_en": "(\\d+(?:[.,]\\d+)?)\\s*x\\s*(louder|quieter|more|less)"
+    }
+  ],
+  "absolute_pattern": {
+    "description": "«120 bpm», «6 db», «40 ms», «7/16», «200 hz», «+3.5 cents». Парсится число + опциональная единица/дробь; маппится на параметр с совпадающим unit-синонимом в scope. absolute-значение → clamp в [min,max], source=\"numeric\".",
+    "regex": "([+\\-−]?\\d+(?:[.,]\\d+)?)\\s*(?:\\/\\s*(\\d+))?\\s*([a-zA-Zа-яА-Я%]+)?"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_meta": {
+    "description": "Маркёры запроса. neutral_markers — запрос из одних нейтральных слов не двигает ничего. relative_markers — в сочетании с direction-словом → base=current. toggle_on/off — для Toggle-параметров.",
+    "version": 1
+  },
+  "neutral_markers": [
+    "настрой", "поставь", "включи", "выбери", "сделай пресет", "сделай вайб",
+    "сделай звучание", "оформи", "prepare", "apply", "setup", "configure",
+    "set", "make a preset", "make a vibe", "build the sound", "establish"
+  ],
+  "relative_markers": [
+    "ещё", "еще", "по", "сильнее", "больше", "поддай ещё", "поднажми ещё",
+    "more", "even", "still more", "yet more", "further", "extra",
+    "additionally", "add some more"
+  ],
+  "toggle_on": [
+    "включи", "вкл", "on", "enable", "активируй", "задействуй",
+    "turn on", "switch on", "activate", "engaged", "make it active"
+  ],
+  "toggle_off": [
+    "выключи", "выкл", "off", "disable", "отключи", "деактивируй",
+    "turn off", "switch off", "deactivate", "disengage", "make it inactive"
+  ]
+}

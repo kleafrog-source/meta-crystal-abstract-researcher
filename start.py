@@ -92,6 +92,7 @@ def main():
     print(f"Python: {sys.version.split()[0]}")
 
     print("\nChecking database configuration...")
+    db_is_sqlite = False
     try:
         from dotenv import load_dotenv
 
@@ -101,10 +102,28 @@ def main():
             print("Database: PostgreSQL")
         elif "sqlite" in db_url or "file:" in db_url:
             print("Database: SQLite")
+            db_is_sqlite = True
         else:
             print("Database is not configured in .env")
     except ImportError:
         print("python-dotenv is not installed, skipping .env check")
+
+    npm_cmd = shutil.which("npm.cmd") or shutil.which("npm") or "npm"
+
+    print("\nSyncing Prisma schema...")
+    try:
+        prisma_cmd = [npm_cmd, "run", "db:push"]
+        prisma_result = subprocess.run(prisma_cmd, check=False)
+        if prisma_result.returncode != 0:
+            print(f"Prisma schema sync failed with code: {prisma_result.returncode}")
+            return 1
+        print("Prisma schema is in sync.")
+    except Exception as exc:
+        print(f"Failed to sync Prisma schema: {exc}")
+        return 1
+
+    if db_is_sqlite:
+        print("SQLite mode detected: schema sync will recreate missing tables in prisma/dev.db when needed.")
 
     print("\nStarting Next.js server...")
     print("App URL: http://localhost:3000")
@@ -113,7 +132,6 @@ def main():
         browser_thread = threading.Thread(target=open_browser_delayed, daemon=True)
         browser_thread.start()
 
-        npm_cmd = shutil.which("npm.cmd") or shutil.which("npm") or "npm"
         print("Press Ctrl+C to stop the server.\n")
         process = subprocess.run([npm_cmd, "run", "dev"], check=False)
         if process.returncode != 0:

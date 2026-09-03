@@ -1,0 +1,11 @@
+{
+  "rows": 483,
+  "dimension": 1024,
+  "backend": "ollama",
+  "model": "qllama/bge-m3:q8_0",
+  "files": {
+    "vectors_json": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\strudel-editor\\data\\datasets\\strudel_role_block_index\\vectors.json",
+    "metadata": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\strudel-editor\\data\\datasets\\strudel_role_block_index\\metadata.json",
+    "manifest": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\strudel-editor\\data\\datasets\\strudel_role_block_index\\manifest.json"
+  }
+}

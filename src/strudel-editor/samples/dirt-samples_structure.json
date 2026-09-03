@@ -1,0 +1,11352 @@
+[
+  {
+    "path": "808",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "808/CB.WAV",
+    "type": "blob",
+    "size": 132346
+  },
+  {
+    "path": "808/CH.WAV",
+    "type": "blob",
+    "size": 22094
+  },
+  {
+    "path": "808/CL.WAV",
+    "type": "blob",
+    "size": 22094
+  },
+  {
+    "path": "808/CP.WAV",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "808/MA.WAV",
+    "type": "blob",
+    "size": 22094
+  },
+  {
+    "path": "808/RS.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808/TR808.TXT",
+    "type": "blob",
+    "size": 8138
+  },
+  {
+    "path": "808bd",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "808bd/BD0000.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808bd/BD0010.WAV",
+    "type": "blob",
+    "size": 264646
+  },
+  {
+    "path": "808bd/BD0025.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808bd/BD0050.WAV",
+    "type": "blob",
+    "size": 132346
+  },
+  {
+    "path": "808bd/BD0075.WAV",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "808bd/BD1000.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808bd/BD1010.WAV",
+    "type": "blob",
+    "size": 264646
+  },
+  {
+    "path": "808bd/BD1025.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808bd/BD1050.WAV",
+    "type": "blob",
+    "size": 132346
+  },
+  {
+    "path": "808bd/BD1075.WAV",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "808bd/BD2500.WAV",
+    "type": "blob",
+    "size": 22094
+  },
+  {
+    "path": "808bd/BD2510.WAV",
+    "type": "blob",
+    "size": 264646
+  },
+  {
+    "path": "808bd/BD2525.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808bd/BD2550.WAV",
+    "type": "blob",
+    "size": 132346
+  },
+  {
+    "path": "808bd/BD2575.WAV",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "808bd/BD5000.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808bd/BD5010.WAV",
+    "type": "blob",
+    "size": 264646
+  },
+  {
+    "path": "808bd/BD5025.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808bd/BD5050.WAV",
+    "type": "blob",
+    "size": 132346
+  },
+  {
+    "path": "808bd/BD5075.WAV",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "808bd/BD7500.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808bd/BD7510.WAV",
+    "type": "blob",
+    "size": 264646
+  },
+  {
+    "path": "808bd/BD7525.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808bd/BD7550.WAV",
+    "type": "blob",
+    "size": 132346
+  },
+  {
+    "path": "808bd/BD7575.WAV",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "808cy",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "808cy/CY0000.WAV",
+    "type": "blob",
+    "size": 132346
+  },
+  {
+    "path": "808cy/CY0010.WAV",
+    "type": "blob",
+    "size": 352846
+  },
+  {
+    "path": "808cy/CY0025.WAV",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "808cy/CY0050.WAV",
+    "type": "blob",
+    "size": 220546
+  },
+  {
+    "path": "808cy/CY0075.WAV",
+    "type": "blob",
+    "size": 308746
+  },
+  {
+    "path": "808cy/CY1000.WAV",
+    "type": "blob",
+    "size": 132346
+  },
+  {
+    "path": "808cy/CY1010.WAV",
+    "type": "blob",
+    "size": 352846
+  },
+  {
+    "path": "808cy/CY1025.WAV",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "808cy/CY1050.WAV",
+    "type": "blob",
+    "size": 220546
+  },
+  {
+    "path": "808cy/CY1075.WAV",
+    "type": "blob",
+    "size": 308746
+  },
+  {
+    "path": "808cy/CY2500.WAV",
+    "type": "blob",
+    "size": 132346
+  },
+  {
+    "path": "808cy/CY2510.WAV",
+    "type": "blob",
+    "size": 352846
+  },
+  {
+    "path": "808cy/CY2525.WAV",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "808cy/CY2550.WAV",
+    "type": "blob",
+    "size": 220546
+  },
+  {
+    "path": "808cy/CY2575.WAV",
+    "type": "blob",
+    "size": 308746
+  },
+  {
+    "path": "808cy/CY5000.WAV",
+    "type": "blob",
+    "size": 132346
+  },
+  {
+    "path": "808cy/CY5010.WAV",
+    "type": "blob",
+    "size": 352846
+  },
+  {
+    "path": "808cy/CY5025.WAV",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "808cy/CY5050.WAV",
+    "type": "blob",
+    "size": 220546
+  },
+  {
+    "path": "808cy/CY5075.WAV",
+    "type": "blob",
+    "size": 308746
+  },
+  {
+    "path": "808cy/CY7500.WAV",
+    "type": "blob",
+    "size": 132346
+  },
+  {
+    "path": "808cy/CY7510.WAV",
+    "type": "blob",
+    "size": 352846
+  },
+  {
+    "path": "808cy/CY7525.WAV",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "808cy/CY7550.WAV",
+    "type": "blob",
+    "size": 220546
+  },
+  {
+    "path": "808cy/CY7575.WAV",
+    "type": "blob",
+    "size": 308746
+  },
+  {
+    "path": "808hc",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "808hc/HC00.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808hc/HC10.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808hc/HC25.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808hc/HC50.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808hc/HC75.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808ht",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "808ht/HT00.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808ht/HT10.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808ht/HT25.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808ht/HT50.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808ht/HT75.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808lc",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "808lc/LC00.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808lc/LC10.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808lc/LC25.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808lc/LC50.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808lc/LC75.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808lt",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "808lt/LT00.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808lt/LT10.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808lt/LT25.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808lt/LT50.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808lt/LT75.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808mc",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "808mc/MC00.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808mc/MC10.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808mc/MC25.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808mc/MC50.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808mc/MC75.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808mt",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "808mt/MT00.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808mt/MT10.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808mt/MT25.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808mt/MT50.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808mt/MT75.WAV",
+    "type": "blob",
+    "size": 88246
+  },
+  {
+    "path": "808oh",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "808oh/OH00.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808oh/OH10.WAV",
+    "type": "blob",
+    "size": 66196
+  },
+  {
+    "path": "808oh/OH25.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808oh/OH50.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808oh/OH75.WAV",
+    "type": "blob",
+    "size": 66196
+  },
+  {
+    "path": "808sd",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "808sd/SD0000.WAV",
+    "type": "blob",
+    "size": 22094
+  },
+  {
+    "path": "808sd/SD0010.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD0025.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808sd/SD0050.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD0075.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD1000.WAV",
+    "type": "blob",
+    "size": 22094
+  },
+  {
+    "path": "808sd/SD1010.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD1025.WAV",
+    "type": "blob",
+    "size": 22094
+  },
+  {
+    "path": "808sd/SD1050.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD1075.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD2500.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808sd/SD2510.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD2525.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808sd/SD2550.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD2575.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD5000.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808sd/SD5010.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD5025.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808sd/SD5050.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD5075.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD7500.WAV",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "808sd/SD7510.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD7525.WAV",
+    "type": "blob",
+    "size": 22094
+  },
+  {
+    "path": "808sd/SD7550.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "808sd/SD7575.WAV",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "909",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "909/BT0A0A7.WAV",
+    "type": "blob",
+    "size": 25152
+  },
+  {
+    "path": "Dirt-Samples.quark",
+    "type": "blob",
+    "size": 74
+  },
+  {
+    "path": "README.md",
+    "type": "blob",
+    "size": 606
+  },
+  {
+    "path": "ab",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "ab/000_ab2closedhh.wav",
+    "type": "blob",
+    "size": 23968
+  },
+  {
+    "path": "ab/001_ab2crash.wav",
+    "type": "blob",
+    "size": 741216
+  },
+  {
+    "path": "ab/002_ab2hit1.wav",
+    "type": "blob",
+    "size": 532412
+  },
+  {
+    "path": "ab/003_ab2hit2.wav",
+    "type": "blob",
+    "size": 1842232
+  },
+  {
+    "path": "ab/004_ab2kick1.wav",
+    "type": "blob",
+    "size": 78400
+  },
+  {
+    "path": "ab/005_ab2kick2.wav",
+    "type": "blob",
+    "size": 765456
+  },
+  {
+    "path": "ab/006_ab2openhh.wav",
+    "type": "blob",
+    "size": 662656
+  },
+  {
+    "path": "ab/007_ab2perc1.wav",
+    "type": "blob",
+    "size": 75904
+  },
+  {
+    "path": "ab/008_ab2perc2.wav",
+    "type": "blob",
+    "size": 53888
+  },
+  {
+    "path": "ab/009_ab2ride.wav",
+    "type": "blob",
+    "size": 757920
+  },
+  {
+    "path": "ab/010_ab2snare1.wav",
+    "type": "blob",
+    "size": 80000
+  },
+  {
+    "path": "ab/011_ab2snare2.wav",
+    "type": "blob",
+    "size": 56320
+  },
+  {
+    "path": "ade",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "ade/000_011112-bassline.wav",
+    "type": "blob",
+    "size": 438106
+  },
+  {
+    "path": "ade/001_011112-melody.wav",
+    "type": "blob",
+    "size": 110880
+  },
+  {
+    "path": "ade/002_20020506-01.wav",
+    "type": "blob",
+    "size": 479276
+  },
+  {
+    "path": "ade/003_abt.wav",
+    "type": "blob",
+    "size": 262188
+  },
+  {
+    "path": "ade/004_fan.wav",
+    "type": "blob",
+    "size": 317484
+  },
+  {
+    "path": "ade/005_fanbass.wav",
+    "type": "blob",
+    "size": 79148
+  },
+  {
+    "path": "ade/006_glass.wav",
+    "type": "blob",
+    "size": 50316
+  },
+  {
+    "path": "ade/007_microsound.wav",
+    "type": "blob",
+    "size": 790028
+  },
+  {
+    "path": "ade/008_rhythm.wav",
+    "type": "blob",
+    "size": 568236
+  },
+  {
+    "path": "ade/009_rise.wav",
+    "type": "blob",
+    "size": 264644
+  },
+  {
+    "path": "ades2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "ades2/000_01.wav",
+    "type": "blob",
+    "size": 3892
+  },
+  {
+    "path": "ades2/001_02.wav",
+    "type": "blob",
+    "size": 11500
+  },
+  {
+    "path": "ades2/002_03.wav",
+    "type": "blob",
+    "size": 10748
+  },
+  {
+    "path": "ades2/003_04.wav",
+    "type": "blob",
+    "size": 15212
+  },
+  {
+    "path": "ades2/004_05.wav",
+    "type": "blob",
+    "size": 11532
+  },
+  {
+    "path": "ades2/005_06.wav",
+    "type": "blob",
+    "size": 7852
+  },
+  {
+    "path": "ades2/006_07.wav",
+    "type": "blob",
+    "size": 16492
+  },
+  {
+    "path": "ades2/007_08.wav",
+    "type": "blob",
+    "size": 6444
+  },
+  {
+    "path": "ades2/008_09.wav",
+    "type": "blob",
+    "size": 9900
+  },
+  {
+    "path": "ades3",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "ades3/01.wav",
+    "type": "blob",
+    "size": 15148
+  },
+  {
+    "path": "ades3/02.wav",
+    "type": "blob",
+    "size": 27212
+  },
+  {
+    "path": "ades3/03.wav",
+    "type": "blob",
+    "size": 13772
+  },
+  {
+    "path": "ades3/04.wav",
+    "type": "blob",
+    "size": 11692
+  },
+  {
+    "path": "ades3/05.wav",
+    "type": "blob",
+    "size": 8924
+  },
+  {
+    "path": "ades3/06.wav",
+    "type": "blob",
+    "size": 13724
+  },
+  {
+    "path": "ades3/07.wav",
+    "type": "blob",
+    "size": 19500
+  },
+  {
+    "path": "ades4",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "ades4/01.wav",
+    "type": "blob",
+    "size": 2828
+  },
+  {
+    "path": "ades4/02.wav",
+    "type": "blob",
+    "size": 2284
+  },
+  {
+    "path": "ades4/03.wav",
+    "type": "blob",
+    "size": 2700
+  },
+  {
+    "path": "ades4/04.wav",
+    "type": "blob",
+    "size": 9292
+  },
+  {
+    "path": "ades4/05.wav",
+    "type": "blob",
+    "size": 2892
+  },
+  {
+    "path": "ades4/06.wav",
+    "type": "blob",
+    "size": 5100
+  },
+  {
+    "path": "alex",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "alex/000_drumx1.wav",
+    "type": "blob",
+    "size": 282284
+  },
+  {
+    "path": "alex/001_drumx2.wav",
+    "type": "blob",
+    "size": 282284
+  },
+  {
+    "path": "alphabet",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "alphabet/a.wav",
+    "type": "blob",
+    "size": 83910
+  },
+  {
+    "path": "alphabet/b.wav",
+    "type": "blob",
+    "size": 65582
+  },
+  {
+    "path": "alphabet/c.wav",
+    "type": "blob",
+    "size": 84002
+  },
+  {
+    "path": "alphabet/d.wav",
+    "type": "blob",
+    "size": 61998
+  },
+  {
+    "path": "alphabet/e.wav",
+    "type": "blob",
+    "size": 70702
+  },
+  {
+    "path": "alphabet/f.wav",
+    "type": "blob",
+    "size": 76846
+  },
+  {
+    "path": "alphabet/g.wav",
+    "type": "blob",
+    "size": 84522
+  },
+  {
+    "path": "alphabet/h.wav",
+    "type": "blob",
+    "size": 108078
+  },
+  {
+    "path": "alphabet/i.wav",
+    "type": "blob",
+    "size": 87086
+  },
+  {
+    "path": "alphabet/j.wav",
+    "type": "blob",
+    "size": 85038
+  },
+  {
+    "path": "alphabet/k.wav",
+    "type": "blob",
+    "size": 70702
+  },
+  {
+    "path": "alphabet/l.wav",
+    "type": "blob",
+    "size": 80938
+  },
+  {
+    "path": "alphabet/m.wav",
+    "type": "blob",
+    "size": 83502
+  },
+  {
+    "path": "alphabet/n.wav",
+    "type": "blob",
+    "size": 77870
+  },
+  {
+    "path": "alphabet/o.wav",
+    "type": "blob",
+    "size": 68654
+  },
+  {
+    "path": "alphabet/p.wav",
+    "type": "blob",
+    "size": 70190
+  },
+  {
+    "path": "alphabet/q.wav",
+    "type": "blob",
+    "size": 84526
+  },
+  {
+    "path": "alphabet/r.wav",
+    "type": "blob",
+    "size": 82990
+  },
+  {
+    "path": "alphabet/s.wav",
+    "type": "blob",
+    "size": 88610
+  },
+  {
+    "path": "alphabet/t.wav",
+    "type": "blob",
+    "size": 78382
+  },
+  {
+    "path": "alphabet/u.wav",
+    "type": "blob",
+    "size": 82478
+  },
+  {
+    "path": "alphabet/v.wav",
+    "type": "blob",
+    "size": 67118
+  },
+  {
+    "path": "alphabet/w.wav",
+    "type": "blob",
+    "size": 99874
+  },
+  {
+    "path": "alphabet/x.wav",
+    "type": "blob",
+    "size": 89134
+  },
+  {
+    "path": "alphabet/y.wav",
+    "type": "blob",
+    "size": 85550
+  },
+  {
+    "path": "alphabet/z.wav",
+    "type": "blob",
+    "size": 81950
+  },
+  {
+    "path": "amencutup",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "amencutup/000_AMENCUT_001.wav",
+    "type": "blob",
+    "size": 23836
+  },
+  {
+    "path": "amencutup/001_AMENCUT_002.wav",
+    "type": "blob",
+    "size": 24924
+  },
+  {
+    "path": "amencutup/002_AMENCUT_003.wav",
+    "type": "blob",
+    "size": 25886
+  },
+  {
+    "path": "amencutup/003_AMENCUT_004.wav",
+    "type": "blob",
+    "size": 12488
+  },
+  {
+    "path": "amencutup/004_AMENCUT_005.wav",
+    "type": "blob",
+    "size": 11344
+  },
+  {
+    "path": "amencutup/005_AMENCUT_006.wav",
+    "type": "blob",
+    "size": 10192
+  },
+  {
+    "path": "amencutup/006_AMENCUT_007.wav",
+    "type": "blob",
+    "size": 12164
+  },
+  {
+    "path": "amencutup/007_AMENCUT_008.wav",
+    "type": "blob",
+    "size": 13876
+  },
+  {
+    "path": "amencutup/008_AMENCUT_009.wav",
+    "type": "blob",
+    "size": 8972
+  },
+  {
+    "path": "amencutup/009_AMENCUT_010.wav",
+    "type": "blob",
+    "size": 25586
+  },
+  {
+    "path": "amencutup/010_AMENCUT_011.wav",
+    "type": "blob",
+    "size": 23770
+  },
+  {
+    "path": "amencutup/011_AMENCUT_012.wav",
+    "type": "blob",
+    "size": 24800
+  },
+  {
+    "path": "amencutup/012_AMENCUT_013.wav",
+    "type": "blob",
+    "size": 23766
+  },
+  {
+    "path": "amencutup/013_AMENCUT_014.wav",
+    "type": "blob",
+    "size": 24758
+  },
+  {
+    "path": "amencutup/014_AMENCUT_015.wav",
+    "type": "blob",
+    "size": 12160
+  },
+  {
+    "path": "amencutup/015_AMENCUT_016.wav",
+    "type": "blob",
+    "size": 11292
+  },
+  {
+    "path": "amencutup/016_AMENCUT_017.wav",
+    "type": "blob",
+    "size": 11514
+  },
+  {
+    "path": "amencutup/017_AMENCUT_018.wav",
+    "type": "blob",
+    "size": 10334
+  },
+  {
+    "path": "amencutup/018_AMENCUT_019.wav",
+    "type": "blob",
+    "size": 25588
+  },
+  {
+    "path": "amencutup/019_AMENCUT_020.wav",
+    "type": "blob",
+    "size": 22904
+  },
+  {
+    "path": "amencutup/020_AMENCUT_021.wav",
+    "type": "blob",
+    "size": 25406
+  },
+  {
+    "path": "amencutup/021_AMENCUT_022.wav",
+    "type": "blob",
+    "size": 12716
+  },
+  {
+    "path": "amencutup/022_AMENCUT_023.wav",
+    "type": "blob",
+    "size": 9980
+  },
+  {
+    "path": "amencutup/023_AMENCUT_024.wav",
+    "type": "blob",
+    "size": 12644
+  },
+  {
+    "path": "amencutup/024_AMENCUT_025.wav",
+    "type": "blob",
+    "size": 10230
+  },
+  {
+    "path": "amencutup/025_AMENCUT_026.wav",
+    "type": "blob",
+    "size": 25182
+  },
+  {
+    "path": "amencutup/026_AMENCUT_027.wav",
+    "type": "blob",
+    "size": 12334
+  },
+  {
+    "path": "amencutup/027_AMENCUT_028.wav",
+    "type": "blob",
+    "size": 12778
+  },
+  {
+    "path": "amencutup/028_AMENCUT_029.wav",
+    "type": "blob",
+    "size": 9744
+  },
+  {
+    "path": "amencutup/029_AMENCUT_030.wav",
+    "type": "blob",
+    "size": 10582
+  },
+  {
+    "path": "amencutup/030_AMENCUT_031.wav",
+    "type": "blob",
+    "size": 48766
+  },
+  {
+    "path": "amencutup/031_AMENCUT_032.wav",
+    "type": "blob",
+    "size": 19078
+  },
+  {
+    "path": "armora",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "armora/000_beep.wav",
+    "type": "blob",
+    "size": 266
+  },
+  {
+    "path": "armora/001_chopper.wav",
+    "type": "blob",
+    "size": 238716
+  },
+  {
+    "path": "armora/002_hiexp.wav",
+    "type": "blob",
+    "size": 301100
+  },
+  {
+    "path": "armora/003_jeepfire.wav",
+    "type": "blob",
+    "size": 100996
+  },
+  {
+    "path": "armora/004_loexp.wav",
+    "type": "blob",
+    "size": 336108
+  },
+  {
+    "path": "armora/005_tankeng.wav",
+    "type": "blob",
+    "size": 140332
+  },
+  {
+    "path": "armora/006_tankfire.wav",
+    "type": "blob",
+    "size": 262364
+  },
+  {
+    "path": "arp",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "arp/000_arp2.wav",
+    "type": "blob",
+    "size": 377444
+  },
+  {
+    "path": "arp/001_arp.wav",
+    "type": "blob",
+    "size": 476900
+  },
+  {
+    "path": "arpy",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "arpy/arpy01.wav",
+    "type": "blob",
+    "size": 11086
+  },
+  {
+    "path": "arpy/arpy02.wav",
+    "type": "blob",
+    "size": 11632
+  },
+  {
+    "path": "arpy/arpy03.wav",
+    "type": "blob",
+    "size": 11684
+  },
+  {
+    "path": "arpy/arpy04.wav",
+    "type": "blob",
+    "size": 12050
+  },
+  {
+    "path": "arpy/arpy05.wav",
+    "type": "blob",
+    "size": 12780
+  },
+  {
+    "path": "arpy/arpy06.wav",
+    "type": "blob",
+    "size": 11684
+  },
+  {
+    "path": "arpy/arpy07.wav",
+    "type": "blob",
+    "size": 12310
+  },
+  {
+    "path": "arpy/arpy08.wav",
+    "type": "blob",
+    "size": 11318
+  },
+  {
+    "path": "arpy/arpy09.wav",
+    "type": "blob",
+    "size": 11528
+  },
+  {
+    "path": "arpy/arpy10.wav",
+    "type": "blob",
+    "size": 11736
+  },
+  {
+    "path": "arpy/arpy11.wav",
+    "type": "blob",
+    "size": 11214
+  },
+  {
+    "path": "auto",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "auto/000_break-kick.wav",
+    "type": "blob",
+    "size": 26598
+  },
+  {
+    "path": "auto/001_break-ride.wav",
+    "type": "blob",
+    "size": 26598
+  },
+  {
+    "path": "auto/002_break-sd.wav",
+    "type": "blob",
+    "size": 26598
+  },
+  {
+    "path": "auto/003_cymrev.wav",
+    "type": "blob",
+    "size": 211818
+  },
+  {
+    "path": "auto/004_kick.wav",
+    "type": "blob",
+    "size": 53058
+  },
+  {
+    "path": "auto/005_kick-ambient.wav",
+    "type": "blob",
+    "size": 211818
+  },
+  {
+    "path": "auto/006_sd.wav",
+    "type": "blob",
+    "size": 53058
+  },
+  {
+    "path": "auto/007_sd-ambient.wav",
+    "type": "blob",
+    "size": 211818
+  },
+  {
+    "path": "auto/008_shake1.wav",
+    "type": "blob",
+    "size": 4794
+  },
+  {
+    "path": "auto/009_shake2.wav",
+    "type": "blob",
+    "size": 9448
+  },
+  {
+    "path": "auto/010_shake3.wav",
+    "type": "blob",
+    "size": 7488
+  },
+  {
+    "path": "baa",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "baa/1.wav",
+    "type": "blob",
+    "size": 805560
+  },
+  {
+    "path": "baa/2.wav",
+    "type": "blob",
+    "size": 475088
+  },
+  {
+    "path": "baa/3.wav",
+    "type": "blob",
+    "size": 619672
+  },
+  {
+    "path": "baa/4.wav",
+    "type": "blob",
+    "size": 392472
+  },
+  {
+    "path": "baa/5.wav",
+    "type": "blob",
+    "size": 330512
+  },
+  {
+    "path": "baa/6.wav",
+    "type": "blob",
+    "size": 289204
+  },
+  {
+    "path": "baa/7.wav",
+    "type": "blob",
+    "size": 371820
+  },
+  {
+    "path": "baa2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "baa2/1.wav",
+    "type": "blob",
+    "size": 402802
+  },
+  {
+    "path": "baa2/2.wav",
+    "type": "blob",
+    "size": 237566
+  },
+  {
+    "path": "baa2/3.wav",
+    "type": "blob",
+    "size": 309858
+  },
+  {
+    "path": "baa2/4.wav",
+    "type": "blob",
+    "size": 196258
+  },
+  {
+    "path": "baa2/5.wav",
+    "type": "blob",
+    "size": 165278
+  },
+  {
+    "path": "baa2/6.wav",
+    "type": "blob",
+    "size": 144624
+  },
+  {
+    "path": "baa2/7.wav",
+    "type": "blob",
+    "size": 185932
+  },
+  {
+    "path": "bass",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bass/000_bass1.wav",
+    "type": "blob",
+    "size": 28716
+  },
+  {
+    "path": "bass/001_bass2.wav",
+    "type": "blob",
+    "size": 21292
+  },
+  {
+    "path": "bass/002_bass3.wav",
+    "type": "blob",
+    "size": 23332
+  },
+  {
+    "path": "bass/003_bass4.wav",
+    "type": "blob",
+    "size": 28204
+  },
+  {
+    "path": "bass0",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bass0/000_0.wav",
+    "type": "blob",
+    "size": 11068
+  },
+  {
+    "path": "bass0/001_1.wav",
+    "type": "blob",
+    "size": 22094
+  },
+  {
+    "path": "bass0/002_2.wav",
+    "type": "blob",
+    "size": 22094
+  },
+  {
+    "path": "bass1",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bass1/18076__daven__01-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 269824
+  },
+  {
+    "path": "bass1/18077__daven__02-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 277888
+  },
+  {
+    "path": "bass1/18078__daven__03-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 271144
+  },
+  {
+    "path": "bass1/18079__daven__04-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 267520
+  },
+  {
+    "path": "bass1/18080__daven__05-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 259072
+  },
+  {
+    "path": "bass1/18081__daven__06-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 260608
+  },
+  {
+    "path": "bass1/18082__daven__07-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 145600
+  },
+  {
+    "path": "bass1/18083__daven__08-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 140674
+  },
+  {
+    "path": "bass1/18084__daven__09-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 146560
+  },
+  {
+    "path": "bass1/18085__daven__10-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 24736
+  },
+  {
+    "path": "bass1/18086__daven__11-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 85312
+  },
+  {
+    "path": "bass1/18087__daven__12-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 84544
+  },
+  {
+    "path": "bass1/18088__daven__13-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 79936
+  },
+  {
+    "path": "bass1/18089__daven__14-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 13264
+  },
+  {
+    "path": "bass1/18090__daven__15-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 417280
+  },
+  {
+    "path": "bass1/18091__daven__16-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 74560
+  },
+  {
+    "path": "bass1/18092__daven__17-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 84352
+  },
+  {
+    "path": "bass1/18093__daven__18-sb-bass-hit-c.wav",
+    "type": "blob",
+    "size": 300450
+  },
+  {
+    "path": "bass1/18094__daven__19-sb-bass-hit-f.wav",
+    "type": "blob",
+    "size": 641486
+  },
+  {
+    "path": "bass1/18095__daven__20-sb-bass-hit-f.wav",
+    "type": "blob",
+    "size": 645326
+  },
+  {
+    "path": "bass1/18096__daven__21-sb-bass-hit-f.wav",
+    "type": "blob",
+    "size": 27572
+  },
+  {
+    "path": "bass1/18097__daven__22-sb-bass-hit-f.wav",
+    "type": "blob",
+    "size": 190706
+  },
+  {
+    "path": "bass1/18098__daven__23-sb-bass-hit-f.wav",
+    "type": "blob",
+    "size": 68276
+  },
+  {
+    "path": "bass1/18099__daven__24-sb-bass-hit-f.wav",
+    "type": "blob",
+    "size": 79220
+  },
+  {
+    "path": "bass1/18100__daven__25-sb-bass-hit-f.wav",
+    "type": "blob",
+    "size": 54932
+  },
+  {
+    "path": "bass1/18101__daven__26-sb-bass-hit-f.wav",
+    "type": "blob",
+    "size": 477314
+  },
+  {
+    "path": "bass1/18102__daven__27-sb-bass-hit-f.wav",
+    "type": "blob",
+    "size": 551196
+  },
+  {
+    "path": "bass1/18103__daven__28-sb-bass-hit-f.wav",
+    "type": "blob",
+    "size": 552042
+  },
+  {
+    "path": "bass1/18104__daven__29-sb-bass-hit-f.wav",
+    "type": "blob",
+    "size": 1297074
+  },
+  {
+    "path": "bass1/18105__daven__30-sb-bass-hit-f.wav",
+    "type": "blob",
+    "size": 355358
+  },
+  {
+    "path": "bass1/_readme_and_license.txt",
+    "type": "blob",
+    "size": 4678
+  },
+  {
+    "path": "bass2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bass2/69988__noizemassacre__hardcore-bass-1.wav",
+    "type": "blob",
+    "size": 303364
+  },
+  {
+    "path": "bass2/69989__noizemassacre__hardcore-bass-2.wav",
+    "type": "blob",
+    "size": 303364
+  },
+  {
+    "path": "bass2/69990__noizemassacre__hardcore-bass-3.wav",
+    "type": "blob",
+    "size": 303364
+  },
+  {
+    "path": "bass2/69991__noizemassacre__hardcore-bass-4.wav",
+    "type": "blob",
+    "size": 303364
+  },
+  {
+    "path": "bass2/69992__noizemassacre__hardcore-bass-5.wav",
+    "type": "blob",
+    "size": 303364
+  },
+  {
+    "path": "bass2/_readme_and_license.txt",
+    "type": "blob",
+    "size": 1332
+  },
+  {
+    "path": "bass3",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bass3/83245__zgump__bass-0201.wav",
+    "type": "blob",
+    "size": 302564
+  },
+  {
+    "path": "bass3/83246__zgump__bass-0202.wav",
+    "type": "blob",
+    "size": 183288
+  },
+  {
+    "path": "bass3/83247__zgump__bass-0203.wav",
+    "type": "blob",
+    "size": 183288
+  },
+  {
+    "path": "bass3/83248__zgump__bass-0204.wav",
+    "type": "blob",
+    "size": 183288
+  },
+  {
+    "path": "bass3/83249__zgump__bass-0205.wav",
+    "type": "blob",
+    "size": 183288
+  },
+  {
+    "path": "bass3/83250__zgump__bass-0206.wav",
+    "type": "blob",
+    "size": 264704
+  },
+  {
+    "path": "bass3/83251__zgump__bass-0207.wav",
+    "type": "blob",
+    "size": 170812
+  },
+  {
+    "path": "bass3/83252__zgump__bass-0208.wav",
+    "type": "blob",
+    "size": 95180
+  },
+  {
+    "path": "bass3/83253__zgump__bass-0209.wav",
+    "type": "blob",
+    "size": 128716
+  },
+  {
+    "path": "bass3/85056__zgump__reverse-bass-01.wav",
+    "type": "blob",
+    "size": 79484
+  },
+  {
+    "path": "bass3/85057__zgump__reverse-bass-02.wav",
+    "type": "blob",
+    "size": 79484
+  },
+  {
+    "path": "bass3/_readme_and_license.txt",
+    "type": "blob",
+    "size": 2029
+  },
+  {
+    "path": "bassdm",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bassdm/000_BT0A0A7.WAV.ews",
+    "type": "blob",
+    "size": 6272
+  },
+  {
+    "path": "bassdm/001_BT0A0A7.WAV",
+    "type": "blob",
+    "size": 25080
+  },
+  {
+    "path": "bassdm/002_BT0A0D0.WAV",
+    "type": "blob",
+    "size": 8848
+  },
+  {
+    "path": "bassdm/003_BT0A0D3.WAV",
+    "type": "blob",
+    "size": 15034
+  },
+  {
+    "path": "bassdm/004_BT0A0DA.WAV",
+    "type": "blob",
+    "size": 43888
+  },
+  {
+    "path": "bassdm/005_BT0AAD0.WAV",
+    "type": "blob",
+    "size": 9504
+  },
+  {
+    "path": "bassdm/006_BT0AADA.WAV",
+    "type": "blob",
+    "size": 44020
+  },
+  {
+    "path": "bassdm/007_BT3A0D0.WAV",
+    "type": "blob",
+    "size": 8740
+  },
+  {
+    "path": "bassdm/008_BT3A0D3.WAV",
+    "type": "blob",
+    "size": 15924
+  },
+  {
+    "path": "bassdm/009_BT3A0D7.WAV",
+    "type": "blob",
+    "size": 28594
+  },
+  {
+    "path": "bassdm/010_BT3A0DA.WAV",
+    "type": "blob",
+    "size": 42880
+  },
+  {
+    "path": "bassdm/011_BT3AAD0.WAV",
+    "type": "blob",
+    "size": 8706
+  },
+  {
+    "path": "bassdm/012_BT3AADA.WAV",
+    "type": "blob",
+    "size": 42900
+  },
+  {
+    "path": "bassdm/013_BT7A0D0.WAV",
+    "type": "blob",
+    "size": 9472
+  },
+  {
+    "path": "bassdm/014_BT7A0D3.WAV",
+    "type": "blob",
+    "size": 14960
+  },
+  {
+    "path": "bassdm/015_BT7A0D7.WAV",
+    "type": "blob",
+    "size": 27544
+  },
+  {
+    "path": "bassdm/016_BT7A0DA.WAV",
+    "type": "blob",
+    "size": 43668
+  },
+  {
+    "path": "bassdm/017_BT7AAD0.WAV",
+    "type": "blob",
+    "size": 9448
+  },
+  {
+    "path": "bassdm/018_BT7AADA.WAV",
+    "type": "blob",
+    "size": 43616
+  },
+  {
+    "path": "bassdm/019_BTAA0D0.WAV",
+    "type": "blob",
+    "size": 9220
+  },
+  {
+    "path": "bassdm/020_BTAA0D3.WAV",
+    "type": "blob",
+    "size": 16310
+  },
+  {
+    "path": "bassdm/021_BTAA0D7.WAV",
+    "type": "blob",
+    "size": 28874
+  },
+  {
+    "path": "bassdm/022_BTAA0DA.WAV",
+    "type": "blob",
+    "size": 43010
+  },
+  {
+    "path": "bassdm/023_BTAAAD0.WAV",
+    "type": "blob",
+    "size": 9216
+  },
+  {
+    "path": "bassdm/024_BTAAADA.WAV",
+    "type": "blob",
+    "size": 43014
+  },
+  {
+    "path": "bassfoo",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bassfoo/000_0.wav",
+    "type": "blob",
+    "size": 11070
+  },
+  {
+    "path": "bassfoo/001_1.wav",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "bassfoo/002_2.wav",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "battles",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "battles/000_explo1.wav",
+    "type": "blob",
+    "size": 210882
+  },
+  {
+    "path": "battles/001_explo2.wav",
+    "type": "blob",
+    "size": 298264
+  },
+  {
+    "path": "bd",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bd/BT0A0A7.wav",
+    "type": "blob",
+    "size": 25108
+  },
+  {
+    "path": "bd/BT0A0D0.wav",
+    "type": "blob",
+    "size": 8978
+  },
+  {
+    "path": "bd/BT0A0D3.wav",
+    "type": "blob",
+    "size": 15138
+  },
+  {
+    "path": "bd/BT0A0DA.wav",
+    "type": "blob",
+    "size": 44028
+  },
+  {
+    "path": "bd/BT0AAD0.wav",
+    "type": "blob",
+    "size": 9628
+  },
+  {
+    "path": "bd/BT0AADA.wav",
+    "type": "blob",
+    "size": 44020
+  },
+  {
+    "path": "bd/BT3A0D0.wav",
+    "type": "blob",
+    "size": 8740
+  },
+  {
+    "path": "bd/BT3A0D3.wav",
+    "type": "blob",
+    "size": 15924
+  },
+  {
+    "path": "bd/BT3A0D7.wav",
+    "type": "blob",
+    "size": 28594
+  },
+  {
+    "path": "bd/BT3A0DA.wav",
+    "type": "blob",
+    "size": 42880
+  },
+  {
+    "path": "bd/BT3AAD0.wav",
+    "type": "blob",
+    "size": 8706
+  },
+  {
+    "path": "bd/BT3AADA.wav",
+    "type": "blob",
+    "size": 42900
+  },
+  {
+    "path": "bd/BT7A0D0.wav",
+    "type": "blob",
+    "size": 9472
+  },
+  {
+    "path": "bd/BT7A0D3.wav",
+    "type": "blob",
+    "size": 14960
+  },
+  {
+    "path": "bd/BT7A0D7.wav",
+    "type": "blob",
+    "size": 27544
+  },
+  {
+    "path": "bd/BT7A0DA.wav",
+    "type": "blob",
+    "size": 43668
+  },
+  {
+    "path": "bd/BT7AAD0.wav",
+    "type": "blob",
+    "size": 9448
+  },
+  {
+    "path": "bd/BT7AADA.wav",
+    "type": "blob",
+    "size": 43616
+  },
+  {
+    "path": "bd/BTAA0D0.wav",
+    "type": "blob",
+    "size": 9220
+  },
+  {
+    "path": "bd/BTAA0D3.wav",
+    "type": "blob",
+    "size": 16310
+  },
+  {
+    "path": "bd/BTAA0D7.wav",
+    "type": "blob",
+    "size": 28874
+  },
+  {
+    "path": "bd/BTAA0DA.wav",
+    "type": "blob",
+    "size": 43010
+  },
+  {
+    "path": "bd/BTAAAD0.wav",
+    "type": "blob",
+    "size": 9216
+  },
+  {
+    "path": "bd/BTAAADA.wav",
+    "type": "blob",
+    "size": 43014
+  },
+  {
+    "path": "bend",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bend/000_2.wav",
+    "type": "blob",
+    "size": 26822
+  },
+  {
+    "path": "bend/001_5.wav",
+    "type": "blob",
+    "size": 26822
+  },
+  {
+    "path": "bend/002_6.wav",
+    "type": "blob",
+    "size": 26822
+  },
+  {
+    "path": "bend/003_8.wav",
+    "type": "blob",
+    "size": 26822
+  },
+  {
+    "path": "bev",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bev/00-mono.wav",
+    "type": "blob",
+    "size": 1416306
+  },
+  {
+    "path": "bev/01-stereo.wav",
+    "type": "blob",
+    "size": 2832462
+  },
+  {
+    "path": "bin",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bin/000_bin1.wav",
+    "type": "blob",
+    "size": 144458
+  },
+  {
+    "path": "bin/001_0.wav",
+    "type": "blob",
+    "size": 72214
+  },
+  {
+    "path": "birds",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "birds/000_1.wav",
+    "type": "blob",
+    "size": 352844
+  },
+  {
+    "path": "birds/001_10.wav",
+    "type": "blob",
+    "size": 352844
+  },
+  {
+    "path": "birds/002_2.wav",
+    "type": "blob",
+    "size": 529244
+  },
+  {
+    "path": "birds/003_3.wav",
+    "type": "blob",
+    "size": 441044
+  },
+  {
+    "path": "birds/004_4.wav",
+    "type": "blob",
+    "size": 705644
+  },
+  {
+    "path": "birds/005_5.wav",
+    "type": "blob",
+    "size": 176444
+  },
+  {
+    "path": "birds/006_6.wav",
+    "type": "blob",
+    "size": 154396
+  },
+  {
+    "path": "birds/007_7.wav",
+    "type": "blob",
+    "size": 242596
+  },
+  {
+    "path": "birds/008_8.wav",
+    "type": "blob",
+    "size": 308744
+  },
+  {
+    "path": "birds/009_9.wav",
+    "type": "blob",
+    "size": 308744
+  },
+  {
+    "path": "birds3",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "birds3/000_1.wav",
+    "type": "blob",
+    "size": 1932
+  },
+  {
+    "path": "birds3/001_10.wav",
+    "type": "blob",
+    "size": 1628
+  },
+  {
+    "path": "birds3/002_11.wav",
+    "type": "blob",
+    "size": 2284
+  },
+  {
+    "path": "birds3/003_12.wav",
+    "type": "blob",
+    "size": 3980
+  },
+  {
+    "path": "birds3/004_13.wav",
+    "type": "blob",
+    "size": 2636
+  },
+  {
+    "path": "birds3/005_14.wav",
+    "type": "blob",
+    "size": 5196
+  },
+  {
+    "path": "birds3/006_15.wav",
+    "type": "blob",
+    "size": 3340
+  },
+  {
+    "path": "birds3/007_16.wav",
+    "type": "blob",
+    "size": 1036
+  },
+  {
+    "path": "birds3/008_17.wav",
+    "type": "blob",
+    "size": 1548
+  },
+  {
+    "path": "birds3/009_18.wav",
+    "type": "blob",
+    "size": 4492
+  },
+  {
+    "path": "birds3/010_19.wav",
+    "type": "blob",
+    "size": 3308
+  },
+  {
+    "path": "birds3/011_2.wav",
+    "type": "blob",
+    "size": 1612
+  },
+  {
+    "path": "birds3/012_3.wav",
+    "type": "blob",
+    "size": 1732
+  },
+  {
+    "path": "birds3/013_4.wav",
+    "type": "blob",
+    "size": 3324
+  },
+  {
+    "path": "birds3/014_5.wav",
+    "type": "blob",
+    "size": 5020
+  },
+  {
+    "path": "birds3/015_6.wav",
+    "type": "blob",
+    "size": 988
+  },
+  {
+    "path": "birds3/016_7.wav",
+    "type": "blob",
+    "size": 1100
+  },
+  {
+    "path": "birds3/017_8.wav",
+    "type": "blob",
+    "size": 2508
+  },
+  {
+    "path": "birds3/018_9.wav",
+    "type": "blob",
+    "size": 2316
+  },
+  {
+    "path": "bleep",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bleep/boip.wav",
+    "type": "blob",
+    "size": 11424
+  },
+  {
+    "path": "bleep/checkpoint-hit.wav",
+    "type": "blob",
+    "size": 94510
+  },
+  {
+    "path": "bleep/echo-blip-thing.wav",
+    "type": "blob",
+    "size": 2064384
+  },
+  {
+    "path": "bleep/harsh-whippleszoot.wav",
+    "type": "blob",
+    "size": 76796
+  },
+  {
+    "path": "bleep/pc_beep.wav",
+    "type": "blob",
+    "size": 16750
+  },
+  {
+    "path": "bleep/shortsaxish.wav",
+    "type": "blob",
+    "size": 21166
+  },
+  {
+    "path": "bleep/simpletone.wav",
+    "type": "blob",
+    "size": 13102
+  },
+  {
+    "path": "bleep/stereo-star-trek-pager.wav",
+    "type": "blob",
+    "size": 46126
+  },
+  {
+    "path": "bleep/tiniest.wav",
+    "type": "blob",
+    "size": 7086
+  },
+  {
+    "path": "bleep/tinynote.wav",
+    "type": "blob",
+    "size": 19406
+  },
+  {
+    "path": "bleep/vidgame-bleep1.wav",
+    "type": "blob",
+    "size": 33486
+  },
+  {
+    "path": "bleep/vidgame-bleep2.wav",
+    "type": "blob",
+    "size": 26446
+  },
+  {
+    "path": "bleep/watch_beep.wav",
+    "type": "blob",
+    "size": 13550
+  },
+  {
+    "path": "blip",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "blip/000_blipp01.wav",
+    "type": "blob",
+    "size": 15916
+  },
+  {
+    "path": "blip/001_blipp02.wav",
+    "type": "blob",
+    "size": 15916
+  },
+  {
+    "path": "blue",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "blue/aya.wav",
+    "type": "blob",
+    "size": 41516
+  },
+  {
+    "path": "blue/howdoesitfeel.wav",
+    "type": "blob",
+    "size": 103724
+  },
+  {
+    "path": "bottle",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bottle/000_1.wav",
+    "type": "blob",
+    "size": 20072
+  },
+  {
+    "path": "bottle/001_10.wav",
+    "type": "blob",
+    "size": 8316
+  },
+  {
+    "path": "bottle/002_11.wav",
+    "type": "blob",
+    "size": 10366
+  },
+  {
+    "path": "bottle/003_12.wav",
+    "type": "blob",
+    "size": 12624
+  },
+  {
+    "path": "bottle/004_13.wav",
+    "type": "blob",
+    "size": 14172
+  },
+  {
+    "path": "bottle/005_2.wav",
+    "type": "blob",
+    "size": 16564
+  },
+  {
+    "path": "bottle/006_3.wav",
+    "type": "blob",
+    "size": 10596
+  },
+  {
+    "path": "bottle/007_4.wav",
+    "type": "blob",
+    "size": 12232
+  },
+  {
+    "path": "bottle/008_5.wav",
+    "type": "blob",
+    "size": 18470
+  },
+  {
+    "path": "bottle/009_6.wav",
+    "type": "blob",
+    "size": 13868
+  },
+  {
+    "path": "bottle/010_7.wav",
+    "type": "blob",
+    "size": 14464
+  },
+  {
+    "path": "bottle/011_8.wav",
+    "type": "blob",
+    "size": 18470
+  },
+  {
+    "path": "bottle/012_9.wav",
+    "type": "blob",
+    "size": 12394
+  },
+  {
+    "path": "breaks125",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "breaks125/015_sdstckbr.wav",
+    "type": "blob",
+    "size": 82564
+  },
+  {
+    "path": "breaks125/016_bllstmp.wav",
+    "type": "blob",
+    "size": 85564
+  },
+  {
+    "path": "breaks152",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "breaks152/000_AMEN.WAV",
+    "type": "blob",
+    "size": 414570
+  },
+  {
+    "path": "breaks157",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "breaks157/000_PLEAD.WAV",
+    "type": "blob",
+    "size": 160234
+  },
+  {
+    "path": "breaks165",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "breaks165/000_RAWCLN.WAV",
+    "type": "blob",
+    "size": 125542
+  },
+  {
+    "path": "breath",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "breath/000_breath.wav",
+    "type": "blob",
+    "size": 87896
+  },
+  {
+    "path": "bubble",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "bubble/000_bub0.wav",
+    "type": "blob",
+    "size": 7882
+  },
+  {
+    "path": "bubble/001_bub1.wav",
+    "type": "blob",
+    "size": 2226
+  },
+  {
+    "path": "bubble/002_bub2.wav",
+    "type": "blob",
+    "size": 4472
+  },
+  {
+    "path": "bubble/003_bub3.wav",
+    "type": "blob",
+    "size": 1526
+  },
+  {
+    "path": "bubble/004_bub4.wav",
+    "type": "blob",
+    "size": 2594
+  },
+  {
+    "path": "bubble/005_bub5.wav",
+    "type": "blob",
+    "size": 1366
+  },
+  {
+    "path": "bubble/006_bub6.wav",
+    "type": "blob",
+    "size": 3062
+  },
+  {
+    "path": "bubble/007_bub7.wav",
+    "type": "blob",
+    "size": 1872
+  },
+  {
+    "path": "can",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "can/000_1.wav",
+    "type": "blob",
+    "size": 13524
+  },
+  {
+    "path": "can/001_10.wav",
+    "type": "blob",
+    "size": 9670
+  },
+  {
+    "path": "can/002_11.wav",
+    "type": "blob",
+    "size": 7854
+  },
+  {
+    "path": "can/003_12.wav",
+    "type": "blob",
+    "size": 29200
+  },
+  {
+    "path": "can/004_13.wav",
+    "type": "blob",
+    "size": 43980
+  },
+  {
+    "path": "can/005_14.wav",
+    "type": "blob",
+    "size": 19906
+  },
+  {
+    "path": "can/006_2.wav",
+    "type": "blob",
+    "size": 13978
+  },
+  {
+    "path": "can/007_3.wav",
+    "type": "blob",
+    "size": 14228
+  },
+  {
+    "path": "can/008_4.wav",
+    "type": "blob",
+    "size": 12114
+  },
+  {
+    "path": "can/009_5.wav",
+    "type": "blob",
+    "size": 4856
+  },
+  {
+    "path": "can/010_6.wav",
+    "type": "blob",
+    "size": 8056
+  },
+  {
+    "path": "can/011_7.wav",
+    "type": "blob",
+    "size": 14532
+  },
+  {
+    "path": "can/012_8.wav",
+    "type": "blob",
+    "size": 6670
+  },
+  {
+    "path": "can/013_9.wav",
+    "type": "blob",
+    "size": 7552
+  },
+  {
+    "path": "casio",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "casio/high.wav",
+    "type": "blob",
+    "size": 19770
+  },
+  {
+    "path": "casio/low.wav",
+    "type": "blob",
+    "size": 19240
+  },
+  {
+    "path": "casio/noise.wav",
+    "type": "blob",
+    "size": 19816
+  },
+  {
+    "path": "cb",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "cb/rytm-cb.wav",
+    "type": "blob",
+    "size": 170222
+  },
+  {
+    "path": "cc",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "cc/CSHD0.wav",
+    "type": "blob",
+    "size": 97826
+  },
+  {
+    "path": "cc/CSHD2.wav",
+    "type": "blob",
+    "size": 90990
+  },
+  {
+    "path": "cc/CSHD4.wav",
+    "type": "blob",
+    "size": 79624
+  },
+  {
+    "path": "cc/CSHD6.wav",
+    "type": "blob",
+    "size": 64610
+  },
+  {
+    "path": "cc/CSHD8.wav",
+    "type": "blob",
+    "size": 54954
+  },
+  {
+    "path": "cc/CSHDA.wav",
+    "type": "blob",
+    "size": 47684
+  },
+  {
+    "path": "chin",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "chin/000_tik1.wav",
+    "type": "blob",
+    "size": 450
+  },
+  {
+    "path": "chin/001_tik2.wav",
+    "type": "blob",
+    "size": 1358
+  },
+  {
+    "path": "chin/002_tik3.wav",
+    "type": "blob",
+    "size": 524
+  },
+  {
+    "path": "chin/003_tik4.wav",
+    "type": "blob",
+    "size": 368
+  },
+  {
+    "path": "circus",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "circus/000_bounce.wav",
+    "type": "blob",
+    "size": 24768
+  },
+  {
+    "path": "circus/001_miss.wav",
+    "type": "blob",
+    "size": 46012
+  },
+  {
+    "path": "circus/002_pop.wav",
+    "type": "blob",
+    "size": 15204
+  },
+  {
+    "path": "clak",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "clak/000_clak1.wav",
+    "type": "blob",
+    "size": 15444
+  },
+  {
+    "path": "clak/001_clak2.wav",
+    "type": "blob",
+    "size": 13020
+  },
+  {
+    "path": "click",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "click/000_click0.wav",
+    "type": "blob",
+    "size": 9744
+  },
+  {
+    "path": "click/001_click1.wav",
+    "type": "blob",
+    "size": 18380
+  },
+  {
+    "path": "click/002_click2.wav",
+    "type": "blob",
+    "size": 41580
+  },
+  {
+    "path": "click/003_click3.wav",
+    "type": "blob",
+    "size": 109616
+  },
+  {
+    "path": "clubkick",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "clubkick/1.wav",
+    "type": "blob",
+    "size": 41452
+  },
+  {
+    "path": "clubkick/2.wav",
+    "type": "blob",
+    "size": 40864
+  },
+  {
+    "path": "clubkick/3.wav",
+    "type": "blob",
+    "size": 47200
+  },
+  {
+    "path": "clubkick/4.wav",
+    "type": "blob",
+    "size": 38016
+  },
+  {
+    "path": "clubkick/5.wav",
+    "type": "blob",
+    "size": 38672
+  },
+  {
+    "path": "co",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "co/CLOP1.wav",
+    "type": "blob",
+    "size": 38970
+  },
+  {
+    "path": "co/CLOP2.wav",
+    "type": "blob",
+    "size": 23100
+  },
+  {
+    "path": "co/CLOP3.wav",
+    "type": "blob",
+    "size": 53120
+  },
+  {
+    "path": "co/CLOP4.wav",
+    "type": "blob",
+    "size": 20252
+  },
+  {
+    "path": "coins",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "coins/coins.wav",
+    "type": "blob",
+    "size": 14630
+  },
+  {
+    "path": "control",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "control/1.wav",
+    "type": "blob",
+    "size": 40384
+  },
+  {
+    "path": "control/2.wav",
+    "type": "blob",
+    "size": 79488
+  },
+  {
+    "path": "cosmicg",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "cosmicg/000_cg_att.wav",
+    "type": "blob",
+    "size": 163750
+  },
+  {
+    "path": "cosmicg/001_cg_chnc.wav",
+    "type": "blob",
+    "size": 11160
+  },
+  {
+    "path": "cosmicg/002_cg_dest.wav",
+    "type": "blob",
+    "size": 336512
+  },
+  {
+    "path": "cosmicg/003_cg_ext.wav",
+    "type": "blob",
+    "size": 43916
+  },
+  {
+    "path": "cosmicg/004_cg_gotb.wav",
+    "type": "blob",
+    "size": 69900
+  },
+  {
+    "path": "cosmicg/005_cg_gotm.wav",
+    "type": "blob",
+    "size": 21460
+  },
+  {
+    "path": "cosmicg/006_cg_gun.wav",
+    "type": "blob",
+    "size": 17420
+  },
+  {
+    "path": "cosmicg/007_cg_m0.wav",
+    "type": "blob",
+    "size": 7352
+  },
+  {
+    "path": "cosmicg/008_cg_m1.wav",
+    "type": "blob",
+    "size": 7630
+  },
+  {
+    "path": "cosmicg/009_cg_m2.wav",
+    "type": "blob",
+    "size": 7620
+  },
+  {
+    "path": "cosmicg/010_cg_m3.wav",
+    "type": "blob",
+    "size": 7454
+  },
+  {
+    "path": "cosmicg/011_cg_m4.wav",
+    "type": "blob",
+    "size": 7590
+  },
+  {
+    "path": "cosmicg/012_cg_m5.wav",
+    "type": "blob",
+    "size": 7606
+  },
+  {
+    "path": "cosmicg/013_cg_m6.wav",
+    "type": "blob",
+    "size": 7650
+  },
+  {
+    "path": "cosmicg/014_cg_m7.wav",
+    "type": "blob",
+    "size": 7376
+  },
+  {
+    "path": "cp",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "cp/HANDCLP0.wav",
+    "type": "blob",
+    "size": 39392
+  },
+  {
+    "path": "cp/HANDCLPA.wav",
+    "type": "blob",
+    "size": 32312
+  },
+  {
+    "path": "cr",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "cr/RIDED0.wav",
+    "type": "blob",
+    "size": 102848
+  },
+  {
+    "path": "cr/RIDED2.wav",
+    "type": "blob",
+    "size": 96214
+  },
+  {
+    "path": "cr/RIDED4.wav",
+    "type": "blob",
+    "size": 70082
+  },
+  {
+    "path": "cr/RIDED6.wav",
+    "type": "blob",
+    "size": 70082
+  },
+  {
+    "path": "cr/RIDED8.wav",
+    "type": "blob",
+    "size": 57872
+  },
+  {
+    "path": "cr/RIDEDA.wav",
+    "type": "blob",
+    "size": 47640
+  },
+  {
+    "path": "crow",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "crow/000_crow.wav",
+    "type": "blob",
+    "size": 22978
+  },
+  {
+    "path": "crow/001_crow2.wav",
+    "type": "blob",
+    "size": 18486
+  },
+  {
+    "path": "crow/002_crow3.wav",
+    "type": "blob",
+    "size": 21856
+  },
+  {
+    "path": "crow/003_crow4.wav",
+    "type": "blob",
+    "size": 22680
+  },
+  {
+    "path": "d",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "d/000_d1.wav",
+    "type": "blob",
+    "size": 2498
+  },
+  {
+    "path": "d/001_d2.wav",
+    "type": "blob",
+    "size": 185352
+  },
+  {
+    "path": "d/002_d3.wav",
+    "type": "blob",
+    "size": 185352
+  },
+  {
+    "path": "d/003_d4.wav",
+    "type": "blob",
+    "size": 20302
+  },
+  {
+    "path": "db",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "db/dbs12closedhh.wav",
+    "type": "blob",
+    "size": 17944
+  },
+  {
+    "path": "db/dbs12crash.wav",
+    "type": "blob",
+    "size": 96936
+  },
+  {
+    "path": "db/dbs12hit1.wav",
+    "type": "blob",
+    "size": 159132
+  },
+  {
+    "path": "db/dbs12hit2.wav",
+    "type": "blob",
+    "size": 134176
+  },
+  {
+    "path": "db/dbs12hit3.wav",
+    "type": "blob",
+    "size": 90100
+  },
+  {
+    "path": "db/dbs12kick1.wav",
+    "type": "blob",
+    "size": 33204
+  },
+  {
+    "path": "db/dbs12kick2.wav",
+    "type": "blob",
+    "size": 24084
+  },
+  {
+    "path": "db/dbs12openhh.wav",
+    "type": "blob",
+    "size": 72188
+  },
+  {
+    "path": "db/dbs12perc1.wav",
+    "type": "blob",
+    "size": 21640
+  },
+  {
+    "path": "db/dbs12perc2.wav",
+    "type": "blob",
+    "size": 423040
+  },
+  {
+    "path": "db/dbs12ride.wav",
+    "type": "blob",
+    "size": 148084
+  },
+  {
+    "path": "db/dbs12snare1.wav",
+    "type": "blob",
+    "size": 43576
+  },
+  {
+    "path": "db/dbs12snare2.wav",
+    "type": "blob",
+    "size": 9992
+  },
+  {
+    "path": "diphone",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "diphone/000_kd1_002.wav",
+    "type": "blob",
+    "size": 48672
+  },
+  {
+    "path": "diphone/001_kd1_003.wav",
+    "type": "blob",
+    "size": 46996
+  },
+  {
+    "path": "diphone/002_kd1_004.wav",
+    "type": "blob",
+    "size": 40706
+  },
+  {
+    "path": "diphone/003_kd1_005.wav",
+    "type": "blob",
+    "size": 37774
+  },
+  {
+    "path": "diphone/004_kd1_006.wav",
+    "type": "blob",
+    "size": 38194
+  },
+  {
+    "path": "diphone/005_kd1_007.wav",
+    "type": "blob",
+    "size": 38612
+  },
+  {
+    "path": "diphone/006_kd1_008.wav",
+    "type": "blob",
+    "size": 38194
+  },
+  {
+    "path": "diphone/007_kd1_009.wav",
+    "type": "blob",
+    "size": 36096
+  },
+  {
+    "path": "diphone/008_kd1_010.wav",
+    "type": "blob",
+    "size": 34420
+  },
+  {
+    "path": "diphone/009_kd1_011.wav",
+    "type": "blob",
+    "size": 38612
+  },
+  {
+    "path": "diphone/010_kd1_012.wav",
+    "type": "blob",
+    "size": 33582
+  },
+  {
+    "path": "diphone/011_kd1_013.wav",
+    "type": "blob",
+    "size": 38194
+  },
+  {
+    "path": "diphone/012_kd1_014.wav",
+    "type": "blob",
+    "size": 37774
+  },
+  {
+    "path": "diphone/013_kd1_015.wav",
+    "type": "blob",
+    "size": 35258
+  },
+  {
+    "path": "diphone/014_kd1_016.wav",
+    "type": "blob",
+    "size": 39870
+  },
+  {
+    "path": "diphone/015_kd1_017.wav",
+    "type": "blob",
+    "size": 38612
+  },
+  {
+    "path": "diphone/016_kd1_018.wav",
+    "type": "blob",
+    "size": 43224
+  },
+  {
+    "path": "diphone/017_kd1_019.wav",
+    "type": "blob",
+    "size": 34420
+  },
+  {
+    "path": "diphone/018_kd1_020.wav",
+    "type": "blob",
+    "size": 41966
+  },
+  {
+    "path": "diphone/019_kd1_021.wav",
+    "type": "blob",
+    "size": 42386
+  },
+  {
+    "path": "diphone/020_kd1_022.wav",
+    "type": "blob",
+    "size": 38612
+  },
+  {
+    "path": "diphone/021_kd1_023.wav",
+    "type": "blob",
+    "size": 38612
+  },
+  {
+    "path": "diphone/022_kd1_024.wav",
+    "type": "blob",
+    "size": 39870
+  },
+  {
+    "path": "diphone/023_kd1_025.wav",
+    "type": "blob",
+    "size": 36096
+  },
+  {
+    "path": "diphone/024_kd1_026.wav",
+    "type": "blob",
+    "size": 38612
+  },
+  {
+    "path": "diphone/025_kd1_027.wav",
+    "type": "blob",
+    "size": 39450
+  },
+  {
+    "path": "diphone/026_kd1_028.wav",
+    "type": "blob",
+    "size": 38194
+  },
+  {
+    "path": "diphone/027_kd1_029.wav",
+    "type": "blob",
+    "size": 39032
+  },
+  {
+    "path": "diphone/028_kd1_030.wav",
+    "type": "blob",
+    "size": 41548
+  },
+  {
+    "path": "diphone/029_kd1_031.wav",
+    "type": "blob",
+    "size": 37356
+  },
+  {
+    "path": "diphone/030_kd1_032.wav",
+    "type": "blob",
+    "size": 43642
+  },
+  {
+    "path": "diphone/031_kd1_033.wav",
+    "type": "blob",
+    "size": 38194
+  },
+  {
+    "path": "diphone/032_kd1_034.wav",
+    "type": "blob",
+    "size": 40288
+  },
+  {
+    "path": "diphone/033_kd1_035.wav",
+    "type": "blob",
+    "size": 40706
+  },
+  {
+    "path": "diphone/034_kd1_036.wav",
+    "type": "blob",
+    "size": 43642
+  },
+  {
+    "path": "diphone/035_kd1_037.wav",
+    "type": "blob",
+    "size": 41548
+  },
+  {
+    "path": "diphone/036_kd1_038.wav",
+    "type": "blob",
+    "size": 39032
+  },
+  {
+    "path": "diphone/037_kd1_039.wav",
+    "type": "blob",
+    "size": 32768
+  },
+  {
+    "path": "diphone2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "diphone2/000_kd1_399.wav",
+    "type": "blob",
+    "size": 32744
+  },
+  {
+    "path": "diphone2/001_kd1_400.wav",
+    "type": "blob",
+    "size": 36306
+  },
+  {
+    "path": "diphone2/002_kd1_401.wav",
+    "type": "blob",
+    "size": 34630
+  },
+  {
+    "path": "diphone2/003_kd1_402.wav",
+    "type": "blob",
+    "size": 29808
+  },
+  {
+    "path": "diphone2/004_kd1_403.wav",
+    "type": "blob",
+    "size": 30022
+  },
+  {
+    "path": "diphone2/005_kd1_404.wav",
+    "type": "blob",
+    "size": 31590
+  },
+  {
+    "path": "diphone2/006_kd1_405.wav",
+    "type": "blob",
+    "size": 29180
+  },
+  {
+    "path": "diphone2/007_kd1_406.wav",
+    "type": "blob",
+    "size": 38088
+  },
+  {
+    "path": "diphone2/008_kd3_010.wav",
+    "type": "blob",
+    "size": 35442
+  },
+  {
+    "path": "diphone2/009_kd3_011.wav",
+    "type": "blob",
+    "size": 35858
+  },
+  {
+    "path": "diphone2/010_kd3_012.wav",
+    "type": "blob",
+    "size": 37524
+  },
+  {
+    "path": "diphone2/011_kd3_013.wav",
+    "type": "blob",
+    "size": 32320
+  },
+  {
+    "path": "dist",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "dist/000_inddistb1.wav",
+    "type": "blob",
+    "size": 423042
+  },
+  {
+    "path": "dist/001_inddistb2.wav",
+    "type": "blob",
+    "size": 423174
+  },
+  {
+    "path": "dist/002_inddistb1ride.wav",
+    "type": "blob",
+    "size": 423586
+  },
+  {
+    "path": "dist/003_inddistb2ride.wav",
+    "type": "blob",
+    "size": 423202
+  },
+  {
+    "path": "dist/004_inddistb3.wav",
+    "type": "blob",
+    "size": 424322
+  },
+  {
+    "path": "dist/005_inddistb3ride.wav",
+    "type": "blob",
+    "size": 423282
+  },
+  {
+    "path": "dist/006_inddistb4.wav",
+    "type": "blob",
+    "size": 424806
+  },
+  {
+    "path": "dist/007_inddistb4ride.wav",
+    "type": "blob",
+    "size": 428530
+  },
+  {
+    "path": "dist/008_inddistb5.wav",
+    "type": "blob",
+    "size": 421638
+  },
+  {
+    "path": "dist/009_inddistb5ride.wav",
+    "type": "blob",
+    "size": 423682
+  },
+  {
+    "path": "dist/010_inddistb6.wav",
+    "type": "blob",
+    "size": 422146
+  },
+  {
+    "path": "dist/011_inddistb6ride.wav",
+    "type": "blob",
+    "size": 423970
+  },
+  {
+    "path": "dist/012_inddistb7.wav",
+    "type": "blob",
+    "size": 424834
+  },
+  {
+    "path": "dist/013_inddistb7ride.wav",
+    "type": "blob",
+    "size": 423426
+  },
+  {
+    "path": "dist/014_inddistb8.wav",
+    "type": "blob",
+    "size": 423426
+  },
+  {
+    "path": "dist/015_inddistb8ride.wav",
+    "type": "blob",
+    "size": 421126
+  },
+  {
+    "path": "dork2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "dork2/0.wav",
+    "type": "blob",
+    "size": 476204
+  },
+  {
+    "path": "dork2/1.wav",
+    "type": "blob",
+    "size": 235564
+  },
+  {
+    "path": "dork2/2.wav",
+    "type": "blob",
+    "size": 68652
+  },
+  {
+    "path": "dork2/4.wav",
+    "type": "blob",
+    "size": 60460
+  },
+  {
+    "path": "dorkbot",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "dorkbot/1.wav",
+    "type": "blob",
+    "size": 268332
+  },
+  {
+    "path": "dorkbot/2.wav",
+    "type": "blob",
+    "size": 124972
+  },
+  {
+    "path": "dr",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "dr/000_002.WAV",
+    "type": "blob",
+    "size": 5426
+  },
+  {
+    "path": "dr/001_003.WAV",
+    "type": "blob",
+    "size": 14330
+  },
+  {
+    "path": "dr/002_004.WAV",
+    "type": "blob",
+    "size": 26370
+  },
+  {
+    "path": "dr/003_005.WAV",
+    "type": "blob",
+    "size": 20018
+  },
+  {
+    "path": "dr/004_006.WAV",
+    "type": "blob",
+    "size": 11286
+  },
+  {
+    "path": "dr/005_008.WAV",
+    "type": "blob",
+    "size": 57328
+  },
+  {
+    "path": "dr/006_009.WAV",
+    "type": "blob",
+    "size": 29244
+  },
+  {
+    "path": "dr/007_010.WAV",
+    "type": "blob",
+    "size": 44088
+  },
+  {
+    "path": "dr/008_011.WAV",
+    "type": "blob",
+    "size": 30362
+  },
+  {
+    "path": "dr/009_014.WAV",
+    "type": "blob",
+    "size": 16702
+  },
+  {
+    "path": "dr/010_015.WAV",
+    "type": "blob",
+    "size": 33672
+  },
+  {
+    "path": "dr/011_016.WAV",
+    "type": "blob",
+    "size": 24940
+  },
+  {
+    "path": "dr/012_017.WAV",
+    "type": "blob",
+    "size": 32288
+  },
+  {
+    "path": "dr/013_019.WAV",
+    "type": "blob",
+    "size": 14414
+  },
+  {
+    "path": "dr/014_023.WAV",
+    "type": "blob",
+    "size": 44176
+  },
+  {
+    "path": "dr/015_024.WAV",
+    "type": "blob",
+    "size": 59178
+  },
+  {
+    "path": "dr/016_025.WAV",
+    "type": "blob",
+    "size": 47180
+  },
+  {
+    "path": "dr/017_026.WAV",
+    "type": "blob",
+    "size": 130482
+  },
+  {
+    "path": "dr/018_027.WAV",
+    "type": "blob",
+    "size": 46064
+  },
+  {
+    "path": "dr/019_028.WAV",
+    "type": "blob",
+    "size": 105124
+  },
+  {
+    "path": "dr/020_029.WAV",
+    "type": "blob",
+    "size": 85712
+  },
+  {
+    "path": "dr/021_030.WAV",
+    "type": "blob",
+    "size": 23638
+  },
+  {
+    "path": "dr/022_031.WAV",
+    "type": "blob",
+    "size": 10714
+  },
+  {
+    "path": "dr/023_032.WAV",
+    "type": "blob",
+    "size": 131082
+  },
+  {
+    "path": "dr/024_033.WAV",
+    "type": "blob",
+    "size": 8452
+  },
+  {
+    "path": "dr/025_034.WAV",
+    "type": "blob",
+    "size": 10652
+  },
+  {
+    "path": "dr/026_035.WAV",
+    "type": "blob",
+    "size": 13722
+  },
+  {
+    "path": "dr/027_036.WAV",
+    "type": "blob",
+    "size": 14360
+  },
+  {
+    "path": "dr/028_037.WAV",
+    "type": "blob",
+    "size": 26338
+  },
+  {
+    "path": "dr/029_038.WAV",
+    "type": "blob",
+    "size": 40536
+  },
+  {
+    "path": "dr/030_039.WAV",
+    "type": "blob",
+    "size": 37086
+  },
+  {
+    "path": "dr/031_040.WAV",
+    "type": "blob",
+    "size": 17842
+  },
+  {
+    "path": "dr/032_041.WAV",
+    "type": "blob",
+    "size": 19202
+  },
+  {
+    "path": "dr/033_042.WAV",
+    "type": "blob",
+    "size": 5904
+  },
+  {
+    "path": "dr/034_043.WAV",
+    "type": "blob",
+    "size": 5106
+  },
+  {
+    "path": "dr/035_044.WAV",
+    "type": "blob",
+    "size": 23344
+  },
+  {
+    "path": "dr/036_045.WAV",
+    "type": "blob",
+    "size": 8712
+  },
+  {
+    "path": "dr/037_046.WAV",
+    "type": "blob",
+    "size": 44496
+  },
+  {
+    "path": "dr/038_047.WAV",
+    "type": "blob",
+    "size": 61908
+  },
+  {
+    "path": "dr/039_048.WAV",
+    "type": "blob",
+    "size": 40560
+  },
+  {
+    "path": "dr/040_049.WAV",
+    "type": "blob",
+    "size": 39946
+  },
+  {
+    "path": "dr/041_050.WAV",
+    "type": "blob",
+    "size": 18222
+  },
+  {
+    "path": "dr2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "dr2/000_DR110CHT.WAV",
+    "type": "blob",
+    "size": 34766
+  },
+  {
+    "path": "dr2/001_DR110CLP.WAV",
+    "type": "blob",
+    "size": 58586
+  },
+  {
+    "path": "dr2/002_DR110CYM.WAV",
+    "type": "blob",
+    "size": 118876
+  },
+  {
+    "path": "dr2/003_DR110KIK.WAV",
+    "type": "blob",
+    "size": 22794
+  },
+  {
+    "path": "dr2/004_DR110OHT.WAV",
+    "type": "blob",
+    "size": 98164
+  },
+  {
+    "path": "dr2/005_DR110SNR.WAV",
+    "type": "blob",
+    "size": 33008
+  },
+  {
+    "path": "dr55",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "dr55/000_DR55 hi hat.wav",
+    "type": "blob",
+    "size": 8746
+  },
+  {
+    "path": "dr55/001_DR55 kick.wav",
+    "type": "blob",
+    "size": 9858
+  },
+  {
+    "path": "dr55/002_DR55 rimshot.wav",
+    "type": "blob",
+    "size": 1452
+  },
+  {
+    "path": "dr55/003_DR55 snare.wav",
+    "type": "blob",
+    "size": 10348
+  },
+  {
+    "path": "dr_few",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "dr_few/000_001.WAV",
+    "type": "blob",
+    "size": 45704
+  },
+  {
+    "path": "dr_few/001_007.WAV",
+    "type": "blob",
+    "size": 2722
+  },
+  {
+    "path": "dr_few/002_012.WAV",
+    "type": "blob",
+    "size": 19914
+  },
+  {
+    "path": "dr_few/003_013.WAV",
+    "type": "blob",
+    "size": 28098
+  },
+  {
+    "path": "dr_few/004_018.WAV",
+    "type": "blob",
+    "size": 57178
+  },
+  {
+    "path": "dr_few/005_020.WAV",
+    "type": "blob",
+    "size": 57244
+  },
+  {
+    "path": "dr_few/006_021.WAV",
+    "type": "blob",
+    "size": 20910
+  },
+  {
+    "path": "dr_few/007_022.WAV",
+    "type": "blob",
+    "size": 51946
+  },
+  {
+    "path": "drum",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "drum/000_drum1.wav",
+    "type": "blob",
+    "size": 23900
+  },
+  {
+    "path": "drum/001_drum2.wav",
+    "type": "blob",
+    "size": 15412
+  },
+  {
+    "path": "drum/002_drum3.wav",
+    "type": "blob",
+    "size": 10944
+  },
+  {
+    "path": "drum/003_drum4.wav",
+    "type": "blob",
+    "size": 11922
+  },
+  {
+    "path": "drum/004_drum5.wav",
+    "type": "blob",
+    "size": 63962
+  },
+  {
+    "path": "drum/005_drum6.wav",
+    "type": "blob",
+    "size": 14306
+  },
+  {
+    "path": "drumtraks",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "drumtraks/000_DT Cabasa.wav",
+    "type": "blob",
+    "size": 9352
+  },
+  {
+    "path": "drumtraks/001_DT Claps.wav",
+    "type": "blob",
+    "size": 25920
+  },
+  {
+    "path": "drumtraks/002_DT Cowbell.wav",
+    "type": "blob",
+    "size": 8348
+  },
+  {
+    "path": "drumtraks/003_DT Crash.wav",
+    "type": "blob",
+    "size": 103996
+  },
+  {
+    "path": "drumtraks/004_DT Hat Closed.wav",
+    "type": "blob",
+    "size": 10098
+  },
+  {
+    "path": "drumtraks/005_DT Hat Open.wav",
+    "type": "blob",
+    "size": 18672
+  },
+  {
+    "path": "drumtraks/006_DT Kick.wav",
+    "type": "blob",
+    "size": 10160
+  },
+  {
+    "path": "drumtraks/007_DT Ride.wav",
+    "type": "blob",
+    "size": 114614
+  },
+  {
+    "path": "drumtraks/008_DT Rimshot.wav",
+    "type": "blob",
+    "size": 12836
+  },
+  {
+    "path": "drumtraks/009_DT Snare.wav",
+    "type": "blob",
+    "size": 11114
+  },
+  {
+    "path": "drumtraks/010_DT Tambourine.wav",
+    "type": "blob",
+    "size": 21882
+  },
+  {
+    "path": "drumtraks/011_DT Tom1.wav",
+    "type": "blob",
+    "size": 49734
+  },
+  {
+    "path": "drumtraks/012_DT Tom2.wav",
+    "type": "blob",
+    "size": 66336
+  },
+  {
+    "path": "e",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "e/000_e1.wav",
+    "type": "blob",
+    "size": 1450
+  },
+  {
+    "path": "e/001_e2.wav",
+    "type": "blob",
+    "size": 1874
+  },
+  {
+    "path": "e/002_e3.wav",
+    "type": "blob",
+    "size": 904
+  },
+  {
+    "path": "e/003_e4.wav",
+    "type": "blob",
+    "size": 2098
+  },
+  {
+    "path": "e/004_e5.wav",
+    "type": "blob",
+    "size": 1760
+  },
+  {
+    "path": "e/005_e6.wav",
+    "type": "blob",
+    "size": 946
+  },
+  {
+    "path": "e/006_e7.wav",
+    "type": "blob",
+    "size": 1026
+  },
+  {
+    "path": "e/007_e8.wav",
+    "type": "blob",
+    "size": 992
+  },
+  {
+    "path": "east",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "east/000_nipon_wood_block.wav",
+    "type": "blob",
+    "size": 30572
+  },
+  {
+    "path": "east/001_ohkawa_mute.wav",
+    "type": "blob",
+    "size": 33260
+  },
+  {
+    "path": "east/002_ohkawa_open.wav",
+    "type": "blob",
+    "size": 50322
+  },
+  {
+    "path": "east/003_shime_hi.wav",
+    "type": "blob",
+    "size": 61786
+  },
+  {
+    "path": "east/004_shime_hi_2.wav",
+    "type": "blob",
+    "size": 61786
+  },
+  {
+    "path": "east/005_shime_mute.wav",
+    "type": "blob",
+    "size": 52966
+  },
+  {
+    "path": "east/006_taiko_1.wav",
+    "type": "blob",
+    "size": 120102
+  },
+  {
+    "path": "east/007_taiko_2.wav",
+    "type": "blob",
+    "size": 28622
+  },
+  {
+    "path": "east/008_taiko_3.wav",
+    "type": "blob",
+    "size": 50372
+  },
+  {
+    "path": "electro1",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "electro1/000_et1closedhh.wav",
+    "type": "blob",
+    "size": 58496
+  },
+  {
+    "path": "electro1/001_et1crash.wav",
+    "type": "blob",
+    "size": 124800
+  },
+  {
+    "path": "electro1/002_et1hit1.wav",
+    "type": "blob",
+    "size": 70784
+  },
+  {
+    "path": "electro1/003_et1hit2.wav",
+    "type": "blob",
+    "size": 114304
+  },
+  {
+    "path": "electro1/004_et1hit3.wav",
+    "type": "blob",
+    "size": 157312
+  },
+  {
+    "path": "electro1/005_et1kick1.wav",
+    "type": "blob",
+    "size": 38272
+  },
+  {
+    "path": "electro1/006_et1kick2.wav",
+    "type": "blob",
+    "size": 63616
+  },
+  {
+    "path": "electro1/007_et1openhh.wav",
+    "type": "blob",
+    "size": 185344
+  },
+  {
+    "path": "electro1/008_et1perc1.wav",
+    "type": "blob",
+    "size": 45696
+  },
+  {
+    "path": "electro1/009_et1perc2.wav",
+    "type": "blob",
+    "size": 22336
+  },
+  {
+    "path": "electro1/010_et1ride.wav",
+    "type": "blob",
+    "size": 168576
+  },
+  {
+    "path": "electro1/011_et1snare1.wav",
+    "type": "blob",
+    "size": 66432
+  },
+  {
+    "path": "electro1/012_et1snare2.wav",
+    "type": "blob",
+    "size": 49920
+  },
+  {
+    "path": "em2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "em2/0.wav",
+    "type": "blob",
+    "size": 579252
+  },
+  {
+    "path": "em2/1.wav",
+    "type": "blob",
+    "size": 606388
+  },
+  {
+    "path": "em2/2.wav",
+    "type": "blob",
+    "size": 778686
+  },
+  {
+    "path": "em2/3.wav",
+    "type": "blob",
+    "size": 393412
+  },
+  {
+    "path": "em2/4.wav",
+    "type": "blob",
+    "size": 322604
+  },
+  {
+    "path": "em2/5.wav",
+    "type": "blob",
+    "size": 280300
+  },
+  {
+    "path": "erk",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "erk/000_123.wav",
+    "type": "blob",
+    "size": 186800
+  },
+  {
+    "path": "f",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "f/000_f.wav",
+    "type": "blob",
+    "size": 50650
+  },
+  {
+    "path": "feel",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "feel/BD 04 d.wav",
+    "type": "blob",
+    "size": 17028
+  },
+  {
+    "path": "feel/HH 003b.wav",
+    "type": "blob",
+    "size": 1460
+  },
+  {
+    "path": "feel/Sd 139.wav",
+    "type": "blob",
+    "size": 21700
+  },
+  {
+    "path": "feel/Sd 180.wav",
+    "type": "blob",
+    "size": 22190
+  },
+  {
+    "path": "feel/Sd 223.wav",
+    "type": "blob",
+    "size": 62220
+  },
+  {
+    "path": "feel/hihat029a.wav",
+    "type": "blob",
+    "size": 31226
+  },
+  {
+    "path": "feel/sub.wav",
+    "type": "blob",
+    "size": 223224
+  },
+  {
+    "path": "feelfx",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "feelfx/blnk.wav",
+    "type": "blob",
+    "size": 662892
+  },
+  {
+    "path": "feelfx/boschwitz.wav",
+    "type": "blob",
+    "size": 117832
+  },
+  {
+    "path": "feelfx/bwawp.wav",
+    "type": "blob",
+    "size": 222880
+  },
+  {
+    "path": "feelfx/doing.wav",
+    "type": "blob",
+    "size": 352772
+  },
+  {
+    "path": "feelfx/laser-buzz.wav",
+    "type": "blob",
+    "size": 112792
+  },
+  {
+    "path": "feelfx/machine.wav",
+    "type": "blob",
+    "size": 56032
+  },
+  {
+    "path": "feelfx/silent.wav",
+    "type": "blob",
+    "size": 223212
+  },
+  {
+    "path": "feelfx/surfactant_15_xilo.wav",
+    "type": "blob",
+    "size": 223210
+  },
+  {
+    "path": "fest",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "fest/000_foo.wav",
+    "type": "blob",
+    "size": 24088
+  },
+  {
+    "path": "fire",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "fire/fire.wav",
+    "type": "blob",
+    "size": 1658924
+  },
+  {
+    "path": "flick",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "flick/000_square-p.wav",
+    "type": "blob",
+    "size": 84996
+  },
+  {
+    "path": "flick/001_1.wav",
+    "type": "blob",
+    "size": 32424
+  },
+  {
+    "path": "flick/002_10.wav",
+    "type": "blob",
+    "size": 16628
+  },
+  {
+    "path": "flick/003_11.wav",
+    "type": "blob",
+    "size": 20352
+  },
+  {
+    "path": "flick/004_12.wav",
+    "type": "blob",
+    "size": 30116
+  },
+  {
+    "path": "flick/005_13.wav",
+    "type": "blob",
+    "size": 28300
+  },
+  {
+    "path": "flick/006_14.wav",
+    "type": "blob",
+    "size": 18484
+  },
+  {
+    "path": "flick/007_2.wav",
+    "type": "blob",
+    "size": 26856
+  },
+  {
+    "path": "flick/008_3.wav",
+    "type": "blob",
+    "size": 26092
+  },
+  {
+    "path": "flick/009_4.wav",
+    "type": "blob",
+    "size": 24760
+  },
+  {
+    "path": "flick/010_5.wav",
+    "type": "blob",
+    "size": 34274
+  },
+  {
+    "path": "flick/011_6.wav",
+    "type": "blob",
+    "size": 19836
+  },
+  {
+    "path": "flick/012_7.wav",
+    "type": "blob",
+    "size": 29916
+  },
+  {
+    "path": "flick/013_8.wav",
+    "type": "blob",
+    "size": 36828
+  },
+  {
+    "path": "flick/014_9.wav",
+    "type": "blob",
+    "size": 20172
+  },
+  {
+    "path": "flick/015_hi.wav",
+    "type": "blob",
+    "size": 32812
+  },
+  {
+    "path": "flick/016_square.wav",
+    "type": "blob",
+    "size": 79620
+  },
+  {
+    "path": "fm",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "fm/31seconds.wav",
+    "type": "blob",
+    "size": 786476
+  },
+  {
+    "path": "fm/808909stabs.wav",
+    "type": "blob",
+    "size": 1809372
+  },
+  {
+    "path": "fm/badboy.wav",
+    "type": "blob",
+    "size": 455724
+  },
+  {
+    "path": "fm/bambaataa.wav",
+    "type": "blob",
+    "size": 740396
+  },
+  {
+    "path": "fm/break1.wav",
+    "type": "blob",
+    "size": 416334
+  },
+  {
+    "path": "fm/break2.wav",
+    "type": "blob",
+    "size": 368684
+  },
+  {
+    "path": "fm/break3.wav",
+    "type": "blob",
+    "size": 367660
+  },
+  {
+    "path": "fm/charly.wav",
+    "type": "blob",
+    "size": 388140
+  },
+  {
+    "path": "fm/electro1.wav",
+    "type": "blob",
+    "size": 755756
+  },
+  {
+    "path": "fm/electro2.wav",
+    "type": "blob",
+    "size": 798764
+  },
+  {
+    "path": "fm/femalevocal1.wav",
+    "type": "blob",
+    "size": 504620
+  },
+  {
+    "path": "fm/femalevocal2.wav",
+    "type": "blob",
+    "size": 713260
+  },
+  {
+    "path": "fm/femalevocal3.wav",
+    "type": "blob",
+    "size": 606508
+  },
+  {
+    "path": "fm/heyhey.wav",
+    "type": "blob",
+    "size": 355372
+  },
+  {
+    "path": "fm/pad.wav",
+    "type": "blob",
+    "size": 332844
+  },
+  {
+    "path": "fm/shakedown.wav",
+    "type": "blob",
+    "size": 1032918
+  },
+  {
+    "path": "fm/stabs.wav",
+    "type": "blob",
+    "size": 1506992
+  },
+  {
+    "path": "foo",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "foo/000_samthfdbrk.wav",
+    "type": "blob",
+    "size": 69764
+  },
+  {
+    "path": "foo/001_frtwbrak.wav",
+    "type": "blob",
+    "size": 100564
+  },
+  {
+    "path": "foo/002_fullbrk.wav",
+    "type": "blob",
+    "size": 81968
+  },
+  {
+    "path": "foo/003_drydrmmr.wav",
+    "type": "blob",
+    "size": 78120
+  },
+  {
+    "path": "foo/004_brtalhat.wav",
+    "type": "blob",
+    "size": 118064
+  },
+  {
+    "path": "foo/005_nicedrop.wav",
+    "type": "blob",
+    "size": 108564
+  },
+  {
+    "path": "foo/006_fastfaze.wav",
+    "type": "blob",
+    "size": 85264
+  },
+  {
+    "path": "foo/007_lkfnkybr.wav",
+    "type": "blob",
+    "size": 108064
+  },
+  {
+    "path": "foo/008_clnkrbrk.wav",
+    "type": "blob",
+    "size": 102664
+  },
+  {
+    "path": "foo/009_hrdlvbrk.wav",
+    "type": "blob",
+    "size": 114320
+  },
+  {
+    "path": "foo/010_dngrsbrk.wav",
+    "type": "blob",
+    "size": 104764
+  },
+  {
+    "path": "foo/011_eyebreak.wav",
+    "type": "blob",
+    "size": 94064
+  },
+  {
+    "path": "foo/012_vctrybrk.wav",
+    "type": "blob",
+    "size": 108564
+  },
+  {
+    "path": "foo/013_mrestick.wav",
+    "type": "blob",
+    "size": 102864
+  },
+  {
+    "path": "foo/014_thumpnbr.wav",
+    "type": "blob",
+    "size": 122320
+  },
+  {
+    "path": "foo/015_sdstckbr.wav",
+    "type": "blob",
+    "size": 82564
+  },
+  {
+    "path": "foo/016_bllstmp.wav",
+    "type": "blob",
+    "size": 85564
+  },
+  {
+    "path": "foo/017_gattabrk.wav",
+    "type": "blob",
+    "size": 109064
+  },
+  {
+    "path": "foo/018_nlzdelit.wav",
+    "type": "blob",
+    "size": 91064
+  },
+  {
+    "path": "foo/019_crshstmp.wav",
+    "type": "blob",
+    "size": 90064
+  },
+  {
+    "path": "foo/020_fststick.wav",
+    "type": "blob",
+    "size": 85664
+  },
+  {
+    "path": "foo/021_sqezdbrk.wav",
+    "type": "blob",
+    "size": 97064
+  },
+  {
+    "path": "foo/022_cnfssbrk.wav",
+    "type": "blob",
+    "size": 116764
+  },
+  {
+    "path": "foo/023_btstmpbr.wav",
+    "type": "blob",
+    "size": 83164
+  },
+  {
+    "path": "foo/024_rlltnbrk.wav",
+    "type": "blob",
+    "size": 109864
+  },
+  {
+    "path": "foo/025_pssbreak.wav",
+    "type": "blob",
+    "size": 83564
+  },
+  {
+    "path": "foo/026_vintage.wav",
+    "type": "blob",
+    "size": 124776
+  },
+  {
+    "path": "future",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "future/000_808KICK4.wav",
+    "type": "blob",
+    "size": 58682
+  },
+  {
+    "path": "future/001_808KICK9.wav",
+    "type": "blob",
+    "size": 22586
+  },
+  {
+    "path": "future/002_Bd1_w.wav",
+    "type": "blob",
+    "size": 77488
+  },
+  {
+    "path": "future/003_Bd2_w.wav",
+    "type": "blob",
+    "size": 69198
+  },
+  {
+    "path": "future/004_Bd3_w.wav",
+    "type": "blob",
+    "size": 74196
+  },
+  {
+    "path": "future/005_Johnson.wav",
+    "type": "blob",
+    "size": 52978
+  },
+  {
+    "path": "future/006_Kick9.wav",
+    "type": "blob",
+    "size": 83258
+  },
+  {
+    "path": "future/007_MKD03.wav",
+    "type": "blob",
+    "size": 53452
+  },
+  {
+    "path": "future/008_MKD60601.wav",
+    "type": "blob",
+    "size": 57914
+  },
+  {
+    "path": "future/009_MKDRCK05.wav",
+    "type": "blob",
+    "size": 15806
+  },
+  {
+    "path": "future/010_MKDRCK06.wav",
+    "type": "blob",
+    "size": 29054
+  },
+  {
+    "path": "future/011_MKDRCK07.wav",
+    "type": "blob",
+    "size": 19168
+  },
+  {
+    "path": "future/012_Mhhcf3.wav",
+    "type": "blob",
+    "size": 25182
+  },
+  {
+    "path": "future/013_Shake2.wav",
+    "type": "blob",
+    "size": 16186
+  },
+  {
+    "path": "future/014_Shake4.wav",
+    "type": "blob",
+    "size": 36666
+  },
+  {
+    "path": "future/015_lockett_conga_mute2.wav",
+    "type": "blob",
+    "size": 124976
+  },
+  {
+    "path": "future/016_lockett_conga_open1.wav",
+    "type": "blob",
+    "size": 181312
+  },
+  {
+    "path": "gab",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "gab/gab01.wav",
+    "type": "blob",
+    "size": 141218
+  },
+  {
+    "path": "gab/gab02.wav",
+    "type": "blob",
+    "size": 35378
+  },
+  {
+    "path": "gab/gab03.wav",
+    "type": "blob",
+    "size": 35378
+  },
+  {
+    "path": "gab/gab04.wav",
+    "type": "blob",
+    "size": 46596
+  },
+  {
+    "path": "gab/gab05.wav",
+    "type": "blob",
+    "size": 35378
+  },
+  {
+    "path": "gab/gab06.wav",
+    "type": "blob",
+    "size": 70658
+  },
+  {
+    "path": "gab/gab07.wav",
+    "type": "blob",
+    "size": 35378
+  },
+  {
+    "path": "gab/gab08.wav",
+    "type": "blob",
+    "size": 70658
+  },
+  {
+    "path": "gab/gab09.wav",
+    "type": "blob",
+    "size": 35378
+  },
+  {
+    "path": "gab/gab10.wav",
+    "type": "blob",
+    "size": 70658
+  },
+  {
+    "path": "gabba",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "gabba/000_0.wav",
+    "type": "blob",
+    "size": 11068
+  },
+  {
+    "path": "gabba/001_1.wav",
+    "type": "blob",
+    "size": 23900
+  },
+  {
+    "path": "gabba/002_2.wav",
+    "type": "blob",
+    "size": 12204
+  },
+  {
+    "path": "gabba/003_3.wav",
+    "type": "blob",
+    "size": 8060
+  },
+  {
+    "path": "gabbaloud",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "gabbaloud/000_0.wav",
+    "type": "blob",
+    "size": 11068
+  },
+  {
+    "path": "gabbaloud/001_1.wav",
+    "type": "blob",
+    "size": 23256
+  },
+  {
+    "path": "gabbaloud/002_2.wav",
+    "type": "blob",
+    "size": 12204
+  },
+  {
+    "path": "gabbaloud/003_3.wav",
+    "type": "blob",
+    "size": 8060
+  },
+  {
+    "path": "gabbalouder",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "gabbalouder/000_0.wav",
+    "type": "blob",
+    "size": 11068
+  },
+  {
+    "path": "gabbalouder/001_1.wav",
+    "type": "blob",
+    "size": 23256
+  },
+  {
+    "path": "gabbalouder/002_2.wav",
+    "type": "blob",
+    "size": 12204
+  },
+  {
+    "path": "gabbalouder/003_3.wav",
+    "type": "blob",
+    "size": 8060
+  },
+  {
+    "path": "glasstap",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "glasstap/000_0.wav",
+    "type": "blob",
+    "size": 12712
+  },
+  {
+    "path": "glasstap/001_1.wav",
+    "type": "blob",
+    "size": 11128
+  },
+  {
+    "path": "glasstap/002_2.wav",
+    "type": "blob",
+    "size": 43854
+  },
+  {
+    "path": "glitch",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "glitch/000_BD.wav",
+    "type": "blob",
+    "size": 5158
+  },
+  {
+    "path": "glitch/001_CB.wav",
+    "type": "blob",
+    "size": 18572
+  },
+  {
+    "path": "glitch/002_FX.wav",
+    "type": "blob",
+    "size": 26274
+  },
+  {
+    "path": "glitch/003_HH.wav",
+    "type": "blob",
+    "size": 12692
+  },
+  {
+    "path": "glitch/004_OH.wav",
+    "type": "blob",
+    "size": 8588
+  },
+  {
+    "path": "glitch/005_P1.wav",
+    "type": "blob",
+    "size": 25900
+  },
+  {
+    "path": "glitch/006_P2.wav",
+    "type": "blob",
+    "size": 31148
+  },
+  {
+    "path": "glitch/007_SN.wav",
+    "type": "blob",
+    "size": 17684
+  },
+  {
+    "path": "glitch2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "glitch2/000_BD.wav",
+    "type": "blob",
+    "size": 5158
+  },
+  {
+    "path": "glitch2/001_CB.wav",
+    "type": "blob",
+    "size": 18572
+  },
+  {
+    "path": "glitch2/002_FX.wav",
+    "type": "blob",
+    "size": 26274
+  },
+  {
+    "path": "glitch2/003_HH.wav",
+    "type": "blob",
+    "size": 12692
+  },
+  {
+    "path": "glitch2/004_OH.wav",
+    "type": "blob",
+    "size": 8588
+  },
+  {
+    "path": "glitch2/005_P1.wav",
+    "type": "blob",
+    "size": 25900
+  },
+  {
+    "path": "glitch2/006_P2.wav",
+    "type": "blob",
+    "size": 31148
+  },
+  {
+    "path": "glitch2/007_SN.wav",
+    "type": "blob",
+    "size": 17684
+  },
+  {
+    "path": "gretsch",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "gretsch/000_brushhitom.wav",
+    "type": "blob",
+    "size": 314456
+  },
+  {
+    "path": "gretsch/001_brushlotom.wav",
+    "type": "blob",
+    "size": 317148
+  },
+  {
+    "path": "gretsch/002_brushsnare.wav",
+    "type": "blob",
+    "size": 348988
+  },
+  {
+    "path": "gretsch/003_brushsnareghost.wav",
+    "type": "blob",
+    "size": 216628
+  },
+  {
+    "path": "gretsch/004_closedhat.wav",
+    "type": "blob",
+    "size": 151228
+  },
+  {
+    "path": "gretsch/005_closedhathard.wav",
+    "type": "blob",
+    "size": 143040
+  },
+  {
+    "path": "gretsch/006_cowbell.wav",
+    "type": "blob",
+    "size": 170344
+  },
+  {
+    "path": "gretsch/007_cymbalgrab.wav",
+    "type": "blob",
+    "size": 397500
+  },
+  {
+    "path": "gretsch/008_cymbalrub.wav",
+    "type": "blob",
+    "size": 786596
+  },
+  {
+    "path": "gretsch/009_flam.wav",
+    "type": "blob",
+    "size": 136056
+  },
+  {
+    "path": "gretsch/010_foothat.wav",
+    "type": "blob",
+    "size": 142028
+  },
+  {
+    "path": "gretsch/011_foothat2.wav",
+    "type": "blob",
+    "size": 147532
+  },
+  {
+    "path": "gretsch/012_hitom.wav",
+    "type": "blob",
+    "size": 450600
+  },
+  {
+    "path": "gretsch/013_kick.wav",
+    "type": "blob",
+    "size": 240800
+  },
+  {
+    "path": "gretsch/014_kicksnare.wav",
+    "type": "blob",
+    "size": 193668
+  },
+  {
+    "path": "gretsch/015_lotom.wav",
+    "type": "blob",
+    "size": 450600
+  },
+  {
+    "path": "gretsch/016_openclosedhat.wav",
+    "type": "blob",
+    "size": 193728
+  },
+  {
+    "path": "gretsch/017_openhat.wav",
+    "type": "blob",
+    "size": 1271168
+  },
+  {
+    "path": "gretsch/018_ridebell.wav",
+    "type": "blob",
+    "size": 1414292
+  },
+  {
+    "path": "gretsch/019_ridecymbal.wav",
+    "type": "blob",
+    "size": 1122492
+  },
+  {
+    "path": "gretsch/020_snare.wav",
+    "type": "blob",
+    "size": 349868
+  },
+  {
+    "path": "gretsch/021_snareghost.wav",
+    "type": "blob",
+    "size": 181980
+  },
+  {
+    "path": "gretsch/022_snarehard.wav",
+    "type": "blob",
+    "size": 269504
+  },
+  {
+    "path": "gretsch/023_snareslack.wav",
+    "type": "blob",
+    "size": 312288
+  },
+  {
+    "path": "gtr",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "gtr/0001_cleanC.wav",
+    "type": "blob",
+    "size": 473410
+  },
+  {
+    "path": "gtr/0002_ovrdC.wav",
+    "type": "blob",
+    "size": 1060560
+  },
+  {
+    "path": "gtr/0003_distC.wav",
+    "type": "blob",
+    "size": 1060560
+  },
+  {
+    "path": "h",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "h/000_0_da0.wav",
+    "type": "blob",
+    "size": 28016
+  },
+  {
+    "path": "h/001_0_da0-200%_1000_0_R.wav",
+    "type": "blob",
+    "size": 55988
+  },
+  {
+    "path": "h/002_0_da0-50%_1000_0_R.wav",
+    "type": "blob",
+    "size": 14030
+  },
+  {
+    "path": "h/003_1_da1.wav",
+    "type": "blob",
+    "size": 30500
+  },
+  {
+    "path": "h/004_2_da2.wav",
+    "type": "blob",
+    "size": 45792
+  },
+  {
+    "path": "h/005_3_tick.wav",
+    "type": "blob",
+    "size": 35350
+  },
+  {
+    "path": "h/006_4_tock.wav",
+    "type": "blob",
+    "size": 33610
+  },
+  {
+    "path": "hand",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "hand/hand1-mono.wav",
+    "type": "blob",
+    "size": 12020
+  },
+  {
+    "path": "hand/hand11-mono.wav",
+    "type": "blob",
+    "size": 495688
+  },
+  {
+    "path": "hand/hand12-mono.wav",
+    "type": "blob",
+    "size": 34984
+  },
+  {
+    "path": "hand/hand13-mono.wav",
+    "type": "blob",
+    "size": 330452
+  },
+  {
+    "path": "hand/hand14-mono.wav",
+    "type": "blob",
+    "size": 54650
+  },
+  {
+    "path": "hand/hand15-mono.wav",
+    "type": "blob",
+    "size": 47378
+  },
+  {
+    "path": "hand/hand16-mono.wav",
+    "type": "blob",
+    "size": 27918
+  },
+  {
+    "path": "hand/hand17.wav",
+    "type": "blob",
+    "size": 19646
+  },
+  {
+    "path": "hand/hand2-mono.wav",
+    "type": "blob",
+    "size": 1350
+  },
+  {
+    "path": "hand/hand20.wav",
+    "type": "blob",
+    "size": 50346
+  },
+  {
+    "path": "hand/hand21-mono.wav",
+    "type": "blob",
+    "size": 68624
+  },
+  {
+    "path": "hand/hand22-mono.wav",
+    "type": "blob",
+    "size": 241182
+  },
+  {
+    "path": "hand/hand3-mono.wav",
+    "type": "blob",
+    "size": 26914
+  },
+  {
+    "path": "hand/hand4-mono.wav",
+    "type": "blob",
+    "size": 19066
+  },
+  {
+    "path": "hand/hand7-mono.wav",
+    "type": "blob",
+    "size": 54622
+  },
+  {
+    "path": "hand/hand8-mono.wav",
+    "type": "blob",
+    "size": 39892
+  },
+  {
+    "path": "hand/hand9-mono.wav",
+    "type": "blob",
+    "size": 6404
+  },
+  {
+    "path": "hardcore",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "hardcore/000_hcclosedhh.wav",
+    "type": "blob",
+    "size": 23360
+  },
+  {
+    "path": "hardcore/001_hchit1.wav",
+    "type": "blob",
+    "size": 171376
+  },
+  {
+    "path": "hardcore/002_hccrash.wav",
+    "type": "blob",
+    "size": 255936
+  },
+  {
+    "path": "hardcore/003_hchit2.wav",
+    "type": "blob",
+    "size": 62720
+  },
+  {
+    "path": "hardcore/004_hckick1.wav",
+    "type": "blob",
+    "size": 60288
+  },
+  {
+    "path": "hardcore/005_hckick2.wav",
+    "type": "blob",
+    "size": 41728
+  },
+  {
+    "path": "hardcore/006_hcopenhh.wav",
+    "type": "blob",
+    "size": 143424
+  },
+  {
+    "path": "hardcore/007_hcperc1.wav",
+    "type": "blob",
+    "size": 16640
+  },
+  {
+    "path": "hardcore/008_hcperc2.wav",
+    "type": "blob",
+    "size": 27648
+  },
+  {
+    "path": "hardcore/009_hcride.wav",
+    "type": "blob",
+    "size": 107456
+  },
+  {
+    "path": "hardcore/010_hcsnare1.wav",
+    "type": "blob",
+    "size": 34048
+  },
+  {
+    "path": "hardcore/011_hcsnare2.wav",
+    "type": "blob",
+    "size": 60032
+  },
+  {
+    "path": "hardkick",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "hardkick/VEC1 BD Distortion 06.wav",
+    "type": "blob",
+    "size": 34236
+  },
+  {
+    "path": "hardkick/VEC1 BD Distortion 37.wav",
+    "type": "blob",
+    "size": 33656
+  },
+  {
+    "path": "hardkick/VEC1 BD Distortion 39.wav",
+    "type": "blob",
+    "size": 28262
+  },
+  {
+    "path": "hardkick/VEC1 BD Distortion 41.wav",
+    "type": "blob",
+    "size": 51794
+  },
+  {
+    "path": "hardkick/VEC1 BD Distortion 52.wav",
+    "type": "blob",
+    "size": 34622
+  },
+  {
+    "path": "hardkick/VEC1 BD Distortion 53.wav",
+    "type": "blob",
+    "size": 27846
+  },
+  {
+    "path": "haw",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "haw/hawaiian-hh.wav",
+    "type": "blob",
+    "size": 58946
+  },
+  {
+    "path": "haw/hawaiian-kick.wav",
+    "type": "blob",
+    "size": 58946
+  },
+  {
+    "path": "haw/hawaiian-pop.wav",
+    "type": "blob",
+    "size": 58946
+  },
+  {
+    "path": "haw/hawaiian-sd.wav",
+    "type": "blob",
+    "size": 58946
+  },
+  {
+    "path": "haw/hawaiian-short1.wav",
+    "type": "blob",
+    "size": 58946
+  },
+  {
+    "path": "haw/hawaiian-short2.wav",
+    "type": "blob",
+    "size": 58946
+  },
+  {
+    "path": "hc",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "hc/HHCD0.wav",
+    "type": "blob",
+    "size": 3804
+  },
+  {
+    "path": "hc/HHCD2.wav",
+    "type": "blob",
+    "size": 7612
+  },
+  {
+    "path": "hc/HHCD4.wav",
+    "type": "blob",
+    "size": 10032
+  },
+  {
+    "path": "hc/HHCD6.wav",
+    "type": "blob",
+    "size": 11750
+  },
+  {
+    "path": "hc/HHCD8.wav",
+    "type": "blob",
+    "size": 12088
+  },
+  {
+    "path": "hc/HHCDA.wav",
+    "type": "blob",
+    "size": 12794
+  },
+  {
+    "path": "hh",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "hh/000_hh3closedhh.wav",
+    "type": "blob",
+    "size": 153960
+  },
+  {
+    "path": "hh/001_hh3crash.wav",
+    "type": "blob",
+    "size": 343168
+  },
+  {
+    "path": "hh/002_hh3hit1.wav",
+    "type": "blob",
+    "size": 295524
+  },
+  {
+    "path": "hh/003_hh3hit2.wav",
+    "type": "blob",
+    "size": 263808
+  },
+  {
+    "path": "hh/004_hh3hit3.wav",
+    "type": "blob",
+    "size": 422528
+  },
+  {
+    "path": "hh/005_hh3kick1.wav",
+    "type": "blob",
+    "size": 81536
+  },
+  {
+    "path": "hh/006_hh3kick2.wav",
+    "type": "blob",
+    "size": 25228
+  },
+  {
+    "path": "hh/007_hh3openhh.wav",
+    "type": "blob",
+    "size": 323200
+  },
+  {
+    "path": "hh/008_hh3rerc1.wav",
+    "type": "blob",
+    "size": 271488
+  },
+  {
+    "path": "hh/009_hh3rerc2.wav",
+    "type": "blob",
+    "size": 313980
+  },
+  {
+    "path": "hh/010_hh3ride.wav",
+    "type": "blob",
+    "size": 352896
+  },
+  {
+    "path": "hh/011_hh3snare1.wav",
+    "type": "blob",
+    "size": 247936
+  },
+  {
+    "path": "hh/012_hh3snare2.wav",
+    "type": "blob",
+    "size": 242304
+  },
+  {
+    "path": "hh27",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "hh27/000_hh27closedhh.wav",
+    "type": "blob",
+    "size": 168860
+  },
+  {
+    "path": "hh27/001_hh27crash.wav",
+    "type": "blob",
+    "size": 326140
+  },
+  {
+    "path": "hh27/002_hh27hit1.wav",
+    "type": "blob",
+    "size": 184188
+  },
+  {
+    "path": "hh27/003_hh27hit2.wav",
+    "type": "blob",
+    "size": 165500
+  },
+  {
+    "path": "hh27/004_hh27hit3.wav",
+    "type": "blob",
+    "size": 202440
+  },
+  {
+    "path": "hh27/005_hh27kick1.wav",
+    "type": "blob",
+    "size": 158804
+  },
+  {
+    "path": "hh27/006_hh27kick2.wav",
+    "type": "blob",
+    "size": 66848
+  },
+  {
+    "path": "hh27/007_hh27opendhh.wav",
+    "type": "blob",
+    "size": 290944
+  },
+  {
+    "path": "hh27/008_hh27perc1.wav",
+    "type": "blob",
+    "size": 228432
+  },
+  {
+    "path": "hh27/009_hh27perc2.wav",
+    "type": "blob",
+    "size": 233600
+  },
+  {
+    "path": "hh27/010_hh27ride.wav",
+    "type": "blob",
+    "size": 300160
+  },
+  {
+    "path": "hh27/011_hh27snare1.wav",
+    "type": "blob",
+    "size": 190372
+  },
+  {
+    "path": "hh27/012_hh27snare2.wav",
+    "type": "blob",
+    "size": 176472
+  },
+  {
+    "path": "hit",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "hit/bandpass-blart.wav",
+    "type": "blob",
+    "size": 23512
+  },
+  {
+    "path": "hit/electro-pling1.wav",
+    "type": "blob",
+    "size": 18408
+  },
+  {
+    "path": "hit/laser-powered-sword.wav",
+    "type": "blob",
+    "size": 29776
+  },
+  {
+    "path": "hit/robot-fart.wav",
+    "type": "blob",
+    "size": 41512
+  },
+  {
+    "path": "hit/ufo-take-me-away.wav",
+    "type": "blob",
+    "size": 264616
+  },
+  {
+    "path": "hit/zap-to-crack.wav",
+    "type": "blob",
+    "size": 63576
+  },
+  {
+    "path": "hmm",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "hmm/hmm.wav",
+    "type": "blob",
+    "size": 62770
+  },
+  {
+    "path": "ho",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "ho/HHOD0.wav",
+    "type": "blob",
+    "size": 22368
+  },
+  {
+    "path": "ho/HHOD2.wav",
+    "type": "blob",
+    "size": 29268
+  },
+  {
+    "path": "ho/HHOD4.wav",
+    "type": "blob",
+    "size": 35268
+  },
+  {
+    "path": "ho/HHOD6.wav",
+    "type": "blob",
+    "size": 38688
+  },
+  {
+    "path": "ho/HHOD8.wav",
+    "type": "blob",
+    "size": 45556
+  },
+  {
+    "path": "ho/HHODA.wav",
+    "type": "blob",
+    "size": 45658
+  },
+  {
+    "path": "hoover",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "hoover/1.wav",
+    "type": "blob",
+    "size": 61700
+  },
+  {
+    "path": "hoover/2.wav",
+    "type": "blob",
+    "size": 81552
+  },
+  {
+    "path": "hoover/3.wav",
+    "type": "blob",
+    "size": 98344
+  },
+  {
+    "path": "hoover/4.wav",
+    "type": "blob",
+    "size": 27928
+  },
+  {
+    "path": "hoover/5.wav",
+    "type": "blob",
+    "size": 55656
+  },
+  {
+    "path": "hoover/6.wav",
+    "type": "blob",
+    "size": 98572
+  },
+  {
+    "path": "house",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "house/000_BD.wav",
+    "type": "blob",
+    "size": 25352
+  },
+  {
+    "path": "house/001_CB.wav",
+    "type": "blob",
+    "size": 41004
+  },
+  {
+    "path": "house/002_FX.wav",
+    "type": "blob",
+    "size": 76524
+  },
+  {
+    "path": "house/003_HH.wav",
+    "type": "blob",
+    "size": 4420
+  },
+  {
+    "path": "house/004_OH.wav",
+    "type": "blob",
+    "size": 68268
+  },
+  {
+    "path": "house/005_P1.wav",
+    "type": "blob",
+    "size": 74924
+  },
+  {
+    "path": "house/006_P2.wav",
+    "type": "blob",
+    "size": 123436
+  },
+  {
+    "path": "house/007_SN.wav",
+    "type": "blob",
+    "size": 10924
+  },
+  {
+    "path": "ht",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "ht/HT0D0.wav",
+    "type": "blob",
+    "size": 20790
+  },
+  {
+    "path": "ht/HT0D3.wav",
+    "type": "blob",
+    "size": 25576
+  },
+  {
+    "path": "ht/HT0D7.wav",
+    "type": "blob",
+    "size": 34272
+  },
+  {
+    "path": "ht/HT0DA.wav",
+    "type": "blob",
+    "size": 37368
+  },
+  {
+    "path": "ht/HT3D0.wav",
+    "type": "blob",
+    "size": 19944
+  },
+  {
+    "path": "ht/HT3D3.wav",
+    "type": "blob",
+    "size": 25374
+  },
+  {
+    "path": "ht/HT3D7.wav",
+    "type": "blob",
+    "size": 35638
+  },
+  {
+    "path": "ht/HT3DA.wav",
+    "type": "blob",
+    "size": 37994
+  },
+  {
+    "path": "ht/HT7D0.wav",
+    "type": "blob",
+    "size": 20594
+  },
+  {
+    "path": "ht/HT7D3.wav",
+    "type": "blob",
+    "size": 26216
+  },
+  {
+    "path": "ht/HT7D7.wav",
+    "type": "blob",
+    "size": 36670
+  },
+  {
+    "path": "ht/HT7DA.wav",
+    "type": "blob",
+    "size": 38512
+  },
+  {
+    "path": "ht/HTAD0.wav",
+    "type": "blob",
+    "size": 20614
+  },
+  {
+    "path": "ht/HTAD3.wav",
+    "type": "blob",
+    "size": 26750
+  },
+  {
+    "path": "ht/HTAD7.wav",
+    "type": "blob",
+    "size": 35000
+  },
+  {
+    "path": "ht/HTADA.wav",
+    "type": "blob",
+    "size": 40190
+  },
+  {
+    "path": "if",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "if/000_gab.wav",
+    "type": "blob",
+    "size": 96366
+  },
+  {
+    "path": "if/001_gab2.wav",
+    "type": "blob",
+    "size": 96366
+  },
+  {
+    "path": "if/002_snarl1b.wav",
+    "type": "blob",
+    "size": 72310
+  },
+  {
+    "path": "if/003_snarl2b.wav",
+    "type": "blob",
+    "size": 72310
+  },
+  {
+    "path": "if/004_snarl3b.wav",
+    "type": "blob",
+    "size": 72310
+  },
+  {
+    "path": "ifdrums",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "ifdrums/ignorebd.wav",
+    "type": "blob",
+    "size": 48254
+  },
+  {
+    "path": "ifdrums/ignorehh.wav",
+    "type": "blob",
+    "size": 48254
+  },
+  {
+    "path": "ifdrums/ignoresd.wav",
+    "type": "blob",
+    "size": 72310
+  },
+  {
+    "path": "incoming",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "incoming/000_Mattel  Snare.wav",
+    "type": "blob",
+    "size": 40776
+  },
+  {
+    "path": "incoming/001_Mattel  Tom VHigh.wav",
+    "type": "blob",
+    "size": 30210
+  },
+  {
+    "path": "incoming/002_Mattel Cymbal.wav",
+    "type": "blob",
+    "size": 84340
+  },
+  {
+    "path": "incoming/003_Mattel Hi-Hat.wav",
+    "type": "blob",
+    "size": 33388
+  },
+  {
+    "path": "incoming/004_Mattel Kick.wav",
+    "type": "blob",
+    "size": 24576
+  },
+  {
+    "path": "incoming/005_Mattel Tom High.wav",
+    "type": "blob",
+    "size": 26790
+  },
+  {
+    "path": "incoming/006_Mattel Tom Low.wav",
+    "type": "blob",
+    "size": 25944
+  },
+  {
+    "path": "incoming/007_Mattel Tom VLow.wav",
+    "type": "blob",
+    "size": 27182
+  },
+  {
+    "path": "industrial",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "industrial/000_01.wav",
+    "type": "blob",
+    "size": 85018
+  },
+  {
+    "path": "industrial/001_02.wav",
+    "type": "blob",
+    "size": 12204
+  },
+  {
+    "path": "industrial/002_03.wav",
+    "type": "blob",
+    "size": 43628
+  },
+  {
+    "path": "industrial/003_04.wav",
+    "type": "blob",
+    "size": 16364
+  },
+  {
+    "path": "industrial/004_05.wav",
+    "type": "blob",
+    "size": 8060
+  },
+  {
+    "path": "industrial/005_06.wav",
+    "type": "blob",
+    "size": 22444
+  },
+  {
+    "path": "industrial/006_07.wav",
+    "type": "blob",
+    "size": 4732
+  },
+  {
+    "path": "industrial/007_08.wav",
+    "type": "blob",
+    "size": 15884
+  },
+  {
+    "path": "industrial/008_09.wav",
+    "type": "blob",
+    "size": 9868
+  },
+  {
+    "path": "industrial/009_10.wav",
+    "type": "blob",
+    "size": 5764
+  },
+  {
+    "path": "industrial/010_11.wav",
+    "type": "blob",
+    "size": 24172
+  },
+  {
+    "path": "industrial/011_12.wav",
+    "type": "blob",
+    "size": 15948
+  },
+  {
+    "path": "industrial/012_13.wav",
+    "type": "blob",
+    "size": 17196
+  },
+  {
+    "path": "industrial/013_14.wav",
+    "type": "blob",
+    "size": 4716
+  },
+  {
+    "path": "industrial/014_15.wav",
+    "type": "blob",
+    "size": 17708
+  },
+  {
+    "path": "industrial/015_16.wav",
+    "type": "blob",
+    "size": 16460
+  },
+  {
+    "path": "industrial/016_17.wav",
+    "type": "blob",
+    "size": 12332
+  },
+  {
+    "path": "industrial/017_18.wav",
+    "type": "blob",
+    "size": 27820
+  },
+  {
+    "path": "industrial/018_19.wav",
+    "type": "blob",
+    "size": 24684
+  },
+  {
+    "path": "industrial/019_20.wav",
+    "type": "blob",
+    "size": 21132
+  },
+  {
+    "path": "industrial/020_21.wav",
+    "type": "blob",
+    "size": 26572
+  },
+  {
+    "path": "industrial/021_22.wav",
+    "type": "blob",
+    "size": 8492
+  },
+  {
+    "path": "industrial/022_23.wav",
+    "type": "blob",
+    "size": 36908
+  },
+  {
+    "path": "industrial/023_24.wav",
+    "type": "blob",
+    "size": 2604
+  },
+  {
+    "path": "industrial/024_25.wav",
+    "type": "blob",
+    "size": 2044
+  },
+  {
+    "path": "industrial/025_26.wav",
+    "type": "blob",
+    "size": 17228
+  },
+  {
+    "path": "industrial/026_27.wav",
+    "type": "blob",
+    "size": 5124
+  },
+  {
+    "path": "industrial/027_28.wav",
+    "type": "blob",
+    "size": 10156
+  },
+  {
+    "path": "industrial/028_29.wav",
+    "type": "blob",
+    "size": 3708
+  },
+  {
+    "path": "industrial/029_30.wav",
+    "type": "blob",
+    "size": 2212
+  },
+  {
+    "path": "industrial/030_31.wav",
+    "type": "blob",
+    "size": 48172
+  },
+  {
+    "path": "industrial/031_32.wav",
+    "type": "blob",
+    "size": 16428
+  },
+  {
+    "path": "insect",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "insect/000_everglades_conehead.wav",
+    "type": "blob",
+    "size": 11144
+  },
+  {
+    "path": "insect/001_robust_shieldback.wav",
+    "type": "blob",
+    "size": 37584
+  },
+  {
+    "path": "insect/002_seashore_meadow_katydid.wav",
+    "type": "blob",
+    "size": 24660
+  },
+  {
+    "path": "invaders",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "invaders/000_0.wav",
+    "type": "blob",
+    "size": 14100
+  },
+  {
+    "path": "invaders/001_1.wav",
+    "type": "blob",
+    "size": 26148
+  },
+  {
+    "path": "invaders/002_11.wav",
+    "type": "blob",
+    "size": 13296
+  },
+  {
+    "path": "invaders/003_12.wav",
+    "type": "blob",
+    "size": 107588
+  },
+  {
+    "path": "invaders/004_13.wav",
+    "type": "blob",
+    "size": 28078
+  },
+  {
+    "path": "invaders/005_14.wav",
+    "type": "blob",
+    "size": 6516
+  },
+  {
+    "path": "invaders/006_15.wav",
+    "type": "blob",
+    "size": 5844
+  },
+  {
+    "path": "invaders/007_16.wav",
+    "type": "blob",
+    "size": 6148
+  },
+  {
+    "path": "invaders/008_17.wav",
+    "type": "blob",
+    "size": 6588
+  },
+  {
+    "path": "invaders/009_18.wav",
+    "type": "blob",
+    "size": 96276
+  },
+  {
+    "path": "invaders/010_2.wav",
+    "type": "blob",
+    "size": 62068
+  },
+  {
+    "path": "invaders/011_3.wav",
+    "type": "blob",
+    "size": 30996
+  },
+  {
+    "path": "invaders/012_4.wav",
+    "type": "blob",
+    "size": 6516
+  },
+  {
+    "path": "invaders/013_5.wav",
+    "type": "blob",
+    "size": 5844
+  },
+  {
+    "path": "invaders/014_6.wav",
+    "type": "blob",
+    "size": 6148
+  },
+  {
+    "path": "invaders/015_7.wav",
+    "type": "blob",
+    "size": 6588
+  },
+  {
+    "path": "invaders/016_8.wav",
+    "type": "blob",
+    "size": 199028
+  },
+  {
+    "path": "invaders/017_9.wav",
+    "type": "blob",
+    "size": 43696
+  },
+  {
+    "path": "jazz",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "jazz/000_BD.wav",
+    "type": "blob",
+    "size": 25352
+  },
+  {
+    "path": "jazz/001_CB.wav",
+    "type": "blob",
+    "size": 41004
+  },
+  {
+    "path": "jazz/002_FX.wav",
+    "type": "blob",
+    "size": 76524
+  },
+  {
+    "path": "jazz/003_HH.wav",
+    "type": "blob",
+    "size": 4420
+  },
+  {
+    "path": "jazz/004_OH.wav",
+    "type": "blob",
+    "size": 68268
+  },
+  {
+    "path": "jazz/005_P1.wav",
+    "type": "blob",
+    "size": 74924
+  },
+  {
+    "path": "jazz/006_P2.wav",
+    "type": "blob",
+    "size": 123436
+  },
+  {
+    "path": "jazz/007_SN.wav",
+    "type": "blob",
+    "size": 10924
+  },
+  {
+    "path": "jungbass",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "jungbass/000_deeep_n_low.wav",
+    "type": "blob",
+    "size": 123694
+  },
+  {
+    "path": "jungbass/001_fat_808_sub.wav",
+    "type": "blob",
+    "size": 117550
+  },
+  {
+    "path": "jungbass/002_fukubass2.wav",
+    "type": "blob",
+    "size": 265472
+  },
+  {
+    "path": "jungbass/003_glide_up_down_sub.wav",
+    "type": "blob",
+    "size": 131630
+  },
+  {
+    "path": "jungbass/004_gliding_808_sub.wav",
+    "type": "blob",
+    "size": 51502
+  },
+  {
+    "path": "jungbass/005_jungasubdown.wav",
+    "type": "blob",
+    "size": 127292
+  },
+  {
+    "path": "jungbass/006_junglerevbass.wav",
+    "type": "blob",
+    "size": 140870
+  },
+  {
+    "path": "jungbass/007_junglesine.wav",
+    "type": "blob",
+    "size": 47756
+  },
+  {
+    "path": "jungbass/008_junglesine2.wav",
+    "type": "blob",
+    "size": 94218
+  },
+  {
+    "path": "jungbass/009_junglesine3.wav",
+    "type": "blob",
+    "size": 94218
+  },
+  {
+    "path": "jungbass/010_mega_jungasubdown.wav",
+    "type": "blob",
+    "size": 127292
+  },
+  {
+    "path": "jungbass/011_shiphorn_tekstep_bass.wav",
+    "type": "blob",
+    "size": 67658
+  },
+  {
+    "path": "jungbass/012_short.wav",
+    "type": "blob",
+    "size": 53294
+  },
+  {
+    "path": "jungbass/013_sub_to_open_wah.wav",
+    "type": "blob",
+    "size": 217646
+  },
+  {
+    "path": "jungbass/014_sustained_2_octave.wav",
+    "type": "blob",
+    "size": 295726
+  },
+  {
+    "path": "jungbass/015_sustained_3_octave.wav",
+    "type": "blob",
+    "size": 196910
+  },
+  {
+    "path": "jungbass/016_sustained_deep_low.wav",
+    "type": "blob",
+    "size": 166190
+  },
+  {
+    "path": "jungbass/017_sweep_me_low_bass.wav",
+    "type": "blob",
+    "size": 66258
+  },
+  {
+    "path": "jungbass/018_synthy_round.wav",
+    "type": "blob",
+    "size": 281134
+  },
+  {
+    "path": "jungbass/019_thin_808_sub.wav",
+    "type": "blob",
+    "size": 268846
+  },
+  {
+    "path": "jungle",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "jungle/jungle4closedhh.wav",
+    "type": "blob",
+    "size": 21834
+  },
+  {
+    "path": "jungle/jungle4crash.wav",
+    "type": "blob",
+    "size": 248532
+  },
+  {
+    "path": "jungle/jungle4hit1.wav",
+    "type": "blob",
+    "size": 21064
+  },
+  {
+    "path": "jungle/jungle4hit2.wav",
+    "type": "blob",
+    "size": 25554
+  },
+  {
+    "path": "jungle/jungle4hit3.wav",
+    "type": "blob",
+    "size": 185902
+  },
+  {
+    "path": "jungle/jungle4kick1.wav",
+    "type": "blob",
+    "size": 29774
+  },
+  {
+    "path": "jungle/jungle4kick2.wav",
+    "type": "blob",
+    "size": 34916
+  },
+  {
+    "path": "jungle/jungle4openhh.wav",
+    "type": "blob",
+    "size": 112172
+  },
+  {
+    "path": "jungle/jungle4perc1.wav",
+    "type": "blob",
+    "size": 18864
+  },
+  {
+    "path": "jungle/jungle4perc2.wav",
+    "type": "blob",
+    "size": 80786
+  },
+  {
+    "path": "jungle/jungle4ride.wav",
+    "type": "blob",
+    "size": 145452
+  },
+  {
+    "path": "jungle/jungle4snare1.wav",
+    "type": "blob",
+    "size": 22528
+  },
+  {
+    "path": "jungle/jungle4snare2.wav",
+    "type": "blob",
+    "size": 19092
+  },
+  {
+    "path": "juno",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "juno/00_juno_raw_low.wav",
+    "type": "blob",
+    "size": 44395
+  },
+  {
+    "path": "juno/01_juno_raw_mid.wav",
+    "type": "blob",
+    "size": 45718
+  },
+  {
+    "path": "juno/02_juno_raw_high.wav",
+    "type": "blob",
+    "size": 43072
+  },
+  {
+    "path": "juno/03_juno_chorus_low.wav",
+    "type": "blob",
+    "size": 43072
+  },
+  {
+    "path": "juno/04_juno_chorus_mid.wav",
+    "type": "blob",
+    "size": 41749
+  },
+  {
+    "path": "juno/05_juno_chorus_high.wav",
+    "type": "blob",
+    "size": 51199
+  },
+  {
+    "path": "juno/06_juno_release_low.wav",
+    "type": "blob",
+    "size": 201832
+  },
+  {
+    "path": "juno/07_juno_release_mid.wav",
+    "type": "blob",
+    "size": 201832
+  },
+  {
+    "path": "juno/08_juno_release_high.wav",
+    "type": "blob",
+    "size": 201832
+  },
+  {
+    "path": "juno/09_juno_pad_c_minor_filter.wav",
+    "type": "blob",
+    "size": 446515
+  },
+  {
+    "path": "juno/10_juno_pad_c_minor_no_filter.wav",
+    "type": "blob",
+    "size": 446515
+  },
+  {
+    "path": "juno/11_juno_pad_c_minor_noise.wav",
+    "type": "blob",
+    "size": 705644
+  },
+  {
+    "path": "jvbass",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "jvbass/000_01.wav",
+    "type": "blob",
+    "size": 39340
+  },
+  {
+    "path": "jvbass/001_02.wav",
+    "type": "blob",
+    "size": 34220
+  },
+  {
+    "path": "jvbass/002_03.wav",
+    "type": "blob",
+    "size": 35948
+  },
+  {
+    "path": "jvbass/003_04.wav",
+    "type": "blob",
+    "size": 32620
+  },
+  {
+    "path": "jvbass/004_05.wav",
+    "type": "blob",
+    "size": 26924
+  },
+  {
+    "path": "jvbass/005_06.wav",
+    "type": "blob",
+    "size": 26284
+  },
+  {
+    "path": "jvbass/006_07.wav",
+    "type": "blob",
+    "size": 21164
+  },
+  {
+    "path": "jvbass/007_08.wav",
+    "type": "blob",
+    "size": 21388
+  },
+  {
+    "path": "jvbass/008_09.wav",
+    "type": "blob",
+    "size": 20460
+  },
+  {
+    "path": "jvbass/009_10.wav",
+    "type": "blob",
+    "size": 17356
+  },
+  {
+    "path": "jvbass/010_11.wav",
+    "type": "blob",
+    "size": 15692
+  },
+  {
+    "path": "jvbass/011_12.wav",
+    "type": "blob",
+    "size": 19052
+  },
+  {
+    "path": "jvbass/012_13.wav",
+    "type": "blob",
+    "size": 17516
+  },
+  {
+    "path": "kicklinn",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "kicklinn/Linn Kick 1.wav",
+    "type": "blob",
+    "size": 17742
+  },
+  {
+    "path": "koy",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "koy/01_left.wav",
+    "type": "blob",
+    "size": 346174
+  },
+  {
+    "path": "koy/02_right.wav",
+    "type": "blob",
+    "size": 346174
+  },
+  {
+    "path": "kurt",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "kurt/000_kurt01.wav",
+    "type": "blob",
+    "size": 12860
+  },
+  {
+    "path": "kurt/001_kurt02.wav",
+    "type": "blob",
+    "size": 33260
+  },
+  {
+    "path": "kurt/002_kurt03.wav",
+    "type": "blob",
+    "size": 17964
+  },
+  {
+    "path": "kurt/003_kurt04.wav",
+    "type": "blob",
+    "size": 21068
+  },
+  {
+    "path": "kurt/004_kurt05.wav",
+    "type": "blob",
+    "size": 35372
+  },
+  {
+    "path": "kurt/005_kurt06.wav",
+    "type": "blob",
+    "size": 237612
+  },
+  {
+    "path": "kurt/006_kurt07.wav",
+    "type": "blob",
+    "size": 201772
+  },
+  {
+    "path": "latibro",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "latibro/000_Sound2.wav",
+    "type": "blob",
+    "size": 34068
+  },
+  {
+    "path": "latibro/001_Sound3.wav",
+    "type": "blob",
+    "size": 36472
+  },
+  {
+    "path": "latibro/002_Sound4.wav",
+    "type": "blob",
+    "size": 34950
+  },
+  {
+    "path": "latibro/003_Sound5.wav",
+    "type": "blob",
+    "size": 37714
+  },
+  {
+    "path": "latibro/004_Sound6.wav",
+    "type": "blob",
+    "size": 38706
+  },
+  {
+    "path": "latibro/005_Sound7.wav",
+    "type": "blob",
+    "size": 39828
+  },
+  {
+    "path": "latibro/006_Sound8.wav",
+    "type": "blob",
+    "size": 37824
+  },
+  {
+    "path": "latibro/007_Sound9.wav",
+    "type": "blob",
+    "size": 38792
+  },
+  {
+    "path": "led",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "led/000_foo.wav",
+    "type": "blob",
+    "size": 721000
+  },
+  {
+    "path": "less",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "less/bass2.wav",
+    "type": "blob",
+    "size": 111508
+  },
+  {
+    "path": "less/hhxx.wav",
+    "type": "blob",
+    "size": 27950
+  },
+  {
+    "path": "less/kicklesshuman.wav",
+    "type": "blob",
+    "size": 27950
+  },
+  {
+    "path": "less/snare.wav",
+    "type": "blob",
+    "size": 111508
+  },
+  {
+    "path": "lighter",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "lighter/000_0.wav",
+    "type": "blob",
+    "size": 7084
+  },
+  {
+    "path": "lighter/001_1.wav",
+    "type": "blob",
+    "size": 9066
+  },
+  {
+    "path": "lighter/002_2.wav",
+    "type": "blob",
+    "size": 12428
+  },
+  {
+    "path": "lighter/003_3.wav",
+    "type": "blob",
+    "size": 6044
+  },
+  {
+    "path": "lighter/004_4.wav",
+    "type": "blob",
+    "size": 5588
+  },
+  {
+    "path": "lighter/005_5.wav",
+    "type": "blob",
+    "size": 10204
+  },
+  {
+    "path": "lighter/006_6.wav",
+    "type": "blob",
+    "size": 7660
+  },
+  {
+    "path": "lighter/007_7.wav",
+    "type": "blob",
+    "size": 8812
+  },
+  {
+    "path": "lighter/008_8.wav",
+    "type": "blob",
+    "size": 64016
+  },
+  {
+    "path": "lighter/009_9.wav",
+    "type": "blob",
+    "size": 6060
+  },
+  {
+    "path": "lighter/010_10.wav",
+    "type": "blob",
+    "size": 7564
+  },
+  {
+    "path": "lighter/011_11.wav",
+    "type": "blob",
+    "size": 7514
+  },
+  {
+    "path": "lighter/012_12.wav",
+    "type": "blob",
+    "size": 11724
+  },
+  {
+    "path": "lighter/013_13.wav",
+    "type": "blob",
+    "size": 7964
+  },
+  {
+    "path": "lighter/014_14.wav",
+    "type": "blob",
+    "size": 4732
+  },
+  {
+    "path": "lighter/015_15.wav",
+    "type": "blob",
+    "size": 1324
+  },
+  {
+    "path": "lighter/016_16.wav",
+    "type": "blob",
+    "size": 4636
+  },
+  {
+    "path": "lighter/017_17.wav",
+    "type": "blob",
+    "size": 27268
+  },
+  {
+    "path": "lighter/018_18.wav",
+    "type": "blob",
+    "size": 4260
+  },
+  {
+    "path": "lighter/019_19.wav",
+    "type": "blob",
+    "size": 4604
+  },
+  {
+    "path": "lighter/020_20.wav",
+    "type": "blob",
+    "size": 5454
+  },
+  {
+    "path": "lighter/021_21.wav",
+    "type": "blob",
+    "size": 6700
+  },
+  {
+    "path": "lighter/022_22.wav",
+    "type": "blob",
+    "size": 608
+  },
+  {
+    "path": "lighter/023_23.wav",
+    "type": "blob",
+    "size": 7310
+  },
+  {
+    "path": "lighter/024_24.wav",
+    "type": "blob",
+    "size": 7052
+  },
+  {
+    "path": "lighter/025_25.wav",
+    "type": "blob",
+    "size": 7656
+  },
+  {
+    "path": "lighter/026_26.wav",
+    "type": "blob",
+    "size": 3212
+  },
+  {
+    "path": "lighter/027_27.wav",
+    "type": "blob",
+    "size": 6070
+  },
+  {
+    "path": "lighter/028_28.wav",
+    "type": "blob",
+    "size": 3598
+  },
+  {
+    "path": "lighter/029_29.wav",
+    "type": "blob",
+    "size": 16558
+  },
+  {
+    "path": "lighter/030_30.wav",
+    "type": "blob",
+    "size": 9358
+  },
+  {
+    "path": "lighter/031_31.wav",
+    "type": "blob",
+    "size": 16940
+  },
+  {
+    "path": "lighter/032_32.wav",
+    "type": "blob",
+    "size": 8668
+  },
+  {
+    "path": "linnhats",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "linnhats/1.wav",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "linnhats/2.wav",
+    "type": "blob",
+    "size": 24896
+  },
+  {
+    "path": "linnhats/3.wav",
+    "type": "blob",
+    "size": 33168
+  },
+  {
+    "path": "linnhats/4.wav",
+    "type": "blob",
+    "size": 48172
+  },
+  {
+    "path": "linnhats/5.wav",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "linnhats/6.wav",
+    "type": "blob",
+    "size": 22096
+  },
+  {
+    "path": "lt",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "lt/LT0D0.wav",
+    "type": "blob",
+    "size": 31528
+  },
+  {
+    "path": "lt/LT0D3.wav",
+    "type": "blob",
+    "size": 38892
+  },
+  {
+    "path": "lt/LT0D7.wav",
+    "type": "blob",
+    "size": 53198
+  },
+  {
+    "path": "lt/LT0DA.wav",
+    "type": "blob",
+    "size": 60032
+  },
+  {
+    "path": "lt/LT3D0.wav",
+    "type": "blob",
+    "size": 31138
+  },
+  {
+    "path": "lt/LT3D3.wav",
+    "type": "blob",
+    "size": 39276
+  },
+  {
+    "path": "lt/LT3D7.wav",
+    "type": "blob",
+    "size": 54536
+  },
+  {
+    "path": "lt/LT3DA.wav",
+    "type": "blob",
+    "size": 59544
+  },
+  {
+    "path": "lt/LT7D0.wav",
+    "type": "blob",
+    "size": 32536
+  },
+  {
+    "path": "lt/LT7D3.wav",
+    "type": "blob",
+    "size": 42062
+  },
+  {
+    "path": "lt/LT7D7.wav",
+    "type": "blob",
+    "size": 58146
+  },
+  {
+    "path": "lt/LT7DA.wav",
+    "type": "blob",
+    "size": 61950
+  },
+  {
+    "path": "lt/LTAD0.wav",
+    "type": "blob",
+    "size": 32358
+  },
+  {
+    "path": "lt/LTAD3.wav",
+    "type": "blob",
+    "size": 41936
+  },
+  {
+    "path": "lt/LTAD7.wav",
+    "type": "blob",
+    "size": 57572
+  },
+  {
+    "path": "lt/LTADA.wav",
+    "type": "blob",
+    "size": 63606
+  },
+  {
+    "path": "made",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "made/0.wav",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "made/1.wav",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "made/2.wav",
+    "type": "blob",
+    "size": 20332
+  },
+  {
+    "path": "made/3.wav",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "made/4.wav",
+    "type": "blob",
+    "size": 61784
+  },
+  {
+    "path": "made/5.wav",
+    "type": "blob",
+    "size": 8866
+  },
+  {
+    "path": "made/6.wav",
+    "type": "blob",
+    "size": 8866
+  },
+  {
+    "path": "made2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "made2/output.wav",
+    "type": "blob",
+    "size": 352846
+  },
+  {
+    "path": "mash",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "mash/0.wav",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "mash/1.wav",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "mash2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "mash2/000_output.wav",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "mash2/001_output2.wav",
+    "type": "blob",
+    "size": 176446
+  },
+  {
+    "path": "mash2/002_output3.wav",
+    "type": "blob",
+    "size": 44146
+  },
+  {
+    "path": "mash2/003_output4.wav",
+    "type": "blob",
+    "size": 8866
+  },
+  {
+    "path": "metal",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "metal/000_0.wav",
+    "type": "blob",
+    "size": 37860
+  },
+  {
+    "path": "metal/001_1.wav",
+    "type": "blob",
+    "size": 36188
+  },
+  {
+    "path": "metal/002_2.wav",
+    "type": "blob",
+    "size": 33086
+  },
+  {
+    "path": "metal/003_3.wav",
+    "type": "blob",
+    "size": 33168
+  },
+  {
+    "path": "metal/004_4.wav",
+    "type": "blob",
+    "size": 29808
+  },
+  {
+    "path": "metal/005_5.wav",
+    "type": "blob",
+    "size": 34616
+  },
+  {
+    "path": "metal/006_6.wav",
+    "type": "blob",
+    "size": 38162
+  },
+  {
+    "path": "metal/007_7.wav",
+    "type": "blob",
+    "size": 34360
+  },
+  {
+    "path": "metal/008_8.wav",
+    "type": "blob",
+    "size": 36598
+  },
+  {
+    "path": "metal/009_9.wav",
+    "type": "blob",
+    "size": 39388
+  },
+  {
+    "path": "miniyeah",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "miniyeah/000_Sound0.wav",
+    "type": "blob",
+    "size": 1520
+  },
+  {
+    "path": "miniyeah/001_Sound11.wav",
+    "type": "blob",
+    "size": 1932
+  },
+  {
+    "path": "miniyeah/002_Sound23.wav",
+    "type": "blob",
+    "size": 1444
+  },
+  {
+    "path": "miniyeah/003_Sound36.wav",
+    "type": "blob",
+    "size": 1076
+  },
+  {
+    "path": "monsterb",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "monsterb/000_jumpdown.wav",
+    "type": "blob",
+    "size": 9666
+  },
+  {
+    "path": "monsterb/001_laughter.wav",
+    "type": "blob",
+    "size": 58122
+  },
+  {
+    "path": "monsterb/002_tongue.wav",
+    "type": "blob",
+    "size": 3760
+  },
+  {
+    "path": "monsterb/003_warping.wav",
+    "type": "blob",
+    "size": 9714
+  },
+  {
+    "path": "monsterb/004_wolfman.wav",
+    "type": "blob",
+    "size": 13320
+  },
+  {
+    "path": "monsterb/005_zap.wav",
+    "type": "blob",
+    "size": 10558
+  },
+  {
+    "path": "moog",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "moog/000_Mighty Moog C2.wav",
+    "type": "blob",
+    "size": 470064
+  },
+  {
+    "path": "moog/001_Mighty Moog C3.wav",
+    "type": "blob",
+    "size": 470400
+  },
+  {
+    "path": "moog/002_Mighty Moog C4.wav",
+    "type": "blob",
+    "size": 470570
+  },
+  {
+    "path": "moog/003_Mighty Moog G1.wav",
+    "type": "blob",
+    "size": 473760
+  },
+  {
+    "path": "moog/004_Mighty Moog G2.wav",
+    "type": "blob",
+    "size": 470360
+  },
+  {
+    "path": "moog/005_Mighty Moog G3.wav",
+    "type": "blob",
+    "size": 470584
+  },
+  {
+    "path": "moog/006_Mighty Moog G4.wav",
+    "type": "blob",
+    "size": 470384
+  },
+  {
+    "path": "mouth",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "mouth/000_1.wav",
+    "type": "blob",
+    "size": 558
+  },
+  {
+    "path": "mouth/001_10.wav",
+    "type": "blob",
+    "size": 5492
+  },
+  {
+    "path": "mouth/002_11.wav",
+    "type": "blob",
+    "size": 740
+  },
+  {
+    "path": "mouth/003_12.wav",
+    "type": "blob",
+    "size": 1972
+  },
+  {
+    "path": "mouth/004_13.wav",
+    "type": "blob",
+    "size": 6598
+  },
+  {
+    "path": "mouth/005_14.wav",
+    "type": "blob",
+    "size": 984
+  },
+  {
+    "path": "mouth/006_15.wav",
+    "type": "blob",
+    "size": 4316
+  },
+  {
+    "path": "mouth/007_2.wav",
+    "type": "blob",
+    "size": 1988
+  },
+  {
+    "path": "mouth/008_3.wav",
+    "type": "blob",
+    "size": 1708
+  },
+  {
+    "path": "mouth/009_4.wav",
+    "type": "blob",
+    "size": 5062
+  },
+  {
+    "path": "mouth/010_5.wav",
+    "type": "blob",
+    "size": 1974
+  },
+  {
+    "path": "mouth/011_6.wav",
+    "type": "blob",
+    "size": 5860
+  },
+  {
+    "path": "mouth/012_7.wav",
+    "type": "blob",
+    "size": 4796
+  },
+  {
+    "path": "mouth/013_8.wav",
+    "type": "blob",
+    "size": 1320
+  },
+  {
+    "path": "mouth/014_9.wav",
+    "type": "blob",
+    "size": 6564
+  },
+  {
+    "path": "mp3",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "mp3/000_mp30.wav",
+    "type": "blob",
+    "size": 50158
+  },
+  {
+    "path": "mp3/001_mp31.wav",
+    "type": "blob",
+    "size": 50158
+  },
+  {
+    "path": "mp3/002_mp32.wav",
+    "type": "blob",
+    "size": 6790
+  },
+  {
+    "path": "mp3/003_mp33.wav",
+    "type": "blob",
+    "size": 6790
+  },
+  {
+    "path": "msg",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "msg/000_msg0.wav",
+    "type": "blob",
+    "size": 1544
+  },
+  {
+    "path": "msg/001_msg1.wav",
+    "type": "blob",
+    "size": 11246
+  },
+  {
+    "path": "msg/002_msg2.wav",
+    "type": "blob",
+    "size": 380
+  },
+  {
+    "path": "msg/003_msg3.wav",
+    "type": "blob",
+    "size": 1510
+  },
+  {
+    "path": "msg/004_msg4.wav",
+    "type": "blob",
+    "size": 740
+  },
+  {
+    "path": "msg/005_msg5.wav",
+    "type": "blob",
+    "size": 740
+  },
+  {
+    "path": "msg/006_msg6.wav",
+    "type": "blob",
+    "size": 1154
+  },
+  {
+    "path": "msg/007_msg7.wav",
+    "type": "blob",
+    "size": 1154
+  },
+  {
+    "path": "msg/008_msg8.wav",
+    "type": "blob",
+    "size": 1154
+  },
+  {
+    "path": "mt",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "mt/MT0D0.wav",
+    "type": "blob",
+    "size": 19408
+  },
+  {
+    "path": "mt/MT0D3.wav",
+    "type": "blob",
+    "size": 25698
+  },
+  {
+    "path": "mt/MT0D7.wav",
+    "type": "blob",
+    "size": 34348
+  },
+  {
+    "path": "mt/MT0DA.wav",
+    "type": "blob",
+    "size": 36532
+  },
+  {
+    "path": "mt/MT3D0.wav",
+    "type": "blob",
+    "size": 19834
+  },
+  {
+    "path": "mt/MT3D3.wav",
+    "type": "blob",
+    "size": 25722
+  },
+  {
+    "path": "mt/MT3D7.wav",
+    "type": "blob",
+    "size": 36496
+  },
+  {
+    "path": "mt/MT3DA.wav",
+    "type": "blob",
+    "size": 38912
+  },
+  {
+    "path": "mt/MT7D0.wav",
+    "type": "blob",
+    "size": 19356
+  },
+  {
+    "path": "mt/MT7D3.wav",
+    "type": "blob",
+    "size": 26828
+  },
+  {
+    "path": "mt/MT7D7.wav",
+    "type": "blob",
+    "size": 35564
+  },
+  {
+    "path": "mt/MT7DA.wav",
+    "type": "blob",
+    "size": 41112
+  },
+  {
+    "path": "mt/MTAD0.wav",
+    "type": "blob",
+    "size": 20382
+  },
+  {
+    "path": "mt/MTAD3.wav",
+    "type": "blob",
+    "size": 25664
+  },
+  {
+    "path": "mt/MTAD7.wav",
+    "type": "blob",
+    "size": 38050
+  },
+  {
+    "path": "mt/MTADA.wav",
+    "type": "blob",
+    "size": 41420
+  },
+  {
+    "path": "mute",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "mute/000_FH A#2 SCF.wav",
+    "type": "blob",
+    "size": 56280
+  },
+  {
+    "path": "mute/001_FH A3 SCF.wav",
+    "type": "blob",
+    "size": 61048
+  },
+  {
+    "path": "mute/002_FH B3 SCF.wav",
+    "type": "blob",
+    "size": 67016
+  },
+  {
+    "path": "mute/003_FH B4 SC.wav",
+    "type": "blob",
+    "size": 62192
+  },
+  {
+    "path": "mute/004_FH B4 SCF.wav",
+    "type": "blob",
+    "size": 54512
+  },
+  {
+    "path": "mute/005_FH C#3 SC.wav",
+    "type": "blob",
+    "size": 65008
+  },
+  {
+    "path": "mute/006_FH C#3 SCF.wav",
+    "type": "blob",
+    "size": 59376
+  },
+  {
+    "path": "mute/007_FH C#5 SCF.wav",
+    "type": "blob",
+    "size": 41784
+  },
+  {
+    "path": "mute/008_FH C4 SCF.wav",
+    "type": "blob",
+    "size": 57560
+  },
+  {
+    "path": "mute/009_FH D#4 SCF.wav",
+    "type": "blob",
+    "size": 60040
+  },
+  {
+    "path": "mute/010_FH D#5 SCF.wav",
+    "type": "blob",
+    "size": 48448
+  },
+  {
+    "path": "mute/011_FH D3 SC.wav",
+    "type": "blob",
+    "size": 59712
+  },
+  {
+    "path": "mute/012_FH D3 SCF.wav",
+    "type": "blob",
+    "size": 53056
+  },
+  {
+    "path": "mute/013_FH E3 SC.wav",
+    "type": "blob",
+    "size": 67488
+  },
+  {
+    "path": "mute/014_FH E3 SCF.wav",
+    "type": "blob",
+    "size": 62880
+  },
+  {
+    "path": "mute/015_FH F#4 SC.wav",
+    "type": "blob",
+    "size": 66776
+  },
+  {
+    "path": "mute/016_FH F#4 SCF.wav",
+    "type": "blob",
+    "size": 59096
+  },
+  {
+    "path": "mute/017_FH F3 SC.wav",
+    "type": "blob",
+    "size": 62736
+  },
+  {
+    "path": "mute/018_FH F3 SCF.wav",
+    "type": "blob",
+    "size": 56592
+  },
+  {
+    "path": "mute/019_FH F5 SCF.wav",
+    "type": "blob",
+    "size": 57016
+  },
+  {
+    "path": "mute/020_FH G#2 SC.wav",
+    "type": "blob",
+    "size": 75736
+  },
+  {
+    "path": "mute/021_FH G#2 SCF.wav",
+    "type": "blob",
+    "size": 69592
+  },
+  {
+    "path": "mute/022_FH G#3 SC.wav",
+    "type": "blob",
+    "size": 73960
+  },
+  {
+    "path": "mute/023_FH G#3 SCF.wav",
+    "type": "blob",
+    "size": 67816
+  },
+  {
+    "path": "mute/024_FH G#4 SC.wav",
+    "type": "blob",
+    "size": 72776
+  },
+  {
+    "path": "mute/025_FH G#4 SCF.wav",
+    "type": "blob",
+    "size": 65608
+  },
+  {
+    "path": "mute/026_FH G2 SC.wav",
+    "type": "blob",
+    "size": 56920
+  },
+  {
+    "path": "mute/027_FH G2 SCF.wav",
+    "type": "blob",
+    "size": 50264
+  },
+  {
+    "path": "newnotes",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "newnotes/000_0.wav",
+    "type": "blob",
+    "size": 13514
+  },
+  {
+    "path": "newnotes/001_1.wav",
+    "type": "blob",
+    "size": 10666
+  },
+  {
+    "path": "newnotes/002_10.wav",
+    "type": "blob",
+    "size": 12028
+  },
+  {
+    "path": "newnotes/003_11.wav",
+    "type": "blob",
+    "size": 13316
+  },
+  {
+    "path": "newnotes/004_12.wav",
+    "type": "blob",
+    "size": 12390
+  },
+  {
+    "path": "newnotes/005_13.wav",
+    "type": "blob",
+    "size": 12906
+  },
+  {
+    "path": "newnotes/006_14.wav",
+    "type": "blob",
+    "size": 14250
+  },
+  {
+    "path": "newnotes/007_2.wav",
+    "type": "blob",
+    "size": 9642
+  },
+  {
+    "path": "newnotes/008_3.wav",
+    "type": "blob",
+    "size": 9746
+  },
+  {
+    "path": "newnotes/009_4.wav",
+    "type": "blob",
+    "size": 11870
+  },
+  {
+    "path": "newnotes/010_5.wav",
+    "type": "blob",
+    "size": 12486
+  },
+  {
+    "path": "newnotes/011_6.wav",
+    "type": "blob",
+    "size": 12268
+  },
+  {
+    "path": "newnotes/012_7.wav",
+    "type": "blob",
+    "size": 12226
+  },
+  {
+    "path": "newnotes/013_8.wav",
+    "type": "blob",
+    "size": 13542
+  },
+  {
+    "path": "newnotes/014_9.wav",
+    "type": "blob",
+    "size": 13476
+  },
+  {
+    "path": "noise",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "noise/000_noise.wav",
+    "type": "blob",
+    "size": 2350
+  },
+  {
+    "path": "noise2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "noise2/000_0.wav",
+    "type": "blob",
+    "size": 16024
+  },
+  {
+    "path": "noise2/001_1.wav",
+    "type": "blob",
+    "size": 5496
+  },
+  {
+    "path": "noise2/002_2.wav",
+    "type": "blob",
+    "size": 4932
+  },
+  {
+    "path": "noise2/003_3.wav",
+    "type": "blob",
+    "size": 5044
+  },
+  {
+    "path": "noise2/004_4.wav",
+    "type": "blob",
+    "size": 3276
+  },
+  {
+    "path": "noise2/005_5.wav",
+    "type": "blob",
+    "size": 3786
+  },
+  {
+    "path": "noise2/006_6.wav",
+    "type": "blob",
+    "size": 12362
+  },
+  {
+    "path": "noise2/007_7.wav",
+    "type": "blob",
+    "size": 2350
+  },
+  {
+    "path": "notes",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "notes/000_0.wav",
+    "type": "blob",
+    "size": 13702
+  },
+  {
+    "path": "notes/001_1.wav",
+    "type": "blob",
+    "size": 11082
+  },
+  {
+    "path": "notes/002_10.wav",
+    "type": "blob",
+    "size": 13130
+  },
+  {
+    "path": "notes/003_11.wav",
+    "type": "blob",
+    "size": 14492
+  },
+  {
+    "path": "notes/004_12.wav",
+    "type": "blob",
+    "size": 13766
+  },
+  {
+    "path": "notes/005_13.wav",
+    "type": "blob",
+    "size": 12994
+  },
+  {
+    "path": "notes/006_14.wav",
+    "type": "blob",
+    "size": 15782
+  },
+  {
+    "path": "notes/007_2.wav",
+    "type": "blob",
+    "size": 10134
+  },
+  {
+    "path": "notes/008_3.wav",
+    "type": "blob",
+    "size": 10242
+  },
+  {
+    "path": "notes/009_4.wav",
+    "type": "blob",
+    "size": 12514
+  },
+  {
+    "path": "notes/010_5.wav",
+    "type": "blob",
+    "size": 13206
+  },
+  {
+    "path": "notes/011_6.wav",
+    "type": "blob",
+    "size": 13064
+  },
+  {
+    "path": "notes/012_7.wav",
+    "type": "blob",
+    "size": 13098
+  },
+  {
+    "path": "notes/013_8.wav",
+    "type": "blob",
+    "size": 14490
+  },
+  {
+    "path": "notes/014_9.wav",
+    "type": "blob",
+    "size": 14500
+  },
+  {
+    "path": "num",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "num/00.wav",
+    "type": "blob",
+    "size": 117882
+  },
+  {
+    "path": "num/01.wav",
+    "type": "blob",
+    "size": 90614
+  },
+  {
+    "path": "num/02.wav",
+    "type": "blob",
+    "size": 94814
+  },
+  {
+    "path": "num/03.wav",
+    "type": "blob",
+    "size": 102406
+  },
+  {
+    "path": "num/04.wav",
+    "type": "blob",
+    "size": 99378
+  },
+  {
+    "path": "num/05.wav",
+    "type": "blob",
+    "size": 156682
+  },
+  {
+    "path": "num/06.wav",
+    "type": "blob",
+    "size": 110738
+  },
+  {
+    "path": "num/07.wav",
+    "type": "blob",
+    "size": 101122
+  },
+  {
+    "path": "num/08.wav",
+    "type": "blob",
+    "size": 92574
+  },
+  {
+    "path": "num/09.wav",
+    "type": "blob",
+    "size": 108602
+  },
+  {
+    "path": "num/10.wav",
+    "type": "blob",
+    "size": 87278
+  },
+  {
+    "path": "num/11.wav",
+    "type": "blob",
+    "size": 108734
+  },
+  {
+    "path": "num/12.wav",
+    "type": "blob",
+    "size": 114098
+  },
+  {
+    "path": "num/13.wav",
+    "type": "blob",
+    "size": 130190
+  },
+  {
+    "path": "num/14.wav",
+    "type": "blob",
+    "size": 141302
+  },
+  {
+    "path": "num/15.wav",
+    "type": "blob",
+    "size": 138238
+  },
+  {
+    "path": "num/16.wav",
+    "type": "blob",
+    "size": 160854
+  },
+  {
+    "path": "num/17.wav",
+    "type": "blob",
+    "size": 163890
+  },
+  {
+    "path": "num/18.wav",
+    "type": "blob",
+    "size": 161614
+  },
+  {
+    "path": "num/19.wav",
+    "type": "blob",
+    "size": 161614
+  },
+  {
+    "path": "num/20.wav",
+    "type": "blob",
+    "size": 106962
+  },
+  {
+    "path": "num/_readme_and_license.txt",
+    "type": "blob",
+    "size": 3235
+  },
+  {
+    "path": "numbers",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "numbers/0.wav",
+    "type": "blob",
+    "size": 178544
+  },
+  {
+    "path": "numbers/1.wav",
+    "type": "blob",
+    "size": 210624
+  },
+  {
+    "path": "numbers/2.wav",
+    "type": "blob",
+    "size": 178274
+  },
+  {
+    "path": "numbers/3.wav",
+    "type": "blob",
+    "size": 183066
+  },
+  {
+    "path": "numbers/4.wav",
+    "type": "blob",
+    "size": 205914
+  },
+  {
+    "path": "numbers/5.wav",
+    "type": "blob",
+    "size": 201424
+  },
+  {
+    "path": "numbers/6.wav",
+    "type": "blob",
+    "size": 173992
+  },
+  {
+    "path": "numbers/7.wav",
+    "type": "blob",
+    "size": 219692
+  },
+  {
+    "path": "numbers/8.wav",
+    "type": "blob",
+    "size": 169324
+  },
+  {
+    "path": "oc",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "oc/OPCL1.wav",
+    "type": "blob",
+    "size": 35002
+  },
+  {
+    "path": "oc/OPCL2.wav",
+    "type": "blob",
+    "size": 26624
+  },
+  {
+    "path": "oc/OPCL3.wav",
+    "type": "blob",
+    "size": 20726
+  },
+  {
+    "path": "oc/OPCL4.wav",
+    "type": "blob",
+    "size": 50432
+  },
+  {
+    "path": "odx",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "odx/000_Kick_1.wav",
+    "type": "blob",
+    "size": 18578
+  },
+  {
+    "path": "odx/001_DX_Snare_1.wav",
+    "type": "blob",
+    "size": 13634
+  },
+  {
+    "path": "odx/002_DXShaker.wav",
+    "type": "blob",
+    "size": 12330
+  },
+  {
+    "path": "odx/003_DXRimshot.wav",
+    "type": "blob",
+    "size": 9798
+  },
+  {
+    "path": "odx/004_DXRide.wav",
+    "type": "blob",
+    "size": 78568
+  },
+  {
+    "path": "odx/005_DX_Open_Hat.wav",
+    "type": "blob",
+    "size": 31284
+  },
+  {
+    "path": "odx/006_DX_Mid_Tom.wav",
+    "type": "blob",
+    "size": 34364
+  },
+  {
+    "path": "odx/007_DX_Med_Crash.wav",
+    "type": "blob",
+    "size": 100778
+  },
+  {
+    "path": "odx/008_DX_Low_Tom.wav",
+    "type": "blob",
+    "size": 34930
+  },
+  {
+    "path": "odx/009_DX_Lo_Crash.wav",
+    "type": "blob",
+    "size": 82854
+  },
+  {
+    "path": "odx/010_DX_Hi_Tom.wav",
+    "type": "blob",
+    "size": 31398
+  },
+  {
+    "path": "odx/011_DX_High_Crash.wav",
+    "type": "blob",
+    "size": 125410
+  },
+  {
+    "path": "odx/012_DX_Cl_Hat.wav",
+    "type": "blob",
+    "size": 21814
+  },
+  {
+    "path": "odx/013_DXClap.wav",
+    "type": "blob",
+    "size": 13258
+  },
+  {
+    "path": "odx/014_DX_Ax_Hat.wav",
+    "type": "blob",
+    "size": 21794
+  },
+  {
+    "path": "off",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "off/000_01.wav",
+    "type": "blob",
+    "size": 19884
+  },
+  {
+    "path": "outdoor",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "outdoor/1.wav",
+    "type": "blob",
+    "size": 118032
+  },
+  {
+    "path": "outdoor/2.wav",
+    "type": "blob",
+    "size": 108896
+  },
+  {
+    "path": "outdoor/3.wav",
+    "type": "blob",
+    "size": 352844
+  },
+  {
+    "path": "outdoor/4.wav",
+    "type": "blob",
+    "size": 93448
+  },
+  {
+    "path": "outdoor/5.wav",
+    "type": "blob",
+    "size": 169356
+  },
+  {
+    "path": "outdoor/6.wav",
+    "type": "blob",
+    "size": 188652
+  },
+  {
+    "path": "pad",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "pad/alien-monolith-pad.wav",
+    "type": "blob",
+    "size": 3175244
+  },
+  {
+    "path": "pad/angelpads.wav",
+    "type": "blob",
+    "size": 881994
+  },
+  {
+    "path": "pad/bellpad-harmonics.wav",
+    "type": "blob",
+    "size": 564526
+  },
+  {
+    "path": "padlong",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "padlong/atmospheric-abduction.wav",
+    "type": "blob",
+    "size": 4571958
+  },
+  {
+    "path": "pebbles",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "pebbles/90788__kmoon__pebbles-scrape-drag-foot.wav",
+    "type": "blob",
+    "size": 6452812
+  },
+  {
+    "path": "perc",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "perc/000_perc0.wav",
+    "type": "blob",
+    "size": 34092
+  },
+  {
+    "path": "perc/001_perc1.wav",
+    "type": "blob",
+    "size": 19756
+  },
+  {
+    "path": "perc/002_perc2.wav",
+    "type": "blob",
+    "size": 14508
+  },
+  {
+    "path": "perc/003_perc3.wav",
+    "type": "blob",
+    "size": 494
+  },
+  {
+    "path": "perc/004_perc4.wav",
+    "type": "blob",
+    "size": 39468
+  },
+  {
+    "path": "perc/005_perc5.wav",
+    "type": "blob",
+    "size": 25516
+  },
+  {
+    "path": "peri",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "peri/000_bd.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/001_bd-rev.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/002_hh2.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/003_hhx.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/004_ksh.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/005_sd.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/006_sd-rev.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/007_xbigclang.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/008_xbong.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/009_xbusket.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/010_xchinga.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/011_xfx1.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/012_xfx2.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/013_xfx3.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "peri/014_xgillclank.wav",
+    "type": "blob",
+    "size": 75850
+  },
+  {
+    "path": "pluck",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "pluck/BS A#2 PI.wav",
+    "type": "blob",
+    "size": 290544
+  },
+  {
+    "path": "pluck/BS A1 PI.wav",
+    "type": "blob",
+    "size": 331440
+  },
+  {
+    "path": "pluck/BS A3 PI.wav",
+    "type": "blob",
+    "size": 283696
+  },
+  {
+    "path": "pluck/BS B1 PI.wav",
+    "type": "blob",
+    "size": 305352
+  },
+  {
+    "path": "pluck/BS B3 PI.wav",
+    "type": "blob",
+    "size": 162784
+  },
+  {
+    "path": "pluck/BS C3 PI.wav",
+    "type": "blob",
+    "size": 308344
+  },
+  {
+    "path": "pluck/BS D#3 PI.wav",
+    "type": "blob",
+    "size": 192560
+  },
+  {
+    "path": "pluck/BS D2 PI.wav",
+    "type": "blob",
+    "size": 330800
+  },
+  {
+    "path": "pluck/BS D4 PI.wav",
+    "type": "blob",
+    "size": 147248
+  },
+  {
+    "path": "pluck/BS E1 PI.wav",
+    "type": "blob",
+    "size": 376496
+  },
+  {
+    "path": "pluck/BS E2 PI.wav",
+    "type": "blob",
+    "size": 332208
+  },
+  {
+    "path": "pluck/BS F1 PI.wav",
+    "type": "blob",
+    "size": 382400
+  },
+  {
+    "path": "pluck/BS F3 PI.wav",
+    "type": "blob",
+    "size": 223952
+  },
+  {
+    "path": "pluck/BS G#2 PI.wav",
+    "type": "blob",
+    "size": 235120
+  },
+  {
+    "path": "pluck/BS G1 PI.wav",
+    "type": "blob",
+    "size": 335408
+  },
+  {
+    "path": "pluck/BS G2 PI.wav",
+    "type": "blob",
+    "size": 267920
+  },
+  {
+    "path": "pluck/BS G3 PI.wav",
+    "type": "blob",
+    "size": 251440
+  },
+  {
+    "path": "popkick",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "popkick/000_1.wav",
+    "type": "blob",
+    "size": 65096
+  },
+  {
+    "path": "popkick/001_10.wav",
+    "type": "blob",
+    "size": 54260
+  },
+  {
+    "path": "popkick/002_2.wav",
+    "type": "blob",
+    "size": 65096
+  },
+  {
+    "path": "popkick/003_3.wav",
+    "type": "blob",
+    "size": 65096
+  },
+  {
+    "path": "popkick/004_4.wav",
+    "type": "blob",
+    "size": 86780
+  },
+  {
+    "path": "popkick/005_5.wav",
+    "type": "blob",
+    "size": 75944
+  },
+  {
+    "path": "popkick/006_6.wav",
+    "type": "blob",
+    "size": 54260
+  },
+  {
+    "path": "popkick/007_7.wav",
+    "type": "blob",
+    "size": 59676
+  },
+  {
+    "path": "popkick/008_8.wav",
+    "type": "blob",
+    "size": 27152
+  },
+  {
+    "path": "popkick/009_9.wav",
+    "type": "blob",
+    "size": 43416
+  },
+  {
+    "path": "print",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "print/000_0.wav",
+    "type": "blob",
+    "size": 105016
+  },
+  {
+    "path": "print/001_1.wav",
+    "type": "blob",
+    "size": 36972
+  },
+  {
+    "path": "print/002_10.wav",
+    "type": "blob",
+    "size": 33260
+  },
+  {
+    "path": "print/003_2.wav",
+    "type": "blob",
+    "size": 177424
+  },
+  {
+    "path": "print/004_3.wav",
+    "type": "blob",
+    "size": 81820
+  },
+  {
+    "path": "print/005_4.wav",
+    "type": "blob",
+    "size": 92992
+  },
+  {
+    "path": "print/006_5.wav",
+    "type": "blob",
+    "size": 69128
+  },
+  {
+    "path": "print/007_6.wav",
+    "type": "blob",
+    "size": 74124
+  },
+  {
+    "path": "print/008_7.wav",
+    "type": "blob",
+    "size": 84700
+  },
+  {
+    "path": "print/009_8.wav",
+    "type": "blob",
+    "size": 161836
+  },
+  {
+    "path": "print/010_9.wav",
+    "type": "blob",
+    "size": 260408
+  },
+  {
+    "path": "proc",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "proc/000_2.wav",
+    "type": "blob",
+    "size": 104748
+  },
+  {
+    "path": "proc/001_3.wav",
+    "type": "blob",
+    "size": 34766
+  },
+  {
+    "path": "procshort",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "procshort/000_1.wav",
+    "type": "blob",
+    "size": 64016
+  },
+  {
+    "path": "procshort/001_10.wav",
+    "type": "blob",
+    "size": 1628
+  },
+  {
+    "path": "procshort/002_11.wav",
+    "type": "blob",
+    "size": 2284
+  },
+  {
+    "path": "procshort/003_4.wav",
+    "type": "blob",
+    "size": 22794
+  },
+  {
+    "path": "procshort/004_5.wav",
+    "type": "blob",
+    "size": 988
+  },
+  {
+    "path": "procshort/005_7.wav",
+    "type": "blob",
+    "size": 1100
+  },
+  {
+    "path": "procshort/006_8.wav",
+    "type": "blob",
+    "size": 2508
+  },
+  {
+    "path": "procshort/007_9.wav",
+    "type": "blob",
+    "size": 2316
+  },
+  {
+    "path": "psr",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "psr/000_01.wav",
+    "type": "blob",
+    "size": 51628
+  },
+  {
+    "path": "psr/001_02.wav",
+    "type": "blob",
+    "size": 32748
+  },
+  {
+    "path": "psr/002_03.wav",
+    "type": "blob",
+    "size": 25772
+  },
+  {
+    "path": "psr/003_04.wav",
+    "type": "blob",
+    "size": 33132
+  },
+  {
+    "path": "psr/004_05.wav",
+    "type": "blob",
+    "size": 26220
+  },
+  {
+    "path": "psr/005_06.wav",
+    "type": "blob",
+    "size": 24620
+  },
+  {
+    "path": "psr/006_07.wav",
+    "type": "blob",
+    "size": 12236
+  },
+  {
+    "path": "psr/007_08.wav",
+    "type": "blob",
+    "size": 15148
+  },
+  {
+    "path": "psr/008_09.wav",
+    "type": "blob",
+    "size": 15212
+  },
+  {
+    "path": "psr/009_10.wav",
+    "type": "blob",
+    "size": 15852
+  },
+  {
+    "path": "psr/010_11.wav",
+    "type": "blob",
+    "size": 2448
+  },
+  {
+    "path": "psr/011_12.wav",
+    "type": "blob",
+    "size": 12524
+  },
+  {
+    "path": "psr/012_13.wav",
+    "type": "blob",
+    "size": 6036
+  },
+  {
+    "path": "psr/013_14.wav",
+    "type": "blob",
+    "size": 14988
+  },
+  {
+    "path": "psr/014_15.wav",
+    "type": "blob",
+    "size": 9532
+  },
+  {
+    "path": "psr/015_16.wav",
+    "type": "blob",
+    "size": 17452
+  },
+  {
+    "path": "psr/016_17.wav",
+    "type": "blob",
+    "size": 3572
+  },
+  {
+    "path": "psr/017_18.wav",
+    "type": "blob",
+    "size": 8572
+  },
+  {
+    "path": "psr/018_19.wav",
+    "type": "blob",
+    "size": 13260
+  },
+  {
+    "path": "psr/019_20.wav",
+    "type": "blob",
+    "size": 5076
+  },
+  {
+    "path": "psr/020_21.wav",
+    "type": "blob",
+    "size": 12732
+  },
+  {
+    "path": "psr/021_22.wav",
+    "type": "blob",
+    "size": 19116
+  },
+  {
+    "path": "psr/022_23.wav",
+    "type": "blob",
+    "size": 202576
+  },
+  {
+    "path": "psr/023_24.wav",
+    "type": "blob",
+    "size": 276012
+  },
+  {
+    "path": "psr/024_25.wav",
+    "type": "blob",
+    "size": 5420
+  },
+  {
+    "path": "psr/025_26.wav",
+    "type": "blob",
+    "size": 7468
+  },
+  {
+    "path": "psr/026_27.wav",
+    "type": "blob",
+    "size": 317996
+  },
+  {
+    "path": "psr/027_28.wav",
+    "type": "blob",
+    "size": 131116
+  },
+  {
+    "path": "psr/028_29.wav",
+    "type": "blob",
+    "size": 9996
+  },
+  {
+    "path": "psr/029_30.wav",
+    "type": "blob",
+    "size": 5260
+  },
+  {
+    "path": "rave",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "rave/AREUREADY.wav",
+    "type": "blob",
+    "size": 349700
+  },
+  {
+    "path": "rave/Babylon.wav",
+    "type": "blob",
+    "size": 616888
+  },
+  {
+    "path": "rave/cut.wav",
+    "type": "blob",
+    "size": 82392
+  },
+  {
+    "path": "rave/doh.wav",
+    "type": "blob",
+    "size": 95928
+  },
+  {
+    "path": "rave/giveit.wav",
+    "type": "blob",
+    "size": 217056
+  },
+  {
+    "path": "rave/ourcrew.wav",
+    "type": "blob",
+    "size": 293456
+  },
+  {
+    "path": "rave/prodigyloop.wav",
+    "type": "blob",
+    "size": 191584
+  },
+  {
+    "path": "rave/stabah.wav",
+    "type": "blob",
+    "size": 271628
+  },
+  {
+    "path": "rave2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "rave2/electric_ping01.ogg",
+    "type": "blob",
+    "size": 5352
+  },
+  {
+    "path": "rave2/rave_bass01.wav",
+    "type": "blob",
+    "size": 33100
+  },
+  {
+    "path": "rave2/rave_bass02.wav",
+    "type": "blob",
+    "size": 60844
+  },
+  {
+    "path": "rave2/rave_bass03.wav",
+    "type": "blob",
+    "size": 29332
+  },
+  {
+    "path": "rave2/rave_bass04.wav",
+    "type": "blob",
+    "size": 35244
+  },
+  {
+    "path": "rave2/rave_choir01.ogg",
+    "type": "blob",
+    "size": 8730
+  },
+  {
+    "path": "ravemono",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "ravemono/Babylon.wav",
+    "type": "blob",
+    "size": 308466
+  },
+  {
+    "path": "ravemono/prodigyloop.wav",
+    "type": "blob",
+    "size": 95814
+  },
+  {
+    "path": "realclaps",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "realclaps/1.wav",
+    "type": "blob",
+    "size": 47920
+  },
+  {
+    "path": "realclaps/2.wav",
+    "type": "blob",
+    "size": 66196
+  },
+  {
+    "path": "realclaps/3.wav",
+    "type": "blob",
+    "size": 66196
+  },
+  {
+    "path": "realclaps/4.wav",
+    "type": "blob",
+    "size": 66196
+  },
+  {
+    "path": "reverbkick",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "reverbkick/1.wav",
+    "type": "blob",
+    "size": 220544
+  },
+  {
+    "path": "rm",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "rm/RIM0.wav",
+    "type": "blob",
+    "size": 3582
+  },
+  {
+    "path": "rm/RIMA.wav",
+    "type": "blob",
+    "size": 3538
+  },
+  {
+    "path": "rs",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "rs/rytm-rs.wav",
+    "type": "blob",
+    "size": 18014
+  },
+  {
+    "path": "sax",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "sax/000_notes121a.wav",
+    "type": "blob",
+    "size": 392404
+  },
+  {
+    "path": "sax/001_notes121a2.wav",
+    "type": "blob",
+    "size": 397460
+  },
+  {
+    "path": "sax/002_notes121b.wav",
+    "type": "blob",
+    "size": 364052
+  },
+  {
+    "path": "sax/003_notes121bflat.wav",
+    "type": "blob",
+    "size": 380470
+  },
+  {
+    "path": "sax/004_notes121bflat2.wav",
+    "type": "blob",
+    "size": 404628
+  },
+  {
+    "path": "sax/005_notes121c.wav",
+    "type": "blob",
+    "size": 390548
+  },
+  {
+    "path": "sax/006_notes121c2.wav",
+    "type": "blob",
+    "size": 370772
+  },
+  {
+    "path": "sax/007_notes121csharp.wav",
+    "type": "blob",
+    "size": 358914
+  },
+  {
+    "path": "sax/008_notes121csharp2.wav",
+    "type": "blob",
+    "size": 357492
+  },
+  {
+    "path": "sax/009_notes121d.wav",
+    "type": "blob",
+    "size": 375956
+  },
+  {
+    "path": "sax/010_notes121e.wav",
+    "type": "blob",
+    "size": 359572
+  },
+  {
+    "path": "sax/011_notes121e2.wav",
+    "type": "blob",
+    "size": 366740
+  },
+  {
+    "path": "sax/012_notes121eflat.wav",
+    "type": "blob",
+    "size": 356756
+  },
+  {
+    "path": "sax/013_notes121eflat2.wav",
+    "type": "blob",
+    "size": 430356
+  },
+  {
+    "path": "sax/014_notes121f.wav",
+    "type": "blob",
+    "size": 365156
+  },
+  {
+    "path": "sax/015_notes121f2.wav",
+    "type": "blob",
+    "size": 379028
+  },
+  {
+    "path": "sax/016_notes121fsharp.wav",
+    "type": "blob",
+    "size": 368212
+  },
+  {
+    "path": "sax/017_notes121fsharp2.wav",
+    "type": "blob",
+    "size": 380050
+  },
+  {
+    "path": "sax/018_notes121g.wav",
+    "type": "blob",
+    "size": 371668
+  },
+  {
+    "path": "sax/019_notes121g2.wav",
+    "type": "blob",
+    "size": 370836
+  },
+  {
+    "path": "sax/020_notes121gsharp.wav",
+    "type": "blob",
+    "size": 389316
+  },
+  {
+    "path": "sax/021_notes121gsharp2.wav",
+    "type": "blob",
+    "size": 375956
+  },
+  {
+    "path": "sd",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "sd/rytm-00-hard.wav",
+    "type": "blob",
+    "size": 81070
+  },
+  {
+    "path": "sd/rytm-01-classic.wav",
+    "type": "blob",
+    "size": 93342
+  },
+  {
+    "path": "seawolf",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "seawolf/000_minehit.wav",
+    "type": "blob",
+    "size": 308342
+  },
+  {
+    "path": "seawolf/001_shiphit.wav",
+    "type": "blob",
+    "size": 431222
+  },
+  {
+    "path": "seawolf/002_torpedo.wav",
+    "type": "blob",
+    "size": 534646
+  },
+  {
+    "path": "sequential",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "sequential/000_Tom Clap.wav",
+    "type": "blob",
+    "size": 11166
+  },
+  {
+    "path": "sequential/001_Tom Crash.wav",
+    "type": "blob",
+    "size": 108090
+  },
+  {
+    "path": "sequential/002_Tom Hat Closed.wav",
+    "type": "blob",
+    "size": 8098
+  },
+  {
+    "path": "sequential/003_Tom Kick.wav",
+    "type": "blob",
+    "size": 6006
+  },
+  {
+    "path": "sequential/004_Tom Openhat.wav",
+    "type": "blob",
+    "size": 36988
+  },
+  {
+    "path": "sequential/005_Tom Snare.wav",
+    "type": "blob",
+    "size": 11886
+  },
+  {
+    "path": "sequential/006_Tom Tom1.wav",
+    "type": "blob",
+    "size": 26284
+  },
+  {
+    "path": "sequential/007_Tom Tom2.wav",
+    "type": "blob",
+    "size": 26138
+  },
+  {
+    "path": "sf",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "sf/000_bass.wav",
+    "type": "blob",
+    "size": 36908
+  },
+  {
+    "path": "sf/001_1.wav",
+    "type": "blob",
+    "size": 38700
+  },
+  {
+    "path": "sf/002_10.wav",
+    "type": "blob",
+    "size": 19116
+  },
+  {
+    "path": "sf/003_11.wav",
+    "type": "blob",
+    "size": 9740
+  },
+  {
+    "path": "sf/004_12.wav",
+    "type": "blob",
+    "size": 6956
+  },
+  {
+    "path": "sf/005_13.wav",
+    "type": "blob",
+    "size": 30604
+  },
+  {
+    "path": "sf/006_14.wav",
+    "type": "blob",
+    "size": 24716
+  },
+  {
+    "path": "sf/007_15.wav",
+    "type": "blob",
+    "size": 27436
+  },
+  {
+    "path": "sf/008_16.wav",
+    "type": "blob",
+    "size": 16556
+  },
+  {
+    "path": "sf/009_17.wav",
+    "type": "blob",
+    "size": 77868
+  },
+  {
+    "path": "sf/010_2.wav",
+    "type": "blob",
+    "size": 38700
+  },
+  {
+    "path": "sf/011_3.wav",
+    "type": "blob",
+    "size": 33644
+  },
+  {
+    "path": "sf/012_4.wav",
+    "type": "blob",
+    "size": 11500
+  },
+  {
+    "path": "sf/013_5.wav",
+    "type": "blob",
+    "size": 16108
+  },
+  {
+    "path": "sf/014_6.wav",
+    "type": "blob",
+    "size": 10508
+  },
+  {
+    "path": "sf/015_7.wav",
+    "type": "blob",
+    "size": 1740
+  },
+  {
+    "path": "sf/016_8.wav",
+    "type": "blob",
+    "size": 17548
+  },
+  {
+    "path": "sf/017_9.wav",
+    "type": "blob",
+    "size": 22444
+  },
+  {
+    "path": "sheffield",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "sheffield/jakeinsects.wav",
+    "type": "blob",
+    "size": 3375684
+  },
+  {
+    "path": "short",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "short/sampleoftheday-gtt-fx-synth-009.wav",
+    "type": "blob",
+    "size": 13862
+  },
+  {
+    "path": "short/sampleoftheday-gtt-snare-drum-010.wav",
+    "type": "blob",
+    "size": 49648
+  },
+  {
+    "path": "short/sampleoftheday-gtt-snare-drum-012.wav",
+    "type": "blob",
+    "size": 37548
+  },
+  {
+    "path": "short/sampleoftheday-gtt-snare-drum-020.wav",
+    "type": "blob",
+    "size": 15340
+  },
+  {
+    "path": "short/sampleoftheday-gtt-snare-drum-021.wav",
+    "type": "blob",
+    "size": 11244
+  },
+  {
+    "path": "sid",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "sid/000_bas2.wav",
+    "type": "blob",
+    "size": 43564
+  },
+  {
+    "path": "sid/001_bas.wav",
+    "type": "blob",
+    "size": 9420
+  },
+  {
+    "path": "sid/002_basd.wav",
+    "type": "blob",
+    "size": 36908
+  },
+  {
+    "path": "sid/003_blipp01.wav",
+    "type": "blob",
+    "size": 15916
+  },
+  {
+    "path": "sid/004_blipp02.wav",
+    "type": "blob",
+    "size": 15916
+  },
+  {
+    "path": "sid/005_high.wav",
+    "type": "blob",
+    "size": 9708
+  },
+  {
+    "path": "sid/006_high2.wav",
+    "type": "blob",
+    "size": 9580
+  },
+  {
+    "path": "sid/007_hihat01.wav",
+    "type": "blob",
+    "size": 35308
+  },
+  {
+    "path": "sid/008_hihat02.wav",
+    "type": "blob",
+    "size": 4652
+  },
+  {
+    "path": "sid/009_lofidrums.wav",
+    "type": "blob",
+    "size": 17964
+  },
+  {
+    "path": "sid/010_sidsnares.wav",
+    "type": "blob",
+    "size": 29868
+  },
+  {
+    "path": "sid/011_tdrum.wav",
+    "type": "blob",
+    "size": 9388
+  },
+  {
+    "path": "simplesine",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "simplesine/000_sine.wav",
+    "type": "blob",
+    "size": 26504
+  },
+  {
+    "path": "simplesine/001_sine2.wav",
+    "type": "blob",
+    "size": 26504
+  },
+  {
+    "path": "simplesine/002_sine3.wav",
+    "type": "blob",
+    "size": 26504
+  },
+  {
+    "path": "simplesine/003_sine4.wav",
+    "type": "blob",
+    "size": 1070
+  },
+  {
+    "path": "simplesine/004_sine5.wav",
+    "type": "blob",
+    "size": 2096
+  },
+  {
+    "path": "simplesine/005_sine6.wav",
+    "type": "blob",
+    "size": 2248
+  },
+  {
+    "path": "sitar",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "sitar/000_d_maj_sitar_chorda.wav",
+    "type": "blob",
+    "size": 694712
+  },
+  {
+    "path": "sitar/001_d_maj_sitar_chordb.wav",
+    "type": "blob",
+    "size": 349418
+  },
+  {
+    "path": "sitar/002_d_maj_sitar_chordc.wav",
+    "type": "blob",
+    "size": 624394
+  },
+  {
+    "path": "sitar/003_d_maj_sitar_chordd.wav",
+    "type": "blob",
+    "size": 575578
+  },
+  {
+    "path": "sitar/004_d_maj_sitar_chorde.wav",
+    "type": "blob",
+    "size": 537614
+  },
+  {
+    "path": "sitar/005_d_minor_sitar_chorda.wav",
+    "type": "blob",
+    "size": 674456
+  },
+  {
+    "path": "sitar/006_d_minor_sitar_chordb.wav",
+    "type": "blob",
+    "size": 526664
+  },
+  {
+    "path": "sitar/007_d_minor_sitar_chordc.wav",
+    "type": "blob",
+    "size": 778028
+  },
+  {
+    "path": "sn",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "sn/ST0T0S0.wav",
+    "type": "blob",
+    "size": 15738
+  },
+  {
+    "path": "sn/ST0T0S3.wav",
+    "type": "blob",
+    "size": 13452
+  },
+  {
+    "path": "sn/ST0T0S7.wav",
+    "type": "blob",
+    "size": 13764
+  },
+  {
+    "path": "sn/ST0T0SA.wav",
+    "type": "blob",
+    "size": 13504
+  },
+  {
+    "path": "sn/ST0T3S3.wav",
+    "type": "blob",
+    "size": 15678
+  },
+  {
+    "path": "sn/ST0T3S7.wav",
+    "type": "blob",
+    "size": 15922
+  },
+  {
+    "path": "sn/ST0T3SA.wav",
+    "type": "blob",
+    "size": 16012
+  },
+  {
+    "path": "sn/ST0T7S3.wav",
+    "type": "blob",
+    "size": 21374
+  },
+  {
+    "path": "sn/ST0T7S7.wav",
+    "type": "blob",
+    "size": 22850
+  },
+  {
+    "path": "sn/ST0T7SA.wav",
+    "type": "blob",
+    "size": 23490
+  },
+  {
+    "path": "sn/ST0TAS3.wav",
+    "type": "blob",
+    "size": 22792
+  },
+  {
+    "path": "sn/ST0TAS7.wav",
+    "type": "blob",
+    "size": 25020
+  },
+  {
+    "path": "sn/ST0TASA.wav",
+    "type": "blob",
+    "size": 25592
+  },
+  {
+    "path": "sn/ST3T0S0.wav",
+    "type": "blob",
+    "size": 13982
+  },
+  {
+    "path": "sn/ST3T0S3.wav",
+    "type": "blob",
+    "size": 14124
+  },
+  {
+    "path": "sn/ST3T0S7.wav",
+    "type": "blob",
+    "size": 13472
+  },
+  {
+    "path": "sn/ST3T0SA.wav",
+    "type": "blob",
+    "size": 14730
+  },
+  {
+    "path": "sn/ST3T3S3.wav",
+    "type": "blob",
+    "size": 15544
+  },
+  {
+    "path": "sn/ST3T3S7.wav",
+    "type": "blob",
+    "size": 15930
+  },
+  {
+    "path": "sn/ST3T3SA.wav",
+    "type": "blob",
+    "size": 15902
+  },
+  {
+    "path": "sn/ST3T7S3.wav",
+    "type": "blob",
+    "size": 21118
+  },
+  {
+    "path": "sn/ST3T7S7.wav",
+    "type": "blob",
+    "size": 22696
+  },
+  {
+    "path": "sn/ST3T7SA.wav",
+    "type": "blob",
+    "size": 23488
+  },
+  {
+    "path": "sn/ST3TAS3.wav",
+    "type": "blob",
+    "size": 22846
+  },
+  {
+    "path": "sn/ST3TAS7.wav",
+    "type": "blob",
+    "size": 25148
+  },
+  {
+    "path": "sn/ST3TASA.wav",
+    "type": "blob",
+    "size": 25662
+  },
+  {
+    "path": "sn/ST7T0S0.wav",
+    "type": "blob",
+    "size": 14032
+  },
+  {
+    "path": "sn/ST7T0S3.wav",
+    "type": "blob",
+    "size": 13962
+  },
+  {
+    "path": "sn/ST7T0S7.wav",
+    "type": "blob",
+    "size": 14402
+  },
+  {
+    "path": "sn/ST7T0SA.wav",
+    "type": "blob",
+    "size": 14594
+  },
+  {
+    "path": "sn/ST7T3S3.wav",
+    "type": "blob",
+    "size": 15718
+  },
+  {
+    "path": "sn/ST7T3S7.wav",
+    "type": "blob",
+    "size": 15924
+  },
+  {
+    "path": "sn/ST7T3SA.wav",
+    "type": "blob",
+    "size": 16296
+  },
+  {
+    "path": "sn/ST7T7S3.wav",
+    "type": "blob",
+    "size": 20928
+  },
+  {
+    "path": "sn/ST7T7S7.wav",
+    "type": "blob",
+    "size": 23612
+  },
+  {
+    "path": "sn/ST7T7SA.wav",
+    "type": "blob",
+    "size": 23610
+  },
+  {
+    "path": "sn/ST7TAS3.wav",
+    "type": "blob",
+    "size": 22720
+  },
+  {
+    "path": "sn/ST7TAS7.wav",
+    "type": "blob",
+    "size": 25658
+  },
+  {
+    "path": "sn/ST7TASA.wav",
+    "type": "blob",
+    "size": 25854
+  },
+  {
+    "path": "sn/STAT0S0.wav",
+    "type": "blob",
+    "size": 14218
+  },
+  {
+    "path": "sn/STAT0S3.wav",
+    "type": "blob",
+    "size": 14594
+  },
+  {
+    "path": "sn/STAT0S7.wav",
+    "type": "blob",
+    "size": 14592
+  },
+  {
+    "path": "sn/STAT0SA.wav",
+    "type": "blob",
+    "size": 14264
+  },
+  {
+    "path": "sn/STAT3S3.wav",
+    "type": "blob",
+    "size": 16044
+  },
+  {
+    "path": "sn/STAT3S7.wav",
+    "type": "blob",
+    "size": 16492
+  },
+  {
+    "path": "sn/STAT3SA.wav",
+    "type": "blob",
+    "size": 16688
+  },
+  {
+    "path": "sn/STAT7S3.wav",
+    "type": "blob",
+    "size": 20800
+  },
+  {
+    "path": "sn/STAT7S7.wav",
+    "type": "blob",
+    "size": 23408
+  },
+  {
+    "path": "sn/STAT7SA.wav",
+    "type": "blob",
+    "size": 23360
+  },
+  {
+    "path": "sn/STATAS3.wav",
+    "type": "blob",
+    "size": 22908
+  },
+  {
+    "path": "sn/STATAS7.wav",
+    "type": "blob",
+    "size": 25978
+  },
+  {
+    "path": "sn/STATASA.wav",
+    "type": "blob",
+    "size": 25664
+  },
+  {
+    "path": "space",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "space/000_0.wav",
+    "type": "blob",
+    "size": 14100
+  },
+  {
+    "path": "space/001_1.wav",
+    "type": "blob",
+    "size": 26148
+  },
+  {
+    "path": "space/002_11.wav",
+    "type": "blob",
+    "size": 13296
+  },
+  {
+    "path": "space/003_12.wav",
+    "type": "blob",
+    "size": 107588
+  },
+  {
+    "path": "space/004_13.wav",
+    "type": "blob",
+    "size": 28078
+  },
+  {
+    "path": "space/005_14.wav",
+    "type": "blob",
+    "size": 6516
+  },
+  {
+    "path": "space/006_15.wav",
+    "type": "blob",
+    "size": 5844
+  },
+  {
+    "path": "space/007_16.wav",
+    "type": "blob",
+    "size": 6148
+  },
+  {
+    "path": "space/008_17.wav",
+    "type": "blob",
+    "size": 6588
+  },
+  {
+    "path": "space/009_18.wav",
+    "type": "blob",
+    "size": 96276
+  },
+  {
+    "path": "space/010_2.wav",
+    "type": "blob",
+    "size": 62068
+  },
+  {
+    "path": "space/011_3.wav",
+    "type": "blob",
+    "size": 30996
+  },
+  {
+    "path": "space/012_4.wav",
+    "type": "blob",
+    "size": 6516
+  },
+  {
+    "path": "space/013_5.wav",
+    "type": "blob",
+    "size": 5844
+  },
+  {
+    "path": "space/014_6.wav",
+    "type": "blob",
+    "size": 6148
+  },
+  {
+    "path": "space/015_7.wav",
+    "type": "blob",
+    "size": 6588
+  },
+  {
+    "path": "space/016_8.wav",
+    "type": "blob",
+    "size": 199028
+  },
+  {
+    "path": "space/017_9.wav",
+    "type": "blob",
+    "size": 43696
+  },
+  {
+    "path": "speakspell",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "speakspell/000_1.wav",
+    "type": "blob",
+    "size": 28576
+  },
+  {
+    "path": "speakspell/001_10.wav",
+    "type": "blob",
+    "size": 28576
+  },
+  {
+    "path": "speakspell/002_11.wav",
+    "type": "blob",
+    "size": 28576
+  },
+  {
+    "path": "speakspell/003_12.wav",
+    "type": "blob",
+    "size": 28576
+  },
+  {
+    "path": "speakspell/004_2.wav",
+    "type": "blob",
+    "size": 28576
+  },
+  {
+    "path": "speakspell/005_3.wav",
+    "type": "blob",
+    "size": 28576
+  },
+  {
+    "path": "speakspell/006_4.wav",
+    "type": "blob",
+    "size": 28576
+  },
+  {
+    "path": "speakspell/007_5.wav",
+    "type": "blob",
+    "size": 28576
+  },
+  {
+    "path": "speakspell/008_6.wav",
+    "type": "blob",
+    "size": 28576
+  },
+  {
+    "path": "speakspell/009_7.wav",
+    "type": "blob",
+    "size": 28576
+  },
+  {
+    "path": "speakspell/010_8.wav",
+    "type": "blob",
+    "size": 28576
+  },
+  {
+    "path": "speakspell/011_9.wav",
+    "type": "blob",
+    "size": 28576
+  },
+  {
+    "path": "speech",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "speech/000_Sound10.wav",
+    "type": "blob",
+    "size": 23878
+  },
+  {
+    "path": "speech/001_Sound4.wav",
+    "type": "blob",
+    "size": 29958
+  },
+  {
+    "path": "speech/002_Sound5.wav",
+    "type": "blob",
+    "size": 19270
+  },
+  {
+    "path": "speech/003_Sound6.wav",
+    "type": "blob",
+    "size": 16518
+  },
+  {
+    "path": "speech/004_Sound7.wav",
+    "type": "blob",
+    "size": 4102
+  },
+  {
+    "path": "speech/005_Sound8.wav",
+    "type": "blob",
+    "size": 39688
+  },
+  {
+    "path": "speech/006_Sound9.wav",
+    "type": "blob",
+    "size": 24710
+  },
+  {
+    "path": "speechless",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "speechless/000_a.wav",
+    "type": "blob",
+    "size": 16654
+  },
+  {
+    "path": "speechless/001_pe.wav",
+    "type": "blob",
+    "size": 18722
+  },
+  {
+    "path": "speechless/002_pepepe.wav",
+    "type": "blob",
+    "size": 33980
+  },
+  {
+    "path": "speechless/003_pepepepepe.wav",
+    "type": "blob",
+    "size": 42814
+  },
+  {
+    "path": "speechless/004_pepper.wav",
+    "type": "blob",
+    "size": 28072
+  },
+  {
+    "path": "speechless/005_pepperpot.wav",
+    "type": "blob",
+    "size": 38352
+  },
+  {
+    "path": "speechless/006_pick.wav",
+    "type": "blob",
+    "size": 26240
+  },
+  {
+    "path": "speechless/007_pickle.wav",
+    "type": "blob",
+    "size": 28484
+  },
+  {
+    "path": "speechless/008_po.wav",
+    "type": "blob",
+    "size": 25810
+  },
+  {
+    "path": "speechless/009_te.wav",
+    "type": "blob",
+    "size": 23616
+  },
+  {
+    "path": "speedupdown",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "speedupdown/000_Sound20.wav",
+    "type": "blob",
+    "size": 16516
+  },
+  {
+    "path": "speedupdown/001_Sound21.wav",
+    "type": "blob",
+    "size": 16516
+  },
+  {
+    "path": "speedupdown/002_Sound22.wav",
+    "type": "blob",
+    "size": 12420
+  },
+  {
+    "path": "speedupdown/003_Sound23.wav",
+    "type": "blob",
+    "size": 12420
+  },
+  {
+    "path": "speedupdown/004_Sound24.wav",
+    "type": "blob",
+    "size": 12420
+  },
+  {
+    "path": "speedupdown/005_Sound25.wav",
+    "type": "blob",
+    "size": 16516
+  },
+  {
+    "path": "speedupdown/006_Sound26.wav",
+    "type": "blob",
+    "size": 11622
+  },
+  {
+    "path": "speedupdown/007_Sound27.wav",
+    "type": "blob",
+    "size": 8324
+  },
+  {
+    "path": "speedupdown/008_Sound28.wav",
+    "type": "blob",
+    "size": 1350
+  },
+  {
+    "path": "stab",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "stab/000_stab1.wav",
+    "type": "blob",
+    "size": 72554
+  },
+  {
+    "path": "stab/001_stab10.wav",
+    "type": "blob",
+    "size": 46162
+  },
+  {
+    "path": "stab/002_stab11.wav",
+    "type": "blob",
+    "size": 46162
+  },
+  {
+    "path": "stab/003_stab12.wav",
+    "type": "blob",
+    "size": 47600
+  },
+  {
+    "path": "stab/004_stab13.wav",
+    "type": "blob",
+    "size": 48586
+  },
+  {
+    "path": "stab/005_stab14.wav",
+    "type": "blob",
+    "size": 48006
+  },
+  {
+    "path": "stab/006_stab15.wav",
+    "type": "blob",
+    "size": 49818
+  },
+  {
+    "path": "stab/007_stab16.wav",
+    "type": "blob",
+    "size": 51696
+  },
+  {
+    "path": "stab/008_stab17.wav",
+    "type": "blob",
+    "size": 51696
+  },
+  {
+    "path": "stab/009_stab18.wav",
+    "type": "blob",
+    "size": 59130
+  },
+  {
+    "path": "stab/010_stab19.wav",
+    "type": "blob",
+    "size": 58634
+  },
+  {
+    "path": "stab/011_stab2.wav",
+    "type": "blob",
+    "size": 78332
+  },
+  {
+    "path": "stab/012_stab20.wav",
+    "type": "blob",
+    "size": 75352
+  },
+  {
+    "path": "stab/013_stab21.wav",
+    "type": "blob",
+    "size": 59092
+  },
+  {
+    "path": "stab/014_stab22.wav",
+    "type": "blob",
+    "size": 47872
+  },
+  {
+    "path": "stab/015_stab23.wav",
+    "type": "blob",
+    "size": 46470
+  },
+  {
+    "path": "stab/016_stab3.wav",
+    "type": "blob",
+    "size": 82062
+  },
+  {
+    "path": "stab/017_stab4.wav",
+    "type": "blob",
+    "size": 87084
+  },
+  {
+    "path": "stab/018_stab5.wav",
+    "type": "blob",
+    "size": 68918
+  },
+  {
+    "path": "stab/019_stab6.wav",
+    "type": "blob",
+    "size": 79162
+  },
+  {
+    "path": "stab/020_stab7.wav",
+    "type": "blob",
+    "size": 66524
+  },
+  {
+    "path": "stab/021_stab8.wav",
+    "type": "blob",
+    "size": 66534
+  },
+  {
+    "path": "stab/022_stab9.wav",
+    "type": "blob",
+    "size": 56836
+  },
+  {
+    "path": "stomp",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "stomp/000_0.wav",
+    "type": "blob",
+    "size": 8866
+  },
+  {
+    "path": "stomp/001_0_2.wav",
+    "type": "blob",
+    "size": 8866
+  },
+  {
+    "path": "stomp/002_1.wav",
+    "type": "blob",
+    "size": 8866
+  },
+  {
+    "path": "stomp/003_2.wav",
+    "type": "blob",
+    "size": 8866
+  },
+  {
+    "path": "stomp/004_3.wav",
+    "type": "blob",
+    "size": 8936
+  },
+  {
+    "path": "stomp/005_5.wav",
+    "type": "blob",
+    "size": 8866
+  },
+  {
+    "path": "stomp/006_6.wav",
+    "type": "blob",
+    "size": 8866
+  },
+  {
+    "path": "stomp/007_7.wav",
+    "type": "blob",
+    "size": 8866
+  },
+  {
+    "path": "stomp/008_8.wav",
+    "type": "blob",
+    "size": 8866
+  },
+  {
+    "path": "stomp/009_9.wav",
+    "type": "blob",
+    "size": 850
+  },
+  {
+    "path": "strudel.json",
+    "type": "blob",
+    "size": 47637
+  },
+  {
+    "path": "subroc3d",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "subroc3d/000_01.wav",
+    "type": "blob",
+    "size": 87478
+  },
+  {
+    "path": "subroc3d/001_02.wav",
+    "type": "blob",
+    "size": 81530
+  },
+  {
+    "path": "subroc3d/002_03.wav",
+    "type": "blob",
+    "size": 89124
+  },
+  {
+    "path": "subroc3d/003_04.wav",
+    "type": "blob",
+    "size": 87454
+  },
+  {
+    "path": "subroc3d/004_05.wav",
+    "type": "blob",
+    "size": 87962
+  },
+  {
+    "path": "subroc3d/005_06.wav",
+    "type": "blob",
+    "size": 70338
+  },
+  {
+    "path": "subroc3d/006_07.wav",
+    "type": "blob",
+    "size": 85936
+  },
+  {
+    "path": "subroc3d/007_08.wav",
+    "type": "blob",
+    "size": 34940
+  },
+  {
+    "path": "subroc3d/008_09.wav",
+    "type": "blob",
+    "size": 820214
+  },
+  {
+    "path": "subroc3d/009_11.wav",
+    "type": "blob",
+    "size": 6496
+  },
+  {
+    "path": "subroc3d/010_12.wav",
+    "type": "blob",
+    "size": 13964
+  },
+  {
+    "path": "sugar",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "sugar/000_bark.wav",
+    "type": "blob",
+    "size": 444668
+  },
+  {
+    "path": "sugar/001_crab.wav",
+    "type": "blob",
+    "size": 189434
+  },
+  {
+    "path": "sundance",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "sundance/000_bong.wav",
+    "type": "blob",
+    "size": 118646
+  },
+  {
+    "path": "sundance/001_explsion.wav",
+    "type": "blob",
+    "size": 293014
+  },
+  {
+    "path": "sundance/002_hatch.wav",
+    "type": "blob",
+    "size": 50182
+  },
+  {
+    "path": "sundance/003_ping1.wav",
+    "type": "blob",
+    "size": 39716
+  },
+  {
+    "path": "sundance/004_ping2.wav",
+    "type": "blob",
+    "size": 33986
+  },
+  {
+    "path": "sundance/005_whoosh.wav",
+    "type": "blob",
+    "size": 93046
+  },
+  {
+    "path": "tabla",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "tabla/000_bass_flick1.wav",
+    "type": "blob",
+    "size": 244972
+  },
+  {
+    "path": "tabla/001_bass_flick2.wav",
+    "type": "blob",
+    "size": 431780
+  },
+  {
+    "path": "tabla/002_bass_lick1.wav",
+    "type": "blob",
+    "size": 538264
+  },
+  {
+    "path": "tabla/003_dead_hit1.wav",
+    "type": "blob",
+    "size": 30304
+  },
+  {
+    "path": "tabla/004_dead_hit2.wav",
+    "type": "blob",
+    "size": 198108
+  },
+  {
+    "path": "tabla/005_dead_hit3.wav",
+    "type": "blob",
+    "size": 160332
+  },
+  {
+    "path": "tabla/006_d_sharp_hit.wav",
+    "type": "blob",
+    "size": 446484
+  },
+  {
+    "path": "tabla/007_hi_flick1.wav",
+    "type": "blob",
+    "size": 446324
+  },
+  {
+    "path": "tabla/008_hi_flick2.wav",
+    "type": "blob",
+    "size": 196648
+  },
+  {
+    "path": "tabla/009_hi_hit1.wav",
+    "type": "blob",
+    "size": 28200
+  },
+  {
+    "path": "tabla/010_hi_hit10.wav",
+    "type": "blob",
+    "size": 79564
+  },
+  {
+    "path": "tabla/011_hi_hit2.wav",
+    "type": "blob",
+    "size": 32180
+  },
+  {
+    "path": "tabla/012_hi_hit3.wav",
+    "type": "blob",
+    "size": 427044
+  },
+  {
+    "path": "tabla/013_hi_hit4.wav",
+    "type": "blob",
+    "size": 95784
+  },
+  {
+    "path": "tabla/014_hi_hit5.wav",
+    "type": "blob",
+    "size": 318192
+  },
+  {
+    "path": "tabla/015_hi_hit6.wav",
+    "type": "blob",
+    "size": 104240
+  },
+  {
+    "path": "tabla/016_hi_hit7.wav",
+    "type": "blob",
+    "size": 292324
+  },
+  {
+    "path": "tabla/017_hi_hit8.wav",
+    "type": "blob",
+    "size": 289516
+  },
+  {
+    "path": "tabla/018_hi_hit9.wav",
+    "type": "blob",
+    "size": 32168
+  },
+  {
+    "path": "tabla/019_lower1_hit.wav",
+    "type": "blob",
+    "size": 423900
+  },
+  {
+    "path": "tabla/020_lower2_hit.wav",
+    "type": "blob",
+    "size": 375632
+  },
+  {
+    "path": "tabla/021_lower3_hit.wav",
+    "type": "blob",
+    "size": 348100
+  },
+  {
+    "path": "tabla/022_lower4_hit.wav",
+    "type": "blob",
+    "size": 242248
+  },
+  {
+    "path": "tabla/023_lower5_hit.wav",
+    "type": "blob",
+    "size": 280176
+  },
+  {
+    "path": "tabla/024_lower6_hit.wav",
+    "type": "blob",
+    "size": 29240
+  },
+  {
+    "path": "tabla/025_lower_hits_descending.wav",
+    "type": "blob",
+    "size": 790236
+  },
+  {
+    "path": "tabla2",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "tabla2/23645_loofa_A_001.wav",
+    "type": "blob",
+    "size": 208410
+  },
+  {
+    "path": "tabla2/23646_loofa_A_002.wav",
+    "type": "blob",
+    "size": 112430
+  },
+  {
+    "path": "tabla2/23647_loofa_A_003.wav",
+    "type": "blob",
+    "size": 132158
+  },
+  {
+    "path": "tabla2/23648_loofa_A_004.wav",
+    "type": "blob",
+    "size": 156736
+  },
+  {
+    "path": "tabla2/23649_loofa_A_005.wav",
+    "type": "blob",
+    "size": 221640
+  },
+  {
+    "path": "tabla2/23650_loofa_A_006.wav",
+    "type": "blob",
+    "size": 194720
+  },
+  {
+    "path": "tabla2/23651_loofa_A_007.wav",
+    "type": "blob",
+    "size": 218698
+  },
+  {
+    "path": "tabla2/23652_loofa_A_008.wav",
+    "type": "blob",
+    "size": 281296
+  },
+  {
+    "path": "tabla2/23653_loofa_A_009.wav",
+    "type": "blob",
+    "size": 85444
+  },
+  {
+    "path": "tabla2/23654_loofa_A_010.wav",
+    "type": "blob",
+    "size": 95694
+  },
+  {
+    "path": "tabla2/23655_loofa_A_011.wav",
+    "type": "blob",
+    "size": 90026
+  },
+  {
+    "path": "tabla2/23656_loofa_A_012.wav",
+    "type": "blob",
+    "size": 111136
+  },
+  {
+    "path": "tabla2/23657_loofa_A_013.wav",
+    "type": "blob",
+    "size": 27334
+  },
+  {
+    "path": "tabla2/23658_loofa_A_014.wav",
+    "type": "blob",
+    "size": 73726
+  },
+  {
+    "path": "tabla2/23659_loofa_A_015.wav",
+    "type": "blob",
+    "size": 96644
+  },
+  {
+    "path": "tabla2/23660_loofa_A_016.wav",
+    "type": "blob",
+    "size": 31356
+  },
+  {
+    "path": "tabla2/23661_loofa_A_017.wav",
+    "type": "blob",
+    "size": 97984
+  },
+  {
+    "path": "tabla2/23662_loofa_A_018.wav",
+    "type": "blob",
+    "size": 94700
+  },
+  {
+    "path": "tabla2/23663_loofa_A_019.wav",
+    "type": "blob",
+    "size": 246630
+  },
+  {
+    "path": "tabla2/23664_loofa_A_020.wav",
+    "type": "blob",
+    "size": 306286
+  },
+  {
+    "path": "tabla2/23665_loofa_A_021.wav",
+    "type": "blob",
+    "size": 204000
+  },
+  {
+    "path": "tabla2/23666_loofa_A_022.wav",
+    "type": "blob",
+    "size": 157414
+  },
+  {
+    "path": "tabla2/23667_loofa_A_023.wav",
+    "type": "blob",
+    "size": 166394
+  },
+  {
+    "path": "tabla2/23668_loofa_A_024.wav",
+    "type": "blob",
+    "size": 103712
+  },
+  {
+    "path": "tabla2/23669_loofa_A_025.wav",
+    "type": "blob",
+    "size": 112618
+  },
+  {
+    "path": "tabla2/23670_loofa_A_026.wav",
+    "type": "blob",
+    "size": 102328
+  },
+  {
+    "path": "tabla2/23671_loofa_A_027.wav",
+    "type": "blob",
+    "size": 99388
+  },
+  {
+    "path": "tabla2/23672_loofa_A_028.wav",
+    "type": "blob",
+    "size": 72928
+  },
+  {
+    "path": "tabla2/23673_loofa_bahia001.wav",
+    "type": "blob",
+    "size": 437786
+  },
+  {
+    "path": "tabla2/23674_loofa_bahia002.wav",
+    "type": "blob",
+    "size": 445154
+  },
+  {
+    "path": "tabla2/23675_loofa_bahia003.wav",
+    "type": "blob",
+    "size": 80188
+  },
+  {
+    "path": "tabla2/23676_loofa_bahia004.wav",
+    "type": "blob",
+    "size": 102912
+  },
+  {
+    "path": "tabla2/23677_loofa_bahia005.wav",
+    "type": "blob",
+    "size": 89886
+  },
+  {
+    "path": "tabla2/23678_loofa_bahia006.wav",
+    "type": "blob",
+    "size": 69050
+  },
+  {
+    "path": "tabla2/23679_loofa_bahia007.wav",
+    "type": "blob",
+    "size": 341006
+  },
+  {
+    "path": "tabla2/23680_loofa_bahia008.wav",
+    "type": "blob",
+    "size": 68842
+  },
+  {
+    "path": "tabla2/23681_loofa_bahia009.wav",
+    "type": "blob",
+    "size": 253018
+  },
+  {
+    "path": "tabla2/23682_loofa_bahia010.wav",
+    "type": "blob",
+    "size": 38468
+  },
+  {
+    "path": "tabla2/23683_loofa_bahia011.wav",
+    "type": "blob",
+    "size": 68138
+  },
+  {
+    "path": "tabla2/23684_loofa_bahia012.wav",
+    "type": "blob",
+    "size": 326564
+  },
+  {
+    "path": "tabla2/23685_loofa_bahia013.wav",
+    "type": "blob",
+    "size": 20916
+  },
+  {
+    "path": "tabla2/23686_loofa_bahia014.wav",
+    "type": "blob",
+    "size": 388566
+  },
+  {
+    "path": "tabla2/23687_loofa_bahia015.wav",
+    "type": "blob",
+    "size": 68068
+  },
+  {
+    "path": "tabla2/23688_loofa_bahia016.wav",
+    "type": "blob",
+    "size": 68126
+  },
+  {
+    "path": "tabla2/23689_loofa_bahia017.wav",
+    "type": "blob",
+    "size": 53556
+  },
+  {
+    "path": "tabla2/23690_loofa_bahia018.wav",
+    "type": "blob",
+    "size": 61458
+  },
+  {
+    "path": "tabla2/__details_and_attribution.txt",
+    "type": "blob",
+    "size": 16272
+  },
+  {
+    "path": "tabla2/__license.txt",
+    "type": "blob",
+    "size": 304
+  },
+  {
+    "path": "tablex",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "tablex/0.wav",
+    "type": "blob",
+    "size": 45958
+  },
+  {
+    "path": "tablex/1.wav",
+    "type": "blob",
+    "size": 90904
+  },
+  {
+    "path": "tablex/fuckable.wav",
+    "type": "blob",
+    "size": 59082
+  },
+  {
+    "path": "tacscan",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "tacscan/000_01.wav",
+    "type": "blob",
+    "size": 504902
+  },
+  {
+    "path": "tacscan/001_02.wav",
+    "type": "blob",
+    "size": 110206
+  },
+  {
+    "path": "tacscan/002_03.wav",
+    "type": "blob",
+    "size": 132396
+  },
+  {
+    "path": "tacscan/003_1up.wav",
+    "type": "blob",
+    "size": 91704
+  },
+  {
+    "path": "tacscan/004_credit.wav",
+    "type": "blob",
+    "size": 91704
+  },
+  {
+    "path": "tacscan/005_eexpl.wav",
+    "type": "blob",
+    "size": 75062
+  },
+  {
+    "path": "tacscan/006_eshot.wav",
+    "type": "blob",
+    "size": 34104
+  },
+  {
+    "path": "tacscan/007_flight1.wav",
+    "type": "blob",
+    "size": 210454
+  },
+  {
+    "path": "tacscan/008_flight2.wav",
+    "type": "blob",
+    "size": 184426
+  },
+  {
+    "path": "tacscan/009_flight3.wav",
+    "type": "blob",
+    "size": 218336
+  },
+  {
+    "path": "tacscan/010_flight4.wav",
+    "type": "blob",
+    "size": 179336
+  },
+  {
+    "path": "tacscan/011_flight5.wav",
+    "type": "blob",
+    "size": 202470
+  },
+  {
+    "path": "tacscan/012_formatn.wav",
+    "type": "blob",
+    "size": 150464
+  },
+  {
+    "path": "tacscan/013_pexpl.wav",
+    "type": "blob",
+    "size": 33574
+  },
+  {
+    "path": "tacscan/014_plaser.wav",
+    "type": "blob",
+    "size": 49544
+  },
+  {
+    "path": "tacscan/015_pship.wav",
+    "type": "blob",
+    "size": 48598
+  },
+  {
+    "path": "tacscan/016_sexpl.wav",
+    "type": "blob",
+    "size": 167538
+  },
+  {
+    "path": "tacscan/017_slaser.wav",
+    "type": "blob",
+    "size": 199968
+  },
+  {
+    "path": "tacscan/018_sthrust.wav",
+    "type": "blob",
+    "size": 400190
+  },
+  {
+    "path": "tacscan/019_tunnelh.wav",
+    "type": "blob",
+    "size": 15792
+  },
+  {
+    "path": "tacscan/020_tunnelw.wav",
+    "type": "blob",
+    "size": 43108
+  },
+  {
+    "path": "tacscan/021_warp.wav",
+    "type": "blob",
+    "size": 492716
+  },
+  {
+    "path": "tech",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "tech/tn1closedhh.wav",
+    "type": "blob",
+    "size": 8896
+  },
+  {
+    "path": "tech/tn1crash.wav",
+    "type": "blob",
+    "size": 109696
+  },
+  {
+    "path": "tech/tn1hit1.wav",
+    "type": "blob",
+    "size": 56576
+  },
+  {
+    "path": "tech/tn1hit2.wav",
+    "type": "blob",
+    "size": 316552
+  },
+  {
+    "path": "tech/tn1hit3.wav",
+    "type": "blob",
+    "size": 18852
+  },
+  {
+    "path": "tech/tn1kick1.wav",
+    "type": "blob",
+    "size": 40500
+  },
+  {
+    "path": "tech/tn1kick2.wav",
+    "type": "blob",
+    "size": 69516
+  },
+  {
+    "path": "tech/tn1openhh.wav",
+    "type": "blob",
+    "size": 57472
+  },
+  {
+    "path": "tech/tn1perc1.wav",
+    "type": "blob",
+    "size": 59904
+  },
+  {
+    "path": "tech/tn1perc2.wav",
+    "type": "blob",
+    "size": 125824
+  },
+  {
+    "path": "tech/tn1ride.wav",
+    "type": "blob",
+    "size": 107904
+  },
+  {
+    "path": "tech/tn1snare1.wav",
+    "type": "blob",
+    "size": 138204
+  },
+  {
+    "path": "tech/tn1snare2.wav",
+    "type": "blob",
+    "size": 10892
+  },
+  {
+    "path": "techno",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "techno/000_0.wav",
+    "type": "blob",
+    "size": 20910
+  },
+  {
+    "path": "techno/001_1.wav",
+    "type": "blob",
+    "size": 36908
+  },
+  {
+    "path": "techno/002_3.wav",
+    "type": "blob",
+    "size": 8060
+  },
+  {
+    "path": "techno/003_4.wav",
+    "type": "blob",
+    "size": 5764
+  },
+  {
+    "path": "techno/004_5.wav",
+    "type": "blob",
+    "size": 29200
+  },
+  {
+    "path": "techno/005_6.wav",
+    "type": "blob",
+    "size": 70246
+  },
+  {
+    "path": "techno/006_7.wav",
+    "type": "blob",
+    "size": 36908
+  },
+  {
+    "path": "tink",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "tink/000_tink1.wav",
+    "type": "blob",
+    "size": 95908
+  },
+  {
+    "path": "tink/001_tink2.wav",
+    "type": "blob",
+    "size": 90068
+  },
+  {
+    "path": "tink/002_tink3.wav",
+    "type": "blob",
+    "size": 111648
+  },
+  {
+    "path": "tink/003_tink4.wav",
+    "type": "blob",
+    "size": 97700
+  },
+  {
+    "path": "tink/004_tink5.wav",
+    "type": "blob",
+    "size": 98734
+  },
+  {
+    "path": "tok",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "tok/000_0.wav",
+    "type": "blob",
+    "size": 19856
+  },
+  {
+    "path": "tok/001_1.wav",
+    "type": "blob",
+    "size": 27372
+  },
+  {
+    "path": "tok/002_2.wav",
+    "type": "blob",
+    "size": 27136
+  },
+  {
+    "path": "tok/003_3.wav",
+    "type": "blob",
+    "size": 25932
+  },
+  {
+    "path": "toys",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "toys/000_ClassicalMusic.wav",
+    "type": "blob",
+    "size": 429194
+  },
+  {
+    "path": "toys/001_ClassicalMusic-Notes.wav",
+    "type": "blob",
+    "size": 161626
+  },
+  {
+    "path": "toys/002_ClassicalMusic-Words.wav",
+    "type": "blob",
+    "size": 267722
+  },
+  {
+    "path": "toys/003_Colors.wav",
+    "type": "blob",
+    "size": 345738
+  },
+  {
+    "path": "toys/004_Colors-Notes.wav",
+    "type": "blob",
+    "size": 181354
+  },
+  {
+    "path": "toys/005_Colors-Words.wav",
+    "type": "blob",
+    "size": 164522
+  },
+  {
+    "path": "toys/006_MusicalMedley.wav",
+    "type": "blob",
+    "size": 424074
+  },
+  {
+    "path": "toys/007_MusicalMedley-Notes.wav",
+    "type": "blob",
+    "size": 172042
+  },
+  {
+    "path": "toys/008_MusicalMedley-Words.wav",
+    "type": "blob",
+    "size": 252170
+  },
+  {
+    "path": "toys/009_Numbers.wav",
+    "type": "blob",
+    "size": 358026
+  },
+  {
+    "path": "toys/010_Numbers-Notes.wav",
+    "type": "blob",
+    "size": 151178
+  },
+  {
+    "path": "toys/011_Numbers-Words.wav",
+    "type": "blob",
+    "size": 206986
+  },
+  {
+    "path": "toys/012_ToyNotes.wav",
+    "type": "blob",
+    "size": 605806
+  },
+  {
+    "path": "trump",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "trump/000_tightstabb.wav",
+    "type": "blob",
+    "size": 24596
+  },
+  {
+    "path": "trump/001_tightstabblowoct.wav",
+    "type": "blob",
+    "size": 26132
+  },
+  {
+    "path": "trump/002_tightstabe.wav",
+    "type": "blob",
+    "size": 39122
+  },
+  {
+    "path": "trump/003_tightstabg.wav",
+    "type": "blob",
+    "size": 21524
+  },
+  {
+    "path": "trump/004_trumpfunk107a.wav",
+    "type": "blob",
+    "size": 278678
+  },
+  {
+    "path": "trump/005_trumpstabb.wav",
+    "type": "blob",
+    "size": 52820
+  },
+  {
+    "path": "trump/006_trumpstabblowoct.wav",
+    "type": "blob",
+    "size": 62356
+  },
+  {
+    "path": "trump/007_trumpstabe.wav",
+    "type": "blob",
+    "size": 46868
+  },
+  {
+    "path": "trump/008_trumpstabg.wav",
+    "type": "blob",
+    "size": 45332
+  },
+  {
+    "path": "trump/009_trumpstabschord.wav",
+    "type": "blob",
+    "size": 100500
+  },
+  {
+    "path": "trump/010_trumptightstabschord.wav",
+    "type": "blob",
+    "size": 72036
+  },
+  {
+    "path": "ul",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "ul/000_beep.wav",
+    "type": "blob",
+    "size": 79478
+  },
+  {
+    "path": "ul/001_little-whip.wav",
+    "type": "blob",
+    "size": 17738
+  },
+  {
+    "path": "ul/002_ulhh.wav",
+    "type": "blob",
+    "size": 25872
+  },
+  {
+    "path": "ul/003_ulkick.wav",
+    "type": "blob",
+    "size": 79478
+  },
+  {
+    "path": "ul/004_ulnoisey-kick.wav",
+    "type": "blob",
+    "size": 26558
+  },
+  {
+    "path": "ul/005_ulnoisey-run.wav",
+    "type": "blob",
+    "size": 53018
+  },
+  {
+    "path": "ul/006_ulnoisey-snare.wav",
+    "type": "blob",
+    "size": 26558
+  },
+  {
+    "path": "ul/007_ulsnare.wav",
+    "type": "blob",
+    "size": 26558
+  },
+  {
+    "path": "ul/008_ulsnare-reverb.wav",
+    "type": "blob",
+    "size": 211778
+  },
+  {
+    "path": "ul/009_ulsnare-reverse.wav",
+    "type": "blob",
+    "size": 26558
+  },
+  {
+    "path": "ulgab",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "ulgab/gab1.wav",
+    "type": "blob",
+    "size": 79478
+  },
+  {
+    "path": "ulgab/gab2.wav",
+    "type": "blob",
+    "size": 26558
+  },
+  {
+    "path": "ulgab/gab3.wav",
+    "type": "blob",
+    "size": 26558
+  },
+  {
+    "path": "ulgab/gab4.wav",
+    "type": "blob",
+    "size": 53018
+  },
+  {
+    "path": "ulgab/gab5.wav",
+    "type": "blob",
+    "size": 53018
+  },
+  {
+    "path": "uxay",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "uxay/000_bar.wav",
+    "type": "blob",
+    "size": 40124
+  },
+  {
+    "path": "uxay/001_erk.wav",
+    "type": "blob",
+    "size": 48044
+  },
+  {
+    "path": "uxay/002_foo.wav",
+    "type": "blob",
+    "size": 103244
+  },
+  {
+    "path": "v",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "v/000_b_blipp01.wav",
+    "type": "blob",
+    "size": 22728
+  },
+  {
+    "path": "v/001_v_blipp02.wav",
+    "type": "blob",
+    "size": 11948
+  },
+  {
+    "path": "v/002_v_perc3.wav",
+    "type": "blob",
+    "size": 70246
+  },
+  {
+    "path": "v/003_v_perc5.wav",
+    "type": "blob",
+    "size": 25590
+  },
+  {
+    "path": "v/004_v_snare01.wav",
+    "type": "blob",
+    "size": 40684
+  },
+  {
+    "path": "v/005_v_snare02.wav",
+    "type": "blob",
+    "size": 13484
+  },
+  {
+    "path": "voodoo",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "voodoo/000_VoodooBass.wav",
+    "type": "blob",
+    "size": 13480
+  },
+  {
+    "path": "voodoo/001_VoodooHihat.wav",
+    "type": "blob",
+    "size": 10924
+  },
+  {
+    "path": "voodoo/002_VoodooRim.wav",
+    "type": "blob",
+    "size": 2172
+  },
+  {
+    "path": "voodoo/003_VoodooSnare.wav",
+    "type": "blob",
+    "size": 11100
+  },
+  {
+    "path": "voodoo/004_VoodooTom.wav",
+    "type": "blob",
+    "size": 11308
+  },
+  {
+    "path": "voodoo/ReadMe.txt",
+    "type": "blob",
+    "size": 3680
+  },
+  {
+    "path": "wind",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "wind/000_wind1.wav",
+    "type": "blob",
+    "size": 76010
+  },
+  {
+    "path": "wind/001_wind10.wav",
+    "type": "blob",
+    "size": 105218
+  },
+  {
+    "path": "wind/002_wind2.wav",
+    "type": "blob",
+    "size": 101102
+  },
+  {
+    "path": "wind/003_wind3.wav",
+    "type": "blob",
+    "size": 86808
+  },
+  {
+    "path": "wind/004_wind4.wav",
+    "type": "blob",
+    "size": 100074
+  },
+  {
+    "path": "wind/005_wind5.wav",
+    "type": "blob",
+    "size": 98678
+  },
+  {
+    "path": "wind/006_wind6.wav",
+    "type": "blob",
+    "size": 89346
+  },
+  {
+    "path": "wind/007_wind7.wav",
+    "type": "blob",
+    "size": 98126
+  },
+  {
+    "path": "wind/008_wind8.wav",
+    "type": "blob",
+    "size": 95860
+  },
+  {
+    "path": "wind/009_wind9.wav",
+    "type": "blob",
+    "size": 93490
+  },
+  {
+    "path": "wobble",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "wobble/000_0.wav",
+    "type": "blob",
+    "size": 33312
+  },
+  {
+    "path": "world",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "world/bd.wav",
+    "type": "blob",
+    "size": 25108
+  },
+  {
+    "path": "world/gabbakick.wav",
+    "type": "blob",
+    "size": 11068
+  },
+  {
+    "path": "world/sn.wav",
+    "type": "blob",
+    "size": 13452
+  },
+  {
+    "path": "xmas",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "xmas/170535__cognito-perceptu__merry-christmas.wav",
+    "type": "blob",
+    "size": 272128
+  },
+  {
+    "path": "yeah",
+    "type": "tree",
+    "size": 0
+  },
+  {
+    "path": "yeah/000_Sound0.wav",
+    "type": "blob",
+    "size": 1520
+  },
+  {
+    "path": "yeah/001_Sound10.wav",
+    "type": "blob",
+    "size": 1892
+  },
+  {
+    "path": "yeah/002_Sound11.wav",
+    "type": "blob",
+    "size": 1932
+  },
+  {
+    "path": "yeah/003_Sound13.wav",
+    "type": "blob",
+    "size": 1114
+  },
+  {
+    "path": "yeah/004_Sound14.wav",
+    "type": "blob",
+    "size": 1498
+  },
+  {
+    "path": "yeah/005_Sound15.wav",
+    "type": "blob",
+    "size": 1776
+  },
+  {
+    "path": "yeah/006_Sound17.wav",
+    "type": "blob",
+    "size": 1444
+  },
+  {
+    "path": "yeah/007_Sound18.wav",
+    "type": "blob",
+    "size": 1420
+  },
+  {
+    "path": "yeah/008_Sound19.wav",
+    "type": "blob",
+    "size": 1814
+  },
+  {
+    "path": "yeah/009_Sound20.wav",
+    "type": "blob",
+    "size": 1456
+  },
+  {
+    "path": "yeah/010_Sound21.wav",
+    "type": "blob",
+    "size": 1782
+  },
+  {
+    "path": "yeah/011_Sound22.wav",
+    "type": "blob",
+    "size": 1384
+  },
+  {
+    "path": "yeah/012_Sound23.wav",
+    "type": "blob",
+    "size": 1444
+  },
+  {
+    "path": "yeah/013_Sound24.wav",
+    "type": "blob",
+    "size": 1956
+  },
+  {
+    "path": "yeah/014_Sound25.wav",
+    "type": "blob",
+    "size": 1960
+  },
+  {
+    "path": "yeah/015_Sound26.wav",
+    "type": "blob",
+    "size": 1472
+  },
+  {
+    "path": "yeah/016_Sound27.wav",
+    "type": "blob",
+    "size": 1172
+  },
+  {
+    "path": "yeah/017_Sound28.wav",
+    "type": "blob",
+    "size": 1690
+  },
+  {
+    "path": "yeah/018_Sound29.wav",
+    "type": "blob",
+    "size": 1428
+  },
+  {
+    "path": "yeah/019_Sound3.wav",
+    "type": "blob",
+    "size": 1198
+  },
+  {
+    "path": "yeah/020_Sound32.wav",
+    "type": "blob",
+    "size": 1798
+  },
+  {
+    "path": "yeah/021_Sound33.wav",
+    "type": "blob",
+    "size": 1502
+  },
+  {
+    "path": "yeah/022_Sound34.wav",
+    "type": "blob",
+    "size": 1270
+  },
+  {
+    "path": "yeah/023_Sound35.wav",
+    "type": "blob",
+    "size": 924
+  },
+  {
+    "path": "yeah/024_Sound36.wav",
+    "type": "blob",
+    "size": 1076
+  },
+  {
+    "path": "yeah/025_Sound4.wav",
+    "type": "blob",
+    "size": 1428
+  },
+  {
+    "path": "yeah/026_Sound5.wav",
+    "type": "blob",
+    "size": 1412
+  },
+  {
+    "path": "yeah/027_Sound6.wav",
+    "type": "blob",
+    "size": 1892
+  },
+  {
+    "path": "yeah/028_Sound7.wav",
+    "type": "blob",
+    "size": 1698
+  },
+  {
+    "path": "yeah/029_Sound8.wav",
+    "type": "blob",
+    "size": 1456
+  },
+  {
+    "path": "yeah/030_Sound9.wav",
+    "type": "blob",
+    "size": 1168
+  }
+]

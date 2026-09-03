@@ -1,0 +1,138 @@
+@import 'tailwindcss';
+
+:root {
+  /* hardware-sequencer-meets-terminal palette */
+  --background: #0a0c09;
+  --surface: #10130d;
+  --surface-2: #161a11;
+  --line: #242b1c;
+  --line-bright: #36402a;
+  --text: #d8e3ca;
+  --text-dim: #7d8a6e;
+  --text-faint: #4d5742;
+  --acid: #c5f74f;
+  --acid-dim: #8fb838;
+  --acid-deep: #3c4d14;
+  --ember: #ff7847;
+  --ember-dim: #b34a26;
+  --glow: rgba(197, 247, 79, 0.35);
+  --ember-glow: rgba(255, 120, 71, 0.4);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-bright: var(--line-bright);
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --color-text-faint: var(--text-faint);
+  --color-acid: var(--acid);
+  --color-acid-dim: var(--acid-dim);
+  --color-acid-deep: var(--acid-deep);
+  --color-ember: var(--ember);
+  --color-ember-dim: var(--ember-dim);
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --font-display: var(--font-unbounded), sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  /* faint phosphor wash + ember vignette */
+  background-image:
+    radial-gradient(ellipse 120% 70% at 50% -10%, rgba(197, 247, 79, 0.045), transparent 60%),
+    radial-gradient(ellipse 100% 80% at 80% 110%, rgba(255, 120, 71, 0.03), transparent 55%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--acid-deep);
+  color: var(--acid);
+}
+
+/* ── scrollbars ─────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-bright) transparent;
+}
+
+/* ── codemirror chrome ──────────────────────────────── */
+.strudel-editor-root {
+  height: 100%;
+}
+.strudel-editor-root .cm-editor {
+  height: 100%;
+  outline: none;
+}
+.strudel-editor-root .cm-scroller {
+  line-height: 1.7;
+  padding: 1rem 0.25rem;
+}
+.strudel-editor-root .cm-gutters {
+  background: transparent;
+  border-right: 1px solid var(--line);
+  color: var(--text-faint);
+}
+.strudel-editor-root .cm-activeLineGutter {
+  background: transparent;
+  color: var(--acid-dim);
+}
+.strudel-editor-root .cm-activeLine {
+  background: rgba(197, 247, 79, 0.04);
+}
+.strudel-editor-root .cm-cursor {
+  border-left-color: var(--acid);
+  border-left-width: 2px;
+}
+
+/* ── LED indicator ──────────────────────────────────── */
+.led {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--text-faint);
+  transition: all 200ms ease;
+}
+.led-on {
+  background: var(--acid);
+  box-shadow:
+    0 0 6px var(--glow),
+    0 0 14px var(--glow);
+}
+.led-warm {
+  background: var(--ember);
+  box-shadow:
+    0 0 6px var(--ember-glow),
+    0 0 14px var(--ember-glow);
+}
+.led-loading {
+  animation: led-pulse 1s ease-in-out infinite;
+}
+@keyframes led-pulse {
+  0%,
+  100% {
+    background: var(--text-faint);
+    box-shadow: none;
+  }
+  50% {
+    background: var(--acid-dim);
+    box-shadow: 0 0 8px var(--glow);
+  }
+}
+
+/* ── panel label: tiny uppercase hardware silkscreen ── */
+.silkscreen {
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  user-select: none;
+}

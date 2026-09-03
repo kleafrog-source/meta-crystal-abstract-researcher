@@ -1,0 +1,133 @@
+{
+  "_meta": {
+    "description": "Direction-слова per quantity_kind. Слайдер = величина; increase = увеличить величину, decrease = уменьшить. RU+EN вперемешку. Приоритет над осями (L1 над L2).",
+    "version": 1,
+    "kinds": ["tempo", "duration", "rate", "level", "density", "detune", "length", "amount", "count"]
+  },
+  "tempo": {
+    "increase": [
+      "быстрее", "разгони", "ускорь", "темп выше", "живее темпом",
+      "поддай темпу", "поднажми", "faster", "speed up", "quicker",
+      "accelerate", "push the tempo", "drive the tempo up",
+      "raise tempo", "more tempo", "pump the pace", "energise the tempo"
+    ],
+    "decrease": [
+      "медленнее", "замедли", "сбавь темп", "потише темпом", "спокойнее темпом",
+      "ослабь темп", "slow down", "slower",
+      "ease the tempo", "pull the tempo back", "lower tempo",
+      "dial the tempo down", "settle the pace", "restrain tempo"
+    ]
+  },
+  "duration": {
+    "increase": [
+      "плавнее", "мягче", "длиннее", "затянутее", "протяжнее",
+      "размазаннее", "долее", "more sustain", "longer", "smoother",
+      "softer attack", "drawn out", "stretched", "more legato",
+      "lingering", "prolonged", "extended release", "sustain it longer"
+    ],
+    "decrease": [
+      "резче", "короче", "жёстче", "быстрее по атаке", "сжато",
+      "компактнее", "обрывистее", "sharper", "snappier", "shorter",
+      "tighter", "staccato", "punchier attack", "clipped",
+      "brief", "crisper", "more abrupt", "faster release"
+    ]
+  },
+  "rate": {
+    "increase": [
+      "быстрее", "живее", "активнее", "чаще", "бойче",
+      "разгоняй модуляцию", "бодрее", "faster", "more active", "livelier",
+      "quicken the rate", "more frequent", "drive the rate up",
+      "speed the lfo", "raise the rate", "more modulation speed"
+    ],
+    "decrease": [
+      "спокойнее", "медленнее", "реже", "ленивее", "тише модуляцией",
+      "приглуши rate", "умереннее", "calmer", "slower", "less active",
+      "settle the rate", "ease the modulation", "slow the lfo",
+      "lower the rate", "dial the rate back", "tame the speed"
+    ]
+  },
+  "level": {
+    "increase": [
+      "громче", "ярче", "ближе", "выпячить", "подать вперёд",
+      "крупнее", "мощнее", "louder", "brighter", "more present",
+      "upfront", "push it up", "lift the level", "raise the gain",
+      "boost it", "more level", "forward in the mix", "hotter"
+    ],
+    "decrease": [
+      "тише", "глубже в фон", "спрятать", "приглуши", "убрать назад",
+      "деликатнее", "subtler", "quieter", "further back", "tuck it in",
+      "lower the level", "pull it down", "drop the gain",
+      "back it off", "less level", "dimmer", "more restrained"
+    ]
+  },
+  "density": {
+    "increase": [
+      "плотнее", "гуще", "насыщеннее", "гуще зернами", "больше частиц",
+      "теснее", "заполненнее", "denser", "thicker", "richer",
+      "more grains", "more particles", "busier texture", "pack them tighter",
+      "saturate the density", "crowd it", "more event mass"
+    ],
+    "decrease": [
+      "реже", "разреженнее", "воздушнее", "прозрачнее", "пореже зернами",
+      "свободнее", "пустотнее", "sparser", "airier", "thinner",
+      "more open", "fewer grains", "less particles", "let it breathe",
+      "open it up", "loosen the density", "clear the texture"
+    ]
+  },
+  "detune": {
+    "increase": [
+      "расстроеннее", "плывёт", "нестабильнее", "разлаженнее", "более microtonal",
+      "вибрируй сильнее", "дрейфуй", "wobbly", "detuned", "drifting",
+      "out of tune", "more microtonal", "pitchy", "unstable pitch",
+      "loosen the tuning", "unsteady", "wandering pitch", "flutter more"
+    ],
+    "decrease": [
+      "точнее", "в строе", "стабильнее", "настроено", "закрепи высоту",
+      "чистый строй", "in tune", "locked", "stable", "clean tuning",
+      "tighten the pitch", "pin the tuning", "lock the intonation",
+      "well-tempered", "settled pitch", "secure the tuning"
+    ]
+  },
+  "length": {
+    "increase": [
+      "длиннее", "протяжнее", "больше хвост", "растянутее", "долее",
+      "продлённее", "more stretched", "longer", "extended tail",
+      "more length", "drawn out", "prolonged", "more delay length",
+      "lengthier", "sustained longer", "wider arc"
+    ],
+    "decrease": [
+      "короче", "компактнее", "сжатее", "меньше хвост", "tighter",
+      "лаконичнее", "shorter", "tighter", "compact", "trimmed",
+      "less length", "snip the tail", "briefer", "more concise",
+      "shorten the arc", "cut it down", "less tail"
+    ]
+  },
+  "amount": {
+    "increase": [
+      "сильнее", "больше", "глубже", "мощнее", "интенсивнее",
+      "выраженнее", "ярче выражено", "more", "deeper", "stronger",
+      "heavier", "more intense", "more pronounced", "wider",
+      "more depth", "more mix", "more amount", "push the depth"
+    ],
+    "decrease": [
+      "слабее", "меньше", "деликатнее", "мягче", "нежнее",
+      "тише выражено", "полегче", "less", "subtle", "gentler",
+      "lighter", "more restrained", "dial back the depth", "thin it out",
+      "less mix", "reduce the amount", "ease the intensity"
+    ]
+  },
+  "count": {
+    "increase": [
+      "больше", "добавь", "увеличь число", "множественнее", "расширь состав",
+      "дай ещё", "more", "extra", "add more", "more voices",
+      "more taps", "more steps", "more stages", "increase the count",
+      "widen the set", "multiply"
+    ],
+    "decrease": [
+      "меньше", "убавь", "сократи число", "урежь", "полегче составом",
+      "сбавь количество", "fewer", "less", "reduce the count", "trim the voices",
+      "drop some steps", "thin the set", "cut some taps", "narrow the set",
+      "pare it back", "fewer stages"
+    ]
+  }
+}

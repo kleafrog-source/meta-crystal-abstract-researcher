@@ -1,0 +1,24 @@
+{
+  "rows": 483,
+  "roles": {
+    "bass": 30,
+    "drums": 86,
+    "harmony": 38,
+    "melody": 159,
+    "texture": 170
+  },
+  "block_types": {
+    "bed": 11,
+    "driver": 4,
+    "peak": 83,
+    "support": 385
+  },
+  "style_tags": {
+    "ambient": 92,
+    "dub": 66,
+    "idm": 1,
+    "industrial": 3,
+    "retro": 5
+  },
+  "jsonl": "D:\\WORK\\CLIENTS\\mmss-meta-crystal\\src\\strudel-editor\\data\\datasets\\strudel_role_blocks.jsonl"
+}

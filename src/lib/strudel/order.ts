@@ -34,6 +34,11 @@ export function readNodeScore(node: StrudelNode) {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
+export function readNodePriority(node: StrudelNode) {
+  const value = node.data.settings?.priority;
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
 export function detectNodePhase(paramId: string) {
   if (paramId === "arp") return "instrument";
   if (paramId === "note" || paramId === "scale" || paramId === "chord" || paramId === "seq" || paramId === "loop" || paramId === "chunk") {
@@ -50,6 +55,15 @@ export function detectNodePhase(paramId: string) {
 
 export function sortSelectedNodes(nodes: StrudelNode[]) {
   return [...nodes].sort((left, right) => {
+    const priorityLeft = readNodePriority(left);
+    const priorityRight = readNodePriority(right);
+    if (priorityLeft !== null || priorityRight !== null) {
+      const normalizedLeft = priorityLeft ?? 999;
+      const normalizedRight = priorityRight ?? 999;
+      if (normalizedLeft !== normalizedRight) {
+        return normalizedLeft - normalizedRight;
+      }
+    }
     const phaseDelta = (SOURCE_PRIORITY[left.data.paramId] ?? 999) - (SOURCE_PRIORITY[right.data.paramId] ?? 999);
     if (phaseDelta !== 0) {
       return phaseDelta;

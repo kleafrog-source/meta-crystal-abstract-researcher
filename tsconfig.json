@@ -38,6 +38,7 @@
   ],
   "exclude": [
     "node_modules",
+    "z-ai-glm-flowmusic-rag-ui",
     "z-ai-reference-crystal-pool-demo",
     ".next",
     ".next/**"

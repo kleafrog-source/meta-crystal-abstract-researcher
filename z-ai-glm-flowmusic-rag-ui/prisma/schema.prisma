@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// RAG Parameter UI — stores Flowmusic audio parameters with their
+// bge-m3:q8_0 embeddings produced by a local Ollama instance.
+// Arrays / floats are stored as JSON-serialised strings because SQLite
+// (and therefore Prisma) does not support list primitives.
+model Parameter {
+  id               String   @id @default(cuid())
+  technicalName    String   @unique
+  uiElement        String
+  minValue         Float?
+  maxValue         Float?
+  step             Float?
+  // JSON-serialised: number | string | number[]
+  defaultValue     String
+  unit             String?
+  // JSON-serialised: string[] | null
+  options          String?
+  minLength        Int?
+  maxLength        Int?
+  // JSON-serialised: string[]
+  lyriaPromptTags  String
+  // JSON-serialised: string[]
+  semanticKeywords String
+  isVectorized     Boolean  @default(false)
+  // JSON-serialised: number[] | null  (1024-dim bge-m3 embedding)
+  embedding        String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([isVectorized])
+}

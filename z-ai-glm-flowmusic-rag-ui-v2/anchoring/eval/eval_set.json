@@ -1,0 +1,5135 @@
+{
+  "_meta": {
+    "description": "Eval-set: directional (15 осей × 2 языков × 3 степени × 2 направления + парафразы) + holistic (40 инструкций с целевым профилем осей Δa ∈ {−0.3, 0, +0.3}).",
+    "counts": {
+      "directional": 180,
+      "directional_paraphrased": 180,
+      "holistic": 40,
+      "total": 400
+    }
+  },
+  "directional": [
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть лихорадочно возбуждённым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly feverishly intense",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно предельно возбуждённым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably extremely aroused",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно лихорадочно возбуждённым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly feverishly intense",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть глубоко медитативным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly profoundly meditative",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно спокойным и медитативным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably calm and meditative",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно глубоко медитативным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly profoundly meditative",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть очень светлым и радостным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly bright and joyful",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно восторженным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably ecstatic",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно очень светлым и радостным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly bright and joyful",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть очень тёмным и мрачным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly very dark and gloomy",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно гнетущим",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably oppressive",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно очень тёмным и мрачным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly very dark and gloomy",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть взрывным по скорости",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly explosively fast",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно мгновенным по сменам",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably instantaneous",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно взрывным по скорости",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly explosively fast",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть ледниково медленным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly glacially slow",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно почти неподвижным по энергии",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably almost motionless",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно ледниково медленным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly glacially slow",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть контрастным и пиковым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly contrasty and peaky",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно резким по динамике",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably sharp dynamics",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно контрастным и пиковым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly contrasty and peaky",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть плоским и ровным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly flat and even",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно без пиков",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably without peaks",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно плоским и ровным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly flat and even",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть очень ярким и звонким",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly very bright and ringing",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно богатым верхами",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably rich in highs",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно очень ярким и звонким",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly very bright and ringing",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть очень тёмным и глухим",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly very dark and muffled",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно всё в низах",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably all in the lows",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно очень тёмным и глухим",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly very dark and muffled",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть предельно жёстким и зернистым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly maximally harsh and grainy",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно диссонирующим",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably dissonant",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно предельно жёстким и зернистым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly maximally harsh and grainy",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть идеально гладким и чистым",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly perfectly smooth and clean",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно почти стерильным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably almost sterile",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно идеально гладким и чистым",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly perfectly smooth and clean",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть почти непрерывно плотным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly near-continuous and dense",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно плотным потоком",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably dense stream",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно почти непрерывно плотным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly near-continuous and dense",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть редким и воздушным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly sparse and airy",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно с большим пустым пространством",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably with lots of space",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно редким и воздушным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly sparse and airy",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть дико непредсказуемым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly wildly unpredictable",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно с сильной хаотической модуляцией",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably strong chaotic modulation",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно дико непредсказуемым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly wildly unpredictable",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть полностью стабильным и предсказуемым",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly fully stable and predictable",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно без сюрпризов",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably no surprises",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно полностью стабильным и предсказуемым",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly fully stable and predictable",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть стремительным в движении",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly rapid in motion",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно сложным в стерео",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably complex in stereo",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно стремительным в движении",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly rapid in motion",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть статичным в пространстве",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly static in space",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно зафиксированным в центре",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably fixed in centre",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно статичным в пространстве",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly static in space",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть очень глубоким и залитым эхом",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly very deep and drenched in echo",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно объёмным залом",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably voluminous hall",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно очень глубоким и залитым эхом",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly very deep and drenched in echo",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть сухим и плоским",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly dry and flat",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно без эха",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably without echo",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно сухим и плоским",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly dry and flat",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть максимально органичным и живым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly maximally organic and alive",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно естественным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably natural",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно максимально органичным и живым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly maximally organic and alive",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть максимально механическим и синтетическим",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly maximally mechanical and synthetic",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно жёстким",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably rigid",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно максимально механическим и синтетическим",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly maximally mechanical and synthetic",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть сильно расстроенным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly heavily detuned",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно с блуждающей высотой",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably wandering pitch",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно сильно расстроенным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly heavily detuned",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть идеально в строе",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly perfectly in tune",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно стабильным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably locked and stable",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно идеально в строе",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly perfectly in tune",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть с максимальным семантическим контролем",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly with maximal semantic control",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно семантика рулит",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably semantics rule",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно с максимальным семантическим контролем",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly with maximal semantic control",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть с минимумом семантического контроля",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly with minimal semantic control",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно почти без семантики",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably barely semantic",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно с минимумом семантического контроля",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly with minimal semantic control",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть с яркой синестезией",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly with bright synesthesia",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно насыщенными образами",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably saturated imagery",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно с яркой синестезией",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly with bright synesthesia",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть чисто звуковым",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly purely sonic",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно без образности",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably no imagery",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно чисто звуковым",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly purely sonic",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "сделай звучание чуть радикально экспериментальным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "make the sound slightly radically experimental",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "сделай звучание заметно ломающим жанр",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "make the sound noticeably genre-breaking",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "сделай звучание сильно радикально экспериментальным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "make the sound strongly radically experimental",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "сделай звучание чуть строго традиционным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "make the sound slightly strictly traditional",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "сделай звучание заметно верным жанру",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "make the sound noticeably genre-faithful",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "сделай звучание сильно строго традиционным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "make the sound strongly strictly traditional",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть лихорадочно возбуждённым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly feverishly intense",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно предельно возбуждённым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably extremely aroused",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно лихорадочно возбуждённым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly feverishly intense",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть глубоко медитативным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly profoundly meditative",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно спокойным и медитативным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably calm and meditative",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно глубоко медитативным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly profoundly meditative",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть очень светлым и радостным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly bright and joyful",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно восторженным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably ecstatic",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно очень светлым и радостным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly bright and joyful",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть очень тёмным и мрачным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly very dark and gloomy",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно гнетущим",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably oppressive",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно очень тёмным и мрачным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly very dark and gloomy",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть взрывным по скорости",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly explosively fast",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно мгновенным по сменам",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably instantaneous",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно взрывным по скорости",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly explosively fast",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть ледниково медленным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly glacially slow",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно почти неподвижным по энергии",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably almost motionless",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно ледниково медленным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly glacially slow",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть контрастным и пиковым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly contrasty and peaky",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно резким по динамике",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably sharp dynamics",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно контрастным и пиковым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly contrasty and peaky",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть плоским и ровным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly flat and even",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно без пиков",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably without peaks",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно плоским и ровным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly flat and even",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть очень ярким и звонким",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly very bright and ringing",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно богатым верхами",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably rich in highs",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно очень ярким и звонким",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly very bright and ringing",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть очень тёмным и глухим",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly very dark and muffled",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно всё в низах",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably all in the lows",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно очень тёмным и глухим",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly very dark and muffled",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть предельно жёстким и зернистым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly maximally harsh and grainy",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно диссонирующим",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably dissonant",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно предельно жёстким и зернистым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly maximally harsh and grainy",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть идеально гладким и чистым",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly perfectly smooth and clean",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно почти стерильным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably almost sterile",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно идеально гладким и чистым",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly perfectly smooth and clean",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть почти непрерывно плотным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly near-continuous and dense",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно плотным потоком",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably dense stream",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно почти непрерывно плотным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly near-continuous and dense",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть редким и воздушным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly sparse and airy",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно с большим пустым пространством",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably with lots of space",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно редким и воздушным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly sparse and airy",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть дико непредсказуемым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly wildly unpredictable",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно с сильной хаотической модуляцией",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably strong chaotic modulation",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно дико непредсказуемым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly wildly unpredictable",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть полностью стабильным и предсказуемым",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly fully stable and predictable",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно без сюрпризов",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably no surprises",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно полностью стабильным и предсказуемым",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly fully stable and predictable",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть стремительным в движении",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly rapid in motion",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно сложным в стерео",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably complex in stereo",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно стремительным в движении",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly rapid in motion",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть статичным в пространстве",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly static in space",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно зафиксированным в центре",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably fixed in centre",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно статичным в пространстве",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly static in space",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть очень глубоким и залитым эхом",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly very deep and drenched in echo",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно объёмным залом",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably voluminous hall",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно очень глубоким и залитым эхом",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly very deep and drenched in echo",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть сухим и плоским",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly dry and flat",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно без эха",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably without echo",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно сухим и плоским",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly dry and flat",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть максимально органичным и живым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly maximally organic and alive",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно естественным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably natural",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно максимально органичным и живым",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly maximally organic and alive",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть максимально механическим и синтетическим",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly maximally mechanical and synthetic",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно жёстким",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably rigid",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно максимально механическим и синтетическим",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly maximally mechanical and synthetic",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть сильно расстроенным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly heavily detuned",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно с блуждающей высотой",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably wandering pitch",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно сильно расстроенным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly heavily detuned",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть идеально в строе",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly perfectly in tune",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно стабильным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably locked and stable",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно идеально в строе",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly perfectly in tune",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть с максимальным семантическим контролем",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly with maximal semantic control",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно семантика рулит",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably semantics rule",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно с максимальным семантическим контролем",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly with maximal semantic control",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть с минимумом семантического контроля",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly with minimal semantic control",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно почти без семантики",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably barely semantic",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно с минимумом семантического контроля",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly with minimal semantic control",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть с яркой синестезией",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly with bright synesthesia",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно насыщенными образами",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably saturated imagery",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно с яркой синестезией",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly with bright synesthesia",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть чисто звуковым",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly purely sonic",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно без образности",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably no imagery",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно чисто звуковым",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly purely sonic",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "пусть звучание станет чуть радикально экспериментальным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "degree": "subtle",
+      "direction": 1,
+      "query": "let the sound become slightly radically experimental",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "degree": "medium",
+      "direction": 1,
+      "query": "пусть звучание станет заметно ломающим жанр",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "degree": "medium",
+      "direction": 1,
+      "query": "let the sound become noticeably genre-breaking",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "degree": "strong",
+      "direction": 1,
+      "query": "пусть звучание станет сильно радикально экспериментальным",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "degree": "strong",
+      "direction": 1,
+      "query": "let the sound become strongly radically experimental",
+      "expected_direction": 1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "пусть звучание станет чуть строго традиционным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "degree": "subtle",
+      "direction": -1,
+      "query": "let the sound become slightly strictly traditional",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "degree": "medium",
+      "direction": -1,
+      "query": "пусть звучание станет заметно верным жанру",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "degree": "medium",
+      "direction": -1,
+      "query": "let the sound become noticeably genre-faithful",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "degree": "strong",
+      "direction": -1,
+      "query": "пусть звучание станет сильно строго традиционным",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "degree": "strong",
+      "direction": -1,
+      "query": "let the sound become strongly strictly traditional",
+      "expected_direction": -1,
+      "expected_delta_range": [
+        0.2,
+        0.6
+      ],
+      "category": "directional_paraphrase"
+    }
+  ],
+  "holistic": [
+    {
+      "query": "сделай тёмный, плотный, медитативный ambient с глубоким хвостом",
+      "language": "ru",
+      "expected_axis_profile": {
+        "timbre_brightness": -0.3,
+        "rhythmic_density": 0.3,
+        "affective_arousal": -0.3,
+        "spatial_depth": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a bright, sparse, playful groove with dry transients",
+      "language": "en",
+      "expected_axis_profile": {
+        "timbre_brightness": 0.3,
+        "rhythmic_density": -0.3,
+        "affective_valence": 0.3,
+        "spatial_depth": -0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай жёсткий, хаотичный, очень быстрый drum&bass с резкими пиками",
+      "language": "ru",
+      "expected_axis_profile": {
+        "timbre_roughness": 0.3,
+        "chaos_amplitude": 0.3,
+        "energy_speed": 0.3,
+        "energy_peak_intensity": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a warm, organic, slow-breathing dub with deep space",
+      "language": "en",
+      "expected_axis_profile": {
+        "organic_mechanical": 0.3,
+        "energy_speed": -0.3,
+        "spatial_depth": 0.3,
+        "timbre_brightness": -0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай радикально экспериментальный, расстроенный, зернистый noise",
+      "language": "ru",
+      "expected_axis_profile": {
+        "style_traditional_radical": 0.3,
+        "tonal_instability": 0.3,
+        "timbre_roughness": 0.3,
+        "rhythmic_density": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a strictly traditional, in-tune, smooth jazz ballad",
+      "language": "en",
+      "expected_axis_profile": {
+        "style_traditional_radical": -0.3,
+        "tonal_instability": -0.3,
+        "timbre_roughness": -0.3,
+        "affective_arousal": -0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай очень объёмное, лихорадочно возбуждённое, движущееся в стерео звучание",
+      "language": "ru",
+      "expected_axis_profile": {
+        "spatial_depth": 0.3,
+        "affective_arousal": 0.3,
+        "spatial_motion": 0.3,
+        "energy_peak_intensity": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a flat, dry, static, in-tune click track",
+      "language": "en",
+      "expected_axis_profile": {
+        "energy_peak_intensity": -0.3,
+        "spatial_depth": -0.3,
+        "spatial_motion": -0.3,
+        "tonal_instability": -0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай светлый, воздушный, редкий, естественный folk-вайб",
+      "language": "ru",
+      "expected_axis_profile": {
+        "affective_valence": 0.3,
+        "rhythmic_density": -0.3,
+        "organic_mechanical": 0.3,
+        "timbre_brightness": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a dark, dense, mechanical, detuned industrial rumble",
+      "language": "en",
+      "expected_axis_profile": {
+        "affective_valence": -0.3,
+        "rhythmic_density": 0.3,
+        "organic_mechanical": -0.3,
+        "tonal_instability": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай яркую синестезию с предельной семантической управляемостью",
+      "language": "ru",
+      "expected_axis_profile": {
+        "visual_metaphor_intensity": 0.3,
+        "semantic_control_strength": 0.3,
+        "timbre_brightness": 0.3,
+        "affective_valence": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a purely sonic, minimal, neutral, balanced texture",
+      "language": "en",
+      "expected_axis_profile": {
+        "visual_metaphor_intensity": -0.3,
+        "affective_arousal": 0.0,
+        "rhythmic_density": 0.0,
+        "timbre_roughness": 0.0
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай медитативный, гладкий, в строе, тёплый drone",
+      "language": "ru",
+      "expected_axis_profile": {
+        "affective_arousal": -0.3,
+        "timbre_roughness": -0.3,
+        "tonal_instability": -0.3,
+        "timbre_brightness": -0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a feverish, grainy, wandering, lo-fi tape distortion vibe",
+      "language": "en",
+      "expected_axis_profile": {
+        "affective_arousal": 0.3,
+        "timbre_roughness": 0.3,
+        "tonal_instability": 0.3,
+        "timbre_brightness": -0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай глубокий, залитый эхом, медленный, почти неподвижный эмбиент",
+      "language": "ru",
+      "expected_axis_profile": {
+        "spatial_depth": 0.3,
+        "energy_speed": -0.3,
+        "affective_arousal": -0.3,
+        "rhythmic_density": -0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a dry, tight, snappy, bright percussion loop",
+      "language": "en",
+      "expected_axis_profile": {
+        "spatial_depth": -0.3,
+        "timbre_brightness": 0.3,
+        "timbre_roughness": 0.3,
+        "rhythmic_density": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай дико непредсказуемый, стремительный, хаотичный glitch",
+      "language": "ru",
+      "expected_axis_profile": {
+        "chaos_amplitude": 0.3,
+        "energy_speed": 0.3,
+        "spatial_motion": 0.3,
+        "rhythmic_density": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a stable, predictable, slow, breathing ambient pad",
+      "language": "en",
+      "expected_axis_profile": {
+        "chaos_amplitude": -0.3,
+        "energy_speed": -0.3,
+        "organic_mechanical": 0.3,
+        "affective_arousal": -0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай радикально жанро-ломающий, но очень чистый и в строе микротональный опыт",
+      "language": "ru",
+      "expected_axis_profile": {
+        "style_traditional_radical": 0.3,
+        "tonal_instability": 0.0,
+        "timbre_roughness": -0.3,
+        "rhythmic_density": 0.0
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a genre-faithful but rough and dense rockabilly",
+      "language": "en",
+      "expected_axis_profile": {
+        "style_traditional_radical": -0.3,
+        "timbre_roughness": 0.3,
+        "rhythmic_density": 0.3,
+        "energy_peak_intensity": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай максимальную семантическую управляемость при нейтральной динамике",
+      "language": "ru",
+      "expected_axis_profile": {
+        "semantic_control_strength": 0.3,
+        "energy_peak_intensity": 0.0,
+        "affective_arousal": 0.0,
+        "rhythmic_density": 0.0
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make minimal semantic control but extreme dynamic peaks",
+      "language": "en",
+      "expected_axis_profile": {
+        "semantic_control_strength": -0.3,
+        "energy_peak_intensity": 0.3,
+        "affective_arousal": 0.3,
+        "timbre_roughness": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай звонкий, быстрый, плотный, громкий и резкий breakcore",
+      "language": "ru",
+      "expected_axis_profile": {
+        "timbre_brightness": 0.3,
+        "energy_speed": 0.3,
+        "rhythmic_density": 0.3,
+        "level": 0.0
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a muffled, slow, sparse, quiet and smooth lullaby",
+      "language": "en",
+      "expected_axis_profile": {
+        "timbre_brightness": -0.3,
+        "energy_speed": -0.3,
+        "rhythmic_density": -0.3,
+        "timbre_roughness": -0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай органичный, естественный, дышащий, тёплый живой ансамбль",
+      "language": "ru",
+      "expected_axis_profile": {
+        "organic_mechanical": 0.3,
+        "affective_valence": 0.3,
+        "timbre_brightness": -0.3,
+        "energy_peak_intensity": -0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a mechanical, rigid, synthetic, cold and detuned android choir",
+      "language": "en",
+      "expected_axis_profile": {
+        "organic_mechanical": -0.3,
+        "affective_valence": -0.3,
+        "tonal_instability": 0.3,
+        "timbre_roughness": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай визуально-образный, кинематографичный, насыщенный вайб с яркими сценами",
+      "language": "ru",
+      "expected_axis_profile": {
+        "visual_metaphor_intensity": 0.3,
+        "affective_arousal": 0.3,
+        "spatial_depth": 0.3,
+        "timbre_brightness": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a purely sonic, no-imagery, abstract texture study",
+      "language": "en",
+      "expected_axis_profile": {
+        "visual_metaphor_intensity": -0.3,
+        "affective_arousal": 0.0,
+        "energy_speed": 0.0,
+        "rhythmic_density": 0.0
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай экстремально контрастный, плоско-тихий посередине, с резкими пиками по краям",
+      "language": "ru",
+      "expected_axis_profile": {
+        "energy_peak_intensity": 0.3,
+        "affective_arousal": 0.0,
+        "level": 0.0,
+        "timbre_brightness": 0.0
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make an even, flat, mid-energy drone with no peaks",
+      "language": "en",
+      "expected_axis_profile": {
+        "energy_peak_intensity": -0.3,
+        "affective_arousal": 0.0,
+        "rhythmic_density": -0.3,
+        "spatial_motion": 0.0
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай стремительное сложное движение в стерео при статичной высоте",
+      "language": "ru",
+      "expected_axis_profile": {
+        "spatial_motion": 0.3,
+        "tonal_instability": -0.3,
+        "energy_speed": 0.3,
+        "rhythmic_density": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a static, centred, locked-pitch mono-compatible mix",
+      "language": "en",
+      "expected_axis_profile": {
+        "spatial_motion": -0.3,
+        "tonal_instability": -0.3,
+        "spatial_depth": -0.3,
+        "affective_arousal": 0.0
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай редкий, воздушный, прозрачный, с большим пустым пространством эмбиент",
+      "language": "ru",
+      "expected_axis_profile": {
+        "rhythmic_density": -0.3,
+        "spatial_depth": 0.3,
+        "affective_arousal": -0.3,
+        "timbre_brightness": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a near-continuous, very dense, saturated event stream",
+      "language": "en",
+      "expected_axis_profile": {
+        "rhythmic_density": 0.3,
+        "chaos_amplitude": 0.3,
+        "energy_speed": 0.3,
+        "affective_arousal": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай очень тёмное, мрачное, гнетущее, медленное дарк-эмбиент",
+      "language": "ru",
+      "expected_axis_profile": {
+        "affective_valence": -0.3,
+        "affective_arousal": -0.3,
+        "timbre_brightness": -0.3,
+        "energy_speed": -0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a very bright, joyful, ecstatic, fast and bouncy groove",
+      "language": "en",
+      "expected_axis_profile": {
+        "affective_valence": 0.3,
+        "affective_arousal": 0.3,
+        "energy_speed": 0.3,
+        "timbre_brightness": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай глубокий, объёмный, залитый эхом hall с длинным хвостом",
+      "language": "ru",
+      "expected_axis_profile": {
+        "spatial_depth": 0.3,
+        "length": 0.3,
+        "timbre_brightness": -0.3,
+        "energy_peak_intensity": -0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a dry, flat, close, short-tailed, direct sound",
+      "language": "en",
+      "expected_axis_profile": {
+        "spatial_depth": -0.3,
+        "length": -0.3,
+        "timbre_brightness": 0.3,
+        "energy_peak_intensity": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "сделай предельно жёсткий, зернистый, диссонирующий, расстроенный noise",
+      "language": "ru",
+      "expected_axis_profile": {
+        "timbre_roughness": 0.3,
+        "tonal_instability": 0.3,
+        "affective_valence": -0.3,
+        "chaos_amplitude": 0.3
+      },
+      "category": "holistic"
+    },
+    {
+      "query": "make a perfectly smooth, clean, in-tune, locked and stable pure tone",
+      "language": "en",
+      "expected_axis_profile": {
+        "timbre_roughness": -0.3,
+        "tonal_instability": -0.3,
+        "chaos_amplitude": -0.3,
+        "affective_arousal": -0.3
+      },
+      "category": "holistic"
+    }
+  ]
+}
