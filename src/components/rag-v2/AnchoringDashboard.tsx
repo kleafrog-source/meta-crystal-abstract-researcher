@@ -124,7 +124,7 @@ export function AnchoringDashboard() {
             onClick={() => startBuildIndex()}
             disabled={statusLoading || status?.retrieval_job.running}
           >
-            {status?.retrieval_job.running ? <Loader2 className="size-4 animate-spin" /> : <Database className="size-4" />}
+            {status?.retrieval_job.running ? <Loader2 className="size-4" /> : <Database className="size-4" />}
             Build retrieval index
           </Button>
           <Button
@@ -133,11 +133,11 @@ export function AnchoringDashboard() {
             onClick={() => startBuildAnchors()}
             disabled={statusLoading || status?.anchors_job.running}
           >
-            {status?.anchors_job.running ? <Loader2 className="size-4 animate-spin" /> : <Cpu className="size-4" />}
+            {status?.anchors_job.running ? <Loader2 className="size-4" /> : <Cpu className="size-4" />}
             Build live anchors
           </Button>
           <Button type="button" size="sm" variant="outline" onClick={() => fetchStatus()} disabled={statusLoading}>
-            {statusLoading ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}
+            {statusLoading ? <Loader2 className="size-4" /> : <RefreshCw className="size-4" />}
             Refresh status
           </Button>
         </div>

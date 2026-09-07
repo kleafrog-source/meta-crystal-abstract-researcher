@@ -174,6 +174,105 @@
     border: 1px solid oklch(0.28 0.02 250 / 60%);
   }
 
+  .flowmusic-console {
+    --console-panel: #09090a;
+    --console-plate: #0d0d0f;
+    --console-line: rgb(255 255 255 / 78%);
+    --console-muted-line: rgb(255 255 255 / 16%);
+    background:
+      linear-gradient(90deg, rgb(255 255 255 / 2%) 1px, transparent 1px),
+      linear-gradient(0deg, rgb(255 255 255 / 1.5%) 1px, transparent 1px),
+      radial-gradient(circle at 25% -20%, rgb(168 85 247 / 11%), transparent 32%),
+      #060607;
+    background-size: 28px 28px, 28px 28px, auto, auto;
+  }
+
+  .flowmusic-console .console-status-badge {
+    border-color: rgb(255 255 255 / 20%);
+    background: rgb(255 255 255 / 4%);
+    color: rgb(212 212 216);
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .console-query-panel,
+  .console-bank,
+  .console-macro-panel {
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 4%), 0 14px 38px rgb(0 0 0 / 28%);
+  }
+
+  .console-service-drawer > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .console-service-drawer > summary::before {
+    content: "+";
+    display: inline-block;
+    margin-right: 0.5rem;
+    color: #e879f9;
+  }
+
+  .console-service-drawer[open] > summary::before {
+    content: "-";
+  }
+
+  .console-bank {
+    border: 1px solid var(--console-line);
+    background: linear-gradient(145deg, rgb(255 255 255 / 4%), transparent 35%), var(--console-panel);
+    padding: 0.45rem;
+  }
+
+  .console-bank-header {
+    min-height: 28px;
+    border: 1px solid var(--console-muted-line);
+    background: rgb(255 255 255 / 3%);
+    margin-bottom: 0.45rem;
+    padding: 0 0.55rem;
+  }
+
+  .console-parameter-bank {
+    scrollbar-color: rgb(217 70 239 / 75%) transparent;
+    scrollbar-width: thin;
+  }
+
+  .console-control-module {
+    min-height: 70px;
+    box-shadow: inset 0 1px rgb(255 255 255 / 3%);
+  }
+
+  .console-control-module [data-slot="slider-track"] {
+    background: rgb(255 255 255 / 12%);
+    height: 4px;
+  }
+
+  .console-control-module [data-slot="slider-range"] {
+    background: linear-gradient(90deg, #a855f7, #e879f9);
+  }
+
+  .console-control-module [data-slot="slider-thumb"] {
+    width: 10px;
+    height: 10px;
+    border-color: #e879f9;
+    background: #17171a;
+    box-shadow: 0 0 9px rgb(232 121 249 / 70%);
+  }
+
+  .console-workbench {
+    height: min(72vh, 760px);
+  }
+
+  @media (max-width: 1279px) {
+    .console-workbench {
+      height: auto;
+    }
+
+    .console-macro-panel {
+      min-height: 460px;
+    }
+  }
+
   .strudel-flow-editor-shell,
   .reactflow-wrapper {
     width: 100%;

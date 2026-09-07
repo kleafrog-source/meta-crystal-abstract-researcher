@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -38,6 +38,11 @@ interface ProfilesList {
   }>;
 }
 
+interface SavedProfileResponse {
+  ok: boolean;
+  profile: ProfilesList["items"][number];
+}
+
 export function SemanticPlane() {
   const PROFILE_MODE = "semantic-control";
   const [profile, setProfile] = useState<EditableProfile>({ ...DEFAULT_PROFILE, name: "semantic-plane-default" });
@@ -57,12 +62,13 @@ export function SemanticPlane() {
   const { toast } = useToast();
   const { data: engineInfo } = useFetch<EngineInfo>("/api/engine");
   const { data: profilesList, refresh: refreshProfiles } = useFetch<ProfilesList>(`/api/profiles?mode=${PROFILE_MODE}`);
-
-  useEffect(() => {
-    if (engineInfo?.engineOk && engineInfo.flags?.length) {
-      setProfile((prev) => withDefaultFlags(prev, engineInfo.flags));
-    }
-  }, [engineInfo]);
+  const effectiveProfile = useMemo(
+    () =>
+      engineInfo?.engineOk && engineInfo.flags?.length
+        ? withDefaultFlags(profile, engineInfo.flags)
+        : profile,
+    [engineInfo, profile],
+  );
 
   useEffect(() => {
     if (!taskId) return;
@@ -104,9 +110,9 @@ export function SemanticPlane() {
       setTaskStatus("running");
       setActiveTab("log");
       const result = await apiPost<{ taskId: string }>("/api/generate/start", {
-        ...profile,
+        ...effectiveProfile,
         name: profileName,
-        disabled_patterns: profile.disabled_patterns,
+        disabled_patterns: effectiveProfile.disabled_patterns,
       });
       setTaskId(result.taskId);
       if (typeof window !== "undefined") {
@@ -137,14 +143,29 @@ export function SemanticPlane() {
       toast({ title: "Profile name required", variant: "destructive" });
       return;
     }
+    if (safeName.includes("::")) {
+      toast({
+        title: "Invalid profile name",
+        description: "`::` is reserved by profile storage. Use a plain name like `saveA`.",
+        variant: "destructive",
+      });
+      return;
+    }
     try {
       await apiPost("/api/profiles", {
-        ...profile,
+        ...effectiveProfile,
         name: safeName,
         mode: PROFILE_MODE,
-        customPatterns: profile.custom_patterns,
-        disabledPatterns: profile.disabled_patterns,
+        customPatterns: effectiveProfile.custom_patterns,
+        disabledPatterns: effectiveProfile.disabled_patterns,
       });
+      const verification = await fetch(`/api/profiles/${encodeURIComponent(safeName)}?mode=${PROFILE_MODE}`, {
+        cache: "no-store",
+      });
+      const verificationPayload = (await verification.json().catch(() => null)) as SavedProfileResponse | null;
+      if (!verification.ok || !verificationPayload?.ok || !verificationPayload.profile) {
+        throw new Error("Profile save verification failed");
+      }
       refreshProfiles();
       setSelectedProfileName(safeName);
       setProfileName(safeName);
@@ -186,7 +207,7 @@ export function SemanticPlane() {
       custom_patterns: found.customPatterns ?? [],
       disabled_patterns: found.disabledPatterns ?? [],
     });
-    setProfile(engineInfo?.flags?.length ? withDefaultFlags(nextProfile, engineInfo.flags) : nextProfile);
+    setProfile(nextProfile);
     setSelectedProfileName(found.name);
     setProfileName(found.name);
   };
@@ -249,18 +270,23 @@ export function SemanticPlane() {
 
           <TabsContent value="query" className="mt-0 flex-1 overflow-y-auto">
             <SemanticConfigPanel
-              profile={profile}
+              profile={effectiveProfile}
               state={semanticState}
               onStateChange={setSemanticState}
-              onApplyProposal={(nextProfile) =>
-                setProfile(engineInfo?.flags?.length ? withDefaultFlags(nextProfile, engineInfo.flags) : nextProfile)
-              }
+              onApplyProposal={(nextProfile) => setProfile(nextProfile)}
+              onApplied={() => {
+                setActiveTab("params");
+                toast({
+                  title: "Semantic proposal applied",
+                  description: "Profile updated. Review the parameters and patterns in the Manual tab before running generation.",
+                });
+              }}
             />
           </TabsContent>
 
           <TabsContent value="params" className="mt-0 flex-1 overflow-y-auto">
             <ProfileConfigurator
-              profile={profile}
+              profile={effectiveProfile}
               onChange={setProfile}
               engineFlags={engineInfo?.flags}
               enginePatterns={engineInfo?.patterns}
@@ -270,7 +296,7 @@ export function SemanticPlane() {
 
           <TabsContent value="domains" className="mt-0 flex-1 overflow-y-auto">
             <ProfileConfigurator
-              profile={profile}
+              profile={effectiveProfile}
               onChange={setProfile}
               engineFlags={engineInfo?.flags}
               sections={["domains"]}

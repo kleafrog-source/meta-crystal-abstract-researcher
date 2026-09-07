@@ -57,6 +57,13 @@ export interface ActiveParameter {
   axes: string[];
 }
 
+export interface InstructionContextEntry {
+  id: string;
+  title: string;
+  content: string;
+  influence: number;
+}
+
 export interface StatusResponse {
   artifacts_ready: boolean;
   total_parameters: number;
@@ -109,10 +116,12 @@ export interface ProposeParametersRequest {
   query: string;
   top_k?: number;
   current_values?: Record<string, number | string>;
+  instruction_context?: InstructionContextEntry[];
 }
 
 export interface ProposeParametersResponse {
   query: string;
+  effective_query?: string;
   results: ActiveParameter[];
   total_candidates: number;
   total_scoped: number;

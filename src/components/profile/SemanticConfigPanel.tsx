@@ -78,11 +78,13 @@ export type SemanticConfigPanelState = {
 export function SemanticConfigPanel({
   profile,
   onApplyProposal,
+  onApplied,
   state,
   onStateChange,
 }: {
   profile: EditableProfile;
   onApplyProposal: (profile: EditableProfile) => void;
+  onApplied?: () => void;
   state?: SemanticConfigPanelState;
   onStateChange?: (state: SemanticConfigPanelState) => void;
 }) {
@@ -119,6 +121,7 @@ export function SemanticConfigPanel({
   const handleApply = () => {
     if (!proposal) return;
     onApplyProposal(proposal.profile);
+    onApplied?.();
   };
 
   return (
@@ -130,7 +133,7 @@ export function SemanticConfigPanel({
             Semantic parameter retrieval
           </CardTitle>
           <CardDescription>
-            Free-form query {"->"} dense retrieval over validated lexicon {"->"} proposed profile diff. Generator parameters are not applied until you confirm them.
+            Free-form query {"->"} dense retrieval over validated lexicon {"->"} proposed profile diff. The draft profile changes are applied only after you press `Apply to current profile`.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

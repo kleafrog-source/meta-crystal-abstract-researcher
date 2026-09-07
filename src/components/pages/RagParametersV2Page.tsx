@@ -1,39 +1,35 @@
 "use client";
 
-import { Layers, Sliders, Sparkles, Zap } from "@/components/icons";
+import { Layers, Sliders, Zap } from "@/components/icons";
 import { AnchoringDashboard } from "@/components/rag-v2/AnchoringDashboard";
 import { MacroGenerator } from "@/components/rag-v2/MacroGenerator";
 import { SemanticSearch } from "@/components/rag-v2/SemanticSearch";
 import { VirtualizedParamList } from "@/components/rag-v2/VirtualizedParamList";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 
 export function RagParametersV2Page() {
   return (
-    <div className="flex h-full flex-col">
-      <header className="border-b border-border bg-card/30 px-6 py-5 backdrop-blur-sm">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+    <div className="flowmusic-console flex h-full flex-col">
+      <header className="border-b border-white/15 bg-black/70 px-4 py-3">
+        <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
           <div>
-            <h1 className="flex items-center gap-2 text-xl font-semibold tracking-tight">
-              <span className="text-glow-emerald">Flowmusic Genesis</span>
-              <Badge variant="outline" className="text-[10px] uppercase">
-                Semantic Value Anchoring V2
-              </Badge>
+            <h1 className="flex items-center gap-2 font-mono text-base font-semibold tracking-tight text-white sm:text-lg">
+              <span className="rounded border border-fuchsia-400/70 bg-fuchsia-950/40 px-2 py-1 text-[10px] uppercase tracking-wide text-fuchsia-200">
+                bge-m3 console
+              </span>
+              Omega-Protocol Parameter Synthesizer
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Isolated v2 integration with enriched JSON artifacts, scoped retrieval, and anchoring through the tested Python runtime.
-            </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="outline">
+          <div className="flex flex-wrap gap-1.5">
+            <Badge variant="outline" className="console-status-badge">
               <Layers className="mr-1 size-3" />
               scoped retrieval
             </Badge>
-            <Badge variant="outline">
+            <Badge variant="outline" className="console-status-badge">
               <Zap className="mr-1 size-3" />
               lexical + axis
             </Badge>
-            <Badge variant="outline">
+            <Badge variant="outline" className="console-status-badge">
               <Sliders className="mr-1 size-3" />
               live controls
             </Badge>
@@ -41,40 +37,31 @@ export function RagParametersV2Page() {
         </div>
       </header>
 
-      <div className="flex-1 overflow-auto p-6">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
-          <Card className="border-border/60 bg-card/60">
-            <CardContent className="flex items-start gap-3 p-5">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Sparkles className="size-5" />
-              </div>
-              <div className="space-y-2 text-sm">
-                <p className="font-medium text-foreground">
-                  This page is the isolated September 3, 2026 v2 integration path. It does not depend on the old Prisma parameter-vector flow.
-                </p>
-                <p className="text-muted-foreground">
-                  Query the sound intent, let v2 scope likely parameters, then inspect whether each change came from numeric, lexical, or axis anchoring before copying the clean macro output.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <AnchoringDashboard />
+      <div className="flex-1 overflow-auto p-3">
+        <div className="mx-auto flex w-full max-w-[1920px] flex-col gap-3">
+          <details className="console-service-drawer rounded border border-white/20 bg-black/50">
+            <summary className="cursor-pointer px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-zinc-500">
+              Service bay: anchoring status, index and live anchors
+            </summary>
+            <div className="border-t border-white/15 p-2">
+              <AnchoringDashboard />
+            </div>
+          </details>
           <SemanticSearch />
 
-          <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-            <section className="space-y-2">
-              <div className="flex items-center justify-between">
-                <h2 className="flex items-center gap-2 text-base font-semibold">
+          <div className="console-workbench grid min-h-[680px] gap-3 xl:grid-cols-[minmax(0,1fr)_360px]">
+            <section className="console-bank flex min-h-0 flex-col">
+              <div className="console-bank-header flex items-center justify-between">
+                <h2 className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-white">
                   <Layers className="size-4 text-primary" />
-                  Anchored parameters
+                  Anchored control bank
                 </h2>
-                <span className="text-xs text-muted-foreground">virtualized results</span>
+                <span className="font-mono text-[10px] text-emerald-300">up to 50 channels</span>
               </div>
-              <VirtualizedParamList />
+              <VirtualizedParamList className="min-h-0 flex-1" />
             </section>
 
-            <aside className="space-y-6">
+            <aside className="min-h-0">
               <MacroGenerator />
             </aside>
           </div>

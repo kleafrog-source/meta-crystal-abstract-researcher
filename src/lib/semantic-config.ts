@@ -301,6 +301,7 @@ function compileProposal(
   const queryLower = query.toLowerCase();
   const knownDomainFlags = getKnownTechnicalNames("domain");
   const knownPatternNames = getKnownTechnicalNames("structural_pattern");
+  const matchedDomainsAboveThreshold = matchedByType.domain.filter((entry) => entry.confidence >= 0.35);
   const paramReasons = new Map<keyof EditableProfile["params"], ProposedParameterValue>();
 
   for (const key of Object.keys(defaults) as Array<keyof EditableProfile["params"]>) {
@@ -345,7 +346,7 @@ function compileProposal(
     inferredParameters.push(`params.${key}`);
   }
 
-  if (matchedByType.domain.length > 0) {
+  if (matchedDomainsAboveThreshold.length > 0) {
     for (const flagName of knownDomainFlags) {
       nextProfile.flags[flagName] = false;
     }
@@ -456,6 +457,12 @@ function compileProposal(
       level: "warning",
       code: "no_domain_match",
       message: "No semantic domain matches were found. The proposal keeps current domain flags.",
+    });
+  } else if (matchedDomainsAboveThreshold.length === 0) {
+    warnings.push({
+      level: "warning",
+      code: "weak_domain_match",
+      message: "Domain matches were below the activation threshold, so current toggles were preserved.",
     });
   }
 

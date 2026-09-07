@@ -17,8 +17,9 @@ export async function POST(request: Request) {
   try {
     const payload = await searchAndAnchor({
       query: typeof body.query === "string" ? body.query : "",
-      topK: typeof body.top_k === "number" ? body.top_k : 30,
+      topK: typeof body.top_k === "number" ? body.top_k : 50,
       currentValues: body.current_values ?? {},
+      instructionContext: Array.isArray(body.instruction_context) ? body.instruction_context : [],
     });
     return NextResponse.json(payload);
   } catch (error) {

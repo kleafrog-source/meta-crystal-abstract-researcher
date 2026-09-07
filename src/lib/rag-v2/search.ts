@@ -4,9 +4,15 @@ import { embedText } from "@/lib/ollama-client";
 import { cosineSimilarity } from "@/lib/vector-math";
 
 import { getEnrichedDataset, buildRetrievalText, toActiveParameter } from "./dataset";
+import { buildEffectiveQuery } from "./instruction-support";
 import { RAG_V2_RETRIEVAL_INDEX_PATH } from "./paths";
 import { runAnchoringBridge } from "./python-bridge";
-import type { ActiveParameter, EnrichedParameter, ProposeParametersResponse } from "./types";
+import type {
+  ActiveParameter,
+  EnrichedParameter,
+  InstructionContextEntry,
+  ProposeParametersResponse,
+} from "./types";
 
 const STOPWORDS = new Set([
   "и",
@@ -95,11 +101,13 @@ export async function searchAndAnchor(params: {
   query: string;
   topK: number;
   currentValues: Record<string, number | string>;
+  instructionContext?: InstructionContextEntry[];
 }): Promise<ProposeParametersResponse> {
   const query = params.query.trim();
   if (!query) {
     return {
       query: "",
+      effective_query: "",
       results: [],
       total_candidates: 0,
       total_scoped: 0,
@@ -107,23 +115,25 @@ export async function searchAndAnchor(params: {
     };
   }
 
+  const effectiveQuery = buildEffectiveQuery(query, params.instructionContext ?? []);
+
   const dataset = await getEnrichedDataset();
   const retrievalIndex = await loadRetrievalIndex();
   if (retrievalIndex.size === 0) {
     throw new Error("Retrieval index is missing or empty. Build the v2 retrieval index first.");
   }
-  const topK = Math.max(1, Math.min(40, params.topK));
-  const candidateLimit = 48;
+  const topK = Math.max(1, Math.min(50, params.topK));
+  const candidateLimit = Math.max(64, topK * 2);
 
   const lexicalCandidates = dataset
     .map((param) => ({
       param,
-      lexical: lexicalScore(query, param),
+      lexical: lexicalScore(effectiveQuery, param),
     }))
     .sort((left, right) => right.lexical - left.lexical || left.param.technical_name.localeCompare(right.param.technical_name))
     .slice(0, candidateLimit);
 
-  const queryVector = await embedText(query);
+  const queryVector = await embedText(effectiveQuery);
   const scored = await Promise.all(
     lexicalCandidates.map(async ({ param, lexical }) => {
       const embedding = retrievalIndex.get(param.technical_name);
@@ -163,6 +173,7 @@ export async function searchAndAnchor(params: {
 
   return {
     query,
+    effective_query: effectiveQuery,
     results,
     total_candidates: dataset.length,
     total_scoped: scoped.length,
