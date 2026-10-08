@@ -41,6 +41,10 @@ export type PageId =
   | "map"
   | "ragparameters"
   | "ragparametersv2"
+  | "ragparametersv3"
+  | "combinatorialgenesis"
+  | "combinatorialsynthesis"
+  | "audioclaprag"
   | "settings";
 
 interface NavItem {
@@ -170,6 +174,30 @@ const NAV_ITEMS: NavItem[] = [
     label: "Flowmusic Genesis V2",
     icon: <Sliders className="h-4 w-4" />,
     description: "Isolated Semantic Value Anchoring v2 page with scoped retrieval and Python runtime anchoring",
+  },
+  {
+    id: "ragparametersv3",
+    label: "Flowmusic Genesis V3",
+    icon: <Sparkles className="h-4 w-4" />,
+    description: "Unified semantic search over the autonomous library, Flowmusic corpus and Combinatorial Atoms",
+  },
+  {
+    id: "combinatorialgenesis",
+    label: "Combinatorial Genesis",
+    icon: <FlaskConical className="h-4 w-4" />,
+    description: "Изолированная лаборатория новых комбинаций без записи в датасет Genesis V2",
+  },
+  {
+    id: "combinatorialsynthesis",
+    label: "Combinatorial Synthesis",
+    icon: <Sparkles className="h-4 w-4" />,
+    description: "BGE-only генерация, отбор и публикация новых параметров из Combinatorial Atoms",
+  },
+  {
+    id: "audioclaprag",
+    label: "Audio CLAP RAG",
+    icon: <Activity className="h-4 w-4" />,
+    description: "Cross-modal search of V3 parameters from an audio reference with LAION-CLAP",
   },
 ];
 

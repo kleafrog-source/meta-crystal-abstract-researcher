@@ -8,6 +8,7 @@ import {
 } from "@/lib/ollama-client";
 import type { VectorizationStatus } from "@/lib/rag-types";
 import { getVectorizationJobState } from "@/lib/rag-vectorize";
+import { loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +23,7 @@ export async function GET() {
       },
     });
     const job = getVectorizationJobState();
+    const embeddingSettings = await loadEmbeddingRuntimeSettings();
 
     const payload: VectorizationStatus = {
       total_parameters: totalParameters,
@@ -35,6 +37,8 @@ export async function GET() {
       ollama_reachable: job.finishedAt
         ? job.ollamaReachable
         : getLastOllamaReachability(),
+      ollama_model: embeddingSettings.model,
+      ollama_base_url: embeddingSettings.baseUrl,
       last_error: job.lastError ?? getLastOllamaError(),
     };
 

@@ -118,7 +118,7 @@ export function VectorizationDashboard() {
         {status?.ollama_reachable ? (
           <div className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
             Embeddings are generated through local Ollama model{" "}
-            <code>qllama/bge-m3:q8_0</code>.
+            <code>{status.ollama_model}</code>.
           </div>
         ) : (
           <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
@@ -126,7 +126,7 @@ export function VectorizationDashboard() {
               <AlertTriangle className="mt-0.5 size-3.5 shrink-0" />
               <div>
                 Local Ollama is required. Start `ollama serve` and pull
-                `qllama/bge-m3:q8_0` before vectorization.
+                `{status?.ollama_model ?? "the embedding model selected in Settings"}` before vectorization.
                 {status?.last_error ? (
                   <div className="mt-1 opacity-80">Details: {status.last_error}</div>
                 ) : null}
@@ -168,7 +168,7 @@ export function VectorizationDashboard() {
                 <AlertDialogTitle>Recompute all embeddings?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This resets the vectorization status for the whole dataset and
-                  recomputes every embedding through `qllama/bge-m3:q8_0`.
+                  recomputes every embedding through `{status?.ollama_model ?? "the model selected in Settings"}`.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

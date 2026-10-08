@@ -38,7 +38,7 @@ def build_text(param: dict) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--endpoint", default=os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434"))
-    parser.add_argument("--model", default=os.environ.get("OLLAMA_EMBED_MODEL", "qllama/bge-m3:q8_0"))
+    parser.add_argument("--model", default=os.environ.get("OLLAMA_EMBED_MODEL", "qwen3-embedding:4b"))
     parser.add_argument("--dataset", required=True)
     parser.add_argument("--out", required=True)
     parser.add_argument("--timeout", type=float, default=60.0)

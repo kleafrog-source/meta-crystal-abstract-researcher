@@ -19,6 +19,10 @@ Supported commands:
   - rollback <id>      : rollback to a snapshot
   - knowledge_stats    : return stats on the engine knowledge base (domains, operators, patterns)
   - search <query>     : simple text search through crystals (returns matching file paths)
+  - stt <audio>        : transcribe a Russian, English, or mixed-language audio recording
+  - audio_index        : incrementally build the LAION-CLAP V3 text index
+  - audio_index_status : inspect the LAION-CLAP index
+  - audio_search       : map an audio fragment to V3 parameters through CLAP
 
 Output protocol:
   Each line is a JSON object with one of these shapes:
@@ -114,6 +118,84 @@ def emit_error(msg):
 
 def emit_done(result):
     emit({"event": "done", "result": result, "ts": datetime.now().isoformat()})
+
+
+def cmd_stt(audio_path):
+    path = Path(audio_path).resolve()
+    if not path.is_file():
+        raise FileNotFoundError(f"Audio file not found: {path}")
+    try:
+        from faster_whisper import WhisperModel
+        import av
+    except ImportError as exc:
+        raise RuntimeError("faster-whisper is not installed. Run: python -m pip install -r requirements.txt") from exc
+
+    # PyAV 19 removed metadata_errors while faster-whisper 1.2 still passes it.
+    # The option is nonessential for local recordings, so discard it here.
+    av_open = av.open
+    def compatible_av_open(*args, **kwargs):
+        kwargs.pop("metadata_errors", None)
+        return av_open(*args, **kwargs)
+    av.open = compatible_av_open
+
+    model_name = os.environ.get("STT_WHISPER_MODEL", "small")
+    device = os.environ.get("STT_WHISPER_DEVICE", "cpu")
+    compute_type = os.environ.get("STT_WHISPER_COMPUTE_TYPE", "int8" if device == "cpu" else "float16")
+    emit_log("info", f"Loading faster-whisper {model_name} ({device}, {compute_type})")
+    model = WhisperModel(model_name, device=device, compute_type=compute_type)
+    segments, info = model.transcribe(
+        str(path),
+        language=None,
+        beam_size=5,
+        vad_filter=True,
+        condition_on_previous_text=False,
+    )
+    text = " ".join(segment.text.strip() for segment in segments if segment.text.strip()).strip()
+    result = {
+        "text": text,
+        "language": info.language,
+        "language_probability": info.language_probability,
+        "model": model_name,
+    }
+    emit_done(result)
+
+
+def cmd_audio_index():
+    from audio_clap_rag import build_index
+    emit_log("info", "Building incremental LAION-CLAP text index")
+    result = build_index(lambda current, total, label: emit_progress(current * 100 / max(total, 1), f"{current}/{total} {label}"))
+    emit_done(result)
+
+
+def cmd_audio_index_status():
+    from audio_clap_rag import index_status
+    emit_done(index_status())
+
+
+def cmd_audio_search(audio_path, params_path):
+    from audio_clap_rag import search_audio
+    params = safe_json_read(Path(params_path), {})
+    emit_log("info", "Running LAION-CLAP cross-modal audio search")
+    result = search_audio(
+        audio_path,
+        float(params.get("offset", 0)),
+        float(params.get("duration", 8)),
+        int(params.get("top_k", 20)),
+        lambda current, total, label: emit_progress(current * 100 / max(total, 1), f"index {current}/{total} {label}"),
+    )
+    emit_done(result)
+
+
+def cmd_audio_save_fragment(audio_path, params_path):
+    from audio_clap_rag import save_audio_fragment
+    params = safe_json_read(Path(params_path), {})
+    result = save_audio_fragment(
+        audio_path,
+        str(params.get("output_path")),
+        float(params.get("offset", 0)),
+        float(params.get("duration", 8)),
+    )
+    emit_done(result)
 
 
 # ============================================================
@@ -1094,7 +1176,7 @@ def cmd_torus_analyze(params_raw=None):
             tol_speed=float(params.get("tol_speed", 1e-3)),
             geometry_R=float(params.get("geometry_R", 1.2)),
             geometry_r=float(params.get("geometry_r", 0.6)),
-            embedding_model=str(params.get("embedding_model", "qllama/bge-m3:q8_0")),
+            embedding_model=str(params.get("embedding_model", "qwen3-embedding:4b")),
             progress_callback=emit_progress,
         )
         payload = module.serialize_torus_for_web(result)
@@ -1259,6 +1341,25 @@ def main():
         elif cmd == "torus_analyze":
             raw = sys.argv[2] if len(sys.argv) > 2 else None
             cmd_torus_analyze(raw)
+        elif cmd == "stt":
+            if len(sys.argv) < 3:
+                emit_error("Не указан путь к аудиофайлу")
+                return
+            cmd_stt(sys.argv[2])
+        elif cmd == "audio_index":
+            cmd_audio_index()
+        elif cmd == "audio_index_status":
+            cmd_audio_index_status()
+        elif cmd == "audio_search":
+            if len(sys.argv) < 4:
+                emit_error("Не указаны аудиофайл и параметры поиска")
+                return
+            cmd_audio_search(sys.argv[2], sys.argv[3])
+        elif cmd == "audio_save_fragment":
+            if len(sys.argv) < 4:
+                emit_error("Не указаны аудиофайл и параметры фрагмента")
+                return
+            cmd_audio_save_fragment(sys.argv[2], sys.argv[3])
         else:
             emit_error(f"Неизвестная команда: {cmd}")
     except KeyboardInterrupt:

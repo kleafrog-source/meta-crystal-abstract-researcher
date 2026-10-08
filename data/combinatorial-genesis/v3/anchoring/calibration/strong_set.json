@@ -1,0 +1,1916 @@
+{
+  "_meta": {
+    "description": "Strong-set: per-axis шаблонные запросы (RU+EN, 3 степени, 2 направления) + per-kind лексические пробы. Используется для калибровки κ_a (медиана raw-Δ на κ=1) и для per-kind лексического smoke.",
+    "count": 156
+  },
+  "items": [
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "query": "сделай звучание чуть лихорадочно возбуждённым",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "query": "make the sound noticeably feverishly intense",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "query": "сделай звучание сильно предельно возбуждённым",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "query": "make the sound slightly extremely aroused",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "query": "сделай звучание чуть глубоко медитативным",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "query": "make the sound noticeably profoundly meditative",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "ru",
+      "query": "сделай звучание сильно спокойным и медитативным",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_arousal",
+      "language": "en",
+      "query": "make the sound slightly calm and meditative",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "query": "сделай звучание чуть очень светлым и радостным",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "query": "make the sound noticeably bright and joyful",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "query": "сделай звучание сильно восторженным",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "query": "make the sound slightly ecstatic",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "query": "сделай звучание чуть очень тёмным и мрачным",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "query": "make the sound noticeably very dark and gloomy",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "ru",
+      "query": "сделай звучание сильно гнетущим",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "affective_valence",
+      "language": "en",
+      "query": "make the sound slightly oppressive",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "query": "сделай звучание чуть взрывным по скорости",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "query": "make the sound noticeably explosively fast",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "query": "сделай звучание сильно мгновенным по сменам",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "query": "make the sound slightly instantaneous",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "query": "сделай звучание чуть ледниково медленным",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "query": "make the sound noticeably glacially slow",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "ru",
+      "query": "сделай звучание сильно почти неподвижным по энергии",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_speed",
+      "language": "en",
+      "query": "make the sound slightly almost motionless",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "query": "сделай звучание чуть контрастным и пиковым",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "query": "make the sound noticeably contrasty and peaky",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "query": "сделай звучание сильно резким по динамике",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "query": "make the sound slightly sharp dynamics",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "query": "сделай звучание чуть плоским и ровным",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "query": "make the sound noticeably flat and even",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "ru",
+      "query": "сделай звучание сильно без пиков",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "energy_peak_intensity",
+      "language": "en",
+      "query": "make the sound slightly without peaks",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "query": "сделай звучание чуть очень ярким и звонким",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "query": "make the sound noticeably very bright and ringing",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "query": "сделай звучание сильно богатым верхами",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "query": "make the sound slightly rich in highs",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "query": "сделай звучание чуть очень тёмным и глухим",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "query": "make the sound noticeably very dark and muffled",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "ru",
+      "query": "сделай звучание сильно всё в низах",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_brightness",
+      "language": "en",
+      "query": "make the sound slightly all in the lows",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "query": "сделай звучание чуть предельно жёстким и зернистым",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "query": "make the sound noticeably maximally harsh and grainy",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "query": "сделай звучание сильно диссонирующим",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "query": "make the sound slightly dissonant",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "query": "сделай звучание чуть идеально гладким и чистым",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "query": "make the sound noticeably perfectly smooth and clean",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "ru",
+      "query": "сделай звучание сильно почти стерильным",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "timbre_roughness",
+      "language": "en",
+      "query": "make the sound slightly almost sterile",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "query": "сделай звучание чуть почти непрерывно плотным",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "query": "make the sound noticeably near-continuous and dense",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "query": "сделай звучание сильно плотным потоком",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "query": "make the sound slightly dense stream",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "query": "сделай звучание чуть редким и воздушным",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "query": "make the sound noticeably sparse and airy",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "ru",
+      "query": "сделай звучание сильно с большим пустым пространством",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "rhythmic_density",
+      "language": "en",
+      "query": "make the sound slightly with lots of space",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "query": "сделай звучание чуть дико непредсказуемым",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "query": "make the sound noticeably wildly unpredictable",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "query": "сделай звучание сильно с сильной хаотической модуляцией",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "query": "make the sound slightly strong chaotic modulation",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "query": "сделай звучание чуть полностью стабильным и предсказуемым",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "query": "make the sound noticeably fully stable and predictable",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "ru",
+      "query": "сделай звучание сильно без сюрпризов",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "chaos_amplitude",
+      "language": "en",
+      "query": "make the sound slightly no surprises",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "query": "сделай звучание чуть стремительным в движении",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "query": "make the sound noticeably rapid in motion",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "query": "сделай звучание сильно сложным в стерео",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "query": "make the sound slightly complex in stereo",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "query": "сделай звучание чуть статичным в пространстве",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "query": "make the sound noticeably static in space",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "ru",
+      "query": "сделай звучание сильно зафиксированным в центре",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_motion",
+      "language": "en",
+      "query": "make the sound slightly fixed in centre",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "query": "сделай звучание чуть очень глубоким и залитым эхом",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "query": "make the sound noticeably very deep and drenched in echo",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "query": "сделай звучание сильно объёмным залом",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "query": "make the sound slightly voluminous hall",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "query": "сделай звучание чуть сухим и плоским",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "query": "make the sound noticeably dry and flat",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "ru",
+      "query": "сделай звучание сильно без эха",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "spatial_depth",
+      "language": "en",
+      "query": "make the sound slightly without echo",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "query": "сделай звучание чуть максимально органичным и живым",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "query": "make the sound noticeably maximally organic and alive",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "query": "сделай звучание сильно естественным",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "query": "make the sound slightly natural",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "query": "сделай звучание чуть максимально механическим и синтетическим",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "query": "make the sound noticeably maximally mechanical and synthetic",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "ru",
+      "query": "сделай звучание сильно жёстким",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "organic_mechanical",
+      "language": "en",
+      "query": "make the sound slightly rigid",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "query": "сделай звучание чуть сильно расстроенным",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "query": "make the sound noticeably heavily detuned",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "query": "сделай звучание сильно с блуждающей высотой",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "query": "make the sound slightly wandering pitch",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "query": "сделай звучание чуть идеально в строе",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "query": "make the sound noticeably perfectly in tune",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "ru",
+      "query": "сделай звучание сильно стабильным",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "tonal_instability",
+      "language": "en",
+      "query": "make the sound slightly locked and stable",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "query": "сделай звучание чуть с максимальным семантическим контролем",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "query": "make the sound noticeably with maximal semantic control",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "query": "сделай звучание сильно семантика рулит",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "query": "make the sound slightly semantics rule",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "query": "сделай звучание чуть с минимумом семантического контроля",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "query": "make the sound noticeably with minimal semantic control",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "ru",
+      "query": "сделай звучание сильно почти без семантики",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "semantic_control_strength",
+      "language": "en",
+      "query": "make the sound slightly barely semantic",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "query": "сделай звучание чуть с яркой синестезией",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "query": "make the sound noticeably with bright synesthesia",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "query": "сделай звучание сильно насыщенными образами",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "query": "make the sound slightly saturated imagery",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "query": "сделай звучание чуть чисто звуковым",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "query": "make the sound noticeably purely sonic",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "ru",
+      "query": "сделай звучание сильно без образности",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "visual_metaphor_intensity",
+      "language": "en",
+      "query": "make the sound slightly no imagery",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "query": "сделай звучание чуть радикально экспериментальным",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "query": "make the sound noticeably radically experimental",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "query": "сделай звучание сильно ломающим жанр",
+      "expected_sign": 1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "query": "make the sound slightly genre-breaking",
+      "expected_sign": 1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "query": "сделай звучание чуть строго традиционным",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "query": "make the sound noticeably strictly traditional",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "ru",
+      "query": "сделай звучание сильно верным жанру",
+      "expected_sign": -1,
+      "target_delta_abs": 0.55,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": "style_traditional_radical",
+      "language": "en",
+      "query": "make the sound slightly genre-faithful",
+      "expected_sign": -1,
+      "target_delta_abs": 0.35,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "axis_strong"
+    },
+    {
+      "axis": null,
+      "kind": "tempo",
+      "language": "ru",
+      "query": "сделай быстрее темп заметно",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "tempo",
+      "language": "en",
+      "query": "make the tempo быстрее, noticeably",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "tempo",
+      "language": "ru",
+      "query": "сделай медленнее темп заметно",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "tempo",
+      "language": "en",
+      "query": "make the tempo медленнее, noticeably",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "duration",
+      "language": "ru",
+      "query": "сделай плавнее атаку заметно",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "duration",
+      "language": "en",
+      "query": "make the attack плавнее, noticeably",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "duration",
+      "language": "ru",
+      "query": "сделай резче атаку заметно",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "duration",
+      "language": "en",
+      "query": "make the attack резче, noticeably",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "rate",
+      "language": "ru",
+      "query": "сделай быстрее скорость LFO заметно",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "rate",
+      "language": "en",
+      "query": "make the LFO rate быстрее, noticeably",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "rate",
+      "language": "ru",
+      "query": "сделай медленнее скорость LFO заметно",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "rate",
+      "language": "en",
+      "query": "make the LFO rate медленнее, noticeably",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "level",
+      "language": "ru",
+      "query": "сделай громче уровень заметно",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "level",
+      "language": "en",
+      "query": "make the level громче, noticeably",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "level",
+      "language": "ru",
+      "query": "сделай тише уровень заметно",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "level",
+      "language": "en",
+      "query": "make the level тише, noticeably",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "density",
+      "language": "ru",
+      "query": "сделай плотнее плотность заметно",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "density",
+      "language": "en",
+      "query": "make the density плотнее, noticeably",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "density",
+      "language": "ru",
+      "query": "сделай реже плотность заметно",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "density",
+      "language": "en",
+      "query": "make the density реже, noticeably",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "detune",
+      "language": "ru",
+      "query": "сделай расстроеннее строй заметно",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "detune",
+      "language": "en",
+      "query": "make the tuning расстроеннее, noticeably",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "detune",
+      "language": "ru",
+      "query": "сделай точнее строй заметно",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "detune",
+      "language": "en",
+      "query": "make the tuning точнее, noticeably",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "length",
+      "language": "ru",
+      "query": "сделай длиннее хвост заметно",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "length",
+      "language": "en",
+      "query": "make the tail длиннее, noticeably",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "length",
+      "language": "ru",
+      "query": "сделай короче хвост заметно",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "length",
+      "language": "en",
+      "query": "make the tail короче, noticeably",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "amount",
+      "language": "ru",
+      "query": "сделай глубже глубину заметно",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "amount",
+      "language": "en",
+      "query": "make the depth глубже, noticeably",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "amount",
+      "language": "ru",
+      "query": "сделай слабее глубину заметно",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "amount",
+      "language": "en",
+      "query": "make the depth слабее, noticeably",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "count",
+      "language": "ru",
+      "query": "сделай больше число заметно",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "count",
+      "language": "en",
+      "query": "make the count больше, noticeably",
+      "expected_sign": 1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "count",
+      "language": "ru",
+      "query": "сделай меньше число заметно",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    },
+    {
+      "axis": null,
+      "kind": "count",
+      "language": "en",
+      "query": "make the count меньше, noticeably",
+      "expected_sign": -1,
+      "target_delta_abs": 0.45,
+      "expected_delta_range": [
+        0.3,
+        0.6
+      ],
+      "category": "kind_lexical"
+    }
+  ]
+}

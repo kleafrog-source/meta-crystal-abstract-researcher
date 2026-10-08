@@ -40,7 +40,7 @@ def main() -> int:
         anchors_path=str(anchoring_dir / "anchors_build.json"),
         lexical_dir=str(anchoring_dir / "lexical"),
         ollama_endpoint=os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434"),
-        ollama_model=os.environ.get("OLLAMA_EMBED_MODEL", "qllama/bge-m3:q8_0"),
+        ollama_model=os.environ.get("OLLAMA_EMBED_MODEL", "qwen3-embedding:4b"),
     )
 
     response = anchor_query(query, scoped_params, current_values, cfg)

@@ -12,7 +12,7 @@ from sklearn.preprocessing import normalize
 warnings.filterwarnings("ignore")
 
 
-def get_ollama_embedding(text: str, model: str = "qllama/bge-m3:q8_0") -> np.ndarray:
+def get_ollama_embedding(text: str, model: str = "qwen3-embedding:4b") -> np.ndarray:
     """Получить эмбеддинг из локального Ollama."""
     url = "http://localhost:11434/api/embeddings"
     payload = {"model": model, "prompt": text}
@@ -26,7 +26,7 @@ def get_ollama_embedding(text: str, model: str = "qllama/bge-m3:q8_0") -> np.nda
     return emb
 
 
-def get_embeddings_ollama(docs, query, model="qllama/bge-m3:q8_0", progress_callback=None):
+def get_embeddings_ollama(docs, query, model="qwen3-embedding:4b", progress_callback=None):
     total = max(len(docs), 1)
     vectors = []
     for index, doc in enumerate(docs, start=1):
@@ -478,7 +478,7 @@ def analyze_torus_flow(
     tol_speed: float = 1e-3,
     geometry_R: float = 1.2,
     geometry_r: float = 0.6,
-    embedding_model: str = "qllama/bge-m3:q8_0",
+    embedding_model: str = "qwen3-embedding:4b",
     progress_callback=None,
 ):
     """Чистое ядро GW-Collapser: вычисляет layout, flow, top-k и MMSS."""

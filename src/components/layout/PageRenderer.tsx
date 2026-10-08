@@ -15,6 +15,10 @@ import { MetisResearchLab } from "@/components/pages/MetisResearchLab";
 import { Pipelines } from "@/components/pages/Pipelines";
 import { RagParametersPage } from "@/components/pages/RagParametersPage";
 import { RagParametersV2Page } from "@/components/pages/RagParametersV2Page";
+import { RagParametersV3Page } from "@/components/pages/RagParametersV3Page";
+import { CombinatorialGenesisPage } from "@/components/pages/CombinatorialGenesisPage";
+import { CombinatorialSynthesisPage } from "@/components/pages/CombinatorialSynthesisPage";
+import { AudioClapRagPage } from "@/components/pages/AudioClapRagPage";
 import { SemanticPlane } from "@/components/pages/SemanticPlane";
 import { Settings } from "@/components/pages/Settings";
 import { StrudelFlowEditor } from "@/components/pages/StrudelFlowEditor";
@@ -65,6 +69,14 @@ export function PageRenderer(props: {
       return <RagParametersPage />;
     case "ragparametersv2":
       return <RagParametersV2Page />;
+    case "ragparametersv3":
+      return <RagParametersV3Page />;
+    case "combinatorialgenesis":
+      return <CombinatorialGenesisPage />;
+    case "combinatorialsynthesis":
+      return <CombinatorialSynthesisPage />;
+    case "audioclaprag":
+      return <AudioClapRagPage />;
     case "settings":
       return <Settings />;
     default:

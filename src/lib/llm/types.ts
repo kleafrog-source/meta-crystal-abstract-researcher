@@ -25,6 +25,8 @@ export interface LLMChatOptions {
   topP?: number;
   /** Max tokens to generate */
   maxTokens?: number;
+  /** Keep a local Ollama model resident between sequential requests. */
+  keepAlive?: string;
   /** Optional system prompt prepended to the conversation */
   system?: string;
   /** RAG-injected context block, inserted after the system prompt */

@@ -17,6 +17,22 @@ function pathnameToPage(pathname: string): PageId {
     return "ragparametersv2";
   }
 
+  if (pathname === "/rag-parameters-v3") {
+    return "ragparametersv3";
+  }
+
+  if (pathname === "/combinatorial-genesis") {
+    return "combinatorialgenesis";
+  }
+
+  if (pathname === "/combinatorial-synthesis") {
+    return "combinatorialsynthesis";
+  }
+
+  if (pathname === "/audio-clap-rag") {
+    return "audioclaprag";
+  }
+
   return "dashboard";
 }
 
@@ -51,6 +67,26 @@ export function AppShell({ children }: AppShellProps) {
 
     if (page === "ragparametersv2") {
       router.push("/rag-parameters-v2");
+      return;
+    }
+
+    if (page === "ragparametersv3") {
+      router.push("/rag-parameters-v3");
+      return;
+    }
+
+    if (page === "combinatorialgenesis") {
+      router.push("/combinatorial-genesis");
+      return;
+    }
+
+    if (page === "combinatorialsynthesis") {
+      router.push("/combinatorial-synthesis");
+      return;
+    }
+
+    if (page === "audioclaprag") {
+      router.push("/audio-clap-rag");
       return;
     }
 

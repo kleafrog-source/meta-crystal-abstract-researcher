@@ -1,12 +1,12 @@
+import { loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
+
 const DEFAULT_OLLAMA_BASE_URL = "http://localhost:11434";
-const DEFAULT_OLLAMA_MODEL = "qllama/bge-m3:q8_0";
+const DEFAULT_OLLAMA_MODEL = "qwen3-embedding:4b";
 const DEFAULT_PROBE_TIMEOUT_MS = 30_000;
 const DEFAULT_EMBED_TIMEOUT_MS = 180_000;
 
-const OLLAMA_BASE_URL =
-  process.env.OLLAMA_BASE_URL?.replace(/\/$/, "") ?? DEFAULT_OLLAMA_BASE_URL;
-const OLLAMA_MODEL =
-  process.env.OLLAMA_EMBED_MODEL?.trim() || DEFAULT_OLLAMA_MODEL;
+let activeBaseUrl = DEFAULT_OLLAMA_BASE_URL;
+let activeModel = DEFAULT_OLLAMA_MODEL;
 const OLLAMA_PROBE_TIMEOUT_MS = parseTimeout(
   process.env.OLLAMA_PROBE_TIMEOUT_MS,
   DEFAULT_PROBE_TIMEOUT_MS,
@@ -15,8 +15,6 @@ const OLLAMA_EMBED_TIMEOUT_MS = parseTimeout(
   process.env.OLLAMA_EMBED_TIMEOUT_MS,
   DEFAULT_EMBED_TIMEOUT_MS,
 );
-const OLLAMA_EMBEDDINGS_ENDPOINT = `${OLLAMA_BASE_URL}/api/embeddings`;
-const OLLAMA_EMBED_ENDPOINT = `${OLLAMA_BASE_URL}/api/embed`;
 
 let lastReachable = false;
 let lastError: string | null = null;
@@ -40,9 +38,9 @@ function parseTimeout(value: string | undefined, fallback: number): number {
   return Math.floor(parsed);
 }
 
-function buildOllamaError(message: string): Error {
+function buildOllamaError(message: string, baseUrl = activeBaseUrl, model = activeModel): Error {
   return new Error(
-    `${message}. Ensure Ollama is running at ${OLLAMA_BASE_URL}, model "${OLLAMA_MODEL}" is available, and the current timeout is long enough (probe=${OLLAMA_PROBE_TIMEOUT_MS}ms, embed=${OLLAMA_EMBED_TIMEOUT_MS}ms).`,
+    `${message}. Ensure Ollama is running at ${baseUrl}, model "${model}" is available, and the current timeout is long enough (probe=${OLLAMA_PROBE_TIMEOUT_MS}ms, embed=${OLLAMA_EMBED_TIMEOUT_MS}ms).`,
   );
 }
 
@@ -50,30 +48,35 @@ async function requestEmbedding(
   input: string,
   timeoutMs: number,
 ): Promise<number[]> {
+  const settings = await loadEmbeddingRuntimeSettings();
+  activeBaseUrl = settings.baseUrl;
+  activeModel = settings.model;
+  const embeddingsEndpoint = `${settings.baseUrl}/api/embeddings`;
+  const embedEndpoint = `${settings.baseUrl}/api/embed`;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    let response = await fetch(OLLAMA_EMBEDDINGS_ENDPOINT, {
+    let response = await fetch(embeddingsEndpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: OLLAMA_MODEL,
+        model: settings.model,
         prompt: input,
       }),
       signal: controller.signal,
     });
 
     if (!response.ok) {
-      response = await fetch(OLLAMA_EMBED_ENDPOINT, {
+      response = await fetch(embedEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: OLLAMA_MODEL,
+          model: settings.model,
           input,
         }),
         signal: controller.signal,
@@ -83,13 +86,15 @@ async function requestEmbedding(
     if (!response.ok) {
       throw buildOllamaError(
         `Ollama responded with HTTP ${response.status} ${response.statusText}`,
+        settings.baseUrl,
+        settings.model,
       );
     }
 
     const payload = (await response.json()) as OllamaEmbeddingsResponse;
     const vector = extractEmbedding(payload);
     if (!vector) {
-      throw buildOllamaError("Ollama returned an empty embedding");
+      throw buildOllamaError("Ollama returned an empty embedding", settings.baseUrl, settings.model);
     }
 
     lastReachable = true;
@@ -153,6 +158,38 @@ export async function embedText(text: string): Promise<number[]> {
   return requestEmbedding(normalized, OLLAMA_EMBED_TIMEOUT_MS);
 }
 
+export async function embedTexts(texts: string[]): Promise<number[][]> {
+  const normalized = texts.map((text) => text.trim());
+  if (normalized.length === 0 || normalized.some((text) => !text)) {
+    throw new Error("Cannot embed an empty text batch.");
+  }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), OLLAMA_EMBED_TIMEOUT_MS);
+  try {
+    const settings = await loadEmbeddingRuntimeSettings();
+    activeBaseUrl = settings.baseUrl;
+    activeModel = settings.model;
+    const response = await fetch(`${settings.baseUrl}/api/embed`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model: settings.model, input: normalized }),
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      return Promise.all(normalized.map((text) => requestEmbedding(text, OLLAMA_EMBED_TIMEOUT_MS)));
+    }
+    const payload = (await response.json()) as OllamaEmbeddingsResponse;
+    if (!Array.isArray(payload.embeddings) || payload.embeddings.length !== normalized.length) {
+      throw buildOllamaError("Ollama returned an unexpected embedding batch");
+    }
+    lastReachable = true;
+    lastError = null;
+    return payload.embeddings;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export function getLastOllamaReachability(): boolean {
   return lastReachable;
 }
@@ -162,11 +199,11 @@ export function getLastOllamaError(): string | null {
 }
 
 export function getOllamaModel(): string {
-  return OLLAMA_MODEL;
+  return activeModel;
 }
 
 export function getOllamaBaseUrl(): string {
-  return OLLAMA_BASE_URL;
+  return activeBaseUrl;
 }
 
 export function getOllamaTimeouts(): {

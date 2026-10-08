@@ -57,6 +57,18 @@ server.log
 # local runtime data
 /data/**
 !/data/.gitkeep
+!/data/combinatorial-genesis/
+!/data/combinatorial-genesis/README.md
+!/data/combinatorial-genesis/flowmusic-inbox/
+!/data/combinatorial-genesis/flowmusic-inbox/.gitkeep
+!/data/combinatorial-genesis/flowmusic-output/
+!/data/combinatorial-genesis/flowmusic-output/.gitkeep
+!/data/combinatorial-genesis/reference/
+!/data/combinatorial-genesis/library/
+!/data/combinatorial-genesis/v3/
+!/data/combinatorial-genesis/v3/anchoring/
+!/data/combinatorial-genesis/v3/anchoring/**
+/data/combinatorial-genesis/v3/anchoring/anchors_build.json
 /db/**
 !/db/.gitkeep
 /prisma/*.db
@@ -69,6 +81,8 @@ server.log
 /download/
 /extracted/
 /upload/
+/audio_parts/**
+!/audio_parts/.gitkeep
 /.agents/
 /.vscode/
 /backups/
@@ -100,3 +114,14 @@ src/strudel-editor/data/datasets/strudel_patterns.jsonl
 src/strudel-editor/data/datasets/strudel_patterns.parquet
 src/strudel-editor/data/datasets/strudel_patterns_manifest.json
 src/strudel-editor/data/datasets/strudel_pattern_index/
+src/strudel-editor/data/datasets/strudel_role_block_index/
+
+# generated embedding/vector artifacts (rebuild locally)
+z-ai-glm-flowmusic-rag-ui-v2/anchoring/retrieval_index.json
+z-ai-glm-flowmusic-rag-ui-v2/anchoring/anchors_build.json
+z-ai-glm-flowmusic-rag-ui-v2/anchoring/eval_report.json
+
+# raw copied model sessions and local dataset collection examples
+/current-dataset-collection-example-session.txt
+/qwen-session-discussion.txt
+/two-test-answers-from-2 accounts-flowmusic.app.txt

@@ -145,7 +145,7 @@ const DEFAULT_FORM = {
   tol_speed: 0.001,
   geometry_R: 1.2,
   geometry_r: 0.6,
-  embedding_model: "qllama/bge-m3:q8_0",
+  embedding_model: "qwen3-embedding:4b",
 };
 
 export function GWCollapser() {

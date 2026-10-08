@@ -239,7 +239,7 @@ def main() -> None:
         choices=["auto", "ollama", "sentence-transformers", "hash"],
         default="auto",
     )
-    parser.add_argument("--model", default="qllama/bge-m3:q8_0")
+    parser.add_argument("--model", default="qwen3-embedding:4b")
     parser.add_argument("--ollama-host", default="http://localhost:11434")
     parser.add_argument("--hash-dims", type=int, default=768)
     args = parser.parse_args()

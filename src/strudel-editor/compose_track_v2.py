@@ -561,7 +561,7 @@ def main() -> None:
     parser.add_argument("query", type=str)
     parser.add_argument("--index", type=Path, default=INDEX_DIR)
     parser.add_argument("--backend", choices=["auto", "hash", "ollama", "sentence-transformers"], default="auto")
-    parser.add_argument("--model", default="qllama/bge-m3:q8_0")
+    parser.add_argument("--model", default="qwen3-embedding:4b")
     parser.add_argument("--ollama-host", default="http://localhost:11434")
     parser.add_argument("--hash-dims", type=int, default=768)
     args = parser.parse_args()

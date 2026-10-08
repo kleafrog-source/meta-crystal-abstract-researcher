@@ -1,5 +1,7 @@
 import { spawn } from "node:child_process";
 
+import { embeddingProcessEnv, loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
+
 import {
   RAG_V2_ANCHORING_DIR,
   RAG_V2_ANCHORS_PATH,
@@ -77,6 +79,7 @@ function startJob(params: {
   cwd: string;
   onFinish?: () => void;
   stateRef: "retrieval" | "anchors";
+  env: NodeJS.ProcessEnv;
 }): { started: boolean; reason?: string } {
   const state = params.stateRef === "retrieval" ? retrievalIndexJob : anchorsJob;
   if (state.running) {
@@ -94,12 +97,7 @@ function startJob(params: {
 
   const child = spawn(params.command, params.args, {
     cwd: params.cwd,
-    env: {
-      ...process.env,
-      PYTHONUTF8: "1",
-      PYTHONIOENCODING: "utf-8",
-      PYTHONUNBUFFERED: "1",
-    },
+    env: params.env,
     stdio: ["ignore", "pipe", "pipe"],
   });
 
@@ -132,7 +130,8 @@ function startJob(params: {
   return { started: true };
 }
 
-export function startRetrievalIndexBuild(): { started: boolean; reason?: string } {
+export async function startRetrievalIndexBuild(): Promise<{ started: boolean; reason?: string }> {
+  const settings = await loadEmbeddingRuntimeSettings();
   return startJob({
     stateRef: "retrieval",
     command: "python",
@@ -145,11 +144,13 @@ export function startRetrievalIndexBuild(): { started: boolean; reason?: string 
       "--out",
       RAG_V2_RETRIEVAL_INDEX_PATH,
     ],
+    env: embeddingProcessEnv(settings),
     onFinish: () => invalidateRetrievalIndexMeta(),
   });
 }
 
-export function startAnchorsBuild(): { started: boolean; reason?: string } {
+export async function startAnchorsBuild(): Promise<{ started: boolean; reason?: string }> {
+  const settings = await loadEmbeddingRuntimeSettings();
   return startJob({
     stateRef: "anchors",
     command: "python",
@@ -158,9 +159,9 @@ export function startAnchorsBuild(): { started: boolean; reason?: string } {
       "-u",
       "build_anchors.py",
       "--endpoint",
-      process.env.OLLAMA_BASE_URL?.replace(/\/$/, "") ?? "http://localhost:11434",
+      settings.baseUrl,
       "--model",
-      process.env.OLLAMA_EMBED_MODEL?.trim() || "qllama/bge-m3:q8_0",
+      settings.model,
       "--dataset",
       RAG_V2_DATASET_PATH,
       "--axes",
@@ -174,6 +175,7 @@ export function startAnchorsBuild(): { started: boolean; reason?: string } {
       "--out",
       RAG_V2_ANCHORS_PATH,
     ],
+    env: embeddingProcessEnv(settings),
     onFinish: () => invalidateAnchorsMeta(),
   });
 }

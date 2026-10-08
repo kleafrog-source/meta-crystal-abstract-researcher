@@ -5,6 +5,6 @@ import { startRetrievalIndexBuild } from "@/lib/rag-v2/build-jobs";
 export const dynamic = "force-dynamic";
 
 export async function POST() {
-  const result = startRetrievalIndexBuild();
+  const result = await startRetrievalIndexBuild();
   return NextResponse.json(result, { status: result.started ? 200 : 409 });
 }

@@ -5,7 +5,7 @@ build_anchors.py — Этап F: сборка anchors_build.json.
 
 Запускается ЛОКАЛЬНО пользователем с уже поднятым Ollama:
     python build_anchors.py --endpoint http://localhost:11434 \
-        --model qllama/bge-m3:q8_0 \
+        --model qwen3-embedding:4b \
         [--dataset unified_parameters_enriched.json] \
         [--axes axes.json] \
         [--strong calibration/strong_set.json] \
@@ -607,7 +607,7 @@ def _now_iso() -> str:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--endpoint", default="http://localhost:11434")
-    ap.add_argument("--model", default="qllama/bge-m3:q8_0")
+    ap.add_argument("--model", default="qwen3-embedding:4b")
     ap.add_argument("--dataset", default="unified_parameters_enriched.json")
     ap.add_argument("--axes", default="axes.json")
     ap.add_argument("--polarity", default="polarity_matrix.json")

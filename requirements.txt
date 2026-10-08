@@ -6,3 +6,7 @@ scikit-learn
 requests
 matplotlib
 umap-learn
+faster-whisper
+transformers
+librosa
+soundfile

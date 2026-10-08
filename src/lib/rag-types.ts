@@ -32,6 +32,8 @@ export interface VectorizationStatus {
   total_in_run: number;
   errors_in_run: number;
   ollama_reachable: boolean;
+  ollama_model: string;
+  ollama_base_url: string;
   last_error: string | null;
 }
 

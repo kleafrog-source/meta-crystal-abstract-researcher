@@ -32,7 +32,7 @@ const DEFAULT_CONFIG: MetisProviderConfig = {
   vllmEmbeddingModel: process.env.METIS_VLLM_EMBED_MODEL || "BAAI/bge-small-en-v1.5",
   ollamaBaseUrl: process.env.METIS_OLLAMA_BASE_URL || "http://127.0.0.1:11434",
   ollamaModel: process.env.METIS_OLLAMA_MODEL || "mmss-qwen2.5-3b-cpu2:latest",
-  ollamaEmbeddingModel: process.env.METIS_OLLAMA_EMBED_MODEL || "qllama/bge-m3:q8_0",
+  ollamaEmbeddingModel: process.env.METIS_OLLAMA_EMBED_MODEL || "qwen3-embedding:4b",
   temperature: Number(process.env.METIS_TEMPERATURE || 0.5),
   maxTokens: Number(process.env.METIS_MAX_TOKENS || 180),
   requestTimeoutMs: Number(process.env.METIS_REQUEST_TIMEOUT_MS || 60000),

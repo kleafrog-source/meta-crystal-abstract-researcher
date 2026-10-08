@@ -2,7 +2,7 @@
 //
 // The endpoint called is exactly:
 //   POST http://localhost:11434/api/embeddings
-//   { "model": "qllama/bge-m3:q8_0", "input": <text> }
+//   { "model": "qwen3-embedding:4b", "input": <text> }
 // as specified in the task. The model name and base URL are configurable
 // through env vars (OLLAMA_EMBED_BASE_URL, OLLAMA_EMBED_MODEL) so a local
 // user can point at a different port / tag without touching code.
@@ -26,7 +26,7 @@ const OLLAMA_BASE_URL =
   process.env.OLLAMA_EMBED_BASE_URL?.replace(/\/$/, "") ??
   "http://localhost:11434";
 const OLLAMA_MODEL =
-  (process.env.OLLAMA_EMBED_MODEL ?? "qllama/bge-m3:q8_0").trim();
+  (process.env.OLLAMA_EMBED_MODEL ?? "qwen3-embedding:4b").trim();
 const OLLAMA_EMBEDDING_ENDPOINT = `${OLLAMA_BASE_URL}/api/embeddings`;
 
 // bge-m3 produces 1024-dimensional vectors. The fallback embedding uses

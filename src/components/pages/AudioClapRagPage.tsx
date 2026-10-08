@@ -1,0 +1,58 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AudioWaveform, Database, HardDrive, Loader2, RotateCcw, Search, Upload } from "lucide-react";
+import { AudioWaveformEditor } from "@/components/audio/AudioWaveformEditor";
+import { MacroGenerator } from "@/components/rag-v3/MacroGenerator";
+import { VirtualizedParamList } from "@/components/rag-v3/VirtualizedParamList";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { FieldHint, FieldLabel } from "@/components/ui/field-hint";
+import { Input } from "@/components/ui/input";
+import type { ActiveParameter } from "@/lib/rag-v3/types";
+
+interface IndexStatus { ready?: boolean; model?: string; parameter_count?: number; created_at?: string; encoded?: number; reused?: number; error?: string }
+interface SavedPart { name: string; size: number }
+
+export function AudioClapRagPage() {
+  const [file, setFile] = useState<File | null>(null); const [audioUrl, setAudioUrl] = useState<string | null>(null); const [audioDuration, setAudioDuration] = useState(0);
+  const [offset, setOffset] = useState("0"); const [duration, setDuration] = useState("8"); const [topK, setTopK] = useState("20");
+  const [parameters, setParameters] = useState<ActiveParameter[]>([]); const [indexStatus, setIndexStatus] = useState<IndexStatus>({});
+  const [parts, setParts] = useState<SavedPart[]>([]); const [busy, setBusy] = useState<"index" | "search" | "save" | "load" | null>(null); const [error, setError] = useState<string | null>(null); const [notice, setNotice] = useState<string | null>(null); const [resetKey, setResetKey] = useState(0);
+  const effectiveDuration = Math.max(1, Math.min(800, Number(duration) || 8, audioDuration || 800)); const maxOffset = Math.max(0, audioDuration - effectiveDuration); const effectiveOffset = Math.max(0, Math.min(maxOffset, Number(offset) || 0));
+  const fragmentLabel = useMemo(() => `${effectiveOffset.toFixed(2)}s — ${(effectiveOffset + effectiveDuration).toFixed(2)}s`, [effectiveDuration, effectiveOffset]);
+  const refreshParts = useCallback(() => fetch("/api/audio/parts", { cache: "no-store" }).then((r) => r.json()).then((data: { files?: SavedPart[] }) => setParts(data.files ?? [])).catch(() => undefined), []);
+
+  useEffect(() => { fetch("/api/audio/index", { cache: "no-store" }).then((r) => r.json()).then(setIndexStatus).catch((caught) => setIndexStatus({ error: String(caught) })); void refreshParts(); }, [refreshParts]);
+  useEffect(() => () => { if (audioUrl) URL.revokeObjectURL(audioUrl); }, [audioUrl]);
+  const chooseFile = useCallback((next: File | null) => { setAudioUrl((old) => { if (old) URL.revokeObjectURL(old); return next ? URL.createObjectURL(next) : null; }); setFile(next); setAudioDuration(0); setOffset("0"); setDuration("8"); setParameters([]); setError(null); setNotice(null); setResetKey((v) => v + 1); }, []);
+  const handleAudioDuration = useCallback((total: number) => { setAudioDuration(total); setDuration((current) => String(Math.min(Number(current) || 8, total || 8))); }, []);
+  const handleRegion = useCallback((start: number, length: number) => { setOffset(start.toFixed(3)); setDuration(length.toFixed(3)); }, []);
+  const reset = () => { chooseFile(null); setTopK("20"); };
+  const loadPart = async (name: string) => { setBusy("load"); try { const response = await fetch(`/api/audio/parts?name=${encodeURIComponent(name)}`); if (!response.ok) throw new Error("Не удалось открыть сохранённый фрагмент"); chooseFile(new File([await response.blob()], name, { type: response.headers.get("content-type") ?? "audio/wav" })); } catch (caught) { setError(caught instanceof Error ? caught.message : String(caught)); } finally { setBusy(null); } };
+  const buildIndex = async () => { setBusy("index"); setError(null); try { const response = await fetch("/api/audio/index", { method: "POST" }); const payload = await response.json(); if (!response.ok) throw new Error(payload.error); setIndexStatus({ ...payload, ready: true }); } catch (caught) { setError(caught instanceof Error ? caught.message : String(caught)); } finally { setBusy(null); } };
+  const searchAudio = async () => { if (!file) return; setBusy("search"); setError(null); try { const form = new FormData(); form.append("audio", file, file.name); form.append("offset", String(effectiveOffset)); form.append("duration", String(effectiveDuration)); form.append("top_k", String(Math.max(3, Math.min(100, Math.trunc(Number(topK) || 20))))); const response = await fetch("/api/audio/search", { method: "POST", body: form }); const payload = await response.json(); if (!response.ok || !Array.isArray(payload.results)) throw new Error(payload.error ?? `HTTP ${response.status}`); setParameters(payload.results); if (payload.index) setIndexStatus({ ...payload.index, ready: true }); setNotice(`Проанализировано CLAP-окон: ${payload.fragment_chunks ?? 1}`); } catch (caught) { setError(caught instanceof Error ? caught.message : String(caught)); } finally { setBusy(null); } };
+  const saveFragment = async () => { if (!file) return; setBusy("save"); setError(null); try { const form = new FormData(); form.append("audio", file, file.name); form.append("original_name", file.name); form.append("offset", String(effectiveOffset)); form.append("duration", String(effectiveDuration)); const response = await fetch("/api/audio/save-fragment", { method: "POST", body: form }); const payload = await response.json(); if (!response.ok) throw new Error(payload.error); setNotice(`Сохранено: ${payload.filename}`); await refreshParts(); } catch (caught) { setError(caught instanceof Error ? caught.message : String(caught)); } finally { setBusy(null); } };
+  const updateValue = (name: string, value: number | string) => setParameters((current) => current.map((item) => item.technical_name === name ? { ...item, current_value: value } : item));
+
+  return <div className="flowmusic-console flex h-full flex-col">
+    <header className="border-b border-white/15 bg-black/70 px-4 py-3"><div className="flex flex-wrap items-center justify-between gap-3"><div><h1 className="flex items-center gap-2 font-mono text-lg font-semibold text-white"><AudioWaveform className="size-5 text-cyan-300" />Audio CLAP RAG · V3 Parameter Mapper</h1><p className="mt-1 text-xs text-zinc-500">Cross-modal audio → text retrieval through laion/clap-htsat-fused.</p></div><div className="flex flex-wrap gap-2"><Badge variant="outline">model: {indexStatus.model ?? "laion/clap-htsat-fused"}</Badge><Badge variant="outline">index: {indexStatus.ready ? `${indexStatus.parameter_count ?? 0} ready` : "not built"}</Badge><Button size="sm" variant="outline" onClick={reset}><RotateCcw className="size-4" />Сбросить Audio RAG</Button></div></div></header>
+    <div className="flex-1 overflow-auto p-3"><div className="mx-auto flex w-full max-w-[1920px] flex-col gap-3">
+      <section className="space-y-3 rounded-lg border border-cyan-400/25 bg-cyan-950/10 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2"><div><h2 className="font-mono text-sm font-semibold uppercase tracking-wide">1 · Аудиореференс и фрагмент</h2><p className="mt-1 text-xs text-zinc-400">Выберите на волне участок до 800 секунд. Длинные участки усредняются по CLAP-окнам.</p></div><div className="flex items-center gap-1"><Button variant="outline" onClick={() => void buildIndex()} disabled={busy !== null}><Database className="size-4" />{busy === "index" ? "Индексация..." : "Обновить CLAP-индекс"}</Button><FieldHint hint="Дописывает новые и изменённые параметры V3, переиспользуя кэш остальных векторов." /></div></div>
+        <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_420px]"><div className="space-y-2">
+          <FieldLabel label="Аудиофайл" hint="Можно выбрать, перетащить, записать с микрофона или открыть из audio_parts." />
+          <label className="flex min-h-16 cursor-pointer items-center justify-center gap-2 rounded border border-dashed border-cyan-400/30 bg-black/30 px-4 text-sm text-zinc-400"><Upload className="size-5" />{file ? file.name : "Выбрать аудиофайл"}<input className="hidden" type="file" accept="audio/*" onChange={(e) => chooseFile(e.target.files?.[0] ?? null)} /></label>
+          {audioUrl ? <AudioWaveformEditor url={audioUrl} offset={effectiveOffset} duration={effectiveDuration} totalDuration={audioDuration} onDuration={handleAudioDuration} onRegion={handleRegion} onFile={chooseFile} /> : null}
+          <div className="flex gap-2"><select className="h-9 min-w-0 flex-1 rounded border border-white/15 bg-black px-2 text-xs" defaultValue="" onChange={(e) => { if (e.target.value) void loadPart(e.target.value); }}><option value="">Открыть сохранённый фрагмент…</option>{parts.map((part) => <option key={part.name} value={part.name}>{part.name}</option>)}</select><Button size="sm" variant="outline" onClick={() => void refreshParts()}>Обновить</Button></div>
+        </div><div className="space-y-3 rounded border border-white/10 bg-black/30 p-3">
+          <div className="flex items-center justify-between"><FieldLabel label="Позиция фрагмента" hint="Синхронизирована с голубой областью на волне." /><span className="font-mono text-xs text-cyan-200">{fragmentLabel}</span></div>
+          <div className="grid grid-cols-3 gap-2"><div><FieldLabel label="Offset, сек" hint="Начало участка." /><Input type="number" min={0} max={maxOffset} step={0.1} value={offset} onChange={(e) => setOffset(e.target.value)} /></div><div><FieldLabel label="Duration, сек" hint="От 1 до 800 секунд." /><Input type="number" min={1} max={Math.min(800, audioDuration || 800)} step={0.5} value={duration} onChange={(e) => setDuration(e.target.value)} /></div><div><FieldLabel label="Top-K" hint="От 3 до 100 параметров." /><Input type="number" min={3} max={100} value={topK} onChange={(e) => setTopK(e.target.value)} /></div></div>
+          <div className="flex gap-2"><Button className="flex-1" onClick={() => void searchAudio()} disabled={!file || !indexStatus.ready || busy !== null}>{busy === "search" ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}{busy === "search" ? "Анализ..." : "Найти параметры"}</Button><Button variant="outline" onClick={() => void saveFragment()} disabled={!file || busy !== null}><HardDrive className="size-4" />Сохранить WAV</Button></div>
+        </div></div>
+        {notice ? <div className="text-xs text-emerald-300">{notice}</div> : null}{error ? <div className="rounded border border-red-500/30 bg-red-950/20 p-3 text-sm text-red-300">{error}</div> : null}
+      </section>
+      <div className="console-workbench grid min-h-[680px] gap-3 xl:grid-cols-[minmax(0,1fr)_360px]"><section className="console-bank flex min-h-0 flex-col"><div className="console-bank-header flex items-center justify-between"><h2 className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-white"><AudioWaveform className="size-4 text-cyan-300" />Audio-matched control bank</h2><span className="font-mono text-[10px] text-emerald-300">{parameters.length} channels</span></div><VirtualizedParamList parameters={parameters} className="min-h-0 flex-1" onChange={updateValue} onRemove={(name) => setParameters((items) => items.filter((item) => item.technical_name !== name))} /></section><aside className="min-h-0"><MacroGenerator key={resetKey} parameters={parameters} audioExport={file ? { originalName: file.name, start: effectiveOffset, end: effectiveOffset + effectiveDuration, topK: Number(topK) || 20 } : undefined} /></aside></div>
+    </div></div>
+  </div>;
+}

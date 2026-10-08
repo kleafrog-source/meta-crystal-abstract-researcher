@@ -120,7 +120,7 @@ python3 gen_sets.py --strong calibration/strong_set.json \
 
 ```bash
 python3 build_anchors.py --endpoint http://localhost:11434 \
-  --model qllama/bge-m3:q8_0 \
+  --model qwen3-embedding:4b \
   --out anchors_build.json
 ```
 
@@ -163,7 +163,7 @@ cfg = Config(
     anchors_path="anchors_build.json",
     lexical_dir="lexical",
     ollama_endpoint="http://localhost:11434",
-    ollama_model="qllama/bge-m3:q8_0",
+    ollama_model="qwen3-embedding:4b",
 )
 
 # scoped_params — выдача существующего retrieval (полные записи из

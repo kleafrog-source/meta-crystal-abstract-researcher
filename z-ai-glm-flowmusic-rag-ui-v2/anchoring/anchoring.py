@@ -56,7 +56,7 @@ class Config:
     anchors_path: str = "anchors_build.json"
     lexical_dir: str = "lexical"
     ollama_endpoint: str = "http://localhost:11434"
-    ollama_model: str = "qllama/bge-m3:q8_0"
+    ollama_model: str = "qwen3-embedding:4b"
     # транзитно: загруженные артефакты (для повторных вызовов)
     _dataset: list | None = field(default=None, repr=False)
     _axes: dict | None = field(default=None, repr=False)
