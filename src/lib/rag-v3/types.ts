@@ -52,7 +52,7 @@ export interface ActiveParameter {
   suggested_value: number | string;
   current_value: number | string;
   before: number | string;
-  source: "numeric" | "lexical" | "axis" | "default" | "neutral" | "audio_similarity";
+  source: "numeric" | "value_anchor" | "lexical" | "axis" | "default" | "neutral" | "audio_similarity";
   detail: string;
   unit?: string;
   options?: string[];

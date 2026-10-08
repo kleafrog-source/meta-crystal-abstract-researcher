@@ -3,7 +3,7 @@ import { spawn } from "node:child_process";
 export interface V3AnchorValue {
   value: number | string;
   before: number | string;
-  source: "numeric" | "lexical" | "axis" | "default" | "neutral";
+  source: "numeric" | "value_anchor" | "lexical" | "axis" | "default" | "neutral";
   detail: string;
 }
 

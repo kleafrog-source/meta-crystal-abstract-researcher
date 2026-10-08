@@ -57,6 +57,10 @@ class Config:
     lexical_dir: str = "lexical"
     ollama_endpoint: str = "http://localhost:11434"
     ollama_model: str = "qwen3-embedding:4b"
+    threshold_range: float = 0.25
+    threshold_select: float = 0.30
+    softmax_temp_explicit: float = 0.02
+    softmax_temp_diffuse: float = 0.05
     # транзитно: загруженные артефакты (для повторных вызовов)
     _dataset: list | None = field(default=None, repr=False)
     _axes: dict | None = field(default=None, repr=False)
@@ -71,6 +75,10 @@ class Config:
     _param_vectors: Any | None = field(default=None, repr=False)
     _param_row_by_name: dict[str, int] = field(default_factory=dict, repr=False)
     _a_home: dict[str, dict[str, float]] = field(default_factory=dict, repr=False)
+    _value_anchor_vectors: Any | None = field(default=None, repr=False)
+    _value_anchor_parameters: dict[str, list[dict]] = field(default_factory=dict, repr=False)
+    _select_option_vectors: Any | None = field(default=None, repr=False)
+    _select_option_parameters: dict[str, list[dict]] = field(default_factory=dict, repr=False)
 
 
 # ---------------------------------------------------------------------------
@@ -489,6 +497,54 @@ def _select_nominal_apply(query: str, param: dict) -> tuple[str, str]:
     return str(param.get("default", "")), "default"
 
 
+def _softmax(scores: list[float], temperature: float) -> list[float]:
+    if not scores:
+        return []
+    temperature = max(float(temperature), 1e-6)
+    maximum = max(scores)
+    values = [math.exp((score - maximum) / temperature) for score in scores]
+    total = sum(values) or 1.0
+    return [value / total for value in values]
+
+
+def _anchor_scores(ex: list[float], entries: list[dict], vectors: Any) -> list[float]:
+    return [cosine(ex, vectors[int(entry["row_index"])]) for entry in entries]
+
+
+def _value_anchor_apply(ex: list[float], param: dict, cfg: Config,
+                        explicit_signal: bool = False
+                        ) -> tuple[float | str, float, str] | None:
+    """Map a query embedding onto persistent Range/Select semantic values."""
+    name = str(param.get("technical_name") or "")
+    ui = param.get("ui_element")
+    if ui == "Range":
+        entries = cfg._value_anchor_parameters.get(name) or []
+        vectors = cfg._value_anchor_vectors
+        threshold = cfg.threshold_range
+    elif ui == "Select":
+        entries = cfg._select_option_parameters.get(name) or []
+        vectors = cfg._select_option_vectors
+        threshold = cfg.threshold_select
+    else:
+        return None
+    if not entries or vectors is None:
+        return None
+    scores = _anchor_scores(ex, entries, vectors)
+    confidence = float(max(scores, default=-1.0))
+    if confidence < threshold:
+        return None
+    if ui == "Select":
+        best_index = max(range(len(scores)), key=lambda index: scores[index])
+        return entries[best_index]["option"], confidence, f"Select option cosine={confidence:.4f}"
+    temperature = cfg.softmax_temp_explicit if explicit_signal else cfg.softmax_temp_diffuse
+    weights = _softmax(scores, temperature)
+    position = sum(float(entry["level"]) * weight for entry, weight in zip(entries, weights))
+    mn = float(param["min_value"])
+    mx = float(param["max_value"])
+    value = _clamp(_snap(mn + position * (mx - mn), param.get("step")), mn, mx)
+    return value, confidence, f"Range anchors cosine={confidence:.4f} p={position:.4f} T={temperature:.3f}"
+
+
 # ---------------------------------------------------------------------------
 # Главная функция
 # ---------------------------------------------------------------------------
@@ -572,7 +628,11 @@ def anchor_query(query: str,
         if ui in ("Range", "Select"):
             # When a technical_name is explicit, do not broadcast its numeric
             # value to every other parameter sharing the same unit/kind.
-            v0, src0 = (None, "default") if numeric_target_names and name not in numeric_target_names else l0_numeric(query_norm, p, cfg._numeric_units)
+            # Select option names are semantic labels rather than shared numeric
+            # units, so an option explicitly present in the query remains local
+            # and may safely preempt for every matching Select control.
+            blocked = ui == "Range" and numeric_target_names and name not in numeric_target_names
+            v0, src0 = (None, "default") if blocked else l0_numeric(query_norm, p, cfg._numeric_units)
             if v0 is not None:
                 results[name] = {
                     "value": v0,
@@ -605,6 +665,22 @@ def anchor_query(query: str,
                 "detail": "neutral query",
             }
             continue
+
+        # Persistent value anchors: after exact numeric/option preemption and
+        # before lexical/axis fallbacks.  A low-confidence match deliberately
+        # falls through to the established L1/L2 behavior.
+        has_lexical_direction = bool(kind in final_dir) if kind else False
+        has_description_direction = _description_direction(query_norm, p) is not None
+        if ui in ("Range", "Select") and ex is not None and not has_lexical_direction and not has_description_direction:
+            anchored_value = _value_anchor_apply(ex, p, cfg, explicit_signal=degree >= 0.55)
+            if anchored_value is not None:
+                value, confidence, detail = anchored_value
+                results[name] = {
+                    "value": value, "before": before, "source": "value_anchor",
+                    "detail": detail,
+                    "confidence": confidence,
+                }
+                continue
 
         # Select nominal: L1 alias match
         if ui == "Select" and p.get("select_typing") == "nominal":

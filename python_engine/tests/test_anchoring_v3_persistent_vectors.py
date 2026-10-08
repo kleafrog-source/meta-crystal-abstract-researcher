@@ -12,7 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 ANCHORING_DIR = PROJECT_ROOT / "python_engine" / "anchoring_v3"
 sys.path.insert(0, str(ANCHORING_DIR))
 
-from anchoring import Config, _param_eid  # noqa: E402
+from anchoring import Config, _param_eid, _value_anchor_apply  # noqa: E402
 from bridge import load_composite_index  # noqa: E402
 
 
@@ -62,6 +62,42 @@ class PersistentVectorTests(unittest.TestCase):
 
         np.testing.assert_array_equal(vector, vectors[0])
         self.assertEqual(home, {"brightness": 0.61})
+
+    def test_range_value_anchor_interpolates_toward_matching_level(self) -> None:
+        vectors = np.asarray([
+            [1.0, 0.0], [0.9, 0.1], [0.7, 0.7], [0.1, 0.9], [0.0, 1.0],
+        ], dtype=np.float32)
+        vectors /= np.linalg.norm(vectors, axis=1, keepdims=True)
+        cfg = Config(
+            threshold_range=0.2,
+            _value_anchor_vectors=vectors,
+            _value_anchor_parameters={"amount": [
+                {"row_index": index, "level": level}
+                for index, level in enumerate((0.0, 0.25, 0.5, 0.75, 1.0))
+            ]},
+        )
+        result = _value_anchor_apply(
+            [0.0, 1.0],
+            {"technical_name": "amount", "ui_element": "Range", "min_value": 0, "max_value": 100, "step": 1},
+            cfg,
+        )
+        self.assertIsNotNone(result)
+        self.assertGreater(result[0], 75)
+
+    def test_select_value_anchor_chooses_best_option(self) -> None:
+        cfg = Config(
+            threshold_select=0.2,
+            _select_option_vectors=np.asarray([[1.0, 0.0], [0.0, 1.0]], dtype=np.float32),
+            _select_option_parameters={"mode": [
+                {"row_index": 0, "option": "soft"},
+                {"row_index": 1, "option": "hard"},
+            ]},
+        )
+        result = _value_anchor_apply(
+            [0.05, 0.99], {"technical_name": "mode", "ui_element": "Select"}, cfg,
+        )
+        self.assertIsNotNone(result)
+        self.assertEqual(result[0], "hard")
 
 
 if __name__ == "__main__":

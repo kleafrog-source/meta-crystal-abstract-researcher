@@ -1,0 +1,13 @@
+{
+  "threshold_range": 0.25,
+  "threshold_select": 0.3,
+  "threshold_toggle": 0.2,
+  "softmax_temp_explicit": 0.02,
+  "softmax_temp_diffuse": 0.05,
+  "relation_alpha_base": 0.15,
+  "relation_alpha_max": 0.25,
+  "enable_llm_text_generation": false,
+  "enable_sinkhorn": false,
+  "sinkhorn_epsilon": 0.075,
+  "sinkhorn_iterations": 50
+}

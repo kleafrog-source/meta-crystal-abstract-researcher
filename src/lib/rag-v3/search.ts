@@ -9,6 +9,7 @@ import { embedText } from "@/lib/ollama-client";
 
 import { rankCompositeNames } from "./composite-index";
 import { runV3AnchoringBridge, type V3AnchorValue } from "./python-bridge";
+import { rankSelectOptionNames } from "./value-index";
 
 export interface RagV3Sources {
   library?: boolean;
@@ -106,7 +107,14 @@ function retrievalText(parameter: EnrichedParameter): string {
 function lexicalScore(query: string, parameter: EnrichedParameter): number {
   const text = retrievalText(parameter).toLowerCase();
   const parameterTokens = new Set(tokenize(text));
-  return tokenize(query).reduce((score, token) => score + (parameter.technical_name.includes(token) ? 5 : 0) + (parameterTokens.has(token) ? 3 : 0) + (text.includes(token) ? 1 : 0), 0);
+  const queryTokens = tokenize(query);
+  let score = queryTokens.reduce((total, token) => total + (parameter.technical_name.includes(token) ? 5 : 0) + (parameterTokens.has(token) ? 3 : 0) + (text.includes(token) ? 1 : 0), 0);
+  for (const size of [2, 3]) {
+    for (let index = 0; index <= queryTokens.length - size; index += 1) {
+      if (text.includes(queryTokens.slice(index, index + size).join(" "))) score += size * 4;
+    }
+  }
+  return score;
 }
 
 function toActive(parameter: EnrichedParameter & { _v3_source: string }, similarity: number, currentValues: Record<string, number | string>, anchored?: V3AnchorValue): ActiveParameter {
@@ -157,28 +165,58 @@ export async function searchV3(params: {
   const effectiveQuery = atomExpansion ? `${baseQuery}\nCombinatorial atoms: ${atomExpansion}` : baseQuery;
   const queryVector = atomExpansion ? await embedText(effectiveQuery) : atomQueryVector;
   const topK = Math.max(1, Math.min(200, Math.round(params.topK)));
-  const candidates = Array.from(records.values())
+  const lexicalCandidates = Array.from(records.values())
     .map((parameter) => ({ parameter, lexical: lexicalScore(effectiveQuery, parameter) }))
     .sort((left, right) => right.lexical - left.lexical || left.parameter.technical_name.localeCompare(right.parameter.technical_name))
     .slice(0, Math.min(records.size, Math.max(256, topK * 4)));
-  const candidateMap = new Map(candidates.map(({ parameter, lexical }) => [parameter.technical_name, { parameter, lexical }]));
+  const optionMatchesQuery = (option: string | number | null) => {
+    if (option === null) return false;
+    const normalizedOption = String(option).toLowerCase().replaceAll("_", " ").trim();
+    if (!normalizedOption) return false;
+    const normalizedQuery = effectiveQuery.toLowerCase();
+    if (normalizedOption.length >= 3) return normalizedQuery.includes(normalizedOption);
+    return /\b(?:mode|option|режим|вариант)\b/u.test(normalizedQuery)
+      && new RegExp(`\\b${normalizedOption.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "u").test(normalizedQuery);
+  };
+  const selectMatches = (await rankSelectOptionNames(queryVector, new Set(records.keys()), Math.max(32, topK * 2)))
+    .filter((match) => optionMatchesQuery(match.option));
+  const selectByName = new Map(selectMatches.map((match) => [match.name, match]));
+  const optionOnlyQuery = tokenize(baseQuery).filter((token) => !new Set([
+    "use", "set", "mode", "option", "sound", "this", "режим", "вариант", "звук", "используй", "установи",
+  ]).has(token)).length <= 2;
+  const candidateMap = new Map(lexicalCandidates.map(({ parameter, lexical }) => [parameter.technical_name, { parameter, lexical }]));
+  for (const parameter of records.values()) {
+    if (parameter.ui_element === "Select" && (parameter.options ?? []).some(optionMatchesQuery)) {
+      candidateMap.set(parameter.technical_name, { parameter, lexical: lexicalScore(effectiveQuery, parameter) });
+    }
+  }
+  for (const match of selectMatches) {
+    const parameter = records.get(match.name);
+    if (parameter && !candidateMap.has(match.name)) candidateMap.set(match.name, { parameter, lexical: lexicalScore(effectiveQuery, parameter) });
+  }
   const semanticRanked = await rankCompositeNames(
     queryVector,
     [...candidateMap.keys()],
     candidateMap.size,
   );
   const ranked = semanticRanked
-    .map((item) => ({
-      ...item,
-      combined:
-        item.similarity
-        + Math.min(20, candidateMap.get(item.name)?.lexical ?? 0) * 0.02
-        + ((candidateMap.get(item.name)?.parameter.options ?? []).some((option) => {
-          const normalizedOption = String(option).toLowerCase().replaceAll("_", " ").trim();
-          return normalizedOption.length >= 3 && effectiveQuery.toLowerCase().includes(normalizedOption);
-        }) ? 0.5 : 0),
-    }))
-    .sort((left, right) => right.combined - left.combined || right.similarity - left.similarity || left.name.localeCompare(right.name))
+    .map((item) => {
+      const exactOption = (candidateMap.get(item.name)?.parameter.options ?? []).some(optionMatchesQuery);
+      return {
+        ...item,
+        exactOption,
+        combined:
+          item.similarity
+          + Math.min(60, candidateMap.get(item.name)?.lexical ?? 0) * 0.02
+          + Math.max(0, selectByName.get(item.name)?.similarity ?? 0) * 0.25
+          + (exactOption ? 0.75 : 0),
+      };
+    })
+    .sort((left, right) => {
+      if (optionOnlyQuery && left.exactOption !== right.exactOption) return left.exactOption ? -1 : 1;
+      if (optionOnlyQuery && left.exactOption && right.exactOption) return left.name.localeCompare(right.name);
+      return right.combined - left.combined || right.similarity - left.similarity || left.name.localeCompare(right.name);
+    })
     .slice(0, topK);
   const anchored = await runV3AnchoringBridge({
     query: effectiveQuery,

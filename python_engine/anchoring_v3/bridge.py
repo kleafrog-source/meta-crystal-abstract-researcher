@@ -24,6 +24,19 @@ def load_composite_index(index_dir: Path) -> tuple[np.memmap, dict[str, int]]:
     return vectors, {str(row["technical_name"]): index for index, row in enumerate(rows)}
 
 
+def load_value_artifact(manifest_path: Path) -> tuple[np.memmap | None, dict[str, list[dict]]]:
+    if not manifest_path.exists():
+        return None, {}
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    vectors_path = manifest_path.parent / manifest["vectors_file"]
+    with vectors_path.open("rb") as handle:
+        count, dimensions = struct.unpack("<II", handle.read(8))
+    if count != manifest["count"] or dimensions != manifest["dimensions"]:
+        raise ValueError(f"V3 value-anchor header mismatch: {manifest_path.name}")
+    vectors = np.memmap(vectors_path, dtype="<f4", mode="r", offset=8, shape=(count, dimensions))
+    return vectors, manifest.get("parameters") or {}
+
+
 def main() -> int:
     project_root = Path(__file__).resolve().parents[2]
     module_dir = project_root / "python_engine" / "anchoring_v3"
@@ -36,6 +49,9 @@ def main() -> int:
     anchors_path = anchoring_dir / "anchors_build.json"
     anchors = json.loads(anchors_path.read_text(encoding="utf-8"))
     vectors, row_by_name = load_composite_index(artifacts / "composite-index")
+    value_vectors, value_parameters = load_value_artifact(artifacts / "value-anchors" / "manifest.json")
+    select_vectors, select_parameters = load_value_artifact(artifacts / "value-anchors" / "select-options.json")
+    runtime_config = json.loads((module_dir / "config.json").read_text(encoding="utf-8"))
     cfg = Config(
         dataset_path=str(artifacts / "dataset.json"),
         axes_path=str(anchoring_dir / "axes.json"),
@@ -47,6 +63,14 @@ def main() -> int:
         _param_vectors=vectors,
         _param_row_by_name=row_by_name,
         _a_home=anchors.get("a_home") or {},
+        _value_anchor_vectors=value_vectors,
+        _value_anchor_parameters=value_parameters,
+        _select_option_vectors=select_vectors,
+        _select_option_parameters=select_parameters,
+        threshold_range=float(runtime_config["threshold_range"]),
+        threshold_select=float(runtime_config["threshold_select"]),
+        softmax_temp_explicit=float(runtime_config["softmax_temp_explicit"]),
+        softmax_temp_diffuse=float(runtime_config["softmax_temp_diffuse"]),
     )
     response = anchor_query(
         payload.get("query", ""),
