@@ -83,3 +83,31 @@ export async function rankCompositeNames(queryVector: number[], names: string[],
     return entry ? [{ name, similarity: dot(query, entry.vector), row: entry.row }] : [];
   }).sort((left, right) => right.similarity - left.similarity || left.name.localeCompare(right.name)).slice(0, limit);
 }
+
+export async function rankCompositeNamesMulti(
+  queryVectors: Array<{ vector: number[]; weight: number }>,
+  names: string[],
+  limit: number,
+) {
+  const index = await loadIndex();
+  const queries = queryVectors.map(({ vector, weight }) => ({ vector: normalized(vector), weight }));
+  if (queries.some((query) => query.vector.length !== index.manifest.dimensions)) {
+    throw new Error("V3 multi-query/index dimensions differ.");
+  }
+  return names.flatMap((name) => {
+    const entry = index.rowByName.get(name);
+    if (!entry) return [];
+    let similarity = Number.NEGATIVE_INFINITY;
+    let conceptIndex = 0;
+    const conceptScores: number[] = [];
+    for (let indexValue = 0; indexValue < queries.length; indexValue += 1) {
+      const score = dot(queries[indexValue].vector, entry.vector) * queries[indexValue].weight;
+      conceptScores.push(score);
+      if (score > similarity) {
+        similarity = score;
+        conceptIndex = indexValue;
+      }
+    }
+    return [{ name, similarity, concept_index: conceptIndex, concept_scores: conceptScores, row: entry.row }];
+  }).sort((left, right) => right.similarity - left.similarity || left.name.localeCompare(right.name)).slice(0, limit);
+}

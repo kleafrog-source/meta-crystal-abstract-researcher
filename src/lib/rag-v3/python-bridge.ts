@@ -3,12 +3,15 @@ import { spawn } from "node:child_process";
 export interface V3AnchorValue {
   value: number | string;
   before: number | string;
-  source: "numeric" | "value_anchor" | "lexical" | "axis" | "default" | "neutral";
+  source: "numeric" | "value_anchor" | "lexical" | "relation" | "axis" | "retrieval" | "not_generated" | "default" | "neutral";
   detail: string;
 }
 
 export function runV3AnchoringBridge(payload: {
   query: string;
+  concepts?: string[];
+  query_embeddings?: number[][];
+  relation_hints?: Record<string, { direction: number; confidence: number; relation: string }>;
   scoped_params: Array<Record<string, unknown>>;
   current_values: Record<string, number | string>;
 }): Promise<Record<string, V3AnchorValue>> {

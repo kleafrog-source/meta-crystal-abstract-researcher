@@ -77,6 +77,9 @@ def main() -> int:
         payload.get("scoped_params", []),
         payload.get("current_values") or {},
         cfg,
+        query_embeddings=payload.get("query_embeddings") or None,
+        query_concepts=payload.get("concepts") or None,
+        relation_hints=payload.get("relation_hints") or None,
     )
     json.dump(response, sys.stdout, ensure_ascii=False)
     return 0

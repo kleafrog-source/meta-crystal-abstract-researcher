@@ -5,10 +5,13 @@ import { readGenesisLibrary, type GenesisLibraryParameter } from "@/lib/combinat
 import { rankRuntimeAtoms } from "@/lib/combinatorial-genesis/runtime-index";
 import { buildEffectiveQuery } from "@/lib/rag-v3/instruction-support";
 import type { ActiveParameter, EnrichedParameter, InstructionContextEntry, ProposeParametersResponse, RetrievalScope, UiElement } from "@/lib/rag-v3/types";
-import { embedText } from "@/lib/ollama-client";
+import { embedText, embedTexts } from "@/lib/ollama-client";
 
-import { rankCompositeNames } from "./composite-index";
+import { rankCompositeNamesMulti } from "./composite-index";
+import { buildRelationAlignment, ensureConceptCoverage } from "./alignment";
 import { runV3AnchoringBridge, type V3AnchorValue } from "./python-bridge";
+import { decomposeQuery } from "./query-concepts";
+import { matchRelations } from "./relation-index";
 import { rankSelectOptionNames } from "./value-index";
 
 export interface RagV3Sources {
@@ -162,8 +165,21 @@ export async function searchV3(params: {
   const atomQueryVector = await embedText(baseQuery);
   const atomRanking = enabled.atoms ? await rankRuntimeAtoms(atomQueryVector, 20) : null;
   const atomExpansion = atomRanking?.atoms.filter((atom) => atom.role !== "unit").slice(0, 12).map((atom) => atom.atom).join(" ") ?? "";
-  const effectiveQuery = atomExpansion ? `${baseQuery}\nCombinatorial atoms: ${atomExpansion}` : baseQuery;
-  const queryVector = atomExpansion ? await embedText(effectiveQuery) : atomQueryVector;
+  const effectiveQuery = baseQuery;
+  const concepts = decomposeQuery(baseQuery, Array.from(records.values(), retrievalText));
+  const extraConceptVectors = concepts.length > 1 ? await embedTexts(concepts.slice(1).map((concept) => concept.text)) : [];
+  const conceptVectors = concepts.map((concept, index) => ({
+    ...concept,
+    vector: index === 0 ? atomQueryVector : extraConceptVectors[index - 1],
+  }));
+  const atomExpansionVector = atomExpansion ? await embedText(`Combinatorial atoms: ${atomExpansion}`) : null;
+  const retrievalVectors = [
+    ...conceptVectors.map((concept) => ({ vector: concept.vector, weight: concept.weight })),
+    ...(atomExpansionVector ? [{ vector: atomExpansionVector, weight: 0.65 }] : []),
+  ];
+  const activeRelations = await matchRelations(baseQuery, conceptVectors.map((concept) => concept.vector));
+  const relationAlignment = buildRelationAlignment(activeRelations, new Set(records.keys()));
+  const queryVector = atomQueryVector;
   const topK = Math.max(1, Math.min(200, Math.round(params.topK)));
   const lexicalCandidates = Array.from(records.values())
     .map((parameter) => ({ parameter, lexical: lexicalScore(effectiveQuery, parameter) }))
@@ -178,15 +194,18 @@ export async function searchV3(params: {
     return /\b(?:mode|option|режим|вариант)\b/u.test(normalizedQuery)
       && new RegExp(`\\b${normalizedOption.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "u").test(normalizedQuery);
   };
-  const selectMatches = (await rankSelectOptionNames(queryVector, new Set(records.keys()), Math.max(32, topK * 2)))
-    .filter((match) => optionMatchesQuery(match.option));
+  const hasOptionCommand = /\b(?:mode|option|режим|вариант)\b/u.test(baseQuery.toLowerCase());
+  const selectMatches = hasOptionCommand
+    ? (await rankSelectOptionNames(queryVector, new Set(records.keys()), Math.max(32, topK * 2)))
+      .filter((match) => optionMatchesQuery(match.option))
+    : [];
   const selectByName = new Map(selectMatches.map((match) => [match.name, match]));
-  const optionOnlyQuery = tokenize(baseQuery).filter((token) => !new Set([
+  const optionOnlyQuery = hasOptionCommand && tokenize(baseQuery).filter((token) => !new Set([
     "use", "set", "mode", "option", "sound", "this", "режим", "вариант", "звук", "используй", "установи",
   ]).has(token)).length <= 2;
   const candidateMap = new Map(lexicalCandidates.map(({ parameter, lexical }) => [parameter.technical_name, { parameter, lexical }]));
   for (const parameter of records.values()) {
-    if (parameter.ui_element === "Select" && (parameter.options ?? []).some(optionMatchesQuery)) {
+    if (hasOptionCommand && parameter.ui_element === "Select" && (parameter.options ?? []).some(optionMatchesQuery)) {
       candidateMap.set(parameter.technical_name, { parameter, lexical: lexicalScore(effectiveQuery, parameter) });
     }
   }
@@ -194,14 +213,19 @@ export async function searchV3(params: {
     const parameter = records.get(match.name);
     if (parameter && !candidateMap.has(match.name)) candidateMap.set(match.name, { parameter, lexical: lexicalScore(effectiveQuery, parameter) });
   }
-  const semanticRanked = await rankCompositeNames(
-    queryVector,
+  for (const name of relationAlignment.names) {
+    const parameter = records.get(name);
+    if (parameter && !candidateMap.has(name)) candidateMap.set(name, { parameter, lexical: lexicalScore(effectiveQuery, parameter) });
+  }
+  const semanticRanked = await rankCompositeNamesMulti(
+    retrievalVectors,
     [...candidateMap.keys()],
     candidateMap.size,
   );
-  const ranked = semanticRanked
+  const rankedPool = semanticRanked
     .map((item) => {
-      const exactOption = (candidateMap.get(item.name)?.parameter.options ?? []).some(optionMatchesQuery);
+      const exactOption = hasOptionCommand
+        && (candidateMap.get(item.name)?.parameter.options ?? []).some(optionMatchesQuery);
       return {
         ...item,
         exactOption,
@@ -209,6 +233,7 @@ export async function searchV3(params: {
           item.similarity
           + Math.min(60, candidateMap.get(item.name)?.lexical ?? 0) * 0.02
           + Math.max(0, selectByName.get(item.name)?.similarity ?? 0) * 0.25
+          + (relationAlignment.biasByName.get(item.name) ?? 0)
           + (exactOption ? 0.75 : 0),
       };
     })
@@ -216,10 +241,18 @@ export async function searchV3(params: {
       if (optionOnlyQuery && left.exactOption !== right.exactOption) return left.exactOption ? -1 : 1;
       if (optionOnlyQuery && left.exactOption && right.exactOption) return left.name.localeCompare(right.name);
       return right.combined - left.combined || right.similarity - left.similarity || left.name.localeCompare(right.name);
-    })
-    .slice(0, topK);
+    });
+  const conceptIndexes = concepts.length > 1
+    ? concepts.slice(1).map((_concept, index) => index + 1)
+    : [0];
+  const ranked = optionOnlyQuery
+    ? rankedPool.slice(0, topK)
+    : ensureConceptCoverage(rankedPool, topK, conceptIndexes, relationAlignment.coverageGroups);
   const anchored = await runV3AnchoringBridge({
     query: effectiveQuery,
+    concepts: conceptVectors.map((concept) => concept.text),
+    query_embeddings: conceptVectors.map((concept) => concept.vector),
+    relation_hints: relationAlignment.hints,
     scoped_params: ranked.map(({ name }) => candidateMap.get(name)!.parameter as unknown as Record<string, unknown>),
     current_values: params.currentValues,
   });

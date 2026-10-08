@@ -166,14 +166,19 @@ def _find_option_match(query: str, param: dict) -> str | None:
     """Точный хит опции Select в запросе (L0-preempt)."""
     opts = param.get("options") or []
     ql = query.lower()
+    def present(value: str) -> bool:
+        normalized = str(value).lower().replace("_", " ").strip()
+        if not normalized:
+            return False
+        return re.search(rf"(?<![\w]){re.escape(normalized)}(?![\w])", ql) is not None
     for o in opts:
-        if str(o).lower() in ql:
+        if present(str(o)):
             return str(o)
     # проверяем aliases (nominal)
     aliases = param.get("option_aliases") or {}
     for opt, syns in aliases.items():
         for syn in syns:
-            if syn.lower() in ql:
+            if present(syn):
                 return opt
     return None
 
@@ -446,6 +451,20 @@ def _param_eid(param_name: str, cfg: Config) -> tuple[Any | None, dict[str, floa
     return cfg._param_vectors[row_index], cfg._a_home.get(param_name, {})
 
 
+def _best_query_embedding(query_embeddings: list[list[float]], param_name: str,
+                          cfg: Config) -> tuple[list[float] | None, int]:
+    if not query_embeddings:
+        return None, 0
+    parameter_vector, _home = _param_eid(param_name, cfg)
+    if parameter_vector is None or len(query_embeddings) == 1:
+        return query_embeddings[0], 0
+    best_index = max(
+        range(len(query_embeddings)),
+        key=lambda index: cosine(query_embeddings[index], parameter_vector),
+    )
+    return query_embeddings[best_index], best_index
+
+
 # ---------------------------------------------------------------------------
 # Применение формулы
 # ---------------------------------------------------------------------------
@@ -484,16 +503,10 @@ def _select_ordinal_apply(param: dict, base_pos: float,
 
 def _select_nominal_apply(query: str, param: dict) -> tuple[str, str]:
     """Nominal → match по option_aliases; иначе default."""
-    aliases = param.get("option_aliases") or {}
-    ql = query.lower()
-    for opt, syns in aliases.items():
-        for syn in syns:
-            if syn.lower() in ql:
-                return opt, "lexical"
-    # точное попадание опции
+    # Exact option and alias matching uses token/phrase boundaries.
     m = _find_option_match(query, param)
     if m is not None:
-        return m, "numeric"
+        return m, "lexical"
     return str(param.get("default", "")), "default"
 
 
@@ -512,7 +525,8 @@ def _anchor_scores(ex: list[float], entries: list[dict], vectors: Any) -> list[f
 
 
 def _value_anchor_apply(ex: list[float], param: dict, cfg: Config,
-                        explicit_signal: bool = False
+                        explicit_signal: bool = False,
+                        direction_hint: float = 0.0,
                         ) -> tuple[float | str, float, str] | None:
     """Map a query embedding onto persistent Range/Select semantic values."""
     name = str(param.get("technical_name") or "")
@@ -530,6 +544,17 @@ def _value_anchor_apply(ex: list[float], param: dict, cfg: Config,
     if not entries or vectors is None:
         return None
     scores = _anchor_scores(ex, entries, vectors)
+    if direction_hint and ui == "Range":
+        scores = [
+            score + 0.10 * direction_hint * (2 * float(entry["level"]) - 1)
+            for score, entry in zip(scores, entries)
+        ]
+    elif direction_hint and ui == "Select" and param.get("option_positions"):
+        positions = {str(item["value"]): float(item["position"]) for item in param["option_positions"]}
+        scores = [
+            score + 0.10 * direction_hint * (2 * positions.get(str(entry["option"]), 0.5) - 1)
+            for score, entry in zip(scores, entries)
+        ]
     confidence = float(max(scores, default=-1.0))
     if confidence < threshold:
         return None
@@ -551,7 +576,10 @@ def _value_anchor_apply(ex: list[float], param: dict, cfg: Config,
 def anchor_query(query: str,
                  scoped_params: list[dict],
                  current_values: dict[str, float | str] | None,
-                 cfg: Config) -> dict[str, dict]:
+                 cfg: Config,
+                 query_embeddings: list[list[float]] | None = None,
+                 query_concepts: list[str] | None = None,
+                 relation_hints: dict[str, dict] | None = None) -> dict[str, dict]:
     """Главный runtime-вход. Возвращает
     {param_name: {value, before, source, detail}}.
 
@@ -560,6 +588,7 @@ def anchor_query(query: str,
     """
     _ensure_loaded(cfg)
     current_values = current_values or {}
+    relation_hints = relation_hints or {}
     query_norm = query.strip()
     if not query_norm:
         return {p["technical_name"]: {
@@ -591,8 +620,14 @@ def anchor_query(query: str,
         mag = max(abs(signed), degree)
         final_dir[kind] = sign * mag
 
-    # L2: embedding запроса (один раз, кэш)
-    ex = _embed_query(query_norm, cfg) if cfg.axes_enabled else None
+    # Embeddings may be supplied by the multi-vector TypeScript retrieval.
+    # Legacy callers still produce one query embedding locally.
+    supplied_embeddings = [vector for vector in (query_embeddings or []) if isinstance(vector, list) and vector]
+    if supplied_embeddings:
+        embedding_candidates = supplied_embeddings
+    else:
+        embedded = _embed_query(query_norm, cfg) if cfg.axes_enabled else None
+        embedding_candidates = [embedded] if embedded is not None else []
 
     # Attention-фильтр: какие параметры покрыты конкретикой?
     any_covered = any(_detect_attention(query_norm, p) for p in scoped_params)
@@ -623,6 +658,12 @@ def anchor_query(query: str,
         before = current_values.get(name, p.get("default"))
         kind = p.get("quantity_kind")
         ui = p.get("ui_element")
+        param_ex, concept_index = _best_query_embedding(embedding_candidates, name, cfg)
+        relation_hint = relation_hints.get(name) or {}
+        relation_direction = float(relation_hint.get("direction") or 0) * float(relation_hint.get("confidence") or 0)
+        concept_detail = ""
+        if query_concepts and 0 <= concept_index < len(query_concepts):
+            concept_detail = f" concept={query_concepts[concept_index][:80]!r}"
 
         # L0: numeric
         if ui in ("Range", "Select"):
@@ -631,7 +672,11 @@ def anchor_query(query: str,
             # Select option names are semantic labels rather than shared numeric
             # units, so an option explicitly present in the query remains local
             # and may safely preempt for every matching Select control.
-            blocked = ui == "Range" and numeric_target_names and name not in numeric_target_names
+            select_command = re.search(r"\b(?:mode|option|режим|вариант)\b", query_lower, re.I) is not None
+            blocked = (
+                (ui == "Range" and numeric_target_names and name not in numeric_target_names)
+                or (ui == "Select" and not select_command and name not in explicit_names)
+            )
             v0, src0 = (None, "default") if blocked else l0_numeric(query_norm, p, cfg._numeric_units)
             if v0 is not None:
                 results[name] = {
@@ -671,13 +716,23 @@ def anchor_query(query: str,
         # falls through to the established L1/L2 behavior.
         has_lexical_direction = bool(kind in final_dir) if kind else False
         has_description_direction = _description_direction(query_norm, p) is not None
-        if ui in ("Range", "Select") and ex is not None and not has_lexical_direction and not has_description_direction:
-            anchored_value = _value_anchor_apply(ex, p, cfg, explicit_signal=degree >= 0.55)
+        if ui in ("Range", "Select") and param_ex is not None and not has_lexical_direction and not has_description_direction:
+            select_command = re.search(r"\b(?:mode|option|режим|вариант)\b", query_lower, re.I) is not None
+            anchored_value = None if ui == "Select" and not select_command and name not in explicit_names else _value_anchor_apply(
+                param_ex, p, cfg, explicit_signal=degree >= 0.55,
+                direction_hint=relation_direction,
+            )
             if anchored_value is not None:
                 value, confidence, detail = anchored_value
+                relation_detail = ""
+                if relation_hint:
+                    relation_detail = (
+                        f" relation={relation_hint.get('relation')}"
+                        f" confidence={float(relation_hint.get('confidence') or 0):.3f}"
+                    )
                 results[name] = {
                     "value": value, "before": before, "source": "value_anchor",
-                    "detail": detail,
+                    "detail": detail + concept_detail + relation_detail,
                     "confidence": confidence,
                 }
                 continue
@@ -724,7 +779,11 @@ def anchor_query(query: str,
             elif (description_direction := _description_direction(query_norm, p)) is not None:
                 signed_norm, detail = description_direction
                 source = "lexical"
-            elif cfg.axes_enabled and ex is not None:
+            elif relation_direction:
+                signed_norm = max(-0.45, min(0.45, relation_direction * 0.45))
+                source = "relation"
+                detail = f"relation={relation_hint.get('relation')} confidence={relation_hint.get('confidence', 0):.3f}"
+            elif cfg.axes_enabled and param_ex is not None:
                 # L2 axis projection (если параметр имеет axes и polarity != 0)
                 axes_p = p.get("axes") or []
                 if axes_p:
@@ -735,7 +794,7 @@ def anchor_query(query: str,
                         best_abs = 0.0
                         for ax_id in axes_p:
                             av = cfg._anchors["axes"].get(ax_id, {})
-                            delta = _axis_delta(ex, e_id, av, ax_id, a_home)
+                            delta = _axis_delta(param_ex, e_id, av, ax_id, a_home)
                             if delta is None:
                                 continue
                             pi = _polarity(ax_id, kind, cfg._polarity, p)
@@ -789,7 +848,11 @@ def anchor_query(query: str,
             elif (description_direction := _description_direction(query_norm, p)) is not None:
                 signed_norm, detail = description_direction
                 source = "lexical"
-            elif cfg.axes_enabled and ex is not None:
+            elif relation_direction:
+                signed_norm = max(-0.45, min(0.45, relation_direction * 0.45))
+                source = "relation"
+                detail = f"relation={relation_hint.get('relation')} confidence={relation_hint.get('confidence', 0):.3f}"
+            elif cfg.axes_enabled and param_ex is not None:
                 # L2 axis projection
                 axes_p = p.get("axes") or []
                 if axes_p:
@@ -799,7 +862,7 @@ def anchor_query(query: str,
                         best_abs = 0.0
                         for ax_id in axes_p:
                             av = cfg._anchors["axes"].get(ax_id, {})
-                            delta = _axis_delta(ex, e_id, av, ax_id, a_home)
+                            delta = _axis_delta(param_ex, e_id, av, ax_id, a_home)
                             if delta is None:
                                 continue
                             pi = _polarity(ax_id, kind, cfg._polarity, p)
@@ -823,9 +886,22 @@ def anchor_query(query: str,
                              "detail": detail}
             continue
 
-        # Text / String / Array — не двигаются семантически
-        results[name] = {"value": before, "before": before,
-                         "source": "default", "detail": "non-numeric ui"}
+        # Text / String / Array: deterministic retrieval-only policy.  There is
+        # no LLM generation in the anchoring bridge.  Existing candidates, when
+        # supplied by a dataset, win; otherwise the stored default is retained
+        # and explicitly marked rather than silently presented as generated.
+        existing_values = p.get("value_candidates") or p.get("published_values") or p.get("options") or []
+        if existing_values and _detect_attention(query_norm, p):
+            query_tokens = set(tokenize(query_norm))
+            selected = max(
+                existing_values,
+                key=lambda value: len(query_tokens & set(tokenize(str(value)))),
+            )
+            results[name] = {"value": selected, "before": before,
+                             "source": "retrieval", "detail": "retrieval-only existing value"}
+        else:
+            results[name] = {"value": before, "before": before,
+                             "source": "not_generated", "detail": "retrieval-only: no existing alternative value"}
 
     return results
 
