@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "updated_at": "2026-10-08T10:37:26.187Z",
+  "entries": [
+    {
+      "technical_name": "auto_recursion_phase_adjacent_error_diffusion",
+      "excluded_at": "2026-10-08T10:37:26.187Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "error_recovery_retry_attempts_max",
+      "excluded_at": "2026-10-08T10:37:26.187Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "omega_synthesis_quantum_error_correction_fidelity_min",
+      "excluded_at": "2026-10-08T10:37:26.187Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "omega_synthesis_recursive_closure_x7_to_d0_seamlessness",
+      "excluded_at": "2026-10-08T10:37:26.187Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    }
+  ]
+}

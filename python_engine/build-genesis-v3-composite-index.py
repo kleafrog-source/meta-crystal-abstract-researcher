@@ -9,10 +9,14 @@ import json
 import math
 import os
 import struct
+import sys
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from parameter_registry import excluded_names, registry_sha256  # noqa: E402
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -156,6 +160,8 @@ def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], b
     for item in frozen:
         records.setdefault(str(item["technical_name"]), ({**item, "retrieval_scope": classify_retrieval_scope(item)}, "frozen"))
     write_json(DATA_ROOT / "v3" / "dataset.json", [item for item, _source in records.values()])
+    excluded = excluded_names(DATA_ROOT)
+    records = {name: value for name, value in records.items() if name not in excluded}
 
     cache = cached_vectors(model)
     planned: list[dict[str, Any]] = []
@@ -208,6 +214,7 @@ def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], b
         "cache_sha256": cache_hash, "model": model, "dimensions": dimensions,
         "parameter_count": len(planned), "library_count": len(library), "frozen_count": len(frozen),
         "dataset_version": latest["version_id"], "vector_origins": origins,
+        "excluded_count": len(excluded), "excluded_sha256": registry_sha256(DATA_ROOT),
         "files": {"rows": "rows.json", "embeddings": "embeddings.f32"},
     }
     write_json(manifest_path, manifest)

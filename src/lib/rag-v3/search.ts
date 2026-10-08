@@ -2,6 +2,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 
 import { readGenesisLibrary, type GenesisLibraryParameter } from "@/lib/combinatorial-genesis/library";
+import { readExcludedRegistry } from "@/lib/combinatorial-genesis/registry";
 import { rankRuntimeAtoms } from "@/lib/combinatorial-genesis/runtime-index";
 import { buildEffectiveQuery } from "@/lib/rag-v3/instruction-support";
 import type { ActiveParameter, EnrichedParameter, InstructionContextEntry, ProposeParametersResponse, RetrievalScope, UiElement } from "@/lib/rag-v3/types";
@@ -148,10 +149,12 @@ export async function searchV3(params: {
   if (!query) return { query: "", effective_query: "", results: [], total_candidates: 0, total_scoped: 0, retrieval_cache_size: 0 };
   const enabled = { library: true, frozen: true, atoms: true, generated: true, ...params.sources };
   const scopes = { ...DEFAULT_SCOPES, ...params.scopes };
-  const [library, frozen] = await Promise.all([
+  const [library, frozen, excludedRegistry] = await Promise.all([
     enabled.library || enabled.generated ? readGenesisLibrary() : Promise.resolve([]),
     enabled.frozen ? readFrozen() : Promise.resolve([]),
+    readExcludedRegistry(),
   ]);
+  const excludedNames = new Set(excludedRegistry.entries.map((entry) => entry.technical_name));
   const records = new Map<string, EnrichedParameter & { _v3_source: string }>();
   if (enabled.library || enabled.generated) {
     for (const item of library) {
@@ -268,7 +271,10 @@ export async function searchV3(params: {
     })),
     current_values: params.currentValues,
   });
-  const results = ranked.map(({ name, similarity }) => toActive(candidateMap.get(name)!.parameter, similarity, params.currentValues, anchored[name]));
+  const results = ranked.map(({ name, similarity }) => ({
+    ...toActive(candidateMap.get(name)!.parameter, similarity, params.currentValues, anchored[name]),
+    excluded: excludedNames.has(name),
+  }));
   return { query, effective_query: effectiveQuery, results, total_candidates: records.size, total_scoped: results.length, retrieval_cache_size: 5043 };
 }
 

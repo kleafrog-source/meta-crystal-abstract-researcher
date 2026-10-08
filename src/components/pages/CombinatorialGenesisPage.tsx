@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ParameterRegistryPanel } from "@/components/combinatorial-genesis/ParameterRegistryPanel";
 
 interface PreviewCandidate {
   technical_name: string;
@@ -464,6 +465,8 @@ export function CombinatorialGenesisPage() {
             </div>
           </div>
         </header>
+
+        <ParameterRegistryPanel />
 
         <section className="space-y-3 rounded-lg border border-emerald-400/20 bg-emerald-950/10 p-4">
           <div className="flex flex-wrap items-start justify-between gap-3">

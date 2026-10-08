@@ -46,6 +46,12 @@ import urllib.error
 import urllib.request
 from typing import Any, Iterable
 
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(PROJECT_ROOT / "python_engine"))
+from parameter_registry import filter_parameters, registry_sha256  # noqa: E402
+
 
 def _configure_stdio() -> None:
     for stream_name in ("stdout", "stderr"):
@@ -705,7 +711,8 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     print(f"[build_anchors] stub={args.stub} model={args.model} endpoint={args.endpoint}")
-    dataset = load_json(args.dataset)
+    registry_root = PROJECT_ROOT / "data" / "combinatorial-genesis"
+    dataset = filter_parameters(load_json(args.dataset), registry_root)
     axes_doc = load_json(args.axes)
     axes = axes_doc["axes"]
     polarity = load_json(args.polarity)
@@ -808,6 +815,7 @@ def main(argv: list[str] | None = None) -> int:
         "dim": client.dim,
         "dataset_sha": dataset_sha,
         "axes_sha": axes_sha,
+        "excluded_sha256": registry_sha256(registry_root),
         "generated_at": _now_iso(),
         "axes": axes_vectors,
         "a_home": a_home,

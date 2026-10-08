@@ -65,6 +65,7 @@ export interface ActiveParameter {
   quantity_kind?: string | null;
   axes: string[];
   retrieval_scope: RetrievalScope;
+  excluded?: boolean;
 }
 
 export interface InstructionContextEntry {

@@ -13,6 +13,8 @@ from typing import Any
 
 import numpy as np
 
+from parameter_registry import excluded_names, registry_sha256
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_ROOT = PROJECT_ROOT / "data" / "combinatorial-genesis"
 INDEX_DIR = DATA_ROOT / "audio-clap-index"
@@ -36,7 +38,8 @@ def _load_v3_parameters() -> list[dict[str, Any]]:
             name = str(row.get("technical_name", "")).strip()
             if name and name not in records:
                 records[name] = {**row, "_v3_source": source}
-    return list(records.values())
+    excluded = excluded_names(DATA_ROOT)
+    return [parameter for name, parameter in records.items() if name not in excluded]
 
 
 def _canonical_hash(parameter: dict[str, Any]) -> str:
@@ -130,6 +133,7 @@ def build_index(progress=None) -> dict[str, Any]:
         "created_at": datetime.now(timezone.utc).isoformat(),
         "parameter_count": len(items),
         "dimensions": len(items[0]["vector"]) if items else 0,
+        "excluded_sha256": registry_sha256(DATA_ROOT),
         "items": items,
     }
     INDEX_DIR.mkdir(parents=True, exist_ok=True)

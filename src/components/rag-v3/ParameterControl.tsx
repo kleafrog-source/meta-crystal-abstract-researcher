@@ -1,8 +1,10 @@
 "use client";
 
-import { X } from "lucide-react";
+import { ArchiveX, MoreVertical, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -42,6 +44,21 @@ export function ParameterControl(props: {
       : Number(props.param.current_value) || 0;
   const textValue = String(props.param.current_value ?? "");
   const domainStyle = resolveDomainStyle(props.param.domain, props.param.technical_name);
+  const excludeFromDatabase = async () => {
+    const reason = window.prompt("Причина исключения параметра из производных индексов:", "not sound-relevant");
+    if (reason === null) return;
+    const response = await fetch("/api/combinatorial-genesis/registry", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ technical_names: [props.param.technical_name], reason, scope: props.param.retrieval_scope }),
+    });
+    if (!response.ok) {
+      const payload = await response.json() as { error?: string };
+      window.alert(payload.error ?? `HTTP ${response.status}`);
+      return;
+    }
+    removeParameter(props.param.technical_name);
+  };
   return (
     <div
       className={cn(
@@ -57,14 +74,20 @@ export function ParameterControl(props: {
                 <span className={cn("truncate font-mono text-[9px] font-semibold uppercase tracking-tight", domainStyle.accentClassName)}>
                   {props.param.technical_name.replace(/_/g, " ")}
                 </span>
-                <button
-                  type="button"
-                  className="-mr-1 inline-flex size-4 shrink-0 items-center justify-center rounded text-zinc-600 opacity-0 transition-none group-hover:opacity-100 hover:text-white"
-                  onClick={() => removeParameter(props.param.technical_name)}
-                  aria-label="Remove parameter"
-                >
-                  <X className="size-3" />
-                </button>
+                <div className="flex items-center gap-1">
+                  {props.param.excluded ? <Badge variant="outline" className="h-4 border-amber-400/40 px-1 text-[8px] text-amber-300">excluded</Badge> : null}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button type="button" className="-mr-1 inline-flex size-4 shrink-0 items-center justify-center rounded text-zinc-600 opacity-0 transition-none group-hover:opacity-100 hover:text-white" aria-label="Parameter actions">
+                        <MoreVertical className="size-3" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => removeParameter(props.param.technical_name)}><X className="size-3" />Убрать из панели</DropdownMenuItem>
+                      <DropdownMenuItem className="text-red-300" onClick={() => void excludeFromDatabase()}><ArchiveX className="size-3" />Исключить из базы</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
 
               {props.param.ui_element === "Range" || props.param.ui_element === "Toggle" ? (

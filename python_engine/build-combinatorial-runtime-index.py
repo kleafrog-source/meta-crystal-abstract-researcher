@@ -9,10 +9,14 @@ import json
 import math
 import os
 import struct
+import sys
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterable
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from parameter_registry import excluded_names, registry_sha256  # noqa: E402
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -75,10 +79,24 @@ def build_runtime_index(
     version_dir = data_root / "datasets" / version_id
     manifest = json.loads((version_dir / "manifest.json").read_text(encoding="utf-8"))
     atoms = json.loads((version_dir / "atoms.json").read_text(encoding="utf-8"))
+    excluded = excluded_names(data_root)
+    filtered_atoms = []
+    for atom in atoms:
+        sources = [name for name in atom.get("source_parameters", []) if name not in excluded]
+        if atom.get("source_parameters") and not sources:
+            continue
+        filtered_atoms.append({**atom, "source_parameters": sources})
+    atoms = filtered_atoms
     texts = [atom_embedding_text(atom) for atom in atoms]
     cache_hash = hashlib.sha256(
         json.dumps(
-            {"version_id": version_id, "model": model, "texts": texts},
+            {
+                "version_id": version_id,
+                "model": model,
+                "texts": texts,
+                "excluded_sha256": registry_sha256(data_root),
+                "source_parameters": [atom.get("source_parameters", []) for atom in atoms],
+            },
             ensure_ascii=False,
             sort_keys=True,
             separators=(",", ":"),
@@ -120,6 +138,8 @@ def build_runtime_index(
         "model": model,
         "dimensions": dimensions,
         "atom_count": len(rows),
+        "excluded_count": len(excluded),
+        "excluded_sha256": registry_sha256(data_root),
         "files": {"rows": "atoms.json", "embeddings": "atom_embeddings.f32"},
     }
     write_json(index_manifest_path, index_manifest)

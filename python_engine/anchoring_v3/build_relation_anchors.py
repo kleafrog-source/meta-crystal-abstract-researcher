@@ -9,6 +9,7 @@ import json
 import math
 import os
 import struct
+import sys
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -16,6 +17,8 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "python_engine"))
+from parameter_registry import filter_parameters, registry_sha256  # noqa: E402
 DEFAULT_DATASET = ROOT / "data" / "combinatorial-genesis" / "v3" / "dataset.json"
 DEFAULT_OUTPUT = ROOT / "data" / "combinatorial-genesis" / "v3" / "relations"
 
@@ -86,7 +89,8 @@ def main() -> int:
     parser.add_argument("--endpoint", default="http://localhost:11434")
     parser.add_argument("--model", default="qwen3-embedding:4b")
     args = parser.parse_args()
-    dataset = read_json(args.dataset)
+    data_root = ROOT / "data" / "combinatorial-genesis"
+    dataset = filter_parameters(read_json(args.dataset), data_root)
     rows = []
     for index, relation in enumerate(RELATIONS):
         rows.append({
@@ -120,6 +124,7 @@ def main() -> int:
         "schema_version": 1, "created_at": datetime.now(timezone.utc).isoformat(),
         "model": args.model, "dimensions": dimensions, "count": len(rows),
         "cache_sha256": cache_sha256,
+        "excluded_sha256": registry_sha256(data_root),
         "alpha_base": 0.15, "alpha_max": 0.25, "activation_threshold": 0.55,
         "vectors_file": vectors_path.name, "relations": rows,
     }

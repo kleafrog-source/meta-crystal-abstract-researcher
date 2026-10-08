@@ -48,6 +48,34 @@ class RuntimeIndexTests(unittest.TestCase):
             self.assertEqual(first_manifest["cache_sha256"], second_manifest["cache_sha256"])
             self.assertEqual(1, len(json.loads((first_dir / "atoms.json").read_text(encoding="utf-8"))))
 
+    def test_excluded_parameters_are_removed_from_atom_sources(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            version_id = "cg-v1-exclusion"
+            version_dir = root / "datasets" / version_id
+            version_dir.mkdir(parents=True)
+            runtime_index.write_json(root / "datasets" / "latest.json", {"version_id": version_id})
+            runtime_index.write_json(version_dir / "manifest.json", {"content_sha256": "abc"})
+            runtime_index.write_json(root / "registry" / "excluded.json", {
+                "version": 1,
+                "entries": [{"technical_name": "excluded_parameter"}],
+            })
+            runtime_index.write_json(version_dir / "atoms.json", [
+                {"atom": "only_excluded", "role": "concept", "source_parameters": ["excluded_parameter"]},
+                {"atom": "shared", "role": "concept", "source_parameters": ["excluded_parameter", "active_parameter"]},
+            ])
+
+            index_dir, manifest, created = runtime_index.build_runtime_index(
+                root, "test-model", "http://test", 8,
+                lambda _endpoint, _model, texts: [[1.0, 0.0] for _ in texts],
+            )
+
+            rows = json.loads((index_dir / "atoms.json").read_text(encoding="utf-8"))
+            self.assertTrue(created)
+            self.assertEqual(1, manifest["atom_count"])
+            self.assertEqual(["active_parameter"], rows[0]["source_parameters"])
+            self.assertEqual(1, manifest["excluded_count"])
+
 
 if __name__ == "__main__":
     unittest.main()

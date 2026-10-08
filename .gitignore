@@ -65,6 +65,8 @@ server.log
 !/data/combinatorial-genesis/flowmusic-output/.gitkeep
 !/data/combinatorial-genesis/reference/
 !/data/combinatorial-genesis/library/
+!/data/combinatorial-genesis/registry/
+!/data/combinatorial-genesis/registry/excluded.json
 !/data/combinatorial-genesis/v3/
 !/data/combinatorial-genesis/v3/anchoring/
 !/data/combinatorial-genesis/v3/anchoring/**

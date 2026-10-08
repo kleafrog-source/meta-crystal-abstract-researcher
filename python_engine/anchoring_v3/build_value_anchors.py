@@ -10,6 +10,7 @@ import math
 import os
 import re
 import struct
+import sys
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -19,6 +20,8 @@ import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "python_engine"))
+from parameter_registry import filter_parameters, registry_sha256  # noqa: E402
 DEFAULT_DATASET = ROOT / "data" / "combinatorial-genesis" / "v3" / "dataset.json"
 DEFAULT_OUTPUT = ROOT / "data" / "combinatorial-genesis" / "v3" / "value-anchors"
 LEVELS = ((0.0, "minimum"), (0.25, "low"), (0.5, "default"), (0.75, "high"), (1.0, "maximum"))
@@ -369,7 +372,8 @@ def main() -> int:
     parser.add_argument("--timeout", type=int, default=1200)
     parser.add_argument("--direct", action="store_true", help="Embed every complete anchor text instead of factorized Qwen vectors")
     args = parser.parse_args()
-    dataset = read_json(args.dataset)
+    data_root = ROOT / "data" / "combinatorial-genesis"
+    dataset = filter_parameters(read_json(args.dataset), data_root)
     range_rows, select_rows = build_rows(dataset)
     args.output.mkdir(parents=True, exist_ok=True)
     row_by_name, base_vectors, dimensions = load_composite(args.dataset.parent)
@@ -427,6 +431,11 @@ def main() -> int:
         range_prototype_vectors._mmap.close()
         option_prototype_vectors._mmap.close()
     base_vectors._mmap.close()
+    excluded_sha = registry_sha256(data_root)
+    range_manifest["excluded_sha256"] = excluded_sha
+    select_manifest["excluded_sha256"] = excluded_sha
+    write_json(args.output / "manifest.json", range_manifest)
+    write_json(args.output / "select-options.json", select_manifest)
     print(json.dumps({
         "model": args.model, "dimensions": dimensions,
         "range_count": range_manifest["count"], "range_parameters": range_manifest["parameter_count"],
