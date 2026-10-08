@@ -4,12 +4,23 @@ import path from "node:path";
 
 import { NextResponse } from "next/server";
 
-import { callSidecar } from "@/lib/engine/runner";
+import { callSidecar, listTasks } from "@/lib/engine/runner";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 7200;
 
 const MAX_AUDIO_BYTES = 150 * 1024 * 1024;
+const SEARCH_TASK_TITLE = "CLAP audio parameter search";
+
+export async function DELETE() {
+  const running = listTasks().filter((task) => (
+    task.status === "running"
+    && task.taskType === "audio-clap"
+    && task.title === SEARCH_TASK_TITLE
+  ));
+  for (const task of running) task.cancel();
+  return NextResponse.json({ ok: true, stopped: running.length });
+}
 
 export async function POST(request: Request) {
   let tempDir: string | null = null;
@@ -32,7 +43,7 @@ export async function POST(request: Request) {
       inputFile: { offset, duration, top_k: topK },
       timeoutMs: 2 * 60 * 60_000,
       taskType: "audio-clap",
-      title: "CLAP audio parameter search",
+      title: SEARCH_TASK_TITLE,
     });
     return NextResponse.json(result);
   } catch (error) {

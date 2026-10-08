@@ -125,3 +125,21 @@ z-ai-glm-flowmusic-rag-ui-v2/anchoring/eval_report.json
 /current-dataset-collection-example-session.txt
 /qwen-session-discussion.txt
 /two-test-answers-from-2 accounts-flowmusic.app.txt
+
+# local project notes and generated architecture/research reports
+/ARCHITECTURE_V2_V3_CURRENT_STATE.md
+/AUDIO_CLAP_RAG.md
+/FLOWMUSIC_COLLECTION_PROMPT_V1.md
+/COMBINATORIAL_GENESIS_ENGINE.md
+/STRUDEL_QUALITY_ROADMAP.md
+/LEXICON_STATUS_DASHBOARD_REPORT.md
+/SEMANTIC_COMPLETENESS_REPORT.md
+/EXTENDED_LEXICON_REPORT.md
+/MACHINE_LEXICON_VERIFICATION_REPORT.md
+/LEXICON_IMPLEMENTATION_REPORT.md
+/RUNTIME_AUDIT_REPORT.md
+/TORUS_ATLAS_IMPLEMENTATION_CHECKLIST.md
+/NEW-TASK.md
+/TASK.md
+/README_SETUP.md
+/STAGED_TASK.md
