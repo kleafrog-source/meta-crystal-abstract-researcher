@@ -1,27 +1,28 @@
 # RAG V3 semantic matrix — BEFORE
 
-Дата: 2026-10-08T06:11:43+03:00
+Дата: 2026-10-08T16:33:02+03:00
 
 Все API-запросы выполнены строго последовательно.
+Среднее время запроса: **2.590 с**.
 
 ## Dataset
 
-- Всего: 6071
-- UI: {'Range': 5597, 'Select': 448, 'Toggle': 15, 'Text': 7, 'Array': 1, 'String': 3}
+- Всего: 6087
+- UI: {'Range': 5611, 'Select': 450, 'Toggle': 15, 'Text': 7, 'Array': 1, 'String': 3}
 - Уникальных unit: 1459
 
 ## Сводка
 
 | Группа | корректно | target retrieved |
 |---|---:|---:|
-| Range | 5/10 | 5/10 |
-| Select | 3/10 | 4/10 |
+| Range | 9/10 | 9/10 |
+| Select | 9/10 | 10/10 |
 | Toggle | 10/10 | 10/10 |
 | Text | 1/10 | 1/10 |
-| String | 1/10 | 1/10 |
-| Array | 2/10 | 2/10 |
+| String | 3/10 | 3/10 |
+| Array | 10/10 | 10/10 |
 | Unit | 13/13 | 13/13 |
-| Complex | 8/10 | 0/10 |
+| Complex | 10/10 | 0/10 |
 
 ## Тесты
 
@@ -30,12 +31,12 @@
 - Query: `Make the sound sharpen it`
 - Target: `groove_inharmonicity_spatial_shadowing_density`
 - Expected: `up`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 0/8
+- Retrieved: **да**
+- Value/default: `124.5` / `20`
+- Source: `lexical`
+- Direction/result: `up`
+- Correct: **да**
+- Changed in Top-K: 3/8
 
 ### 2. Range · Top-K 12
 
@@ -47,7 +48,7 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 4/12
+- Changed in Top-K: 3/12
 
 ### 3. Range · Top-K 20
 
@@ -59,7 +60,7 @@
 - Source: `lexical`
 - Direction/result: `up`
 - Correct: **да**
-- Changed in Top-K: 2/20
+- Changed in Top-K: 6/20
 
 ### 4. Range · Top-K 30
 
@@ -71,7 +72,7 @@
 - Source: `lexical`
 - Direction/result: `down`
 - Correct: **да**
-- Changed in Top-K: 1/30
+- Changed in Top-K: 9/30
 
 ### 5. Range · Top-K 50
 
@@ -83,19 +84,19 @@
 - Source: `lexical`
 - Direction/result: `up`
 - Correct: **да**
-- Changed in Top-K: 10/50
+- Changed in Top-K: 15/50
 
 ### 6. Range · Top-K 8
 
 - Query: `Make the sound produce dry air with strong high-frequency attenuation`
 - Target: `acoustic_air_absorption_humidity_ratio`
 - Expected: `down`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 1/8
+- Retrieved: **да**
+- Value/default: `0` / `0.5`
+- Source: `lexical`
+- Direction/result: `down`
+- Correct: **да**
+- Changed in Top-K: 3/8
 
 ### 7. Range · Top-K 12
 
@@ -107,19 +108,19 @@
 - Source: `lexical`
 - Direction/result: `up`
 - Correct: **да**
-- Changed in Top-K: 6/12
+- Changed in Top-K: 4/12
 
 ### 8. Range · Top-K 20
 
 - Query: `Make the sound produce specular, mirror-like reflections`
 - Target: `acoustic_boundary_scattering_coefficient`
 - Expected: `down`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 4/20
+- Retrieved: **да**
+- Value/default: `0` / `0.2`
+- Source: `lexical`
+- Direction/result: `down`
+- Correct: **да**
+- Changed in Top-K: 6/20
 
 ### 9. Range · Top-K 30
 
@@ -131,31 +132,31 @@
 - Source: `lexical`
 - Direction/result: `up`
 - Correct: **да**
-- Changed in Top-K: 11/30
+- Changed in Top-K: 9/30
 
 ### 10. Range · Top-K 50
 
 - Query: `Make the sound produce strong low-frequency shadowing`
 - Target: `acoustic_diffraction_edge_frequency`
 - Expected: `down`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 6/50
+- Retrieved: **да**
+- Value/default: `100` / `2000`
+- Source: `lexical`
+- Direction/result: `down`
+- Correct: **да**
+- Changed in Top-K: 13/50
 
 ### 11. Select · Top-K 8
 
 - Query: `Use 1 mode for this sound`
 - Target: `a5_adapt_density_smoothing_filter_order`
 - Expected: `1`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 1/8
+- Retrieved: **да**
+- Value/default: `1` / `2`
+- Source: `numeric`
+- Direction/result: `match`
+- Correct: **да**
+- Changed in Top-K: 3/8
 
 ### 12. Select · Top-K 12
 
@@ -164,34 +165,34 @@
 - Expected: `cardioid`
 - Retrieved: **да**
 - Value/default: `cardioid` / `omnidirectional`
-- Source: `lexical`
+- Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 2/12
+- Changed in Top-K: 3/12
 
 ### 13. Select · Top-K 20
 
 - Query: `Use triangle mode for this sound`
 - Target: `adaptive_eq_automation_shape`
 - Expected: `triangle`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 4/20
+- Retrieved: **да**
+- Value/default: `triangle` / `sine`
+- Source: `numeric`
+- Direction/result: `match`
+- Correct: **да**
+- Changed in Top-K: 6/20
 
 ### 14. Select · Top-K 30
 
 - Query: `Use aggressive mode for this sound`
 - Target: `adaptive_eq_learning_bias_curve`
 - Expected: `aggressive`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 0/30
+- Retrieved: **да**
+- Value/default: `aggressive` / `balanced`
+- Source: `numeric`
+- Direction/result: `match`
+- Correct: **да**
+- Changed in Top-K: 7/30
 
 ### 15. Select · Top-K 50
 
@@ -200,33 +201,33 @@
 - Expected: `down`
 - Retrieved: **да**
 - Value/default: `down` / `up`
-- Source: `lexical`
+- Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 4/50
+- Changed in Top-K: 11/50
 
 ### 16. Select · Top-K 8
 
 - Query: `Use 1/4 mode for this sound`
 - Target: `arpeggiator_rate_division`
 - Expected: `1/4`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
+- Retrieved: **да**
+- Value/default: `1/16` / `1/16`
+- Source: `default`
+- Direction/result: `mismatch`
 - Correct: **нет**
-- Changed in Top-K: 1/8
+- Changed in Top-K: 3/8
 
 ### 17. Select · Top-K 12
 
 - Query: `Use exponential mode for this sound`
 - Target: `articulation_velocity_to_parameter_bias`
 - Expected: `exponential`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
+- Retrieved: **да**
+- Value/default: `exponential` / `linear`
+- Source: `numeric`
+- Direction/result: `match`
+- Correct: **да**
 - Changed in Top-K: 2/12
 
 ### 18. Select · Top-K 20
@@ -236,22 +237,22 @@
 - Expected: `Left Only`
 - Retrieved: **да**
 - Value/default: `Left Only` / `Disabled`
-- Source: `lexical`
+- Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 2/20
+- Changed in Top-K: 5/20
 
 ### 19. Select · Top-K 30
 
 - Query: `Use rossler mode for this sound`
 - Target: `attractor_type_selection`
 - Expected: `rossler`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 1/30
+- Retrieved: **да**
+- Value/default: `rossler` / `lorenz`
+- Source: `numeric`
+- Direction/result: `match`
+- Correct: **да**
+- Changed in Top-K: 7/30
 
 ### 20. Select · Top-K 50
 
@@ -259,11 +260,11 @@
 - Target: `audio_buffer_size_samples`
 - Expected: `32`
 - Retrieved: **да**
-- Value/default: `256` / `256`
-- Source: `default`
-- Direction/result: `mismatch`
-- Correct: **нет**
-- Changed in Top-K: 1/50
+- Value/default: `32` / `256`
+- Source: `numeric`
+- Direction/result: `match`
+- Correct: **да**
+- Changed in Top-K: 10/50
 
 ### 21. Toggle · Top-K 8
 
@@ -271,7 +272,7 @@
 - Target: `autopan_interchannel_phase_inversion`
 - Expected: `1`
 - Retrieved: **да**
-- Value/default: `0` / `1`
+- Value/default: `1` / `1`
 - Source: `lexical`
 - Direction/result: `match`
 - Correct: **да**
@@ -299,7 +300,7 @@
 - Source: `lexical`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 0/20
+- Changed in Top-K: 4/20
 
 ### 24. Toggle · Top-K 30
 
@@ -311,7 +312,7 @@
 - Source: `lexical`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 5/30
+- Changed in Top-K: 4/30
 
 ### 25. Toggle · Top-K 50
 
@@ -323,7 +324,7 @@
 - Source: `lexical`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 4/50
+- Changed in Top-K: 13/50
 
 ### 26. Toggle · Top-K 8
 
@@ -335,7 +336,7 @@
 - Source: `lexical`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 1/8
+- Changed in Top-K: 2/8
 
 ### 27. Toggle · Top-K 12
 
@@ -347,7 +348,7 @@
 - Source: `lexical`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 2/12
+- Changed in Top-K: 5/12
 
 ### 28. Toggle · Top-K 20
 
@@ -359,7 +360,7 @@
 - Source: `lexical`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 3/20
+- Changed in Top-K: 5/20
 
 ### 29. Toggle · Top-K 30
 
@@ -371,7 +372,7 @@
 - Source: `lexical`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 2/30
+- Changed in Top-K: 8/30
 
 ### 30. Toggle · Top-K 50
 
@@ -383,7 +384,7 @@
 - Source: `lexical`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 1/50
+- Changed in Top-K: 14/50
 
 ### 31. Text · Top-K 8
 
@@ -395,7 +396,7 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 0/8
+- Changed in Top-K: 3/8
 
 ### 32. Text · Top-K 12
 
@@ -407,7 +408,7 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 0/12
+- Changed in Top-K: 4/12
 
 ### 33. Text · Top-K 20
 
@@ -419,7 +420,7 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 3/20
+- Changed in Top-K: 6/20
 
 ### 34. Text · Top-K 30
 
@@ -428,10 +429,10 @@
 - Expected: `unchanged`
 - Retrieved: **да**
 - Value/default: `3:4` / `3:4`
-- Source: `default`
+- Source: `not_generated`
 - Direction/result: `unchanged`
 - Correct: **да**
-- Changed in Top-K: 0/30
+- Changed in Top-K: 5/30
 
 ### 35. Text · Top-K 50
 
@@ -443,7 +444,7 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 6/50
+- Changed in Top-K: 12/50
 
 ### 36. Text · Top-K 8
 
@@ -455,7 +456,7 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 2/8
+- Changed in Top-K: 3/8
 
 ### 37. Text · Top-K 12
 
@@ -467,7 +468,7 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 0/12
+- Changed in Top-K: 4/12
 
 ### 38. Text · Top-K 20
 
@@ -479,7 +480,7 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 0/20
+- Changed in Top-K: 6/20
 
 ### 39. Text · Top-K 30
 
@@ -491,7 +492,7 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 3/30
+- Changed in Top-K: 9/30
 
 ### 40. Text · Top-K 50
 
@@ -503,7 +504,7 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 3/50
+- Changed in Top-K: 15/50
 
 ### 41. String · Top-K 8
 
@@ -515,7 +516,7 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 0/8
+- Changed in Top-K: 3/8
 
 ### 42. String · Top-K 12
 
@@ -527,31 +528,31 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 3/12
+- Changed in Top-K: 4/12
 
 ### 43. String · Top-K 20
 
 - Query: `Create a sound with семя фрактального ритма`
 - Target: `l_system_axiom_string_initial`
 - Expected: `unchanged`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 0/20
+- Retrieved: **да**
+- Value/default: `F` / `F`
+- Source: `not_generated`
+- Direction/result: `unchanged`
+- Correct: **да**
+- Changed in Top-K: 4/20
 
 ### 44. String · Top-K 30
 
 - Query: `Create a sound with interoperable asset licensing smart contract address ethereum`
 - Target: `interoperable_asset_licensing_smart_contract_address`
 - Expected: `unchanged`
-- Retrieved: **да**
-- Value/default: `0x...` / `0x...`
-- Source: `default`
-- Direction/result: `unchanged`
-- Correct: **да**
-- Changed in Top-K: 0/30
+- Retrieved: **нет**
+- Value/default: `None` / `None`
+- Source: `None`
+- Direction/result: `target_not_retrieved`
+- Correct: **нет**
+- Changed in Top-K: 8/30
 
 ### 45. String · Top-K 50
 
@@ -563,19 +564,19 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 3/50
+- Changed in Top-K: 15/50
 
 ### 46. String · Top-K 8
 
 - Query: `Create a sound with generative rule starting point`
 - Target: `l_system_axiom_string_initial`
 - Expected: `unchanged`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 0/8
+- Retrieved: **да**
+- Value/default: `F` / `F`
+- Source: `not_generated`
+- Direction/result: `unchanged`
+- Correct: **да**
+- Changed in Top-K: 2/8
 
 ### 47. String · Top-K 12
 
@@ -587,7 +588,7 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 0/12
+- Changed in Top-K: 4/12
 
 ### 48. String · Top-K 20
 
@@ -599,19 +600,19 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 0/20
+- Changed in Top-K: 6/20
 
 ### 49. String · Top-K 30
 
 - Query: `Create a sound with базовый паттерн рекурсии`
 - Target: `l_system_axiom_string_initial`
 - Expected: `unchanged`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 6/30
+- Retrieved: **да**
+- Value/default: `F` / `F`
+- Source: `not_generated`
+- Direction/result: `unchanged`
+- Correct: **да**
+- Changed in Top-K: 7/30
 
 ### 50. String · Top-K 50
 
@@ -623,43 +624,43 @@
 - Source: `None`
 - Direction/result: `target_not_retrieved`
 - Correct: **нет**
-- Changed in Top-K: 7/50
+- Changed in Top-K: 14/50
 
 ### 51. Array · Top-K 8
 
 - Query: `Create a sound with точки якорей энергии на таймлайне`
 - Target: `energy_timeline_anchor_points`
 - Expected: `unchanged`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 0/8
+- Retrieved: **да**
+- Value/default: `30, 120, 240` / `30, 120, 240`
+- Source: `not_generated`
+- Direction/result: `unchanged`
+- Correct: **да**
+- Changed in Top-K: 2/8
 
 ### 52. Array · Top-K 12
 
 - Query: `Create a sound with временные метки пиков`
 - Target: `energy_timeline_anchor_points`
 - Expected: `unchanged`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 1/12
+- Retrieved: **да**
+- Value/default: `30, 120, 240` / `30, 120, 240`
+- Source: `not_generated`
+- Direction/result: `unchanged`
+- Correct: **да**
+- Changed in Top-K: 3/12
 
 ### 53. Array · Top-K 20
 
 - Query: `Create a sound with структурные вехи трека`
 - Target: `energy_timeline_anchor_points`
 - Expected: `unchanged`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 0/20
+- Retrieved: **да**
+- Value/default: `30, 120, 240` / `30, 120, 240`
+- Source: `not_generated`
+- Direction/result: `unchanged`
+- Correct: **да**
+- Changed in Top-K: 5/20
 
 ### 54. Array · Top-K 30
 
@@ -668,10 +669,10 @@
 - Expected: `unchanged`
 - Retrieved: **да**
 - Value/default: `30, 120, 240` / `30, 120, 240`
-- Source: `default`
+- Source: `not_generated`
 - Direction/result: `unchanged`
 - Correct: **да**
-- Changed in Top-K: 3/30
+- Changed in Top-K: 6/30
 
 ### 55. Array · Top-K 50
 
@@ -680,70 +681,70 @@
 - Expected: `unchanged`
 - Retrieved: **да**
 - Value/default: `30, 120, 240` / `30, 120, 240`
-- Source: `default`
+- Source: `not_generated`
 - Direction/result: `unchanged`
 - Correct: **да**
-- Changed in Top-K: 7/50
+- Changed in Top-K: 12/50
 
 ### 56. Array · Top-K 8
 
 - Query: `Create a sound with arrangement milestone coordinates`
 - Target: `energy_timeline_anchor_points`
 - Expected: `unchanged`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 0/8
+- Retrieved: **да**
+- Value/default: `30, 120, 240` / `30, 120, 240`
+- Source: `not_generated`
+- Direction/result: `unchanged`
+- Correct: **да**
+- Changed in Top-K: 2/8
 
 ### 57. Array · Top-K 12
 
 - Query: `Create a sound with dynamic climax positioning points`
 - Target: `energy_timeline_anchor_points`
 - Expected: `unchanged`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 0/12
+- Retrieved: **да**
+- Value/default: `30, 120, 240` / `30, 120, 240`
+- Source: `not_generated`
+- Direction/result: `unchanged`
+- Correct: **да**
+- Changed in Top-K: 2/12
 
 ### 58. Array · Top-K 20
 
 - Query: `Create a sound with точки якорей энергии на таймлайне`
 - Target: `energy_timeline_anchor_points`
 - Expected: `unchanged`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 1/20
+- Retrieved: **да**
+- Value/default: `30, 120, 240` / `30, 120, 240`
+- Source: `not_generated`
+- Direction/result: `unchanged`
+- Correct: **да**
+- Changed in Top-K: 5/20
 
 ### 59. Array · Top-K 30
 
 - Query: `Create a sound with временные метки пиков`
 - Target: `energy_timeline_anchor_points`
 - Expected: `unchanged`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 4/30
+- Retrieved: **да**
+- Value/default: `30, 120, 240` / `30, 120, 240`
+- Source: `not_generated`
+- Direction/result: `unchanged`
+- Correct: **да**
+- Changed in Top-K: 8/30
 
 ### 60. Array · Top-K 50
 
 - Query: `Create a sound with структурные вехи трека`
 - Target: `energy_timeline_anchor_points`
 - Expected: `unchanged`
-- Retrieved: **нет**
-- Value/default: `None` / `None`
-- Source: `None`
-- Direction/result: `target_not_retrieved`
-- Correct: **нет**
-- Changed in Top-K: 5/50
+- Retrieved: **да**
+- Value/default: `30, 120, 240` / `30, 120, 240`
+- Source: `not_generated`
+- Direction/result: `unchanged`
+- Correct: **да**
+- Changed in Top-K: 13/50
 
 ### 61. Unit · Top-K 8
 
@@ -755,7 +756,7 @@
 - Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 1/8
+- Changed in Top-K: 3/8
 
 ### 62. Unit · Top-K 12
 
@@ -767,7 +768,7 @@
 - Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 2/12
+- Changed in Top-K: 4/12
 
 ### 63. Unit · Top-K 20
 
@@ -779,7 +780,7 @@
 - Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 1/20
+- Changed in Top-K: 6/20
 
 ### 64. Unit · Top-K 30
 
@@ -791,7 +792,7 @@
 - Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 1/30
+- Changed in Top-K: 9/30
 
 ### 65. Unit · Top-K 50
 
@@ -803,7 +804,7 @@
 - Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 1/50
+- Changed in Top-K: 14/50
 
 ### 66. Unit · Top-K 8
 
@@ -815,7 +816,7 @@
 - Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 2/8
+- Changed in Top-K: 3/8
 
 ### 67. Unit · Top-K 12
 
@@ -827,7 +828,7 @@
 - Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 1/12
+- Changed in Top-K: 4/12
 
 ### 68. Unit · Top-K 20
 
@@ -839,7 +840,7 @@
 - Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 1/20
+- Changed in Top-K: 6/20
 
 ### 69. Unit · Top-K 30
 
@@ -851,7 +852,7 @@
 - Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 2/30
+- Changed in Top-K: 9/30
 
 ### 70. Unit · Top-K 50
 
@@ -863,7 +864,7 @@
 - Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 1/50
+- Changed in Top-K: 13/50
 
 ### 71. Unit · Top-K 8
 
@@ -887,7 +888,7 @@
 - Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 5/12
+- Changed in Top-K: 4/12
 
 ### 73. Unit · Top-K 20
 
@@ -899,7 +900,7 @@
 - Source: `numeric`
 - Direction/result: `match`
 - Correct: **да**
-- Changed in Top-K: 4/20
+- Changed in Top-K: 6/20
 
 ### 74. Complex · Top-K 30
 
@@ -909,9 +910,9 @@
 - Retrieved: **нет**
 - Value/default: `None` / `None`
 - Source: `None`
-- Direction/result: `changed=3`
+- Direction/result: `changed=8`
 - Correct: **да**
-- Changed in Top-K: 3/30
+- Changed in Top-K: 8/30
 
 ### 75. Complex · Top-K 50
 
@@ -933,9 +934,9 @@
 - Retrieved: **нет**
 - Value/default: `None` / `None`
 - Source: `None`
-- Direction/result: `changed=1`
+- Direction/result: `changed=3`
 - Correct: **да**
-- Changed in Top-K: 1/8
+- Changed in Top-K: 3/8
 
 ### 77. Complex · Top-K 12
 
@@ -945,9 +946,9 @@
 - Retrieved: **нет**
 - Value/default: `None` / `None`
 - Source: `None`
-- Direction/result: `changed=1`
+- Direction/result: `changed=4`
 - Correct: **да**
-- Changed in Top-K: 1/12
+- Changed in Top-K: 4/12
 
 ### 78. Complex · Top-K 20
 
@@ -957,9 +958,9 @@
 - Retrieved: **нет**
 - Value/default: `None` / `None`
 - Source: `None`
-- Direction/result: `changed=0`
-- Correct: **нет**
-- Changed in Top-K: 0/20
+- Direction/result: `changed=6`
+- Correct: **да**
+- Changed in Top-K: 6/20
 
 ### 79. Complex · Top-K 30
 
@@ -969,9 +970,9 @@
 - Retrieved: **нет**
 - Value/default: `None` / `None`
 - Source: `None`
-- Direction/result: `changed=2`
+- Direction/result: `changed=7`
 - Correct: **да**
-- Changed in Top-K: 2/30
+- Changed in Top-K: 7/30
 
 ### 80. Complex · Top-K 50
 
@@ -981,9 +982,9 @@
 - Retrieved: **нет**
 - Value/default: `None` / `None`
 - Source: `None`
-- Direction/result: `changed=3`
+- Direction/result: `changed=12`
 - Correct: **да**
-- Changed in Top-K: 3/50
+- Changed in Top-K: 12/50
 
 ### 81. Complex · Top-K 8
 
@@ -993,9 +994,9 @@
 - Retrieved: **нет**
 - Value/default: `None` / `None`
 - Source: `None`
-- Direction/result: `changed=0`
-- Correct: **нет**
-- Changed in Top-K: 0/8
+- Direction/result: `changed=3`
+- Correct: **да**
+- Changed in Top-K: 3/8
 
 ### 82. Complex · Top-K 12
 
@@ -1005,9 +1006,9 @@
 - Retrieved: **нет**
 - Value/default: `None` / `None`
 - Source: `None`
-- Direction/result: `changed=5`
+- Direction/result: `changed=4`
 - Correct: **да**
-- Changed in Top-K: 5/12
+- Changed in Top-K: 4/12
 
 ### 83. Complex · Top-K 20
 
@@ -1017,6 +1018,6 @@
 - Retrieved: **нет**
 - Value/default: `None` / `None`
 - Source: `None`
-- Direction/result: `changed=3`
+- Direction/result: `changed=6`
 - Correct: **да**
-- Changed in Top-K: 3/20
+- Changed in Top-K: 6/20

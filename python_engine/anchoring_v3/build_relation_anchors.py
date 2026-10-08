@@ -18,7 +18,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "python_engine"))
-from parameter_registry import filter_parameters, registry_sha256  # noqa: E402
+from parameter_registry import filter_parameters, read_registry, registry_sha256  # noqa: E402
 DEFAULT_DATASET = ROOT / "data" / "combinatorial-genesis" / "v3" / "dataset.json"
 DEFAULT_OUTPUT = ROOT / "data" / "combinatorial-genesis" / "v3" / "relations"
 
@@ -125,6 +125,8 @@ def main() -> int:
         "model": args.model, "dimensions": dimensions, "count": len(rows),
         "cache_sha256": cache_sha256,
         "excluded_sha256": registry_sha256(data_root),
+        "excluded_count": len(read_registry(data_root)["entries"]),
+        "source_parameter_count": len(dataset),
         "alpha_base": 0.15, "alpha_max": 0.25, "activation_threshold": 0.55,
         "vectors_file": vectors_path.name, "relations": rows,
     }

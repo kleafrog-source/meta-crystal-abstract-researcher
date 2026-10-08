@@ -21,7 +21,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "python_engine"))
-from parameter_registry import filter_parameters, registry_sha256  # noqa: E402
+from parameter_registry import filter_parameters, read_registry, registry_sha256  # noqa: E402
 DEFAULT_DATASET = ROOT / "data" / "combinatorial-genesis" / "v3" / "dataset.json"
 DEFAULT_OUTPUT = ROOT / "data" / "combinatorial-genesis" / "v3" / "value-anchors"
 LEVELS = ((0.0, "minimum"), (0.25, "low"), (0.5, "default"), (0.75, "high"), (1.0, "maximum"))
@@ -367,9 +367,10 @@ def main() -> int:
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--endpoint", default="http://localhost:11434")
-    parser.add_argument("--model", default="qwen3-embedding:4b")
+    parser.add_argument("--model", default=os.environ.get("OLLAMA_EMBED_MODEL", "qwen3-embedding:0.6b"))
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--timeout", type=int, default=1200)
+    parser.add_argument("--target", choices=("all", "range", "select"), default="all")
     parser.add_argument("--direct", action="store_true", help="Embed every complete anchor text instead of factorized Qwen vectors")
     args = parser.parse_args()
     data_root = ROOT / "data" / "combinatorial-genesis"
@@ -377,69 +378,80 @@ def main() -> int:
     range_rows, select_rows = build_rows(dataset)
     args.output.mkdir(parents=True, exist_ok=True)
     row_by_name, base_vectors, dimensions = load_composite(args.dataset.parent)
+    range_manifest = None
+    select_manifest = None
     if args.direct:
-        range_manifest = build_artifact(
+        if args.target in ("all", "range"):
+            range_manifest = build_artifact(
             label="range_value_anchors", rows=range_rows,
             manifest_path=args.output / "manifest.json", vectors_path=args.output / "embeddings.f32",
             endpoint=args.endpoint, model=args.model, dimensions=dimensions,
             batch_size=max(1, args.batch_size), timeout=args.timeout,
-        )
-        select_manifest = build_artifact(
+            )
+        if args.target in ("all", "select"):
+            select_manifest = build_artifact(
             label="select_option_anchors", rows=select_rows,
             manifest_path=args.output / "select-options.json", vectors_path=args.output / "select-options.f32",
             endpoint=args.endpoint, model=args.model, dimensions=dimensions,
             batch_size=max(1, args.batch_size), timeout=args.timeout,
-        )
+            )
     else:
         range_prototypes, option_prototypes = prototype_rows(range_rows, select_rows)
-        range_prototype_manifest = build_artifact(
-            label="range_state_prototypes", rows=range_prototypes,
-            manifest_path=args.output / "range-prototypes.json", vectors_path=args.output / "range-prototypes.f32",
-            endpoint=args.endpoint, model=args.model, dimensions=dimensions,
-            batch_size=max(1, args.batch_size), timeout=args.timeout,
-        )
-        option_prototype_manifest = build_option_prototypes_from_composite(
-            prototype_rows_value=option_prototypes, select_rows=select_rows,
-            manifest_path=args.output / "option-prototypes.json",
-            vectors_path=args.output / "option-prototypes.f32", model=args.model,
-            dimensions=dimensions, row_by_name=row_by_name, base_vectors=base_vectors,
-        )
-        range_prototype_vectors = np.memmap(
-            args.output / range_prototype_manifest["vectors_file"], dtype="<f4", mode="r", offset=8,
-            shape=(range_prototype_manifest["count"], dimensions),
-        )
-        option_prototype_vectors = np.memmap(
-            args.output / option_prototype_manifest["vectors_file"], dtype="<f4", mode="r", offset=8,
-            shape=(option_prototype_manifest["count"], dimensions),
-        )
-        range_manifest = composed_manifest(
-            rows=range_rows, output_path=args.output / "embeddings.f32",
-            manifest_path=args.output / "manifest.json", model=args.model, dimensions=dimensions,
-            row_by_name=row_by_name, base_vectors=base_vectors,
-            prototype_vectors=range_prototype_vectors,
-            prototype_index={str(row["level"]): row["row_index"] for row in range_prototypes},
-            prototype_key="level", base_weight=0.82, prototype_weight=0.38,
-        )
-        select_manifest = composed_manifest(
-            rows=select_rows, output_path=args.output / "select-options.f32",
-            manifest_path=args.output / "select-options.json", model=args.model, dimensions=dimensions,
-            row_by_name=row_by_name, base_vectors=base_vectors,
-            prototype_vectors=option_prototype_vectors,
-            prototype_index={str(row["option"]): row["row_index"] for row in option_prototypes},
-            prototype_key="option", base_weight=0.78, prototype_weight=0.48,
-        )
-        range_prototype_vectors._mmap.close()
-        option_prototype_vectors._mmap.close()
+        if args.target in ("all", "range"):
+            range_prototype_manifest = build_artifact(
+                label="range_state_prototypes", rows=range_prototypes,
+                manifest_path=args.output / "range-prototypes.json", vectors_path=args.output / "range-prototypes.f32",
+                endpoint=args.endpoint, model=args.model, dimensions=dimensions,
+                batch_size=max(1, args.batch_size), timeout=args.timeout,
+            )
+            range_prototype_vectors = np.memmap(
+                args.output / range_prototype_manifest["vectors_file"], dtype="<f4", mode="r", offset=8,
+                shape=(range_prototype_manifest["count"], dimensions),
+            )
+            range_manifest = composed_manifest(
+                rows=range_rows, output_path=args.output / "embeddings.f32",
+                manifest_path=args.output / "manifest.json", model=args.model, dimensions=dimensions,
+                row_by_name=row_by_name, base_vectors=base_vectors,
+                prototype_vectors=range_prototype_vectors,
+                prototype_index={str(row["level"]): row["row_index"] for row in range_prototypes},
+                prototype_key="level", base_weight=0.82, prototype_weight=0.38,
+            )
+            range_prototype_vectors._mmap.close()
+        if args.target in ("all", "select"):
+            option_prototype_manifest = build_option_prototypes_from_composite(
+                prototype_rows_value=option_prototypes, select_rows=select_rows,
+                manifest_path=args.output / "option-prototypes.json",
+                vectors_path=args.output / "option-prototypes.f32", model=args.model,
+                dimensions=dimensions, row_by_name=row_by_name, base_vectors=base_vectors,
+            )
+            option_prototype_vectors = np.memmap(
+                args.output / option_prototype_manifest["vectors_file"], dtype="<f4", mode="r", offset=8,
+                shape=(option_prototype_manifest["count"], dimensions),
+            )
+            select_manifest = composed_manifest(
+                rows=select_rows, output_path=args.output / "select-options.f32",
+                manifest_path=args.output / "select-options.json", model=args.model, dimensions=dimensions,
+                row_by_name=row_by_name, base_vectors=base_vectors,
+                prototype_vectors=option_prototype_vectors,
+                prototype_index={str(row["option"]): row["row_index"] for row in option_prototypes},
+                prototype_key="option", base_weight=0.78, prototype_weight=0.48,
+            )
+            option_prototype_vectors._mmap.close()
     base_vectors._mmap.close()
     excluded_sha = registry_sha256(data_root)
-    range_manifest["excluded_sha256"] = excluded_sha
-    select_manifest["excluded_sha256"] = excluded_sha
-    write_json(args.output / "manifest.json", range_manifest)
-    write_json(args.output / "select-options.json", select_manifest)
+    for manifest, manifest_path in ((range_manifest, args.output / "manifest.json"), (select_manifest, args.output / "select-options.json")):
+        if manifest is not None:
+            manifest["excluded_sha256"] = excluded_sha
+            manifest["excluded_count"] = len(read_registry(data_root)["entries"])
+            manifest["source_parameter_count"] = len(dataset)
+            write_json(manifest_path, manifest)
     print(json.dumps({
         "model": args.model, "dimensions": dimensions,
-        "range_count": range_manifest["count"], "range_parameters": range_manifest["parameter_count"],
-        "select_count": select_manifest["count"], "select_parameters": select_manifest["parameter_count"],
+        "target": args.target,
+        "range_count": range_manifest["count"] if range_manifest else None,
+        "range_parameters": range_manifest["parameter_count"] if range_manifest else None,
+        "select_count": select_manifest["count"] if select_manifest else None,
+        "select_parameters": select_manifest["parameter_count"] if select_manifest else None,
     }, ensure_ascii=False), flush=True)
     return 0
 

@@ -10,6 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import type { StatusResponse } from "@/lib/rag-v3/types";
 import { cn } from "@/lib/utils";
 import { useRagV3Store } from "@/store/rag-v3-store";
+import { ManagedRebuildPanel } from "./ManagedRebuildPanel";
 
 export function AnchoringDashboard() {
   const status = useRagV3Store((state) => state.status);
@@ -141,6 +142,7 @@ export function AnchoringDashboard() {
             Refresh status
           </Button>
         </div>
+        <ManagedRebuildPanel />
       </CardContent>
     </Card>
   );

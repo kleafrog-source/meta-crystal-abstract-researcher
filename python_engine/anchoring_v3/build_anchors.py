@@ -50,7 +50,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / "python_engine"))
-from parameter_registry import filter_parameters, registry_sha256  # noqa: E402
+from parameter_registry import filter_parameters, read_registry, registry_sha256  # noqa: E402
 
 
 def _configure_stdio() -> None:
@@ -816,6 +816,8 @@ def main(argv: list[str] | None = None) -> int:
         "dataset_sha": dataset_sha,
         "axes_sha": axes_sha,
         "excluded_sha256": registry_sha256(registry_root),
+        "excluded_count": len(read_registry(registry_root)["entries"]),
+        "source_parameter_count": len(dataset),
         "generated_at": _now_iso(),
         "axes": axes_vectors,
         "a_home": a_home,

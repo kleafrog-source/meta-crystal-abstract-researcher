@@ -196,7 +196,7 @@ export async function searchV3(params: {
     const normalizedQuery = effectiveQuery.toLowerCase();
     if (normalizedOption.length >= 3) return normalizedQuery.includes(normalizedOption);
     return /\b(?:mode|option|режим|вариант)\b/u.test(normalizedQuery)
-      && new RegExp(`\\b${normalizedOption.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "u").test(normalizedQuery);
+      && new RegExp(`(?<![\\p{L}\\p{N}_/.:])${normalizedOption.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\p{L}\\p{N}_/.:])`, "u").test(normalizedQuery);
   };
   const hasOptionCommand = /\b(?:mode|option|режим|вариант)\b/u.test(baseQuery.toLowerCase());
   const selectMatches = hasOptionCommand

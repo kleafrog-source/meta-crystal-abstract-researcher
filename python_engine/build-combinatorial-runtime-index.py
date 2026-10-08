@@ -67,6 +67,12 @@ def write_vectors(path: Path, vectors: list[list[float]]) -> int:
     return dimensions
 
 
+def read_vectors(path: Path) -> list[list[float]]:
+    with path.open("rb") as handle:
+        count, dimensions = struct.unpack("<II", handle.read(8))
+        return [list(struct.unpack(f"<{dimensions}f", handle.read(dimensions * 4))) for _ in range(count)]
+
+
 def build_runtime_index(
     data_root: Path,
     model: str,
@@ -109,12 +115,27 @@ def build_runtime_index(
         if index_manifest.get("cache_sha256") == cache_hash:
             return index_dir, index_manifest, False
 
+    reusable: dict[str, list[float]] = {}
+    rows_path = index_dir / "atoms.json"
+    vectors_path = index_dir / "atom_embeddings.f32"
+    if index_manifest_path.exists() and rows_path.exists() and vectors_path.exists():
+        previous_manifest = json.loads(index_manifest_path.read_text(encoding="utf-8"))
+        if previous_manifest.get("model") == model:
+            previous_rows = json.loads(rows_path.read_text(encoding="utf-8"))
+            for row, vector in zip(previous_rows, read_vectors(vectors_path)):
+                if row.get("embedding_text") == atom_embedding_text(row):
+                    reusable[str(row.get("atom"))] = normalize(vector)
+
     index_dir.mkdir(parents=True, exist_ok=True)
-    vectors: list[list[float]] = []
-    for start in range(0, len(texts), batch_size):
-        chunk = texts[start : start + batch_size]
-        vectors.extend(normalize(vector) for vector in embedder(endpoint, model, chunk))
-        print(f"Embedded atoms {len(vectors)}/{len(texts)}", flush=True)
+    vectors_by_atom = dict(reusable)
+    pending = [(atom, text) for atom, text in zip(atoms, texts) if str(atom.get("atom")) not in vectors_by_atom]
+    for start in range(0, len(pending), batch_size):
+        chunk = pending[start : start + batch_size]
+        embedded = embedder(endpoint, model, [text for _atom, text in chunk])
+        for (atom, _text), vector in zip(chunk, embedded):
+            vectors_by_atom[str(atom.get("atom"))] = normalize(vector)
+        print(f"Embedded atoms {min(start + len(chunk), len(pending))}/{len(pending)}", flush=True)
+    vectors = [vectors_by_atom[str(atom.get("atom"))] for atom in atoms]
 
     dimensions = write_vectors(index_dir / "atom_embeddings.f32", vectors)
     rows = [
@@ -140,6 +161,9 @@ def build_runtime_index(
         "atom_count": len(rows),
         "excluded_count": len(excluded),
         "excluded_sha256": registry_sha256(data_root),
+        "source_parameter_count": len({name for atom in atoms for name in atom.get("source_parameters", [])}),
+        "embedded_count": len(pending),
+        "reused_count": len(atoms) - len(pending),
         "files": {"rows": "atoms.json", "embeddings": "atom_embeddings.f32"},
     }
     write_json(index_manifest_path, index_manifest)

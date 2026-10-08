@@ -215,6 +215,7 @@ def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], b
         "parameter_count": len(planned), "library_count": len(library), "frozen_count": len(frozen),
         "dataset_version": latest["version_id"], "vector_origins": origins,
         "excluded_count": len(excluded), "excluded_sha256": registry_sha256(DATA_ROOT),
+        "source_parameter_count": len(planned),
         "files": {"rows": "rows.json", "embeddings": "embeddings.f32"},
     }
     write_json(manifest_path, manifest)

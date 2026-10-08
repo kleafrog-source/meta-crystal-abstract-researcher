@@ -171,7 +171,7 @@ def _find_option_match(query: str, param: dict) -> str | None:
         normalized = str(value).lower().replace("_", " ").strip()
         if not normalized:
             return False
-        return re.search(rf"(?<![\w]){re.escape(normalized)}(?![\w])", ql) is not None
+        return re.search(rf"(?<![\w/.:]){re.escape(normalized)}(?![\w/.:])", ql) is not None
     for o in opts:
         if present(str(o)):
             return str(o)

@@ -13,7 +13,7 @@ from typing import Any
 
 import numpy as np
 
-from parameter_registry import excluded_names, registry_sha256
+from parameter_registry import excluded_names, read_registry, registry_sha256
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_ROOT = PROJECT_ROOT / "data" / "combinatorial-genesis"
@@ -134,6 +134,8 @@ def build_index(progress=None) -> dict[str, Any]:
         "parameter_count": len(items),
         "dimensions": len(items[0]["vector"]) if items else 0,
         "excluded_sha256": registry_sha256(DATA_ROOT),
+        "excluded_count": len(read_registry(DATA_ROOT)["entries"]),
+        "source_parameter_count": len(parameters),
         "items": items,
     }
     INDEX_DIR.mkdir(parents=True, exist_ok=True)
