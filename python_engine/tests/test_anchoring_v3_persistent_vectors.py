@@ -142,6 +142,49 @@ class PersistentVectorTests(unittest.TestCase):
         self.assertIsNotNone(biased)
         self.assertGreater(biased[0], neutral[0])
 
+    def test_value_anchor_respects_confidence_threshold(self) -> None:
+        audit = {}
+        cfg = Config(
+            threshold_range=0.95,
+            _value_anchor_vectors=np.asarray([[1.0, 0.0]] * 5, dtype=np.float32),
+            _value_anchor_parameters={"amount": [
+                {"row_index": index, "level": level}
+                for index, level in enumerate((0.0, 0.25, 0.5, 0.75, 1.0))
+            ]},
+        )
+        result = _value_anchor_apply(
+            [0.0, 1.0],
+            {"technical_name": "amount", "ui_element": "Range", "min_value": 0, "max_value": 100, "step": 1, "default": 50},
+            cfg,
+            audit=audit,
+        )
+
+        self.assertIsNone(result)
+        self.assertFalse(audit["applied"])
+        self.assertLess(audit["confidence"], audit["threshold"])
+
+    def test_low_direction_never_moves_range_above_default(self) -> None:
+        vectors = np.asarray([
+            [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [0.0, 1.0], [1.0, 0.0],
+        ], dtype=np.float32)
+        cfg = Config(
+            threshold_range=0.2,
+            _value_anchor_vectors=vectors,
+            _value_anchor_parameters={"amount": [
+                {"row_index": index, "level": level}
+                for index, level in enumerate((0.0, 0.25, 0.5, 0.75, 1.0))
+            ]},
+        )
+        result = _value_anchor_apply(
+            [1.0, 0.0],
+            {"technical_name": "amount", "ui_element": "Range", "min_value": 0, "max_value": 100, "step": 1, "default": 20},
+            cfg,
+            direction_hint=-1.0,
+        )
+
+        self.assertIsNotNone(result)
+        self.assertLess(result[0], 20)
+
 
 if __name__ == "__main__":
     unittest.main()

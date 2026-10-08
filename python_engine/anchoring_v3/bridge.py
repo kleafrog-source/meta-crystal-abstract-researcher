@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import struct
 import sys
@@ -69,9 +70,11 @@ def main() -> int:
         _select_option_parameters=select_parameters,
         threshold_range=float(runtime_config["threshold_range"]),
         threshold_select=float(runtime_config["threshold_select"]),
+        threshold_toggle=float(runtime_config["threshold_toggle"]),
         softmax_temp_explicit=float(runtime_config["softmax_temp_explicit"]),
         softmax_temp_diffuse=float(runtime_config["softmax_temp_diffuse"]),
     )
+    audit_log: list[dict] = []
     response = anchor_query(
         payload.get("query", ""),
         payload.get("scoped_params", []),
@@ -80,6 +83,26 @@ def main() -> int:
         query_embeddings=payload.get("query_embeddings") or None,
         query_concepts=payload.get("concepts") or None,
         relation_hints=payload.get("relation_hints") or None,
+        audit_log=audit_log,
+    )
+    audit_dir = project_root / "reports" / "stage4_anchor_logs"
+    audit_dir.mkdir(parents=True, exist_ok=True)
+    query = str(payload.get("query", ""))
+    query_id = hashlib.sha256(query.encode("utf-8")).hexdigest()[:16]
+    audit_payload = {
+        "query_id": query_id,
+        "query": query,
+        "model": cfg.ollama_model,
+        "threshold_range": cfg.threshold_range,
+        "threshold_select": cfg.threshold_select,
+        "threshold_toggle": cfg.threshold_toggle,
+        "softmax_temp_explicit": cfg.softmax_temp_explicit,
+        "softmax_temp_diffuse": cfg.softmax_temp_diffuse,
+        "parameters": audit_log,
+    }
+    (audit_dir / f"{query_id}.json").write_text(
+        json.dumps(audit_payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
     )
     json.dump(response, sys.stdout, ensure_ascii=False)
     return 0

@@ -9,6 +9,7 @@ import { embedText, embedTexts } from "@/lib/ollama-client";
 
 import { rankCompositeNamesMulti } from "./composite-index";
 import { buildRelationAlignment, ensureConceptCoverage } from "./alignment";
+import { RAG_V3_CONFIG } from "./config";
 import { runV3AnchoringBridge, type V3AnchorValue } from "./python-bridge";
 import { decomposeQuery } from "./query-concepts";
 import { matchRelations } from "./relation-index";
@@ -224,20 +225,25 @@ export async function searchV3(params: {
   );
   const rankedPool = semanticRanked
     .map((item) => {
+      const parameter = candidateMap.get(item.name)?.parameter;
       const exactOption = hasOptionCommand
-        && (candidateMap.get(item.name)?.parameter.options ?? []).some(optionMatchesQuery);
+        && (parameter?.options ?? []).some(optionMatchesQuery);
+      const exactTechnicalName = effectiveQuery.toLowerCase().includes(item.name.toLowerCase());
       return {
         ...item,
         exactOption,
+        exactTechnicalName,
         combined:
           item.similarity
           + Math.min(60, candidateMap.get(item.name)?.lexical ?? 0) * 0.02
           + Math.max(0, selectByName.get(item.name)?.similarity ?? 0) * 0.25
           + (relationAlignment.biasByName.get(item.name) ?? 0)
-          + (exactOption ? 0.75 : 0),
+          + (exactOption ? 0.75 : 0)
+          + (exactTechnicalName ? 4 : 0),
       };
     })
     .sort((left, right) => {
+      if (left.exactTechnicalName !== right.exactTechnicalName) return left.exactTechnicalName ? -1 : 1;
       if (optionOnlyQuery && left.exactOption !== right.exactOption) return left.exactOption ? -1 : 1;
       if (optionOnlyQuery && left.exactOption && right.exactOption) return left.name.localeCompare(right.name);
       return right.combined - left.combined || right.similarity - left.similarity || left.name.localeCompare(right.name);
@@ -248,12 +254,18 @@ export async function searchV3(params: {
   const ranked = optionOnlyQuery
     ? rankedPool.slice(0, topK)
     : ensureConceptCoverage(rankedPool, topK, conceptIndexes, relationAlignment.coverageGroups);
+  const anchorBudget = Math.max(1, Math.ceil(ranked.length * RAG_V3_CONFIG.anchorChangeFraction));
   const anchored = await runV3AnchoringBridge({
     query: effectiveQuery,
     concepts: conceptVectors.map((concept) => concept.text),
     query_embeddings: conceptVectors.map((concept) => concept.vector),
     relation_hints: relationAlignment.hints,
-    scoped_params: ranked.map(({ name }) => candidateMap.get(name)!.parameter as unknown as Record<string, unknown>),
+    scoped_params: ranked.map(({ name, similarity }, index) => ({
+      ...(candidateMap.get(name)!.parameter as unknown as Record<string, unknown>),
+      _retrieval_rank: index + 1,
+      _retrieval_similarity: similarity,
+      _anchor_eligible: index < anchorBudget,
+    })),
     current_values: params.currentValues,
   });
   const results = ranked.map(({ name, similarity }) => toActive(candidateMap.get(name)!.parameter, similarity, params.currentValues, anchored[name]));

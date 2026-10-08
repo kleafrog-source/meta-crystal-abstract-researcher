@@ -59,6 +59,7 @@ class Config:
     ollama_model: str = "qwen3-embedding:4b"
     threshold_range: float = 0.25
     threshold_select: float = 0.30
+    threshold_toggle: float = 0.20
     softmax_temp_explicit: float = 0.02
     softmax_temp_diffuse: float = 0.05
     # транзитно: загруженные артефакты (для повторных вызовов)
@@ -180,6 +181,18 @@ def _find_option_match(query: str, param: dict) -> str | None:
         for syn in syns:
             if present(syn):
                 return opt
+    # Ordinal commands are deterministic only when the query names the
+    # control itself.  This avoids broadcasting "first option" across every
+    # Select result in Top-K.
+    technical_name = str(param.get("technical_name") or "")
+    if technical_name and technical_name.lower() in ql:
+        ordinal_words = {
+            "first": 0, "second": 1, "third": 2, "fourth": 3, "fifth": 4,
+            "перв": 0, "втор": 1, "трет": 2, "четверт": 3, "пят": 4,
+        }
+        for word, index in ordinal_words.items():
+            if re.search(rf"\b{word}\w*\b", ql) and index < len(opts):
+                return str(opts[index])
     return None
 
 
@@ -316,7 +329,14 @@ def _detect_neutral(query: str, markers: dict) -> bool:
     ql = query.lower().strip()
     if not ql:
         return True
-    neutral = [w.lower() for w in markers.get("neutral_markers", [])]
+    # Remove complete phrases before their shorter substrings (for example,
+    # ``standard settings`` before ``set``), otherwise a short marker can
+    # corrupt a longer neutral phrase and leave artificial query tokens.
+    neutral = sorted(
+        (w.lower() for w in markers.get("neutral_markers", [])),
+        key=len,
+        reverse=True,
+    )
     # удаляем все neutral-маркеры из запроса
     remaining = ql
     for w in neutral:
@@ -324,6 +344,42 @@ def _detect_neutral(query: str, markers: dict) -> bool:
     # если после удаления остались только стоп-слова и пунктуация → neutral
     toks = tokenize(remaining)
     return len(toks) == 0
+
+
+def _generic_anchor_direction(query: str) -> float:
+    """Return only an unambiguous broad low/dark or high/bright direction."""
+    low = re.search(r"\b(?:low|lower|dark|darker|muffled|muted)\b|\b(?:низк|темн|приглуш)", query, re.I)
+    high = re.search(r"\b(?:high|higher|bright|brighter|screaming)\b|\b(?:высок|ярк|визг)", query, re.I)
+    if bool(low) == bool(high):
+        return 0.0
+    return -1.0 if low else 1.0
+
+
+def _semantic_anchor_direction(query: str, param: dict) -> float:
+    """Resolve common sound-control directions only when name and intent agree."""
+    ql = query.lower()
+    name = str(param.get("technical_name") or "").lower()
+    if re.search(r"wet|dry_wet|reverb_mix", name):
+        if re.search(r"\b(?:wet|more reverb|wetter|spacious)\b|\b(?:влажн|больше реверб)", ql):
+            return 1.0
+        if re.search(r"\b(?:dry|drier|less reverb)\b|\b(?:сух|меньше реверб)", ql):
+            return -1.0
+    if "decay" in name or "release" in name or "tail" in name:
+        if re.search(r"\b(?:long|longer|more sustain)\b|\b(?:длин|дольше)", ql):
+            return 1.0
+        if re.search(r"\b(?:short|shorter|tight|tighter|punchy)\b|\b(?:корот|плотн|хлест)", ql):
+            return -1.0
+    if "attack" in name and re.search(r"time|duration|envelope", name):
+        if re.search(r"\b(?:slow|slower|soft|softer|gentle|gentler)\b|\b(?:медлен|мягк)", ql):
+            return 1.0
+        if re.search(r"\b(?:fast|faster|sharp|hard)\b|\b(?:быстр|резк|жестк)", ql):
+            return -1.0
+    if re.search(r"drive|distortion|harsh|attack_gain", name):
+        if re.search(r"\b(?:soft|softer|gentle|gentler|clean|cleaner)\b|\b(?:мягк|чист)", ql):
+            return -1.0
+        if re.search(r"\b(?:hard|harder|aggressive|harsh|distorted)\b|\b(?:жестк|агрессив|искаж)", ql):
+            return 1.0
+    return 0.0
 
 
 def _detect_attention(query: str, param: dict) -> bool:
@@ -527,6 +583,7 @@ def _anchor_scores(ex: list[float], entries: list[dict], vectors: Any) -> list[f
 def _value_anchor_apply(ex: list[float], param: dict, cfg: Config,
                         explicit_signal: bool = False,
                         direction_hint: float = 0.0,
+                        audit: dict | None = None,
                         ) -> tuple[float | str, float, str] | None:
     """Map a query embedding onto persistent Range/Select semantic values."""
     name = str(param.get("technical_name") or "")
@@ -543,7 +600,8 @@ def _value_anchor_apply(ex: list[float], param: dict, cfg: Config,
         return None
     if not entries or vectors is None:
         return None
-    scores = _anchor_scores(ex, entries, vectors)
+    raw_scores = _anchor_scores(ex, entries, vectors)
+    scores = list(raw_scores)
     if direction_hint and ui == "Range":
         scores = [
             score + 0.10 * direction_hint * (2 * float(entry["level"]) - 1)
@@ -556,17 +614,38 @@ def _value_anchor_apply(ex: list[float], param: dict, cfg: Config,
             for score, entry in zip(scores, entries)
         ]
     confidence = float(max(scores, default=-1.0))
+    temperature = cfg.softmax_temp_explicit if explicit_signal else cfg.softmax_temp_diffuse
+    weights = _softmax(scores, temperature)
+    if audit is not None:
+        audit.update({
+            "query_cosines_to_anchors": [round(float(score), 8) for score in raw_scores],
+            "softmax_weights": [round(float(weight), 8) for weight in weights],
+            "confidence": confidence,
+            "threshold": threshold,
+            "temperature": temperature,
+            "applied": False,
+        })
     if confidence < threshold:
         return None
     if ui == "Select":
         best_index = max(range(len(scores)), key=lambda index: scores[index])
+        if audit is not None:
+            audit.update({"chosen_level": entries[best_index]["option"], "applied": True})
         return entries[best_index]["option"], confidence, f"Select option cosine={confidence:.4f}"
-    temperature = cfg.softmax_temp_explicit if explicit_signal else cfg.softmax_temp_diffuse
-    weights = _softmax(scores, temperature)
     position = sum(float(entry["level"]) * weight for entry, weight in zip(entries, weights))
     mn = float(param["min_value"])
     mx = float(param["max_value"])
     value = _clamp(_snap(mn + position * (mx - mn), param.get("step")), mn, mx)
+    default_value = param.get("default")
+    if direction_hint and isinstance(default_value, (int, float)):
+        step = float(param.get("step") or 0)
+        minimum_delta = step if step > 0 else (mx - mn) * 0.01
+        if direction_hint < 0 and value > float(default_value):
+            value = _clamp(_snap(float(default_value) - minimum_delta, param.get("step")), mn, mx)
+        elif direction_hint > 0 and value < float(default_value):
+            value = _clamp(_snap(float(default_value) + minimum_delta, param.get("step")), mn, mx)
+    if audit is not None:
+        audit.update({"chosen_level": position, "applied": True})
     return value, confidence, f"Range anchors cosine={confidence:.4f} p={position:.4f} T={temperature:.3f}"
 
 
@@ -579,7 +658,8 @@ def anchor_query(query: str,
                  cfg: Config,
                  query_embeddings: list[list[float]] | None = None,
                  query_concepts: list[str] | None = None,
-                 relation_hints: dict[str, dict] | None = None) -> dict[str, dict]:
+                 relation_hints: dict[str, dict] | None = None,
+                 audit_log: list[dict] | None = None) -> dict[str, dict]:
     """Главный runtime-вход. Возвращает
     {param_name: {value, before, source, detail}}.
 
@@ -652,7 +732,20 @@ def anchor_query(query: str,
         if numeric_candidates:
             numeric_target_names.add(max(numeric_candidates, key=lambda item: item[0])[1])
 
+    explicit_anchor_direction = 0.0
+    for candidate in scoped_params:
+        if candidate.get("technical_name") not in numeric_target_names or candidate.get("ui_element") != "Range":
+            continue
+        numeric_value, _numeric_source = l0_numeric(query_norm, candidate, cfg._numeric_units)
+        default_value = candidate.get("default")
+        if isinstance(numeric_value, (int, float)) and isinstance(default_value, (int, float)):
+            explicit_anchor_direction = 1.0 if numeric_value > default_value else -1.0 if numeric_value < default_value else 0.0
+            break
+    broad_anchor_direction = explicit_anchor_direction or _generic_anchor_direction(query_norm)
+
     results: dict[str, dict] = {}
+    anchor_audits: dict[str, dict] = {}
+    explicit_value_signal = re.search(r"(?<![\w])-?\d+(?:[.,]\d+)?", query_norm) is not None
     for p in scoped_params:
         name = p["technical_name"]
         before = current_values.get(name, p.get("default"))
@@ -661,9 +754,20 @@ def anchor_query(query: str,
         param_ex, concept_index = _best_query_embedding(embedding_candidates, name, cfg)
         relation_hint = relation_hints.get(name) or {}
         relation_direction = float(relation_hint.get("direction") or 0) * float(relation_hint.get("confidence") or 0)
+        semantic_anchor_direction = _semantic_anchor_direction(query_norm, p)
+        anchor_direction = semantic_anchor_direction or relation_direction or broad_anchor_direction
         concept_detail = ""
         if query_concepts and 0 <= concept_index < len(query_concepts):
             concept_detail = f" concept={query_concepts[concept_index][:80]!r}"
+        precomputed_anchor = None
+        if ui in ("Range", "Select") and param_ex is not None:
+            audit = anchor_audits.setdefault(name, {})
+            precomputed_anchor = _value_anchor_apply(
+                param_ex, p, cfg,
+                explicit_signal=explicit_value_signal or degree >= 0.55,
+                direction_hint=anchor_direction,
+                audit=audit,
+            )
 
         # L0: numeric
         if ui in ("Range", "Select"):
@@ -675,7 +779,14 @@ def anchor_query(query: str,
             select_command = re.search(r"\b(?:mode|option|режим|вариант)\b", query_lower, re.I) is not None
             blocked = (
                 (ui == "Range" and numeric_target_names and name not in numeric_target_names)
-                or (ui == "Select" and not select_command and name not in explicit_names)
+                or (
+                    ui == "Select"
+                    and name not in explicit_names
+                    and (
+                        not select_command
+                        or not bool(p.get("_anchor_eligible", True))
+                    )
+                )
             )
             v0, src0 = (None, "default") if blocked else l0_numeric(query_norm, p, cfg._numeric_units)
             if v0 is not None:
@@ -711,6 +822,16 @@ def anchor_query(query: str,
             }
             continue
 
+        # Only the most relevant retrieval slice may alter values.  The rest of
+        # Top-K remains visible but stays at default, which prevents a single
+        # concept from broadcasting a value-anchor movement across the bank.
+        if ui in ("Range", "Select") and not bool(p.get("_anchor_eligible", True)) and name not in explicit_names:
+            results[name] = {
+                "value": before, "before": before, "source": "default",
+                "detail": "selectivity gate: outside semantic change budget",
+            }
+            continue
+
         # Persistent value anchors: after exact numeric/option preemption and
         # before lexical/axis fallbacks.  A low-confidence match deliberately
         # falls through to the established L1/L2 behavior.
@@ -718,12 +839,17 @@ def anchor_query(query: str,
         has_description_direction = _description_direction(query_norm, p) is not None
         if ui in ("Range", "Select") and param_ex is not None and not has_lexical_direction and not has_description_direction:
             select_command = re.search(r"\b(?:mode|option|режим|вариант)\b", query_lower, re.I) is not None
-            anchored_value = None if ui == "Select" and not select_command and name not in explicit_names else _value_anchor_apply(
-                param_ex, p, cfg, explicit_signal=degree >= 0.55,
-                direction_hint=relation_direction,
-            )
+            anchored_value = None if ui == "Select" and not select_command and name not in explicit_names else precomputed_anchor
             if anchored_value is not None:
                 value, confidence, detail = anchored_value
+                if ui == "Range" and anchor_direction and isinstance(value, (int, float)) and isinstance(p.get("default"), (int, float)):
+                    default_value = float(p["default"])
+                    if anchor_direction > 0 and value < default_value:
+                        value = _clamp(default_value + (default_value - value), p.get("min_value"), p.get("max_value"))
+                        value = _snap(value, p.get("step"))
+                    elif anchor_direction < 0 and value > default_value:
+                        value = _clamp(default_value - (value - default_value), p.get("min_value"), p.get("max_value"))
+                        value = _snap(value, p.get("step"))
                 relation_detail = ""
                 if relation_hint:
                     relation_detail = (
@@ -903,6 +1029,31 @@ def anchor_query(query: str,
             results[name] = {"value": before, "before": before,
                              "source": "not_generated", "detail": "retrieval-only: no existing alternative value"}
 
+    if audit_log is not None:
+        for p in scoped_params:
+            name = p["technical_name"]
+            result = results[name]
+            ui = p.get("ui_element")
+            threshold = cfg.threshold_range if ui == "Range" else cfg.threshold_select if ui == "Select" else cfg.threshold_toggle if ui == "Toggle" else None
+            diagnostic = anchor_audits.get(name, {})
+            audit_log.append({
+                "technical_name": name,
+                "ui_element": ui,
+                "retrieval_rank": p.get("_retrieval_rank"),
+                "retrieval_similarity": p.get("_retrieval_similarity"),
+                "anchor_eligible": bool(p.get("_anchor_eligible", True)),
+                "query_cosines_to_anchors": diagnostic.get("query_cosines_to_anchors", []),
+                "chosen_level": diagnostic.get("chosen_level"),
+                "softmax_weights": diagnostic.get("softmax_weights", []),
+                "confidence": diagnostic.get("confidence"),
+                "threshold": diagnostic.get("threshold", threshold),
+                "temperature": diagnostic.get("temperature", cfg.softmax_temp_explicit if explicit_value_signal else cfg.softmax_temp_diffuse),
+                "applied": result["source"] == "value_anchor",
+                "source": result["source"],
+                "before": result["before"],
+                "after": result["value"],
+                "detail": result["detail"],
+            })
     return results
 
 

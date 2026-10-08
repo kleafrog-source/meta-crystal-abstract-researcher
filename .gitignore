@@ -143,3 +143,5 @@ z-ai-glm-flowmusic-rag-ui-v2/anchoring/eval_report.json
 /TASK.md
 /README_SETUP.md
 /STAGED_TASK.md
+/STAGED_TASK_part2.md
+/reports/stage4_anchor_logs/*.json

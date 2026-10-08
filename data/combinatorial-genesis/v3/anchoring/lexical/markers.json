@@ -6,7 +6,8 @@
   "neutral_markers": [
     "настрой", "поставь", "включи", "выбери", "сделай пресет", "сделай вайб",
     "сделай звучание", "оформи", "prepare", "apply", "setup", "configure",
-    "set", "make a preset", "make a vibe", "build the sound", "establish"
+    "set", "make a preset", "make a vibe", "build the sound", "establish",
+    "no changes", "standard settings", "neutral configuration", "default", "keep as is"
   ],
   "relative_markers": [
     "ещё", "еще", "по", "сильнее", "больше", "поддай ещё", "поднажми ещё",
