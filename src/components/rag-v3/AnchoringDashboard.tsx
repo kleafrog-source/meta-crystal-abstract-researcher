@@ -11,6 +11,7 @@ import type { StatusResponse } from "@/lib/rag-v3/types";
 import { cn } from "@/lib/utils";
 import { useRagV3Store } from "@/store/rag-v3-store";
 import { ManagedRebuildPanel } from "./ManagedRebuildPanel";
+import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
 
 export function AnchoringDashboard() {
   const status = useRagV3Store((state) => state.status);
@@ -25,31 +26,27 @@ export function AnchoringDashboard() {
   }, [fetchStatus]);
 
   return (
-    <Card className="border-border/60">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center justify-between gap-3 text-base">
+    <Card className="gap-2 border-border/60 py-2">
+      <CardHeader className="border-b border-border/40 px-3 py-1.5 [.border-b]:pb-1.5">
+        <CardTitle className="flex items-center justify-between gap-3 text-xs">
           <span className="flex items-center gap-2">
             <Cpu className="size-4 text-primary" />
             Unified Retrieval & Anchoring V3
+            <V3InfoTip content="Компактный статус retrieval, anchors, axes и подключения к Ollama для текущего V3." />
           </span>
-          <Badge
-            variant="outline"
-            className={cn(
-              status?.ollama_reachable
-                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
-                : "border-amber-500/40 bg-amber-500/10 text-amber-300",
-            )}
-          >
-            {status?.ollama_reachable ? "Ollama connected" : "Ollama unavailable"}
-          </Badge>
+          <V3Tooltip content="Показывает доступность локального Ollama endpoint с активной embedding-моделью.">
+            <Badge variant="outline" className={cn("h-5 px-1.5 text-[9px]", status?.ollama_reachable ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300" : "border-amber-500/40 bg-amber-500/10 text-amber-300")}>
+              {status?.ollama_reachable ? "Ollama connected" : "Ollama unavailable"}
+            </Badge>
+          </V3Tooltip>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 px-3 pb-1">
         <div className="grid gap-3 sm:grid-cols-4">
-          <Stat icon={<Database className="size-3.5" />} label="Dataset" value={String(status?.total_parameters ?? 0)} />
-          <Stat icon={<CheckCircle2 className="size-3.5" />} label="Artifacts" value={status?.artifacts_ready ? "ready" : "missing"} accent={status?.artifacts_ready ? "text-emerald-300" : undefined} />
-          <Stat icon={<Cpu className="size-3.5" />} label="Axes" value={status?.axes_enabled ? "live" : status?.anchors_stub ? "stub" : "off"} />
-          <Stat icon={<RefreshCw className="size-3.5" />} label="Searchable" value={status?.retrieval_index_ready ? String(status?.retrieval_index_count ?? 0) : "missing"} />
+          <Stat icon={<Database className="size-3.5" />} label="Dataset" value={String(status?.total_parameters ?? 0)} hint="Количество параметров в активном объединённом датасете V3." />
+          <Stat icon={<CheckCircle2 className="size-3.5" />} label="Artifacts" value={status?.artifacts_ready ? "ready" : "missing"} accent={status?.artifacts_ready ? "text-emerald-300" : undefined} hint="Готовность обязательных retrieval- и anchoring-артефактов." />
+          <Stat icon={<Cpu className="size-3.5" />} label="Axes" value={status?.axes_enabled ? "live" : status?.anchors_stub ? "stub" : "off"} hint="Состояние semantic axes, используемых для выбора числовых значений." />
+          <Stat icon={<RefreshCw className="size-3.5" />} label="Searchable" value={status?.retrieval_index_ready ? String(status?.retrieval_index_count ?? 0) : "missing"} hint="Число параметров, доступных в текущем composite retrieval index." />
         </div>
 
         <div className="rounded-md border border-border/60 bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
@@ -119,28 +116,21 @@ export function AnchoringDashboard() {
         ) : null}
 
         <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => startBuildIndex()}
-            disabled={statusLoading || status?.retrieval_job.running}
-          >
-            {status?.retrieval_job.running ? <Loader2 className="size-4" /> : <Database className="size-4" />}
-            Build composite index
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => startBuildAnchors()}
-            disabled={statusLoading || status?.anchors_job.running}
-          >
-            {status?.anchors_job.running ? <Loader2 className="size-4" /> : <Cpu className="size-4" />}
-            Build V3 live anchors
-          </Button>
-          <Button type="button" size="sm" variant="outline" onClick={() => fetchStatus()} disabled={statusLoading}>
-            {statusLoading ? <Loader2 className="size-4" /> : <RefreshCw className="size-4" />}
-            Refresh status
-          </Button>
+          <V3Tooltip content="Полностью перестраивает объединённый retrieval index для активной embedding-модели.">
+            <Button type="button" size="sm" onClick={() => startBuildIndex()} disabled={statusLoading || status?.retrieval_job.running}>
+              {status?.retrieval_job.running ? <Loader2 className="size-4" /> : <Database className="size-4" />}Build composite index
+            </Button>
+          </V3Tooltip>
+          <V3Tooltip content="Перестраивает live anchors и semantic axes V3 для выбора значений параметров.">
+            <Button type="button" size="sm" onClick={() => startBuildAnchors()} disabled={statusLoading || status?.anchors_job.running}>
+              {status?.anchors_job.running ? <Loader2 className="size-4" /> : <Cpu className="size-4" />}Build V3 live anchors
+            </Button>
+          </V3Tooltip>
+          <V3Tooltip content="Повторно загружает статус Ollama, индексов и фоновых заданий.">
+            <Button type="button" size="sm" variant="outline" onClick={() => fetchStatus()} disabled={statusLoading}>
+              {statusLoading ? <Loader2 className="size-4" /> : <RefreshCw className="size-4" />}Refresh status
+            </Button>
+          </V3Tooltip>
         </div>
         <ManagedRebuildPanel />
       </CardContent>
@@ -148,14 +138,13 @@ export function AnchoringDashboard() {
   );
 }
 
-function Stat(props: { icon: React.ReactNode; label: string; value: string; accent?: string }) {
+function Stat(props: { icon: React.ReactNode; label: string; value: string; accent?: string; hint: string }) {
   return (
-    <div className="rounded-lg border border-border/60 bg-muted/30 px-3 py-2">
-      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wide text-muted-foreground">
-        {props.icon}
-        {props.label}
+    <div className="rounded border border-border/60 bg-muted/30 px-2 py-1.5">
+      <div className="flex items-center gap-1 text-[9px] uppercase tracking-wide text-muted-foreground">
+        {props.icon}{props.label}<V3InfoTip content={props.hint} />
       </div>
-      <div className={cn("mt-1 font-mono text-lg font-semibold", props.accent)}>{props.value}</div>
+      <div className={cn("font-mono text-sm font-semibold", props.accent)}>{props.value}</div>
     </div>
   );
 }

@@ -17,6 +17,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { buildCrystalPreviewText, buildCrystalQueryText } from "@/lib/rag-v3/crystal-query";
+import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
 
 type CrystalListItem = {
   id: string;
@@ -131,17 +132,17 @@ export function MetaCrystalPickerDialog(props: {
         }
       }}
     >
-      <DialogTrigger asChild>
-        <Button type="button" size="sm" variant="outline">
-          <Database className="size-4" />
-          Use crystal
-        </Button>
-      </DialogTrigger>
+      <V3Tooltip content={`Выбирает мета-кристалл и добавляет его смысловое описание в ${props.targetLabel}.`}>
+        <DialogTrigger asChild>
+          <Button type="button" size="sm" variant="outline"><Database className="size-4" />Use crystal</Button>
+        </DialogTrigger>
+      </V3Tooltip>
       <DialogContent className="max-w-6xl p-0">
         <DialogHeader className="border-b border-border/60 px-6 py-4">
           <DialogTitle className="flex items-center gap-2 text-base">
             <Database className="size-4 text-primary" />
             Meta-crystal seed for {props.targetLabel}
+            <V3InfoTip content="Кристалл преобразуется в компактный текстовый seed и не запускает поиск до явной команды Search." />
           </DialogTitle>
           <DialogDescription className="text-xs">
             Pick any crystal from the current library and convert it into a compact semantic seed for the query field.
@@ -152,38 +153,19 @@ export function MetaCrystalPickerDialog(props: {
           <div className="border-b border-border/60 p-4 lg:border-b-0 lg:border-r">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="flex-1">
-                <Input
-                  value={searchDraft}
-                  placeholder="Search 6000+ crystals by code, focus, combination..."
-                  onChange={(event) => setSearchDraft(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                      event.preventDefault();
-                      setPage(1);
-                      setAppliedSearch(searchDraft.trim());
-                    }
-                  }}
-                />
+                <V3Tooltip content="Ищет кристаллы по коду, фокусу и описанию комбинации.">
+                  <Input value={searchDraft} placeholder="Search 6000+ crystals by code, focus, combination..." onChange={(event) => setSearchDraft(event.target.value)} onKeyDown={(event) => {
+                    if (event.key === "Enter") { event.preventDefault(); setPage(1); setAppliedSearch(searchDraft.trim()); }
+                  }} />
+                </V3Tooltip>
               </div>
-              <Button
-                type="button"
-                onClick={() => {
-                  setPage(1);
-                  setAppliedSearch(searchDraft.trim());
-                }}
-              >
-                <Search className="size-4" />
-                Search
-              </Button>
+              <V3Tooltip content="Применяет введённый фильтр к библиотеке кристаллов.">
+                <Button type="button" onClick={() => { setPage(1); setAppliedSearch(searchDraft.trim()); }}><Search className="size-4" />Search</Button>
+              </V3Tooltip>
               <label className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Checkbox
-                  checked={semantic}
-                  onCheckedChange={(checked) => {
-                    setPage(1);
-                    setSemantic(checked === true);
-                  }}
-                  aria-label="Use semantic search"
-                />
+                <V3Tooltip content="Включает embedding-поиск по смыслу вместо только текстового совпадения.">
+                  <Checkbox checked={semantic} onCheckedChange={(checked) => { setPage(1); setSemantic(checked === true); }} aria-label="Use semantic search" />
+                </V3Tooltip>
                 Semantic
               </label>
             </div>
@@ -218,16 +200,8 @@ export function MetaCrystalPickerDialog(props: {
                 {items.map((item) => {
                   const active = item.id === selectedId;
                   return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      className={`w-full rounded-xl border p-3 text-left transition-colors ${
-                        active
-                          ? "border-primary/60 bg-primary/8"
-                          : "border-border/60 bg-background/40 hover:bg-muted/30"
-                      }`}
-                      onClick={() => setSelectedId(item.id)}
-                    >
+                    <V3Tooltip key={item.id} content="Выбирает кристалл и показывает подготовленный semantic seed справа.">
+                    <button type="button" className={`w-full rounded-xl border p-3 text-left transition-colors ${active ? "border-primary/60 bg-primary/8" : "border-border/60 bg-background/40 hover:bg-muted/30"}`} onClick={() => setSelectedId(item.id)}>
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <div className="truncate font-mono text-xs text-foreground">{item.code}</div>
@@ -243,30 +217,19 @@ export function MetaCrystalPickerDialog(props: {
                         {item.combinationShort || item.combination}
                       </div>
                     </button>
+                    </V3Tooltip>
                   );
                 })}
               </div>
             </ScrollArea>
 
             <div className="mt-4 flex items-center justify-between gap-2">
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                disabled={page <= 1 || loading}
-                onClick={() => setPage((current) => Math.max(1, current - 1))}
-              >
-                Prev
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                disabled={page >= totalPages || loading}
-                onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
-              >
-                Next
-              </Button>
+              <V3Tooltip content="Открывает предыдущую страницу библиотеки кристаллов.">
+                <Button type="button" size="sm" variant="outline" disabled={page <= 1 || loading} onClick={() => setPage((current) => Math.max(1, current - 1))}>Prev</Button>
+              </V3Tooltip>
+              <V3Tooltip content="Открывает следующую страницу библиотеки кристаллов.">
+                <Button type="button" size="sm" variant="outline" disabled={page >= totalPages || loading} onClick={() => setPage((current) => Math.min(totalPages, current + 1))}>Next</Button>
+              </V3Tooltip>
             </div>
           </div>
 
@@ -275,6 +238,7 @@ export function MetaCrystalPickerDialog(props: {
               <div className="flex items-center gap-2 text-sm font-medium">
                 <Sparkles className="size-4 text-primary" />
                 Crystal seed preview
+                <V3InfoTip content="Предпросмотр текста, который будет добавлен к запросу без изменения исходного кристалла." />
               </div>
 
               {detailLoading ? (
@@ -304,21 +268,12 @@ export function MetaCrystalPickerDialog(props: {
               )}
             </div>
 
-            <Button
-              type="button"
-              className="mt-4 w-full"
-              disabled={!previewSource}
-              onClick={() => {
-                if (!previewSource) {
-                  return;
-                }
-                props.onSelect(buildCrystalQueryText(previewSource));
-                setOpen(false);
-              }}
-            >
-              <Sparkles className="size-4" />
-              Insert into {props.targetLabel}
-            </Button>
+            <V3Tooltip content={`Добавляет semantic seed в ${props.targetLabel} и закрывает окно.`}>
+              <Button type="button" className="mt-4 w-full" disabled={!previewSource} onClick={() => {
+                if (!previewSource) return;
+                props.onSelect(buildCrystalQueryText(previewSource)); setOpen(false);
+              }}><Sparkles className="size-4" />Insert into {props.targetLabel}</Button>
+            </V3Tooltip>
           </div>
         </div>
       </DialogContent>

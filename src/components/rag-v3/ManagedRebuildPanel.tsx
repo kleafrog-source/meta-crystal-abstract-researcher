@@ -1,13 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Database, Info, Loader2, RefreshCw, Square, Waves } from "lucide-react";
+import { Database, Loader2, RefreshCw, Square, Waves } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { ArtifactKind, ArtifactStatus, ManagedJob, RebuildKind } from "@/lib/rag-v3/managed-rebuild";
 import { cn } from "@/lib/utils";
+import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
 
 interface RebuildStatus {
   artifacts: ArtifactStatus[];
@@ -75,14 +75,14 @@ export function ManagedRebuildPanel() {
         <div>
           <div className="flex items-center gap-2 text-sm font-semibold">
             <Database className="size-4 text-cyan-300" />Управляемая перестройка V3
-            <TooltipProvider delayDuration={150}><Tooltip><TooltipTrigger asChild><Info className="size-3.5 text-zinc-500" /></TooltipTrigger><TooltipContent className="max-w-sm">Каждый индекс перестраивается отдельно. Общая кнопка выполняет шесть Qwen-этапов последовательно и никогда не запускает CLAP.</TooltipContent></Tooltip></TooltipProvider>
+            <V3InfoTip content="Каждый индекс перестраивается отдельно. Общая кнопка выполняет шесть embedding-этапов последовательно и никогда не запускает CLAP." />
           </div>
           <div className="mt-1 text-xs text-zinc-500">Активная модель: <code>{status?.active_model ?? "—"}</code> · параметров: {status?.active_parameters ?? "—"}</div>
         </div>
         <div className="flex gap-2">
-          <Button size="sm" onClick={() => void start("all_qwen")} disabled={loading || status?.job.running}>Перестроить всё (кроме CLAP)</Button>
-          <Button size="sm" variant="destructive" onClick={() => void stop()} disabled={!status?.job.running}><Square className="size-3.5" />Остановить</Button>
-          <Button size="sm" variant="outline" onClick={() => void refresh()} disabled={loading}><RefreshCw className="size-3.5" />Обновить</Button>
+          <V3Tooltip content="Последовательно обновляет composite, atoms, live anchors, Range, Select и relation anchors активной моделью."><Button size="sm" onClick={() => void start("all_qwen")} disabled={loading || status?.job.running}>Перестроить всё (кроме CLAP)</Button></V3Tooltip>
+          <V3Tooltip content="Останавливает активный управляемый процесс после завершения текущей операции."><Button size="sm" variant="destructive" onClick={() => void stop()} disabled={!status?.job.running}><Square className="size-3.5" />Остановить</Button></V3Tooltip>
+          <V3Tooltip content="Обновляет состояния индексов и текущего фонового процесса."><Button size="sm" variant="outline" onClick={() => void refresh()} disabled={loading}><RefreshCw className="size-3.5" />Обновить</Button></V3Tooltip>
         </div>
       </div>
 
@@ -94,7 +94,7 @@ export function ManagedRebuildPanel() {
 
       {status?.artifacts.find((artifact) => artifact.kind === "clap") ? (
         <div className="rounded border border-fuchsia-400/25 bg-fuchsia-950/10 p-3">
-          <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-fuchsia-200"><Waves className="size-4" />Независимый CLAP-индекс</div>
+          <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-fuchsia-200"><Waves className="size-4" />Независимый CLAP-индекс<V3InfoTip content="CLAP использует отдельную аудио-текстовую модель и не входит в общую embedding-перестройку V3." /></div>
           <ArtifactCard artifact={status.artifacts.find((artifact) => artifact.kind === "clap")!} running={status.job.running && status.job.stage === "clap"} onStart={() => void start("clap")} disabled={loading || status.job.running} />
         </div>
       ) : null}
@@ -118,7 +118,9 @@ function ArtifactCard(props: { artifact: ArtifactStatus; running: boolean; disab
       <div className="mt-1 text-[10px] text-zinc-500">{artifact.model ?? "—"} · {artifact.dimensions ?? "—"}D · {artifact.parameter_count} rows</div>
       <div className="text-[10px] text-zinc-500">built: {artifact.built_at ? new Date(artifact.built_at).toLocaleString() : "—"} · +{artifact.added_since_build} / excluded {artifact.excluded_since_build}</div>
       {artifact.reason ? <div className="mt-1 text-[10px] text-amber-300">{artifact.reason}</div> : null}
-      <Button className="mt-2 w-full" size="sm" variant="outline" disabled={props.disabled} onClick={props.onStart}>{props.running ? <Loader2 className="size-3.5 animate-spin" /> : null}{buttonLabels[artifact.kind]}</Button>
+      <V3Tooltip content={`Перестраивает только артефакт «${artifact.label}». Текущий статус: ${artifact.status}.`}>
+        <Button className="mt-2 w-full" size="sm" variant="outline" disabled={props.disabled} onClick={props.onStart}>{props.running ? <Loader2 className="size-3.5 animate-spin" /> : null}{buttonLabels[artifact.kind]}</Button>
+      </V3Tooltip>
     </div>
   );
 }

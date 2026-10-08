@@ -15,18 +15,13 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import type { ActiveParameter, UiElement } from "@/lib/rag-v3/types";
 import { cn } from "@/lib/utils";
 import { useRagV3Store } from "@/store/rag-v3-store";
 import {
   resolveDomainStyle,
 } from "./domain-style";
+import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
 
 export function ParameterControl(props: {
   param: ActiveParameter;
@@ -66,22 +61,16 @@ export function ParameterControl(props: {
         domainStyle.cardClassName.replace(/bg-[^ ]+/g, ""),
       )}
     >
-      <TooltipProvider delayDuration={180}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="min-w-0">
+      <div className="min-w-0">
               <div className="mb-2 flex items-center justify-between gap-1">
                 <span className={cn("truncate font-mono text-[9px] font-semibold uppercase tracking-tight", domainStyle.accentClassName)}>
                   {props.param.technical_name.replace(/_/g, " ")}
                 </span>
                 <div className="flex items-center gap-1">
+                  <V3InfoTip content={<div className="space-y-1 text-[11px]"><div className="font-mono font-semibold">{props.param.technical_name}</div><div>{resolveRussianDescription(props.param)}</div><div className="text-muted-foreground">{props.param.domain ?? "General"} | {props.param.source} | sim {Math.round(props.param.similarity * 100)}%</div><div className="text-muted-foreground">{props.param.detail}</div></div>} />
                   {props.param.excluded ? <Badge variant="outline" className="h-4 border-amber-400/40 px-1 text-[8px] text-amber-300">excluded</Badge> : null}
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button type="button" className="-mr-1 inline-flex size-4 shrink-0 items-center justify-center rounded text-zinc-600 opacity-0 transition-none group-hover:opacity-100 hover:text-white" aria-label="Parameter actions">
-                        <MoreVertical className="size-3" />
-                      </button>
-                    </DropdownMenuTrigger>
+                    <V3Tooltip content="Открывает действия для этого параметра."><DropdownMenuTrigger asChild><button type="button" className="-mr-1 inline-flex size-4 shrink-0 items-center justify-center rounded text-zinc-600 opacity-0 transition-none group-hover:opacity-100 hover:text-white" aria-label="Parameter actions"><MoreVertical className="size-3" /></button></DropdownMenuTrigger></V3Tooltip>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => removeParameter(props.param.technical_name)}><X className="size-3" />Убрать из панели</DropdownMenuItem>
                       <DropdownMenuItem className="text-red-300" onClick={() => void excludeFromDatabase()}><ArchiveX className="size-3" />Исключить из базы</DropdownMenuItem>
@@ -115,18 +104,7 @@ export function ParameterControl(props: {
                   onChange={(value) => updateParameterValue(props.param.technical_name, parseTextValue(value, props.param.ui_element))}
                 />
               ) : null}
-            </div>
-          </TooltipTrigger>
-          <TooltipContent side="top" className="max-w-sm whitespace-normal text-left">
-            <div className="space-y-1 text-[11px]">
-              <div className="font-mono font-semibold">{props.param.technical_name}</div>
-              <div>{resolveRussianDescription(props.param)}</div>
-              <div className="text-muted-foreground">{props.param.domain ?? "General"} | {props.param.source} | sim {Math.round(props.param.similarity * 100)}%</div>
-              <div className="text-muted-foreground">{props.param.detail}</div>
-            </div>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      </div>
     </div>
   );
 }
@@ -145,7 +123,7 @@ function RangeControl(props: {
     return (
       <div className="flex h-[38px] items-center justify-between rounded border border-white/10 bg-black/50 px-2">
         <span className="font-mono text-[10px] text-zinc-400">{clampedValue !== 0 ? "ON" : "OFF"}</span>
-        <Switch checked={clampedValue !== 0} onCheckedChange={(checked) => props.onChange(checked ? 1 : 0)} />
+        <V3Tooltip content="Включает или выключает логический параметр."><Switch checked={clampedValue !== 0} onCheckedChange={(checked) => props.onChange(checked ? 1 : 0)} /></V3Tooltip>
       </div>
     );
   }
@@ -160,17 +138,11 @@ function RangeControl(props: {
         <span className="font-mono text-[9px] text-zinc-500">{formatNumber(max, step)}</span>
       </div>
 
-      <Slider
-        value={[clampedValue]}
-        min={min}
-        max={max}
-        step={step}
-        onValueChange={(values) => {
-          if (values.length > 0) {
-            props.onChange(roundToStep(values[0], min, step));
-          }
-        }}
-      />
+      <V3Tooltip content={`Изменяет значение от ${formatNumber(min, step)} до ${formatNumber(max, step)} с шагом ${step}.`}>
+        <Slider value={[clampedValue]} min={min} max={max} step={step} onValueChange={(values) => {
+          if (values.length > 0) props.onChange(roundToStep(values[0], min, step));
+        }} />
+      </V3Tooltip>
 
     </div>
   );
@@ -186,9 +158,7 @@ function SelectControl(props: { param: ActiveParameter; value: string; onChange:
         {props.param.technical_name}
       </Label>
       <Select value={safeValue} onValueChange={props.onChange}>
-        <SelectTrigger id={`select-${props.param.technical_name}`} className="h-[38px] border-white/10 bg-black/50 font-mono text-[10px]">
-          <SelectValue placeholder="Select a value" />
-        </SelectTrigger>
+        <V3Tooltip content="Выберите одно из допустимых значений параметра."><SelectTrigger id={`select-${props.param.technical_name}`} className="h-[38px] border-white/10 bg-black/50 font-mono text-[10px]"><SelectValue placeholder="Select a value" /></SelectTrigger></V3Tooltip>
         <SelectContent>
           {options.map((option) => (
             <SelectItem key={option} value={option}>
@@ -207,16 +177,9 @@ function TextControl(props: { param: ActiveParameter; value: string; onChange: (
       <Label className="sr-only" htmlFor={`text-${props.param.technical_name}`}>
         {props.param.technical_name}
       </Label>
-      <Input
-        id={`text-${props.param.technical_name}`}
-        value={props.value}
-        type="text"
-        placeholder={String(props.param.default)}
-        minLength={props.param.min_length}
-        maxLength={props.param.max_length}
-        onChange={(event) => props.onChange(event.target.value)}
-        className="h-[38px] border-white/10 bg-black/50 font-mono text-[10px]"
-      />
+      <V3Tooltip content="Введите текстовое или массивное значение параметра вручную.">
+        <Input id={`text-${props.param.technical_name}`} value={props.value} type="text" placeholder={String(props.param.default)} minLength={props.param.min_length} maxLength={props.param.max_length} onChange={(event) => props.onChange(event.target.value)} className="h-[38px] border-white/10 bg-black/50 font-mono text-[10px]" />
+      </V3Tooltip>
     </div>
   );
 }

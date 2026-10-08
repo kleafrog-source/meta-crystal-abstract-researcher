@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Loader2, Mic, Plus, Square } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function SpeechInputButtons({ value, onChange, label }: { value: string; onChange: (value: string) => void; label: string }) {
   const [state, setState] = useState<"idle" | "recording" | "transcribing">("idle");
@@ -131,7 +132,14 @@ export function SpeechInputButtons({ value, onChange, label }: { value: string; 
 function SpeechButton({ mode, activeMode, state, label, onClick }: { mode: "replace" | "append"; activeMode: "replace" | "append" | null; state: "idle" | "recording" | "transcribing"; label: string; onClick: () => void }) {
   const active = activeMode === mode && state !== "idle";
   const title = mode === "append" ? "Добавить голосом" : "Заменить голосом";
-  return <button type="button" aria-label={`${title}: ${label}`} title={active && state === "recording" ? "Остановить запись" : active && state === "transcribing" ? "Распознавание…" : title} className={`inline-flex size-7 items-center justify-center rounded-md border ${active && state === "recording" ? "border-red-400 bg-red-500/20 text-red-300" : "border-white/15 bg-black/70 text-muted-foreground"}`} onClick={onClick} disabled={state === "transcribing"}>
+  const hint = active && state === "recording"
+    ? "Останавливает текущую запись и отправляет её на распознавание."
+    : active && state === "transcribing"
+      ? "Аудио распознаётся локальной STT-моделью."
+      : mode === "append"
+        ? `Распознаёт речь и добавляет текст в конец поля «${label}».`
+        : `Распознаёт речь и заменяет содержимое поля «${label}».`;
+  return <Tooltip><TooltipTrigger asChild><button type="button" aria-label={`${title}: ${label}`} className={`inline-flex size-7 items-center justify-center rounded-md border ${active && state === "recording" ? "border-red-400 bg-red-500/20 text-red-300" : "border-white/15 bg-black/70 text-muted-foreground"}`} onClick={onClick} disabled={state === "transcribing"}>
     {active && state === "recording" ? <Square className="size-3.5 fill-current" /> : active && state === "transcribing" ? <Loader2 className="size-4 animate-spin" /> : mode === "append" ? <span className="relative"><Mic className="size-4" /><Plus className="absolute -right-1.5 -top-1.5 size-2.5 stroke-[3]" /></span> : <Mic className="size-4" />}
-  </button>;
+  </button></TooltipTrigger><TooltipContent side="right" sideOffset={6} className="max-w-xs text-left">{hint}</TooltipContent></Tooltip>;
 }
