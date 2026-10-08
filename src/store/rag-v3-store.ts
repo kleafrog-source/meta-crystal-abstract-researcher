@@ -11,6 +11,7 @@ import {
 import type {
   ActiveParameter,
   ProposeParametersResponse,
+  RetrievalScope,
   StatusResponse,
   UiElement,
 } from "@/lib/rag-v3/types";
@@ -23,6 +24,7 @@ export interface RagV3Sources {
   atoms: boolean;
   generated: boolean;
 }
+export type RagV3Scopes = Record<RetrievalScope, boolean>;
 
 interface RagV3State {
   status: StatusResponse | null;
@@ -32,6 +34,7 @@ interface RagV3State {
   queryB: string;
   topK: number;
   sources: RagV3Sources;
+  scopes: RagV3Scopes;
   searchMode: SearchMode;
   transitionRatio: number;
   instructionSlots: InstructionSlot[];
@@ -53,6 +56,7 @@ interface RagV3State {
   setQueryB: (query: string) => void;
   setTopK: (topK: number) => void;
   toggleSource: (source: keyof RagV3Sources) => void;
+  toggleScope: (scope: RetrievalScope) => void;
   setSearchMode: (mode: SearchMode) => void;
   setTransitionRatio: (ratio: number) => void;
   updateInstructionSlot: (
@@ -240,6 +244,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
   queryB: "",
   topK: 50,
   sources: { library: true, frozen: true, atoms: true, generated: true },
+  scopes: { sound: true, structure: true, metadata: false, provenance: false, administrative: false },
   searchMode: "single",
   transitionRatio: 50,
   instructionSlots: DEFAULT_INSTRUCTION_SLOTS.map((slot) => ({ ...slot })),
@@ -312,6 +317,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
           current_values: {},
           instruction_context: toInstructionContext(get().instructionSlots),
           sources: get().sources,
+          scopes: get().scopes,
         }),
       });
 
@@ -433,6 +439,10 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
     set((state) => ({
       sources: { ...state.sources, [source]: !state.sources[source] },
     }));
+  },
+
+  toggleScope(scope) {
+    set((state) => ({ scopes: { ...state.scopes, [scope]: !state.scopes[scope] } }));
   },
 
   setSearchMode(searchMode) {
@@ -601,6 +611,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
     instructionSettingsSavedAt: state.instructionSettingsSavedAt,
     topK: state.topK,
     sources: state.sources,
+    scopes: state.scopes,
   }),
 }));
 

@@ -156,8 +156,10 @@ def main():
     for group in ("Range", "Select", "Toggle", "Text", "String", "Array", "Unit", "Complex"):
         rows = [r for r in records if r["group"] == group]
         summaries[group] = (sum(bool(r.get("correct")) for r in rows), len(rows), sum(bool(r.get("target_result")) for r in rows))
+    elapsed_values = [float(record["elapsed"]) for record in records if "elapsed" in record]
+    average_elapsed = sum(elapsed_values) / len(elapsed_values) if elapsed_values else 0.0
     units = Counter(str(x.get("unit") or "<empty>") for x in dataset)
-    lines = [f"# RAG V3 semantic matrix — {PHASE}", "", f"Дата: {datetime.now().astimezone().isoformat(timespec='seconds')}", "", "Все API-запросы выполнены строго последовательно.", "", "## Dataset", "", f"- Всего: {len(dataset)}", f"- UI: {dict((k, len(v)) for k, v in by_ui.items())}", f"- Уникальных unit: {len(units)}", "", "## Сводка", "", "| Группа | корректно | target retrieved |", "|---|---:|---:|"]
+    lines = [f"# RAG V3 semantic matrix — {PHASE}", "", f"Дата: {datetime.now().astimezone().isoformat(timespec='seconds')}", "", "Все API-запросы выполнены строго последовательно.", f"Среднее время запроса: **{average_elapsed:.3f} с**.", "", "## Dataset", "", f"- Всего: {len(dataset)}", f"- UI: {dict((k, len(v)) for k, v in by_ui.items())}", f"- Уникальных unit: {len(units)}", "", "## Сводка", "", "| Группа | корректно | target retrieved |", "|---|---:|---:|"]
     for group, (ok, total, found) in summaries.items(): lines.append(f"| {group} | {ok}/{total} | {found}/{total} |")
     lines += ["", "## Тесты", ""]
     for index, row in enumerate(records, 1):

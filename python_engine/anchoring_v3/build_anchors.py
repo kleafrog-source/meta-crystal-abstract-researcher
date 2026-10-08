@@ -468,7 +468,14 @@ def check_neutral(axes_vectors: dict[str, dict], neutral_set: dict,
                    client: OllamaClient | None, polarity_matrix: dict,
                    dataset: list[dict], param_embeddings: dict[str, list[float]],
                    epsilon_axis: float = 0.05) -> dict:
-    """Проверка: на neutral_set |κ_a·rawΔ| ≤ 0.05. Если нарушено — ужать κ."""
+    """Calibrate κ so at least 95% of neutral probes stay inside epsilon.
+
+    The previous implementation counted every intermediate violation while it
+    repeatedly halved κ.  Its reported number therefore was not the number of
+    violations left after calibration.  Collecting all raw deltas first makes
+    the calibration deterministic and lets the diagnostic describe the final
+    state that runtime actually uses.
+    """
     if client is None:
         return {"checked": False, "note": "stub mode; neutral check skipped"}
     by_kind: dict[str, list[str]] = {}
@@ -476,7 +483,9 @@ def check_neutral(axes_vectors: dict[str, dict], neutral_set: dict,
         k = p.get("quantity_kind")
         if k:
             by_kind.setdefault(k, []).append(p["technical_name"])
-    violations: list[dict] = []
+    observations: dict[str, list[dict]] = {
+        axis_id: [] for axis_id, _vec in iter_real_axes(axes_vectors)
+    }
     for item in neutral_set["items"]:
         ex = client.embed(item["query"])
         for axis, vec in iter_real_axes(axes_vectors):
@@ -495,19 +504,57 @@ def check_neutral(axes_vectors: dict[str, dict], neutral_set: dict,
             e_id = param_embeddings.get(target_param, [])
             if not e_id:
                 continue
-            delta = _vec_dot(_vec_sub(ex, e_id), u)
-            scaled = abs(vec["kappa"] * delta)
+            raw_delta = abs(_vec_dot(_vec_sub(ex, e_id), u))
+            observations[axis].append({
+                "query": item["query"][:80],
+                "raw_delta": raw_delta,
+            })
+
+    pre_adjustment_violations = 0
+    calibration: dict[str, dict] = {}
+    for axis, items in observations.items():
+        if not items:
+            continue
+        initial_kappa = float(axes_vectors[axis]["kappa"])
+        pre_adjustment_violations += sum(
+            1 for item in items
+            if initial_kappa * item["raw_delta"] > epsilon_axis
+        )
+        raw_values = sorted(item["raw_delta"] for item in items)
+        percentile_index = max(0, math.ceil(0.95 * len(raw_values)) - 1)
+        p95_raw_delta = raw_values[percentile_index]
+        neutral_cap = (
+            epsilon_axis / p95_raw_delta if p95_raw_delta > 0 else initial_kappa
+        )
+        final_kappa = min(initial_kappa, neutral_cap)
+        axes_vectors[axis]["kappa"] = final_kappa
+        calibration[axis] = {
+            "samples": len(items),
+            "initial_kappa": round(initial_kappa, 8),
+            "p95_raw_delta": round(p95_raw_delta, 8),
+            "final_kappa": round(final_kappa, 8),
+        }
+
+    violations: list[dict] = []
+    for axis, items in observations.items():
+        final_kappa = float(axes_vectors[axis]["kappa"])
+        for item in items:
+            scaled = final_kappa * item["raw_delta"]
             if scaled > epsilon_axis:
                 violations.append({
-                    "query": item["query"][:80],
+                    "query": item["query"],
                     "axis": axis,
                     "scaled_delta": round(scaled, 4),
-                    "kappa": vec["kappa"],
+                    "kappa": round(final_kappa, 8),
                 })
-                # ужать κ: умножаем на 0.5 (детерминированная корректировка)
-                axes_vectors[axis]["kappa"] = max(0.5, vec["kappa"] * 0.5)
-    return {"checked": True, "violations": len(violations),
-            "sample_violations": violations[:10]}
+    return {
+        "checked": True,
+        "epsilon_axis": epsilon_axis,
+        "pre_adjustment_violations": pre_adjustment_violations,
+        "violations": len(violations),
+        "calibration": calibration,
+        "sample_violations": violations[:10],
+    }
 
 
 def build_a_home(axes_vectors: dict[str, dict], dataset: list[dict],

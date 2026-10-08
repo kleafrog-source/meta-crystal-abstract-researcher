@@ -4,7 +4,7 @@ import path from "node:path";
 import { readGenesisLibrary, type GenesisLibraryParameter } from "@/lib/combinatorial-genesis/library";
 import { rankRuntimeAtoms } from "@/lib/combinatorial-genesis/runtime-index";
 import { buildEffectiveQuery } from "@/lib/rag-v3/instruction-support";
-import type { ActiveParameter, EnrichedParameter, InstructionContextEntry, ProposeParametersResponse, UiElement } from "@/lib/rag-v3/types";
+import type { ActiveParameter, EnrichedParameter, InstructionContextEntry, ProposeParametersResponse, RetrievalScope, UiElement } from "@/lib/rag-v3/types";
 import { embedText } from "@/lib/ollama-client";
 
 import { rankCompositeNames } from "./composite-index";
@@ -17,8 +17,24 @@ export interface RagV3Sources {
   generated?: boolean;
 }
 
+export type RagV3Scopes = Record<RetrievalScope, boolean>;
+
+const DEFAULT_SCOPES: RagV3Scopes = { sound: true, structure: true, metadata: false, provenance: false, administrative: false };
+
 const DATA_ROOT = path.join(process.cwd(), "data", "combinatorial-genesis");
 const STOPWORDS = new Set(["и", "в", "на", "с", "по", "для", "the", "a", "an", "of", "to", "in", "and", "with"]);
+
+function classifyRetrievalScope(parameter: GenesisLibraryParameter): RetrievalScope {
+  const existing = String((parameter as GenesisLibraryParameter & { retrieval_scope?: unknown }).retrieval_scope ?? "").toLowerCase();
+  if (["sound", "structure", "metadata", "provenance", "administrative"].includes(existing)) return existing as RetrievalScope;
+  const name = String(parameter.technical_name ?? "").toLowerCase();
+  const text = [name.replaceAll("_", " "), parameter.category, parameter.sub_category, parameter.description_en].filter(Boolean).join(" ").toLowerCase();
+  if (name.startsWith("provenance_") || name.includes("ownership_proof") || name.includes("_hash")) return "provenance";
+  if (["smart_contract", "gas_limit", "licensing", "contract_address"].some((term) => name.includes(term))) return "administrative";
+  if (["interoperable_asset_", "descriptive_metadata_", "classification_", "semantic_concept_"].some((term) => name.startsWith(term))) return "metadata";
+  const structureTerms = ["arrangement", "timeline", "song section", "section transition", "composition structure", "sequencer", "sequence length", "step pattern", "pattern length", "arpeggiator", "tempo", "rhythmic pattern", "rhythm grid", "meter", "time signature"];
+  return structureTerms.some((term) => text.includes(term)) ? "structure" : "sound";
+}
 
 function tokenize(text: string): string[] {
   return (text.toLowerCase().match(/[\p{L}\p{N}_]+/gu) ?? []).filter((token) => token.length > 1 && !STOPWORDS.has(token));
@@ -57,6 +73,7 @@ function normalizeParameter(parameter: GenesisLibraryParameter, source: "library
     option_aliases: parameter.option_aliases && typeof parameter.option_aliases === "object"
       ? Object.fromEntries(Object.entries(parameter.option_aliases).filter((entry): entry is [string, string[]] => Array.isArray(entry[1]) && entry[1].every((item) => typeof item === "string")))
       : null,
+    retrieval_scope: classifyRetrievalScope(parameter),
     _v3_source: source,
   };
 }
@@ -113,10 +130,12 @@ export async function searchV3(params: {
   currentValues: Record<string, number | string>;
   instructionContext: InstructionContextEntry[];
   sources: RagV3Sources;
+  scopes?: Partial<RagV3Scopes>;
 }): Promise<ProposeParametersResponse> {
   const query = params.query.trim();
   if (!query) return { query: "", effective_query: "", results: [], total_candidates: 0, total_scoped: 0, retrieval_cache_size: 0 };
   const enabled = { library: true, frozen: true, atoms: true, generated: true, ...params.sources };
+  const scopes = { ...DEFAULT_SCOPES, ...params.scopes };
   const [library, frozen] = await Promise.all([
     enabled.library || enabled.generated ? readGenesisLibrary() : Promise.resolve([]),
     enabled.frozen ? readFrozen() : Promise.resolve([]),
@@ -129,6 +148,7 @@ export async function searchV3(params: {
     }
   }
   for (const item of frozen) if (!records.has(item.technical_name)) records.set(item.technical_name, normalizeParameter(item, "frozen"));
+  for (const [name, parameter] of records) if (!scopes[parameter.retrieval_scope]) records.delete(name);
 
   const baseQuery = buildEffectiveQuery(query, params.instructionContext);
   const atomQueryVector = await embedText(baseQuery);

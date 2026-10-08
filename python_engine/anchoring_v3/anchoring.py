@@ -68,6 +68,9 @@ class Config:
     _numeric_units: dict | None = field(default=None, repr=False)
     _ollama_client: Any | None = field(default=None, repr=False)
     _query_cache: dict[str, list[float]] = field(default_factory=dict, repr=False)
+    _param_vectors: Any | None = field(default=None, repr=False)
+    _param_row_by_name: dict[str, int] = field(default_factory=dict, repr=False)
+    _a_home: dict[str, dict[str, float]] = field(default_factory=dict, repr=False)
 
 
 # ---------------------------------------------------------------------------
@@ -411,47 +414,28 @@ def _polarity(axis: str, kind: str, polarity_matrix: dict,
     return pi
 
 
-def _axis_delta(ex: list[float], e_id: list[float],
-                axis_vec: dict) -> float | None:
+def _axis_delta(ex: list[float], e_id: Any, axis_vec: dict,
+                axis_id: str, a_home: dict[str, float]) -> float | None:
     u = axis_vec.get("u")
-    if not u:
+    if not u or e_id is None:
         return None
     kappa = axis_vec.get("kappa", 1.0)
+    home = a_home.get(axis_id)
+    center = axis_vec.get("c")
+    if home is not None and center:
+        query_position = 0.5 + kappa * _vec_dot(_vec_sub(ex, center), u)
+        return query_position - home
     return kappa * _vec_dot(_vec_sub(ex, e_id), u)
 
 
-def _param_eid(param_name: str, cfg: Config) -> list[float]:
-    """Возвращает ē_id(p) — эмбеддинг-вектор параметра. В stub-режиме
-    используем a_home как прокси (но оси всё равно выключены). В реальном
-    режиме — пере-эмбеддим semantic_keywords (или кэшируем)."""
+def _param_eid(param_name: str, cfg: Config) -> tuple[Any | None, dict[str, float]]:
+    """Return the persistent composite vector and its precomputed axis home."""
     if cfg._anchors.get("stub"):
-        return []
-    # кэш по имени параметра
-    cache = getattr(cfg, "_param_eid_cache", None)
-    if cache is None:
-        cache = {}
-        setattr(cfg, "_param_eid_cache", cache)
-    if param_name in cache:
-        return cache[param_name]
-    # ищем параметр в датасете
-    for p in cfg._dataset or []:
-        if p["technical_name"] == param_name:
-            kws = p.get("semantic_keywords") or []
-            if not kws or not _HAS_OLLAMA_CLIENT:
-                cache[param_name] = []
-                return []
-            if cfg._ollama_client is None:
-                cfg._ollama_client = OllamaClient(cfg.ollama_endpoint, cfg.ollama_model)
-            vecs = [cfg._ollama_client.embed(k) for k in kws]
-            eid = [0.0] * len(vecs[0]) if vecs else []
-            for v in vecs:
-                for i, x in enumerate(v):
-                    eid[i] += x
-            eid = [x / len(vecs) for x in eid] if vecs else []
-            cache[param_name] = eid
-            return eid
-    cache[param_name] = []
-    return []
+        return None, {}
+    row_index = cfg._param_row_by_name.get(param_name)
+    if row_index is None or cfg._param_vectors is None:
+        return None, cfg._a_home.get(param_name, {})
+    return cfg._param_vectors[row_index], cfg._a_home.get(param_name, {})
 
 
 # ---------------------------------------------------------------------------
@@ -668,14 +652,14 @@ def anchor_query(query: str,
                 # L2 axis projection (если параметр имеет axes и polarity != 0)
                 axes_p = p.get("axes") or []
                 if axes_p:
-                    e_id = _param_eid(name, cfg)
-                    if e_id:
+                    e_id, a_home = _param_eid(name, cfg)
+                    if e_id is not None:
                         # выбрать ось с макс |Δa|
                         best_axis = None
                         best_abs = 0.0
                         for ax_id in axes_p:
                             av = cfg._anchors["axes"].get(ax_id, {})
-                            delta = _axis_delta(ex, e_id, av)
+                            delta = _axis_delta(ex, e_id, av, ax_id, a_home)
                             if delta is None:
                                 continue
                             pi = _polarity(ax_id, kind, cfg._polarity, p)
@@ -733,13 +717,13 @@ def anchor_query(query: str,
                 # L2 axis projection
                 axes_p = p.get("axes") or []
                 if axes_p:
-                    e_id = _param_eid(name, cfg)
-                    if e_id:
+                    e_id, a_home = _param_eid(name, cfg)
+                    if e_id is not None:
                         best_axis = None
                         best_abs = 0.0
                         for ax_id in axes_p:
                             av = cfg._anchors["axes"].get(ax_id, {})
-                            delta = _axis_delta(ex, e_id, av)
+                            delta = _axis_delta(ex, e_id, av, ax_id, a_home)
                             if delta is None:
                                 continue
                             pi = _polarity(ax_id, kind, cfg._polarity, p)

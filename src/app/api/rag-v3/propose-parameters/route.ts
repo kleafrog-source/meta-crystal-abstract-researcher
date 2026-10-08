@@ -15,6 +15,7 @@ export async function POST(request: Request) {
       currentValues: body.current_values ?? {},
       instructionContext: Array.isArray(body.instruction_context) ? body.instruction_context : [],
       sources: body.sources ?? {},
+      scopes: body.scopes,
     }));
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });

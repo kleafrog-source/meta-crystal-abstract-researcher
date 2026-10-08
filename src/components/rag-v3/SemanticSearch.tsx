@@ -29,7 +29,9 @@ export function SemanticSearch() {
   const queryB = useRagV3Store((state) => state.queryB);
   const topK = useRagV3Store((state) => state.topK);
   const sources = useRagV3Store((state) => state.sources);
+  const scopes = useRagV3Store((state) => state.scopes);
   const toggleSource = useRagV3Store((state) => state.toggleSource);
+  const toggleScope = useRagV3Store((state) => state.toggleScope);
   const [topKDraft, setTopKDraft] = useState(String(topK));
   const searchMode = useRagV3Store((state) => state.searchMode);
   const transitionRatio = useRagV3Store((state) => state.transitionRatio);
@@ -127,6 +129,21 @@ export function SemanticSearch() {
             <RefreshCw className="size-3.5" />
           </Button>
         </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-1.5 rounded border border-white/15 bg-white/[0.025] p-2">
+        <span className="mr-1 font-mono text-[10px] uppercase tracking-wide text-muted-foreground">Retrieval scope</span>
+        {([
+          ["sound", "Sound"],
+          ["structure", "Structure"],
+          ["metadata", "Metadata"],
+          ["provenance", "Provenance"],
+          ["administrative", "Administrative"],
+        ] as const).map(([scope, label]) => (
+          <Button key={scope} type="button" size="sm" variant={scopes[scope] ? "default" : "outline"} onClick={() => toggleScope(scope)}>
+            {label}
+          </Button>
+        ))}
       </div>
 
       <div className={`grid gap-2 ${searchMode === "transition" ? "xl:grid-cols-2" : ""}`}>

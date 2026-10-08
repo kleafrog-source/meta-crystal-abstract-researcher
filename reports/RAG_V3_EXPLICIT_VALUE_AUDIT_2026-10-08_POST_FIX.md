@@ -1,6 +1,6 @@
-# Flowmusic Genesis V3 — аудит явных значений BGE-M3
+# Flowmusic Genesis V3 — аудит явных значений Qwen · STAGE1
 
-Дата: 2026-10-08T06:27:40+03:00
+Дата: 2026-10-08T09:36:12+03:00
 
 Все 20 запросов выполнены строго последовательно. `current_values` и instruction context очищены для изоляции retrieval и anchoring.
 
@@ -9,7 +9,8 @@
 - Успешных HTTP-запросов: **20/20**
 - Целевой technical_name найден: **19/20**
 - Запрошенное значение выставлено правильно: **19/20**
-- Все выбранные значения, отличающиеся от default: **50/476 (10.5%)**
+- Все выбранные значения, отличающиеся от default: **55/476 (11.6%)**
+- Среднее время запроса: **3.165 с**
 
 ## Результаты
 
@@ -19,7 +20,7 @@
 
 Цель: `acoustic_feature_attack_density` → ожидалось `0.82`
 Найдена: **да**; результат: `0.8200000000000001`; default: `0.5`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **1**, осталось default **2**. Время: 16.9 с.
+Весь Top-K: изменено **1**, осталось default **2**. Время: 3.4 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -33,7 +34,7 @@
 
 Цель: `basic_amplitude_envelope_attack_ms` → ожидалось `640`
 Найдена: **да**; результат: `640`; default: `10`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **1**, осталось default **4**. Время: 18.2 с.
+Весь Top-K: изменено **1**, осталось default **4**. Время: 3.1 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -49,7 +50,7 @@
 
 Цель: `spectral_smoothing_attack_time` → ожидалось `48.0`
 Найдена: **да**; результат: `48`; default: `2`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **1**, осталось default **7**. Время: 18.1 с.
+Весь Top-K: изменено **1**, осталось default **7**. Время: 3.5 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -68,7 +69,7 @@
 
 Цель: `resonant_body_excitation_attack_damping` → ожидалось `0.84`
 Найдена: **да**; результат: `0.84`; default: `0.3`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **3**, осталось default **9**. Время: 19.3 с.
+Весь Top-K: изменено **3**, осталось default **9**. Время: 3.2 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -91,7 +92,7 @@
 
 Цель: `stereo_width_chorus_flanger_depth` → ожидалось `0.95`
 Найдена: **да**; результат: `0.9500000000000001`; default: `0.7`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **3**, осталось default **17**. Время: 25.1 с.
+Весь Top-K: изменено **3**, осталось default **17**. Время: 3.1 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -122,7 +123,7 @@
 
 Цель: `psychoacoustic_loudness_sharpness_ratio` → ожидалось `1.5`
 Найдена: **да**; результат: `1.5`; default: `0.3`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **3**, осталось default **27**. Время: 18.4 с.
+Весь Top-K: изменено **3**, осталось default **27**. Время: 3.2 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -163,7 +164,7 @@
 
 Цель: `stereo_width_coefficient_ratio` → ожидалось `1.6`
 Найдена: **да**; результат: `1.6`; default: `1`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **7**, осталось default **43**. Время: 32.0 с.
+Весь Top-K: изменено **7**, осталось default **43**. Время: 3.1 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -224,7 +225,7 @@
 
 Цель: `acoustic_feature_attack_density` → ожидалось `0.18`
 Найдена: **да**; результат: `0.18`; default: `0.5`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **1**, осталось default **4**. Время: 19.3 с.
+Весь Top-K: изменено **1**, осталось default **4**. Время: 3.1 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -240,7 +241,7 @@
 
 Цель: `basic_amplitude_envelope_attack_ms` → ожидалось `1250`
 Найдена: **да**; результат: `1250`; default: `10`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **2**, осталось default **6**. Время: 20.9 с.
+Весь Top-K: изменено **2**, осталось default **6**. Время: 3.2 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -259,7 +260,7 @@
 
 Цель: `spectral_smoothing_attack_time` → ожидалось `155.0`
 Найдена: **да**; результат: `155`; default: `2`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **1**, осталось default **11**. Время: 18.6 с.
+Весь Top-K: изменено **1**, осталось default **11**. Время: 3.0 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -282,7 +283,7 @@
 
 Цель: `resonant_body_excitation_attack_damping` → ожидалось `0.08`
 Найдена: **да**; результат: `0.08`; default: `0.3`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **3**, осталось default **17**. Время: 20.3 с.
+Весь Top-K: изменено **4**, осталось default **16**. Время: 3.1 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -300,7 +301,7 @@
 | 12 | `reverb_early_reflections_damping_hz` | `8000` | `8000` | нет | `default` |
 | 13 | `reverb_diffuse_field_absorption_ratio` | `0.5` | `0.5` | нет | `default` |
 | 14 | `subharmonic_resonance_damping_factor` | `0.5` | `0.5` | нет | `default` |
-| 15 | `acid_mud_viscosity_resonance_damping` | `0.25` | `0.25` | нет | `default` |
+| 15 | `acid_mud_viscosity_resonance_damping` | `0.38` | `0.25` | да | `lexical` |
 | 16 | `reverb_late_tail_damping_crossover_hz` | `4000` | `4000` | нет | `default` |
 | 17 | `reverb_room_wall_viscoelastic_damping_index` | `0.15` | `0.15` | нет | `default` |
 | 18 | `reverb_modal_density_per_hz` | `1.5` | `1.5` | нет | `default` |
@@ -313,7 +314,7 @@
 
 Цель: `stereo_width_chorus_flanger_depth` → ожидалось `0.15`
 Найдена: **да**; результат: `0.15000000000000002`; default: `0.7`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **5**, осталось default **25**. Время: 29.4 с.
+Весь Top-K: изменено **5**, осталось default **25**. Время: 3.1 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -354,7 +355,7 @@
 
 Цель: `psychoacoustic_loudness_sharpness_ratio` → ожидалось `0.2`
 Найдена: **нет**; результат: `None`; default: `None`; отличается от default: **нет**; запрос выполнен правильно: **нет**.
-Весь Top-K: изменено **0**, осталось default **50**. Время: 18.7 с.
+Весь Top-K: изменено **0**, осталось default **50**. Время: 3.2 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -415,7 +416,7 @@
 
 Цель: `stereo_width_coefficient_ratio` → ожидалось `0.35`
 Найдена: **да**; результат: `0.35000000000000003`; default: `1`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **1**, осталось default **2**. Время: 19.1 с.
+Весь Top-K: изменено **1**, осталось default **2**. Время: 3.2 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -429,7 +430,7 @@
 
 Цель: `acoustic_feature_attack_density` → ожидалось `0.93`
 Найдена: **да**; результат: `0.93`; default: `0.5`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **1**, осталось default **7**. Время: 20.4 с.
+Весь Top-K: изменено **1**, осталось default **7**. Время: 3.0 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -448,7 +449,7 @@
 
 Цель: `basic_amplitude_envelope_attack_ms` → ожидалось `80`
 Найдена: **да**; результат: `80`; default: `10`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **2**, осталось default **10**. Время: 20.5 с.
+Весь Top-K: изменено **2**, осталось default **10**. Время: 3.0 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -471,7 +472,7 @@
 
 Цель: `spectral_smoothing_attack_time` → ожидалось `12.5`
 Найдена: **да**; результат: `12.5`; default: `2`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **1**, осталось default **19**. Время: 21.5 с.
+Весь Top-K: изменено **2**, осталось default **18**. Время: 3.0 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -489,7 +490,7 @@
 | 12 | `spectral_gate_lookahead_smoothing_ms` | `5` | `5` | нет | `default` |
 | 13 | `spectral_flux_transient_emphasis_smoothing_ms` | `2` | `2` | нет | `default` |
 | 14 | `spectral_diffusion_application_threshold` | `0.05` | `0.05` | нет | `default` |
-| 15 | `basic_amplitude_envelope_attack_ms` | `10` | `10` | нет | `default` |
+| 15 | `basic_amplitude_envelope_attack_ms` | `398` | `10` | да | `lexical` |
 | 16 | `spectral_freeze_crossfade_time_ms` | `100` | `100` | нет | `default` |
 | 17 | `spectral_flatness_smoothness_factor` | `0.2` | `0.2` | нет | `default` |
 | 18 | `noise_shaping_spectral_flux_modulation_rate` | `1` | `1` | нет | `default` |
@@ -502,7 +503,7 @@
 
 Цель: `resonant_body_excitation_attack_damping` → ожидалось `0.67`
 Найдена: **да**; результат: `0.67`; default: `0.3`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **1**, осталось default **29**. Время: 23.8 с.
+Весь Top-K: изменено **2**, осталось default **28**. Время: 3.1 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -517,7 +518,7 @@
 | 9 | `resonator_decay_time_seconds` | `1` | `1` | нет | `default` |
 | 10 | `reverb_late_reflection_highpass_resonance_q` | `0.707` | `0.707` | нет | `default` |
 | 11 | `subharmonic_resonance_damping_factor` | `0.5` | `0.5` | нет | `default` |
-| 12 | `acid_mud_viscosity_resonance_damping` | `0.25` | `0.25` | нет | `default` |
+| 12 | `acid_mud_viscosity_resonance_damping` | `0.41000000000000003` | `0.25` | да | `lexical` |
 | 13 | `reverb_damping_frequency_hz` | `4000` | `4000` | нет | `default` |
 | 14 | `reverb_late_reflection_highpass_resonance_db` | `0` | `0` | нет | `default` |
 | 15 | `acoustic_structural_resonance_q_factor` | `5` | `5` | нет | `default` |
@@ -543,7 +544,7 @@
 
 Цель: `stereo_width_chorus_flanger_depth` → ожидалось `0.4`
 Найдена: **да**; результат: `0.4`; default: `0.7`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **6**, осталось default **44**. Время: 34.3 с.
+Весь Top-K: изменено **6**, осталось default **44**. Время: 3.2 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -604,7 +605,7 @@
 
 Цель: `stereo_width_coefficient_ratio` → ожидалось `1.85`
 Найдена: **да**; результат: `1.85`; default: `1`; отличается от default: **да**; запрос выполнен правильно: **да**.
-Весь Top-K: изменено **7**, осталось default **93**. Время: 48.7 с.
+Весь Top-K: изменено **9**, осталось default **91**. Время: 3.5 с.
 
 | # | parameter | value | default | отличается | source |
 |---:|---|---:|---:|:---:|---|
@@ -684,7 +685,7 @@
 | 74 | `vibe_event_horizon_shimmer_reverb_octave_shift` | `+1 octave` | `+1 octave` | нет | `default` |
 | 75 | `micro_harmony_generator_amplitude_scale` | `0.5` | `0.5` | нет | `default` |
 | 76 | `spectral_delay_band_crossfade_width` | `0.1` | `0.1` | нет | `default` |
-| 77 | `stereo_pan_position_degrees` | `0` | `0` | нет | `default` |
+| 77 | `stereo_pan_position_degrees` | `32` | `0` | да | `lexical` |
 | 78 | `visual_event_duration_adaptive_scale` | `0.5` | `0.5` | нет | `default` |
 | 79 | `supersaw_unison_voice_pan_distribution_spread` | `90` | `90` | нет | `default` |
 | 80 | `a5_adapt_density_micro_shruthi_smoothing_scale` | `0.85` | `0.85` | нет | `default` |
@@ -693,7 +694,7 @@
 | 83 | `spectral_crossover_transition_width_octaves` | `0.5` | `0.5` | нет | `default` |
 | 84 | `multi_tap_delay_pan_spread_angle` | `90` | `90` | нет | `default` |
 | 85 | `low_frequency_rumble_screen_shake_mm` | `5` | `5` | нет | `default` |
-| 86 | `noise_shaping_correlation_coefficient` | `0` | `0` | нет | `default` |
+| 86 | `noise_shaping_correlation_coefficient` | `-0.16` | `0` | да | `lexical` |
 | 87 | `stereo_phase_correlation_target` | `0.5` | `0.5` | нет | `default` |
 | 88 | `organic_granulation_spray_stereo_phase_decay_smoothing_ms_absolute` | `0` | `20` | да | `lexical` |
 | 89 | `simple_stereo_delay_feedback_percent` | `30` | `30` | нет | `default` |

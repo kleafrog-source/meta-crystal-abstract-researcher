@@ -13,7 +13,8 @@ from pathlib import Path
 
 
 ENDPOINT = "http://localhost:3000/api/rag-v3/propose-parameters"
-REPORT = Path(__file__).resolve().parents[2] / "reports" / "RAG_V3_EXPLICIT_VALUE_AUDIT_2026-10-08_POST_FIX.md"
+PHASE = sys.argv[1] if len(sys.argv) > 1 else "POST_FIX"
+REPORT = Path(__file__).resolve().parents[2] / "reports" / f"RAG_V3_EXPLICIT_VALUE_AUDIT_2026-10-08_{PHASE}.md"
 
 TESTS = [
     ("acoustic_feature_attack_density", 0.82, 3, "Set acoustic_feature_attack_density to 0.82"),
@@ -81,8 +82,10 @@ def main() -> int:
     successful = [case for case in cases if "error" not in case]
     total_results = sum(len(case["results"]) for case in successful)
     total_changed = sum(case.get("changed", 0) for case in successful)
+    elapsed_values = [float(case["elapsed"]) for case in successful]
+    average_elapsed = sum(elapsed_values) / len(elapsed_values) if elapsed_values else 0.0
     lines = [
-        "# Flowmusic Genesis V3 — аудит явных значений BGE-M3",
+        f"# Flowmusic Genesis V3 — аудит явных значений Qwen · {PHASE}",
         "",
         f"Дата: {datetime.now().astimezone().isoformat(timespec='seconds')}",
         "",
@@ -94,6 +97,7 @@ def main() -> int:
         f"- Целевой technical_name найден: **{sum(bool(case.get('target_found')) for case in successful)}/20**",
         f"- Запрошенное значение выставлено правильно: **{sum(bool(case.get('value_correct')) for case in successful)}/20**",
         f"- Все выбранные значения, отличающиеся от default: **{total_changed}/{total_results} ({(100 * total_changed / total_results if total_results else 0):.1f}%)**",
+        f"- Среднее время запроса: **{average_elapsed:.3f} с**",
         "",
         "## Результаты",
         "",

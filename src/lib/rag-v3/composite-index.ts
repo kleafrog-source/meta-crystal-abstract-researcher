@@ -10,6 +10,7 @@ interface CompositeRow {
   embedding_text: string;
   embedding_text_sha256: string;
   vector_origin: string;
+  retrieval_scope: string;
 }
 
 interface CompositeManifest {

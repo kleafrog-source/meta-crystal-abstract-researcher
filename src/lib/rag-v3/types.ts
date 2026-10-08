@@ -6,6 +6,8 @@ export type UiElement =
   | "Array"
   | "String";
 
+export type RetrievalScope = "sound" | "structure" | "metadata" | "provenance" | "administrative";
+
 export interface EnrichedParameter {
   technical_name: string;
   name_ru?: string;
@@ -32,6 +34,7 @@ export interface EnrichedParameter {
   select_typing?: "nominal" | "ordinal" | null;
   option_positions?: Array<{ value: string; position: number }> | null;
   option_aliases?: Record<string, string[]> | null;
+  retrieval_scope: RetrievalScope;
 }
 
 export interface ActiveParameter {
@@ -61,6 +64,7 @@ export interface ActiveParameter {
   domain?: string | null;
   quantity_kind?: string | null;
   axes: string[];
+  retrieval_scope: RetrievalScope;
 }
 
 export interface InstructionContextEntry {
@@ -123,6 +127,7 @@ export interface ProposeParametersRequest {
   top_k?: number;
   current_values?: Record<string, number | string>;
   instruction_context?: InstructionContextEntry[];
+  scopes?: Partial<Record<RetrievalScope, boolean>>;
 }
 
 export interface ProposeParametersResponse {

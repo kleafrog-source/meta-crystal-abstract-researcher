@@ -19,6 +19,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_ROOT = PROJECT_ROOT / "data" / "combinatorial-genesis"
 DEFAULT_MODEL = os.environ.get("OLLAMA_EMBED_MODEL", "qwen3-embedding:4b")
 DEFAULT_ENDPOINT = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
+RETRIEVAL_SCOPES = {"sound", "structure", "metadata", "provenance", "administrative"}
 
 
 def read_json(path: Path) -> Any:
@@ -32,6 +33,31 @@ def write_json(path: Path, value: Any) -> None:
 
 def sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def classify_retrieval_scope(parameter: dict[str, Any]) -> str:
+    existing = str(parameter.get("retrieval_scope") or "").lower()
+    if existing in RETRIEVAL_SCOPES:
+        return existing
+    name = str(parameter.get("technical_name") or "").lower()
+    text = " ".join((
+        name.replace("_", " "), str(parameter.get("category") or ""),
+        str(parameter.get("sub_category") or ""), str(parameter.get("description_en") or ""),
+    )).lower()
+    if name.startswith("provenance_") or "ownership_proof" in name or "_hash" in name:
+        return "provenance"
+    if any(term in name for term in ("smart_contract", "gas_limit", "licensing", "contract_address")):
+        return "administrative"
+    if name.startswith(("interoperable_asset_", "descriptive_metadata_", "classification_", "semantic_concept_")):
+        return "metadata"
+    structure_terms = (
+        "arrangement", "timeline", "song_section", "section_transition", "composition_structure",
+        "sequencer", "sequence_length", "step_pattern", "pattern_length", "arpeggiator",
+        "tempo", "rhythmic_pattern", "rhythm_grid", "meter", "time_signature",
+    )
+    if any(term.replace("_", " ") in text for term in structure_terms):
+        return "structure"
+    return "sound"
 
 
 def retrieval_text(parameter: dict[str, Any]) -> str:
@@ -125,10 +151,10 @@ def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], b
     latest = read_json(DATA_ROOT / "datasets" / "latest.json")
     frozen = read_json(DATA_ROOT / "datasets" / latest["version_id"] / "parameters.json")
     records: dict[str, tuple[dict[str, Any], str]] = {
-        str(item["technical_name"]): (item, "library") for item in library
+        str(item["technical_name"]): ({**item, "retrieval_scope": classify_retrieval_scope(item)}, "library") for item in library
     }
     for item in frozen:
-        records.setdefault(str(item["technical_name"]), (item, "frozen"))
+        records.setdefault(str(item["technical_name"]), ({**item, "retrieval_scope": classify_retrieval_scope(item)}, "frozen"))
     write_json(DATA_ROOT / "v3" / "dataset.json", [item for item, _source in records.values()])
 
     cache = cached_vectors(model)
@@ -145,6 +171,7 @@ def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], b
             reusable_names.add(name)
         planned.append({
             "technical_name": name, "source": source, "generated": parameter.get("domain") == "experimental_combinatorial_genesis",
+            "retrieval_scope": parameter["retrieval_scope"],
             "embedding_text": text, "embedding_text_sha256": sha256_text(text),
             "vector_origin": vector_info[1] if vector_info else "ollama",
         })
