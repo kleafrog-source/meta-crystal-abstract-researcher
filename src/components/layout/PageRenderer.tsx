@@ -21,8 +21,6 @@ import { CombinatorialSynthesisPage } from "@/components/pages/CombinatorialSynt
 import { AudioClapRagPage } from "@/components/pages/AudioClapRagPage";
 import { SemanticPlane } from "@/components/pages/SemanticPlane";
 import { Settings } from "@/components/pages/Settings";
-import { StrudelFlowEditor } from "@/components/pages/StrudelFlowEditor";
-import { StrudelLab } from "@/components/pages/StrudelLab";
 import { TorusAtlas } from "@/components/pages/TorusAtlas";
 import type { PageId } from "@/components/layout/Sidebar";
 
@@ -47,10 +45,6 @@ export function PageRenderer(props: {
       return <Chat />;
     case "semanticplane":
       return <SemanticPlane />;
-    case "strudel":
-      return <StrudelLab />;
-    case "strudelflow":
-      return <StrudelFlowEditor />;
     case "mmss":
       return <MMSS />;
     case "metis":
