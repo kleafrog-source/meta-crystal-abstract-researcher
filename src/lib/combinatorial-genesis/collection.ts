@@ -113,6 +113,12 @@ export function inspectCollectionResponse(
     if (typeof parameter.name_ru !== "string" || !parameter.name_ru.trim()) errors.push(`${prefix}.name_ru is required.`);
     if (typeof parameter.description_en !== "string" || !parameter.description_en.trim()) errors.push(`${prefix}.description_en is required.`);
     if (typeof parameter.description_ru !== "string" || !parameter.description_ru.trim()) errors.push(`${prefix}.description_ru is required.`);
+    if (String(parameter.name_ru ?? "").length > 120) errors.push(`${prefix}.name_ru exceeds 120 characters.`);
+    if (String(parameter.description_en ?? "").length > 360) errors.push(`${prefix}.description_en exceeds 360 characters.`);
+    if (String(parameter.description_ru ?? "").length > 420) errors.push(`${prefix}.description_ru exceeds 420 characters.`);
+    if (typeof parameter.quantity_kind !== "string" || !TECHNICAL_NAME.test(parameter.quantity_kind)) {
+      errors.push(`${prefix}.quantity_kind must be non-empty English snake_case.`);
+    }
 
     if (uiElement === "Range") {
       const values = [parameter.min_value, parameter.max_value, parameter.step, parameter.default];
@@ -133,17 +139,34 @@ export function inspectCollectionResponse(
         if (typeof parameter.default !== "string" || !options.includes(parameter.default)) errors.push(`${prefix}.default must be present in options.`);
       }
     }
+    if (uiElement === "Toggle") {
+      if (parameter.min_value !== 0 || parameter.max_value !== 1 || parameter.step !== 1 || (parameter.default !== 0 && parameter.default !== 1) || parameter.unit !== "boolean") {
+        errors.push(`${prefix} Toggle requires min_value 0, max_value 1, step 1, default 0 or 1, and unit boolean.`);
+      }
+    }
+    if (uiElement === "Text" && (typeof parameter.default !== "string" || parameter.unit !== "text")) {
+      errors.push(`${prefix} Text requires a string default and unit text.`);
+    }
+    if (uiElement === "String" && typeof parameter.default !== "string") {
+      errors.push(`${prefix} String requires a string default.`);
+    }
+    if (uiElement === "Array" && (!Array.isArray(parameter.default) || parameter.default.length === 0 || !parameter.default.every(finite))) {
+      errors.push(`${prefix} Array requires a non-empty array of finite numbers as default.`);
+    }
 
     const tags = stringArray(parameter.lyria_prompt_tags);
-    if (!tags || tags.length !== 3) errors.push(`${prefix}.lyria_prompt_tags must contain exactly 3 strings.`);
+    if (!tags || tags.length !== 3 || tags.some((item) => !item.trim())) errors.push(`${prefix}.lyria_prompt_tags must contain exactly 3 non-empty strings.`);
     const keywords = stringArray(parameter.semantic_keywords);
-    if (!keywords || keywords.length !== 7) errors.push(`${prefix}.semantic_keywords must contain exactly 7 strings.`);
+    if (!keywords || keywords.length !== 7 || keywords.some((item) => !item.trim())) errors.push(`${prefix}.semantic_keywords must contain exactly 7 non-empty strings.`);
+    else if (keywords.slice(0, 3).some((item) => !/[А-Яа-яЁё]/.test(item)) || keywords.slice(3).some((item) => /[А-Яа-яЁё]/.test(item))) {
+      errors.push(`${prefix}.semantic_keywords must contain 3 Russian strings followed by 4 English strings.`);
+    }
     if (errors.length === startErrorCount) validCount += 1;
   });
 
   if (referenceOverlapCount > 0) {
     warnings.push(
-      `${referenceOverlapCount} technical_name value(s) also exist in the current 2733 reference dataset; this is allowed and will be preserved as frequency/provenance evidence.`,
+      `${referenceOverlapCount} technical_name value(s) also exist in the current V3 reference library; inbox import may preserve them as frequency/provenance evidence, while direct autonomous publication will reject collisions.`,
     );
   }
 

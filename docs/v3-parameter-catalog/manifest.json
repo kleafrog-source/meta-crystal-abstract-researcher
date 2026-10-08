@@ -1,0 +1,74 @@
+{
+  "generated_at": "2026-10-08T18:01:28.513Z",
+  "parameter_count": 6087,
+  "part_size": 500,
+  "part_count": 13,
+  "files": [
+    {
+      "name": "part-001.md",
+      "count": 500,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-001.md"
+    },
+    {
+      "name": "part-002.md",
+      "count": 500,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-002.md"
+    },
+    {
+      "name": "part-003.md",
+      "count": 500,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-003.md"
+    },
+    {
+      "name": "part-004.md",
+      "count": 500,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-004.md"
+    },
+    {
+      "name": "part-005.md",
+      "count": 500,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-005.md"
+    },
+    {
+      "name": "part-006.md",
+      "count": 500,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-006.md"
+    },
+    {
+      "name": "part-007.md",
+      "count": 500,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-007.md"
+    },
+    {
+      "name": "part-008.md",
+      "count": 500,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-008.md"
+    },
+    {
+      "name": "part-009.md",
+      "count": 500,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-009.md"
+    },
+    {
+      "name": "part-010.md",
+      "count": 500,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-010.md"
+    },
+    {
+      "name": "part-011.md",
+      "count": 500,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-011.md"
+    },
+    {
+      "name": "part-012.md",
+      "count": 500,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-012.md"
+    },
+    {
+      "name": "part-013.md",
+      "count": 87,
+      "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-013.md"
+    }
+  ],
+  "output_dir": "D:\\dev\\personal\\projects\\mmss-meta-crystal\\docs\\v3-parameter-catalog"
+}

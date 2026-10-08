@@ -33,6 +33,10 @@ function pathnameToPage(pathname: string): PageId {
     return "audioclaprag";
   }
 
+  if (pathname === "/meta-crystal-v3-lab") {
+    return "metacrystalv3lab";
+  }
+
   return "dashboard";
 }
 
@@ -87,6 +91,11 @@ export function AppShell({ children }: AppShellProps) {
 
     if (page === "audioclaprag") {
       router.push("/audio-clap-rag");
+      return;
+    }
+
+    if (page === "metacrystalv3lab") {
+      router.push("/meta-crystal-v3-lab");
       return;
     }
 

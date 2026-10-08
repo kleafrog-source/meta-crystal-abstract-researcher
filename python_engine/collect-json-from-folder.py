@@ -127,6 +127,15 @@ def validate_parameter(parameter: Any, index: int) -> list[str]:
     for field in ("name_ru", "description_en", "description_ru", "category", "sub_category", "unit"):
         if not isinstance(parameter.get(field), str) or not parameter[field].strip():
             errors.append(f"{prefix}.{field} is required")
+    if len(str(parameter.get("name_ru", ""))) > 120:
+        errors.append(f"{prefix}.name_ru exceeds 120 characters")
+    if len(str(parameter.get("description_en", ""))) > 360:
+        errors.append(f"{prefix}.description_en exceeds 360 characters")
+    if len(str(parameter.get("description_ru", ""))) > 420:
+        errors.append(f"{prefix}.description_ru exceeds 420 characters")
+    quantity_kind = parameter.get("quantity_kind")
+    if not isinstance(quantity_kind, str) or not TECHNICAL_NAME.fullmatch(quantity_kind):
+        errors.append(f"{prefix}.quantity_kind must be non-empty English snake_case")
 
     ui_element = parameter.get("ui_element")
     if ui_element not in UI_ELEMENTS:
@@ -152,11 +161,34 @@ def validate_parameter(parameter: Any, index: int) -> list[str]:
                 errors.append(f"{prefix}.options must be unique")
             if parameter.get("default") not in options:
                 errors.append(f"{prefix}.default must be present in options")
+    elif ui_element == "Toggle":
+        if not (
+            parameter.get("min_value") == 0
+            and parameter.get("max_value") == 1
+            and parameter.get("step") == 1
+            and parameter.get("default") in (0, 1)
+            and parameter.get("unit") == "boolean"
+        ):
+            errors.append(f"{prefix} Toggle requires min_value 0, max_value 1, step 1, default 0 or 1, and unit boolean")
+    elif ui_element == "Text":
+        if not isinstance(parameter.get("default"), str) or parameter.get("unit") != "text":
+            errors.append(f"{prefix} Text requires a string default and unit text")
+    elif ui_element == "String":
+        if not isinstance(parameter.get("default"), str):
+            errors.append(f"{prefix} String requires a string default")
+    elif ui_element == "Array":
+        default = parameter.get("default")
+        if not isinstance(default, list) or not default or not all(is_finite_number(value) for value in default):
+            errors.append(f"{prefix} Array requires a non-empty array of finite numbers as default")
 
-    if not is_string_list(parameter.get("lyria_prompt_tags"), 3):
-        errors.append(f"{prefix}.lyria_prompt_tags must contain exactly 3 strings")
-    if not is_string_list(parameter.get("semantic_keywords"), 7):
-        errors.append(f"{prefix}.semantic_keywords must contain exactly 7 strings")
+    tags = parameter.get("lyria_prompt_tags")
+    if not is_string_list(tags, 3) or any(not item.strip() for item in tags):
+        errors.append(f"{prefix}.lyria_prompt_tags must contain exactly 3 non-empty strings")
+    keywords = parameter.get("semantic_keywords")
+    if not is_string_list(keywords, 7) or any(not item.strip() for item in keywords):
+        errors.append(f"{prefix}.semantic_keywords must contain exactly 7 non-empty strings")
+    elif any(not re.search(r"[А-Яа-яЁё]", item) for item in keywords[:3]) or any(re.search(r"[А-Яа-яЁё]", item) for item in keywords[3:]):
+        errors.append(f"{prefix}.semantic_keywords must contain 3 Russian strings followed by 4 English strings")
     return errors
 
 

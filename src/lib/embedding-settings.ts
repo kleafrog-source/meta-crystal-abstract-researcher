@@ -6,7 +6,7 @@ export interface EmbeddingRuntimeSettings {
 }
 
 const FALLBACK_BASE_URL = "http://localhost:11434";
-const FALLBACK_MODEL = "qwen3-embedding:4b";
+const FALLBACK_MODEL = "qwen3-embedding:0.6b";
 
 export async function loadEmbeddingRuntimeSettings(): Promise<EmbeddingRuntimeSettings> {
   try {

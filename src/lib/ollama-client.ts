@@ -1,7 +1,7 @@
 import { loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
 
 const DEFAULT_OLLAMA_BASE_URL = "http://localhost:11434";
-const DEFAULT_OLLAMA_MODEL = "qwen3-embedding:4b";
+const DEFAULT_OLLAMA_MODEL = "qwen3-embedding:0.6b";
 const DEFAULT_PROBE_TIMEOUT_MS = 30_000;
 const DEFAULT_EMBED_TIMEOUT_MS = 180_000;
 

@@ -43,6 +43,7 @@ export type PageId =
   | "combinatorialgenesis"
   | "combinatorialsynthesis"
   | "audioclaprag"
+  | "metacrystalv3lab"
   | "settings";
 
 interface NavItem {
@@ -184,6 +185,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "Audio CLAP RAG",
     icon: <Activity className="h-4 w-4" />,
     description: "Cross-modal search of V3 parameters from an audio reference with LAION-CLAP",
+  },
+  {
+    id: "metacrystalv3lab",
+    label: "Meta-Crystal V3 Lab",
+    icon: <Brain className="h-4 w-4" />,
+    description: "RAG-куратор параметров V3 из библиотеки Мета-Кристаллов",
   },
 ];
 

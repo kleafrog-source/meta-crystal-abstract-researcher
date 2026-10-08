@@ -26,6 +26,7 @@ def parameter(name: str) -> dict:
         "step": 0.01,
         "default": 0.5,
         "unit": "normalized_ratio",
+        "quantity_kind": "test_amount",
         "lyria_prompt_tags": ["test one", "test two", "test three"],
         "semantic_keywords": [
             "тест один",

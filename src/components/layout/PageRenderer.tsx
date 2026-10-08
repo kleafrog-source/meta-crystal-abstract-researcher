@@ -19,6 +19,7 @@ import { RagParametersV3Page } from "@/components/pages/RagParametersV3Page";
 import { CombinatorialGenesisPage } from "@/components/pages/CombinatorialGenesisPage";
 import { CombinatorialSynthesisPage } from "@/components/pages/CombinatorialSynthesisPage";
 import { AudioClapRagPage } from "@/components/pages/AudioClapRagPage";
+import { MetaCrystalV3LabPage } from "@/components/pages/MetaCrystalV3LabPage";
 import { SemanticPlane } from "@/components/pages/SemanticPlane";
 import { Settings } from "@/components/pages/Settings";
 import { TorusAtlas } from "@/components/pages/TorusAtlas";
@@ -71,6 +72,8 @@ export function PageRenderer(props: {
       return <CombinatorialSynthesisPage />;
     case "audioclaprag":
       return <AudioClapRagPage />;
+    case "metacrystalv3lab":
+      return <MetaCrystalV3LabPage />;
     case "settings":
       return <Settings />;
     default:

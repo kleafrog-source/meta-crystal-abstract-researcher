@@ -196,6 +196,21 @@
     letter-spacing: 0.06em;
   }
 
+  .flowmusic-console [data-slot="button"] {
+    border-color: rgb(245 158 11 / 20%);
+    background-color: rgb(245 158 11 / 5%);
+    background-image: linear-gradient(to bottom right, rgb(245 158 11 / 10%), rgb(245 158 11 / 5%));
+    color: rgb(252 211 77);
+  }
+
+  .flowmusic-console [data-slot="button"]:hover:not(:disabled) {
+    border-color: rgb(245 158 11 / 42%);
+    background-color: rgb(245 158 11 / 10%);
+    background-image: linear-gradient(to bottom right, rgb(245 158 11 / 20%), rgb(245 158 11 / 10%));
+    color: rgb(254 243 199);
+    box-shadow: 0 0 18px rgb(245 158 11 / 12%);
+  }
+
   .console-query-panel,
   .console-bank,
   .console-macro-panel {

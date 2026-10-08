@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ParameterRegistryPanel } from "@/components/combinatorial-genesis/ParameterRegistryPanel";
+import { V3CatalogPanel } from "@/components/combinatorial-genesis/V3CatalogPanel";
 
 interface PreviewCandidate {
   technical_name: string;
@@ -468,6 +469,8 @@ export function CombinatorialGenesisPage() {
 
         <ParameterRegistryPanel />
 
+        <V3CatalogPanel />
+
         <section className="space-y-3 rounded-lg border border-emerald-400/20 bg-emerald-950/10 p-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
@@ -485,7 +488,7 @@ export function CombinatorialGenesisPage() {
                   Открыть FLOWMUSIC_COLLECTION_PROMPT_V1.md
                 </button>
                 . {" "}
-                Прикреплять датасет из 2733 параметров не нужно. Вставьте сюда полный JSON-ответ Flowmusic;
+                Полный датасет прикреплять не нужно: при необходимости используйте raw-ссылки из V3 technical-name catalog. Вставьте сюда полный JSON-ответ Flowmusic;
                 проверка пока ничего не сохраняет.
               </p>
             </div>
