@@ -33,6 +33,8 @@ export interface LLMChatOptions {
   ragContext?: string;
   /** Signal to abort the request */
   signal?: AbortSignal;
+  /** Ollama structured-output mode: generic JSON or a JSON Schema object. */
+  format?: "json" | Record<string, unknown>;
 }
 
 export interface LLMChatResult {

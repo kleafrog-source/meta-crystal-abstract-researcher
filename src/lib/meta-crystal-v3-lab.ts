@@ -56,10 +56,20 @@ export function validateLabParameters(
   existingNames: ReadonlySet<string>,
   parentParameters: string[] = [],
 ): ValidatedLabCandidate[] {
+  const normalizedParameters = parameters.map((parameter) => {
+    const keywords = Array.isArray(parameter.semantic_keywords)
+      ? parameter.semantic_keywords.filter((item): item is string => typeof item === "string")
+      : [];
+    const russian = keywords.filter((item) => /[А-Яа-яЁё]/.test(item));
+    const english = keywords.filter((item) => !/[А-Яа-яЁё]/.test(item));
+    return keywords.length === 7 && russian.length === 3 && english.length === 4
+      ? { ...parameter, semantic_keywords: [...russian, ...english] }
+      : parameter;
+  });
   const raw = JSON.stringify({
     collection_protocol: "FLOWMUSIC_LEXICAL_MULTI_ACCOUNT_V1",
     batch_index: 1,
-    parameters,
+    parameters: normalizedParameters,
   });
   const inspection = inspectCollectionResponse(raw, existingNames);
   return inspection.parameters.map((parameter, index) => {

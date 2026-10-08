@@ -165,6 +165,7 @@ export class OllamaProvider implements LLMProvider {
       model,
       messages: fullMessages,
       stream,
+      ...(opts.format ? { format: opts.format } : {}),
       ...(opts.keepAlive ? { keep_alive: opts.keepAlive } : {}),
       options: {
         temperature: opts.temperature ?? 0.7,

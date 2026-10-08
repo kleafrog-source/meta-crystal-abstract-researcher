@@ -33,6 +33,8 @@ interface Proposal {
   candidates: LabCandidate[];
   meta_crystal_context: Array<{ kind: string; name: string; score: number; snippet: string }>;
   v3_neighbours: Array<{ technical_name: string; similarity: number }>;
+  raw_reply?: string;
+  raw_attempts?: string[];
   error?: string;
 }
 
@@ -71,11 +73,12 @@ export function MetaCrystalV3LabPage() {
   const [error, setError] = useState("");
   const [candidatePackage, setCandidatePackage] = useState<PackageResult | null>(null);
   const [publishResult, setPublishResult] = useState<PublishResult | null>(null);
+  const [rawReply, setRawReply] = useState("");
   const abortRef = useRef<AbortController | null>(null);
 
   const propose = async () => {
     if (!query.trim()) return;
-    setBusy("propose"); setError(""); setProposal(null); setCandidatePackage(null); setPublishResult(null); setSelected(new Set()); setDirty(new Set());
+    setBusy("propose"); setError(""); setRawReply(""); setProposal(null); setCandidatePackage(null); setPublishResult(null); setSelected(new Set()); setDirty(new Set());
     const controller = new AbortController(); abortRef.current = controller;
     try {
       const response = await fetch("/api/meta-crystal-v3-lab/propose", {
@@ -83,6 +86,9 @@ export function MetaCrystalV3LabPage() {
         body: JSON.stringify({ query, count: Math.max(1, Math.min(8, Math.trunc(Number(count) || 3))) }),
       });
       const value = await response.json() as Proposal;
+      setRawReply(Array.isArray(value.raw_attempts) && value.raw_attempts.length > 1
+        ? value.raw_attempts.map((item, index) => `--- попытка ${index + 1} ---\n${item}`).join("\n\n")
+        : typeof value.raw_reply === "string" ? value.raw_reply : "");
       if (!response.ok) throw new Error(value.error ?? `HTTP ${response.status}`);
       setProposal(value); setEdits(value.candidates.map((item) => JSON.stringify(item.parameter, null, 2)));
     } catch (caught) {
@@ -156,6 +162,7 @@ export function MetaCrystalV3LabPage() {
           <Textarea rows={5} value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Например: найти в Мета-Кристаллах идеи для независимых параметров нестабильной резонансной микродинамики, которых ещё нет в V3" />
           <div className="flex flex-wrap items-end gap-2"><label className="grid gap-1 text-xs"><span className="flex items-center gap-1">Кандидатов <Help>За один ответ запрашивается от 1 до 8 параметров. Небольшой пакет надёжнее для локальной LLM.</Help></span><Input className="w-24" type="number" min={1} max={8} value={count} onChange={(event) => setCount(event.target.value)} /></label><Button onClick={() => void propose()} disabled={busy !== null || !query.trim()}><FlaskConical className="size-4" />{busy === "propose" ? "Анализ..." : "Найти и предложить"}</Button><Button variant="outline" onClick={() => abortRef.current?.abort()} disabled={busy !== "propose"}><Square className="size-4" />Остановить</Button></div>
           {error ? <div className="rounded border border-red-400/30 bg-red-950/20 p-3 text-sm text-red-200">{error}</div> : null}
+          {rawReply ? <details className="rounded border border-violet-400/20 bg-violet-950/10 p-3 text-xs text-violet-200" open={Boolean(error)}><summary className="cursor-pointer font-semibold">Сырой ответ модели для диагностики</summary><pre className="mt-2 max-h-96 overflow-auto whitespace-pre-wrap break-words font-mono text-[11px] text-zinc-300">{rawReply}</pre></details> : null}
         </section>
 
         {proposal ? <section className="space-y-3 rounded-lg border border-fuchsia-400/20 bg-fuchsia-950/10 p-4">
