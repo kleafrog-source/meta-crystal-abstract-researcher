@@ -2,6 +2,13 @@
 
 Веб-реализация десктопного GUI «Мета-Кристалл» на базе Next.js 16 + TypeScript с интеграцией локальных LLM (Ollama), RAG-пайплайна и векторного поиска по базе знаний движка.
 
+## Документация по режимам приложения
+
+Подробное руководство по пяти режимам приложения:
+
+- **[English Guide](docs/application-modes-guide.md)** — Flowmusic Genesis V3, Audio CLAP RAG, Combinatorial Genesis, Combinatorial Synthesis, Meta-Crystal V3 Lab
+- **[Русское руководство](docs/application-modes-guide-ru.md)** — Flowmusic Genesis V3, Audio CLAP RAG, Combinatorial Genesis, Combinatorial Synthesis, Meta-Crystal V3 Lab
+
 ## Архитектура
 
 ```
