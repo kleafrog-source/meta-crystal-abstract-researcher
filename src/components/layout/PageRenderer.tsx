@@ -20,6 +20,10 @@ import { CombinatorialGenesisPage } from "@/components/pages/CombinatorialGenesi
 import { CombinatorialSynthesisPage } from "@/components/pages/CombinatorialSynthesisPage";
 import { AudioClapRagPage } from "@/components/pages/AudioClapRagPage";
 import { MetaCrystalV3LabPage } from "@/components/pages/MetaCrystalV3LabPage";
+import { WhiteSpaceDiscoveryPage } from "@/components/pages/WhiteSpaceDiscoveryPage";
+import { KnowledgeGraphPage } from "@/components/pages/KnowledgeGraphPage";
+import { MorphoAcousticRagPage } from "@/components/pages/MorphoAcousticRagPage";
+import { CrossModalConsensusPage } from "@/components/pages/CrossModalConsensusPage";
 import { SemanticPlane } from "@/components/pages/SemanticPlane";
 import { Settings } from "@/components/pages/Settings";
 import { TorusAtlas } from "@/components/pages/TorusAtlas";
@@ -74,6 +78,14 @@ export function PageRenderer(props: {
       return <AudioClapRagPage />;
     case "metacrystalv3lab":
       return <MetaCrystalV3LabPage />;
+    case "whitespacediscovery":
+      return <WhiteSpaceDiscoveryPage />;
+    case "knowledgegraph":
+      return <KnowledgeGraphPage />;
+    case "morphoacousticrag":
+      return <MorphoAcousticRagPage />;
+    case "crossmodalconsensus":
+      return <CrossModalConsensusPage />;
     case "settings":
       return <Settings />;
     default:

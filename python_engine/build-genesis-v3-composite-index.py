@@ -181,7 +181,12 @@ def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], b
             "embedding_text": text, "embedding_text_sha256": sha256_text(text),
             "vector_origin": vector_info[1] if vector_info else "ollama",
         })
-    cache_hash = sha256_text(json.dumps({"model": model, "rows": planned}, ensure_ascii=False, sort_keys=True))
+    cache_hash = sha256_text(json.dumps({
+        "model": model,
+        "dataset_version": latest["version_id"],
+        "excluded_sha256": registry_sha256(DATA_ROOT),
+        "rows": planned,
+    }, ensure_ascii=False, sort_keys=True))
     index_dir = DATA_ROOT / "v3" / "composite-index"
     manifest_path = index_dir / "manifest.json"
     if manifest_path.exists():

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Layers, Sliders, Zap } from "@/components/icons";
+import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton";
 import { AnchoringDashboard } from "@/components/rag-v3/AnchoringDashboard";
 import { MacroGenerator } from "@/components/rag-v3/MacroGenerator";
 import { SemanticSearch } from "@/components/rag-v3/SemanticSearch";
@@ -12,6 +13,9 @@ import { useRagV3Store } from "@/store/rag-v3-store";
 
 export function RagParametersV3Page() {
   const statusModel = useRagV3Store((state) => state.status?.ollama_model);
+  const activeParameters = useRagV3Store((state) => state.activeParameters);
+  const query = useRagV3Store((state) => state.query);
+  const topK = useRagV3Store((state) => state.topK);
   const [configuredModel, setConfiguredModel] = useState<string | null>(null);
 
   useEffect(() => {
@@ -80,6 +84,7 @@ export function RagParametersV3Page() {
                 <span className="font-mono text-[10px] text-emerald-300">up to 50 channels</span>
               </div>
               <VirtualizedParamList className="min-h-0 flex-1" />
+              <div className="border-t border-white/10 p-2"><JournalDraftButton modality="text" engine="semantic-v3" parameters={activeParameters} model={{ id: model ?? "unknown" }} settings={{ top_k: topK }} query={query} label={`Semantic V3 · ${query.slice(0, 96) || "query"}`} /></div>
             </section>
 
             <aside className="min-h-0">

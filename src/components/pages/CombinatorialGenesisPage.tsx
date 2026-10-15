@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AlertCircle, Atom, BookOpenText, Database, FileCheck2, FlaskConical, GitCompareArrows, PackageCheck, Play, RotateCcw, ShieldCheck, Sparkles, Square } from "lucide-react";
+import { AlertCircle, Atom, BookOpenText, Database, FileCheck2, FlaskConical, GitCompareArrows, PackageCheck, Play, RotateCcw, ShieldCheck, Sparkles, Square, Wrench } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,17 @@ interface PreviewCandidate {
     donor_parameters: string[];
     explanation: string[];
   };
+}
+
+interface InboxRepairResult {
+  mode: "preview" | "apply";
+  file_count: number;
+  changed_file_count: number;
+  before_errors: number;
+  after_errors: number;
+  change_count: number;
+  backup_dir: string | null;
+  error?: string;
 }
 
 interface PreviewResponse {
@@ -203,6 +214,8 @@ export function CombinatorialGenesisPage() {
   const [pipelineRun, setPipelineRun] = useState<PipelineRun | null>(null);
   const [pipelineJob, setPipelineJob] = useState<PipelineJob | null>(null);
   const [pipelineError, setPipelineError] = useState<string | null>(null);
+  const [repairingInbox, setRepairingInbox] = useState<"preview" | "apply" | null>(null);
+  const [repairResult, setRepairResult] = useState<InboxRepairResult | null>(null);
   const [promptOpen, setPromptOpen] = useState(false);
   const [promptText, setPromptText] = useState("");
   const [promptError, setPromptError] = useState<string | null>(null);
@@ -399,6 +412,18 @@ export function CombinatorialGenesisPage() {
     }
   };
 
+  const repairInbox = async (apply: boolean) => {
+    setRepairingInbox(apply ? "apply" : "preview");
+    setPipelineError(null);
+    try {
+      const response = await fetch("/api/combinatorial-genesis/inbox-repair", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ apply }) });
+      const payload = await response.json() as InboxRepairResult;
+      if (!response.ok) throw new Error(payload.error ?? `HTTP ${response.status}`);
+      setRepairResult(payload);
+    } catch (caught) { setPipelineError(caught instanceof Error ? caught.message : String(caught)); }
+    finally { setRepairingInbox(null); }
+  };
+
   const showCollectionPrompt = async () => {
     setPromptOpen(true);
     if (promptText) return;
@@ -516,6 +541,12 @@ export function CombinatorialGenesisPage() {
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
+              <Button type="button" variant="outline" onClick={() => void repairInbox(false)} disabled={Boolean(pipelineJob?.running) || repairingInbox !== null}>
+                <Wrench className="size-4" />{repairingInbox === "preview" ? "Проверка..." : "Проверить и исправить"}
+              </Button>
+              <Button type="button" variant="outline" onClick={() => void repairInbox(true)} disabled={Boolean(pipelineJob?.running) || repairingInbox !== null || !repairResult || repairResult.changed_file_count === 0}>
+                <ShieldCheck className="size-4" />{repairingInbox === "apply" ? "Исправление..." : "Применить с бэкапом"}
+              </Button>
               <Button type="button" onClick={() => void runInboxPipeline()} disabled={Boolean(pipelineJob?.running)}>
                 <Play className="size-4" />
                 {pipelineJob?.running ? "Обработка данных..." : "Обработать inbox"}
@@ -530,6 +561,11 @@ export function CombinatorialGenesisPage() {
               </Button>
               </div>
             </div>
+            {repairResult ? <div className={`mt-2 rounded border p-2 text-xs ${repairResult.after_errors ? "border-amber-400/30 text-amber-200" : "border-emerald-400/30 text-emerald-200"}`}>
+              Repair {repairResult.mode}: файлов {repairResult.file_count}, изменяемых {repairResult.changed_file_count}, ошибок {repairResult.before_errors} → {repairResult.after_errors}, правок {repairResult.change_count}.
+              {repairResult.backup_dir ? <div className="mt-1 break-all text-zinc-400">Бэкап: {repairResult.backup_dir}</div> : null}
+              {repairResult.after_errors ? <div className="mt-1">Неоднозначные записи останутся в карантине и не будут выдуманы автоматически.</div> : null}
+            </div> : null}
             {pipelineJob?.running ? (
               <div className="mt-2 text-xs text-cyan-200">
                 Этап {pipelineJob.progress.current || "—"}/{pipelineJob.progress.total || "—"}: {pipelineJob.progress.step ?? "запуск"}

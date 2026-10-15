@@ -1,9 +1,76 @@
 # V3 technical names · part 2
 
-Generated: 2026-10-08T18:01:28.513Z
+Generated: 2026-10-15T08:02:15.668Z
 
+## dynamics / expansion
+
+- dynamic_range_expander_threshold_db
+- expander_ratio_factor
+- multiband_expansion_threshold_db
+- upward_expander_threshold_db
+## Dynamics / Frequency Selective Compression
+
+- deesser_sibilance_reduction_threshold_db
+## Dynamics / Frequency Selective Processing
+
+- dynamic_deasser_attenuation_ratio
+- multiband_deasser_threshold_db
+- multiband_transient_deasser_frequency_hz
+## dynamics / frequency_dynamics
+
+- dynamics_deesser_band_solo_toggle
+## Dynamics / Gate Processing
+
+- noise_gate_hysteresis_range_db
+## dynamics / gating
+
+- gate_attack_duration
+- transient_gate_threshold_db
+## dynamics / level_normalization
+
+- rms_level_target
+## Dynamics / Limiter Knees
+
+- dynamic_peak_limiter_knee_width_db
+## Dynamics / Limiter Lookahead
+
+- dynamic_peak_limiter_lookahead_ms
+## Dynamics / Limiter Processing
+
+- dynamic_lookahead_peak_limiter_release_ms
+## dynamics / limiting
+
+- dynamic_limiter_inter_sample_peak_headroom_db
+- dynamic_limiter_lookahead_time_ms
+- dynamics_limiter_release_time_constant_ms
+- limiter_ceiling_level
+- limiter_ceiling_level_db
+- limiter_ceiling_threshold_db
+- lookahead_limiter_ceiling_db
+- peak_limiter_release_time_ms
+## dynamics / lookahead_processing
+
+- lookahead_anticipation_time_ms
+## dynamics / loudness_adaptation
+
+- adaptive_loudness_time_constant
+- groove_inharmonicity_spatial_shadowing_loudness
+- shadowing_reflections_subconscious_foldback_loudness
+## Dynamics / Multiband Compression
+
+- multiband_compressor_threshold_low_db
+## Dynamics / Multiband Dynamics
+
+- multiband_compression_crossover_freq_hz
+- multiband_compressor_release_time_ms
+- multiband_expander_threshold_db
 ## Dynamics / Multiband Processing
 
+- multiband_compressor_attack_time_ms
+- multiband_compressor_crossover_filter_slope_db_per_octave
+- multiband_compressor_crossover_frequency_hz
+- multiband_compressor_knee_width_db
+- multiband_compressor_release_characteristic_mode
 - multiband_compressor_sidechain_filter_frequency_hz
 - multiband_compressor_sidechain_filter_highpass_cutoff_hz
 - multiband_compressor_sidechain_filter_lowpass_cutoff_hz
@@ -33,6 +100,13 @@ Generated: 2026-10-08T18:01:28.513Z
 ## dynamics / multiband_gate
 
 - multiband_gate_crossover_slope
+## dynamics / multiband_processing
+
+- dynamics_multiband_compressor_crossover_slope
+- dynamics_multiband_compressor_lookahead_time_ms
+- dynamics_multiband_crossover_frequencies_hz_array
+- dynamics_multiband_expander_ratio_per_band
+- dynamics_multiband_output_gain_compensation_array
 ## dynamics / noise_gate
 
 - noise_floor_gate_threshold_db
@@ -50,10 +124,12 @@ Generated: 2026-10-08T18:01:28.513Z
 ## dynamics / parallel_compression
 
 - compressor_mix_parallel_amount
+- dynamics_parallel_compression_blend_ratio
 - overwhelming_wall_of_sound_compression_ratio
 - parallel_compression_mix_ratio
 ## dynamics / parallel_processing
 
+- dynamics_parallel_saturation_blend_ratio
 - parallel_compression_mix
 ## Dynamics / Peak Limiting
 
@@ -90,6 +166,10 @@ Generated: 2026-10-08T18:01:28.513Z
 - dynamic_ducking_release_time_milliseconds
 ## dynamics / sidechain_compression
 
+- dynamics_compressor_sidechain_highpass_frequency
+- dynamics_sidechain_duck_depth_db
+- dynamics_sidechain_envelope_release_curve_shape
+- dynamics_sidechain_key_filter_type
 - sidechain_compressor_ducking_depth_db
 ## dynamics / sidechain_eq
 
@@ -239,6 +319,11 @@ Generated: 2026-10-08T18:01:28.513Z
 - transient_shaper_sustain_threshold_db
 ## dynamics / transient_shaping
 
+- dynamics_transient_designer_punch_frequency_hz
+- dynamics_transient_shaper_attack_bandwidth_hz
+- dynamics_transient_shaper_release_bandwidth_hz
+- dynamics_transient_shaper_sustain_decay_ratio
+- dynamics_transient_shaper_sustain_gain_db
 - transient_attack_shaping_curve
 - transient_attack_time_ms
 - transient_preservation_ratio
@@ -253,6 +338,7 @@ Generated: 2026-10-08T18:01:28.513Z
 ## dynamics / upward_compression
 
 - dynamics_upward_compression_amount
+- dynamics_upward_compressor_knee_width_db
 - upward_compression_amount
 - upward_compressor_gain_boost_db
 ## dynamics / velocity_response
@@ -503,6 +589,12 @@ Generated: 2026-10-08T18:01:28.513Z
 ## generative_algorithms / branching_process
 
 - generative_branching_factor
+## generative_algorithms / cellular_automata
+
+- generative_algorithms_cellular_automata_grid_wrap_mode
+- generative_algorithms_cellular_automata_initial_state_string
+- generative_algorithms_cellular_automata_neighborhood_radius
+- generative_algorithms_cellular_automata_rule_string
 ## generative_algorithms / chaos_synthesis
 
 - generative_logistic_map_bifurcation_parameter
@@ -513,12 +605,21 @@ Generated: 2026-10-08T18:01:28.513Z
 ## generative_algorithms / constraint
 
 - generative_rule_constraint_tightness
+## generative_algorithms / euclidean_rhythms
+
+- generative_algorithms_euclidean_rhythm_step_count
+## generative_algorithms / evolutionary_synthesis
+
+- generative_algorithms_genetic_algorithm_mutation_rate_percent
 ## generative_algorithms / fractal_complexity
 
 - fractal_dimension_hausdorff_index
 ## generative_algorithms / fractal_generation
 
 - generative_lindenmayer_system_recursion_depth
+## generative_algorithms / grammar_based_composition
+
+- generative_algorithms_grammar_rule_expansion_depth
 ## generative_algorithms / granular_pitch
 
 - stochastic_grain_pitch_spread
@@ -534,6 +635,18 @@ Generated: 2026-10-08T18:01:28.513Z
 ## generative_algorithms / l_systems
 
 - stochastic_l_system_branching_angle_degrees
+## generative_algorithms / lsystem_composition
+
+- generative_algorithms_lsystem_axiom_string
+- generative_algorithms_lsystem_iteration_count
+- generative_algorithms_lsystem_rule_definition_string
+## generative_algorithms / markov_chains
+
+- generative_algorithms_markov_chain_memory_depth
+- generative_algorithms_markov_chain_state_space_size
+- generative_algorithms_markov_chain_temperature
+- generative_algorithms_markov_transition_matrix_string
+- generative_algorithms_markov_transition_matrix_text
 ## generative_algorithms / markov_generation
 
 - generative_markov_node_pruning_threshold_ratio
@@ -568,6 +681,11 @@ Generated: 2026-10-08T18:01:28.513Z
 ## generative_algorithms / neuromorphic_synthesis
 
 - dendritic_neural_synaptic_pruning_threshold
+## generative_algorithms / noise_modulation
+
+- generative_algorithms_fractal_noise_lacunarity
+- generative_algorithms_fractal_noise_persistence_factor
+- generative_algorithms_perlin_noise_octave_count
 ## generative_algorithms / note_generation
 
 - probabilistic_note_repetition
@@ -602,6 +720,12 @@ Generated: 2026-10-08T18:01:28.513Z
 ## generative_algorithms / probabilistic_note_generation
 
 - stochastic_melody_skip_probability
+## generative_algorithms / random_walk
+
+- generative_algorithms_random_walk_momentum_factor
+## generative_algorithms / rhythmic_generation
+
+- generative_algorithms_schillinger_rhythm_ratio_string
 ## generative_algorithms / sequence_generation
 
 - generative_pattern_stochastic_jump_probability
@@ -609,15 +733,34 @@ Generated: 2026-10-08T18:01:28.513Z
 ## generative_algorithms / spectral_freezing
 
 - spectral_freeze_duration
+## generative_algorithms / statistical_generation
+
+- generative_algorithms_probability_distribution_skewness
 ## generative_algorithms / stochastic_control
 
 - stochastic_event_variability
 ## generative_algorithms / stochastic_generation
 
+- generative_algorithms_stochastic_drift_variance
+- generative_algorithms_stochastic_random_seed_string
+- generative_algorithms_stochastic_walk_boundary_condition
+- generative_algorithms_stochastic_walk_momentum_decay
 - generative_pattern_stochasticity_factor
+## generative_algorithms / turing_machine
+
+- turing_machine_sequence_length_steps
 ## generative_algorithms / velocity_humanization
 
 - stochastic_velocity_humanization_range_percent
+## lyrical_prosody / vocal_dynamics
+
+- vocal_prosody_sibilance_suppression_threshold
+## mastering_bus / dither_and_quantization
+
+- mastering_bus_dither_noise_shaping_profile
+## modulation_matrix / mpe_control
+
+- mpe_polyphonic_pressure_filter_sweep_depth
 ## Nonlinear Systems / Amplifier Distortion
 
 - crossover_distortion_threshold_v
@@ -683,128 +826,3 @@ Generated: 2026-10-08T18:01:28.513Z
 - saturator_triode_tube_anode_load_impedance_kohm
 - saturator_triode_tube_anode_voltage_volts
 - saturator_triode_tube_cathode_resistor_ohm
-- saturator_triode_tube_grid_bias_voltage_volts
-- saturator_triode_tube_grid_current_ma
-- saturator_triode_tube_grid_leak_capacitor_nfarad
-- saturator_triode_tube_grid_leak_capacitor_scaling
-- saturator_triode_tube_grid_leak_resistor_kohm
-- saturator_triode_tube_plate_voltage_ripple_percentage
-- saturator_triode_tube_screen_tap_ratio
-- saturator_triode_tube_screen_tap_ratio_decay_rate_db_per_sec
-- saturator_triode_tube_screen_tap_ratio_decay_rate_scaling_factor
-- saturator_triode_tube_screen_tap_ratio_decay_scaling_factor
-- saturator_triode_tube_screen_tap_ratio_decay_scaling_mode_type
-- saturator_triode_tube_screen_tap_ratio_decay_time_ms
-- saturator_triode_tube_screen_tap_ratio_mode
-- saturator_triode_tube_screen_tap_ratio_scaling
-## Nonlinear Systems / Distortion & Waveshaping
-
-- analog_diode_asymmetry_threshold_v
-- analog_saturation_harmonic_asymmetry_ratio
-- analog_saturation_soft_knee_curvature_ratio
-- analog_saturation_soft_knee_width_db
-- analog_saturation_transfer_function_exponent
-- analog_saturator_dc_blocking_filter_cutoff_hz
-- analog_saturator_eighteenth_harmonic_gain_db
-- analog_saturator_eighth_harmonic_gain_db
-- analog_saturator_eleventh_harmonic_gain_db
-- analog_saturator_even_harmonic_gain_db
-- analog_saturator_fifteenth_harmonic_gain_db
-- analog_saturator_fifth_harmonic_gain_db
-- analog_saturator_fourteenth_harmonic_gain_db
-- analog_saturator_fourth_harmonic_gain_db
-- analog_saturator_intermodulation_distortion_ratio
-- analog_saturator_nineteenth_harmonic_gain_db
-- analog_saturator_ninth_harmonic_gain_db
-- analog_saturator_odd_harmonic_gain_db
-- analog_saturator_second_harmonic_gain_db
-- analog_saturator_second_harmonic_phase_deg
-- analog_saturator_seventeenth_harmonic_gain_db
-- analog_saturator_seventh_harmonic_gain_db
-- analog_saturator_sixteenth_harmonic_gain_db
-- analog_saturator_sixth_harmonic_gain_db
-- analog_saturator_tenth_harmonic_gain_db
-- analog_saturator_third_harmonic_gain_db
-- analog_saturator_third_harmonic_phase_deg
-- analog_saturator_thirteenth_harmonic_gain_db
-- analog_saturator_twelfth_harmonic_gain_db
-- analog_saturator_twentieth_harmonic_gain_db
-- analog_saturator_twenty_eighth_harmonic_gain_db
-- analog_saturator_twenty_fifth_harmonic_gain_db
-- analog_saturator_twenty_first_harmonic_gain_db
-- analog_saturator_twenty_fourth_harmonic_gain_db
-- analog_saturator_twenty_ninth_harmonic_gain_db
-- analog_saturator_twenty_second_harmonic_gain_db
-- analog_saturator_twenty_seventh_harmonic_gain_db
-- analog_saturator_twenty_sixth_harmonic_gain_db
-- analog_saturator_twenty_third_harmonic_gain_db
-- asymmetric_clip_threshold_db
-- diode_clipper_forward_bias_voltage_v
-- harmonic_distortion_asymmetry_bias_ratio
-- saturator_dc_offset_bias_volts
-## Nonlinear Systems / Heterodyning
-
-- diode_ring_modulator_bias_voltage
-- subharmonic_ring_modulator_carrier_frequency_hz
-## Nonlinear Systems / Magnetic Saturation
-
-- magnetic_hysteresis_saturation_ratio
-## Nonlinear Systems / Op-Amp Circuit Emulation
-
-- analog_opamp_slew_rate_volts_per_microsecond
-## Nonlinear Systems / Pentode Tube Emulation
-
-- analog_vacuum_tube_screen_grid_voltage_volts
-## Nonlinear Systems / Phase Distortion
-
-- sub_bass_phase_distortion_amount_rad
-## Nonlinear Systems / Subharmonic Generation
-
-- subharmonic_distortion_asymmetry_factor
-## Nonlinear Systems / Tape Head Emulation
-
-- magnetic_tape_head_bump_frequency_hz
-## Nonlinear Systems / Tape Saturation Curve
-
-- analog_tape_saturation_soft_knee_db
-## Nonlinear Systems / Tape Saturation
-
-- analog_tape_head_bump_resonance_hz
-- analog_tape_saturation_thd_percent
-- tape_saturation_bias_voltage_v
-## Nonlinear Systems / Transformer Circuit Modeling
-
-- transformer_magnetizing_inductance_henries
-## Nonlinear Systems / Transformer Emulation
-
-- transformer_core_hysteresis_loss_watts
-## Nonlinear Systems / Transformer Saturation
-
-- transformer_saturation_core_loss_ratio
-## Nonlinear Systems / Tube Amplification
-
-- analog_tube_plate_voltage_v
-## Nonlinear Systems / Tube Asymmetry Dynamics
-
-- analog_vacuum_tube_anode_saturation_knee_asymmetry_smoothing_rate
-## Nonlinear Systems / Tube Asymmetry Modeling
-
-- analog_vacuum_tube_anode_saturation_knee_asymmetry_factor
-## Nonlinear Systems / Tube Asymmetry Smoothing
-
-- analog_vacuum_tube_anode_saturation_knee_asymmetry_smoothing_factor
-## Nonlinear Systems / Tube Circuit Emulation
-
-- analog_vacuum_tube_cathode_decoupling_capacitance_uf
-- analog_vacuum_tube_plate_resistance_ohms
-- vacuum_tube_anode_voltage_starvation_volts
-## Nonlinear Systems / Tube Circuit Modeling
-
-- analog_vacuum_tube_grid_current_bias_amperes
-## Nonlinear Systems / Tube Curvature Control
-
-- analog_vacuum_tube_anode_saturation_knee_smoothing_factor
-## Nonlinear Systems / Tube Dynamic Asymmetry
-
-- analog_vacuum_tube_anode_saturation_knee_asymmetry_decay_ms
-- analog_vacuum_tube_anode_saturation_knee_asymmetry_smoothing_ms

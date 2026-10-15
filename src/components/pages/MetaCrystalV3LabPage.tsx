@@ -62,7 +62,7 @@ function Help({ children }: { children: string }) {
 }
 
 export function MetaCrystalV3LabPage() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(() => typeof window === "undefined" ? "" : new URLSearchParams(window.location.search).get("query") ?? "");
   const [count, setCount] = useState("3");
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [edits, setEdits] = useState<string[]>([]);

@@ -137,5 +137,17 @@ z-ai-glm-flowmusic-rag-ui-v2/anchoring/eval_report.json
 /TASK.md
 /README_SETUP.md
 /STAGED_TASK.md
+/TASK-list.md
 /STAGED_TASK_part2.md
+/task-cross-modal-consensus.md
 /reports/stage4_anchor_logs/*.json
+/data/combinatorial-genesis/white-space/
+/data/combinatorial-genesis/inbox-repair-report.json
+/data/combinatorial-genesis/flowmusic-inbox-repair-backups/
+/data/combinatorial-genesis/knowledge-graph/
+/data/combinatorial-genesis/morpho-siglip/
+/data/combinatorial-genesis/morpho-siglip-row-cache/
+/data/combinatorial-genesis/morpho-siglip-value-cache/
+/data/combinatorial-genesis/morpho-siglip.building/
+/data/combinatorial-genesis/morpho-siglip.previous/
+/data/cross-modal-consensus/

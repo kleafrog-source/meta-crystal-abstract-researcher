@@ -867,3 +867,47 @@ Potential improvements to the application modes:
 6. **Auto-Publish**: Optional auto-publish for high-confidence candidates
 7. **Cross-Mode Search**: Unified search across all parameter sources
 8. **Parameter Relationships**: Track and visualize parameter dependencies
+
+---
+
+## White Space Discovery
+
+Route: `/white-space-discovery`.
+
+This read-only V3 analysis uses the active canonical snapshot and the existing composite index. It reports taxonomy coverage gaps, rare or source-less atoms, low local semantic density, and isolated knowledge-graph parameters. Every result includes deterministic evidence and a suggested query that can be opened in Meta-Crystal V3 Lab or Combinatorial Synthesis. Building and stopping the report does not call Ollama, publish parameters, or modify V2/V3 datasets.
+
+Runtime artifacts are stored under `data/combinatorial-genesis/white-space/` and are excluded from Git. A dataset, exclusion registry, composite-index, or graph change marks the report stale.
+
+## Parameter Knowledge Graph
+
+Route: `/knowledge-graph`.
+
+The graph is a read-only derivative of the active V3 snapshot. It contains parameter, atom, category, sub-category, quantity-kind, and UI-element nodes. Taxonomy/atom edges come directly from dataset fields; semantic edges are mutual bounded k-nearest-neighbor relationships reproduced from the active composite vectors. The interface only requests a bounded ego graph, never the full graph.
+
+The page supports build, stop, refresh, exact `technical_name` lookup, depth 1–2, edge filtering, a tabular subgraph, and edge provenance. Runtime artifacts live under `data/combinatorial-genesis/knowledge-graph/` and are excluded from Git. Building is CPU-only and does not call Ollama.
+
+## Morpho-Acoustic RAG
+
+Route: `/morpho-acoustic-rag`.
+
+This mode maps an uploaded image to relevant sound/structure parameters from the active V3 snapshot through the shared text/image space of `google/siglip2-base-patch16-224`. The model is loaded locally from `MMSS_SIGLIP_MODEL`, runs in float32 on CPU, and does not use Ollama or the GPU. Image similarity controls retrieval; the selected value mode independently controls automatic Range, Select, and Toggle values. Every returned control remains editable in the reused V3 control bank and can be exported through Clean Macro Output.
+
+The text index is built in batches, reuses content-addressed row vectors, activates through a staging directory, and is marked stale when the V3 source or exclusion registry changes. Index and search operations both have explicit stop controls. Runtime vectors and row cache under `data/combinatorial-genesis/morpho-siglip*` are excluded from Git.
+
+Parameter values are inferred in the same SigLIP2 image/text space from the existing V3 Range anchors, Select option texts, semantic axes, polarity matrix, and relation anchors. `Expressive` is the default: it selects the strongest Range anchor, interpolates only inside its local neighboring interval, and accepts the highest-scoring Select/Toggle option without a conservative margin. `Conservative` uses a soft weighted position, moves 35% from the stored default toward it, and requires a larger Select/Toggle margin. `Default only` disables value inference while preserving image-based retrieval. Value vectors are generated lazily for the current Top-K and stored in the ignored `morpho-siglip-value-cache`.
+
+## Cross-Modal Consensus
+
+Route: `/cross-modal-consensus`.
+
+Iterations 1–3 provide the Cross-Modal Journal, Cycle Verification and Lingua Franca Bridge. Audio CLAP, Morpho-Acoustic and Semantic V3 results can be saved explicitly as immutable content-addressed snapshots. Image assets and selected audio fragments are retained locally by SHA-256; text sessions remain asset-free. Repeating the same save is idempotent. Records preserve the active V3 dataset identity, model metadata, retrieval ranks, normalized within-source scores, chosen values and provenance.
+
+The Journal index and manifest are updated atomically. Deleting a record removes its media asset only when no other record references the same asset. Runtime records and user media live under `data/cross-modal-consensus/` and are excluded from Git.
+
+The **Verify cycle** action asks the active chat model for a strict structured EN/RU reverse query, then calls `searchV3` directly with an empty current-value state and the original Top-K. The chat model receives a compact set of up to 12 human-readable acoustic descriptions and selected values; technical names and administrative metadata are deliberately omitted so a small local model does not mistake reverse synthesis for a request to explain controls. For Semantic V3 the original query is primary evidence. Replay uses one reverse-query language matching the original query (English by default for media), preventing translated duplicates from becoming competing multi-vector concepts. It compares the original and replayed parameter sets using weighted rank overlap, Jaccard, value agreement and retrieval-scope agreement. The calibrated `cycle-v2` score is `0.50 overlap + 0.25 Jaccard + 0.20 values + 0.05 scopes`; scores at or above `0.55` are `verified`, `0.20–0.55` are `review`, and lower scores are `rejected`. Raw model output is retained when structured parsing fails. Every retry is a separate immutable verification artifact, while the source Journal record remains unchanged. A human `approved/rejected` verdict is stored as a separate immutable artifact and never overwrites machine metrics. Manual approval makes a record eligible for Bridge; manual rejection remains visible as an explicit reviewer decision. The UI can stop the active chat request and repeat verification after model or dataset changes.
+
+The **Lingua Franca Bridge** embeds `query_en + query_ru + key_concepts` from eligible cycle artifacts with the currently configured Ollama embedding model. It never compares or combines raw CLAP, SigLIP2 and Ollama vectors. The local `text-index` stores metadata in `rows.json`, normalized vectors in `embeddings.f32`, and model/dimension/journal identity in `manifest.json`. Rebuilding is incremental while the model is unchanged; matching verification/text hashes reuse their existing vectors. A model change marks the index stale and requires a rebuild. Search is strictly cross-modal (`audio → image` or `image → audio`), excludes the source record and duplicate asset hashes, uses only `verified` records by default, and includes `review` only through the explicit UI switch. `rejected` records are never indexed. Similarity shown in the UI is cosine similarity of reverse-query texts, not probability or CLAP/SigLIP2 similarity.
+
+The **Consensus Engine** accepts explicitly selected Journal snapshots with independent user weights in `[0,1]`. Parameter votes use deterministic noisy-OR over within-source normalized scores plus a bounded agreement bonus. Range values are converted to normalized positions and resolved by weighted median before clamping and step snapping. Select and Toggle values use weighted categorical voting with the stored default as the deterministic tie-break. Text, String and Array values are retained only when sources agree exactly; otherwise the stored default is used and the row is marked as a conflict. Optional Knowledge Graph expansion is depth=1, limited to the two strongest semantic neighbours per directly selected parameter, multiplied by a visible fixed graph penalty, and never adds a second vote to a parameter already supported directly. The UI exposes source weights, graph toggle, provenance and conflicts, then reuses the V3 `VirtualizedParamList` and controlled `MacroGenerator` for manual adjustment and export.
+
+The **Transitional Query** selects two different Journal records as A and B. The server performs one lightweight preparation step that joins their parameter snapshots to current V3 metadata; moving the slider afterwards is entirely local and does not call CLAP, SigLIP2, Ollama or an API. Parameter score is `(1-t) * scoreA + t * scoreB`, with an absent endpoint contributing score `0`. Range values interpolate through normalized `[0,1]` positions and are clamped/snapped to the current V3 range. Select and Toggle values use score-weighted voting with an `0.08` hysteresis band around the switch, preventing jitter. Text/String/Array use an endpoint value at `t=0/1`, exact agreement inside the interval, or default when the endpoints conflict. Top-K is re-ranked deterministically by interpolated score and `technical_name`. A transition point reuses the V3 control bank and macro export and can be stored as `modality: transition`; running Cycle Verification on that Journal record provides the optional LLM description and V3 replay.

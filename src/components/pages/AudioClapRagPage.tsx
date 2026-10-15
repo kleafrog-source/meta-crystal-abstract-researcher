@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AudioWaveform, Database, HardDrive, Loader2, RotateCcw, Search, Square, Upload } from "lucide-react";
 import { AudioWaveformEditor } from "@/components/audio/AudioWaveformEditor";
+import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton";
 import { MacroGenerator } from "@/components/rag-v3/MacroGenerator";
 import { VirtualizedParamList } from "@/components/rag-v3/VirtualizedParamList";
 import { Badge } from "@/components/ui/badge";
@@ -50,7 +51,7 @@ export function AudioClapRagPage() {
         </div><div className="space-y-3 rounded border border-white/10 bg-black/30 p-3">
           <div className="flex items-center justify-between"><FieldLabel label="Позиция фрагмента" hint="Синхронизирована с голубой областью на волне." /><span className="font-mono text-xs text-cyan-200">{fragmentLabel}</span></div>
           <div className="grid grid-cols-3 gap-2"><div><FieldLabel label="Offset, сек" hint="Начало участка." /><Input type="number" min={0} max={maxOffset} step={0.1} value={offset} onChange={(e) => setOffset(e.target.value)} /></div><div><FieldLabel label="Duration, сек" hint="От 1 до 800 секунд." /><Input type="number" min={1} max={Math.min(800, audioDuration || 800)} step={0.5} value={duration} onChange={(e) => setDuration(e.target.value)} /></div><div><FieldLabel label="Top-K" hint="От 3 до 100 параметров." /><Input type="number" min={3} max={100} value={topK} onChange={(e) => setTopK(e.target.value)} /></div></div>
-          <div className="flex gap-2"><Button className="flex-1" onClick={() => void searchAudio()} disabled={!file || !indexStatus.ready || busy !== null}>{busy === "search" ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}{busy === "search" ? "Анализ..." : "Найти параметры"}</Button>{busy === "search" ? <Button variant="destructive" onClick={() => void stopSearch()}><Square className="size-4" />Остановить поиск</Button> : null}<Button variant="outline" onClick={() => void saveFragment()} disabled={!file || busy !== null}><HardDrive className="size-4" />Сохранить WAV</Button></div>
+          <div className="flex flex-wrap gap-2"><Button className="flex-1" onClick={() => void searchAudio()} disabled={!file || !indexStatus.ready || busy !== null}>{busy === "search" ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}{busy === "search" ? "Анализ..." : "Найти параметры"}</Button>{busy === "search" ? <Button variant="destructive" onClick={() => void stopSearch()}><Square className="size-4" />Остановить поиск</Button> : null}<Button variant="outline" onClick={() => void saveFragment()} disabled={!file || busy !== null}><HardDrive className="size-4" />Сохранить WAV</Button><JournalDraftButton modality="audio" engine="clap" parameters={parameters} model={{ id: indexStatus.model ?? "laion/clap-htsat-fused" }} settings={{ offset: effectiveOffset, duration: effectiveDuration, top_k: Number(topK) || 20 }} asset={file} label={`Audio · ${file?.name ?? "reference"} · ${fragmentLabel}`} /></div>
         </div></div>
         {notice ? <div className="text-xs text-emerald-300">{notice}</div> : null}{error ? <div className="rounded border border-red-500/30 bg-red-950/20 p-3 text-sm text-red-300">{error}</div> : null}
       </section>

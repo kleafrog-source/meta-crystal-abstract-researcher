@@ -1,6 +1,6 @@
 # V3 technical names · part 1
 
-Generated: 2026-10-08T18:01:28.513Z
+Generated: 2026-10-15T08:02:15.668Z
 
 ## Acoustic Physics / Acoustic Absorption Materials
 
@@ -282,6 +282,9 @@ Generated: 2026-10-08T18:01:28.513Z
 ## acoustic_physics / boundary_acoustics
 
 - wall_boundary_reflection_coefficient
+## acoustic_physics / bowed_strings
+
+- acoustic_physics_bow_hair_roughness_coefficient
 ## acoustic_physics / cavity_coupling
 
 - acoustic_cavity_coupling_coefficient
@@ -353,6 +356,22 @@ Generated: 2026-10-08T18:01:28.513Z
 ## acoustic_physics / physical_instrument_modeling
 
 - woodwind_embouchure_hole_impedance_ohms
+## acoustic_physics / physical_modeling
+
+- acoustic_physics_bowed_string_bow_velocity_m_per_sec
+- acoustic_physics_cymbal_strike_position_ratio
+- acoustic_physics_drum_head_tension_variance_percent
+- acoustic_physics_drum_head_tuning_offset_cents
+- acoustic_physics_drum_shell_material_density
+- acoustic_physics_drum_shell_resonance_damping_factor
+- acoustic_physics_guitar_pickup_position_ratio
+- acoustic_physics_piano_hammer_felt_hardness_index
+- acoustic_physics_piano_pedal_mechanism_noise_level_db
+- acoustic_physics_piano_string_inharmonicity_coefficient
+- acoustic_physics_resonator_body_volume_cubic_meters
+- acoustic_physics_soundboard_wood_age_factor
+- acoustic_physics_string_body_resonance_coupling_db
+- acoustic_physics_string_inharmonicity_compensation_toggle
 ## acoustic_physics / plasma_acoustics
 
 - magnetohydrodynamic_resonance_coupling_factor
@@ -444,6 +463,13 @@ Generated: 2026-10-08T18:01:28.513Z
 ## acoustic_physics / string_physics
 
 - string_fundamental_linear_mass_density
+## acoustic_physics / string_resonance
+
+- acoustic_physics_bridge_impedance_matching_factor
+- acoustic_physics_string_damping_factor
+- acoustic_physics_string_excitation_position_ratio
+- acoustic_physics_string_fret_noise_amplitude_db
+- acoustic_physics_string_pluck_noise_amplitude_db
 ## acoustic_physics / structural_resonance
 
 - acoustic_structural_resonance_q_factor
@@ -490,6 +516,12 @@ Generated: 2026-10-08T18:01:28.513Z
 ## acoustic_physics / waveguide
 
 - acoustic_waveguide_bend_angle_degrees
+## acoustic_physics / woodwind_modeling
+
+- acoustic_physics_flute_embouchure_hole_diameter_ratio
+- acoustic_physics_reed_stiffness_nonlinearity_factor
+- acoustic_physics_woodwind_bore_material_density
+- acoustic_physics_woodwind_bore_taper_ratio
 ## Combinatorial Genesis / a3_sruti
 
 - a3_sruti_polyphonic_isotropic_mix
@@ -620,10 +652,22 @@ Generated: 2026-10-08T18:01:28.513Z
 ## cross_domain_controls / crossover_filtering
 
 - sub_bass_crossover_frequency_hz
+## cross_domain_controls / cv_to_midi
+
+- cross_domain_cv_to_midi_pitch_bend_smoothing_ms
 ## cross_domain_controls / dynamic_ducking
 
 - sub_bass_sidechain_ducking_depth_db
 - sub_bass_sidechain_ducking_release_time_ms
+## cross_domain_controls / envelope_following
+
+- cross_domain_controls_audio_to_cv_envelope_asymmetry_ratio
+## cross_domain_controls / midi_clock_sync
+
+- cross_domain_controls_midi_clock_tempo_nudge_amount_bpm
+## cross_domain_controls / midi_to_cv
+
+- cross_domain_midi_to_cv_gate_inversion_toggle
 ## cross_domain_controls / parameter_coupling
 
 - cross_domain_coupling_strength
@@ -701,6 +745,9 @@ Generated: 2026-10-08T18:01:28.513Z
 - dynamic_compressor_attack_time_ms
 - dynamic_downward_compressor_threshold_db
 - dynamic_range_compression_ratio
+- dynamics_compressor_auto_makeup_gain_target_lufs
+- dynamics_compressor_knee_softness_db
+- dynamics_compressor_stereo_link_mode
 - feedback_compressor_detector_integration_time_ms
 - feedforward_compressor_attack_time_ms
 - feedforward_compressor_release_time_ms
@@ -771,9 +818,16 @@ Generated: 2026-10-08T18:01:28.513Z
 
 - dynamic_envelope_follower_attack_ms
 - envelope_follow_smoothing_time_ms
+## dynamics / envelope_following
+
+- dynamics_envelope_follower_attack_smoothing_ms
+- dynamics_envelope_follower_rms_window_size_ms
 ## dynamics / envelope_gate
 
 - envelope_gate_threshold_db
+## dynamics / envelope_generation
+
+- dynamics_envelope_generator_hold_time_ms
 ## dynamics / envelope_tracking
 
 - envelope_follower_release_time_ms
@@ -854,63 +908,3 @@ Generated: 2026-10-08T18:01:28.513Z
 - dynamic_decompressor_threshold_db
 - dynamic_expansion_ratio
 - dynamic_range_decompressor_expansion_ratio
-- dynamic_range_expander_threshold_db
-- expander_ratio_factor
-- multiband_expansion_threshold_db
-- upward_expander_threshold_db
-## Dynamics / Frequency Selective Compression
-
-- deesser_sibilance_reduction_threshold_db
-## Dynamics / Frequency Selective Processing
-
-- dynamic_deasser_attenuation_ratio
-- multiband_deasser_threshold_db
-- multiband_transient_deasser_frequency_hz
-## Dynamics / Gate Processing
-
-- noise_gate_hysteresis_range_db
-## dynamics / gating
-
-- gate_attack_duration
-- transient_gate_threshold_db
-## dynamics / level_normalization
-
-- rms_level_target
-## Dynamics / Limiter Knees
-
-- dynamic_peak_limiter_knee_width_db
-## Dynamics / Limiter Lookahead
-
-- dynamic_peak_limiter_lookahead_ms
-## Dynamics / Limiter Processing
-
-- dynamic_lookahead_peak_limiter_release_ms
-## dynamics / limiting
-
-- dynamic_limiter_inter_sample_peak_headroom_db
-- dynamic_limiter_lookahead_time_ms
-- limiter_ceiling_level
-- limiter_ceiling_level_db
-- limiter_ceiling_threshold_db
-- lookahead_limiter_ceiling_db
-- peak_limiter_release_time_ms
-## dynamics / loudness_adaptation
-
-- adaptive_loudness_time_constant
-- groove_inharmonicity_spatial_shadowing_loudness
-- shadowing_reflections_subconscious_foldback_loudness
-## Dynamics / Multiband Compression
-
-- multiband_compressor_threshold_low_db
-## Dynamics / Multiband Dynamics
-
-- multiband_compression_crossover_freq_hz
-- multiband_compressor_release_time_ms
-- multiband_expander_threshold_db
-## Dynamics / Multiband Processing
-
-- multiband_compressor_attack_time_ms
-- multiband_compressor_crossover_filter_slope_db_per_octave
-- multiband_compressor_crossover_frequency_hz
-- multiband_compressor_knee_width_db
-- multiband_compressor_release_characteristic_mode

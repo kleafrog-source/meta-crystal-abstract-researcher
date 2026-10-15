@@ -18,6 +18,8 @@ import {
   Database,
   CircleDot,
   Sliders,
+  Search,
+  BookOpen,
 } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
@@ -44,6 +46,10 @@ export type PageId =
   | "combinatorialsynthesis"
   | "audioclaprag"
   | "metacrystalv3lab"
+  | "whitespacediscovery"
+  | "knowledgegraph"
+  | "morphoacousticrag"
+  | "crossmodalconsensus"
   | "settings";
 
 interface NavItem {
@@ -191,6 +197,30 @@ const NAV_ITEMS: NavItem[] = [
     label: "Meta-Crystal V3 Lab",
     icon: <Brain className="h-4 w-4" />,
     description: "RAG-куратор параметров V3 из библиотеки Мета-Кристаллов",
+  },
+  {
+    id: "whitespacediscovery",
+    label: "White Space Discovery",
+    icon: <Search className="h-4 w-4" />,
+    description: "Анализ таксономических, атомных и семантически разреженных областей V3",
+  },
+  {
+    id: "knowledgegraph",
+    label: "Knowledge Graph",
+    icon: <Workflow className="h-4 w-4" />,
+    description: "Проверяемый граф параметров, атомов, таксономии и семантических соседей V3",
+  },
+  {
+    id: "morphoacousticrag",
+    label: "Morpho-Acoustic RAG",
+    icon: <CircleDot className="h-4 w-4" />,
+    description: "CPU-поиск параметров V3 по изображению через локальный SigLIP2",
+  },
+  {
+    id: "crossmodalconsensus",
+    label: "Cross-Modal Consensus",
+    icon: <BookOpen className="h-4 w-4" />,
+    description: "Journal, cycle verification и консенсус результатов Audio, Image и Semantic V3",
   },
 ];
 

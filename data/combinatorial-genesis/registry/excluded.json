@@ -1,12 +1,19 @@
 {
   "version": 1,
-  "updated_at": "2026-10-08T10:37:26.187Z",
+  "updated_at": "2026-10-13T04:30:42.875Z",
   "entries": [
     {
       "technical_name": "auto_recursion_phase_adjacent_error_diffusion",
       "excluded_at": "2026-10-08T10:37:26.187Z",
       "excluded_by": "user",
       "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "auto_recursion_target_d_metric_threshold",
+      "excluded_at": "2026-10-13T04:30:42.875Z",
+      "excluded_by": "user",
+      "reason": "bugged",
       "scope": "sound"
     },
     {
@@ -28,6 +35,27 @@
       "excluded_at": "2026-10-08T10:37:26.187Z",
       "excluded_by": "user",
       "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "omega_synthesis_strong_reset_independence_enforcement",
+      "excluded_at": "2026-10-13T04:30:33.151Z",
+      "excluded_by": "user",
+      "reason": "bugged",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "validation_recursion_depth_r_max_enforcement",
+      "excluded_at": "2026-10-13T04:30:13.729Z",
+      "excluded_by": "user",
+      "reason": "bugged",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "validation_unstable_flag_recursion_rollback_depth",
+      "excluded_at": "2026-10-13T04:27:39.574Z",
+      "excluded_by": "user",
+      "reason": "bugged",
       "scope": "sound"
     }
   ]

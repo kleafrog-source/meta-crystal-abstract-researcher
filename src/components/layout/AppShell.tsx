@@ -37,6 +37,19 @@ function pathnameToPage(pathname: string): PageId {
     return "metacrystalv3lab";
   }
 
+  if (pathname === "/white-space-discovery") {
+    return "whitespacediscovery";
+  }
+  if (pathname === "/knowledge-graph") {
+    return "knowledgegraph";
+  }
+  if (pathname === "/morpho-acoustic-rag") {
+    return "morphoacousticrag";
+  }
+  if (pathname === "/cross-modal-consensus") {
+    return "crossmodalconsensus";
+  }
+
   return "dashboard";
 }
 
@@ -96,6 +109,23 @@ export function AppShell({ children }: AppShellProps) {
 
     if (page === "metacrystalv3lab") {
       router.push("/meta-crystal-v3-lab");
+      return;
+    }
+
+    if (page === "whitespacediscovery") {
+      router.push("/white-space-discovery");
+      return;
+    }
+    if (page === "knowledgegraph") {
+      router.push("/knowledge-graph");
+      return;
+    }
+    if (page === "morphoacousticrag") {
+      router.push("/morpho-acoustic-rag");
+      return;
+    }
+    if (page === "crossmodalconsensus") {
+      router.push("/cross-modal-consensus");
       return;
     }
 

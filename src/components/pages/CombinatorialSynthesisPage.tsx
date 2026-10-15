@@ -94,7 +94,7 @@ export function CombinatorialSynthesisPage() {
   const [chatModel, setChatModel] = useState<string>("—");
   const [indexModel, setIndexModel] = useState<string>("—");
   const [macro, setMacro] = useState("");
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(() => typeof window === "undefined" ? "" : new URLSearchParams(window.location.search).get("query") ?? "");
   const [seed, setSeed] = useState("0");
   const [limit, setLimit] = useState("30");
   const [sourceCount, setSourceCount] = useState("3");

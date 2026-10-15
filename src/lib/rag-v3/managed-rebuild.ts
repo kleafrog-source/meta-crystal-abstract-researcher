@@ -4,6 +4,7 @@ import path from "node:path";
 
 import { loadEmbeddingRuntimeSettings, embeddingProcessEnv } from "@/lib/embedding-settings";
 import { excludedRegistrySha, readExcludedRegistry } from "@/lib/combinatorial-genesis/registry";
+import { getV3SnapshotIdentity } from "@/lib/rag-v3/snapshot";
 
 export type RebuildKind = "composite" | "atoms" | "anchors" | "range" | "select" | "relations" | "clap" | "all_qwen";
 export type ArtifactKind = Exclude<RebuildKind, "all_qwen">;
@@ -146,15 +147,15 @@ async function readJson(filePath: string): Promise<Record<string, unknown> | nul
 }
 
 export async function getArtifactStatuses(): Promise<{ artifacts: ArtifactStatus[]; active_model: string; registry_sha256: string; active_parameters: number }> {
-  const [settings, registry, latest] = await Promise.all([
+  const [settings, registry, latest, snapshot] = await Promise.all([
     loadEmbeddingRuntimeSettings(),
     readExcludedRegistry(),
     readJson(path.join(DATA_ROOT, "datasets", "latest.json")),
+    getV3SnapshotIdentity(),
   ]);
   const registrySha = excludedRegistrySha(registry);
   const versionId = String(latest?.version_id ?? "");
-  const dataset = await readJson(path.join(V3_ROOT, "dataset.json")) as unknown as Array<{ technical_name: string }> | null;
-  const activeCount = Math.max(0, (dataset?.length ?? 0) - registry.entries.length);
+  const activeCount = snapshot.parameter_count;
   const paths: Record<ArtifactKind, string> = {
     composite: path.join(V3_ROOT, "composite-index", "manifest.json"),
     atoms: path.join(DATA_ROOT, "indexes", versionId, "manifest.json"),

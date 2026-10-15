@@ -150,6 +150,40 @@ def run_pipeline() -> int:
             write_report(report)
             print(json.dumps(report, ensure_ascii=False))
             return completed.returncode
+        if script == "collect-json-from-folder.py":
+            collection_report_path = DATA_ROOT / "flowmusic-output" / "collection_report.json"
+            collection_report = json.loads(collection_report_path.read_text(encoding="utf-8"))
+            accepted = int(collection_report.get("accepted_occurrences", 0))
+            rejected = int(collection_report.get("rejected_occurrences", 0))
+            total = accepted + rejected
+            max_rejection_fraction = float(os.environ.get("COMBINATORIAL_MAX_REJECTION_FRACTION", "0.25"))
+            rejection_fraction = rejected / total if total else 1.0
+            if accepted == 0 or rejection_fraction > max_rejection_fraction:
+                result["status"] = "blocked_by_quality_gate"
+                result["quality_gate"] = {
+                    "accepted_occurrences": accepted,
+                    "rejected_occurrences": rejected,
+                    "rejection_fraction": rejection_fraction,
+                    "maximum_rejection_fraction": max_rejection_fraction,
+                }
+                report = {
+                    "status": "failed_quality_gate",
+                    "started_at": started_at,
+                    "finished_at": datetime.now(timezone.utc).isoformat(),
+                    "inbox_files": files,
+                    "archive_files": archive_files,
+                    "version_before": version_before,
+                    "version_after": latest_version(),
+                    "steps": results,
+                }
+                write_report(report)
+                print(json.dumps(report, ensure_ascii=False))
+                print(
+                    f"Collector rejected {rejected}/{total} occurrences ({rejection_fraction:.1%}); "
+                    "dataset freeze was blocked. Repair or remove invalid inbox files first.",
+                    file=sys.stderr,
+                )
+                return 4
 
     version_after = latest_version()
     report = {
