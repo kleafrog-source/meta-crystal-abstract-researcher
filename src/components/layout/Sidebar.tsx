@@ -45,11 +45,13 @@ export type PageId =
   | "combinatorialgenesis"
   | "combinatorialsynthesis"
   | "audioclaprag"
+  | "audiotoparameter"
   | "metacrystalv3lab"
   | "whitespacediscovery"
   | "knowledgegraph"
   | "morphoacousticrag"
   | "crossmodalconsensus"
+  | "vocalallocationmatrix"
   | "settings";
 
 interface NavItem {
@@ -193,6 +195,12 @@ const NAV_ITEMS: NavItem[] = [
     description: "Cross-modal search of V3 parameters from an audio reference with LAION-CLAP",
   },
   {
+    id: "audiotoparameter",
+    label: "Audio-to-Parameter",
+    icon: <Activity className="h-4 w-4" />,
+    description: "Авто-разбивка аудио по таймингам с batch поиском и интерполяцией параметров",
+  },
+  {
     id: "metacrystalv3lab",
     label: "Meta-Crystal V3 Lab",
     icon: <Brain className="h-4 w-4" />,
@@ -221,6 +229,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "Cross-Modal Consensus",
     icon: <BookOpen className="h-4 w-4" />,
     description: "Journal, cycle verification и консенсус результатов Audio, Image и Semantic V3",
+  },
+  {
+    id: "vocalallocationmatrix",
+    label: "Vocal Allocation Matrix",
+    icon: <Sliders className="h-4 w-4" />,
+    description: "Целевой подбор языков, TECH4, FX4 и слоёв вокальной матрицы",
   },
 ];
 

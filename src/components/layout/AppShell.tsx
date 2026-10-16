@@ -5,7 +5,10 @@ import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 interface AppShellProps {
-  children: (props: { activePage: PageId; setActivePage: (p: PageId) => void }) => React.ReactNode;
+  children: (props: {
+    activePage: PageId;
+    setActivePage: (p: PageId) => void;
+  }) => React.ReactNode;
 }
 
 function pathnameToPage(pathname: string): PageId {
@@ -33,6 +36,13 @@ function pathnameToPage(pathname: string): PageId {
     return "audioclaprag";
   }
 
+  if (
+    pathname === "/audio-to-parameter" ||
+    pathname === "/audio-to-parameter-rag-segments"
+  ) {
+    return "audiotoparameter";
+  }
+
   if (pathname === "/meta-crystal-v3-lab") {
     return "metacrystalv3lab";
   }
@@ -49,6 +59,7 @@ function pathnameToPage(pathname: string): PageId {
   if (pathname === "/cross-modal-consensus") {
     return "crossmodalconsensus";
   }
+  if (pathname === "/vocal-allocation-matrix") return "vocalallocationmatrix";
 
   return "dashboard";
 }
@@ -71,7 +82,11 @@ export function AppShell({ children }: AppShellProps) {
     update();
     const handleRefresh = () => update();
     window.addEventListener("tasks:refresh", handleRefresh as EventListener);
-    return () => window.removeEventListener("tasks:refresh", handleRefresh as EventListener);
+    return () =>
+      window.removeEventListener(
+        "tasks:refresh",
+        handleRefresh as EventListener,
+      );
   }, []);
 
   const handleNavigate = (page: PageId) => {
@@ -107,6 +122,11 @@ export function AppShell({ children }: AppShellProps) {
       return;
     }
 
+    if (page === "audiotoparameter") {
+      router.push("/audio-to-parameter-rag-segments");
+      return;
+    }
+
     if (page === "metacrystalv3lab") {
       router.push("/meta-crystal-v3-lab");
       return;
@@ -128,6 +148,7 @@ export function AppShell({ children }: AppShellProps) {
       router.push("/cross-modal-consensus");
       return;
     }
+    if (page === "vocalallocationmatrix") { router.push("/vocal-allocation-matrix"); return; }
 
     if (pathname !== "/") {
       router.push("/");
@@ -143,7 +164,10 @@ export function AppShell({ children }: AppShellProps) {
       />
       <main className="flex-1 min-w-0 flex flex-col">
         {children({
-          activePage: pathnameToPage(pathname) === "dashboard" ? activePage : pathnameToPage(pathname),
+          activePage:
+            pathnameToPage(pathname) === "dashboard"
+              ? activePage
+              : pathnameToPage(pathname),
           setActivePage,
         })}
       </main>

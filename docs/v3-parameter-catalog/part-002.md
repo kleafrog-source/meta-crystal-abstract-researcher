@@ -1,9 +1,52 @@
 # V3 technical names · part 2
 
-Generated: 2026-10-15T08:02:15.668Z
+Generated: 2026-10-16T06:05:21.023Z
 
+## Dynamics / Expander Dynamic Curvature
+
+- dynamic_downward_expander_ratio_knee_smoothing_rate
+## Dynamics / Expander Dynamic Scaling
+
+- dynamic_downward_expander_ratio_scaling_factor
+## Dynamics / Expander Dynamics
+
+- dynamic_downward_expander_attack_time_ms
+- dynamic_downward_expander_knee_smoothing_time_ms
+- dynamic_downward_expander_ratio_knee_smoothing_decay_ms
+- dynamic_downward_expander_ratio_knee_smoothing_decay_time_ms
+- dynamic_downward_expander_threshold_db
+- dynamic_downward_expander_threshold_hysteresis_decay_ms
+- dynamic_downward_expander_threshold_hysteresis_decay_rate
+- dynamic_downward_expander_threshold_hysteresis_ratio
+- dynamic_expansion_knee_characteristic_db
+## Dynamics / Expander Knee Controls
+
+- dynamic_downward_expander_knee_width_db
+## Dynamics / Expander Processing
+
+- dynamic_range_expansion_ratio
+- multiband_expander_attack_time_ms
+- multiband_expander_knee_width_db
+- multiband_expander_release_time_ms
+## Dynamics / Expander Range Controls
+
+- dynamic_downward_expander_attenuation_limit_db
+## Dynamics / Expander Threshold Dynamics
+
+- dynamic_downward_expander_threshold_hysteresis_ms
+- dynamic_downward_expander_threshold_hysteresis_smoothing_ms
+## Dynamics / Expander Threshold Kinetics
+
+- dynamic_downward_expander_threshold_hysteresis_rate
+## Dynamics / Expander Threshold Stabilization
+
+- dynamic_downward_expander_threshold_hysteresis_db
 ## dynamics / expansion
 
+- decompressor_expansion_ratio
+- dynamic_decompressor_threshold_db
+- dynamic_expansion_ratio
+- dynamic_range_decompressor_expansion_ratio
 - dynamic_range_expander_threshold_db
 - expander_ratio_factor
 - multiband_expansion_threshold_db
@@ -344,6 +387,28 @@ Generated: 2026-10-15T08:02:15.668Z
 ## dynamics / velocity_response
 
 - midi_note_velocity_curve
+## envelope_shaping / transient_detection
+
+- envelope_follower_attack_ms
+- envelope_follower_release_ms
+## evolutionary_control / refinement_protocol
+
+- hyper_refinement_intensity
+## evolutionary_control / stability_validation
+
+- stability_threshold_current_tier
+## experimental_processing / aleatoric_gating
+
+- random_noise_gate_threshold_db
+## experimental_processing / cellular_automata
+
+- cellular_automata_effect_rule_index
+## experimental_processing / formant_scrambling
+
+- experimental_formant_scramble_intensity
+## experimental_processing / granular_entropy
+
+- experimental_grain_position_entropy
 ## Generative Algorithms / Aleatoric Modulation
 
 - stochastic_pitch_drift_cents
@@ -752,77 +817,42 @@ Generated: 2026-10-15T08:02:15.668Z
 ## generative_algorithms / velocity_humanization
 
 - stochastic_velocity_humanization_range_percent
-## lyrical_prosody / vocal_dynamics
+## generative_algorithms / vocal_modulation
 
-- vocal_prosody_sibilance_suppression_threshold
-## mastering_bus / dither_and_quantization
+- vocal_algorithmic_generative_modulation_pattern
+## generative_sequencing / melodic_entropy
 
-- mastering_bus_dither_noise_shaping_profile
-## modulation_matrix / mpe_control
+- generative_melodic_entropy
+## generative_sequencing / phrase_mutation
 
-- mpe_polyphonic_pressure_filter_sweep_depth
-## Nonlinear Systems / Amplifier Distortion
+- generative_phrase_mutation_rate
+## generative_sequencing / stochastic_walk
 
-- crossover_distortion_threshold_v
-- crossover_distortion_threshold_volts
-## Nonlinear Systems / Analog Circuit Emulation
+- stochastic_walk_inertia_factor
+## glossolalia_generation / chant_synthesis
 
-- analog_power_supply_sag_depth_ratio
-## Nonlinear Systems / Analog Distortion
+- dissonant_chant_layer_count
+## glossolalia_generation / fragment_switching
 
-- diode_clipper_forward_bias_voltage
-## Nonlinear Systems / Analog Emulation
+- glossolalia_fragment_switch_rate_hz
+## glossolalia_generation / syllable_permutation
 
-- analog_inductor_hysteresis_saturation_db
-- analog_tape_head_azimuth_alignment_arcmin
-- analog_tape_head_gap_width_um
-- magnetic_tape_print_through_level_db
-- tape_flutter_frequency_hz
-- tape_hysteresis_saturation_depth
-- tape_scrape_flutter_frequency_hz
-- tape_wow_frequency_hz
-## Nonlinear Systems / Asymmetrical Tube Saturation
+- glossolalia_syllable_entropy
+## granular_physics / amplitude_modulation
 
-- analog_vacuum_tube_anode_saturation_knee_asymmetry_ratio
-## Nonlinear Systems / Chaotic Modulation
+- stochastic_amplitude_jitter
+## granular_physics / cloud_synthesis
 
-- chaos_attractor_nonlinearity_alpha
-- chaos_entrainment_mix_stiffness_resonance
-- chaos_whisper_mix_resonance
-- chaotic_attractor_bifurcation_index
-## Nonlinear Systems / Circuit Modeling
+- granular_cloud_density_ratio
+## granular_physics / formant_granulation
 
-- analog_inductor_core_saturation_current_amperes
-## Nonlinear Systems / Digital Degradation
+- vocal_formant_grain_size_ms
+## granular_physics / grain_envelope
 
-- bitcrusher_downsampling_factor
-- bitcrusher_sample_rate_reduction_factor
-- bitcrusher_sample_rate_reduction_ratio
-## Nonlinear Systems / Diode Clipper
+- transient_grain_envelope_decay
+## granular_physics / grain_scrubbing
 
-- diode_clipper_thermal_voltage_drift_volts
-## Nonlinear Systems / Diode Emulation
+- granular_scrub_position_jitter
+## granular_physics / organic_noise
 
-- analog_diode_clipper_saturation_knee_softness_db
-- analog_germanium_diode_leakage_current_amperes
-## Nonlinear Systems / Distortion & Saturation
-
-- asymmetric_diode_clipper_threshold_volts
-- asymmetric_triode_tube_plate_resistor_kohm
-- harmonic_exciter_tube_saturation_drive
-- saturator_asymmetric_triode_bias_volts
-- saturator_germanium_diode_forward_voltage_drop_volts
-- saturator_germanium_transistor_emitter_resistor_ohm
-- saturator_jfet_transistor_drain_to_source_resistance_ohm
-- saturator_jfet_transistor_pinch_off_voltage_volts
-- saturator_mosfet_transistor_drain_current_ma
-- saturator_opamp_open_loop_gain_db
-- saturator_opamp_slew_rate_limit_volts_per_microsecond
-- saturator_optical_photoresistor_response_time_ms
-- saturator_pentode_vacuum_tube_screen_grid_voltage_volts
-- saturator_pentode_vacuum_tube_suppressor_grid_voltage_volts
-- saturator_silicon_diode_breakdown_voltage_volts
-- saturator_symmetric_push_pull_drive_gain_db
-- saturator_triode_tube_anode_load_impedance_kohm
-- saturator_triode_tube_anode_voltage_volts
-- saturator_triode_tube_cathode_resistor_ohm
+- organic_breath_turbulence_scale

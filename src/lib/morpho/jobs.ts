@@ -241,3 +241,87 @@ export async function runMorphoSearch(
     });
   });
 }
+
+export async function runMorphoAudioSearch(
+  audioPath: string,
+  offset: number,
+  duration: number,
+  topK: number,
+  detail: "low" | "medium" | "high",
+  layout: "mel" | "composite",
+): Promise<Record<string, unknown>> {
+  if (shared.__morphoJobs!.search.running)
+    throw new Error("Another Morpho search is already active");
+  const job = idle();
+  job.running = true;
+  job.started_at = Date.now();
+  shared.__morphoJobs!.search = job;
+  return new Promise((resolve, reject) => {
+    let stdout = "",
+      stderr = "";
+    const child = spawn(
+      PYTHON,
+      [
+        "-u",
+        SCRIPT,
+        "search-audio",
+        "--model-path",
+        MODEL_PATH,
+        "--audio",
+        audioPath,
+        "--offset",
+        String(offset),
+        "--duration",
+        String(duration),
+        "--top-k",
+        String(topK),
+        "--value-mode",
+        "expressive",
+        "--spectrogram-detail",
+        detail,
+        "--spectrogram-layout",
+        layout,
+      ],
+      {
+        cwd: ROOT,
+        windowsHide: true,
+        env: env(),
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    );
+    shared.__morphoChildren!.search = child;
+    job.pid = child.pid ?? null;
+    child.stdout?.setEncoding("utf8");
+    child.stderr?.setEncoding("utf8");
+    child.stdout?.on("data", (value) => {
+      stdout += String(value);
+      append("search", String(value));
+    });
+    child.stderr?.on("data", (value) => {
+      stderr += String(value);
+      append("search", String(value));
+    });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      job.running = false;
+      job.exit_code = code;
+      job.finished_at = Date.now();
+      delete shared.__morphoChildren!.search;
+      if (code !== 0) {
+        const message = job.stop_requested
+          ? "Morpho audio search stopped"
+          : stderr.trim() ||
+            job.log_tail.at(-1) ||
+            `process exited with ${code}`;
+        job.last_error = message;
+        reject(new Error(message));
+        return;
+      }
+      try {
+        resolve(JSON.parse(stdout.trim().split(/\r?\n/).at(-1) ?? "{}"));
+      } catch {
+        reject(new Error("Morpho audio search returned invalid JSON"));
+      }
+    });
+  });
+}

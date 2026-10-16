@@ -47,6 +47,7 @@ export function MorphoAcousticRagPage() {
   const [preview, setPreview] = useState<string | null>(null);
   const [topK, setTopK] = useState("20");
   const [valueMode, setValueMode] = useState<ValueMode>("expressive");
+  const [vocalMatrixMode, setVocalMatrixMode] = useState(false);
   const [anchoredCount, setAnchoredCount] = useState(0);
   const [parameters, setParameters] = useState<ActiveParameter[]>([]);
   const [busy, setBusy] = useState(false);
@@ -112,6 +113,7 @@ export function MorphoAcousticRagPage() {
       form.append("image", file, file.name);
       form.append("top_k", topK);
       form.append("value_mode", valueMode);
+      form.append("vocal_matrix", String(vocalMatrixMode));
       const response = await fetch("/api/morpho/search", {
         method: "POST",
         body: form,
@@ -293,6 +295,13 @@ export function MorphoAcousticRagPage() {
                 </div>
               </div>
               <Button
+                type="button"
+                variant={vocalMatrixMode ? "default" : "outline"}
+                onClick={() => setVocalMatrixMode((value) => !value)}
+                disabled={busy}
+              >Vocal Matrix</Button>
+              <div className="flex items-center gap-1 text-xs text-zinc-500">Фильтрует расширенный SigLIP2-поиск до вокальной матрицы.<V3InfoTip content="Работает и с обычным изображением, и с загруженным изображением спектрограммы. Значения выбираются текущим режимом Expressive/Conservative/Default." /></div>
+              <Button
                 onClick={() => void search()}
                 disabled={!file || !status?.ready || busy}
               >
@@ -322,7 +331,7 @@ export function MorphoAcousticRagPage() {
                   revision: status?.manifest?.model_revision,
                   dimensions: status?.manifest?.dimensions,
                 }}
-                settings={{ top_k: Number(topK) || 20, value_mode: valueMode }}
+                settings={{ top_k: Number(topK) || 20, value_mode: valueMode, vocal_matrix: vocalMatrixMode }}
                 asset={file}
                 label={`Image · ${file?.name ?? "reference"}`}
               />

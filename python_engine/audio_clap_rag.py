@@ -7,6 +7,8 @@ import hashlib
 import json
 import math
 import os
+import shutil
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -87,6 +89,31 @@ def _feature_tensor(output):
     return output
 
 
+def _replace_index(temp_path: Path, destination: Path) -> None:
+    """Publish a completed index despite transient Windows file handles."""
+    last_error: PermissionError | None = None
+    for attempt in range(12):
+        try:
+            temp_path.replace(destination)
+            return
+        except PermissionError as error:
+            last_error = error
+            time.sleep(0.25 * (attempt + 1))
+
+    # Some Windows readers allow writes but deny delete/rename sharing. The
+    # complete temporary file remains the source of truth for this fallback.
+    try:
+        with temp_path.open("rb") as source, destination.open("wb") as target:
+            shutil.copyfileobj(source, target, length=1024 * 1024)
+            target.flush()
+            os.fsync(target.fileno())
+        temp_path.unlink(missing_ok=True)
+    except OSError:
+        if last_error is not None:
+            raise last_error
+        raise
+
+
 def build_index(progress=None) -> dict[str, Any]:
     parameters = _load_v3_parameters()
     previous: dict[str, Any] = {}
@@ -141,7 +168,7 @@ def build_index(progress=None) -> dict[str, Any]:
     INDEX_DIR.mkdir(parents=True, exist_ok=True)
     temp_path = INDEX_PATH.with_suffix(".tmp")
     temp_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
-    temp_path.replace(INDEX_PATH)
+    _replace_index(temp_path, INDEX_PATH)
     return {"model": MODEL_NAME, "parameter_count": len(items), "encoded": len(pending), "reused": reused, "path": str(INDEX_PATH)}
 
 

@@ -1,7 +1,297 @@
 # V3 technical names · part 6
 
-Generated: 2026-10-15T08:02:15.668Z
+Generated: 2026-10-16T06:05:21.023Z
 
+## Spectral Processing / Comb Filtering
+
+- comb_filter_delay_time_ms
+- comb_filter_feedback_gain_ratio
+## Spectral Processing / Cross Synthesis
+
+- spectral_coherence_bandwidth_hz
+- spectral_coherence_threshold_ratio
+## Spectral Processing / Cross-Channel Analysis
+
+- spectral_coherence_window_length_samples
+## Spectral Processing / Cross-Spectral Analysis Dynamics
+
+- spectral_coherence_cross_spectral_density_decay_factor
+- spectral_coherence_cross_spectral_density_decay_ms
+- spectral_coherence_cross_spectral_density_decay_ratio
+- spectral_coherence_cross_spectral_density_decay_slope_db_per_ms
+- spectral_coherence_cross_spectral_density_decay_speed
+- spectral_coherence_cross_spectral_density_decay_time_constant_exponent
+- spectral_coherence_cross_spectral_density_decay_time_constant_factor
+- spectral_coherence_cross_spectral_density_decay_time_constant_ms
+- spectral_coherence_cross_spectral_density_decay_time_constant_ratio
+- spectral_coherence_cross_spectral_density_smoothing_decay_ms
+- spectral_coherence_cross_spectral_density_smoothing_decay_rate_hz
+- spectral_coherence_cross_spectral_density_smoothing_decay_ratio
+## Spectral Processing / Cross-Spectral Analysis Kinetics
+
+- spectral_coherence_cross_spectral_density_smoothing_rate
+## Spectral Processing / Cross-Spectral Analysis
+
+- spectral_coherence_cross_spectral_density_db
+- spectral_coherence_cross_spectral_density_smoothing_factor
+- spectral_coherence_cross_spectral_density_smoothing_multiplier
+## Spectral Processing / Cross-Spectral Dynamics
+
+- spectral_coherence_cross_spectral_density_decay_rate
+## Spectral Processing / Cross-Spectral Integration
+
+- spectral_coherence_cross_spectral_density_smoothing_time_ms
+## Spectral Processing / Cross-Spectral Phase Dynamics
+
+- spectral_coherence_cross_spectral_phase_decay_rate
+## Spectral Processing / Cross-Spectral Smoothing
+
+- spectral_coherence_cross_spectral_density_smoothing_ms
+## Spectral Processing / Cross-Synthesis
+
+- spectral_morphing_crossfade_position
+## Spectral Processing / Dynamic Equalization
+
+- spectral_deesser_center_frequency_hz
+## Spectral Processing / Filter Topology
+
+- spectral_centroid_shift_hz
+## Spectral Processing / Frequency Shifting
+
+- frequency_shifter_single_sideband_hz
+## Spectral Processing / Harmonic Balance
+
+- spectral_slope_tilt_pivot_frequency_hz
+## Spectral Processing / Harmonic Excitation
+
+- harmonic_exciter_drive_percentage
+## Spectral Processing / Harmonic Generation
+
+- sub_harmonic_saturation_gain_db
+## Spectral Processing / Harmonic Saturation
+
+- harmonic_distortion_even_odd_ratio
+## Spectral Processing / Harmonic Structure
+
+- spectral_inharmonicity_deviation_factor
+## Spectral Processing / Noise Reduction
+
+- spectral_gate_noise_floor_db
+## Spectral Processing / Noise Suppression
+
+- spectral_gate_threshold_db
+## Spectral Processing / Onset Detection
+
+- spectral_flux_difference_threshold_db
+- spectral_flux_difference_threshold_ratio
+- spectral_flux_energy_centroid_shift_hz
+- spectral_flux_energy_kurtosis_decay_rate_db_per_sec
+- spectral_flux_energy_kurtosis_decay_rate_scaling_factor
+- spectral_flux_energy_kurtosis_decay_rate_scaling_mode_type
+- spectral_flux_energy_kurtosis_decay_scaling_factor
+- spectral_flux_energy_kurtosis_decay_threshold_db
+- spectral_flux_energy_kurtosis_decay_threshold_scaling
+- spectral_flux_energy_kurtosis_decay_time_ms
+- spectral_flux_energy_kurtosis_moment_ratio
+- spectral_flux_energy_kurtosis_ratio
+- spectral_flux_energy_kurtosis_scaling_factor
+- spectral_flux_energy_kurtosis_standard_deviation_ratio
+- spectral_flux_energy_kurtosis_threshold_db
+- spectral_flux_energy_skewness_decay_rate_scaling_factor
+- spectral_flux_energy_skewness_decay_time_ms
+- spectral_flux_energy_skewness_moment_ratio
+- spectral_flux_energy_skewness_ratio
+- spectral_flux_energy_skewness_standard_deviation_ratio
+- spectral_flux_energy_skewness_threshold_db
+- spectral_flux_energy_skewness_threshold_scaling
+- spectral_flux_onset_adaptive_threshold_factor
+- spectral_flux_peak_to_average_ratio
+- spectral_flux_transient_threshold_ratio
+## Spectral Processing / Phase Analysis
+
+- spectral_coherence_phase_variance
+## Spectral Processing / Phase Coherence Analysis
+
+- spectral_coherence_phase_cross_correlation_threshold
+## Spectral Processing / Phase Coherence Dynamics
+
+- spectral_coherence_cross_spectral_phase_decay_ms
+## Spectral Processing / Phase Coherence Limits
+
+- spectral_coherence_cross_spectral_phase_threshold_degrees
+## Spectral Processing / Phase Coherence
+
+- spectral_coherence_cross_correlation_factor
+## Spectral Processing / Phase Decorrelation
+
+- spectral_coherence_cross_spectral_phase_dispersion_ratio
+## Spectral Processing / Phase Modulation
+
+- spectral_bin_phase_randomization_ratio
+## Spectral Processing / Resonant Filtering
+
+- resonant_filter_q_factor_ratio
+## Spectral Processing / Source Separation
+
+- spectral_debleeding_suppression_db
+## Spectral Processing / Spectral Analysis Variance
+
+- spectral_flatness_variance_db
+## Spectral Processing / Spectral Analysis
+
+- spectral_centroid_modulation_decay_ms
+- spectral_centroid_modulation_decay_q_factor
+- spectral_centroid_modulation_decay_rate_hz
+- spectral_centroid_modulation_decay_smoothing_ms
+- spectral_centroid_modulation_decay_smoothing_q_boost_db
+- spectral_centroid_modulation_decay_smoothing_q_factor
+- spectral_centroid_modulation_decay_smoothing_q_factor_boost
+- spectral_centroid_modulation_frequency_hz
+- spectral_centroid_modulation_index_ratio
+- spectral_energy_centroid_acceleration_hz_per_sec2
+- spectral_energy_centroid_bandpass_q_factor
+- spectral_energy_centroid_deceleration_hz_per_sec2
+- spectral_energy_centroid_high_pass_cutoff_hz
+- spectral_energy_centroid_high_pass_q_factor
+- spectral_energy_centroid_high_pass_q_factor_resonance
+- spectral_energy_centroid_high_pass_smoothing_decay_ms
+- spectral_energy_centroid_high_pass_smoothing_decay_q_boost
+- spectral_energy_centroid_high_pass_smoothing_decay_q_factor
+- spectral_energy_centroid_high_pass_smoothing_ms
+- spectral_energy_centroid_high_pass_smoothing_q_factor
+- spectral_energy_centroid_jerk_hz_per_sec3
+- spectral_energy_centroid_low_pass_cutoff_hz
+- spectral_energy_centroid_low_pass_q_factor
+- spectral_energy_centroid_notch_depth_db
+- spectral_energy_centroid_notch_q_factor
+- spectral_energy_centroid_notch_q_factor_boost
+- spectral_energy_centroid_notch_q_factor_resonance
+- spectral_energy_centroid_notch_smoothing_ms
+- spectral_energy_centroid_smoothing_ms
+- spectral_energy_centroid_snap_threshold_hz
+- spectral_energy_centroid_spread_hz
+- spectral_energy_centroid_velocity_hz_per_sec
+- spectral_energy_flux_skewness_ratio
+- spectral_energy_flux_smoothing_window_ms
+- spectral_energy_flux_spectral_spread_hz
+- spectral_energy_flux_spectral_tilt_db
+- spectral_energy_flux_threshold_ratio
+- spectral_energy_kurtosis_factor
+- spectral_flatness_entropy_ratio
+- spectral_flux_smoothing_time_ms
+- spectral_harmonicity_index_ratio
+- spectral_kurtosis_coefficient_ratio
+- spectral_skewness_coefficient_ratio
+- spectral_spread_bandwidth_hz
+## Spectral Processing / Spectral Balancing
+
+- spectral_tilt_slope_db_per_oct
+## Spectral Processing / Spectral Decomposition
+
+- harmonic_to_noise_ratio_db
+## Spectral Processing / Spectral Distribution
+
+- spectral_energy_skewness_ratio
+- spectral_energy_spread_bark_bandwidth
+## Spectral Processing / Spectral Dynamics
+
+- spectral_contrast_expansion_db
+## Spectral Processing / Spectral Enhancement
+
+- spectral_valley_fill_gain_db
+## Spectral Processing / Spectral Envelope Smoothing
+
+- spectral_energy_flux_smoothing_ms
+## Spectral Processing / Spectral Envelope
+
+- spectral_envelope_cepstral_liftering_cutoff
+- spectral_envelope_warping_exponent
+## Spectral Processing / Spectral Feature Control
+
+- spectral_centroid_frequency_hz
+- spectral_contrast_peak_valley_ratio_db
+- spectral_crest_factor_ratio
+- spectral_decrease_slope_ratio
+- spectral_energy_centroid_variance_hz
+- spectral_flatness_measure_ratio
+- spectral_flatness_measure_smoothing_window_ms
+- spectral_flux_energy_standard_deviation_hz
+- spectral_kurtosis_moment_value
+- spectral_kurtosis_variance_threshold
+- spectral_rolloff_frequency_hz
+- spectral_skewness_moment_ratio
+- spectral_skewness_variance_ratio
+- spectral_slopeness_energy_decay_db_per_khz
+- spectral_spread_variance_hz_squared
+- spectral_whiteness_measure_ratio
+## Spectral Processing / Spectral Feature Extraction
+
+- spectral_flatness_measure_db
+- spectral_flux_threshold_normalized
+## Spectral Processing / Spectral Modulation
+
+- spectral_centroid_modulation_depth_percentage
+## Spectral Processing / Spectral Moment Analysis
+
+- spectral_energy_centroid_skewness_factor
+- spectral_energy_spread_hz
+## Spectral Processing / Spectral Moment Modulation
+
+- spectral_kurtosis_modulation_index
+## Spectral Processing / Spectral Morphing
+
+- spectral_morphing_crossfade_ratio
+## Spectral Processing / Spectral Reshaping
+
+- spectral_centroid_shift_hertz
+## Spectral Processing / Spectral Tilt Control
+
+- spectral_tilt_reference_frequency_hz
+## Spectral Processing / Stereo Phase Alignment
+
+- spectral_coherence_cross_spectral_phase_degrees
+## Spectral Processing / Stereo Phase Analysis
+
+- spectral_coherence_cross_spectral_phase_smoothing_ms
+## Spectral Processing / Transient Accentuation
+
+- spectral_flux_transient_emphasis_ratio
+## Spectral Processing / Transient Detection
+
+- spectral_flux_transient_sensitivity_ratio
+## Spectral Processing / Transient Processing Dynamics
+
+- spectral_flux_transient_emphasis_decay_rate
+## Spectral Processing / Transient Processing Smoothing
+
+- spectral_flux_transient_emphasis_smoothing_ms
+## Spectral Processing / Transient Processing Thresholds
+
+- spectral_flux_transient_emphasis_threshold_db
+## Spectral Processing / Transient Processing
+
+- spectral_subband_transient_threshold_db
+## Spectral Processing / Transient Spectral Analysis
+
+- spectral_flux_transient_decay_time_ms
+## Spectral Processing / Windowing Analysis
+
+- spectral_leakage_windowing_attenuation_db
+## spectral_analysis / spectral_metrics
+
+- spectral_bandwidth_hz
+- spectral_centroid_hz
+- spectral_rolloff_hz
+## spectral_processing / band_crossfade
+
+- spectral_band_crossfade_width_octaves
+## spectral_processing / band_rejection
+
+- band_rejection_width
+- rejection_crackle_hole_boil_pressure
+## spectral_processing / bandpass_filtering
+
+- bandpass_filter_bandwidth
 ## spectral_processing / cepstral_smoothing
 
 - spectral_cepstral_smoothing_amount
@@ -408,12 +698,45 @@ Generated: 2026-10-15T08:02:15.668Z
 ## spectral_processing / transient_smearing
 
 - spectral_transient_smearing_time_ms
+## spectral_processing / vocal_harmonics
+
+- vocal_harmonic_enrichment_formant_trait
 ## spectral_processing / windowing
 
 - spectral_window_type
 ## spectral_processing / zero_padding
 
 - spectral_bin_zero_padding_factor
+## stability_control / invariant_enforcement
+
+- closure_constraint_enable
+- density_constraint_enable
+- flux_balance_constraint_enable
+- mono_init_constraint_enable
+## stability_control / status_flagging
+
+- stability_flag_select
+## stability_control / threshold_enforcement
+
+- d_metric_threshold_current
+## stereo_imaging / mid_side_processing
+
+- mid_side_balance_ratio
+## stereo_imaging / width_control
+
+- stereo_width_expansion_ratio
+## stochastic_effects / aleatoric_reverb
+
+- stochastic_reverb_decay_randomness
+## stochastic_effects / pitch_drift
+
+- stochastic_pitch_drift_rate
+## stochastic_effects / random_walk_modulation
+
+- random_walk_filter_cutoff_path
+## stochastic_effects / spatial_jitter
+
+- stochastic_spatial_position_jitter
 ## structural / acidity
 
 - acid_base
@@ -432,6 +755,9 @@ Generated: 2026-10-15T08:02:15.668Z
 ## structure / clusters
 
 - fractal_cluster
+## synthesis_engine / cross_synthesis
+
+- ultimate_bio_acoustic_vocal_cross_synthesis_mode
 ## synthesis / acid_filter_acoustics
 
 - acid_tb303_resonance_screaming_bias
@@ -580,269 +906,3 @@ Generated: 2026-10-15T08:02:15.668Z
 - granular_grain_spectral_blur_amount
 - granular_grain_spectral_freeze_ratio
 - granular_grain_spectral_phase_lock_amount
-- granular_grain_spectral_tilt
-- granular_grain_stereo_position_modulation_rate
-- granular_grain_stereo_width_spread_ratio
-- granular_grain_time_pitch_uncoupling_ratio
-- granular_grain_time_position_quantization
-- granular_grain_time_stretch_density_compensation_ratio
-- granular_grain_time_stretch_density_mode
-- granular_grain_time_stretch_density_smoothing_ms
-- granular_grain_time_stretch_pitch_bend_decay_curve
-- granular_grain_time_stretch_pitch_bend_decay_factor
-- granular_grain_time_stretch_pitch_bend_decay_mode
-- granular_grain_time_stretch_pitch_bend_decay_ms
-- granular_grain_time_stretch_pitch_bend_decay_ratio
-- granular_grain_time_stretch_pitch_bend_direction_mode
-- granular_grain_time_stretch_pitch_bend_range_semitones
-- granular_grain_time_stretch_pitch_bend_smoothing_ms
-- granular_grain_time_stretch_pitch_shift_cents
-- granular_grain_time_stretch_ratio
-- granular_grain_time_stretch_smoothing_ms
-- granular_grain_time_stretch_transient_decay_ms
-- granular_grain_time_stretch_transient_hold_ms
-- granular_grain_time_stretch_transient_protect_ratio
-- granular_grain_time_stretch_transient_threshold_db
-- granular_grain_transient_alignment_mode
-- granular_grain_waveform_phase_reset
-- granular_grain_window_overlap
-- granular_pitch_jitter_semitones
-- granular_position_random_jitter_ms
-- granular_spray_time_window_ms
-- granular_texture_density_hz
-- granular_waveform_grain_window_shape
-- granulator_pitch_quantization_scale_mode
-- granulator_texture_grain_density_jitter_ratio
-## synthesis / hard_sync
-
-- oscillator_sync_ratio
-## Synthesis / Harmonic Generation
-
-- sub_bass_harmonic_generator_order_ratio
-- sub_bass_harmonic_phase_alignment_deg
-## synthesis / lfo_modulation
-
-- hypnagogic_pitch_drift_lfo_rate_hz
-## synthesis / microtonal_tuning
-
-- microtonal_pitch_offset
-## synthesis / modulation
-
-- lfo_frequency_modulation_hz
-## Synthesis / Nonlinear Distortion
-
-- wavefolder_symmetry_bias_ratio
-## synthesis / nonlinear_shaping
-
-- wavefolder_threshold_voltage_volts
-## Synthesis / Oscillator Modulation
-
-- pulse_width_modulation_depth_percentage
-- pulse_width_modulation_depth_ratio
-## synthesis / oscillator_phase
-
-- oscillator_phase_reset_on_note
-## synthesis / oscillator_sync
-
-- oscillator_hard_sync_anti_aliasing
-- oscillator_hard_sync_depth
-- oscillator_hard_sync_phase_offset_degrees
-- oscillator_hard_sync_ratio
-- oscillator_hard_sync_reset_phase
-- oscillator_hard_sync_slave_ratio
-- oscillator_hard_sync_sweep_rate_hz
-- oscillator_sync_frequency_ratio
-- oscillator_sync_modulation_envelope_amount
-- oscillator_sync_softness_amount
-## Synthesis / Phase Distortion
-
-- sub_bass_phase_distortion_frequency_hz
-## Synthesis / Phase Processing
-
-- sub_bass_phase_alignment_allpass_decay_ms
-- sub_bass_phase_alignment_allpass_decay_q_factor
-- sub_bass_phase_alignment_allpass_decay_rate_hz
-- sub_bass_phase_alignment_allpass_decay_smoothing_ms
-- sub_bass_phase_alignment_allpass_decay_smoothing_ms_value
-- sub_bass_phase_alignment_allpass_decay_smoothing_q_boost_db
-- sub_bass_phase_alignment_allpass_decay_smoothing_q_boost_db_value
-- sub_bass_phase_alignment_allpass_decay_smoothing_q_factor
-- sub_bass_phase_alignment_allpass_delay_ms
-- sub_bass_phase_alignment_allpass_q_factor
-- sub_bass_phase_alignment_bandwidth_hz
-- sub_bass_phase_alignment_center_frequency_hz
-- sub_bass_phase_alignment_crossfade_ms
-- sub_bass_phase_alignment_damping_q_factor
-- sub_bass_phase_alignment_damping_ratio
-- sub_bass_phase_alignment_gain_db
-- sub_bass_phase_alignment_high_pass_cutoff_hz
-- sub_bass_phase_alignment_high_pass_decay_ms
-- sub_bass_phase_alignment_high_pass_decay_q_boost
-- sub_bass_phase_alignment_high_pass_decay_q_factor
-- sub_bass_phase_alignment_high_pass_decay_smoothing_ms
-- sub_bass_phase_alignment_high_pass_q_factor
-- sub_bass_phase_alignment_high_pass_q_factor_boost
-- sub_bass_phase_alignment_high_pass_q_factor_resonance
-- sub_bass_phase_alignment_high_pass_slope_db_per_oct
-- sub_bass_phase_alignment_high_pass_smoothing_ms
-- sub_bass_phase_alignment_low_pass_cutoff_hz
-- sub_bass_phase_alignment_low_pass_q_factor
-- sub_bass_phase_alignment_low_pass_q_factor_resonance
-- sub_bass_phase_alignment_low_pass_slope_db_per_oct
-- sub_bass_phase_alignment_offset_deg
-- sub_bass_phase_alignment_order_index
-- sub_bass_phase_alignment_q_factor
-- sub_bass_phase_alignment_resonance_db
-- sub_bass_phase_alignment_slope_deg_per_hz
-- sub_bass_phase_alignment_tolerance_deg
-- sub_bass_phase_alignment_tracking_speed_ms
-- sub_bass_phase_crossover_frequency_hz
-## synthesis / phase_distortion
-
-- oscillator_phase_distortion_curve
-- phase_distortion_amount
-- synthesis_phase_distortion_feedback_amount
-## synthesis / phase_modulation
-
-- oscillator_phase_modulation_index
-## Synthesis / Physical Modeling Synthesis
-
-- physical_membrane_tension_newtons
-## Synthesis / Physical Modeling
-
-- acoustic_string_pluck_position_ratio
-- physical_string_stiffness_factor
-- plucked_string_stiffness_dispersion_coefficient
-## synthesis / physical_modeling
-
-- brass_lip_tension_ratio
-- physical_model_bow_pressure
-- physical_modeling_bow_pressure_grams
-- physical_modeling_hammer_stiffness_factor
-- physical_modeling_membrane_tension_newtons
-- physical_modeling_pickup_position_ratio
-- physical_modeling_string_damping_coefficient
-- resonator_excitation_noise_mix
-- stiff_string_dispersion_coefficient
-- waveguide_bore_length_millimeters
-## Synthesis / Pitch Processing
-
-- pitch_quantize_scale_snap_cents
-- pitch_shift_semitones_amount
-## Synthesis / Pitch Tracking
-
-- phase_locked_loop_tracking_speed_ms
-## synthesis / pitch_transition
-
-- pitch_glide_duration
-## Synthesis / Pulse Width Modulation
-
-- subharmonic_pulse_width_modulation_duty_cycle
-## synthesis / pulse_width_modulation
-
-- oscillator_pulse_width_modulation_depth
-- oscillator_pulse_width_modulation_rate_hz
-- oscillator_pulse_width_modulation_source
-## synthesis / pulse_width
-
-- oscillator_pulse_width_amount
-## Synthesis / Ring Modulation
-
-- ring_modulator_carrier_freq_hz
-## synthesis / ring_modulation
-
-- oscillator_ring_modulation_depth
-- ring_modulation_depth
-## synthesis / sub_bass_enhancement
-
-- sub_bass_harmonic_crossover_frequency_hz
-- sub_bass_harmonic_even_odd_ratio
-- sub_bass_harmonic_generator_drive_ratio
-- sub_bass_harmonic_saturation_drive_db
-## synthesis / sub_bass_generation
-
-- sub_bass_harmonic_envelope_attack_ms
-- sub_harmonic_synthesizer_drive_db
-## synthesis / sub_bass_processing
-
-- sub_bass_harmonic_even_order_drive_db
-- sub_bass_harmonic_quadrature_phase_balance_ratio
-## synthesis / sub_bass_synthesis
-
-- sub_bass_harmonic_synthesis_order
-- subharmonic_sub_bass_pulse_width_modulation_percentage
-## synthesis / sub_harmonic_synthesis
-
-- sub_bass_harmonic_synthesizer_cutoff_hz
-## synthesis / sub_oscillator
-
-- oscillator_sub_oscillator_level_db
-## Synthesis / Sub-Harmonic Generation
-
-- subharmonic_generator_octave_blend_ratio
-- subharmonic_oscillator_frequency_division_factor
-## Synthesis / Subharmonic Feedback
-
-- subharmonic_distortion_feedback_gain_db
-## Synthesis / Subharmonic Filtering
-
-- subharmonic_even_harmonic_rejection_db
-## Synthesis / Subharmonic Generation
-
-- sub_bass_harmonic_exciter_mix_ratio
-- sub_bass_phase_alignment_frequency_hz
-- sub_bass_subharmonic_generator_tracking_speed_ms
-- sub_harmonic_synthesizer_cutoff_hz
-- subharmonic_frequency_divider_ratio
-- subharmonic_generator_tracking_window_ms
-- subharmonic_octave_blend_ratio
-- subharmonic_oscillator_octave_blend_ratio
-- subharmonic_synthesizer_mode
-## Synthesis / Subharmonic Pitch Detection
-
-- subharmonic_tracking_lowpass_filter_order
-## Synthesis / Subharmonic Pitch Tracking
-
-- subharmonic_frequency_tracking_bandwidth_hz
-## Synthesis / Subharmonic Processing
-
-- subharmonic_generator_lowpass_cutoff_hz
-## Synthesis / Subharmonic Ring Modulation
-
-- subharmonic_ring_modulator_mix_ratio
-## synthesis / subharmonic_generation
-
-- subharmonic_generation_level
-## synthesis / subharmonic
-
-- subharmonic_generation_division
-## Synthesis / Subtractive Synthesis
-
-- sub_filter_envelope_decay_time_ms
-- subtractive_filter_resonance_tracking_ratio
-- subtractive_synth_sub_oscillator_level_db
-## synthesis / subtractive_synthesis
-
-- subtractive_filter_cutoff_env_amount_bipolar_ratio
-- subtractive_filter_cutoff_env_amount_velocity_curve
-- subtractive_filter_cutoff_env_amount_velocity_curve_exponent
-- subtractive_filter_cutoff_env_amount_velocity_curve_factor
-- subtractive_filter_cutoff_env_amount_velocity_curve_pivot
-- subtractive_filter_cutoff_env_amount_velocity_curve_shape
-- subtractive_filter_cutoff_env_amount_velocity_mode
-- subtractive_filter_cutoff_env_amount_velocity_pivot_ratio
-- subtractive_filter_cutoff_env_amount_velocity_pivot_value
-- subtractive_filter_cutoff_env_amount_velocity_scale
-- subtractive_filter_cutoff_env_amount_velocity_sensitivity
-- subtractive_filter_cutoff_env_amount_velocity_threshold
-- subtractive_filter_cutoff_key_tracking_offset_semitones
-- subtractive_filter_cutoff_lfo_depth_mode
-- subtractive_filter_cutoff_lfo_depth_octaves
-- subtractive_filter_cutoff_lfo_depth_velocity_scale
-- subtractive_filter_cutoff_lfo_phase_offset_degrees
-- subtractive_filter_cutoff_lfo_phase_offset_ratio
-- subtractive_filter_cutoff_lfo_phase_sync_mode
-- subtractive_filter_cutoff_lfo_waveform
-- subtractive_filter_cutoff_lfo_waveform_invert
-- subtractive_filter_cutoff_tracking_slope_ratio
-- subtractive_filter_cutoff_velocity_curve_shape

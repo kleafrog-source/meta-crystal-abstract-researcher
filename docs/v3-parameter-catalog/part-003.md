@@ -1,9 +1,245 @@
 # V3 technical names · part 3
 
-Generated: 2026-10-15T08:02:15.668Z
+Generated: 2026-10-16T06:05:21.023Z
 
+## granular_physics / pitch_granulation
+
+- micro_pitch_grain_spread
+## granular_physics / playback_direction
+
+- granular_playback_direction_prob
+## granular_physics / stochastic_modulation
+
+- stochastic_vocal_branching_rate
+## granular_physics / transient_sync
+
+- transient_sync_offset_ms
+## hybrid_processing / oscillator_sync
+
+- analog_oscillator_sync_mode
+## hybrid_processing / reverb_processing
+
+- hybrid_reverb_dry_wet_ratio
+## hybrid_processing / signal_blending
+
+- hybrid_acoustic_electronic_mix_ratio
+## language_and_phonetics / articulation_control
+
+- vocal_phonetic_articulation_mode
+## language_fusion / binding_rules
+
+- strict_language_binding_toggle
+## language_fusion / iso_blending
+
+- language_pair_blend_ratio_iso
+## language_fusion / polyglot_processing
+
+- polyglot_mix_entropy_ratio
+## language_selection / iso_registry
+
+- iso_language_primary_select
+## linguistic_entropy / chaos_control
+
+- linguistic_chaos_threshold
+## linguistic_entropy / entropy_control
+
+- occult_vocal_blend_entropy
+## linguistic_entropy / syntax_constraints
+
+- polyglot_coherence_index
+## lyrical_prosody / vocal_dynamics
+
+- vocal_prosody_sibilance_suppression_threshold
+## mastering_bus / dither_and_quantization
+
+- mastering_bus_dither_noise_shaping_profile
+## mastering / dithering
+
+- dither_noise_shape_select
+## mastering / gain_staging
+
+- final_output_gain_db
+## mastering / harmonic_excitation
+
+- harmonic_exciter_drive_db
+## mastering / limiting
+
+- brickwall_limiter_release_ms
+- brickwall_limiter_threshold_db
+- true_peak_ceiling_db
+## mastering / loudness_control
+
+- loudness_normalization_target_lufs
+## mastering / vocal_integration
+
+- vocal_mastering_integration_profile
+## material_physics / biomechanical_friction
+
+- vocal_fold_viscous_friction_coefficient
+## material_physics / granular_dynamics
+
+- granular_material_stiffness_modulus
+## material_physics / thermodynamics
+
+- thermal_conductivity_coefficient
+## material_physics / tissue_mechanics
+
+- vocal_tract_wall_compliance
+## material_physics / viscoelasticity
+
+- viscoelastic_damping_ratio
+## matrix_routing / fx_routing
+
+- fx_chain_routing_matrix_slot
+## meta_tagging / fx_coding
+
+- fx_chain_4char_code
+## meta_tagging / fx_selection
+
+- fx_chain_breakdown_accent
+- fx_chain_closure_tail
+- fx_chain_emergence_layer
+- fx_chain_ritual_chant
+## meta_tagging / language_selection
+
+- iso_language_ambient_whisper
+- iso_language_breakdown_guttural
+- iso_language_polyglot_pool
+- iso_language_ritual_chant
+- iso_language_secondary_select
+## meta_tagging / syntax_enforcement
+
+- meta_tag_syntax_enable
+## meta_tagging / technique_coding
+
+- vocal_technique_4char_code
+## meta_tagging / technique_selection
+
+- technique_breakdown_accent
+- technique_closure_decay
+- technique_emergence_scream
+- technique_ritual_chant_layer
+## metric_monitoring / divergence_calculation
+
+- d_metric_current_value
+## metric_monitoring / recursion_scaling
+
+- recursion_time_rt
+## metric_monitoring / spatial_validation
+
+- spatial_width_s_ratio
+## metric_monitoring / velocity_tracking
+
+- velocity_v_ms
+## midi_control / cc_mapping
+
+- midi_cc_expression_depth
+- midi_cc_modulation_depth
+## midi_control / pitch_wheel
+
+- pitch_bend_range_semitones
+## midi_control / velocity_mapping
+
+- velocity_to_filter_cutoff_curve
+- velocity_to_volume_curve
+## midi_mapping / cc_assignment
+
+- midi_cc_number_primary
+## midi_mapping / channel_routing
+
+- midi_channel_select
+## mix_engineering / spectral_separation
+
+- parallel_vocal_spectral_separation_strategy
+- vocal_spectral_masking_separation_strategy
+## modular_synthesis / cv_conversion
+
+- cv_to_filter_cutoff_scale
+- cv_to_pitch_conversion_scale
+- midi_to_cv_gate_inversion
+## modular_synthesis / cv_processing
+
+- cv_slew_rate_limit_ms
+## modulation_matrix / mpe_control
+
+- mpe_polyphonic_pressure_filter_sweep_depth
+## modulation / lfo_generation
+
+- lfo_amplitude_depth_ratio
+- lfo_phase_offset_degrees
+- lfo_shape_selector
+## modulation / matrix_routing
+
+- modulation_matrix_destination_select
+- modulation_matrix_source_select
+## modulation / tempo_synchronization
+
+- lfo_rate_sync_division
+## Nonlinear Systems / Amplifier Distortion
+
+- crossover_distortion_threshold_v
+- crossover_distortion_threshold_volts
+## Nonlinear Systems / Analog Circuit Emulation
+
+- analog_power_supply_sag_depth_ratio
+## Nonlinear Systems / Analog Distortion
+
+- diode_clipper_forward_bias_voltage
+## Nonlinear Systems / Analog Emulation
+
+- analog_inductor_hysteresis_saturation_db
+- analog_tape_head_azimuth_alignment_arcmin
+- analog_tape_head_gap_width_um
+- magnetic_tape_print_through_level_db
+- tape_flutter_frequency_hz
+- tape_hysteresis_saturation_depth
+- tape_scrape_flutter_frequency_hz
+- tape_wow_frequency_hz
+## Nonlinear Systems / Asymmetrical Tube Saturation
+
+- analog_vacuum_tube_anode_saturation_knee_asymmetry_ratio
+## Nonlinear Systems / Chaotic Modulation
+
+- chaos_attractor_nonlinearity_alpha
+- chaos_entrainment_mix_stiffness_resonance
+- chaos_whisper_mix_resonance
+- chaotic_attractor_bifurcation_index
+## Nonlinear Systems / Circuit Modeling
+
+- analog_inductor_core_saturation_current_amperes
+## Nonlinear Systems / Digital Degradation
+
+- bitcrusher_downsampling_factor
+- bitcrusher_sample_rate_reduction_factor
+- bitcrusher_sample_rate_reduction_ratio
+## Nonlinear Systems / Diode Clipper
+
+- diode_clipper_thermal_voltage_drift_volts
+## Nonlinear Systems / Diode Emulation
+
+- analog_diode_clipper_saturation_knee_softness_db
+- analog_germanium_diode_leakage_current_amperes
 ## Nonlinear Systems / Distortion & Saturation
 
+- asymmetric_diode_clipper_threshold_volts
+- asymmetric_triode_tube_plate_resistor_kohm
+- harmonic_exciter_tube_saturation_drive
+- saturator_asymmetric_triode_bias_volts
+- saturator_germanium_diode_forward_voltage_drop_volts
+- saturator_germanium_transistor_emitter_resistor_ohm
+- saturator_jfet_transistor_drain_to_source_resistance_ohm
+- saturator_jfet_transistor_pinch_off_voltage_volts
+- saturator_mosfet_transistor_drain_current_ma
+- saturator_opamp_open_loop_gain_db
+- saturator_opamp_slew_rate_limit_volts_per_microsecond
+- saturator_optical_photoresistor_response_time_ms
+- saturator_pentode_vacuum_tube_screen_grid_voltage_volts
+- saturator_pentode_vacuum_tube_suppressor_grid_voltage_volts
+- saturator_silicon_diode_breakdown_voltage_volts
+- saturator_symmetric_push_pull_drive_gain_db
+- saturator_triode_tube_anode_load_impedance_kohm
+- saturator_triode_tube_anode_voltage_volts
+- saturator_triode_tube_cathode_resistor_ohm
 - saturator_triode_tube_grid_bias_voltage_volts
 - saturator_triode_tube_grid_current_ma
 - saturator_triode_tube_grid_leak_capacitor_nfarad
@@ -196,6 +432,40 @@ Generated: 2026-10-15T08:02:15.668Z
 - saturator_hard_clip_threshold_db
 - soft_clip_waveshaper_saturation_drive_db
 - soft_clipper_knee_smoothing_db
+## nonlinear_dynamics / chaotic_attractors
+
+- chaotic_lorenz_prandtl_ratio
+## nonlinear_dynamics / chaotic_modulation
+
+- chaotic_modulation_entropy_factor
+## nonlinear_dynamics / digital_degradation
+
+- digital_bitcrush_aliasing_factor
+## nonlinear_dynamics / feedback_instability
+
+- nonlinear_feedback_delay_instability
+## nonlinear_dynamics / intermodulation
+
+- intermodulation_distortion_density
+## nonlinear_dynamics / magnetic_emulation
+
+- hysteresis_saturation_tracking
+## nonlinear_dynamics / magnetic_hysteresis
+
+- magnetic_tape_hysteresis_loss_factor
+## nonlinear_dynamics / mass_spring_systems
+
+- nonlinear_spring_constant_ratio
+## nonlinear_dynamics / soft_clipping
+
+- soft_clipper_knee_curvature
+## nonlinear_dynamics / subharmonic_distortion
+
+- subharmonic_foldback_asymmetry
+## nonlinear_dynamics / wavefolding
+
+- nonlinear_wavefolding_symmetry_threshold
+- wave_shaper_fold_iterations
 ## nonlinear_systems / analog_modeling
 
 - analog_inductor_saturation_current_ma
@@ -281,6 +551,7 @@ Generated: 2026-10-15T08:02:15.668Z
 - odd_even_harmonic_balance_ratio
 ## nonlinear_systems / intermodulation
 
+- intermodulation_distortion_mix
 - transient_intermodulation_distortion_threshold_percent
 ## nonlinear_systems / ladder_filter
 
@@ -288,6 +559,9 @@ Generated: 2026-10-15T08:02:15.668Z
 ## nonlinear_systems / limiting
 
 - diode_bridge_limiter_recovery_curve_shape
+## nonlinear_systems / magnetic_hysteresis
+
+- hysteresis_magnetic_tape_ratio
 ## nonlinear_systems / mosfet_clipping
 
 - mosfet_clipper_softness_amount
@@ -329,6 +603,10 @@ Generated: 2026-10-15T08:02:15.668Z
 ## nonlinear_systems / sub_bass
 
 - sub_bass_harmonic_generation_amount
+## nonlinear_systems / subharmonic_synthesis
+
+- subharmonic_foldback_freq_hz
+- subharmonic_foldback_phase_offset
 ## nonlinear_systems / tape_emulation
 
 - analog_tape_head_gap_loss_db
@@ -400,6 +678,7 @@ Generated: 2026-10-15T08:02:15.668Z
 - push_pull_tube_amplifier_screen_grid_voltage_volts
 ## nonlinear_systems / tube_saturation
 
+- nonlinear_tube_saturation_curve
 - tube_saturation_bias_voltage
 - vacuum_tube_grid_current_amount
 ## nonlinear_systems / vari_mu
@@ -419,6 +698,7 @@ Generated: 2026-10-15T08:02:15.668Z
 - nonlinear_systems_wavefolder_drive_compensation_gain_db
 ## nonlinear_systems / wavefolding
 
+- foldback_clipping_threshold_db
 - nonlinear_systems_wavefolder_reflection_count
 - nonlinear_systems_wavefolding_symmetry_bias
 - wavefolder_bias_offset
@@ -426,6 +706,7 @@ Generated: 2026-10-15T08:02:15.668Z
 - wavefolder_folding_threshold_volts
 - wavefolder_symmetry_offset_volts
 - wavefolding_symmetry_bias
+- wavefolding_symmetry_threshold
 ## nonlinear_systems / waveshaping
 
 - asymmetrical_soft_clipper_knee_smoothness
@@ -436,6 +717,21 @@ Generated: 2026-10-15T08:02:15.668Z
 ## nonlinear_systems / zener_clipping
 
 - zener_diode_clipper_knee_sharpness
+## omega_sequence / buildup_dynamics
+
+- vector_rise_acceleration_rate
+## omega_sequence / invariant_enforcement
+
+- zero_flux_balance_constraint
+## omega_sequence / layer_convolution
+
+- convolve_layer_stack_depth
+## omega_sequence / phase_selection
+
+- omega_phase_current_index
+## omega_sequence / technique_switching
+
+- commute_mode_switch_speed
 ## Organic Textures / Analog Emulation
 
 - tape_hysteresis_saturation_amount
@@ -606,213 +902,3 @@ Generated: 2026-10-15T08:02:15.668Z
 - organic_folley_surface_friction_ratio
 - organic_folley_surface_roughness_index
 - organic_metallic_plate_tension_pascal
-- organic_wood_surface_resonance_decay_ms
-## Organic Textures / Tape Artifacts
-
-- analog_tape_barkhausen_noise_level_db
-- analog_tape_flux_leakage_crosstalk_db
-- analog_tape_head_azimuth_phase_skew_microseconds
-- analog_tape_layer_print_through_attenuation_db
-- cassette_tape_azimuth_alignment_error_degrees
-- tape_print_through_time_offset_sec
-## Organic Textures / Tape Emulation Artifacts
-
-- tape_print_through_echo_db
-## Organic Textures / Tape Emulation Modeling
-
-- analog_magnetic_tape_coercivity_oersted
-- fry_coercivity_dust_intersample_resonance
-## Organic Textures / Tape Emulation
-
-- analog_tape_demagnetization_loss_db
-- analog_tape_head_azimuth_phase_error_degrees
-- analog_tape_head_bump_frequency_hz
-- analog_tape_head_core_permeability_henry_per_meter
-- analog_tape_head_gap_azimuth_alignment_degrees
-- analog_tape_head_gap_depth_microns
-- analog_tape_head_gap_loss_attenuation_db_per_octave
-- analog_tape_head_gap_loss_corner_frequency_hz
-- analog_tape_head_gap_loss_high_frequency_damping_db_per_octave
-- analog_tape_head_gap_loss_high_frequency_phase_dispersion
-- analog_tape_head_gap_loss_high_frequency_phase_dispersion_mode
-- analog_tape_head_gap_loss_high_frequency_phase_dispersion_scaling
-- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_rate_db_per_sec
-- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_rate_scaling
-- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_rate_scaling_mode_type
-- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_time_ms
-- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_time_scaling
-- analog_tape_head_gap_loss_high_frequency_phase_offset_degrees
-- analog_tape_head_gap_loss_high_frequency_phase_offset_mode
-- analog_tape_head_gap_loss_high_frequency_phase_offset_ratio
-- analog_tape_head_gap_loss_high_frequency_phase_offset_scaling
-- analog_tape_head_gap_loss_high_frequency_phase_offset_scaling_factor
-- analog_tape_head_gap_loss_high_frequency_phase_shift_degrees
-- analog_tape_head_gap_loss_high_frequency_phase_slope
-- analog_tape_head_gap_loss_high_frequency_resonance_q
-- analog_tape_head_gap_loss_high_frequency_shelf_db
-- analog_tape_head_gap_width_azimuth_skew_ratio
-- analog_tape_head_gap_width_frequency_hz
-- analog_tape_head_gap_width_loss_db_per_khz
-- analog_tape_head_gap_width_microns
-- analog_tape_head_loss_frequency_hz
-- analog_tape_magnetic_coercivity_oersteds
-- tape_magnetic_saturation_bias_current_ma
-- tape_saturation_even_harmonic_drive_db
-- tape_saturation_odd_harmonic_drive_db
-## Organic Textures / Tape Machine Artifacts
-
-- tape_azimuth_alignment_error_microns
-## Organic Textures / Tape Modulation
-
-- tape_wow_and_flutter_frequency_hz
-## Organic Textures / Time Stretch
-
-- granular_time_stretch_ratio
-## Organic Textures / Transient Generation
-
-- percussive_transient_density_ratio
-## Organic Textures / Transient-Aware Granular Processing
-
-- granular_time_stretch_transient_preservation_ratio
-## Organic Textures / Transient-Synchronized Granular Synthesis
-
-- granular_transient_slice_threshold_db
-## Organic Textures / Vinyl Emulation
-
-- vinyl_pinch_effect_groove_radius_mm
-- vinyl_surface_crackle_density_fps
-## organic_textures / analog_emulation
-
-- tape_hiss_noise_density_db
-## organic_textures / analog_tape
-
-- tape_wow_and_flutter_rate_hz
-## organic_textures / artifact_emulation
-
-- vinyl_surface_noise_level_db
-## organic_textures / bio_inspired_generative_decay
-
-- mycelial_network_density_decay_ms
-## organic_textures / bio_luminescence
-
-- bioluminescent_enzymatic_flash_interval_ms
-## organic_textures / biomimetic_growth
-
-- mycology_hyphal_tip_extension_velocity_um_per_min
-## organic_textures / environmental_acoustics
-
-- ambient_floor_air_absorption_db
-## organic_textures / environmental_noise
-
-- organic_textures_fire_crackle_event_density_hz
-- organic_textures_rain_drop_size_distribution_skew
-- organic_textures_vinyl_crackle_impact_velocity_sensitivity
-- organic_textures_wind_noise_spectral_color
-## organic_textures / environmental_soundscapes
-
-- rain_droplet_impact_rate_per_sec
-## organic_textures / film_soundtrack_emulation
-
-- optical_dust_scratch_density_per_sec
-## organic_textures / fluid_turbulence
-
-- isotropic_turbulent_cascade_kolmogorov_scale_ms
-## organic_textures / foley_synthesis
-
-- gravel_footstep_impact_granularity_factor
-## organic_textures / fractal_variation
-
-- fractal_texture_dimension
-## organic_textures / friction_acoustics
-
-- piezoelectric_friction_stick_slip_frequency_hz
-## organic_textures / granular_synthesis
-
-- organic_texture_grain_density_modulation_rate
-- shivering_cold_grain_freeze_density_ratio
-## organic_textures / hardware_emulation
-
-- analog_circuit_thermal_noise_level_db
-- instability_tree_noise_trigger_resonance
-## organic_textures / liquid_synthesis
-
-- organic_textures_water_droplet_resonance_decay_time_ms
-## organic_textures / micro_variation
-
-- organic_texture_irregularity
-## organic_textures / modal_variation
-
-- organic_resonance_mode_variation
-## organic_textures / natural_decay
-
-- natural_decay_curve_exponent
-## organic_textures / noise_generation
-
-- noise_color_spectral_slope
-- pink_noise_generator_level_db
-## organic_textures / resonance_variation
-
-- organic_resonance_decay_variation
-## organic_textures / tape_artifacts
-
-- organic_magnetic_tape_print_through_db
-## organic_textures / tape_emulation
-
-- analog_tape_asymmetric_saturator_bias_ratio
-- analog_tape_flutter_frequency_hz
-- analog_tape_head_azimuth_jitter_amount_arcmin
-- analog_tape_head_bump_gain_db
-- analog_tape_head_bump_q_factor
-- analog_tape_head_gap_azimuth_alignment_mode
-- analog_tape_head_gap_loss_compensation_db
-- analog_tape_head_gap_loss_filter_order
-- analog_tape_head_gap_loss_q_factor
-- analog_tape_head_saturator_drive_ratio
-- analog_tape_saturation_asymmetry_dc_bias_volts
-- analog_tape_saturation_even_harmonic_asymmetry_ratio
-- analog_tape_saturation_even_harmonic_bias_volts
-- analog_tape_saturation_even_harmonic_drive_db
-- analog_tape_saturation_even_harmonic_knee_smoothing_factor
-- analog_tape_saturation_even_harmonic_knee_smoothing_mode
-- analog_tape_saturation_even_harmonic_knee_smoothing_ratio
-- analog_tape_saturation_even_harmonic_knee_smoothing_shape
-- analog_tape_saturation_even_harmonic_knee_width_db
-- analog_tape_saturation_even_harmonic_ratio
-- analog_tape_saturation_even_harmonic_threshold_db
-- analog_tape_saturation_even_harmonic_threshold_mode
-- analog_tape_saturation_knee_smoothing_factor
-- analog_tape_saturation_knee_width_db
-- analog_tape_saturation_odd_harmonic_asymmetry_ratio
-- analog_tape_saturation_odd_harmonic_asymmetry_volts
-- analog_tape_saturation_odd_harmonic_bias_ratio
-- analog_tape_saturation_odd_harmonic_bias_volts
-- analog_tape_saturation_odd_harmonic_drive_db
-- analog_tape_saturation_odd_harmonic_knee_smoothing
-- analog_tape_saturation_odd_harmonic_knee_width_db
-- analog_tape_saturation_odd_harmonic_ratio
-- analog_tape_saturation_odd_harmonic_threshold_db
-- analog_tape_transport_flutter_depth_percent
-- cassette_wow_flutter_depth_percent
-- organic_tape_head_bump_frequency_hz
-- organic_tape_scrape_flutter_gain_db
-- tape_head_azimuth_alignment_error_arcmin
-- tape_head_azimuth_alignment_error_microns
-- tape_head_azimuth_lfo_rate_hz
-- tape_head_gap_loss_frequency_hz
-- tape_head_gap_width_microns
-- tape_head_saturator_flux_hysteresis_width
-- tape_hiss_noise_floor_db
-- tape_hysteresis_magnetic_remanence_tesla
-- tape_print_through_level_db
-- tape_print_through_pre_echo_db
-- tape_saturation_high_frequency_compression_db
-- tape_transport_wow_depth_percent
-## organic_textures / vinyl_emulation
-
-- nostalgic_vinyl_surface_crackle_density_per_sec
-- organic_vinyl_dust_crackle_density_per_second
-- organic_vinyl_groove_eccentricity_hz
-- organic_vinyl_groove_noise_spectral_tilt_db
-- organic_vinyl_groove_wear_factor
-- organic_vinyl_pinch_effect_distortion_ratio
-- organic_vinyl_rumble_center_frequency_hz

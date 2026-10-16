@@ -1,6 +1,6 @@
 # V3 technical names · part 1
 
-Generated: 2026-10-15T08:02:15.668Z
+Generated: 2026-10-16T06:05:21.023Z
 
 ## Acoustic Physics / Acoustic Absorption Materials
 
@@ -261,9 +261,16 @@ Generated: 2026-10-15T08:02:15.668Z
 
 - acoustic_wall_viscous_boundary_layer_roughness_microns
 - acoustic_wall_viscous_boundary_layer_roughness_smoothing_ms
-## Acoustic Physics / Wave Transmission
+## acoustic_modeling / boundary_reflections
 
 - acoustic_impedance_mismatch_ratio
+## acoustic_modeling / porous_acoustics
+
+- glottal_tissue_porosity_ratio
+- porous_absorber_tortuosity_factor
+## acoustic_modeling / surface_boundary
+
+- surface_roughness_micro_meters
 ## acoustic_physics / absorption
 
 - acoustic_boundary_absorption_coefficient
@@ -522,6 +529,39 @@ Generated: 2026-10-15T08:02:15.668Z
 - acoustic_physics_reed_stiffness_nonlinearity_factor
 - acoustic_physics_woodwind_bore_material_density
 - acoustic_physics_woodwind_bore_taper_ratio
+## aleatoric_generation / aleatoric_delay
+
+- aleatoric_delay_feedback_probability
+## aleatoric_generation / amplitude_modulation
+
+- aleatoric_amplitude_modulation_depth
+## algorithmic_composition / cellular_automata
+
+- cellular_automata_rule_index
+## algorithmic_composition / density_control
+
+- algorithmic_vocal_density
+## algorithmic_composition / l_system_generation
+
+- l_system_vocal_recursion_depth
+## algorithmic_composition / markov_sequencing
+
+- markov_chain_transition_entropy
+## binaural_modeling / crossfeed_processing
+
+- binaural_crossfeed_mix
+## binaural_modeling / hrtf_cues
+
+- interaural_time_difference_ms
+## binaural_modeling / material_physics
+
+- vocal_material_acoustic_impedance
+## chaotic_modulation / attractor_dynamics
+
+- lorenz_attractor_prandtl_number
+## chaotic_modulation / lfo_dynamics
+
+- chaotic_modulation_rate_hz
 ## Combinatorial Genesis / a3_sruti
 
 - a3_sruti_polyphonic_isotropic_mix
@@ -646,6 +686,15 @@ Generated: 2026-10-15T08:02:15.668Z
 ## compositional_structures / transition_effects
 
 - cinematic_trailer_downshifter_pitch_glide_time_s
+## cross_domain_control / envelope_generation
+
+- modular_envelope_generator_stage
+## cross_domain_control / matrix_routing
+
+- modular_patch_routing_matrix
+## cross_domain_control / modulation_routing
+
+- cross_domain_modulation_source_select
 ## cross_domain_controls / biological_metamorphosis_synthesis
 
 - spectral_chrysalis_morphology_stage
@@ -705,9 +754,29 @@ Generated: 2026-10-15T08:02:15.668Z
 ## Cross-Domain Controls / Psychoacoustic Filtering
 
 - psychoacoustic_masking_depth_ratio
+## digital_distortion / aliasing_control
+
+- bitcrush_aliasing_factor
+## digital_distortion / error_diffusion
+
+- quantization_error_diffusion_depth
+## dsp_and_fx_processing / chain_architecture
+
+- vocal_fx_chain_architecture
+- vocal_fx_chain_select
+## dsp_processing / vocal_fx_chains
+
+- vocal_signal_processing_chain_topology
 ## Dynamics & Nonlinear Systems / Harmonic Saturation
 
 - sub_bass_harmonic_drive_db
+## dynamics_processing / sidechain_compression
+
+- sidechain_compression_ratio
+- sidechain_duck_depth_db
+## dynamics_processing / vocal_envelopes
+
+- vocal_dynamic_behavior_transient_profile
 ## Dynamics / Compression Topology
 
 - compressor_attack_time_ms
@@ -865,46 +934,3 @@ Generated: 2026-10-15T08:02:15.668Z
 ## Dynamics / Expander Dynamic Curvature
 
 - dynamic_downward_expander_knee_smoothing_decay_ms
-- dynamic_downward_expander_ratio_knee_smoothing_rate
-## Dynamics / Expander Dynamic Scaling
-
-- dynamic_downward_expander_ratio_scaling_factor
-## Dynamics / Expander Dynamics
-
-- dynamic_downward_expander_attack_time_ms
-- dynamic_downward_expander_knee_smoothing_time_ms
-- dynamic_downward_expander_ratio_knee_smoothing_decay_ms
-- dynamic_downward_expander_ratio_knee_smoothing_decay_time_ms
-- dynamic_downward_expander_threshold_db
-- dynamic_downward_expander_threshold_hysteresis_decay_ms
-- dynamic_downward_expander_threshold_hysteresis_decay_rate
-- dynamic_downward_expander_threshold_hysteresis_ratio
-- dynamic_expansion_knee_characteristic_db
-## Dynamics / Expander Knee Controls
-
-- dynamic_downward_expander_knee_width_db
-## Dynamics / Expander Processing
-
-- dynamic_range_expansion_ratio
-- multiband_expander_attack_time_ms
-- multiband_expander_knee_width_db
-- multiband_expander_release_time_ms
-## Dynamics / Expander Range Controls
-
-- dynamic_downward_expander_attenuation_limit_db
-## Dynamics / Expander Threshold Dynamics
-
-- dynamic_downward_expander_threshold_hysteresis_ms
-- dynamic_downward_expander_threshold_hysteresis_smoothing_ms
-## Dynamics / Expander Threshold Kinetics
-
-- dynamic_downward_expander_threshold_hysteresis_rate
-## Dynamics / Expander Threshold Stabilization
-
-- dynamic_downward_expander_threshold_hysteresis_db
-## dynamics / expansion
-
-- decompressor_expansion_ratio
-- dynamic_decompressor_threshold_db
-- dynamic_expansion_ratio
-- dynamic_range_decompressor_expansion_ratio

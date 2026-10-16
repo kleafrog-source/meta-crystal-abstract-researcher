@@ -10,6 +10,7 @@ import os
 import shutil
 import struct
 import sys
+import tempfile
 import time
 from collections import defaultdict
 from pathlib import Path
@@ -362,6 +363,87 @@ def search_image(image_path: Path, data_root: Path, index_dir: Path, model_path:
     return {"results": results, "top_k": count, "value_mode": value_mode, "anchored_count": len(anchors), "index": status, "image": {"name": image_path.name}}
 
 
+def _matrix_image(matrix: np.ndarray, size: tuple[int, int]):
+    from PIL import Image
+
+    values = np.nan_to_num(np.asarray(matrix, dtype=np.float32))
+    low, high = np.percentile(values, [2.0, 98.0])
+    normalized = np.clip((values - low) / max(float(high - low), 1e-6), 0.0, 1.0)
+    red = np.clip(1.8 * normalized, 0.0, 1.0)
+    green = np.clip(1.8 * normalized - 0.45, 0.0, 1.0)
+    blue = np.clip(1.4 - 1.5 * normalized, 0.0, 1.0)
+    rgb = (np.stack((red, green, blue), axis=-1) * 255.0).astype(np.uint8)
+    return Image.fromarray(np.flipud(rgb), mode="RGB").resize(size, Image.Resampling.BILINEAR)
+
+
+def audio_spectrogram(audio_path: Path, output_path: Path, offset: float, duration: float, detail: str, layout: str) -> dict[str, object]:
+    import librosa
+    from PIL import Image
+
+    fft_sizes = {"low": 512, "medium": 1024, "high": 2048}
+    n_fft = fft_sizes.get(detail, 1024)
+    hop_length = max(64, n_fft // 4)
+    audio, sample_rate = librosa.load(
+        audio_path,
+        sr=32000,
+        mono=True,
+        offset=max(0.0, offset),
+        duration=max(0.1, duration),
+    )
+    if audio.size == 0:
+        raise RuntimeError("The selected audio segment is empty")
+    mel = librosa.feature.melspectrogram(
+        y=audio,
+        sr=sample_rate,
+        n_fft=n_fft,
+        hop_length=hop_length,
+        n_mels=224,
+        power=2.0,
+    )
+    decibels = librosa.power_to_db(mel, ref=np.max, top_db=80.0)
+    if layout == "composite":
+        magnitude = np.abs(librosa.stft(audio, n_fft=n_fft, hop_length=hop_length))
+        stft_db = librosa.amplitude_to_db(magnitude, ref=np.max, top_db=80.0)
+        chroma = librosa.feature.chroma_stft(S=magnitude**2, sr=sample_rate)
+        contrast = librosa.feature.spectral_contrast(
+            S=magnitude,
+            sr=sample_rate,
+            n_fft=n_fft,
+            hop_length=hop_length,
+        )
+        image = Image.new("RGB", (224, 224))
+        for position, matrix in (
+            ((0, 0), decibels),
+            ((112, 0), stft_db),
+            ((0, 112), chroma),
+            ((112, 112), contrast),
+        ):
+            image.paste(_matrix_image(matrix, (112, 112)), position)
+    else:
+        image = _matrix_image(decibels, (224, 224))
+    image.save(output_path, format="PNG")
+    return {
+        "sample_rate": sample_rate,
+        "n_fft": n_fft,
+        "hop_length": hop_length,
+        "mel_bands": 224,
+        "offset": max(0.0, offset),
+        "duration": max(0.1, duration),
+        "detail": detail,
+        "layout": layout,
+        "panels": ["mel", "stft", "chroma", "spectral_contrast"] if layout == "composite" else ["mel"],
+    }
+
+
+def search_audio(audio_path: Path, data_root: Path, index_dir: Path, model_path: Path, top_k: int, value_mode: str, offset: float, duration: float, detail: str, layout: str) -> dict[str, object]:
+    with tempfile.TemporaryDirectory(prefix="meta-crystal-siglip-audio-") as directory:
+        image_path = Path(directory) / "spectrogram.png"
+        spectrogram = audio_spectrogram(audio_path, image_path, offset, duration, detail, layout)
+        result = search_image(image_path, data_root, index_dir, model_path, top_k, value_mode)
+        result["audio"] = {"name": audio_path.name, **spectrogram}
+        return result
+
+
 def smoke(model_path: Path) -> dict[str, object]:
     from PIL import Image
     started = time.perf_counter()
@@ -395,12 +477,17 @@ def main() -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["smoke", "status", "build-index", "search"])
+    parser.add_argument("command", choices=["smoke", "status", "build-index", "search", "search-audio"])
     parser.add_argument("--model-path", type=Path, default=DEFAULT_MODEL_PATH)
     parser.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
     parser.add_argument("--index-dir", type=Path, default=DEFAULT_INDEX_DIR)
     parser.add_argument("--batch-size", type=int, default=24)
     parser.add_argument("--image", type=Path)
+    parser.add_argument("--audio", type=Path)
+    parser.add_argument("--offset", type=float, default=0.0)
+    parser.add_argument("--duration", type=float, default=10.0)
+    parser.add_argument("--spectrogram-detail", choices=["low", "medium", "high"], default="medium")
+    parser.add_argument("--spectrogram-layout", choices=["mel", "composite"], default="mel")
     parser.add_argument("--top-k", type=int, default=20)
     parser.add_argument("--value-mode", choices=["expressive", "conservative", "default"], default="expressive")
     args = parser.parse_args()
@@ -413,6 +500,9 @@ def main() -> int:
     elif args.command == "search":
         if not args.image: parser.error("--image is required for search")
         print(json.dumps(search_image(args.image.resolve(), args.data_root.resolve(), args.index_dir.resolve(), args.model_path.resolve(), max(1, min(100, args.top_k)), args.value_mode), ensure_ascii=False), flush=True)
+    elif args.command == "search-audio":
+        if not args.audio: parser.error("--audio is required for search-audio")
+        print(json.dumps(search_audio(args.audio.resolve(), args.data_root.resolve(), args.index_dir.resolve(), args.model_path.resolve(), max(1, min(100, args.top_k)), args.value_mode, max(0.0, args.offset), max(0.1, args.duration), args.spectrogram_detail, args.spectrogram_layout), ensure_ascii=False), flush=True)
     return 0
 
 

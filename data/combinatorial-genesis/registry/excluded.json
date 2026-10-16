@@ -1,10 +1,80 @@
 {
   "version": 1,
-  "updated_at": "2026-10-13T04:30:42.875Z",
+  "updated_at": "2026-10-16T00:55:48.520Z",
   "entries": [
+    {
+      "technical_name": "api_fail_safe_grace_period_ms",
+      "excluded_at": "2026-10-16T00:53:51.189Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "api_fail_safe_r7_bypass_decay_limit_seconds",
+      "excluded_at": "2026-10-16T00:53:51.189Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "api_failsafe_simplification_threshold",
+      "excluded_at": "2026-10-16T00:53:51.189Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "api_key_rotation_interval_days",
+      "excluded_at": "2026-10-16T00:53:51.189Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "api_rate_limit_requests_per_minute",
+      "excluded_at": "2026-10-16T00:53:51.189Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "api_request_timeout_seconds",
+      "excluded_at": "2026-10-16T00:53:51.189Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "auto_recursion_max_self_correction_attempts_limit",
+      "excluded_at": "2026-10-16T00:55:48.520Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
     {
       "technical_name": "auto_recursion_phase_adjacent_error_diffusion",
       "excluded_at": "2026-10-08T10:37:26.187Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "auto_recursion_r7_api_bypass_drone_simplifier",
+      "excluded_at": "2026-10-16T00:53:51.189Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "auto_recursion_seed_hash_auto_increment_step",
+      "excluded_at": "2026-10-16T00:55:48.520Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "provenance"
+    },
+    {
+      "technical_name": "auto_recursion_self_correction_density_rho_boost_step",
+      "excluded_at": "2026-10-16T00:55:48.520Z",
       "excluded_by": "user",
       "reason": "not sound-relevant",
       "scope": "sound"
@@ -19,6 +89,13 @@
     {
       "technical_name": "error_recovery_retry_attempts_max",
       "excluded_at": "2026-10-08T10:37:26.187Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "generative_lsystem_recursion_depth_limit",
+      "excluded_at": "2026-10-16T00:55:48.520Z",
       "excluded_by": "user",
       "reason": "not sound-relevant",
       "scope": "sound"
@@ -42,6 +119,34 @@
       "excluded_at": "2026-10-13T04:30:33.151Z",
       "excluded_by": "user",
       "reason": "bugged",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "validation_api_fail_safe_bypass_activation",
+      "excluded_at": "2026-10-16T00:53:51.189Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "validation_r7_api_bypass_ambient_drone_enforcement",
+      "excluded_at": "2026-10-16T00:53:51.189Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "validation_r7_api_bypass_decay_ceiling",
+      "excluded_at": "2026-10-16T00:53:51.189Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
+      "scope": "sound"
+    },
+    {
+      "technical_name": "validation_r7_api_bypass_decay_limit_seconds",
+      "excluded_at": "2026-10-16T00:53:51.189Z",
+      "excluded_by": "user",
+      "reason": "not sound-relevant",
       "scope": "sound"
     },
     {

@@ -35,6 +35,7 @@ interface RagV3State {
   topK: number;
   sources: RagV3Sources;
   scopes: RagV3Scopes;
+  vocalMatrixMode: boolean;
   searchMode: SearchMode;
   transitionRatio: number;
   instructionSlots: InstructionSlot[];
@@ -57,6 +58,7 @@ interface RagV3State {
   setTopK: (topK: number) => void;
   toggleSource: (source: keyof RagV3Sources) => void;
   toggleScope: (scope: RetrievalScope) => void;
+  toggleVocalMatrixMode: () => void;
   setSearchMode: (mode: SearchMode) => void;
   setTransitionRatio: (ratio: number) => void;
   updateInstructionSlot: (
@@ -245,6 +247,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
   topK: 50,
   sources: { library: true, frozen: true, atoms: true, generated: true },
   scopes: { sound: true, structure: true, metadata: false, provenance: false, administrative: false },
+  vocalMatrixMode: false,
   searchMode: "single",
   transitionRatio: 50,
   instructionSlots: DEFAULT_INSTRUCTION_SLOTS.map((slot) => ({ ...slot })),
@@ -306,7 +309,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
     set({ isSearching: true, searchError: null });
 
     try {
-      const response = await fetch("/api/rag-v3/propose-parameters", {
+      const response = await fetch(get().vocalMatrixMode ? "/api/vocal-allocation/search" : "/api/rag-v3/propose-parameters", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -443,6 +446,10 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
 
   toggleScope(scope) {
     set((state) => ({ scopes: { ...state.scopes, [scope]: !state.scopes[scope] } }));
+  },
+
+  toggleVocalMatrixMode() {
+    set((state) => ({ vocalMatrixMode: !state.vocalMatrixMode }));
   },
 
   setSearchMode(searchMode) {
@@ -612,6 +619,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
     topK: state.topK,
     sources: state.sources,
     scopes: state.scopes,
+    vocalMatrixMode: state.vocalMatrixMode,
   }),
 }));
 

@@ -46,6 +46,8 @@ export function SemanticSearch() {
   const scopes = useRagV3Store((state) => state.scopes);
   const toggleSource = useRagV3Store((state) => state.toggleSource);
   const toggleScope = useRagV3Store((state) => state.toggleScope);
+  const vocalMatrixMode = useRagV3Store((state) => state.vocalMatrixMode);
+  const toggleVocalMatrixMode = useRagV3Store((state) => state.toggleVocalMatrixMode);
   const [topKDraft, setTopKDraft] = useState(String(topK));
   const searchMode = useRagV3Store((state) => state.searchMode);
   const transitionRatio = useRagV3Store((state) => state.transitionRatio);
@@ -108,6 +110,9 @@ export function SemanticSearch() {
           </Button>
         </V3Tooltip>
         <InstructionSettingsDialog />
+        <V3Tooltip content="Включает целевой разбор языков, TECH4, FX4, вокальных слоёв и I/S/E/A. Обычный V3 остаётся доступен после отключения.">
+          <Button type="button" size="sm" variant={vocalMatrixMode ? "default" : "outline"} onClick={toggleVocalMatrixMode}>Vocal Matrix</Button>
+        </V3Tooltip>
         <div className="flex flex-wrap items-center gap-1">
           {([
             ["library", "Library"],

@@ -1365,10 +1365,12 @@ def main():
     except KeyboardInterrupt:
         emit_log("warn", "Прервано пользователем")
         emit_error("interrupted")
+        raise SystemExit(130)
     except Exception as e:
         emit_log("error", f"Необработанная ошибка: {e}")
         emit_log("error", traceback.format_exc())
         emit_error(str(e))
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

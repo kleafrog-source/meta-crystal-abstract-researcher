@@ -1,9 +1,219 @@
 # V3 technical names · part 4
 
-Generated: 2026-10-15T08:02:15.668Z
+Generated: 2026-10-16T06:05:21.023Z
 
+## Organic Textures / Physical Modeling
+
+- organic_wood_surface_resonance_decay_ms
+## Organic Textures / Tape Artifacts
+
+- analog_tape_barkhausen_noise_level_db
+- analog_tape_flux_leakage_crosstalk_db
+- analog_tape_head_azimuth_phase_skew_microseconds
+- analog_tape_layer_print_through_attenuation_db
+- cassette_tape_azimuth_alignment_error_degrees
+- tape_print_through_time_offset_sec
+## Organic Textures / Tape Emulation Artifacts
+
+- tape_print_through_echo_db
+## Organic Textures / Tape Emulation Modeling
+
+- analog_magnetic_tape_coercivity_oersted
+- fry_coercivity_dust_intersample_resonance
+## Organic Textures / Tape Emulation
+
+- analog_tape_demagnetization_loss_db
+- analog_tape_head_azimuth_phase_error_degrees
+- analog_tape_head_bump_frequency_hz
+- analog_tape_head_core_permeability_henry_per_meter
+- analog_tape_head_gap_azimuth_alignment_degrees
+- analog_tape_head_gap_depth_microns
+- analog_tape_head_gap_loss_attenuation_db_per_octave
+- analog_tape_head_gap_loss_corner_frequency_hz
+- analog_tape_head_gap_loss_high_frequency_damping_db_per_octave
+- analog_tape_head_gap_loss_high_frequency_phase_dispersion
+- analog_tape_head_gap_loss_high_frequency_phase_dispersion_mode
+- analog_tape_head_gap_loss_high_frequency_phase_dispersion_scaling
+- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_rate_db_per_sec
+- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_rate_scaling
+- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_rate_scaling_mode_type
+- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_time_ms
+- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_time_scaling
+- analog_tape_head_gap_loss_high_frequency_phase_offset_degrees
+- analog_tape_head_gap_loss_high_frequency_phase_offset_mode
+- analog_tape_head_gap_loss_high_frequency_phase_offset_ratio
+- analog_tape_head_gap_loss_high_frequency_phase_offset_scaling
+- analog_tape_head_gap_loss_high_frequency_phase_offset_scaling_factor
+- analog_tape_head_gap_loss_high_frequency_phase_shift_degrees
+- analog_tape_head_gap_loss_high_frequency_phase_slope
+- analog_tape_head_gap_loss_high_frequency_resonance_q
+- analog_tape_head_gap_loss_high_frequency_shelf_db
+- analog_tape_head_gap_width_azimuth_skew_ratio
+- analog_tape_head_gap_width_frequency_hz
+- analog_tape_head_gap_width_loss_db_per_khz
+- analog_tape_head_gap_width_microns
+- analog_tape_head_loss_frequency_hz
+- analog_tape_magnetic_coercivity_oersteds
+- tape_magnetic_saturation_bias_current_ma
+- tape_saturation_even_harmonic_drive_db
+- tape_saturation_odd_harmonic_drive_db
+## Organic Textures / Tape Machine Artifacts
+
+- tape_azimuth_alignment_error_microns
+## Organic Textures / Tape Modulation
+
+- tape_wow_and_flutter_frequency_hz
+## Organic Textures / Time Stretch
+
+- granular_time_stretch_ratio
+## Organic Textures / Transient Generation
+
+- percussive_transient_density_ratio
+## Organic Textures / Transient-Aware Granular Processing
+
+- granular_time_stretch_transient_preservation_ratio
+## Organic Textures / Transient-Synchronized Granular Synthesis
+
+- granular_transient_slice_threshold_db
+## Organic Textures / Vinyl Emulation
+
+- vinyl_pinch_effect_groove_radius_mm
+- vinyl_surface_crackle_density_fps
+## organic_textures / analog_emulation
+
+- tape_hiss_noise_density_db
+## organic_textures / analog_tape
+
+- tape_wow_and_flutter_rate_hz
+## organic_textures / artifact_emulation
+
+- vinyl_surface_noise_level_db
+## organic_textures / bio_inspired_generative_decay
+
+- mycelial_network_density_decay_ms
+## organic_textures / bio_luminescence
+
+- bioluminescent_enzymatic_flash_interval_ms
+## organic_textures / biomimetic_growth
+
+- mycology_hyphal_tip_extension_velocity_um_per_min
+## organic_textures / environmental_acoustics
+
+- ambient_floor_air_absorption_db
+## organic_textures / environmental_noise
+
+- organic_textures_fire_crackle_event_density_hz
+- organic_textures_rain_drop_size_distribution_skew
+- organic_textures_vinyl_crackle_impact_velocity_sensitivity
+- organic_textures_wind_noise_spectral_color
+## organic_textures / environmental_soundscapes
+
+- rain_droplet_impact_rate_per_sec
+## organic_textures / film_soundtrack_emulation
+
+- optical_dust_scratch_density_per_sec
+## organic_textures / fluid_turbulence
+
+- isotropic_turbulent_cascade_kolmogorov_scale_ms
+## organic_textures / foley_synthesis
+
+- gravel_footstep_impact_granularity_factor
+## organic_textures / fractal_variation
+
+- fractal_texture_dimension
+## organic_textures / friction_acoustics
+
+- piezoelectric_friction_stick_slip_frequency_hz
+## organic_textures / granular_synthesis
+
+- organic_texture_grain_density_modulation_rate
+- shivering_cold_grain_freeze_density_ratio
+## organic_textures / hardware_emulation
+
+- analog_circuit_thermal_noise_level_db
+- instability_tree_noise_trigger_resonance
+## organic_textures / liquid_synthesis
+
+- organic_textures_water_droplet_resonance_decay_time_ms
+## organic_textures / micro_variation
+
+- organic_texture_irregularity
+## organic_textures / modal_variation
+
+- organic_resonance_mode_variation
+## organic_textures / natural_decay
+
+- natural_decay_curve_exponent
+## organic_textures / noise_generation
+
+- noise_color_spectral_slope
+- pink_noise_generator_level_db
+## organic_textures / resonance_variation
+
+- organic_resonance_decay_variation
+## organic_textures / tape_artifacts
+
+- organic_magnetic_tape_print_through_db
+## organic_textures / tape_emulation
+
+- analog_tape_asymmetric_saturator_bias_ratio
+- analog_tape_flutter_frequency_hz
+- analog_tape_head_azimuth_jitter_amount_arcmin
+- analog_tape_head_bump_gain_db
+- analog_tape_head_bump_q_factor
+- analog_tape_head_gap_azimuth_alignment_mode
+- analog_tape_head_gap_loss_compensation_db
+- analog_tape_head_gap_loss_filter_order
+- analog_tape_head_gap_loss_q_factor
+- analog_tape_head_saturator_drive_ratio
+- analog_tape_saturation_asymmetry_dc_bias_volts
+- analog_tape_saturation_even_harmonic_asymmetry_ratio
+- analog_tape_saturation_even_harmonic_bias_volts
+- analog_tape_saturation_even_harmonic_drive_db
+- analog_tape_saturation_even_harmonic_knee_smoothing_factor
+- analog_tape_saturation_even_harmonic_knee_smoothing_mode
+- analog_tape_saturation_even_harmonic_knee_smoothing_ratio
+- analog_tape_saturation_even_harmonic_knee_smoothing_shape
+- analog_tape_saturation_even_harmonic_knee_width_db
+- analog_tape_saturation_even_harmonic_ratio
+- analog_tape_saturation_even_harmonic_threshold_db
+- analog_tape_saturation_even_harmonic_threshold_mode
+- analog_tape_saturation_knee_smoothing_factor
+- analog_tape_saturation_knee_width_db
+- analog_tape_saturation_odd_harmonic_asymmetry_ratio
+- analog_tape_saturation_odd_harmonic_asymmetry_volts
+- analog_tape_saturation_odd_harmonic_bias_ratio
+- analog_tape_saturation_odd_harmonic_bias_volts
+- analog_tape_saturation_odd_harmonic_drive_db
+- analog_tape_saturation_odd_harmonic_knee_smoothing
+- analog_tape_saturation_odd_harmonic_knee_width_db
+- analog_tape_saturation_odd_harmonic_ratio
+- analog_tape_saturation_odd_harmonic_threshold_db
+- analog_tape_transport_flutter_depth_percent
+- cassette_wow_flutter_depth_percent
+- organic_tape_head_bump_frequency_hz
+- organic_tape_scrape_flutter_gain_db
+- tape_head_azimuth_alignment_error_arcmin
+- tape_head_azimuth_alignment_error_microns
+- tape_head_azimuth_lfo_rate_hz
+- tape_head_gap_loss_frequency_hz
+- tape_head_gap_width_microns
+- tape_head_saturator_flux_hysteresis_width
+- tape_hiss_noise_floor_db
+- tape_hysteresis_magnetic_remanence_tesla
+- tape_print_through_level_db
+- tape_print_through_pre_echo_db
+- tape_saturation_high_frequency_compression_db
+- tape_transport_wow_depth_percent
 ## organic_textures / vinyl_emulation
 
+- nostalgic_vinyl_surface_crackle_density_per_sec
+- organic_vinyl_dust_crackle_density_per_second
+- organic_vinyl_groove_eccentricity_hz
+- organic_vinyl_groove_noise_spectral_tilt_db
+- organic_vinyl_groove_wear_factor
+- organic_vinyl_pinch_effect_distortion_ratio
+- organic_vinyl_rumble_center_frequency_hz
 - organic_vinyl_surface_crackle_density_per_second
 - organic_vinyl_surface_crackle_gain_db
 - organic_vinyl_surface_hiss_db
@@ -38,9 +248,35 @@ Generated: 2026-10-15T08:02:15.668Z
 ## performance_articulations / legato_transitions
 
 - legato_portamento_curvature_exponent
+## performance_expression / aftertouch_mapping
+
+- aftertouch_to_pitch_bend_range
+- aftertouch_to_vibrato_depth
+## performance_expression / mpe_control
+
+- mpe_slide_portamento_time
+- mpe_timbre_pressure_sensitivity
+## phase_control / focal_convergence
+
+- focus_convergence_sharpness
+## phase_control / transition_dynamics
+
+- phase_transition_smoothness_ratio
 ## physical_modeling / resonator_excitation
 
 - physical_resonator_excitation_position
+## polyglot_fusion / mode_selection
+
+- polyglot_mix_mode_select
+## polyglot_fusion / phoneme_swapping
+
+- cross_layer_phoneme_swap_prob
+## polyglot_fusion / pool_management
+
+- language_union_pool_size
+## polyglot_fusion / spectral_density
+
+- spectral_multilingual_texture_density
 ## Psychoacoustics / Auditory Illusion
 
 - shepard_tone_glissando_rate_semitones_per_sec
@@ -114,6 +350,7 @@ Generated: 2026-10-15T08:02:15.668Z
 - psychoacoustic_sharpness_high_frequency_weight_exponent
 ## psychoacoustics / auditory_masking
 
+- psychoacoustic_masking_depth_sone
 - psychoacoustic_masking_spread_function_slope_db_bark
 - psychoacoustic_masking_threshold_offset_db
 - psychoacoustic_masking_threshold_shift_db
@@ -344,6 +581,9 @@ Generated: 2026-10-15T08:02:15.668Z
 
 - psychoacoustic_loudness_tonal_masking_noise_margin_db
 - spectral_masking_threshold_offset_db
+## psychoacoustics / spectral_brightness
+
+- spectral_centroid_shift_perceived
 ## psychoacoustics / spectral_pruning
 
 - psychoacoustics_masking_threshold_offset_db
@@ -470,6 +710,18 @@ Generated: 2026-10-15T08:02:15.668Z
 ## Psychoacoustics / Virtual Bass
 
 - psychoacoustic_bass_boost_freq_hz
+## real_time_modulation / formant_control
+
+- real_time_formant_shift_cc
+## recursion_engine / dimensional_resolution
+
+- dimensional_resolution_df
+## recursion_engine / error_handling
+
+- auto_correction_attempt_count
+## recursion_engine / recursion_counter
+
+- recursion_depth_r_value
 ## Rhythm and Structure / Algorithmic Patterning
 
 - algorithmic_euclidean_step_length_count
@@ -572,271 +824,3 @@ Generated: 2026-10-15T08:02:15.668Z
 - rhythmic_pattern_ghost_note_velocity_ratio
 - rhythmic_pattern_syncopation_accent_boost_db
 - rhythmic_pattern_syncopation_density_index
-- rhythmic_pattern_syncopation_groove_humanize_amount_percent
-- rhythmic_pattern_syncopation_groove_humanize_curve
-- rhythmic_pattern_syncopation_groove_humanize_decay_ms
-- rhythmic_pattern_syncopation_groove_humanize_distribution
-- rhythmic_pattern_syncopation_groove_humanize_fade_in_ms
-- rhythmic_pattern_syncopation_groove_humanize_lfo_depth
-- rhythmic_pattern_syncopation_groove_humanize_lfo_depth_mode
-- rhythmic_pattern_syncopation_groove_humanize_lfo_depth_ratio
-- rhythmic_pattern_syncopation_groove_humanize_lfo_phase_deg
-- rhythmic_pattern_syncopation_groove_humanize_lfo_phase_mode
-- rhythmic_pattern_syncopation_groove_humanize_lfo_phase_offset_deg_value
-- rhythmic_pattern_syncopation_groove_humanize_lfo_phase_offset_ratio
-- rhythmic_pattern_syncopation_groove_humanize_lfo_phase_ratio
-- rhythmic_pattern_syncopation_groove_humanize_lfo_rate_hz
-- rhythmic_pattern_syncopation_groove_humanize_lfo_waveform
-- rhythmic_pattern_syncopation_groove_humanize_phase_offset_deg
-- rhythmic_pattern_syncopation_groove_humanize_ratio
-- rhythmic_pattern_syncopation_groove_humanize_seed
-- rhythmic_pattern_syncopation_groove_shift_ms
-- rhythmic_pattern_syncopation_humanize_bounds_ms
-- rhythmic_pattern_syncopation_humanize_jitter_ms
-- rhythmic_pattern_syncopation_humanize_pivot_step
-- rhythmic_pattern_syncopation_shift_steps
-- rhythmic_pattern_syncopation_weight_decay_ratio
-- rhythmic_syncopation_weight_index
-## rhythm_and_structure / groove_quantization
-
-- drum_machine_swing_groove_percentage
-## rhythm_and_structure / groove_templates
-
-- rhythm_structure_groove_template_offset_ms_array
-## rhythm_and_structure / groove_timing
-
-- groove_quantization_strength_percent
-- groove_shuffle_swing_percent
-- groove_shuffle_timing_offset_percent
-- rhythmic_swing_microtiming_offset
-- stochastic_groove_humanization_timing_window_ms
-- stochastic_rhythmic_swing_groove_bias
-## rhythm_and_structure / groove
-
-- groove_push_pull_offset_ms
-- groove_quantization_template_style
-- groove_shuffle_triplet_grid_bias
-- rhythmic_groove_phase_offset_degrees
-- rhythmic_groove_shuffle_triplet_feeling_ratio
-- rhythmic_swing_groove_amount_percent
-- rhythmic_swing_subdivision_base
-- swing_quantization_ratio
-## rhythm_and_structure / humanization
-
-- groove_humanization_timing_jitter_ms
-- rhythmic_groove_humanize_velocity_range
-- rhythmic_groove_microtiming_humanize_decay_ms
-## rhythm_and_structure / microtiming_groove
-
-- anxious_palpitation_tempo_rubato_flex_percentage
-- stochastic_isochronous_groove_deviation_ms
-## rhythm_and_structure / microtiming
-
-- rhythm_structure_microtiming_humanization_variance
-- rhythm_structure_swing_microtiming_curve_mode
-- rhythm_structure_swing_microtiming_jitter_ms
-- rhythm_structure_swing_microtiming_offset_percent
-## rhythm_and_structure / polymeter
-
-- polymeter_numerator_ratio_mode
-## rhythm_and_structure / polyrhythm_generation
-
-- polyrhythmic_divergence_angle_degrees
-## rhythm_and_structure / polyrhythmic_alignment
-
-- polyrhythmic_phase_displacement_beats
-## rhythm_and_structure / polyrhythmic_groove
-
-- subconscious_rhythmic_polyrhythm_swing_bias
-## rhythm_and_structure / polyrhythmic_sequencing
-
-- polyrhythmic_phase_drift_rate_hz
-- xenochronous_polybeat_ratio_numerator
-## rhythm_and_structure / polyrhythm
-
-- rhythm_structure_polyrhythm_layer_count
-- rhythm_structure_polyrhythm_phase_drift_rate
-- rhythm_structure_polyrhythm_phase_reset_mode
-- rhythmic_polyrhythm_numerator_pulse_count
-- rhythmic_polyrhythm_ratio_denominator
-## rhythm_and_structure / probabilistic_gating
-
-- sequencer_probability_gate_glitch_mode
-## rhythm_and_structure / quantization
-
-- quantization_grid_swing_amount
-## rhythm_and_structure / rhythmic_gating
-
-- rhythmic_gate_pattern_duty_cycle_ratio
-## rhythm_and_structure / rhythmic_grid
-
-- groove_syncopation_index
-- rhythmic_tuplet_division_count
-## rhythm_and_structure / sample_playback
-
-- sample_start_offset_milliseconds
-## rhythm_and_structure / sequencer_dynamics
-
-- drum_machine_accent_probability_threshold
-## rhythm_and_structure / sequencer_ratcheting
-
-- polyrhythmic_sequencer_ratchet_count
-## rhythm_and_structure / sequencer_traversal
-
-- sequencer_step_direction_playback_mode
-## rhythm_and_structure / stutter_effect
-
-- rhythmic_stutter_slice_count
-## rhythm_and_structure / tempo_control
-
-- rhythmic_pattern_tempo_multiplier_factor
-- rhythmic_pattern_tempo_rubato_amount_percent
-- rhythmic_pattern_tempo_sync_subdivision_enum
-## rhythm_and_structure / tempo_dynamics
-
-- groove_tempo_acceleration_bpm_per_min
-## rhythm_and_structure / tempo_humanization
-
-- stochastic_tempo_rubato_depth_bpm
-## rhythm_and_structure / transition_fills
-
-- transition_fill_stutter_triplet_subdivision_mode
-## rhythm_structure / accent_generation
-
-- rhythmic_accent_probability
-## rhythm_structure / cycle_organization
-
-- rhythmic_cycle_length
-## rhythm_structure / cycle_phase
-
-- rhythmic_phase_offset
-## rhythm_structure / euclidean_rhythm
-
-- euclidean_rhythm_fill_ratio
-## rhythm_structure / metric_emphasis
-
-- metric_accent_strength
-## rhythm_structure / phrase_segmentation
-
-- phrase_boundary_probability
-## rhythm_structure / tempo_synchronization
-
-- tempo_sync_division
-## rhythm_structure / timing_groove
-
-- rhythmic_swing_proportion
-## rhythm_structure / timing_variation
-
-- rhythmic_onset_jitter
-## rhythm / duration
-
-- fractional_duration_rhythm
-## sampler_engine / time_stretching
-
-- sampler_time_stretch_formant_preservation_ratio
-## sound / harmonic
-
-- harmonic_resonance
-## sound / interference
-
-- acoustic_interference
-## sound / pulsing
-
-- dual_pulsing
-## Spatial Perception / 3D Distance
-
-- spatial_binaural_distance_attenuation_meters
-## Spatial Perception / 3D Panning
-
-- binaural_azimuth_angle_degrees
-## Spatial Perception / 3D Positioning
-
-- spatial_head_related_transfer_function_elevation_degrees
-## Spatial Perception / 3D Spatial Positioning
-
-- binaural_azimuth_angle_deg
-- spatial_binaural_distance_attenuation_m
-- spatial_binaural_elevation_angle_deg
-- spatial_binaural_listener_ear_distance_m
-- spatial_binaural_listener_head_width_m
-- spatial_panning_elevation_degrees
-## Spatial Perception / Ambisonic Positioning
-
-- spatial_ambisonic_elevation_angle_deg
-## Spatial Perception / Ambisonics Spatialization
-
-- spatial_ambisonics_decoder_order
-## Spatial Perception / Ambisonics
-
-- ambisonic_b_format_w_channel_gain_db
-- ambisonic_order_truncation_threshold
-- spatial_ambisonic_order_index
-- spatial_ambisonic_zoom_focus_angle_deg
-## Spatial Perception / Atmospheric Acoustic Modeling
-
-- spatial_interspeaker_crossfeed_delay_temperature_coefficient_factor
-## Spatial Perception / Atmospheric Attenuation
-
-- spatial_distance_air_absorption_humidity_percent
-## Spatial Perception / Atmospheric Delay Physics
-
-- spatial_interspeaker_crossfeed_delay_temperature_compensation_ratio
-- spatial_interspeaker_crossfeed_delay_temperature_decay_ms
-- spatial_interspeaker_crossfeed_delay_temperature_decay_rate
-## Spatial Perception / Atmospheric Distance Modeling
-
-- spatial_binaural_distance_attenuation_frequency_exponent
-## Spatial Perception / Atmospheric Propagation Physics
-
-- spatial_interspeaker_crossfeed_delay_temperature_coefficient
-## Spatial Perception / Binaural Cues
-
-- binaural_distance_cue_air_absorption_humidity_decay_mode
-- binaural_distance_cue_air_absorption_humidity_decay_rate
-- binaural_distance_cue_air_absorption_humidity_decay_rate_scaling
-- binaural_distance_cue_air_absorption_humidity_decay_rate_scaling_mode_type
-- binaural_distance_cue_air_absorption_humidity_decay_scaling
-- binaural_distance_cue_air_absorption_humidity_decay_scaling_factor
-- binaural_distance_cue_air_absorption_humidity_decay_scaling_mode
-- binaural_distance_cue_air_absorption_humidity_offset_percentage
-- binaural_distance_cue_air_absorption_humidity_percentage
-- binaural_distance_cue_air_absorption_humidity_scaling
-- binaural_distance_cue_air_absorption_humidity_scaling_mode
-- binaural_distance_cue_air_absorption_humidity_scaling_mode_type
-- binaural_distance_cue_air_absorption_model_type
-- binaural_distance_cue_air_absorption_pressure_hpa
-- binaural_distance_cue_air_absorption_temperature_celsius
-- binaural_distance_cue_air_absorption_temperature_scaling
-- binaural_distance_cue_elevation_pinna_notch_width_hz
-- binaural_distance_cue_ground_reflection_delay_ms
-- binaural_distance_cue_ground_reflection_phase_invert
-- binaural_distance_cue_high_frequency_damping_hz
-- binaural_distance_cue_source_elevation_degrees
-- binaural_distance_cue_spherical_head_shadowing_db
-- binaural_interaural_spectral_difference_db
-- binaural_interaural_time_difference_smoothing_ms
-- binaural_listener_head_pitch_angle_degrees
-- binaural_listener_head_roll_angle_degrees
-- binaural_listener_head_yaw_angle_degrees
-- binaural_pinna_reflection_time_delay_microseconds
-- binaural_shoulder_reflection_gain_db
-- binaural_spherical_head_radius_meters
-- binaural_torso_reflection_delay_ms
-- interaural_level_difference_db
-- interaural_time_difference_microseconds
-- spatial_binaural_head_shadowing_cutoff_frequency_hz
-- spatial_binaural_pinna_elevation_notch_depth_db
-- spatial_headphone_crossfeed_level_db
-- spatial_listener_ear_canal_resonance_frequency_hz
-## Spatial Perception / Binaural Distance Scaling
-
-- spatial_binaural_distance_attenuation_frequency_scaling_factor
-## Spatial Perception / Binaural Localization
-
-- interaural_time_delay_milliseconds
-## Spatial Perception / Binaural Modeling
-
-- spatial_binaural_listener_head_radius_meters
-## Spatial Perception / Binaural Pinna Modeling
-
-- spatial_binaural_pinna_reflection_delay_microseconds

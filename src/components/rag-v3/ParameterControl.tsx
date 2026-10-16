@@ -4,7 +4,12 @@ import { ArchiveX, MoreVertical, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -18,9 +23,7 @@ import { Switch } from "@/components/ui/switch";
 import type { ActiveParameter, UiElement } from "@/lib/rag-v3/types";
 import { cn } from "@/lib/utils";
 import { useRagV3Store } from "@/store/rag-v3-store";
-import {
-  resolveDomainStyle,
-} from "./domain-style";
+import { resolveDomainStyle } from "./domain-style";
 import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
 
 export function ParameterControl(props: {
@@ -29,7 +32,9 @@ export function ParameterControl(props: {
   onChange?: (technicalName: string, value: number | string) => void;
   onRemove?: (technicalName: string) => void;
 }) {
-  const storeUpdateParameterValue = useRagV3Store((state) => state.updateParameterValue);
+  const storeUpdateParameterValue = useRagV3Store(
+    (state) => state.updateParameterValue,
+  );
   const storeRemoveParameter = useRagV3Store((state) => state.removeParameter);
   const updateParameterValue = props.onChange ?? storeUpdateParameterValue;
   const removeParameter = props.onRemove ?? storeRemoveParameter;
@@ -38,17 +43,27 @@ export function ParameterControl(props: {
       ? props.param.current_value
       : Number(props.param.current_value) || 0;
   const textValue = String(props.param.current_value ?? "");
-  const domainStyle = resolveDomainStyle(props.param.domain, props.param.technical_name);
+  const domainStyle = resolveDomainStyle(
+    props.param.domain,
+    props.param.technical_name,
+  );
   const excludeFromDatabase = async () => {
-    const reason = window.prompt("Причина исключения параметра из производных индексов:", "not sound-relevant");
+    const reason = window.prompt(
+      "Причина исключения параметра из производных индексов:",
+      "not sound-relevant",
+    );
     if (reason === null) return;
     const response = await fetch("/api/combinatorial-genesis/registry", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ technical_names: [props.param.technical_name], reason, scope: props.param.retrieval_scope }),
+      body: JSON.stringify({
+        technical_names: [props.param.technical_name],
+        reason,
+        scope: props.param.retrieval_scope,
+      }),
     });
     if (!response.ok) {
-      const payload = await response.json() as { error?: string };
+      const payload = (await response.json()) as { error?: string };
       window.alert(payload.error ?? `HTTP ${response.status}`);
       return;
     }
@@ -62,48 +77,110 @@ export function ParameterControl(props: {
       )}
     >
       <div className="min-w-0">
-              <div className="mb-2 flex items-center justify-between gap-1">
-                <span className={cn("truncate font-mono text-[9px] font-semibold uppercase tracking-tight", domainStyle.accentClassName)}>
-                  {props.param.technical_name.replace(/_/g, " ")}
-                </span>
-                <div className="flex items-center gap-1">
-                  <V3InfoTip content={<div className="space-y-1 text-[11px]"><div className="font-mono font-semibold">{props.param.technical_name}</div><div>{resolveRussianDescription(props.param)}</div><div className="text-muted-foreground">{props.param.domain ?? "General"} | {props.param.source} | sim {Math.round(props.param.similarity * 100)}%</div><div className="text-muted-foreground">{props.param.detail}</div></div>} />
-                  {props.param.excluded ? <Badge variant="outline" className="h-4 border-amber-400/40 px-1 text-[8px] text-amber-300">excluded</Badge> : null}
-                  <DropdownMenu>
-                    <V3Tooltip content="Открывает действия для этого параметра."><DropdownMenuTrigger asChild><button type="button" className="-mr-1 inline-flex size-4 shrink-0 items-center justify-center rounded text-zinc-600 opacity-0 transition-none group-hover:opacity-100 hover:text-white" aria-label="Parameter actions"><MoreVertical className="size-3" /></button></DropdownMenuTrigger></V3Tooltip>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => removeParameter(props.param.technical_name)}><X className="size-3" />Убрать из панели</DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-300" onClick={() => void excludeFromDatabase()}><ArchiveX className="size-3" />Исключить из базы</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+        <div className="mb-2 flex items-center justify-between gap-1">
+          <span
+            className={cn(
+              "truncate font-mono text-[9px] font-semibold uppercase tracking-tight",
+              domainStyle.accentClassName,
+            )}
+          >
+            {props.param.technical_name.replace(/_/g, " ")}
+          </span>
+          <div className="flex items-center gap-1">
+            <V3InfoTip
+              content={
+                <div className="space-y-1 text-[11px]">
+                  <div className="font-mono font-semibold">
+                    {props.param.technical_name}
+                  </div>
+                  <div>{resolveRussianDescription(props.param)}</div>
+                  <div className="text-muted-foreground">
+                    {props.param.domain ?? "General"} | {props.param.source} |
+                    sim {Math.round(props.param.similarity * 100)}%
+                  </div>
+                  <div className="text-muted-foreground">
+                    {props.param.detail}
+                  </div>
                 </div>
-              </div>
+              }
+            />
+            {props.param.excluded ? (
+              <Badge
+                variant="outline"
+                className="h-4 border-amber-400/40 px-1 text-[8px] text-amber-300"
+              >
+                excluded
+              </Badge>
+            ) : null}
+            <DropdownMenu>
+              <V3Tooltip content="Открывает действия для этого параметра.">
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="-mr-1 inline-flex size-4 shrink-0 items-center justify-center rounded text-zinc-600 opacity-0 transition-none group-hover:opacity-100 hover:text-white"
+                    aria-label="Parameter actions"
+                  >
+                    <MoreVertical className="size-3" />
+                  </button>
+                </DropdownMenuTrigger>
+              </V3Tooltip>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={() => removeParameter(props.param.technical_name)}
+                >
+                  <X className="size-3" />
+                  Убрать из панели
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="text-red-300"
+                  onClick={() => void excludeFromDatabase()}
+                >
+                  <ArchiveX className="size-3" />
+                  Исключить из базы
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
 
-              {props.param.ui_element === "Range" || props.param.ui_element === "Toggle" ? (
-                <RangeControl
-                  param={props.param}
-                  value={numericValue}
-                  onChange={(value) => updateParameterValue(props.param.technical_name, value)}
-                />
-              ) : null}
+        {props.param.ui_element === "Range" ||
+        props.param.ui_element === "Toggle" ? (
+          <RangeControl
+            param={props.param}
+            value={numericValue}
+            onChange={(value) =>
+              updateParameterValue(props.param.technical_name, value)
+            }
+          />
+        ) : null}
 
-              {props.param.ui_element === "Select" ? (
-                <SelectControl
-                  param={props.param}
-                  value={textValue}
-                  onChange={(value) => updateParameterValue(props.param.technical_name, parseTextValue(value, props.param.ui_element))}
-                />
-              ) : null}
+        {props.param.ui_element === "Select" ? (
+          <SelectControl
+            param={props.param}
+            value={textValue}
+            onChange={(value) =>
+              updateParameterValue(
+                props.param.technical_name,
+                parseTextValue(value, props.param.ui_element),
+              )
+            }
+          />
+        ) : null}
 
-              {props.param.ui_element !== "Range" &&
-              props.param.ui_element !== "Toggle" &&
-              props.param.ui_element !== "Select" ? (
-                <TextControl
-                  param={props.param}
-                  value={textValue}
-                  onChange={(value) => updateParameterValue(props.param.technical_name, parseTextValue(value, props.param.ui_element))}
-                />
-              ) : null}
+        {props.param.ui_element !== "Range" &&
+        props.param.ui_element !== "Toggle" &&
+        props.param.ui_element !== "Select" ? (
+          <TextControl
+            param={props.param}
+            value={textValue}
+            onChange={(value) =>
+              updateParameterValue(
+                props.param.technical_name,
+                parseTextValue(value, props.param.ui_element),
+              )
+            }
+          />
+        ) : null}
       </div>
     </div>
   );
@@ -115,15 +192,24 @@ function RangeControl(props: {
   onChange: (value: number) => void;
 }) {
   const min = props.param.min_value ?? 0;
-  const max = props.param.max_value ?? (props.param.ui_element === "Toggle" ? 1 : 100);
-  const step = props.param.step ?? (props.param.ui_element === "Toggle" ? 1 : 0.01);
+  const max =
+    props.param.max_value ?? (props.param.ui_element === "Toggle" ? 1 : 100);
+  const step =
+    props.param.step ?? (props.param.ui_element === "Toggle" ? 1 : 0.01);
   const clampedValue = clamp(roundToStep(props.value, min, step), min, max);
 
   if (props.param.ui_element === "Toggle") {
     return (
       <div className="flex h-[38px] items-center justify-between rounded border border-white/10 bg-black/50 px-2">
-        <span className="font-mono text-[10px] text-zinc-400">{clampedValue !== 0 ? "ON" : "OFF"}</span>
-        <V3Tooltip content="Включает или выключает логический параметр."><Switch checked={clampedValue !== 0} onCheckedChange={(checked) => props.onChange(checked ? 1 : 0)} /></V3Tooltip>
+        <span className="font-mono text-[10px] text-zinc-400">
+          {clampedValue !== 0 ? "ON" : "OFF"}
+        </span>
+        <V3Tooltip content="Включает или выключает логический параметр.">
+          <Switch
+            checked={clampedValue !== 0}
+            onCheckedChange={(checked) => props.onChange(checked ? 1 : 0)}
+          />
+        </V3Tooltip>
       </div>
     );
   }
@@ -131,34 +217,64 @@ function RangeControl(props: {
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <span className="font-mono text-[9px] text-zinc-500">{formatNumber(min, step)}</span>
-        <span className="font-mono text-xs font-semibold text-fuchsia-300">
-          {formatNumber(clampedValue, step)}{props.param.unit ? ` ${props.param.unit}` : ""}
+        <span className="font-mono text-[9px] text-zinc-500">
+          {formatNumber(min, step)}
         </span>
-        <span className="font-mono text-[9px] text-zinc-500">{formatNumber(max, step)}</span>
+        <span className="font-mono text-xs font-semibold text-fuchsia-300">
+          {formatNumber(clampedValue, step)}
+          {props.param.unit ? ` ${props.param.unit}` : ""}
+        </span>
+        <span className="font-mono text-[9px] text-zinc-500">
+          {formatNumber(max, step)}
+        </span>
       </div>
 
-      <V3Tooltip content={`Изменяет значение от ${formatNumber(min, step)} до ${formatNumber(max, step)} с шагом ${step}.`}>
-        <Slider value={[clampedValue]} min={min} max={max} step={step} onValueChange={(values) => {
-          if (values.length > 0) props.onChange(roundToStep(values[0], min, step));
-        }} />
+      <V3Tooltip
+        content={`Изменяет значение от ${formatNumber(min, step)} до ${formatNumber(max, step)} с шагом ${step}.`}
+      >
+        <Slider
+          value={[clampedValue]}
+          min={min}
+          max={max}
+          step={step}
+          onValueChange={(values) => {
+            if (values.length > 0)
+              props.onChange(roundToStep(values[0], min, step));
+          }}
+        />
       </V3Tooltip>
-
     </div>
   );
 }
 
-function SelectControl(props: { param: ActiveParameter; value: string; onChange: (value: string) => void }) {
+function SelectControl(props: {
+  param: ActiveParameter;
+  value: string;
+  onChange: (value: string) => void;
+}) {
   const options = props.param.options ?? [];
-  const safeValue = props.value && options.includes(props.value) ? props.value : (options[0] ?? "");
+  const safeValue =
+    props.value && options.includes(props.value)
+      ? props.value
+      : (options[0] ?? "");
 
   return (
     <div className="space-y-1">
-      <Label className="sr-only" htmlFor={`select-${props.param.technical_name}`}>
+      <Label
+        className="sr-only"
+        htmlFor={`select-${props.param.technical_name}`}
+      >
         {props.param.technical_name}
       </Label>
       <Select value={safeValue} onValueChange={props.onChange}>
-        <V3Tooltip content="Выберите одно из допустимых значений параметра."><SelectTrigger id={`select-${props.param.technical_name}`} className="h-[38px] border-white/10 bg-black/50 font-mono text-[10px]"><SelectValue placeholder="Select a value" /></SelectTrigger></V3Tooltip>
+        <V3Tooltip content="Выберите одно из допустимых значений параметра.">
+          <SelectTrigger
+            id={`select-${props.param.technical_name}`}
+            className="h-[38px] border-white/10 bg-black/50 font-mono text-[10px]"
+          >
+            <SelectValue placeholder="Select a value" />
+          </SelectTrigger>
+        </V3Tooltip>
         <SelectContent>
           {options.map((option) => (
             <SelectItem key={option} value={option}>
@@ -171,14 +287,27 @@ function SelectControl(props: { param: ActiveParameter; value: string; onChange:
   );
 }
 
-function TextControl(props: { param: ActiveParameter; value: string; onChange: (value: string) => void }) {
+function TextControl(props: {
+  param: ActiveParameter;
+  value: string;
+  onChange: (value: string) => void;
+}) {
   return (
     <div className="space-y-1">
       <Label className="sr-only" htmlFor={`text-${props.param.technical_name}`}>
         {props.param.technical_name}
       </Label>
       <V3Tooltip content="Введите текстовое или массивное значение параметра вручную.">
-        <Input id={`text-${props.param.technical_name}`} value={props.value} type="text" placeholder={String(props.param.default)} minLength={props.param.min_length} maxLength={props.param.max_length} onChange={(event) => props.onChange(event.target.value)} className="h-[38px] border-white/10 bg-black/50 font-mono text-[10px]" />
+        <Input
+          id={`text-${props.param.technical_name}`}
+          value={props.value}
+          type="text"
+          placeholder={String(props.param.default)}
+          minLength={props.param.min_length}
+          maxLength={props.param.max_length}
+          onChange={(event) => props.onChange(event.target.value)}
+          className="h-[38px] border-white/10 bg-black/50 font-mono text-[10px]"
+        />
       </V3Tooltip>
     </div>
   );
@@ -192,7 +321,9 @@ function formatNumber(value: number, step?: number): string {
     const decimals = Math.min(6, Math.max(0, Math.ceil(-Math.log10(step))));
     return value.toFixed(decimals);
   }
-  return Number.isInteger(value) ? String(value) : String(Math.round(value * 1000) / 1000);
+  return Number.isInteger(value)
+    ? String(value)
+    : String(Math.round(value * 1000) / 1000);
 }
 
 function parseTextValue(value: string, uiElement: UiElement): number | string {
@@ -208,7 +339,12 @@ function parseTextValue(value: string, uiElement: UiElement): number | string {
   return value;
 }
 
-function normalizePresetValue(value: number | string, min: number, max: number, step: number): number {
+function normalizePresetValue(
+  value: number | string,
+  min: number,
+  max: number,
+  step: number,
+): number {
   const numeric = typeof value === "number" ? value : Number(value);
   if (!Number.isFinite(numeric)) {
     return roundToStep(min, min, step);
@@ -242,7 +378,9 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 function resolveRussianDescription(param: ActiveParameter): string {
-  const russianKeyword = param.semantic_keywords.find((keyword) => /[А-Яа-яЁё]/.test(keyword));
+  const russianKeyword = param.semantic_keywords.find((keyword) =>
+    /[А-Яа-яЁё]/.test(keyword),
+  );
   if (russianKeyword) {
     return russianKeyword;
   }
@@ -259,5 +397,3 @@ function resolveRussianDescription(param: ActiveParameter): string {
 
   return "Параметр выбран через semantic retrieval и anchoring.";
 }
-
-

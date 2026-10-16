@@ -140,6 +140,9 @@ z-ai-glm-flowmusic-rag-ui-v2/anchoring/eval_report.json
 /TASK-list.md
 /STAGED_TASK_part2.md
 /task-cross-modal-consensus.md
+/new-flowmusic-sync-parameters-task/*.txt
+/new-flowmusic-sync-parameters-task/*.md
+/new-flowmusic-sync-parameters-task/*.json
 /reports/stage4_anchor_logs/*.json
 /data/combinatorial-genesis/white-space/
 /data/combinatorial-genesis/inbox-repair-report.json
@@ -150,4 +153,5 @@ z-ai-glm-flowmusic-rag-ui-v2/anchoring/eval_report.json
 /data/combinatorial-genesis/morpho-siglip-value-cache/
 /data/combinatorial-genesis/morpho-siglip.building/
 /data/combinatorial-genesis/morpho-siglip.previous/
+/data/combinatorial-genesis/vocal-phonetic/
 /data/cross-modal-consensus/
