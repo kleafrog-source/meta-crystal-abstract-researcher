@@ -836,9 +836,9 @@ function toMatchedEntry(
 }
 
 function inferSelectedValue(entry: LexiconEntry) {
-  if (entry.entity_type === "domain") return entry.technical?.default_value ?? true;
-  if (entry.entity_type === "generation_parameter") return entry.technical?.default_value ?? null;
-  return entry.technical?.name ?? null;
+  if (entry.entity_type === "domain") return asScalar(entry.technical?.default_value) ?? true;
+  if (entry.entity_type === "generation_parameter") return asScalar(entry.technical?.default_value);
+  return asScalar(entry.technical?.name);
 }
 
 function buildEntryText(entry: LexiconEntry): string {
@@ -900,4 +900,8 @@ function stringifyField(value: unknown) {
 
 function asNullableString(value: unknown) {
   return typeof value === "string" && value.trim() ? value : null;
+}
+
+function asScalar(value: unknown): string | number | boolean | null {
+  return typeof value === "string" || typeof value === "number" || typeof value === "boolean" ? value : null;
 }

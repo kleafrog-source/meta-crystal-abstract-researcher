@@ -130,7 +130,6 @@ interface CandidatePackage {
   created: boolean;
   package_path: string;
   publish_status: string;
-  writes_to_v2: boolean;
   summary: {
     candidate_count: number;
     publishable_count: number;
@@ -146,7 +145,6 @@ interface PublishResult {
   published: boolean;
   already_published: boolean;
   writes_to_library: boolean;
-  writes_to_v2: boolean;
   library_before_count: number;
   proposed_addition_count: number;
   simulated_after_count: number;
@@ -481,7 +479,7 @@ export function CombinatorialGenesisPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="outline"><ShieldCheck className="mr-1 size-3" />V2 isolated</Badge>
+              <Badge variant="outline"><ShieldCheck className="mr-1 size-3" />V3 protected</Badge>
               <Badge variant="outline"><Database className="mr-1 size-3" />library: {collectionStats?.library_parameter_count ?? "—"}</Badge>
               <Badge variant="outline">published: {collectionStats?.library_published_package_count ?? 0}</Badge>
               <Badge variant="outline">frozen runtime + qwen3-embedding</Badge>
@@ -753,9 +751,9 @@ export function CombinatorialGenesisPage() {
             <h2 className="font-mono text-sm font-semibold uppercase tracking-wide text-white">Safety boundary</h2>
             <div className="space-y-2 text-xs text-zinc-400">
               <p>1. Стартовые 2733 параметра скопированы в автономную библиотеку CG.</p>
-              <p>2. Генерация, проверка дублей и значения больше не читают файлы V2.</p>
+              <p>2. Генерация, проверка дублей и значения работают на автономных данных Combinatorial Genesis.</p>
               <p>3. Frozen atom index и qwen3-embedding:0.6b ранжируют атомы и готовые кандидаты.</p>
-              <p>4. Flowmusic Genesis V2 и его retrieval index не изменяются.</p>
+              <p>4. Рабочий датасет и retrieval index V3 изменяются только отдельной операцией публикации.</p>
               <p>5. Публикация добавляет только auto-resolved кандидаты в собственную базу CG с резервной копией.</p>
             </div>
           </aside>
@@ -778,13 +776,13 @@ export function CombinatorialGenesisPage() {
                 <PackageCheck className="size-4" />
                 {savingPackage ? "Saving dry-run..." : "Save experimental package"}
               </Button>
-              <span className="text-xs text-zinc-500">Сохраняет неизменяемый draft; V2 не изменяется.</span>
+              <span className="text-xs text-zinc-500">Сохраняет неизменяемый draft; рабочая база V3 не изменяется.</span>
             </div>
             {packageError ? <div className="rounded border border-red-500/30 bg-red-950/20 p-3 text-sm text-red-300">{packageError}</div> : null}
             {candidatePackage ? (
               <div className="rounded border border-emerald-400/30 bg-emerald-950/20 p-3 text-xs text-emerald-100">
                 <div className="font-mono">{candidatePackage.package_id} · {candidatePackage.created ? "created" : "reused"}</div>
-                <div className="mt-1">publishable: {candidatePackage.summary.publishable_count}/{candidatePackage.summary.candidate_count} · needs review: {candidatePackage.summary.needs_review_count} · V2 writes: {String(candidatePackage.writes_to_v2)}</div>
+                <div className="mt-1">publishable: {candidatePackage.summary.publishable_count}/{candidatePackage.summary.candidate_count} · needs review: {candidatePackage.summary.needs_review_count}</div>
                 <div className="mt-1 break-all text-emerald-200/60">{candidatePackage.package_path}</div>
                 <div className="mt-2 flex flex-wrap gap-2">
                   <Button type="button" variant="outline" onClick={() => void runPublish(true)} disabled={runningPublish !== null}>
@@ -805,7 +803,7 @@ export function CombinatorialGenesisPage() {
                   {" · "}{publishResult.ready_for_library_publish ? "ready" : "blocked"}
                 </div>
                 <div className="mt-1">CG library: {publishResult.library_before_count} → {publishResult.simulated_after_count} · additions {publishResult.proposed_addition_count}</div>
-                <div>collisions: {publishResult.collisions.length} · schema errors: {publishResult.schema_errors.length} · writes to library: {String(publishResult.writes_to_library)} · writes to V2: {String(publishResult.writes_to_v2)}</div>
+                <div>collisions: {publishResult.collisions.length} · schema errors: {publishResult.schema_errors.length} · writes to library: {String(publishResult.writes_to_library)}</div>
                 <div className="mt-1 break-all opacity-60">{publishResult.export_dir}</div>
               </div>
             ) : null}

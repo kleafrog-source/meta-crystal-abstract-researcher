@@ -13,7 +13,7 @@ import { rankCompositeNames } from "@/lib/rag-v3/composite-index";
 export const dynamic = "force-dynamic";
 export const maxDuration = 600;
 
-const PROMPT_PATH = path.join(process.cwd(), "FLOWMUSIC_COLLECTION_PROMPT_V1.md");
+const PROMPT_PATH = path.join(process.cwd(), "docs", "prompts", "FLOWMUSIC_COLLECTION_PROMPT_V1.md");
 
 function collectionResponseSchema(count: number): Record<string, unknown> {
   const commonProperties = {

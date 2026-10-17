@@ -134,6 +134,6 @@ Runtime preview выводит `quantity_kind`, `ui_element`, `unit`, диапа
 `reference/base_parameters.json` — неизменяемый стартовый снимок 2733 параметров V2. При первом запуске
 он копируется в локальную `library/parameters.json`. После этого preview, stop-list, value donors и
 публикация используют только собственную library; файлы Flowmusic Genesis V2 не читаются и не изменяются.
-На странице имя `FLOWMUSIC_COLLECTION_PROMPT_V1.md` открывает окно с полным актуальным текстом промта.
+На странице имя `FLOWMUSIC_COLLECTION_PROMPT_V1.md` открывает окно с актуальным текстом из `docs/prompts/FLOWMUSIC_COLLECTION_PROMPT_V1.md`.
 Канонические `library/parameters.json` и `library/manifest.json` не игнорируются Git, поэтому принятые
 результаты можно переносить вместе с проектом. Runtime indexes, exports и history-backups остаются локальными.

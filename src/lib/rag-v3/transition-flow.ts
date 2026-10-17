@@ -43,7 +43,7 @@ export function buildTransitionFlowReport(input: {
   const names = Array.from(new Set([...primaryMap.keys(), ...secondaryMap.keys()]));
 
   const entries = names
-    .map((name) => {
+    .map<TransitionFlowEntry | null>((name) => {
       const fromA = primaryMap.get(name);
       const fromB = secondaryMap.get(name);
       const current = activeMap.get(name);

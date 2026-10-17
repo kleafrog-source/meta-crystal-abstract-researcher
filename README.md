@@ -63,7 +63,6 @@ V3 datasets and generated local indexes (data/combinatorial-genesis)
 - `src/lib` — retrieval, управление Ollama/GPU, фоновые задания и общие типы.
 - `python_engine` — CLAP, SigLIP2, anchoring, combinatorial и служебные пайплайны.
 - `data/combinatorial-genesis` — локальная база V3, inbox и перестраиваемые индексы.
-- `z-ai-glm-flowmusic-rag-ui-v2/anchoring` — сохранённый legacy-контур V2. Каталог намеренно остаётся в проекте: Python-мост V2 читает его артефакты, хотя его отдельный старый UI не компилируется вместе с основным приложением.
 
 ## Данные и индексы
 
@@ -97,4 +96,4 @@ python -m compileall -q python_engine
 
 ## Репозиторий
 
-Проект использует `pnpm`; `node_modules` остаётся локальной виртуальной структурой со ссылками на общий store. Не добавляйте в Git содержимое `data`, `.next`, локальные модели, логи, временные спектрограммы и резервные копии. Перед удалением legacy-каталогов проверяйте обращения из `src` и `python_engine`: V2 anchoring остаётся рабочей зависимостью.
+Проект использует `pnpm`; `node_modules` остаётся локальной виртуальной структурой со ссылками на общий store. Не добавляйте в Git содержимое `data`, `.next`, локальные модели, логи, временные спектрограммы и резервные копии.

@@ -12,14 +12,6 @@ interface AppShellProps {
 }
 
 function pathnameToPage(pathname: string): PageId {
-  if (pathname === "/rag-parameters") {
-    return "ragparameters";
-  }
-
-  if (pathname === "/rag-parameters-v2") {
-    return "ragparametersv2";
-  }
-
   if (pathname === "/rag-parameters-v3") {
     return "ragparametersv3";
   }
@@ -91,16 +83,6 @@ export function AppShell({ children }: AppShellProps) {
 
   const handleNavigate = (page: PageId) => {
     setActivePage(page);
-
-    if (page === "ragparameters") {
-      router.push("/rag-parameters");
-      return;
-    }
-
-    if (page === "ragparametersv2") {
-      router.push("/rag-parameters-v2");
-      return;
-    }
 
     if (page === "ragparametersv3") {
       router.push("/rag-parameters-v3");

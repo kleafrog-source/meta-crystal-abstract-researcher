@@ -161,7 +161,6 @@ export async function POST(request: Request) {
       published: !body.dry_run && ready && !alreadyPublished,
       already_published: alreadyPublished,
       writes_to_library: !body.dry_run && ready && !alreadyPublished,
-      writes_to_v2: false,
       library_path: GENESIS_LIBRARY_PATH,
       library_before_count: library.length,
       proposed_addition_count: additions.length,

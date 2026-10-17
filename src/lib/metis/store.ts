@@ -154,7 +154,7 @@ export class MetisStore {
     total: 0.0193,
     weights: { recon: 1, op: 0.8, reg: 0.3 },
   };
-  last_gates = null;
+  last_gates: SystemState["metis"]["last_gates"] = null;
   last_top_rho: TopRhoSelection | null = null;
   last_forget_op_count = 0;
   last_total_op_count = 0;

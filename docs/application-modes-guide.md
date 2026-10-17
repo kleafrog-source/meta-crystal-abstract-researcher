@@ -581,7 +581,7 @@ Meta-Crystal V3 Lab Flow
 
 3. **Collection Protocol**:
    - LLM instructed to follow Flowmusic collection protocol
-   - Protocol loaded from `FLOWMUSIC_COLLECTION_PROMPT_V1.md`
+   - Protocol loaded from `docs/prompts/FLOWMUSIC_COLLECTION_PROMPT_V1.md`
    - Enforces JSON schema with all required fields
    - Specifies batch size override (requested count vs. fixed 10)
 
@@ -874,7 +874,7 @@ Potential improvements to the application modes:
 
 Route: `/white-space-discovery`.
 
-This read-only V3 analysis uses the active canonical snapshot and the existing composite index. It reports taxonomy coverage gaps, rare or source-less atoms, low local semantic density, and isolated knowledge-graph parameters. Every result includes deterministic evidence and a suggested query that can be opened in Meta-Crystal V3 Lab or Combinatorial Synthesis. Building and stopping the report does not call Ollama, publish parameters, or modify V2/V3 datasets.
+This read-only V3 analysis uses the active canonical snapshot and the existing composite index. It reports taxonomy coverage gaps, rare or source-less atoms, low local semantic density, and isolated knowledge-graph parameters. Every result includes deterministic evidence and a suggested query that can be opened in Meta-Crystal V3 Lab or Combinatorial Synthesis. Building and stopping the report does not call Ollama, publish parameters, or modify the V3 dataset.
 
 Runtime artifacts are stored under `data/combinatorial-genesis/white-space/` and are excluded from Git. A dataset, exclusion registry, composite-index, or graph change marks the report stale.
 

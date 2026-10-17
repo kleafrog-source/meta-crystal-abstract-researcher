@@ -39,8 +39,6 @@ export type PageId =
   | "crystalpool"
   | "torusatlas"
   | "map"
-  | "ragparameters"
-  | "ragparametersv2"
   | "ragparametersv3"
   | "combinatorialgenesis"
   | "combinatorialsynthesis"
@@ -159,18 +157,6 @@ const NAV_ITEMS: NavItem[] = [
     description: "LLM-провайдер и параметры",
   },
   {
-    id: "ragparameters",
-    label: "Flowmusic Genesis",
-    icon: <Sliders className="h-4 w-4" />,
-    description: "RAG Parameters UI with local Ollama embeddings and Flowmusic macro generation",
-  },
-  {
-    id: "ragparametersv2",
-    label: "Flowmusic Genesis V2",
-    icon: <Sliders className="h-4 w-4" />,
-    description: "Isolated Semantic Value Anchoring v2 page with scoped retrieval and Python runtime anchoring",
-  },
-  {
     id: "ragparametersv3",
     label: "Flowmusic Genesis V3",
     icon: <Sparkles className="h-4 w-4" />,
@@ -180,7 +166,7 @@ const NAV_ITEMS: NavItem[] = [
     id: "combinatorialgenesis",
     label: "Combinatorial Genesis",
     icon: <FlaskConical className="h-4 w-4" />,
-    description: "Изолированная лаборатория новых комбинаций без записи в датасет Genesis V2",
+    description: "Изолированная лаборатория новых комбинаций без прямой записи в рабочий датасет V3",
   },
   {
     id: "combinatorialsynthesis",

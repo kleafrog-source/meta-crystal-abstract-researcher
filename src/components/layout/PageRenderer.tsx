@@ -1,20 +1,8 @@
 "use client";
 
-import { Dashboard } from "@/components/pages/Dashboard";
-import { Chat } from "@/components/pages/Chat";
-import { Crystals } from "@/components/pages/Crystals";
-import { Enrichment } from "@/components/pages/Enrichment";
-import { Generation } from "@/components/pages/Generation";
-import { GWCollapser } from "@/components/pages/GWCollapser";
-import { GWCollapserCrystalPool } from "@/components/pages/GWCollapserCrystalPool";
-import { Import } from "@/components/pages/Import";
-import { MMSS } from "@/components/pages/MMSS";
-import { Map } from "@/components/pages/Map";
-import { MetisLab } from "@/components/pages/MetisLab";
-import { MetisResearchLab } from "@/components/pages/MetisResearchLab";
-import { Pipelines } from "@/components/pages/Pipelines";
-import { RagParametersPage } from "@/components/pages/RagParametersPage";
-import { RagParametersV2Page } from "@/components/pages/RagParametersV2Page";
+import dynamic from "next/dynamic";
+
+import { AMCoreDashboard } from "@/components/pages/AMCoreDashboard";
 import { RagParametersV3Page } from "@/components/pages/RagParametersV3Page";
 import { CombinatorialGenesisPage } from "@/components/pages/CombinatorialGenesisPage";
 import { CombinatorialSynthesisPage } from "@/components/pages/CombinatorialSynthesisPage";
@@ -26,10 +14,23 @@ import { KnowledgeGraphPage } from "@/components/pages/KnowledgeGraphPage";
 import { MorphoAcousticRagPage } from "@/components/pages/MorphoAcousticRagPage";
 import { CrossModalConsensusPage } from "@/components/pages/CrossModalConsensusPage";
 import { VocalAllocationMatrixPage } from "@/components/pages/VocalAllocationMatrixPage";
-import { SemanticPlane } from "@/components/pages/SemanticPlane";
 import { Settings } from "@/components/pages/Settings";
-import { TorusAtlas } from "@/components/pages/TorusAtlas";
 import type { PageId } from "@/components/layout/Sidebar";
+
+const SemanticPlane = dynamic(() => import("@/components/pages/SemanticPlane").then((module) => module.SemanticPlane));
+const Generation = dynamic(() => import("@/components/pages/Generation").then((module) => module.Generation));
+const Pipelines = dynamic(() => import("@/components/pages/Pipelines").then((module) => module.Pipelines));
+const Crystals = dynamic(() => import("@/components/pages/Crystals").then((module) => module.Crystals));
+const Import = dynamic(() => import("@/components/pages/Import").then((module) => module.Import));
+const Enrichment = dynamic(() => import("@/components/pages/Enrichment").then((module) => module.Enrichment));
+const Chat = dynamic(() => import("@/components/pages/Chat").then((module) => module.Chat));
+const MMSS = dynamic(() => import("@/components/pages/MMSS").then((module) => module.MMSS));
+const MetisLab = dynamic(() => import("@/components/pages/MetisLab").then((module) => module.MetisLab));
+const MetisResearchLab = dynamic(() => import("@/components/pages/MetisResearchLab").then((module) => module.MetisResearchLab));
+const GWCollapser = dynamic(() => import("@/components/pages/GWCollapser").then((module) => module.GWCollapser));
+const GWCollapserCrystalPool = dynamic(() => import("@/components/pages/GWCollapserCrystalPool").then((module) => module.GWCollapserCrystalPool));
+const TorusAtlas = dynamic(() => import("@/components/pages/TorusAtlas").then((module) => module.TorusAtlas));
+const Map = dynamic(() => import("@/components/pages/Map").then((module) => module.Map));
 
 export function PageRenderer(props: {
   activePage: PageId;
@@ -37,7 +38,7 @@ export function PageRenderer(props: {
 }) {
   switch (props.activePage) {
     case "dashboard":
-      return <Dashboard onNavigate={props.setActivePage} />;
+      return <AMCoreDashboard onNavigate={props.setActivePage} />;
     case "generation":
       return <Generation />;
     case "pipelines":
@@ -66,10 +67,6 @@ export function PageRenderer(props: {
       return <TorusAtlas />;
     case "map":
       return <Map />;
-    case "ragparameters":
-      return <RagParametersPage />;
-    case "ragparametersv2":
-      return <RagParametersV2Page />;
     case "ragparametersv3":
       return <RagParametersV3Page />;
     case "combinatorialgenesis":
@@ -95,6 +92,6 @@ export function PageRenderer(props: {
     case "settings":
       return <Settings />;
     default:
-      return <Dashboard onNavigate={props.setActivePage} />;
+      return <AMCoreDashboard onNavigate={props.setActivePage} />;
   }
 }

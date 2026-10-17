@@ -38,10 +38,6 @@
   ],
   "exclude": [
     "node_modules",
-    "z-ai-glm-flowmusic-rag-ui-v2",
-    "metis-torus-atlas-demo",
-    "metis-torus-atlas-demo-v2",
-    "psyvibe-instruction-synthesizer",
     ".next",
     ".next/**"
   ]

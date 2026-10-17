@@ -146,7 +146,6 @@ export async function POST(request: Request) {
       created_at: new Date().toISOString(),
       content_sha256: contentSha256,
       publish_status: "autonomous_library_publishable",
-      writes_to_v2: false,
       source: {
         dataset_version: latest.version_id,
         embedding_model: body.embedding_model,
