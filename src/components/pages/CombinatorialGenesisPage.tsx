@@ -484,7 +484,7 @@ export function CombinatorialGenesisPage() {
               <Badge variant="outline"><ShieldCheck className="mr-1 size-3" />V2 isolated</Badge>
               <Badge variant="outline"><Database className="mr-1 size-3" />library: {collectionStats?.library_parameter_count ?? "—"}</Badge>
               <Badge variant="outline">published: {collectionStats?.library_published_package_count ?? 0}</Badge>
-              <Badge variant="outline">frozen runtime + BGE</Badge>
+              <Badge variant="outline">frozen runtime + qwen3-embedding</Badge>
               {collectionStats?.runtime_index_ready ? (
                 <Badge variant="outline">atom index: {collectionStats.runtime_index_atom_count}</Badge>
               ) : null}
@@ -535,7 +535,7 @@ export function CombinatorialGenesisPage() {
           <div className="rounded border border-emerald-400/20 bg-black/30 p-3">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="font-mono text-xs text-emerald-100">flowmusic-inbox → frozen dataset → BGE index</div>
+                <div className="font-mono text-xs text-emerald-100">flowmusic-inbox → frozen dataset → embedding model index</div>
                 <div className="mt-1 text-xs text-zinc-500">
                   Добавьте .txt/.md в data/combinatorial-genesis/flowmusic-inbox и запустите все этапы одной кнопкой.
                 </div>
@@ -649,7 +649,7 @@ export function CombinatorialGenesisPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <GitCompareArrows className="size-4 text-cyan-300" />
-                  <h2 className="font-mono text-sm font-semibold uppercase tracking-wide text-white">BGE semantic review</h2>
+                  <h2 className="font-mono text-sm font-semibold uppercase tracking-wide text-white">Embedding model semantic review</h2>
                 </div>
                 <p className="mt-1 max-w-4xl text-xs text-zinc-400">
                   Алгоритм сам классифицирует пары как same, related или distinct. Ручные кнопки оставлены
@@ -657,7 +657,7 @@ export function CombinatorialGenesisPage() {
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary">model: {collectionStats?.semantic_model ?? "bge-m3"}</Badge>
+                <Badge variant="secondary">model: {collectionStats?.semantic_model ?? "qwen3-embedding:0.6b"}</Badge>
                 <Badge variant="secondary">review pairs: {semanticReview.total}</Badge>
                 <Badge variant="secondary">same: {collectionStats?.auto_decision_counts?.same ?? "—"}</Badge>
                 <Badge variant="secondary">related: {collectionStats?.auto_decision_counts?.related ?? "—"}</Badge>
@@ -728,7 +728,7 @@ export function CombinatorialGenesisPage() {
               placeholder={"viscous_sub_bass_hydrodynamic_shear_strain_rate_sec: 145\ninfrasonic_shockwave_refraction_index_ratio: 1.45\nglottal_pulse_subharmonic_cascade_depth: 0.25"}
             />
             <label className="block space-y-1 text-xs text-zinc-400">
-              <span>Intent/query for bge-m3 (optional; macro names are used when empty)</span>
+              <span>Intent/query for qwen3-embedding:0.6b (optional; macro names are used when empty)</span>
               <Input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
@@ -754,7 +754,7 @@ export function CombinatorialGenesisPage() {
             <div className="space-y-2 text-xs text-zinc-400">
               <p>1. Стартовые 2733 параметра скопированы в автономную библиотеку CG.</p>
               <p>2. Генерация, проверка дублей и значения больше не читают файлы V2.</p>
-              <p>3. Frozen atom index и bge-m3 ранжируют атомы и готовые кандидаты.</p>
+              <p>3. Frozen atom index и qwen3-embedding:0.6b ранжируют атомы и готовые кандидаты.</p>
               <p>4. Flowmusic Genesis V2 и его retrieval index не изменяются.</p>
               <p>5. Публикация добавляет только auto-resolved кандидаты в собственную базу CG с резервной копией.</p>
             </div>

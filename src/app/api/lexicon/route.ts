@@ -223,7 +223,7 @@ export async function GET(request: Request) {
         },
         {
           id: "embedding_index",
-          name: "BGE-M3 indexing",
+          name: "qwen3-embedding:0.6b indexing",
           status: "future",
           description: "Создание embeddings и retrieval index после утверждения semantic layer.",
         },

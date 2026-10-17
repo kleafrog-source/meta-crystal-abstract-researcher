@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a local bge-m3 atom index for the latest frozen Combinatorial Genesis dataset."""
+"""Build a local qwen3-embedding:0.6b atom index for the latest frozen Combinatorial Genesis dataset."""
 
 from __future__ import annotations
 

@@ -29,7 +29,7 @@ const DEFAULT_CONFIG: MetisProviderConfig = {
   embeddingProvider: (process.env.METIS_EMBED_PROVIDER as "stub" | "vllm" | "ollama") || "stub",
   vllmBaseUrl: process.env.METIS_VLLM_BASE_URL || "http://127.0.0.1:8000/v1",
   vllmModel: process.env.METIS_VLLM_MODEL || "IAAR-Shanghai/Metis-4B",
-  vllmEmbeddingModel: process.env.METIS_VLLM_EMBED_MODEL || "BAAI/bge-small-en-v1.5",
+  vllmEmbeddingModel: process.env.METIS_VLLM_EMBED_MODEL || "Qwen/Qwen3-Embedding-0.6B",
   ollamaBaseUrl: process.env.METIS_OLLAMA_BASE_URL || "http://127.0.0.1:11434",
   ollamaModel: process.env.METIS_OLLAMA_MODEL || "mmss-qwen2.5-3b-cpu2:latest",
   ollamaEmbeddingModel: process.env.METIS_OLLAMA_EMBED_MODEL || "qwen3-embedding:4b",
@@ -100,7 +100,7 @@ function createStubEmbedding(text: string): EmbeddingResponse {
   const vector = normalize(Array.from({ length: EMBEDDING_DIM }, () => (rng() - 0.5) * 2));
   return {
     vector,
-    modelId: "stub:bge-small-en-v1.5@local",
+    modelId: "stub:hash-384d@local",
     dim: EMBEDDING_DIM,
     inferenceMs: Date.now() - startedAt,
   };

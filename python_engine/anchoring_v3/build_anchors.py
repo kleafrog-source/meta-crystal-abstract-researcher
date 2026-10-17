@@ -739,7 +739,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  OK, dim={len(probe)}")
     except Exception as e:
         print(f"  FAIL: {e}", file=sys.stderr)
-        print("  Hint: запустите `ollama serve` и `ollama pull bge-m3`", file=sys.stderr)
+        print("  Hint: запустите `ollama serve` и `ollama pull qwen3-embedding:0.6b`", file=sys.stderr)
         return 2
 
     # 1. Эмбеддинг якорей + u_a, c_a

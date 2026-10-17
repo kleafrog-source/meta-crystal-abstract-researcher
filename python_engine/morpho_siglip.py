@@ -376,32 +376,55 @@ def _matrix_image(matrix: np.ndarray, size: tuple[int, int]):
     return Image.fromarray(np.flipud(rgb), mode="RGB").resize(size, Image.Resampling.BILINEAR)
 
 
+def _zscore_channel(matrix: np.ndarray, clip: float = 3.0) -> np.ndarray:
+    values = np.nan_to_num(np.asarray(matrix, dtype=np.float32))
+    normalized = (values - float(values.mean())) / max(float(values.std()), 1e-6)
+    return np.clip((normalized + clip) / (2.0 * clip), 0.0, 1.0)
+
+
+def _rgb_delta_image(decibels: np.ndarray):
+    import librosa
+    from PIL import Image
+
+    red = _zscore_channel(decibels)
+    green = _zscore_channel(librosa.feature.delta(decibels, order=1))
+    blue = _zscore_channel(librosa.feature.delta(decibels, order=2))
+    rgb = (np.stack((red, green, blue), axis=-1) * 255.0).astype(np.uint8)
+    return Image.fromarray(np.flipud(rgb), mode="RGB")
+
+
 def audio_spectrogram(audio_path: Path, output_path: Path, offset: float, duration: float, detail: str, layout: str) -> dict[str, object]:
     import librosa
     from PIL import Image
 
     fft_sizes = {"low": 512, "medium": 1024, "high": 2048}
-    n_fft = fft_sizes.get(detail, 1024)
-    hop_length = max(64, n_fft // 4)
+    n_fft = 2048 if layout == "rgb_delta" else fft_sizes.get(detail, 1024)
     audio, sample_rate = librosa.load(
         audio_path,
-        sr=32000,
+        sr=44100 if layout == "rgb_delta" else 32000,
         mono=True,
         offset=max(0.0, offset),
         duration=max(0.1, duration),
     )
     if audio.size == 0:
         raise RuntimeError("The selected audio segment is empty")
+    n_mels = 256 if layout == "rgb_delta" else 224
+    hop_length = max(64, round((audio.size - n_fft) / max(1, n_mels - 1))) if layout == "rgb_delta" else max(64, n_fft // 4)
     mel = librosa.feature.melspectrogram(
         y=audio,
         sr=sample_rate,
         n_fft=n_fft,
         hop_length=hop_length,
-        n_mels=224,
+        n_mels=n_mels,
         power=2.0,
+        center=False if layout == "rgb_delta" else True,
     )
     decibels = librosa.power_to_db(mel, ref=np.max, top_db=80.0)
-    if layout == "composite":
+    if layout == "rgb_delta":
+        source_image = _rgb_delta_image(decibels)
+        pre_resize = [source_image.width, source_image.height]
+        image = source_image.resize((224, 224), Image.Resampling.BILINEAR)
+    elif layout == "composite":
         magnitude = np.abs(librosa.stft(audio, n_fft=n_fft, hop_length=hop_length))
         stft_db = librosa.amplitude_to_db(magnitude, ref=np.max, top_db=80.0)
         chroma = librosa.feature.chroma_stft(S=magnitude**2, sr=sample_rate)
@@ -421,17 +444,20 @@ def audio_spectrogram(audio_path: Path, output_path: Path, offset: float, durati
             image.paste(_matrix_image(matrix, (112, 112)), position)
     else:
         image = _matrix_image(decibels, (224, 224))
+    if layout != "rgb_delta":
+        pre_resize = [int(decibels.shape[1]), int(decibels.shape[0])]
     image.save(output_path, format="PNG")
     return {
         "sample_rate": sample_rate,
         "n_fft": n_fft,
         "hop_length": hop_length,
-        "mel_bands": 224,
+        "mel_bands": n_mels,
+        "pre_resize_shape": pre_resize,
         "offset": max(0.0, offset),
         "duration": max(0.1, duration),
         "detail": detail,
         "layout": layout,
-        "panels": ["mel", "stft", "chroma", "spectral_contrast"] if layout == "composite" else ["mel"],
+        "panels": ["mel", "delta_1", "delta_2"] if layout == "rgb_delta" else (["mel", "stft", "chroma", "spectral_contrast"] if layout == "composite" else ["mel"]),
     }
 
 
@@ -487,7 +513,7 @@ def main() -> int:
     parser.add_argument("--offset", type=float, default=0.0)
     parser.add_argument("--duration", type=float, default=10.0)
     parser.add_argument("--spectrogram-detail", choices=["low", "medium", "high"], default="medium")
-    parser.add_argument("--spectrogram-layout", choices=["mel", "composite"], default="mel")
+    parser.add_argument("--spectrogram-layout", choices=["mel", "composite", "rgb_delta"], default="rgb_delta")
     parser.add_argument("--top-k", type=int, default=20)
     parser.add_argument("--value-mode", choices=["expressive", "conservative", "default"], default="expressive")
     args = parser.parse_args()

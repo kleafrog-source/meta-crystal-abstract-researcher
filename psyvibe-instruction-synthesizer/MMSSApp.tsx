@@ -21,7 +21,7 @@ export default function MMSSApp() {
     return initial;
   });
 
-  // Vector retrieval via bge-m3 embeddings simulation
+  // Vector retrieval via qwen3-embedding:0.6b embeddings simulation
   const retrievalResults: RetrievalResult[] = useMemo(() => {
     return retrieveSemanticParameters(query, 104);
   }, [query]);
@@ -79,13 +79,13 @@ export default function MMSSApp() {
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-wider text-cyan-300 flex items-center gap-2">
-              MMSS BGE-M3 SYNTHESIZER
+              MMSS qwen3-embedding:0.6b SYNTHESIZER
               <span className="text-xs px-2 py-0.5 rounded bg-cyan-900/50 text-cyan-400 border border-cyan-500/30">
                 104 CONTROLS
               </span>
             </h1>
             <p className="text-xs text-slate-400">
-              Dense Vector Retrieval Configurator | bge-m3 Embedding Matching & Semantic Mapping
+              Dense Vector Retrieval Configurator | qwen3-embedding:0.6b Embedding Matching & Semantic Mapping
             </p>
           </div>
         </div>
@@ -115,12 +115,12 @@ export default function MMSSApp() {
         {/* Left Column: Semantic Retrieval Query & Controls (Cols 1-8) */}
         <div className="lg:col-span-8 flex flex-col gap-6">
           
-          {/* BGE-M3 Embedding Query Input Panel */}
+          {/* qwen3-embedding:0.6b Embedding Query Input Panel */}
           <div className="p-5 rounded-xl bg-slate-900/90 border border-cyan-800/40 shadow-xl space-y-3">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold text-cyan-400 uppercase tracking-widest flex items-center gap-2">
                 <Search className="w-4 h-4 text-cyan-400" />
-                BGE-M3 Vector Embedding Query Filter
+                qwen3-embedding:0.6b Vector Embedding Query Filter
               </label>
               <span className="text-[10px] text-slate-400 font-normal">
                 Local Retrieval Engine Active
@@ -197,7 +197,7 @@ export default function MMSSApp() {
               <span>Displaying {displayedParams.length} parameters</span>
               {query && (
                 <span className="text-cyan-400 font-semibold">
-                  Sorted by BGE-M3 Dense Cosine Similarity Score
+                  Sorted by qwen3-embedding:0.6b Dense Cosine Similarity Score
                 </span>
               )}
             </div>

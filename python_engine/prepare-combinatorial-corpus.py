@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare a quality-gated atom corpus and a bge-m3 semantic review queue."""
+"""Prepare a quality-gated atom corpus and a qwen3-embedding:0.6b semantic review queue."""
 
 from __future__ import annotations
 
@@ -545,7 +545,7 @@ def build_semantic_review(
     nearest_scores = list(nearest_by_record.values())
     report = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "method": "bge-m3 embeddings + deterministic sparse-hyperplane approximate neighbors + exact cosine rerank",
+        "method": "qwen3-embedding:0.6b embeddings + deterministic sparse-hyperplane approximate neighbors + exact cosine rerank",
         "automatic_merge": False, "record_count": len(parameters), "candidate_pair_count": len(scored),
         "nearest_neighbor_score_quantiles": {
             "p50": percentile(nearest_scores, 0.50), "p90": percentile(nearest_scores, 0.90),

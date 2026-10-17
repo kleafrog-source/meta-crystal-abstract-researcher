@@ -1,235 +1,100 @@
-# Мета-Кристалл v7.2 — Веб-приложение
+# Meta-Crystal v7.2
 
-Веб-реализация десктопного GUI «Мета-Кристалл» на базе Next.js 16 + TypeScript с интеграцией локальных LLM (Ollama), RAG-пайплайна и векторного поиска по базе знаний движка.
+Локальная исследовательская среда для семантического поиска, синтеза и мультимодального сопоставления параметров звука. Интерфейс построен на Next.js 16 и React 19; вычислительные пайплайны работают через Python sidecar, Ollama и локальные CLAP/SigLIP2-модели.
 
-## Документация по режимам приложения
+## Основные режимы
 
-Подробное руководство по пяти режимам приложения:
+| Режим | Назначение |
+|---|---|
+| **Flowmusic Genesis V3** | Независимый Single query, Transition A/B, retrieval по составной базе V3, live anchors/axes и готовый Clean Macro. |
+| **Combinatorial Genesis** | Импорт и проверка новых батчей, карантин ошибок, построение composite index, anchors и служебных артефактов. |
+| **Combinatorial Synthesis** | Без-LLM рекомбинация атомов, embedding-ранжирование, ручной/LLM-review и публикация кандидатов. |
+| **Audio CLAP RAG** | Поиск параметров V3 по выбранному аудиофрагменту через LAION-CLAP. |
+| **Audio-to-Parameter** | Автоматическая нарезка трека на временные узлы, последовательный поиск, сглаживание и воспроизводимая временная линия параметров. |
+| **Morpho-Acoustic RAG** | Поиск параметров по изображению или спектрограмме через SigLIP2. |
+| **Vocal Allocation Matrix** | Целевой подбор языков, TECH4/FX4, слоёв и пространственного распределения вокала. |
+| **Cross-Modal Consensus** | Журнал и проверка согласия результатов semantic/audio/image retrieval. |
+| **Meta-Crystal V3 Lab** | Куратор новых параметров из библиотеки Мета-Кристаллов. |
+| **White Space / Knowledge Graph** | Анализ пробелов V3 и проверяемых связей параметров, атомов и таксономии. |
 
-- **[English Guide](docs/application-modes-guide.md)** — Flowmusic Genesis V3, Audio CLAP RAG, Combinatorial Genesis, Combinatorial Synthesis, Meta-Crystal V3 Lab
-- **[Русское руководство](docs/application-modes-guide-ru.md)** — Flowmusic Genesis V3, Audio CLAP RAG, Combinatorial Genesis, Combinatorial Synthesis, Meta-Crystal V3 Lab
+Подробности:
+
+- [Руководство по режимам (RU)](docs/application-modes-guide-ru.md)
+- [Application modes guide (EN)](docs/application-modes-guide.md)
+- [Audio-to-Parameter: временная линия и поиск](docs/audio-to-parameter.md)
+
+## Быстрый запуск
+
+Требования: Node.js, `pnpm`, Python, Ollama. Большие модели и построенные индексы хранятся локально и не входят в Git.
+
+```powershell
+pnpm install
+python -m pip install -r requirements.txt
+pnpm run db:generate
+pnpm run db:push
+pnpm run dev
+```
+
+Откройте `http://localhost:3000`. Настройки моделей доступны в разделе **Настройки**. Текущий рекомендуемый лёгкий embedding-профиль — `qwen3-embedding:0.6b`; фактическая модель всегда берётся из сохранённых настроек и должна совпадать с моделью конкретного индекса.
+
+Для локальных весов Hugging Face можно использовать отдельный диск:
+
+```powershell
+$env:HF_HOME = "D:\hfmodels"
+$env:HF_HUB_CACHE = "D:\hfmodels\hub"
+```
 
 ## Архитектура
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                  Next.js 16 (App Router)                     │
-│                                                              │
-│  ┌─────────────────┐    ┌─────────────────────────────────┐  │
-│  │  React UI       │ ←→ │  Next.js API Routes             │  │
-│  │  (8 страниц)    │    │  /api/dashboard, /api/crystals   │  │
-│  │  Tailwind +     │    │  /api/generate, /api/pipelines   │  │
-│  │  shadcn/ui      │    │  /api/llm/*, /api/settings       │  │
-│  │  Dark theme     │    │  /api/import, /api/enrich        │  │
-│  └─────────────────┘    └────────────┬─────────────────────┘  │
-│                                      │                        │
-│                       ┌──────────────┴───────────────┐        │
-│                       │  TypeScript Service Layer    │        │
-│                       │  • LLM providers (Ollama/Mock)│       │
-│                       │  • RAG pipeline              │        │
-│                       │  • Sidecar runner (subprocess)│       │
-│                       │  • Crystal indexer           │        │
-│                       └──────────────┬───────────────┘        │
-│                                      │                        │
-│                              ┌───────┴────────┐               │
-│                              │ Python sidecar │               │
-│                              │ (sidecar.py)   │               │
-│                              └───────┬────────┘               │
-│                                      │                        │
-│                       ┌──────────────┴───────────────┐        │
-│                       │  Existing Python Engine      │        │
-│                       │  • metacrystal_engine_v7.py  │        │
-│                       │  • import_engine.py          │        │
-│                       │  • enrichment_v3.py          │        │
-│                       │  • pipeline_engine.py        │        │
-│                       └──────────────────────────────┘        │
-│                                                              │
-│  Storage:                                                    │
-│   • Prisma + SQLite (DB)                                    │
-│   • data/meta_crystals/ (engine file output)                │
-│   • data/.temp/ (profile JSON for sidecar calls)            │
-└──────────────────────────────────────────────────────────────┘
+```text
+React UI (src/components/pages)
+        │
+Next.js API routes (src/app/api)
+        │
+TypeScript jobs / process management (src/lib)
+        │
+Python sidecar and pipelines (python_engine)
+        │
+V3 datasets and generated local indexes (data/combinatorial-genesis)
 ```
 
-## Реализованный функционал
+- `src/app/api` — маршруты поиска, импорта, индексации и управления задачами.
+- `src/components/pages` — независимые интерфейсы режимов.
+- `src/lib` — retrieval, управление Ollama/GPU, фоновые задания и общие типы.
+- `python_engine` — CLAP, SigLIP2, anchoring, combinatorial и служебные пайплайны.
+- `data/combinatorial-genesis` — локальная база V3, inbox и перестраиваемые индексы.
+- `z-ai-glm-flowmusic-rag-ui-v2/anchoring` — сохранённый legacy-контур V2. Каталог намеренно остаётся в проекте: Python-мост V2 читает его артефакты, хотя его отдельный старый UI не компилируется вместе с основным приложением.
 
-### Страницы UI
+## Данные и индексы
 
-| Страница       | Описание                                                    |
-|----------------|-------------------------------------------------------------|
-| **Дашборд**    | Статистика кристаллов, последние алмазы, запуски пайплайнов |
-| **Генерация**  | Профиль параметров + 74 флага доменов + live-лог (SSE)      |
-| **Пайплайны**  | CRUD + конструктор шагов + запуск с потоковым логом         |
-| **Библиотека** | Таблица с фильтрами, семантический поиск, детальная панель  |
-| **Импорт**     | Загрузка JSON + diff-предпросмотр + применение              |
-| **Обогащение** | Запуск EnricherV3, поиск изоморфизмов, лог                  |
-| **LLM-чат**    | RAG-чат с Ollama/Mock, генерация пайплайнов из запроса      |
-| **Настройки**  | Выбор провайдера, моделей, температуры, индексация базы     |
+Исходные батчи добавляются через **Combinatorial Genesis → Обработать inbox**. Невалидные элементы попадают в карантин с причинами. После изменения V3 необходимо перестроить те индексы, которые использует нужный режим:
 
-### API эндпоинты
+1. composite retrieval / V3 live anchors;
+2. CLAP text index для Audio CLAP RAG;
+3. SigLIP2 text/value caches для Morpho-Acoustic RAG;
+4. дополнительные relation/value anchors, если они включены в выбранном профиле.
 
-```
-GET    /api/engine                  — информация о движке (74 домена, 196 операторов)
-GET    /api/dashboard               — агрегированная статистика
-GET    /api/crystals                — список с пагинацией, фильтрами, семантическим поиском
-GET    /api/crystals/[id]           — детали кристалла
-DELETE /api/crystals/[id]           — удаление записи
-POST   /api/crystals/[id]/favourite — переключение избранного
-POST   /api/generate/start          — запуск генерации (возвращает taskId)
-GET    /api/generate/stream/[taskId]— SSE-стрим логов генерации
-POST   /api/generate/stop/[taskId]  — остановка генерации (SIGTERM)
-GET    /api/pipelines               — список пайплайнов
-POST   /api/pipelines               — создание
-GET    /api/pipelines/[id]          — детали
-PUT    /api/pipelines/[id]          — обновление
-DELETE /api/pipelines/[id]          — удаление
-POST   /api/pipelines/[id]/run      — запуск пайплайна
-POST   /api/import/upload           — загрузка файла (multipart)
-POST   /api/import/preview          — diff-предпросмотр
-POST   /api/import/apply            — применение импорта
-POST   /api/enrich                  — запуск обогащения
-GET    /api/enrich/status/[taskId]  — статус
-POST   /api/llm/chat                — чат с RAG
-POST   /api/llm/embed               — получить эмбеддинг
-POST   /api/llm/interpret/[id]      — интерпретация кристалла
-POST   /api/llm/generate_pipeline   — пайплайн из описания
-POST   /api/llm/index_kb            — индексация базы знаний
-GET    /api/llm/models              — список моделей Ollama
-GET    /api/llm/messages            — история чата
-GET    /api/profiles                — список профилей
-POST   /api/profiles                — создание/обновление профиля
-GET    /api/settings                — настройки LLM
-PUT    /api/settings                — обновление настроек
+Сгенерированные векторы, временные аудиофайлы, локальные БД, логи, модели и пользовательские датасеты исключены из Git. В репозитории остаются код, схемы, тесты и небольшие воспроизводимые метаданные.
+
+## Audio-to-Parameter
+
+Страница: `http://localhost:3000/audio-to-parameter-rag-segments`.
+
+Режим загружает трек в WaveSurfer, показывает waveform, minimap и спектрограмму, затем создаёт временные узлы с заданным шагом. Каждый узел обрабатывается последовательно, чтобы не перегружать GPU. Поиск объединяет морфологические визуальные признаки спектрограммы и доступные retrieval-сигналы, после чего значения сглаживаются между соседними узлами. Во время воспроизведения активный узел, параметры и цветовые акценты синхронизируются с текущей позицией.
+
+Поддерживаются остановка пакетной обработки, повторный запуск отдельных сегментов, разные представления спектрограммы, Vocal Allocation Matrix и экспорт Clean Macro/таймлайна. Точные правила приоритетов и сглаживания описаны в [отдельном документе](docs/audio-to-parameter.md).
+
+## Проверки
+
+```powershell
+pnpm exec tsc --noEmit
+pnpm exec eslint src
+pnpm exec vitest run
+python -m compileall -q python_engine
 ```
 
-## Запуск
+Тяжёлые retrieval-проверки запускайте последовательно: локальная конфигурация Ollama и мультимодальные модели могут совместно исчерпать VRAM. Перед CLAP/SigLIP2-поиском приложение освобождает загруженные Ollama-модели и выдерживает защитную паузу.
 
-### Разработка
+## Репозиторий
 
-```bash
-bun install
-bun run db:push      # создать SQLite-схему
-bun run dev          # запуск Next.js на порту 3000
-```
-
-### Пересчет UMAP-карты
-
-После того как у кристаллов уже есть `embedding`, можно предвычислить 2D-координаты для страницы `Map`:
-
-```bash
-npm run compute:umap
-```
-
-Поддерживаются env-параметры:
-
-- `UMAP_N_NEIGHBORS` — число соседей, по умолчанию `15`
-- `UMAP_MIN_DIST` — плотность локального уплотнения, по умолчанию `0.1`
-- `UMAP_METRIC` — метрика расстояния, по умолчанию `cosine`
-
-Результат записывается в поля `Crystal.umapX` и `Crystal.umapY`.
-
-### Использование с Ollama
-
-1. Запустите Ollama локально: `ollama serve`
-2. Загрузите модели:
-   ```bash
-   ollama pull qwen2.5-3b
-   ollama pull embeddinggemma:300m
-   ```
-3. В настройках выберите провайдер **Ollama** и нажмите «Обновить список моделей»
-4. Нажмите «Индексировать» в разделе RAG для построения эмбеддингов базы знаний
-
-Без Ollama приложение работает в режиме **Mock** — детерминированные ответы и хэш-based эмбеддинги.
-
-## Структура проекта
-
-```
-src/
-├── app/
-│   ├── api/                    # Next.js API routes (route handlers)
-│   │   ├── crystals/
-│   │   ├── dashboard/
-│   │   ├── engine/
-│   │   ├── enrich/
-│   │   ├── generate/
-│   │   ├── import/
-│   │   ├── llm/
-│   │   ├── pipelines/
-│   │   ├── profiles/
-│   │   └── settings/
-│   ├── globals.css             # Тёмная тема Meta-Crystal
-│   ├── layout.tsx
-│   └── page.tsx                # Главная (AppShell + переключение страниц)
-├── components/
-│   ├── icons.tsx               # Реэкспорт lucide-react иконок
-│   ├── layout/
-│   │   ├── AppShell.tsx
-│   │   └── Sidebar.tsx
-│   ├── pages/                  # 8 страниц приложения
-│   │   ├── Dashboard.tsx
-│   │   ├── Generation.tsx
-│   │   ├── Pipelines.tsx
-│   │   ├── Crystals.tsx
-│   │   ├── Import.tsx
-│   │   ├── Enrichment.tsx
-│   │   ├── Chat.tsx
-│   │   └── Settings.tsx
-│   └── ui/                     # shadcn/ui компоненты
-├── hooks/
-│   ├── use-fetch.ts            # Хук + apiPost/apiPut/apiDelete
-│   ├── use-toast.ts
-│   └── use-mobile.ts
-├── lib/
-│   ├── db.ts                   # Prisma client
-│   ├── engine/
-│   │   ├── runner.ts           # Python sidecar runner (spawn + SSE)
-│   │   └── sync.ts             # Синхронизация индекса движка с БД
-│   ├── llm/
-│   │   ├── types.ts            # LLMProvider интерфейс + cosineSimilarity
-│   │   ├── ollama.ts           # Ollama HTTP client
-│   │   ├── mock.ts             # Mock провайдер (fallback)
-│   │   └── factory.ts          # Загрузка/сохранение настроек + buildProvider
-│   └── rag/
-│       └── index.ts            # RAG pipeline (embed + cosine search)
-└── types/
-    └── index.ts                # Общие доменные типы
-
-python_engine/
-├── sidecar.py                  # Python sidecar: spawn из Node.js
-├── metacrystal_engine_v7.py    # Оригинальный движок (без изменений)
-├── import_engine.py
-├── enrichment_v3.py
-├── pipeline_engine.py
-└── merge_indices.py
-
-prisma/
-└── schema.prisma               # SQLite-схема (Crystal, Pipeline, ChatMessage, …)
-```
-
-## Связь с ТЗ
-
-| Требование ТЗ                                | Реализация                                  |
-|----------------------------------------------|---------------------------------------------|
-| FastAPI backend                              | Next.js API Routes (TypeScript)             |
-| PostgreSQL + pgvector                        | SQLite + JSON-stored embeddings + cosine   |
-| Celery + Redis для фоновых задач             | child_process spawn + in-memory task registry |
-| WebSocket для логов                          | Server-Sent Events (SSE)                    |
-| LLMInterface (chat, embed, generate_completion) | LLMProvider interface + Ollama/Mock       |
-| RAG: embed → search → context inject         | `buildRAGContext()` в `src/lib/rag/index.ts` |
-| Семантический поиск по кристаллам            | `semanticSearchCrystals()` + cosine sim     |
-| Автоматическое построение пайплайнов через LLM | `/api/llm/generate_pipeline` + save to DB   |
-| Переключение LLM-провайдеров                 | Settings → `provider: "ollama" \| "mock"`   |
-| Тёмная тема                                  | `globals.css` + OKLCH palette               |
-| Docker-compose                               | (Не реализовано в прототипе — используется bun) |
-
-## Известные упрощения
-
-1. **SQLite вместо PostgreSQL+pgvector**: эмбеддинги хранятся как JSON-массивы в БД, cosine similarity считается в приложении. Для production-нагрузки нужен pgvector + HNSW.
-2. **In-memory task registry вместо Redis**: задачи хранятся в `globalThis.__sidecarTasks`. Не работает в multi-instance деплое.
-3. **SSE вместо WebSocket**: проще в реализации, достаточно для однонаправленных логов.
-4. **Mock-провайдер**: детерминированные ответы на основе хэш-эмбеддингов. Полезен для разработки без Ollama.
-5. **Pipeline engine**: вместо прямого использования `PipelineStep` (требует полный profile) реализован транслятор user-facing `{action, params}` → вызов `engine.evolve_with_saving`.
-
-## Лицензия
-
-Проект представляет собой прототип для замены десктопного GUI. Использует оригинальные Python-модули без модификаций.
+Проект использует `pnpm`; `node_modules` остаётся локальной виртуальной структурой со ссылками на общий store. Не добавляйте в Git содержимое `data`, `.next`, локальные модели, логи, временные спектрограммы и резервные копии. Перед удалением legacy-каталогов проверяйте обращения из `src` и `python_engine`: V2 anchoring остаётся рабочей зависимостью.

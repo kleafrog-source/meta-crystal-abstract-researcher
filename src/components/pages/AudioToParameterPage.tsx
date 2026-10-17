@@ -28,8 +28,11 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import {
+  blendParameterFrames,
   buildAudioAnalysisPoints,
+  buildPriorityTimeline,
   interpolateParameterFrames,
+  smoothTimelineSegments,
 } from "@/lib/audio-segment-timeline";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 
@@ -38,7 +41,7 @@ type AnalysisStatus = "pending" | "processing" | "complete" | "error";
 type SpectrogramDetail = "low" | "medium" | "high";
 type SpectrogramScale = "linear" | "logarithmic" | "mel" | "bark" | "erb";
 type SpectrogramRenderer = "standard" | "windowed";
-type SiglipSpectrogramLayout = "mel" | "composite";
+type SiglipSpectrogramLayout = "mel" | "composite" | "rgb_delta";
 
 interface SegmentPoint {
   time: number;
@@ -105,7 +108,7 @@ function mergeFrames(
 }
 
 function currentFrame(
-  segments: SegmentPoint[],
+  segments: Array<{ time: number; clap: ActiveParameter[]; siglip: ActiveParameter[] }>,
   time: number,
   engine: Engine,
   interpolate: boolean,
@@ -141,7 +144,8 @@ export function AudioToParameterPage() {
   const [seekRequest, setSeekRequest] = useState({ time: 0, token: 0 });
   const [regionOffset, setRegionOffset] = useState(0);
   const [regionDuration, setRegionDuration] = useState(10);
-  const [segmentInterval, setSegmentInterval] = useState(10);
+  const [segmentInterval, setSegmentInterval] = useState(2);
+  const [nodeInterval, setNodeInterval] = useState(20);
   const [segments, setSegments] = useState<SegmentPoint[]>([]);
   const [clapTopK, setClapTopK] = useState(20);
   const [siglipTopK, setSiglipTopK] = useState(20);
@@ -163,7 +167,10 @@ export function AudioToParameterPage() {
   const [spectrogramRenderer, setSpectrogramRenderer] =
     useState<SpectrogramRenderer>("windowed");
   const [siglipSpectrogramLayout, setSiglipSpectrogramLayout] =
-    useState<SiglipSpectrogramLayout>("composite");
+    useState<SiglipSpectrogramLayout>("rgb_delta");
+  const [blendMode, setBlendMode] = useState(false);
+  const [clapWeight, setClapWeight] = useState(0.5);
+  const [vocalMatrixMode, setVocalMatrixMode] = useState(false);
   const [morphoStatus, setMorphoStatus] = useState<MorphoStatus | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -274,6 +281,7 @@ export function AudioToParameterPage() {
           );
           form.append("spectrogram_detail", spectrogramDetail);
           form.append("spectrogram_layout", siglipSpectrogramLayout);
+          form.append("vocal_matrix", String(vocalMatrixMode));
           const response = await fetch("/api/audio-to-parameter/segment", {
             method: "POST",
             body: form,
@@ -313,6 +321,7 @@ export function AudioToParameterPage() {
       siglipTopK,
       siglipSpectrogramLayout,
       spectrogramDetail,
+      vocalMatrixMode,
     ],
   );
 
@@ -326,19 +335,23 @@ export function AudioToParameterPage() {
     setNotice("Остановка анализа запрошена.");
   }, []);
 
+  const nodeSegments = useMemo(
+    () => smoothTimelineSegments(segments, nodeInterval),
+    [nodeInterval, segments],
+  );
   const clapFrame = useMemo(
-    () => currentFrame(segments, currentTime, "clap", interpolateClap),
-    [currentTime, interpolateClap, segments],
+    () => currentFrame(nodeSegments, currentTime, "clap", interpolateClap),
+    [currentTime, interpolateClap, nodeSegments],
   );
   const siglipFrame = useMemo(
-    () => currentFrame(segments, currentTime, "siglip", interpolateSiglip),
-    [currentTime, interpolateSiglip, segments],
+    () => currentFrame(nodeSegments, currentTime, "siglip", interpolateSiglip),
+    [currentTime, interpolateSiglip, nodeSegments],
   );
   const visibleClap = showClap ? clapFrame : [];
   const visibleSiglip = showSiglip ? siglipFrame : [];
   const macroParameters = useMemo(
-    () => mergeFrames(visibleClap, visibleSiglip),
-    [visibleClap, visibleSiglip],
+    () => blendMode ? blendParameterFrames(visibleClap, visibleSiglip, clapWeight) : mergeFrames(visibleClap, visibleSiglip),
+    [blendMode, clapWeight, visibleClap, visibleSiglip],
   );
 
   const seekToSegment = (segment: SegmentPoint) => {
@@ -393,9 +406,20 @@ export function AudioToParameterPage() {
     });
   };
 
+  const downloadJson = (payload: unknown, suffix: string) => {
+    if (!file) return;
+    const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
+    const anchor = document.createElement("a"); anchor.href = url; anchor.download = `${file.name.replace(/\.[^.]+$/, "")}-${suffix}.json`; anchor.click(); URL.revokeObjectURL(url);
+  };
+
   const exportTimeline = () => {
     if (!file || !segments.length) return;
-    const payload = {
+    downloadJson(buildPriorityTimeline(nodeSegments, { audioName: file.name, audioDuration, rawInterval: segmentInterval, nodeInterval, blend: blendMode, clapWeight, vocalMatrix: vocalMatrixMode }), "priority-timeline");
+  };
+
+  const exportLegacyTimeline = () => {
+    if (!file || !segments.length) return;
+    downloadJson({
       schema_version: "FLOWMUSIC_AUDIO_PARAMETER_TIMELINE_V1",
       audio: { name: file.name, duration_seconds: audioDuration },
       sampling: {
@@ -407,7 +431,7 @@ export function AudioToParameterPage() {
         siglip: interpolateSiglip,
         cross_engine: false,
       },
-      points: segments.map((segment) => ({
+      points: nodeSegments.map((segment) => ({
         time_seconds: segment.time,
         analysis_window: {
           offset_seconds: segment.offset,
@@ -422,17 +446,7 @@ export function AudioToParameterPage() {
           value: parameter.current_value,
         })),
       })),
-    };
-    const url = URL.createObjectURL(
-      new Blob([JSON.stringify(payload, null, 2)], {
-        type: "application/json",
-      }),
-    );
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = `${file.name.replace(/\.[^.]+$/, "")}-parameter-timeline.json`;
-    anchor.click();
-    URL.revokeObjectURL(url);
+    }, "legacy-timeline");
   };
 
   return (
@@ -532,24 +546,28 @@ export function AudioToParameterPage() {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <FieldLabel
-                    label="Интервал, сек"
-                    hint="От 0.1 до 600 секунд. Если интервал длиннее трека, создаются две крайние точки."
+                    label="Raw sampling, сек"
+                    hint="Высокочастотный сбор от 0.5 до 30 секунд. По умолчанию 2 секунды."
                   />
                   <Input
                     type="number"
-                    min={0.1}
-                    max={600}
-                    step={0.1}
+                    min={0.5}
+                    max={30}
+                    step={0.5}
                     value={segmentInterval}
                     onChange={(event) =>
                       setSegmentInterval(
                         Math.max(
-                          0.1,
-                          Math.min(600, Number(event.target.value) || 0.1),
+                          0.5,
+                          Math.min(30, Number(event.target.value) || 0.5),
                         ),
                       )
                     }
                   />
+                </div>
+                <div>
+                  <FieldLabel label="Node interval, сек" hint="Сглаженные узлы итогового timeline: от 5 до 360 секунд." />
+                  <Input type="number" min={5} max={360} step={1} value={nodeInterval} onChange={(event) => setNodeInterval(Math.max(5, Math.min(360, Number(event.target.value) || 20)))} />
                 </div>
                 <div className="flex items-end">
                   <Button
@@ -667,6 +685,7 @@ export function AudioToParameterPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="rgb_delta">RGB delta</SelectItem>
                       <SelectItem value="composite">composite</SelectItem>
                       <SelectItem value="mel">mel</SelectItem>
                     </SelectContent>
@@ -721,6 +740,8 @@ export function AudioToParameterPage() {
               </div>
 
               <div className="grid gap-2 sm:grid-cols-2">
+                <ToggleRow label="Blend CLAP & SigLIP" checked={blendMode} onChange={setBlendMode} />
+                <ToggleRow label="Vocal Allocation Matrix" checked={vocalMatrixMode} onChange={setVocalMatrixMode} />
                 <ToggleRow
                   label="Показывать спектрограмму"
                   checked={showSpectrogram}
@@ -747,6 +768,7 @@ export function AudioToParameterPage() {
                   onChange={setInterpolateSiglip}
                 />
               </div>
+              {blendMode ? <div><FieldLabel label={`Вес CLAP: ${Math.round(clapWeight * 100)}%`} hint="Остаток веса принадлежит SigLIP2. Scores нормализуются отдельно перед объединением." /><Input type="range" min={0} max={1} step={0.05} value={clapWeight} onChange={(event) => setClapWeight(Number(event.target.value))} /></div> : null}
 
               <div className="grid grid-cols-2 gap-2">
                 <Button
@@ -823,7 +845,10 @@ export function AudioToParameterPage() {
                 onClick={exportTimeline}
               >
                 <Download className="size-4" />
-                Экспорт Flowmusic timeline
+                Экспорт Priority Timeline
+              </Button>
+              <Button className="w-full" variant="ghost" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportLegacyTimeline}>
+                <Download className="size-4" />Экспорт legacy timeline
               </Button>
               {notice ? (
                 <div className="rounded border border-cyan-400/20 bg-cyan-950/20 p-2 text-xs text-cyan-200">
@@ -868,7 +893,7 @@ export function AudioToParameterPage() {
               ))}
             </div>
             <ParameterTimelineGraph
-              segments={segments}
+              segments={nodeSegments}
               currentTime={currentTime}
               duration={audioDuration}
               showClap={showClap}
@@ -876,21 +901,20 @@ export function AudioToParameterPage() {
             />
           </section>
 
-          <div className="grid min-h-[620px] gap-3 xl:grid-cols-2">
-            <ParameterBank
+          <div className={`grid min-h-[620px] gap-3 ${blendMode ? "grid-cols-1" : "xl:grid-cols-2"}`}>
+            {blendMode ? <ParameterBank title="Blended CLAP + SigLIP2" accent="cyan" parameters={macroParameters} onChange={(name, value) => { updateValue("clap", name, value); updateValue("siglip", name, value); }} onRemove={(name) => { removeValue("clap", name); removeValue("siglip", name); }} /> : <><ParameterBank
               title="CLAP Parameters"
               accent="cyan"
               parameters={visibleClap}
               onChange={(name, value) => updateValue("clap", name, value)}
               onRemove={(name) => removeValue("clap", name)}
-            />
-            <ParameterBank
+            /><ParameterBank
               title="SigLIP2 Spectrogram Parameters"
               accent="fuchsia"
               parameters={visibleSiglip}
               onChange={(name, value) => updateValue("siglip", name, value)}
               onRemove={(name) => removeValue("siglip", name)}
-            />
+            /></>}
           </div>
 
           <aside className="flex flex-wrap gap-2">
@@ -986,7 +1010,7 @@ function ParameterTimelineGraph({
   showClap,
   showSiglip,
 }: {
-  segments: SegmentPoint[];
+  segments: Array<{ time: number; clap: ActiveParameter[]; siglip: ActiveParameter[] }>;
   currentTime: number;
   duration: number;
   showClap: boolean;

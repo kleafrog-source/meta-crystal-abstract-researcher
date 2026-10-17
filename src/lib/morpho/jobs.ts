@@ -248,7 +248,7 @@ export async function runMorphoAudioSearch(
   duration: number,
   topK: number,
   detail: "low" | "medium" | "high",
-  layout: "mel" | "composite",
+  layout: "mel" | "composite" | "rgb_delta",
 ): Promise<Record<string, unknown>> {
   if (shared.__morphoJobs!.search.running)
     throw new Error("Another Morpho search is already active");

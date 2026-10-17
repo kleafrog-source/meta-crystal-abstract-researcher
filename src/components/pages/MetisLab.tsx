@@ -57,7 +57,7 @@ const DEFAULT_CONFIG: MetisProviderConfig = {
   embeddingProvider: "stub",
   vllmBaseUrl: "http://127.0.0.1:8000/v1",
   vllmModel: "IAAR-Shanghai/Metis-4B",
-  vllmEmbeddingModel: "BAAI/bge-small-en-v1.5",
+  vllmEmbeddingModel: "Qwen/Qwen3-Embedding-0.6B",
   ollamaBaseUrl: "http://127.0.0.1:11434",
   ollamaModel: "mmss-qwen2.5-3b-cpu2:latest",
   ollamaEmbeddingModel: "qwen3-embedding:4b",

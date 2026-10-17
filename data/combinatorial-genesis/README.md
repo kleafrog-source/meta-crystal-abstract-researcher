@@ -55,7 +55,7 @@ python python_engine/prepare-combinatorial-corpus.py
 - `eligible_parameters.json` — quality-gated рабочий срез без изменения canonical/raw;
 - `quality_report.json` — объяснимые причины карантина и ручной проверки;
 - `atom_corpus.json` — английские атомы, частоты и параметры-источники;
-- `semantic_review_queue.json` — ближайшие bge-m3 пары только для review;
+- `semantic_review_queue.json` — ближайшие qwen3-embedding:0.6b пары только для review;
 - `semantic_report.json` — модель, метод и распределение score;
 - `semantic_auto_triage.json` — автоматические `same/related/distinct`, confidence и причины;
 - `semantic_groups.json` — группы консервативно признанных эквивалентов;
@@ -86,7 +86,7 @@ python python_engine/freeze-combinatorial-dataset.py
 Embedding model и Ollama endpoint берутся из общего раздела приложения **«Настройки»**. После смены
 модели runtime/composite index и live anchors нужно перестроить: векторы разных моделей не смешиваются.
 
-Для отладки отдельного этапа новой frozen-версии можно построить локальный bge-m3 индекс атомов:
+Для отладки отдельного этапа новой frozen-версии можно построить локальный qwen3-embedding:0.6b индекс атомов:
 
 ```powershell
 python python_engine/build-combinatorial-runtime-index.py
@@ -95,7 +95,7 @@ python python_engine/build-combinatorial-runtime-index.py
 Индекс сохраняется отдельно в `indexes/<version-id>/`, не изменяет frozen dataset и повторно
 используется при неизменных version/model/embedding text. Runtime preview ранжирует атомы по запросу,
 генерирует bounded candidates, применяет exact stop-list автономной library + frozen dataset и повторно сортирует
-целые имена кандидатов через bge-m3.
+целые имена кандидатов через qwen3-embedding:0.6b.
 
 ## Value inference и experimental packages
 

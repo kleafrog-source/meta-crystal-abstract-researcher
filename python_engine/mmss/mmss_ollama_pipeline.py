@@ -140,10 +140,10 @@ if __name__ == "__main__":
         "sample_cycle": {"encoder_mode": emode, "z_norm": round(float(z.norm()), 4),
                          "inv_dim": int(inv.numel())},
         "honesty": "В сэндбоксе Ollama недоступен → отработал fallback. Локально с поднятым "
-                   "Ollama (bge-small-en + qwen2.5) pipeline переключится на ollama_real "
+                   "Ollama (qwen3-embedding:0.6b + qwen2.5) pipeline переключится на ollama_real "
                    "автоматически — код менять не нужно (encoder/teacher — pluggable callable).",
         "local_instructions": [
-            "1) ollama pull bge-small-en   (или nomic-embed-text)",
+            "1) ollama pull qwen3-embedding:0.6b   (или nomic-embed-text)",
             "2) ollama pull qwen2.5:7b      (или llama3.1 / phi3)",
             "3) python3 mmss_ollama_pipeline.py  → pipeline_mode должен стать ollama_real",
         ],

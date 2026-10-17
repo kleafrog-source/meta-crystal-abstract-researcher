@@ -15,7 +15,7 @@ export function RagParametersV2Page() {
           <div>
             <h1 className="flex items-center gap-2 font-mono text-base font-semibold tracking-tight text-white sm:text-lg">
               <span className="rounded border border-fuchsia-400/70 bg-fuchsia-950/40 px-2 py-1 text-[10px] uppercase tracking-wide text-fuchsia-200">
-                bge-m3 console
+                bge-m3:latest console
               </span>
               Omega-Protocol Parameter Synthesizer
             </h1>

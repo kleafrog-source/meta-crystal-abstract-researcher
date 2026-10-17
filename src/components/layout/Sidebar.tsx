@@ -186,7 +186,7 @@ const NAV_ITEMS: NavItem[] = [
     id: "combinatorialsynthesis",
     label: "Combinatorial Synthesis",
     icon: <Sparkles className="h-4 w-4" />,
-    description: "BGE-only генерация, отбор и публикация новых параметров из Combinatorial Atoms",
+    description: "Embedding-генерация, отбор и публикация новых параметров из Combinatorial Atoms",
   },
   {
     id: "audioclaprag",

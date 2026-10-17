@@ -18,7 +18,7 @@ export function assembleMMSSInstruction(
     [protocolTitle]: {
       mode: 'STRONG_RESET_INDEPENDENCE',
       timestamp: new Date().toISOString(),
-      embedding_model: 'bge-m3_local_dense_retrieval',
+      embedding_model: 'qwen3-embedding:0.6b_local_dense_retrieval',
       active_parameters_count: activeParams.length,
       configured_modules: Object.keys(grouped),
     }

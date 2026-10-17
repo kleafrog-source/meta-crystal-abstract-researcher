@@ -18,7 +18,7 @@ make_encoder()/make_teacher() возвращают (callable, mode).
 
 Этот модуль НЕ требует Ollama для импорта/теста: fallback работает офлайн.
 Локально у пользователя: достаточно поднять Ollama с моделью эмбеддингов
-(напр. `ollama pull bge-small-en` или `nomic-embed-text`) и чат-моделью
+(напр. `ollama pull qwen3-embedding:0.6b` или `nomic-embed-text`) и чат-моделью
 (напр. `ollama pull qwen2.5:7b`) — swap автоматический.
 """
 
@@ -71,7 +71,7 @@ class SyntheticTeacher(Teacher):
 # Ollama клиент (реальный)
 # ---------------------------------------------------------------------------
 # Выровнено под репозиторий meta-crystal-abstract-researcher (src/lib/llm/ollama.ts):
-DEFAULT_EMBED_MODEL = "embeddinggemma:300m"   # bge-small-en / nomic-embed-text / mxbai-embed-large
+DEFAULT_EMBED_MODEL = "embeddinggemma:300m"   # qwen3-embedding:0.6b / nomic-embed-text / mxbai-embed-large
 DEFAULT_CHAT_MODEL = "qwen2.5-3b"             # qwen2.5:7b / llama3.1 / phi3
 
 

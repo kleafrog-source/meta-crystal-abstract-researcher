@@ -6,12 +6,12 @@
  *
  *   Вариант A — sentence-transformers (Python):
  *     from sentence_transformers import SentenceTransformer
- *     model = SentenceTransformer("BAAI/bge-small-en-v1.5")
- *     emb = model.encode(text)  # → np.ndarray of shape (384,)
+ *     model = SentenceTransformer("Qwen/Qwen3-Embedding-0.6B")
+ *     emb = model.encode(text)  # → np.ndarray of shape (1024,)
  *
  *   Вариант B — Xenova/transformers.js (in-process):
  *     import { pipeline } from "@xenova/transformers"
- *     const extractor = await pipeline("feature-extraction", "Xenova/bge-small-en-v1.5")
+ *     const extractor = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2")
  *     const emb = await extractor(text, { pooling: "mean", normalize: true })
  *
  *   Вариант C — Ollama embeddings:
@@ -32,7 +32,7 @@ export interface EmbeddingResult {
   inference_ms: number;
 }
 
-export const STUB_EMBED_MODEL_ID = "stub:bge-small-en-v1.5@local";
+export const STUB_EMBED_MODEL_ID = "stub:hash-384d@local";
 
 /**
  * STUB embedding generator.

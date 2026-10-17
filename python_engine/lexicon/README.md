@@ -256,7 +256,7 @@ python lexicon/scripts/build_lexicon.py
 
 **Future LLM-assisted:**
 - DeepSeek will fill semantic fields
-- BGE-M3 will index entries
+- qwen3-embedding:0.6b will index entries
 - Retrieval will find parameters by natural language
 
 ---
@@ -402,7 +402,7 @@ Snapshots allow rollback to previous versions if needed.
 
 ### Phase 3: Retrieval (Future)
 - ⏳ Connect DeepSeek for auto-description
-- ⏳ Use BGE-M3 for embedding generation
+- ⏳ Use qwen3-embedding:0.6b for embedding generation
 - ⏳ Build vector index for retrieval
 - ⏳ Add natural language query interface
 

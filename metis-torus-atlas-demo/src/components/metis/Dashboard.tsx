@@ -117,7 +117,7 @@ const STUB_FILES = [
     path: "src/lib/stubs/embeddings.ts",
     name: "Embedding Generator",
     replacement: "sentence-transformers (BGE) / Xenova / Ollama embeddings",
-    current: "stub:bge-small-en-v1.5@local — hash-based 384d vector",
+    current: "stub:hash-384d@local — deterministic hash vector",
     fn: "stubEmbed(text)",
   },
   {

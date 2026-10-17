@@ -8,6 +8,7 @@ import { callSidecar, listTasks } from "@/lib/engine/runner";
 import { runMorphoAudioSearch, stopMorpho } from "@/lib/morpho/jobs";
 import { prepareGpuForExternalModel } from "@/lib/ollama-memory";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
+import { isVocalMatrixParameter } from "@/lib/vocal-allocation/parser";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 7200;
@@ -62,13 +63,15 @@ export async function POST(request: Request) {
       3,
       Math.min(100, Math.trunc(Number(form.get("top_k") ?? 20) || 20)),
     );
+    const vocalMatrix = form.get("vocal_matrix") === "true";
+    const searchTopK = vocalMatrix ? Math.max(topK, 100) : topK;
     const requestedDetail = String(form.get("spectrogram_detail") ?? "medium");
     const detail =
       requestedDetail === "low" || requestedDetail === "high"
         ? requestedDetail
         : "medium";
-    const layout =
-      form.get("spectrogram_layout") === "composite" ? "composite" : "mel";
+    const requestedLayout = String(form.get("spectrogram_layout") ?? "rgb_delta");
+    const layout = requestedLayout === "composite" || requestedLayout === "mel" ? requestedLayout : "rgb_delta";
 
     tempDir = await fs.mkdtemp(
       path.join(os.tmpdir(), "meta-crystal-audio-segment-"),
@@ -87,13 +90,13 @@ export async function POST(request: Request) {
         audioPath,
         offset,
         duration,
-        topK,
+        searchTopK,
         detail,
         layout,
       )) as SearchResult;
       return NextResponse.json({
         engine,
-        parameters: result.results ?? [],
+        parameters: (result.results ?? []).filter((item) => !vocalMatrix || isVocalMatrixParameter(item)).slice(0, topK),
         anchored_count: result.anchored_count ?? 0,
         index: result.index,
         spectrogram: result.audio,
@@ -102,7 +105,7 @@ export async function POST(request: Request) {
 
     const { result: rawResult } = await callSidecar("audio_search", {
       args: [audioPath],
-      inputFile: { offset, duration, top_k: topK },
+      inputFile: { offset, duration, top_k: searchTopK },
       timeoutMs: 10 * 60 * 1000,
       taskType: TASK_TYPE,
       title: "Audio-to-Parameter CLAP segment search",
@@ -110,7 +113,7 @@ export async function POST(request: Request) {
     const result = rawResult as SearchResult;
     return NextResponse.json({
       engine,
-      parameters: result.results ?? [],
+      parameters: (result.results ?? []).filter((item) => !vocalMatrix || isVocalMatrixParameter(item)).slice(0, topK),
       anchored_count: result.anchored_count ?? 0,
       index: result.index,
     });
