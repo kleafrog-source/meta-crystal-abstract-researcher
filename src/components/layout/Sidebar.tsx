@@ -6,13 +6,10 @@ import {
   FlaskConical,
   Workflow,
   Library,
-  Download,
   Sparkles,
-  MessageSquare,
   Brain,
   Settings,
   LayoutDashboard,
-  CrystalIcon,
   Cpu,
   Activity,
   Database,
@@ -20,8 +17,10 @@ import {
   Sliders,
   Search,
   BookOpen,
+  ChevronLeft,
 } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import { SidebarSpoiler } from "./SidebarSpoiler";
 
 export type PageId =
   | "dashboard"
@@ -59,106 +58,16 @@ interface NavItem {
   description: string;
 }
 
-const NAV_ITEMS: NavItem[] = [
+const PRIMARY_NAV_ITEMS: NavItem[] = [
   {
     id: "dashboard",
-    label: "Дашборд",
+    label: "AM-Core Dashboard",
     icon: <LayoutDashboard className="h-4 w-4" />,
     description: "Статистика и последние алмазы",
   },
   {
-    id: "generation",
-    label: "Генерация",
-    icon: <FlaskConical className="h-4 w-4" />,
-    description: "Запуск генерации мета-кристаллов",
-  },
-  {
-    id: "pipelines",
-    label: "Пайплайны",
-    icon: <Workflow className="h-4 w-4" />,
-    description: "Конструктор и запуск пайплайнов",
-  },
-  {
-    id: "crystals",
-    label: "Библиотека",
-    icon: <Library className="h-4 w-4" />,
-    description: "Каталог сгенерированных кристаллов",
-  },
-  {
-    id: "import",
-    label: "Импорт",
-    icon: <Download className="h-4 w-4" />,
-    description: "Импорт файлов с diff-предпросмотром",
-  },
-  {
-    id: "enrichment",
-    label: "Обогащение",
-    icon: <Sparkles className="h-4 w-4" />,
-    description: "Детерминированное расширение базы",
-  },
-  {
-    id: "chat",
-    label: "LLM-чат",
-    icon: <MessageSquare className="h-4 w-4" />,
-    description: "RAG-чат с локальной LLM",
-  },
-  {
-    id: "semanticplane",
-    label: "Semantic Plane",
-    icon: <Brain className="h-4 w-4" />,
-    description: "Separate semantic settings control plane over generation profiles",
-  },
-  {
-    id: "mmss",
-    label: "MMSS",
-    icon: <Cpu className="h-4 w-4" />,
-    description: "MMSS ingest, retrain, eval и результаты",
-  },
-  {
-    id: "metis",
-    label: "Metis Lab",
-    icon: <Cpu className="h-4 w-4" />,
-    description: "Isolated Metis memory stack with torus atlas and provider runtime switch",
-  },
-  {
-    id: "metisresearch",
-    label: "Metis Research",
-    icon: <Database className="h-4 w-4" />,
-    description: "Separate research workspace for candidate-pool comparison, run history and atlas-centered retrieval analysis",
-  },
-  {
-    id: "gwcollapser",
-    label: "GW-Collapser",
-    icon: <Activity className="h-4 w-4" />,
-    description: "Torus flow analysis over crystal semantic fragments",
-  },
-  {
-    id: "crystalpool",
-    label: "Crystal Pool",
-    icon: <Database className="h-4 w-4" />,
-    description: "Bulk operations and action orchestration for GW-Collapser crystal pools",
-  },
-  {
-    id: "torusatlas",
-    label: "Torus Atlas",
-    icon: <Database className="h-4 w-4" />,
-    description: "Canvas-first atlas view for torus placement, formulas and fast visual exploration",
-  },
-  {
-    id: "map",
-    label: "Map",
-    icon: <CircleDot className="h-4 w-4" />,
-    description: "2D UMAP field over crystal embeddings for neighborhood exploration",
-  },
-  {
-    id: "settings",
-    label: "Настройки",
-    icon: <Settings className="h-4 w-4" />,
-    description: "LLM-провайдер и параметры",
-  },
-  {
     id: "ragparametersv3",
-    label: "Flowmusic Genesis V3",
+    label: "AM-Core Engine",
     icon: <Sparkles className="h-4 w-4" />,
     description: "Unified semantic search over the autonomous library, Flowmusic corpus and Combinatorial Atoms",
   },
@@ -187,50 +96,49 @@ const NAV_ITEMS: NavItem[] = [
     description: "Авто-разбивка аудио по таймингам с batch поиском и интерполяцией параметров",
   },
   {
-    id: "metacrystalv3lab",
-    label: "Meta-Crystal V3 Lab",
-    icon: <Brain className="h-4 w-4" />,
-    description: "RAG-куратор параметров V3 из библиотеки Мета-Кристаллов",
-  },
-  {
-    id: "whitespacediscovery",
-    label: "White Space Discovery",
-    icon: <Search className="h-4 w-4" />,
-    description: "Анализ таксономических, атомных и семантически разреженных областей V3",
-  },
-  {
-    id: "knowledgegraph",
-    label: "Knowledge Graph",
-    icon: <Workflow className="h-4 w-4" />,
-    description: "Проверяемый граф параметров, атомов, таксономии и семантических соседей V3",
-  },
-  {
     id: "morphoacousticrag",
     label: "Morpho-Acoustic RAG",
     icon: <CircleDot className="h-4 w-4" />,
     description: "CPU-поиск параметров V3 по изображению через локальный SigLIP2",
   },
   {
-    id: "crossmodalconsensus",
-    label: "Cross-Modal Consensus",
-    icon: <BookOpen className="h-4 w-4" />,
-    description: "Journal, cycle verification и консенсус результатов Audio, Image и Semantic V3",
-  },
-  {
     id: "vocalallocationmatrix",
-    label: "Vocal Allocation Matrix",
+    label: "AM-Vocal Morphology Matrix",
     icon: <Sliders className="h-4 w-4" />,
     description: "Целевой подбор языков, TECH4, FX4 и слоёв вокальной матрицы",
   },
+  {
+    id: "settings",
+    label: "Настройки",
+    icon: <Settings className="h-4 w-4" />,
+    description: "Модели, провайдеры и параметры AM-Core",
+  },
+];
+
+const LEGACY_NAV_ITEMS: NavItem[] = [
+  { id: "crystals", label: "Библиотека AM-Crystal", icon: <Library className="h-4 w-4" />, description: "Архив кристаллов и связанные инструменты" },
+  { id: "semanticplane", label: "Semantic Plane", icon: <Brain className="h-4 w-4" />, description: "Legacy semantic generation profiles" },
+  { id: "mmss", label: "IRE", icon: <Cpu className="h-4 w-4" />, description: "Ingest · Retrain · Eval старого crystal-контура" },
+  { id: "metis", label: "Metis Lab", icon: <Cpu className="h-4 w-4" />, description: "Экспериментальная среда памяти Metis" },
+  { id: "metisresearch", label: "Metis Research", icon: <Database className="h-4 w-4" />, description: "Исследовательский контур Metis" },
+  { id: "gwcollapser", label: "GW-Collapser", icon: <Activity className="h-4 w-4" />, description: "Torus flow analysis" },
+  { id: "crystalpool", label: "GW Crystal Pool", icon: <Database className="h-4 w-4" />, description: "Пакетные операции GW-Collapser" },
+  { id: "torusatlas", label: "Torus Atlas", icon: <Database className="h-4 w-4" />, description: "Legacy torus visualization" },
+  { id: "map", label: "Map · Crystal UMAP", icon: <CircleDot className="h-4 w-4" />, description: "UMAP старой библиотеки кристаллов" },
+  { id: "metacrystalv3lab", label: "Meta-Crystal V3 Lab", icon: <Brain className="h-4 w-4" />, description: "Мост от AM-Crystal к V3" },
+  { id: "whitespacediscovery", label: "White Space Discovery", icon: <Search className="h-4 w-4" />, description: "Анализ пробелов AM-Core" },
+  { id: "knowledgegraph", label: "Knowledge Graph", icon: <Workflow className="h-4 w-4" />, description: "Граф связей AM-Core" },
+  { id: "crossmodalconsensus", label: "Cross-Modal Consensus", icon: <BookOpen className="h-4 w-4" />, description: "Исследовательская мультимодальная верификация" },
 ];
 
 interface SidebarProps {
   active: PageId;
   onNavigate: (page: PageId) => void;
   activeRuns: number;
+  onClose?: () => void;
 }
 
-export function Sidebar({ active, onNavigate, activeRuns }: SidebarProps) {
+export function Sidebar({ active, onNavigate, activeRuns, onClose }: SidebarProps) {
   const [engineOk, setEngineOk] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -250,10 +158,10 @@ export function Sidebar({ active, onNavigate, activeRuns }: SidebarProps) {
           </div>
           <div>
             <div className="text-sm font-semibold tracking-tight text-glow-emerald">
-              Мета-Кристалл
+              Abstract-Mindfreak
             </div>
             <div className="text-[10px] text-muted-foreground uppercase tracking-widest">
-              v7.2 · web
+              AM-Core · web
             </div>
           </div>
         </div>
@@ -262,10 +170,10 @@ export function Sidebar({ active, onNavigate, activeRuns }: SidebarProps) {
       {/* Nav */}
       <nav className="flex-1 px-2 py-3 overflow-y-auto">
         <div className="px-3 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground/70">
-          Модули
+          AM-Core
         </div>
         <ul className="space-y-0.5">
-          {NAV_ITEMS.map((item) => (
+          {PRIMARY_NAV_ITEMS.map((item) => (
             <li key={item.id}>
               <button
                 onClick={() => onNavigate(item.id)}
@@ -297,10 +205,22 @@ export function Sidebar({ active, onNavigate, activeRuns }: SidebarProps) {
             </li>
           ))}
         </ul>
+        <SidebarSpoiler title="Архив / Legacy & Research">
+          <ul className="space-y-0.5">
+            {LEGACY_NAV_ITEMS.map((item) => (
+              <li key={item.id}>
+                <button onClick={() => onNavigate(item.id)} className={cn("w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm border transition-colors", active === item.id ? "bg-primary/15 border-primary/30 text-primary-foreground" : "border-transparent text-muted-foreground hover:bg-sidebar-accent")} title={item.description}>
+                  <span className="shrink-0">{item.icon}</span><span className="flex-1 truncate text-left">{item.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </SidebarSpoiler>
       </nav>
 
       {/* Status footer */}
       <div className="px-3 py-3 border-t border-border space-y-2">
+        {onClose && <button onClick={onClose} className="mb-2 flex w-full items-center justify-center gap-2 rounded-md border border-border px-2 py-1.5 text-xs text-muted-foreground hover:bg-sidebar-accent"><ChevronLeft className="h-3.5 w-3.5" />Скрыть панель</button>}
         <div className="flex items-center justify-between text-[11px]">
           <span className="text-muted-foreground">Engine</span>
           <div className="flex items-center gap-1.5">

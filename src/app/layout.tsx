@@ -3,9 +3,9 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "Мета-Кристалл — Комбинаторная Алхимия",
+  title: "Abstract-Mindfreak — AM-Core",
   description:
-    "Веб-приложение для генерации мета-кристаллов с интеграцией LLM и RAG. Построено на FastAPI-совместимой архитектуре поверх Next.js.",
+    "AM-Core: семантический, комбинаторный и мультимодальный поиск параметров звукового синтеза.",
   keywords: [
     "мета-кристалл",
     "комбинаторная алхимия",

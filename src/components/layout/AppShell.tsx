@@ -3,6 +3,7 @@
 import { Sidebar, type PageId } from "./Sidebar";
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { ChevronRight } from "@/components/icons";
 
 interface AppShellProps {
   children: (props: {
@@ -12,7 +13,7 @@ interface AppShellProps {
 }
 
 function pathnameToPage(pathname: string): PageId {
-  if (pathname === "/rag-parameters-v3") {
+  if (pathname === "/rag-parameters-v3" || pathname === "/am-core") {
     return "ragparametersv3";
   }
 
@@ -51,7 +52,7 @@ function pathnameToPage(pathname: string): PageId {
   if (pathname === "/cross-modal-consensus") {
     return "crossmodalconsensus";
   }
-  if (pathname === "/vocal-allocation-matrix") return "vocalallocationmatrix";
+  if (pathname === "/vocal-allocation-matrix" || pathname === "/am-vocal-morphology-matrix") return "vocalallocationmatrix";
 
   return "dashboard";
 }
@@ -61,6 +62,15 @@ export function AppShell({ children }: AppShellProps) {
   const router = useRouter();
   const [activePage, setActivePage] = useState<PageId>("dashboard");
   const [activeRuns, setActiveRuns] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  useEffect(() => {
+    if (pathname !== "/") return;
+    const page = new URLSearchParams(window.location.search).get("page") as PageId | null;
+    if (!page) return;
+    const timer = window.setTimeout(() => setActivePage(page), 0);
+    return () => window.clearTimeout(timer);
+  }, [pathname]);
 
   useEffect(() => {
     const update = () => {
@@ -85,7 +95,7 @@ export function AppShell({ children }: AppShellProps) {
     setActivePage(page);
 
     if (page === "ragparametersv3") {
-      router.push("/rag-parameters-v3");
+      router.push("/am-core");
       return;
     }
 
@@ -130,20 +140,21 @@ export function AppShell({ children }: AppShellProps) {
       router.push("/cross-modal-consensus");
       return;
     }
-    if (page === "vocalallocationmatrix") { router.push("/vocal-allocation-matrix"); return; }
+    if (page === "vocalallocationmatrix") { router.push("/am-vocal-morphology-matrix"); return; }
 
-    if (pathname !== "/") {
-      router.push("/");
-    }
+    if (page === "dashboard") router.push("/");
+    else router.push(`/?page=${encodeURIComponent(page)}`);
   };
 
   return (
     <div className="min-h-screen flex">
-      <Sidebar
-        active={pathnameToPage(pathname)}
-        onNavigate={handleNavigate}
-        activeRuns={activeRuns}
-      />
+      {sidebarOpen ? (
+        <Sidebar active={pathnameToPage(pathname) === "dashboard" ? activePage : pathnameToPage(pathname)} onNavigate={handleNavigate} activeRuns={activeRuns} onClose={() => setSidebarOpen(false)} />
+      ) : (
+        <button type="button" onClick={() => setSidebarOpen(true)} className="fixed left-3 top-3 z-50 flex h-9 items-center gap-1 rounded-md border border-border bg-background/90 px-2 text-xs text-muted-foreground shadow-lg backdrop-blur hover:bg-accent" title="Показать боковую панель">
+          <ChevronRight className="h-4 w-4" /><span className="hidden sm:inline">Меню</span>
+        </button>
+      )}
       <main className="flex-1 min-w-0 flex flex-col">
         {children({
           activePage:

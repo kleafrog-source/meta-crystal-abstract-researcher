@@ -1,5 +1,8 @@
-import { RagParametersV3Page } from "@/components/pages/RagParametersV3Page";
+"use client";
+
+import { AppShell } from "@/components/layout/AppShell";
+import { PageRenderer } from "@/components/layout/PageRenderer";
 
 export default function RagParametersV3Route() {
-  return <RagParametersV3Page />;
+  return <AppShell>{({ activePage, setActivePage }) => <PageRenderer activePage={activePage} setActivePage={setActivePage} />}</AppShell>;
 }

@@ -1,4 +1,4 @@
-# Meta-Crystal v7.2
+# Abstract-Mindfreak · AM-Core
 
 Локальная исследовательская среда для семантического поиска, синтеза и мультимодального сопоставления параметров звука. Интерфейс построен на Next.js 16 и React 19; вычислительные пайплайны работают через Python sidecar, Ollama и локальные CLAP/SigLIP2-модели.
 
@@ -6,16 +6,15 @@
 
 | Режим | Назначение |
 |---|---|
-| **Flowmusic Genesis V3** | Независимый Single query, Transition A/B, retrieval по составной базе V3, live anchors/axes и готовый Clean Macro. |
+| **AM-Core Engine** | Независимый Single query, Transition A/B, retrieval по канонической базе V3, live anchors/axes и готовый Clean Macro. |
 | **Combinatorial Genesis** | Импорт и проверка новых батчей, карантин ошибок, построение composite index, anchors и служебных артефактов. |
 | **Combinatorial Synthesis** | Без-LLM рекомбинация атомов, embedding-ранжирование, ручной/LLM-review и публикация кандидатов. |
 | **Audio CLAP RAG** | Поиск параметров V3 по выбранному аудиофрагменту через LAION-CLAP. |
 | **Audio-to-Parameter** | Автоматическая нарезка трека на временные узлы, последовательный поиск, сглаживание и воспроизводимая временная линия параметров. |
 | **Morpho-Acoustic RAG** | Поиск параметров по изображению или спектрограмме через SigLIP2. |
-| **Vocal Allocation Matrix** | Целевой подбор языков, TECH4/FX4, слоёв и пространственного распределения вокала. |
-| **Cross-Modal Consensus** | Журнал и проверка согласия результатов semantic/audio/image retrieval. |
-| **Meta-Crystal V3 Lab** | Куратор новых параметров из библиотеки Мета-Кристаллов. |
-| **White Space / Knowledge Graph** | Анализ пробелов V3 и проверяемых связей параметров, атомов и таксономии. |
+| **AM-Vocal Morphology Matrix** | Целевой подбор языков, TECH4/FX4, слоёв и пространственного распределения вокала. |
+
+Cross-Modal Consensus, Meta-Crystal V3 Lab, White Space Discovery, Knowledge Graph и прежний crystal/Metis/Torus-контур доступны в сворачиваемом разделе **Архив / Legacy & Research** и загружаются только при открытии.
 
 Подробности:
 

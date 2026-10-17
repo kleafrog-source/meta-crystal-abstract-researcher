@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -54,6 +54,7 @@ interface ProfilesList {
   }>;
 }
 
+/** @deprecated Use SemanticPlane; retained temporarily for saved generation workflows. */
 export function Generation() {
   const PROFILE_MODE = "generation";
   const [profile, setProfile] = useState(DEFAULT_PROFILE);
@@ -74,11 +75,10 @@ export function Generation() {
   const { data: engineInfo } = useFetch<EngineInfo>("/api/engine");
   const { data: profilesList, refresh: refreshProfiles } = useFetch<ProfilesList>(`/api/profiles?mode=${PROFILE_MODE}`);
 
-  useEffect(() => {
-    if (engineInfo?.engineOk && engineInfo.flags?.length) {
-      setProfile((prev) => withDefaultFlags(prev, engineInfo.flags));
-    }
-  }, [engineInfo, profile.flags]);
+  const effectiveProfile = useMemo(
+    () => engineInfo?.engineOk && engineInfo.flags?.length ? withDefaultFlags(profile, engineInfo.flags) : profile,
+    [engineInfo, profile],
+  );
   useEffect(() => {
     if (!taskId) return;
     const es = new EventSource(`/api/generate/stream/${taskId}`);
@@ -120,9 +120,9 @@ export function Generation() {
       setTaskStatus("running");
       setActiveTab("log");
       const result = await apiPost<{ taskId: string }>("/api/generate/start", {
-        ...profile,
+        ...effectiveProfile,
         name: profileName,
-        disabled_patterns: profile.disabled_patterns,
+        disabled_patterns: effectiveProfile.disabled_patterns,
       });
       setTaskId(result.taskId);
       if (typeof window !== "undefined") {
@@ -155,11 +155,11 @@ export function Generation() {
     }
     try {
       await apiPost("/api/profiles", {
-        ...profile,
+        ...effectiveProfile,
         name: safeName,
         mode: PROFILE_MODE,
-        customPatterns: profile.custom_patterns,
-        disabledPatterns: profile.disabled_patterns,
+        customPatterns: effectiveProfile.custom_patterns,
+        disabledPatterns: effectiveProfile.disabled_patterns,
       });
       refreshProfiles();
       setSelectedProfileName(safeName);
@@ -263,7 +263,7 @@ export function Generation() {
 
           <TabsContent value="params" className="mt-0 flex-1 overflow-y-auto">
             <ProfileConfigurator
-              profile={profile}
+              profile={effectiveProfile}
               onChange={setProfile}
               engineFlags={engineInfo?.flags}
               enginePatterns={engineInfo?.patterns}
@@ -273,7 +273,7 @@ export function Generation() {
 
           <TabsContent value="domains" className="mt-0 flex-1 overflow-y-auto">
             <ProfileConfigurator
-              profile={profile}
+              profile={effectiveProfile}
               onChange={setProfile}
               engineFlags={engineInfo?.flags}
               sections={["domains"]}
@@ -282,7 +282,7 @@ export function Generation() {
 
           <TabsContent value="semantic" className="mt-0 flex-1 overflow-y-auto">
             <SemanticConfigPanel
-              profile={profile}
+              profile={effectiveProfile}
               state={semanticState}
               onStateChange={setSemanticState}
               onApplyProposal={(nextProfile) =>

@@ -79,22 +79,22 @@ const DEFAULT_MODELS = {
   ollamaHost: "http://127.0.0.1:11434",
 };
 
-const MMSS_FIELD_HINTS: Record<string, string> = {
-  "Chat model": "LLM-модель учителя для MMSS. Используется при retrain и задачах, где нужен текстовый вывод модели.",
+const IRE_FIELD_HINTS: Record<string, string> = {
+  "Chat model": "LLM-модель учителя для IRE. Используется при retrain и задачах, где нужен текстовый вывод модели.",
   "Embed model": "Embedding-модель для кодирования кристаллов и запросов. При смене модели результаты пространства признаков меняются.",
   "Chat timeout, sec": "Диапазон: 10-600 секунд. Увеличение полезно для медленных локальных моделей, но дольше удерживает задачу активной при зависаниях.",
   "Embed timeout, sec": "Диапазон: 5-300 секунд. Подходит для медленных embedding-запросов на слабом железе.",
-  "Ollama host": "URL локального Ollama API. Обычно http://127.0.0.1:11434. Если адрес неверный, MMSS уйдет в fallback или не увидит модели.",
+  "Ollama host": "URL локального Ollama API. Обычно http://127.0.0.1:11434. Если адрес неверный, IRE уйдет в fallback или не увидит модели.",
   "Crystal code": "Код одного кристалла для точечного ingest. Используйте существующий code из библиотеки, чтобы не прогонять всю базу.",
   "n_pairs": "Диапазон: 4-10000. Число обучающих пар для retrain. Рост повышает покрытие, но увеличивает время и нагрузку на CPU.",
   "epochs": "Диапазон: 1-100. Больше эпох усиливает дообучение, но повышает риск переобучения и долгих прогонов.",
   "batch": "Диапазон: 1-256. Большее значение ускоряет проходы при достаточной памяти, но увеличивает нагрузку.",
   "lr x1000": "Скорость обучения, умноженная на 1000 для удобства ввода. Рост делает обучение агрессивнее, но может ухудшить стабильность.",
   "Output checkpoint": "Путь к checkpoint-файлу .pt, куда будет сохранен результат retrain. Используйте отдельное имя для разных экспериментов.",
-  "Crystal limit": "Диапазон: 1-10000. Ограничивает размер выборки для MMSS eval. Небольшие значения подходят для smoke/regression проверок.",
+  "Crystal limit": "Диапазон: 1-10000. Ограничивает размер выборки для IRE eval. Небольшие значения подходят для smoke/regression проверок.",
 };
 
-export function MMSS() {
+export function IRE() {
   const { data: status, loading: statusLoading, refresh: refreshStatus } = useFetch<MmssStatusResponse>("/api/mmss/status");
   const { data: reportData, loading: reportLoading, refresh: refreshReport } = useFetch<MmssReportResponse>("/api/mmss/report");
   const { data: runsData, loading: runsLoading, refresh: refreshRuns } = useFetch<MmssRunsResponse>("/api/mmss/runs?limit=14");
@@ -141,7 +141,7 @@ export function MMSS() {
           setRunning(false);
           es.close();
           toast({
-            title: "MMSS задача завершилась с ошибкой",
+            title: "IRE задача завершилась с ошибкой",
             description: payload.msg ?? "unknown error",
             variant: "destructive",
           });
@@ -177,7 +177,7 @@ export function MMSS() {
     } catch (error) {
       setRunning(false);
       toast({
-        title: "Не удалось запустить MMSS режим",
+        title: "Не удалось запустить IRE режим",
         description: (error as Error).message,
         variant: "destructive",
       });
@@ -195,7 +195,7 @@ export function MMSS() {
       }
     } catch (error) {
       toast({
-        title: "Не удалось остановить MMSS задачу",
+        title: "Не удалось остановить IRE задачу",
         description: (error as Error).message,
         variant: "destructive",
       });
@@ -210,7 +210,7 @@ export function MMSS() {
         <div className="flex items-center justify-between gap-4">
           <div>
             <h1 className="flex items-center gap-2 text-xl font-semibold tracking-tight">
-              <span className="text-glow-emerald">MMSS</span>
+              <span className="text-glow-emerald">IRE</span>
               <Badge variant="outline">real-data gate</Badge>
               {running && (
                 <Badge variant="outline">
@@ -220,7 +220,7 @@ export function MMSS() {
               )}
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Отдельный режим для MMSS ingest, retrain, eval и просмотра результатов поверх текущей базы кристаллов.
+              Ingest · Retrain · Eval для экспериментального контура базы кристаллов.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -245,9 +245,9 @@ export function MMSS() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-sm">
                   <Server className="h-4 w-4 text-cyan-400" />
-                  MMSS runtime
+                  IRE runtime
                 </CardTitle>
-                <CardDescription>Модели и timeout для teacher/encoder. Эти значения передаются только MMSS задачам.</CardDescription>
+                <CardDescription>Модели и timeout для teacher/encoder. Эти значения передаются только IRE-задачам.</CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <Field label="Chat model" value={runtimeForm.chatModel} onChange={(value) => setRuntimeForm((prev) => ({ ...prev, chatModel: value }))} />
@@ -264,7 +264,7 @@ export function MMSS() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-sm"><Database className="h-4 w-4 text-emerald-400" />Ingest</CardTitle>
-                  <CardDescription>Запуск `mmss_ingest_all` или `mmss_ingest_code`.</CardDescription>
+                  <CardDescription>Загрузка всей crystal-базы или одного выбранного кода в IRE.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="grid grid-cols-2 gap-2">
@@ -313,7 +313,7 @@ export function MMSS() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-sm"><Cpu className="h-4 w-4 text-amber-400" />Eval</CardTitle>
-                <CardDescription>Запуск `mmss_eval` с ограничением размера выборки для smoke/regression проверок.</CardDescription>
+                <CardDescription>IRE eval с ограничением размера выборки для smoke/regression проверок.</CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-[180px_1fr]">
                 <NumberField label="Crystal limit" value={evalForm.crystal_limit} onChange={(value) => setEvalForm({ crystal_limit: value })} />
@@ -332,14 +332,14 @@ export function MMSS() {
 
             <Card className="flex flex-col">
               <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-sm"><Terminal className="h-4 w-4 text-emerald-400" />Текущий лог MMSS</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-sm"><Terminal className="h-4 w-4 text-emerald-400" />Текущий лог IRE</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Progress value={running ? progressValue : lastResult ? 100 : 0} />
                 <ScrollArea className="h-[260px] rounded-md border border-border bg-card/40">
                   <div className="space-y-0.5 p-3 font-mono text-xs">
                     {events.length === 0 ? (
-                      <div className="italic text-muted-foreground">$ ожидание запуска mmss…</div>
+                      <div className="italic text-muted-foreground">$ ожидание запуска IRE…</div>
                     ) : (
                       events.map((event, index) => <LogLine key={index} event={event} />)
                     )}
@@ -363,7 +363,7 @@ export function MMSS() {
           <div className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-sm"><Server className="h-4 w-4 text-cyan-400" />Статус MMSS</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-sm"><Server className="h-4 w-4 text-cyan-400" />Статус IRE</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <StatusRow
@@ -405,8 +405,8 @@ export function MMSS() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-sm">Журнал запусков MMSS</CardTitle>
-                <CardDescription>Параметры запуска, статус, итог и измененные артефакты по последним MMSS задачам.</CardDescription>
+                <CardTitle className="text-sm">Журнал запусков IRE</CardTitle>
+                <CardDescription>Параметры запуска, статус, итог и изменённые артефакты последних IRE-задач.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 {runsData?.runs?.length ? (
@@ -471,7 +471,7 @@ function Field({
 }) {
   return (
     <div className="space-y-1.5">
-      <FieldLabel label={label} hint={MMSS_FIELD_HINTS[label]} />
+      <FieldLabel label={label} hint={IRE_FIELD_HINTS[label]} />
       <Input value={value} onChange={(event) => onChange(event.target.value)} className="font-mono text-xs" />
     </div>
   );
@@ -488,7 +488,7 @@ function NumberField({
 }) {
   return (
     <div className="space-y-1.5">
-      <FieldLabel label={label} hint={MMSS_FIELD_HINTS[label]} />
+      <FieldLabel label={label} hint={IRE_FIELD_HINTS[label]} />
       <Input
         type="number"
         value={value}
