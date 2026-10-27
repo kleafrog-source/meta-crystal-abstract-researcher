@@ -11,6 +11,9 @@ export function VirtualizedParamList(props: {
   className?: string;
   onChange?: (technicalName: string, value: number | string) => void;
   onRemove?: (technicalName: string) => void;
+  displayMode?: "detail" | "standard" | "compact";
+  selectedParameterName?: string | null;
+  onSelectParameter?: (technicalName: string) => void;
 }) {
   const storeParameters = useRagV3Store((state) => state.activeParameters);
   const isSearching = useRagV3Store((state) => state.isSearching);
@@ -18,7 +21,7 @@ export function VirtualizedParamList(props: {
 
   return (
     <div
-      className={`console-parameter-bank overflow-y-auto rounded-lg border border-white/75 bg-black/55 p-2 ${props.className ?? ""}`}
+      className={`console-parameter-bank rounded-lg border border-border bg-black/55 p-2 ${props.className ?? ""}`}
     >
       {parameters.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-3 px-6 py-16 text-center">
@@ -37,9 +40,9 @@ export function VirtualizedParamList(props: {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6">
+        <div className={`console-param-grid console-param-grid-${props.displayMode ?? "detail"}`}>
           {parameters.map((parameter, index) => (
-            <ParameterControl key={parameter.technical_name} param={parameter} index={index} onChange={props.onChange} onRemove={props.onRemove} />
+            <ParameterControl key={parameter.technical_name} param={parameter} index={index} displayMode={props.displayMode ?? "detail"} onChange={props.onChange} onRemove={props.onRemove} selected={props.selectedParameterName === parameter.technical_name} onSelect={props.onSelectParameter} />
           ))}
         </div>
       )}

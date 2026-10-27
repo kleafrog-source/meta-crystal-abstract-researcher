@@ -138,6 +138,8 @@ export interface ChatResponse {
   detected_op: DetectedOp;
   response_text: string;
   model_id: string;
+  model_requested?: string;
+  actual_route?: string;
   internal_trace: {
     hypermemory_importance: number[];
     top_rho_selection: TopRhoSelection;

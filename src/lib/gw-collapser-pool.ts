@@ -1030,6 +1030,7 @@ async function callCrystalLlmJson(prompt: string, system: string, temperature: n
       return extractJson(result.text);
     } catch (error) {
       lastError = error as Error;
+      if (provider.id === "freellmapi") break;
     }
   }
   throw lastError ?? new Error("LLM JSON parse failed");

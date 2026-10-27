@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import {
-  Gem,
   FlaskConical,
   Workflow,
   Library,
@@ -21,6 +20,9 @@ import {
 } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { SidebarSpoiler } from "./SidebarSpoiler";
+import { AMCoreLogo } from "@/components/ui/am-core-logo";
+import { AMIcon } from "@/components/ui/am-icon";
+import { AppearancePicker } from "./AppearancePicker";
 
 export type PageId =
   | "dashboard"
@@ -62,55 +64,55 @@ const PRIMARY_NAV_ITEMS: NavItem[] = [
   {
     id: "dashboard",
     label: "AM-Core Dashboard",
-    icon: <LayoutDashboard className="h-4 w-4" />,
+    icon: <AMIcon name="dashboard" size="sm" className="sidebar-icon sidebar-icon-c1" />,
     description: "Статистика и последние алмазы",
   },
   {
     id: "ragparametersv3",
     label: "AM-Core Engine",
-    icon: <Sparkles className="h-4 w-4" />,
+    icon: <AMIcon name="engine" size="sm" className="sidebar-icon sidebar-icon-c2" />,
     description: "Unified semantic search over the autonomous library, Flowmusic corpus and Combinatorial Atoms",
   },
   {
     id: "combinatorialgenesis",
     label: "Combinatorial Genesis",
-    icon: <FlaskConical className="h-4 w-4" />,
+    icon: <AMIcon name="genesis" size="sm" className="sidebar-icon sidebar-icon-c3" />,
     description: "Изолированная лаборатория новых комбинаций без прямой записи в рабочий датасет V3",
   },
   {
     id: "combinatorialsynthesis",
     label: "Combinatorial Synthesis",
-    icon: <Sparkles className="h-4 w-4" />,
+    icon: <AMIcon name="synthesis" size="sm" className="sidebar-icon sidebar-icon-c4" />,
     description: "Embedding-генерация, отбор и публикация новых параметров из Combinatorial Atoms",
   },
   {
     id: "audioclaprag",
     label: "Audio CLAP RAG",
-    icon: <Activity className="h-4 w-4" />,
+    icon: <AMIcon name="clap" size="sm" className="sidebar-icon sidebar-icon-c5" />,
     description: "Cross-modal search of V3 parameters from an audio reference with LAION-CLAP",
   },
   {
     id: "audiotoparameter",
     label: "Audio-to-Parameter",
-    icon: <Activity className="h-4 w-4" />,
+    icon: <AMIcon name="audioToParameter" size="sm" className="sidebar-icon sidebar-icon-c6" />,
     description: "Авто-разбивка аудио по таймингам с batch поиском и интерполяцией параметров",
   },
   {
     id: "morphoacousticrag",
     label: "Morpho-Acoustic RAG",
-    icon: <CircleDot className="h-4 w-4" />,
+    icon: <AMIcon name="morpho" size="sm" className="sidebar-icon sidebar-icon-c7" />,
     description: "CPU-поиск параметров V3 по изображению через локальный SigLIP2",
   },
   {
     id: "vocalallocationmatrix",
     label: "AM-Vocal Morphology Matrix",
-    icon: <Sliders className="h-4 w-4" />,
+    icon: <AMIcon name="vocal" size="sm" className="sidebar-icon sidebar-icon-c8" />,
     description: "Целевой подбор языков, TECH4, FX4 и слоёв вокальной матрицы",
   },
   {
     id: "settings",
     label: "Настройки",
-    icon: <Settings className="h-4 w-4" />,
+    icon: <AMIcon name="settings" size="sm" className="sidebar-icon sidebar-icon-c9" />,
     description: "Модели, провайдеры и параметры AM-Core",
   },
 ];
@@ -149,13 +151,11 @@ export function Sidebar({ active, onNavigate, activeRuns, onClose }: SidebarProp
   }, []);
 
   return (
-    <aside className="w-64 shrink-0 border-r border-border bg-sidebar/80 backdrop-blur-sm flex flex-col h-screen sticky top-0">
+    <aside className="app-sidebar w-64 shrink-0 border-r border-border flex flex-col h-screen sticky top-0">
       {/* Brand */}
-      <div className="px-5 py-5 border-b border-border">
+      <div className="px-3 py-4 border-b border-border">
         <div className="flex items-center gap-2.5">
-          <div className="relative h-9 w-9 rounded-lg bg-gradient-to-br from-emerald-500 via-cyan-400 to-purple-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <Gem className="h-5 w-5 text-white" />
-          </div>
+          <AMCoreLogo />
           <div>
             <div className="text-sm font-semibold tracking-tight text-glow-emerald">
               Abstract-Mindfreak
@@ -183,10 +183,11 @@ export function Sidebar({ active, onNavigate, activeRuns, onClose }: SidebarProp
                     ? "bg-primary/15 text-primary-foreground border border-primary/30 shadow-sm shadow-primary/10"
                     : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground border border-transparent",
                 )}
+                aria-current={active === item.id ? "page" : undefined}
                 title={item.description}
               >
                 <span
-                  className={cn(
+                  className={cn("sidebar-nav-icon",
                     "shrink-0 transition-colors",
                     active === item.id
                       ? "text-primary"
@@ -210,7 +211,7 @@ export function Sidebar({ active, onNavigate, activeRuns, onClose }: SidebarProp
             {LEGACY_NAV_ITEMS.map((item) => (
               <li key={item.id}>
                 <button onClick={() => onNavigate(item.id)} className={cn("w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm border transition-colors", active === item.id ? "bg-primary/15 border-primary/30 text-primary-foreground" : "border-transparent text-muted-foreground hover:bg-sidebar-accent")} title={item.description}>
-                  <span className="shrink-0">{item.icon}</span><span className="flex-1 truncate text-left">{item.label}</span>
+                  <span className="sidebar-nav-icon shrink-0">{item.icon}</span><span className="flex-1 truncate text-left">{item.label}</span>
                 </button>
               </li>
             ))}
@@ -221,6 +222,7 @@ export function Sidebar({ active, onNavigate, activeRuns, onClose }: SidebarProp
       {/* Status footer */}
       <div className="px-3 py-3 border-t border-border space-y-2">
         {onClose && <button onClick={onClose} className="mb-2 flex w-full items-center justify-center gap-2 rounded-md border border-border px-2 py-1.5 text-xs text-muted-foreground hover:bg-sidebar-accent"><ChevronLeft className="h-3.5 w-3.5" />Скрыть панель</button>}
+        <AppearancePicker page={active} />
         <div className="flex items-center justify-between text-[11px]">
           <span className="text-muted-foreground">Engine</span>
           <div className="flex items-center gap-1.5">

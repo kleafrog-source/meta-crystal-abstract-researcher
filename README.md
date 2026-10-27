@@ -21,6 +21,7 @@ Cross-Modal Consensus, Meta-Crystal V3 Lab, White Space Discovery, Knowledge Gra
 - [Руководство по режимам (RU)](docs/application-modes-guide-ru.md)
 - [Application modes guide (EN)](docs/application-modes-guide.md)
 - [Audio-to-Parameter: временная линия и поиск](docs/audio-to-parameter.md)
+- [FreeLLMAPI, оформление и редизайн AM-Core](docs/llm-and-appearance.md)
 
 ## Быстрый запуск
 

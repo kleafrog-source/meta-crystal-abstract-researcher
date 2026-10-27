@@ -23,6 +23,7 @@ make_encoder()/make_teacher() возвращают (callable, mode).
 """
 
 import json
+import os
 import re
 import urllib.request
 import urllib.error
@@ -202,6 +203,43 @@ class OllamaTeacher(Teacher):
             return _synthetic_teacher_invariant(query)
 
 
+class FreeLLMAPITeacher(Teacher):
+    """Text-only FreeLLMAPI adapter; failures are returned without backend fallback."""
+    INV_DIM = 8
+
+    def __init__(self, base_url: str, model: str, api_key: str, timeout: float = 60.0):
+        self.url = base_url.rstrip("/") + "/chat/completions"
+        self.model = model or "auto"
+        self.api_key = api_key
+        self.timeout = timeout
+        self.system = (
+            "You are an invariant-extraction engine. Output ONLY a JSON object "
+            f"{{\"invariant\": [8 floats in -1..1]}} across these axes: {DOMAINS}."
+        )
+
+    def __call__(self, query: str) -> torch.Tensor:
+        if not self.api_key:
+            raise RuntimeError("FreeLLMAPI key is missing from the server environment")
+        payload = {"model": self.model, "stream": False, "temperature": 0.2,
+                   "messages": [{"role":"system","content":self.system},{"role":"user","content":query}]}
+        req = urllib.request.Request(self.url, data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type":"application/json", "Authorization":"Bearer " + self.api_key}, method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=self.timeout) as response:
+                result = json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as error:
+            raise RuntimeError(f"FreeLLMAPI chat completion returned HTTP {error.code}") from None
+        content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
+        if not content:
+            raise RuntimeError("FreeLLMAPI returned an empty teacher response")
+        data = OllamaTeacher._extract_json(content)
+        values = [float(item) for item in data["invariant"]]
+        values = (values + [0.0] * self.INV_DIM)[:self.INV_DIM]
+        tensor = torch.tensor(values, dtype=torch.float32).clamp(-1.0, 1.0)
+        norm = tensor.norm()
+        return tensor / norm if norm > 0 else tensor
+
+
 # ---------------------------------------------------------------------------
 # Фабрики с автодетектом
 # ---------------------------------------------------------------------------
@@ -221,6 +259,12 @@ def make_encoder(prefer_ollama: bool = True, host: str = "http://localhost:11434
 
 def make_teacher(prefer_ollama: bool = True, host: str = "http://localhost:11434",
                  model: str = DEFAULT_CHAT_MODEL, timeout: float = 60.0) -> tuple:
+    if os.environ.get("TEXT_LLM_PROVIDER") == "freellmapi":
+        teacher = FreeLLMAPITeacher(
+            os.environ.get("FREELLMAPI_BASE_URL", "http://localhost:3001/v1"),
+            os.environ.get("FREELLMAPI_MODEL", "auto"),
+            os.environ.get("FREELLMAPI_API_KEY", ""), timeout)
+        return teacher, "freellmapi_router"
     if prefer_ollama and detect_ollama(host):
         try:
             t = OllamaTeacher(host, model, timeout)

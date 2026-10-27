@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  AudioLines,
   Download,
   Loader2,
   Scissors,
@@ -27,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { AMIcon } from "@/components/ui/am-icon";
 import {
   blendParameterFrames,
   buildAudioAnalysisPoints,
@@ -34,24 +34,22 @@ import {
   interpolateParameterFrames,
   smoothTimelineSegments,
 } from "@/lib/audio-segment-timeline";
+import {
+  applySuccessfulSegmentResult,
+  type AudioAnalysisStatus,
+  type AudioEngine,
+  type AudioSegmentResultPoint,
+} from "@/lib/audio-segment-result";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 
-type Engine = "clap" | "siglip";
-type AnalysisStatus = "pending" | "processing" | "complete" | "error";
+type Engine = AudioEngine;
+type AnalysisStatus = AudioAnalysisStatus;
 type SpectrogramDetail = "low" | "medium" | "high";
 type SpectrogramScale = "linear" | "logarithmic" | "mel" | "bark" | "erb";
 type SpectrogramRenderer = "standard" | "windowed";
 type SiglipSpectrogramLayout = "mel" | "composite" | "rgb_delta";
 
-interface SegmentPoint {
-  time: number;
-  offset: number;
-  duration: number;
-  clap: ActiveParameter[];
-  siglip: ActiveParameter[];
-  clapStatus: AnalysisStatus;
-  siglipStatus: AnalysisStatus;
-}
+type SegmentPoint = AudioSegmentResultPoint;
 
 interface SegmentResponse {
   parameters?: ActiveParameter[];
@@ -259,13 +257,12 @@ export function AudioToParameterPage() {
       setBusy(engine);
       setError("");
       setNotice("");
-      const working = segments.map((segment) => ({
+      let working = segments.map((segment) => ({
         ...segment,
         clap: [...segment.clap],
         siglip: [...segment.siglip],
       }));
       const statusField = engine === "clap" ? "clapStatus" : "siglipStatus";
-      const resultField = engine === "clap" ? "clap" : "siglip";
       try {
         for (let index = 0; index < working.length; index += 1) {
           working[index][statusField] = "processing";
@@ -290,11 +287,17 @@ export function AudioToParameterPage() {
           const payload = (await response.json()) as SegmentResponse;
           if (!response.ok)
             throw new Error(payload.error ?? `HTTP ${response.status}`);
-          working[index][resultField] = Array.isArray(payload.parameters)
+          const parameters = Array.isArray(payload.parameters)
             ? payload.parameters
             : [];
-          working[index][statusField] = "complete";
-          setSegments([...working]);
+          const nextWorking = applySuccessfulSegmentResult(
+            working,
+            index,
+            engine,
+            parameters,
+          );
+          working = nextWorking;
+          setSegments(nextWorking);
           setNotice(
             `${engine === "clap" ? "CLAP" : "SigLIP2"}: обработано ${index + 1} / ${working.length}.`,
           );
@@ -455,7 +458,7 @@ export function AudioToParameterPage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="flex items-center gap-2 font-mono text-lg font-semibold">
-              <AudioLines className="size-5 text-cyan-300" />
+              <AMIcon name="audioToParameter" size="md" bright />
               Audio-to-Parameter · Segmented CLAP + SigLIP2
             </h1>
             <p className="mt-1 text-xs text-zinc-500">

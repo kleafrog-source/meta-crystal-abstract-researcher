@@ -137,7 +137,7 @@ export function MetaCrystalPickerDialog(props: {
           <Button type="button" size="sm" variant="outline"><Database className="size-4" />Use crystal</Button>
         </DialogTrigger>
       </V3Tooltip>
-      <DialogContent className="max-w-6xl p-0">
+      <DialogContent className="h-[min(90dvh,900px)] w-[calc(100vw-1rem)] max-w-[min(96vw,90rem)] overflow-hidden p-0 sm:w-[calc(100vw-2rem)] sm:max-w-[min(96vw,90rem)]">
         <DialogHeader className="border-b border-border/60 px-6 py-4">
           <DialogTitle className="flex items-center gap-2 text-base">
             <Database className="size-4 text-primary" />

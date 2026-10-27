@@ -456,6 +456,7 @@ async function callJsonChat(prompt: string, system: string, temperature: number)
       return extractJson(result.text);
     } catch (error) {
       lastError = error as Error;
+      if (provider.id === "freellmapi") break;
     }
   }
   throw lastError ?? new Error("LLM JSON parse failed");

@@ -993,9 +993,10 @@ def cmd_mmss_retrain(params_raw=None):
             model=MMSS_CHAT_MODEL,
             timeout=MMSS_CHAT_TIMEOUT_SEC,
         )
-        if encoder_mode != "ollama_real" or teacher_mode != "ollama_real":
+        allowed_teacher_modes = {"ollama_real", "freellmapi_router"}
+        if encoder_mode != "ollama_real" or teacher_mode not in allowed_teacher_modes:
             emit_error(
-                f"Real Ollama mode is required for mmss_retrain. "
+                f"A real embedding provider and configured text provider are required for mmss_retrain. "
                 f"encoder={encoder_mode}, teacher={teacher_mode}"
             )
             return

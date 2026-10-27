@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { FieldHint, FieldLabel } from "@/components/ui/field-hint";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { AMIcon } from "@/components/ui/am-icon";
+import { resolveNormalizationBatch, selectPendingNormalizationCandidates } from "@/lib/combinatorial-genesis/normalization-selection";
 
 interface Candidate {
   technical_name: string;
@@ -48,6 +50,9 @@ interface Candidate {
     recommended: boolean;
     selection_reason: string;
     model: string;
+    provider: string;
+    requestedModel?: string;
+    actualRoute?: string;
   };
   source_metadata?: Candidate["metadata"];
 }
@@ -92,6 +97,7 @@ interface V3SourceResult {
 export function CombinatorialSynthesisPage() {
   const [model, setModel] = useState<string>("—");
   const [chatModel, setChatModel] = useState<string>("—");
+  const [textProvider, setTextProvider] = useState<string>("—");
   const [indexModel, setIndexModel] = useState<string>("—");
   const [macro, setMacro] = useState("");
   const [query, setQuery] = useState(() => typeof window === "undefined" ? "" : new URLSearchParams(window.location.search).get("query") ?? "");
@@ -101,6 +107,8 @@ export function CombinatorialSynthesisPage() {
   const [sourceBusy, setSourceBusy] = useState(false);
   const [preview, setPreview] = useState<Preview | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [normalizationSelected, setNormalizationSelected] = useState<Set<string>>(new Set());
+  const [normalizationErrors, setNormalizationErrors] = useState<Record<string, string>>({});
   const [candidatePackage, setCandidatePackage] = useState<CandidatePackage | null>(null);
   const [publishResult, setPublishResult] = useState<PublishResult | null>(null);
   const [busy, setBusy] = useState<"generate" | "package" | "check" | "publish" | "llm" | null>(null);
@@ -115,9 +123,11 @@ export function CombinatorialSynthesisPage() {
       fetch("/api/settings", { cache: "no-store" }).then((response) => response.json()),
       fetch("/api/combinatorial-genesis/collections/stats", { cache: "no-store" }).then((response) => response.json()),
     ])
-      .then(([settings, stats]: [{ llm?: { embedModel?: string; chatModel?: string } }, { runtime_index_model?: string }]) => {
+      .then(([settings, stats]: [{ llm?: { provider?: string; embedModel?: string; chatModel?: string; freeLLMApiModel?: string } }, { runtime_index_model?: string }]) => {
         setModel(settings.llm?.embedModel || "—");
-        setChatModel(settings.llm?.chatModel || "—");
+        const provider = settings.llm?.provider || "—";
+        setTextProvider(provider);
+        setChatModel(provider === "freellmapi" ? settings.llm?.freeLLMApiModel || "auto" : settings.llm?.chatModel || "—");
         setIndexModel(stats.runtime_index_model || "—");
       })
       .catch(() => { setModel("—"); setIndexModel("—"); });
@@ -180,9 +190,13 @@ export function CombinatorialSynthesisPage() {
       if (!response.ok) throw new Error(payload.error ?? `HTTP ${response.status}`);
       setPreview({ ...payload, candidates: payload.candidates.map((candidate) => ({ ...candidate, source_metadata: structuredClone(candidate.metadata) })) });
       setSelected(new Set());
+      setNormalizationSelected(new Set());
+      setNormalizationErrors({});
     } catch (caught) {
       setPreview(null);
       setSelected(new Set());
+      setNormalizationSelected(new Set());
+      setNormalizationErrors({});
       setError(caught instanceof Error ? caught.message : String(caught));
     } finally {
       setBusy(null);
@@ -296,20 +310,23 @@ export function CombinatorialSynthesisPage() {
     setReviewMessage((current) => ({ ...current, [candidate.technical_name]: "Проверка подтверждена; кандидат готов к включению в draft." }));
   };
 
-  const normalizeWithLlm = async () => {
-    if (!preview) return;
-    const pending = preview.candidates.filter((candidate) => !candidate.llm_normalization);
-    const targets = pending.length > 0 ? pending : preview.candidates;
+  const normalizeWithLlm = async (requestedNames?: string[]) => {
+    if (!preview || busy !== null || llmAbortRef.current) return;
+    const names = requestedNames ?? preview.candidates.filter((candidate) => !candidate.llm_normalization).map((candidate) => candidate.technical_name);
+    const targets = selectPendingNormalizationCandidates(preview.candidates, names);
+    if (!targets.length) return;
     setBusy("llm");
     setError(null);
     setLlmProgress({ current: 0, total: targets.length });
     const controller = new AbortController();
     llmAbortRef.current = controller;
+    const failures: Record<string, string> = {};
+    const completedNames = new Set<string>();
     try {
       const snapshotResponse = await fetch("/api/combinatorial-genesis/normalization-snapshot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ candidates: preview.candidates, model: chatModel }),
+        body: JSON.stringify({ candidates: targets, model: chatModel }),
         signal: controller.signal,
       });
       const snapshot = await snapshotResponse.json() as { job_id?: string; error?: string };
@@ -317,22 +334,46 @@ export function CombinatorialSynthesisPage() {
       normalizationJobRef.current = snapshot.job_id;
       for (let start = 0; start < targets.length; start += 1) {
         const batch = targets.slice(start, start + 1);
-        const response = await fetch("/api/combinatorial-genesis/normalize-metadata", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ candidates: batch }),
-          signal: controller.signal,
-        });
-        const payload = await response.json() as { model?: string; candidates?: Array<Omit<NonNullable<Candidate["llm_normalization"]>, "model"> & { technical_name: string }>; error?: string };
-        if (!response.ok || !payload.candidates || !payload.model) throw new Error(payload.error ?? `HTTP ${response.status}`);
+        let response: Response;
+        let payload: { model?: string; provider?: string; requestedModel?: string; actualRoute?: string; candidates?: Array<Omit<NonNullable<Candidate["llm_normalization"]>, "model" | "provider" | "requestedModel" | "actualRoute"> & { technical_name: string }>; error?: string };
+        try {
+          response = await fetch("/api/combinatorial-genesis/normalize-metadata", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ candidates: batch }),
+            signal: controller.signal,
+          });
+          payload = await response.json() as typeof payload;
+        } catch (caught) {
+          if (caught instanceof Error && caught.name === "AbortError") throw caught;
+          const failure = caught instanceof Error ? caught.message : String(caught);
+          const outcome = resolveNormalizationBatch(batch.map((item) => item.technical_name), [], failure);
+          Object.assign(failures, outcome.failed);
+          setNormalizationErrors((current) => ({ ...current, ...outcome.failed }));
+          setLlmProgress({ current: start + batch.length, total: targets.length });
+          continue;
+        }
+        if (!response.ok || !payload.candidates || !payload.model) {
+          const failure = payload.error ?? `HTTP ${response.status}`;
+          const outcome = resolveNormalizationBatch(batch.map((item) => item.technical_name), [], failure);
+          Object.assign(failures, outcome.failed);
+          setNormalizationErrors((current) => ({ ...current, ...outcome.failed }));
+          setLlmProgress({ current: start + batch.length, total: targets.length });
+          await fetch("/api/combinatorial-genesis/normalization-snapshot", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ job_id: snapshot.job_id, results: [], status: "running" }) });
+          continue;
+        }
         const normalized = new Map(payload.candidates.map((item) => [item.technical_name, item]));
+        const outcome = resolveNormalizationBatch(batch.map((item) => item.technical_name), [...normalized.keys()]);
+        Object.assign(failures, outcome.failed);
+        setNormalizationErrors((current) => ({ ...current, ...outcome.failed }));
+        for (const name of outcome.succeeded) completedNames.add(name);
         setPreview((current) => current ? {
           ...current,
           candidates: current.candidates.map((candidate) => {
             const item = normalized.get(candidate.technical_name);
             return item ? {
               ...candidate,
-              llm_normalization: { ...item, model: payload.model! },
+              llm_normalization: { ...item, model: payload.model!, provider: payload.provider ?? textProvider, requestedModel: payload.requestedModel, actualRoute: payload.actualRoute },
               metadata: {
                 ...candidate.metadata,
                 name_ru: item.name_ru,
@@ -351,6 +392,16 @@ export function CombinatorialSynthesisPage() {
           }
           return next;
         });
+        setNormalizationErrors((current) => {
+          const next = { ...current };
+          for (const name of normalized.keys()) delete next[name];
+          return next;
+        });
+        setNormalizationSelected((current) => {
+          const next = new Set(current);
+          for (const name of normalized.keys()) next.delete(name);
+          return next;
+        });
         await fetch("/api/combinatorial-genesis/normalization-snapshot", {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -362,15 +413,22 @@ export function CombinatorialSynthesisPage() {
       await fetch("/api/combinatorial-genesis/normalization-snapshot", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ job_id: snapshot.job_id, results: [], status: "completed" }),
+        body: JSON.stringify({ job_id: snapshot.job_id, results: [], status: Object.keys(failures).length ? "partial" : "completed" }),
       });
     } catch (caught) {
       if (!(caught instanceof Error && caught.name === "AbortError")) setError(caught instanceof Error ? caught.message : String(caught));
+      if (caught instanceof Error && caught.name === "AbortError") setNormalizationErrors((current) => Object.assign({}, current, ...targets.filter((candidate) => !completedNames.has(candidate.technical_name)).map((candidate) => ({ [candidate.technical_name]: "Нормализация остановлена до получения результата." }))));
     } finally {
       llmAbortRef.current = null;
       setBusy(null);
     }
   };
+
+  const toggleNormalization = (name: string) => setNormalizationSelected((current) => {
+    const next = new Set(current);
+    if (next.has(name)) next.delete(name); else next.add(name);
+    return next;
+  });
 
   const stopLlm = () => {
     llmAbortRef.current?.abort();
@@ -422,10 +480,10 @@ export function CombinatorialSynthesisPage() {
         <header className="rounded-lg border border-fuchsia-400/30 bg-fuchsia-950/10 p-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <div className="flex items-center gap-2"><Sparkles className="size-5 text-fuchsia-300" /><h1 className="font-mono text-lg font-semibold">Combinatorial Parameter Synthesis</h1></div>
+              <div className="flex items-center gap-2"><AMIcon name="synthesis" size="md" bright /><h1 className="font-mono text-lg font-semibold">Combinatorial Parameter Synthesis</h1></div>
               <p className="mt-2 max-w-4xl text-sm text-zinc-400">Создание новых technical_name из frozen atoms, qwen3-embedding-ранжирование без LLM, ручной отбор и контролируемая публикация в автономную библиотеку Genesis.</p>
             </div>
-            <div className="flex flex-wrap gap-2"><Badge variant="outline">Embeddings model: {model}</Badge><Badge variant="outline">description normalization: {chatModel}</Badge><Badge variant="outline">index: {indexModel}</Badge><Badge variant="outline">V3 protected</Badge></div>
+            <div className="flex flex-wrap gap-2"><Badge variant="outline">Embeddings model: {model}</Badge><Badge variant="outline">description normalization: {textProvider} · {chatModel}</Badge><Badge variant="outline">index: {indexModel}</Badge><Badge variant="outline">V3 protected</Badge></div>
           </div>
         </header>
 
@@ -469,7 +527,9 @@ export function CombinatorialSynthesisPage() {
             <div className="flex flex-wrap gap-2"><Badge variant="secondary">dataset: {preview.dataset_version}</Badge><Badge variant="secondary">model: {preview.embedding_model}</Badge><Badge variant="secondary">generated: {preview.generated_before_bge_rerank}</Badge><Badge variant="secondary">selected: {selected.size}</Badge></div>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button size="sm" onClick={() => void normalizeWithLlm()} disabled={busy !== null}>{busy === "llm" ? `LLM ${llmProgress.current}/${llmProgress.total}` : `Нормализовать описания через ${chatModel}`}</Button>
+            <Button size="sm" onClick={() => void normalizeWithLlm()} disabled={busy !== null || preview.candidates.every((item) => item.llm_normalization)}>{busy === "llm" ? `LLM ${llmProgress.current}/${llmProgress.total}` : `Нормализовать все описания · ${textProvider} · ${chatModel}`}</Button>
+            <Button size="sm" variant="outline" onClick={() => void normalizeWithLlm([...normalizationSelected])} disabled={busy !== null || normalizationSelected.size === 0}>{`Нормализовать выбранные (${normalizationSelected.size})`}</Button>
+            <Button size="sm" variant="outline" onClick={() => void normalizeWithLlm(Object.keys(normalizationErrors))} disabled={busy !== null || Object.keys(normalizationErrors).length === 0}>{`Повторить ошибки (${Object.keys(normalizationErrors).length})`}</Button>
             <Button variant="destructive" size="sm" onClick={stopLlm} disabled={busy !== "llm"}>Остановить LLM</Button>
             <Button variant="outline" size="sm" onClick={applyLlmSelection} disabled={busy !== null || !preview.candidates.some((item) => item.llm_normalization)}>Применить LLM-отбор</Button>
             <Button variant="outline" size="sm" onClick={() => setSelected(new Set(preview.candidates.filter((item) => item.value_inference.status === "auto_resolved" && item.metadata.review_status === "approved").map((item) => item.technical_name)))}>Выбрать все проверенные</Button>
@@ -477,11 +537,13 @@ export function CombinatorialSynthesisPage() {
           </div>
           <div className="grid gap-3 lg:grid-cols-2">
             {preview.candidates.map((candidate) => <article key={candidate.technical_name} className={`rounded-lg border p-3 ${selected.has(candidate.technical_name) ? "border-fuchsia-400/50 bg-fuchsia-950/20" : "border-white/10 bg-black/40"}`}>
+              <label className="mb-2 flex items-center gap-2 text-xs text-cyan-200"><input type="checkbox" className="accent-cyan-400" checked={normalizationSelected.has(candidate.technical_name)} disabled={busy !== null || Boolean(candidate.llm_normalization)} onChange={() => toggleNormalization(candidate.technical_name)} />Выбрать только для нормализации описания</label>
               <label className="flex items-start gap-3"><input type="checkbox" className="mt-1 accent-fuchsia-500 disabled:opacity-30" checked={selected.has(candidate.technical_name)} disabled={candidate.metadata.review_status !== "approved" || candidate.value_inference.status !== "auto_resolved"} onChange={() => toggle(candidate.technical_name)} /><div className="min-w-0 flex-1"><code className="break-all text-sm text-fuchsia-100">{candidate.technical_name}</code><div className="mt-1 flex flex-wrap gap-2 text-[11px] text-zinc-500"><span>embedding {candidate.query_similarity.toFixed(4)}</span><span>selection {candidate.selection_score.toFixed(4)}</span><span>{candidate.value_inference.status}</span><span>metadata: {candidate.metadata.review_status}</span><span>confidence {candidate.value_inference.confidence.toFixed(3)}</span></div></div></label>
+              {normalizationErrors[candidate.technical_name] ? <div role="alert" className="mt-2 rounded border border-red-400/30 bg-red-950/20 p-2 text-xs text-red-200">Ошибка нормализации: {normalizationErrors[candidate.technical_name]}</div> : null}
               <div className="mt-2 rounded border border-white/10 bg-black/30 p-2 text-xs text-zinc-400"><span>{candidate.value_inference.ui_element}</span> · <span>{candidate.value_inference.unit}</span> · <span>{candidate.value_inference.quantity_kind}</span>{candidate.value_inference.ui_element === "Range" ? <div className="mt-1 font-mono">{candidate.value_inference.min_value} … {candidate.value_inference.default} … {candidate.value_inference.max_value} · step {candidate.value_inference.step}</div> : null}</div>
               <div className="mt-3 grid gap-2 xl:grid-cols-2">
                 <div className="rounded border border-cyan-400/20 bg-cyan-950/10 p-2 text-xs"><div className="mb-2 font-mono font-semibold uppercase tracking-wide text-cyan-300">Embedding + donors · исходное</div><div className="space-y-2 text-zinc-400"><div><span className="text-zinc-600">name_ru:</span> {(candidate.source_metadata ?? candidate.metadata).name_ru}</div><div><span className="text-zinc-600">description_en:</span> {(candidate.source_metadata ?? candidate.metadata).description_en}</div><div><span className="text-zinc-600">description_ru:</span> {(candidate.source_metadata ?? candidate.metadata).description_ru}</div></div></div>
-                <div className="rounded border border-violet-400/30 bg-violet-950/15 p-2 text-xs"><div className="mb-2 flex flex-wrap items-center justify-between gap-2 font-mono font-semibold uppercase tracking-wide text-violet-300"><span>LLM · {candidate.llm_normalization?.model ?? chatModel}</span>{candidate.llm_normalization ? <span className={candidate.llm_normalization.recommended ? "text-emerald-300" : "text-amber-300"}>{candidate.llm_normalization.recommended ? "recommended" : "manual review"}</span> : null}</div>{candidate.llm_normalization ? <div className="grid gap-2"><label className="grid gap-1 text-violet-200">name_ru<Input className="border-violet-400/20 text-violet-100" value={candidate.llm_normalization.name_ru} onChange={(event) => updateLlmText(candidate, "name_ru", event.target.value)} /></label><label className="grid gap-1 text-violet-200">description_en<Textarea className="border-violet-400/20 text-violet-100" rows={3} value={candidate.llm_normalization.description_en} onChange={(event) => updateLlmText(candidate, "description_en", event.target.value)} /></label><label className="grid gap-1 text-violet-200">description_ru<Textarea className="border-violet-400/20 text-violet-100" rows={3} value={candidate.llm_normalization.description_ru} onChange={(event) => updateLlmText(candidate, "description_ru", event.target.value)} /></label><div className="text-[11px] text-violet-300/70">{candidate.llm_normalization.selection_reason}</div></div> : <div className="py-4 text-center text-violet-300/50">Запустите пакетную нормализацию описаний.</div>}</div>
+                <div className="rounded border border-violet-400/30 bg-violet-950/15 p-2 text-xs"><div className="mb-2 flex flex-wrap items-center justify-between gap-2 font-mono font-semibold uppercase tracking-wide text-violet-300"><span>LLM · {candidate.llm_normalization?.provider ?? textProvider} · {candidate.llm_normalization?.requestedModel ?? candidate.llm_normalization?.model ?? chatModel}</span>{candidate.llm_normalization ? <span className={candidate.llm_normalization.recommended ? "text-emerald-300" : "text-amber-300"}>{candidate.llm_normalization.recommended ? "recommended" : "manual review"}</span> : null}</div>{candidate.llm_normalization ? <div className="grid gap-2">{candidate.llm_normalization.actualRoute ? <div className="font-mono text-[10px] text-violet-300/70">routed via {candidate.llm_normalization.actualRoute}</div> : null}<label className="grid gap-1 text-violet-200">name_ru<Input className="border-violet-400/20 text-violet-100" value={candidate.llm_normalization.name_ru} onChange={(event) => updateLlmText(candidate, "name_ru", event.target.value)} /></label><label className="grid gap-1 text-violet-200">description_en<Textarea className="border-violet-400/20 text-violet-100" rows={3} value={candidate.llm_normalization.description_en} onChange={(event) => updateLlmText(candidate, "description_en", event.target.value)} /></label><label className="grid gap-1 text-violet-200">description_ru<Textarea className="border-violet-400/20 text-violet-100" rows={3} value={candidate.llm_normalization.description_ru} onChange={(event) => updateLlmText(candidate, "description_ru", event.target.value)} /></label><div className="text-[11px] text-violet-300/70">{candidate.llm_normalization.selection_reason}</div></div> : <div className="py-4 text-center text-violet-300/50">Запустите пакетную нормализацию описаний.</div>}</div>
               </div>
               <details className="mt-2 text-xs text-zinc-500"><summary className="cursor-pointer">Происхождение</summary><div className="mt-1 break-all">{candidate.parent_parameters.join(" · ")}</div></details>
               <details className="mt-3 rounded border border-amber-400/20 bg-amber-950/10 p-2 text-xs text-zinc-300">

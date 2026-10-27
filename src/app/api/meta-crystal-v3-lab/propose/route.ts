@@ -139,6 +139,12 @@ export async function POST(request: Request) {
       format: responseSchema,
     };
     const result = await provider.chat([{ role: "user" as const, content: user }], chatOptions);
+    let routing = {
+      ...(result.requestedModel ? { requestedModel: result.requestedModel } : {}),
+      ...(result.actualRoute ? { actualRoute: result.actualRoute } : {}),
+      ...(result.actualProvider ? { actualProvider: result.actualProvider } : {}),
+      ...(result.actualModel ? { actualModel: result.actualModel } : {}),
+    };
     let parsed: Record<string, unknown>;
     try {
       parsed = extractJsonObject(result.text);
@@ -186,6 +192,12 @@ export async function POST(request: Request) {
           ].join("\n"),
         },
       ], chatOptions);
+      routing = {
+        ...(retry.requestedModel ? { requestedModel: retry.requestedModel } : {}),
+        ...(retry.actualRoute ? { actualRoute: retry.actualRoute } : {}),
+        ...(retry.actualProvider ? { actualProvider: retry.actualProvider } : {}),
+        ...(retry.actualModel ? { actualModel: retry.actualModel } : {}),
+      };
       rawAttempts.push(retry.text);
       try {
         const retryParsed = extractJsonObject(retry.text);
@@ -200,6 +212,7 @@ export async function POST(request: Request) {
       dataset_version: datasetVersion,
       embedding_model: embeddingSettings.model,
       chat_model: result.model,
+      ...routing,
       candidates,
       meta_crystal_context: rag.results,
       v3_neighbours: nearest.map((item) => ({ technical_name: item.name, similarity: item.similarity })),

@@ -3,6 +3,7 @@ import { getActiveProvider } from "@/lib/llm/factory";
 import { buildRAGContext } from "@/lib/rag";
 import { db } from "@/lib/db";
 import type { LLMMessage } from "@/lib/llm/types";
+import { saveChatRouteMetadata } from "@/lib/llm/chat-route-metadata";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -68,7 +69,7 @@ export async function POST(req: Request) {
           },
         });
       }
-      await db.chatMessage.create({
+      const assistantMessage = await db.chatMessage.create({
         data: {
           role: "assistant",
           content: result.text,
@@ -76,6 +77,10 @@ export async function POST(req: Request) {
           provider: provider.id,
           model: result.model,
         },
+      });
+      await saveChatRouteMetadata(assistantMessage.id, {
+        requestedModel: result.requestedModel ?? body.model ?? settings.chatModel,
+        actualRoute: result.actualRoute, actualProvider: result.actualProvider, actualModel: result.actualModel,
       });
     } catch (e) {
       console.error("chat persist failed:", e);
@@ -88,6 +93,10 @@ export async function POST(req: Request) {
       ragResults,
       provider: result.provider,
       model: result.model,
+      requestedModel: result.requestedModel ?? body.model ?? settings.chatModel,
+      ...(result.actualRoute ? { actualRoute: result.actualRoute } : {}),
+      ...(result.actualProvider ? { actualProvider: result.actualProvider } : {}),
+      ...(result.actualModel ? { actualModel: result.actualModel } : {}),
       usage: result.usage,
     });
   } catch (e) {

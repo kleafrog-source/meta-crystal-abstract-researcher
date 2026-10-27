@@ -8,6 +8,7 @@ import { MacroGenerator } from "@/components/rag-v3/MacroGenerator";
 import { VirtualizedParamList } from "@/components/rag-v3/VirtualizedParamList";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AMIcon } from "@/components/ui/am-icon";
 import { FieldHint, FieldLabel } from "@/components/ui/field-hint";
 import { Input } from "@/components/ui/input";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
@@ -40,7 +41,7 @@ export function AudioClapRagPage() {
   const updateValue = (name: string, value: number | string) => setParameters((current) => current.map((item) => item.technical_name === name ? { ...item, current_value: value } : item));
 
   return <div className="flowmusic-console flex h-full flex-col">
-    <header className="border-b border-white/15 bg-black/70 px-4 py-3"><div className="flex flex-wrap items-center justify-between gap-3"><div><h1 className="flex items-center gap-2 font-mono text-lg font-semibold text-white"><AudioWaveform className="size-5 text-cyan-300" />Audio CLAP RAG · V3 Parameter Mapper</h1><p className="mt-1 text-xs text-zinc-500">Cross-modal audio → text retrieval through laion/clap-htsat-fused.</p></div><div className="flex flex-wrap gap-2"><Badge variant="outline">model: {indexStatus.model ?? "laion/clap-htsat-fused"}</Badge><Badge variant="outline">index: {indexStatus.ready ? `${indexStatus.parameter_count ?? 0} ready` : "not built"}</Badge><Button size="sm" variant="outline" onClick={reset}><RotateCcw className="size-4" />Сбросить Audio RAG</Button></div></div></header>
+    <header className="border-b border-white/15 bg-black/70 px-4 py-3"><div className="flex flex-wrap items-center justify-between gap-3"><div><h1 className="flex items-center gap-2 font-mono text-lg font-semibold text-white"><AMIcon name="clap" size="md" bright />Audio CLAP RAG · V3 Parameter Mapper</h1><p className="mt-1 text-xs text-zinc-500">Cross-modal audio → text retrieval through laion/clap-htsat-fused.</p></div><div className="flex flex-wrap gap-2"><Badge variant="outline">model: {indexStatus.model ?? "laion/clap-htsat-fused"}</Badge><Badge variant="outline">index: {indexStatus.ready ? `${indexStatus.parameter_count ?? 0} ready` : "not built"}</Badge><Button size="sm" variant="outline" onClick={reset}><RotateCcw className="size-4" />Сбросить Audio RAG</Button></div></div></header>
     <div className="flex-1 overflow-auto p-3"><div className="mx-auto flex w-full max-w-[1920px] flex-col gap-3">
       <section className="space-y-3 rounded-lg border border-cyan-400/25 bg-cyan-950/10 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2"><div><h2 className="font-mono text-sm font-semibold uppercase tracking-wide">1 · Аудиореференс и фрагмент</h2><p className="mt-1 text-xs text-zinc-400">Выберите на волне участок до 800 секунд. Длинные участки усредняются по CLAP-окнам.</p></div><div className="flex items-center gap-1"><Button variant="outline" onClick={() => void buildIndex()} disabled={busy !== null}><Database className="size-4" />{busy === "index" ? "Индексация..." : "Обновить CLAP-индекс"}</Button><FieldHint hint="Дописывает новые и изменённые параметры V3, переиспользуя кэш остальных векторов." /></div></div>

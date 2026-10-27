@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { AMIcon } from "@/components/ui/am-icon";
 import {
   Select,
   SelectContent,
@@ -40,12 +41,15 @@ import {
 } from "@/components/icons";
 import { useToast } from "@/hooks/use-toast";
 import { apiPost, apiPut, useFetch } from "@/hooks/use-fetch";
+import { AppearanceEditor } from "@/components/settings/AppearanceEditor";
 
 interface SettingsData {
   ok: boolean;
   llm: {
-    provider: "ollama" | "mock";
+    provider: "ollama" | "freellmapi" | "mock";
     ollamaUrl: string;
+    freeLLMApiUrl: string;
+    freeLLMApiModel: string;
     chatModel: string;
     embedModel: string;
     temperature: number;
@@ -105,6 +109,8 @@ export function Settings() {
   const { toast } = useToast();
 
   useEffect(() => {
+    // Hydrate editable settings from the server response once it is available.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (data?.llm) setLlm(data.llm);
   }, [data]);
 
@@ -155,7 +161,8 @@ export function Settings() {
   const refreshModels = async () => {
     setModelsLoading(true);
     try {
-      const response = await fetch("/api/llm/models");
+      const params = new URLSearchParams({ provider: llm?.provider ?? "ollama", ...(llm?.provider === "freellmapi" ? { baseUrl: llm.freeLLMApiUrl } : {}) });
+      const response = await fetch(`/api/llm/models?${params}`, { cache: "no-store" });
       const payload = await response.json();
       setModels(payload);
       if (payload.reachable) {
@@ -165,8 +172,8 @@ export function Settings() {
         });
       } else {
         toast({
-          title: "Ollama недоступен",
-          description: `По адресу ${llm?.ollamaUrl}. Используется mock-провайдер.`,
+          title: `${payload.provider ?? "LLM"} недоступен`,
+          description: payload.error ?? "Проверьте сервер и настройки провайдера.",
           variant: "destructive",
         });
       }
@@ -281,6 +288,8 @@ export function Settings() {
     ],
     [],
   );
+  const textModel = llm?.provider === "freellmapi" ? llm.freeLLMApiModel : llm?.chatModel;
+  const setTextModel = (chatModel: string) => setLlm((current) => current ? current.provider === "freellmapi" ? { ...current, freeLLMApiModel: chatModel } : { ...current, chatModel } : current);
 
   if (!llm) {
     return (
@@ -295,7 +304,7 @@ export function Settings() {
       <header className="border-b border-border bg-card/30 px-6 py-5 backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-semibold tracking-tight text-glow-emerald">Настройки</h1>
+            <h1 className="flex items-center gap-2 text-xl font-semibold tracking-tight text-glow-emerald"><AMIcon name="settings" size="md" bright />Настройки</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               Конфигурация LLM, моделей и фоновой индексации для чата и интерпретации.
             </p>
@@ -308,13 +317,14 @@ export function Settings() {
       </header>
 
       <div className="max-w-5xl flex-1 space-y-4 overflow-y-auto p-6">
+        <AppearanceEditor />
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm">
               <Cpu className="h-4 w-4 text-emerald-400" />
               LLM-провайдер
             </CardTitle>
-            <CardDescription>Ollama для локальной работы или mock для безопасного fallback.</CardDescription>
+            <CardDescription>Выбор текстового провайдера. Embedding остаётся на Ollama.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -326,6 +336,13 @@ export function Settings() {
                 onClick={() => setLlm({ ...llm, provider: "ollama" })}
               />
               <ProviderCard
+                label="FreeLLMAPI"
+                description="Серверная маршрутизация текстовых моделей; ключ хранится только в окружении сервера."
+                icon={<Wifi className="h-5 w-5" />}
+                active={llm.provider === "freellmapi"}
+                onClick={() => setLlm({ ...llm, provider: "freellmapi" })}
+              />
+              <ProviderCard
                 label="Mock"
                 description="Безопасный fallback без реальной локальной модели."
                 icon={<Brain className="h-5 w-5" />}
@@ -334,9 +351,9 @@ export function Settings() {
               />
             </div>
 
-            {llm.provider === "ollama" && (
+            {(llm.provider === "ollama" || llm.provider === "freellmapi") && (
               <div className="space-y-3 border-t border-border pt-2">
-                <div className="space-y-1.5">
+                {llm.provider === "ollama" ? <div className="space-y-1.5">
                   <HintLabel
                     label="URL Ollama"
                     hint="Адрес локального Ollama API. Обычно это http://127.0.0.1:11434."
@@ -347,7 +364,10 @@ export function Settings() {
                     placeholder="http://127.0.0.1:11434"
                     className="font-mono text-sm"
                   />
-                </div>
+                </div> : <div className="space-y-1.5">
+                  <HintLabel label="FreeLLMAPI URL" hint="OpenAI-совместимый endpoint API. Для локального FreeLLMAPI по умолчанию используется http://localhost:3001/v1." />
+                  <Input value={llm.freeLLMApiUrl} onChange={(e) => setLlm({ ...llm, freeLLMApiUrl: e.target.value })} placeholder="http://localhost:3001/v1" className="font-mono text-sm" />
+                </div>}
                 <div className="flex flex-wrap items-center gap-2">
                   <Button variant="outline" size="sm" onClick={refreshModels} disabled={modelsLoading}>
                     {modelsLoading ? (
@@ -382,9 +402,7 @@ export function Settings() {
               <Sparkles className="h-4 w-4 text-violet-400" />
               Модели
             </CardTitle>
-            <CardDescription>
-              Используйте refresh, чтобы подтянуть актуальный список локальных моделей из Ollama, а не старые пресеты.
-            </CardDescription>
+            <CardDescription>{llm.provider === "freellmapi" ? "Для FreeLLMAPI выберите Auto или доступную модель маршрутизатора." : "Список локальных моделей Ollama и embedding-модель."}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -394,16 +412,17 @@ export function Settings() {
               />
               <div className="flex gap-2">
                 <Input
-                  value={llm.chatModel}
-                  onChange={(e) => setLlm({ ...llm, chatModel: e.target.value })}
+                  value={textModel ?? ""}
+                  onChange={(e) => setTextModel(e.target.value)}
                   className="flex-1 font-mono text-sm"
                 />
-                <Select value={llm.chatModel} onValueChange={(value) => setLlm({ ...llm, chatModel: value })}>
+                <Select value={textModel ?? ""} onValueChange={setTextModel}>
                   <SelectTrigger className="w-72">
                     <SelectValue placeholder="Выбрать..." />
                   </SelectTrigger>
                   <SelectContent>
-                    {(models?.models?.length ? models.models : presetModels.map((id) => ({ id, name: id }))).map((model) => (
+                    {llm.provider === "freellmapi" && <SelectItem value="auto">Auto — серверная маршрутизация</SelectItem>}
+                    {(models?.models?.length ? models.models : llm.provider === "ollama" ? presetModels.map((id) => ({ id, name: id })) : []).map((model) => (
                       <SelectItem key={model.id} value={model.id}>
                         {model.name}
                       </SelectItem>
@@ -416,7 +435,7 @@ export function Settings() {
             <div className="space-y-2">
               <HintLabel
                 label="Embedding-модель"
-                hint="Используется для RAG и индексации кристаллов. Если смените модель, лучше запустить полную переиндексацию."
+                hint="Embedding всегда выполняется через Ollama и не меняется при выборе FreeLLMAPI. Смена модели может требовать перестройки индекса."
               />
               <div className="flex gap-2">
                 <Input

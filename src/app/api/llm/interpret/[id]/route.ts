@@ -82,6 +82,7 @@ export async function POST(
     let interpretation: string;
     let providerId = provider.id;
     let modelId = settings.chatModel;
+    let routing: Record<string, string> = {};
 
     try {
       const result = await provider.chat(
@@ -98,8 +99,17 @@ export async function POST(
       interpretation = result.text;
       providerId = result.provider;
       modelId = result.model;
+      routing = {
+        ...(result.requestedModel ? { requestedModel: result.requestedModel } : {}),
+        ...(result.actualRoute ? { actualRoute: result.actualRoute } : {}),
+        ...(result.actualProvider ? { actualProvider: result.actualProvider } : {}),
+        ...(result.actualModel ? { actualModel: result.actualModel } : {}),
+      };
     } catch (error) {
       console.error("interpretation LLM failed:", error);
+      if (provider.id === "freellmapi") {
+        return NextResponse.json({ ok: false, error: (error as Error).message }, { status: 502 });
+      }
       interpretation = buildFallbackInterpretation({
         code: crystal.code,
         type: crystal.type,
@@ -121,6 +131,7 @@ export async function POST(
       ragResults: rag.results,
       provider: providerId,
       model: modelId,
+      ...routing,
       crystal: {
         id: crystal.id,
         code: crystal.code,

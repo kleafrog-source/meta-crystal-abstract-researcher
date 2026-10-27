@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AM-Core · Semantic Search V3 — Redesign + Icons + Responsive</title>
+  <style>
+    :root {
+      --bg: #0b0b0d;
+      --surface: #121214;
+      --surface-2: #18181b;
+      --border: #27272a;
+      --text: #e4e4e7;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --accent: #a78bfa;
+      --accent-soft: rgba(167, 139, 250, 0.15);
+
+      /* Icon muted (default) */
+      --ic-engine: #7B6BB8;
+      --ic-vocal: #B85CAA;
+      --ic-settings: #2A9B8C;
+      --ic-single: #B87A3A;
+      --ic-transition: #6B78C0;
+      --ic-search: #B85A5A;
+      --ic-copy: #3A9B5A;
+      --ic-generate: #8B6BB8;
+      --ic-export: #4A8BC8;
+      --ic-macro: #7AAA2A;
+
+      /* Icon bright (hover / active) */
+      --ic-engine-b: #A78BFA;
+      --ic-vocal-b: #E879F9;
+      --ic-settings-b: #2DD4BF;
+      --ic-single-b: #FB923C;
+      --ic-transition-b: #818CF8;
+      --ic-search-b: #F87171;
+      --ic-copy-b: #4ADE80;
+      --ic-generate-b: #C084FC;
+      --ic-export-b: #60A5FA;
+      --ic-macro-b: #A3E635;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13px;
+      line-height: 1.4;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== ICONS ===== */
+    .am-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: color 0.2s ease;
+    }
+    .am-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .am-icon-sm { width: 18px; height: 18px; }
+    .am-icon-md { width: 22px; height: 22px; }
+    .am-icon-lg { width: 28px; height: 28px; }
+    .am-icon-xl { width: 36px; height: 36px; }
+
+    .ic-engine     { color: var(--ic-engine); }
+    .ic-vocal      { color: var(--ic-vocal); }
+    .ic-settings   { color: var(--ic-settings); }
+    .ic-single     { color: var(--ic-single); }
+    .ic-transition { color: var(--ic-transition); }
+    .ic-search     { color: var(--ic-search); }
+    .ic-copy       { color: var(--ic-copy); }
+    .ic-generate   { color: var(--ic-generate); }
+    .ic-export     { color: var(--ic-export); }
+    .ic-macro      { color: var(--ic-macro); }
+
+    button:hover .ic-engine,     button.active .ic-engine,     .mode-btn.active .ic-engine     { color: var(--ic-engine-b); }
+    button:hover .ic-vocal,      button.active .ic-vocal,      .source-chip.active .ic-vocal  { color: var(--ic-vocal-b); }
+    button:hover .ic-settings,   button.active .ic-settings                                   { color: var(--ic-settings-b); }
+    button:hover .ic-single,     button.active .ic-single,     .mode-btn.active .ic-single     { color: var(--ic-single-b); }
+    button:hover .ic-transition, button.active .ic-transition, .mode-btn.active .ic-transition { color: var(--ic-transition-b); }
+    button:hover .ic-search,     button.active .ic-search                                     { color: var(--ic-search-b); }
+    button:hover .ic-copy,       button.active .ic-copy                                       { color: var(--ic-copy-b); }
+    button:hover .ic-generate,   button.active .ic-generate                                   { color: var(--ic-generate-b); }
+    button:hover .ic-export,     button.active .ic-export                                     { color: var(--ic-export-b); }
+    button:hover .ic-macro,      button.active .ic-macro                                      { color: var(--ic-macro-b); }
+
+    /* ===== TOP BAR ===== */
+    .topbar {
+      height: 44px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 10px;
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+
+    .topbar-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-meta {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .pill {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .topk-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 4px 2px 8px;
+    }
+
+    .topk-wrap label { font-size: 11px; color: var(--text-muted); }
+    .topk-wrap input {
+      width: 44px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-size: 12px;
+      padding: 3px 6px;
+      text-align: center;
+      outline: none;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-secondary);
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .btn:hover { background: #1f1f23; color: var(--text); border-color: #3f3f46; }
+    .btn-primary {
+      background: var(--accent-soft);
+      border-color: rgba(167, 139, 250, 0.4);
+      color: #ddd6fe;
+    }
+    .btn-primary:hover { background: rgba(167, 139, 250, 0.28); color: #fff; }
+    .btn-ghost { background: transparent; border-color: transparent; color: var(--text-muted); }
+    .btn-ghost:hover { background: var(--surface-2); color: var(--text); }
+    .btn-search { padding: 8px 16px; font-size: 13px; font-weight: 600; }
+
+    /* ===== MAIN ===== */
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      min-height: 0;
+    }
+
+    .workspace {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    /* ===== SEARCH ===== */
+    .search-section {
+      border-bottom: 1px solid var(--border);
+      padding: 12px 14px 14px;
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .section-label span {
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+      color: #52525b;
+    }
+
+    .modes-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .mode-btn {
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+    }
+    .mode-btn.active {
+      background: var(--accent-soft);
+      border-color: rgba(167, 139, 250, 0.45);
+      color: #e9d5ff;
+    }
+    .mode-btn:hover:not(.active) { border-color: #3f3f46; color: var(--text); }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    .chip-label { font-size: 11px; color: #52525b; margin-right: 2px; }
+
+    .source-chip {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 5px 11px;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .source-chip::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid currentColor;
+      flex-shrink: 0;
+    }
+    .source-chip.active {
+      background: rgba(34, 211, 238, 0.08);
+      border-color: rgba(34, 211, 238, 0.4);
+      color: #a5f3fc;
+    }
+    .source-chip.active::before {
+      background: #22d3ee;
+      border-color: #22d3ee;
+    }
+
+    .scope-chip {
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-muted);
+      border-radius: 5px;
+      padding: 3px 9px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .scope-chip.active {
+      background: rgba(251, 146, 60, 0.12);
+      border-color: rgba(251, 146, 60, 0.4);
+      color: #fdba74;
+    }
+
+    .query-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .query-box-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .query-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+    .query-meta { font-size: 11px; color: var(--text-muted); }
+    .query-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.45;
+      resize: none;
+      min-height: 44px;
+      outline: none;
+      font-family: inherit;
+    }
+    .query-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .query-actions .spacer { flex: 1; min-width: 8px; }
+
+    /* ===== BANK ===== */
+    .bank-section {
+      flex: 1;
+      overflow: auto;
+      padding: 12px 14px 20px;
+    }
+    .bank-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .bank-title { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+
+    .view-modes {
+      display: flex;
+      gap: 2px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px;
+    }
+    .view-mode {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .view-mode.active { background: #27272a; color: var(--text); }
+
+    /* PARAM shared */
+    .param-actions { display: flex; gap: 2px; flex-shrink: 0; }
+    .icon-btn {
+      width: 22px; height: 22px;
+      border: none; background: transparent;
+      color: #52525b; border-radius: 4px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+    }
+    .icon-btn:hover { background: #27272a; color: #a1a1aa; }
+
+    /* MODE 2 */
+    .bank-grid.mode-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 10px;
+    }
+    .mode-2 .param {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 13px 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 132px;
+    }
+    .mode-2 .param-top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+    .mode-2 .param-en {
+      font-size: 12px; font-weight: 600; line-height: 1.3;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden; min-height: 2.6em;
+    }
+    .mode-2 .param-ru {
+      font-size: 12.5px; font-weight: 500; color: var(--text);
+      margin-top: 3px; line-height: 1.35;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden; min-height: 2.7em;
+    }
+    .mode-2 .param-meta {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      margin-top: 4px; font-size: 10px; color: var(--text-muted);
+    }
+    .mode-2 .param-meta .sim { font-weight: 600; }
+    .mode-2 .param-values {
+      display: flex; justify-content: space-between;
+      font-family: ui-monospace, monospace; font-size: 10px; color: var(--text-muted);
+    }
+    .mode-2 .param-values .cur { font-weight: 600; font-size: 11px; color: #e4e4e7; }
+    .mode-2 .slider { position: relative; height: 5px; background: #27272a; border-radius: 3px; }
+    .mode-2 .slider-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 3px; }
+    .mode-2 .slider-thumb {
+      position: absolute; top: 50%; width: 13px; height: 13px;
+      border-radius: 50%; background: #18181b; border: 2px solid;
+      transform: translate(-50%, -50%);
+    }
+    .mode-2 .param-select {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); border-radius: 5px; padding: 6px 8px; font-size: 12px; outline: none;
+    }
+
+    .t-orange .param-en, .t-orange .sim { color: #fdba74; }
+    .t-orange .slider-fill { background: #ea580c; }
+    .t-orange .slider-thumb { border-color: #fb923c; }
+    .t-orange.param { border-color: rgba(251,146,60,0.25); }
+    .t-orange .cur { color: #fdba74; }
+
+    .t-cyan .param-en, .t-cyan .sim { color: #67e8f9; }
+    .t-cyan .slider-fill { background: #0891b2; }
+    .t-cyan .slider-thumb { border-color: #22d3ee; }
+    .t-cyan.param { border-color: rgba(34,211,238,0.22); }
+    .t-cyan .cur { color: #67e8f9; }
+
+    .t-violet .param-en, .t-violet .sim { color: #c4b5fd; }
+    .t-violet .slider-fill { background: #7c3aed; }
+    .t-violet .slider-thumb { border-color: #a78bfa; }
+    .t-violet.param { border-color: rgba(167,139,250,0.28); }
+    .t-violet .cur { color: #c4b5fd; }
+
+    .t-rose .param-en, .t-rose .sim { color: #f9a8d4; }
+    .t-rose .slider-fill { background: #db2777; }
+    .t-rose .slider-thumb { border-color: #f472b6; }
+    .t-rose.param { border-color: rgba(244,114,182,0.25); }
+    .t-rose .cur { color: #f9a8d4; }
+
+    .t-emerald .param-en, .t-emerald .sim { color: #6ee7b7; }
+    .t-emerald .slider-fill { background: #059669; }
+    .t-emerald .slider-thumb { border-color: #34d399; }
+    .t-emerald.param { border-color: rgba(52,211,153,0.22); }
+    .t-emerald .cur { color: #6ee7b7; }
+
+    /* MODE 1 */
+    .bank-grid.mode-1 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .mode-1 .param {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 200px;
+    }
+    .mode-1 .param-en {
+      font-size: 13px; font-weight: 600; line-height: 1.35;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden; min-height: 2.7em;
+    }
+    .mode-1 .param-ru {
+      font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.35;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden; min-height: 2.7em; margin-top: 2px;
+    }
+    .mode-1 .param-meta { display: flex; gap: 8px; font-size: 11px; color: var(--text-muted); }
+    .mode-1 .param-meta .sim { font-weight: 600; }
+    .mode-1 .param-values {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: ui-monospace, monospace; font-size: 11px; color: var(--text-muted);
+    }
+    .mode-1 .param-values .cur { font-size: 13px; font-weight: 600; color: #e4e4e7; }
+    .mode-1 .value-edit { display: flex; align-items: center; gap: 4px; }
+    .mode-1 .value-edit button {
+      width: 22px; height: 22px; border: 1px solid var(--border);
+      background: var(--surface-2); color: var(--text-secondary);
+      border-radius: 4px; cursor: pointer; font-size: 12px;
+    }
+    .mode-1 .slider { position: relative; height: 6px; background: #27272a; border-radius: 3px; }
+    .mode-1 .slider-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 3px; }
+    .mode-1 .slider-thumb {
+      position: absolute; top: 50%; width: 16px; height: 16px;
+      border-radius: 50%; background: #18181b; border: 2px solid;
+      transform: translate(-50%, -50%);
+    }
+    .mode-1 .option-pills { display: flex; flex-wrap: wrap; gap: 5px; }
+    .mode-1 .option-pill {
+      border: 1px solid var(--border); background: var(--bg); color: var(--text-muted);
+      border-radius: 5px; padding: 5px 9px; font-size: 11px; cursor: pointer;
+    }
+    .mode-1 .option-pill.selected {
+      background: rgba(167,139,250,0.15); border-color: rgba(167,139,250,0.45); color: #e9d5ff;
+    }
+    .mode-1 .hint-keys { font-size: 10px; color: #52525b; }
+
+    /* MODE 3 */
+    .bank-grid.mode-3 {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 8px;
+    }
+    .mode-3 .param {
+      background: linear-gradient(160deg, #1a1a1e 0%, #121214 100%);
+      border: 1px solid #2a2a2e;
+      border-radius: 10px;
+      padding: 8px 6px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      aspect-ratio: 1;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .mode-3 .param-en {
+      font-size: 9px; font-weight: 600; text-align: center; line-height: 1.2;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden; width: 100%; min-height: 2.2em;
+    }
+    .mode-3 .param-ru, .mode-3 .param-meta, .mode-3 .param-actions { display: none; }
+    .mode-3 .knob-wrap { position: relative; width: 52px; height: 52px; flex-shrink: 0; }
+    .mode-3 .knob-track {
+      width: 100%; height: 100%; border-radius: 50%;
+      background: conic-gradient(from -90deg, var(--knob-color) var(--knob-pct), #2a2a2e 0);
+      padding: 4px;
+    }
+    .mode-3 .knob-inner {
+      width: 100%; height: 100%; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #2a2a30, #141416 70%);
+      border: 1px solid #3a3a40;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.4);
+      display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .mode-3 .knob-pointer {
+      position: absolute; width: 2px; height: 14px; background: #e4e4e7;
+      border-radius: 1px; top: 8px; left: 50%;
+      transform-origin: bottom center;
+      transform: translateX(-50%) rotate(var(--knob-rot, 0deg));
+    }
+    .mode-3 .knob-value {
+      font-family: ui-monospace, monospace; font-size: 9px; font-weight: 600;
+      color: #d4d4d8; text-align: center;
+    }
+    .mode-3 .t-orange { --knob-color: #fb923c; }
+    .mode-3 .t-orange .param-en { color: #fdba74; }
+    .mode-3 .t-cyan { --knob-color: #22d3ee; }
+    .mode-3 .t-cyan .param-en { color: #67e8f9; }
+    .mode-3 .t-violet { --knob-color: #a78bfa; }
+    .mode-3 .t-violet .param-en { color: #c4b5fd; }
+    .mode-3 .t-rose { --knob-color: #f472b6; }
+    .mode-3 .t-rose .param-en { color: #f9a8d4; }
+    .mode-3 .t-emerald { --knob-color: #34d399; }
+    .mode-3 .t-emerald .param-en { color: #6ee7b7; }
+
+    .mode-1 .knob-wrap, .mode-2 .knob-wrap,
+    .mode-1 .knob-value, .mode-2 .knob-value { display: none; }
+    .mode-3 .slider, .mode-3 .param-values, .mode-3 .param-select,
+    .mode-3 .option-pills, .mode-3 .value-edit, .mode-3 .hint-keys { display: none; }
+    .mode-2 .option-pills, .mode-2 .value-edit, .mode-2 .hint-keys { display: none; }
+    .mode-1 .param-select { display: none; }
+
+    /* ===== RIGHT PANEL ===== */
+    .side-panel {
+      border-left: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .side-header {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      gap: 8px;
+    }
+    .side-title {
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .side-body {
+      flex: 1; display: flex; flex-direction: column;
+      min-height: 0; padding: 12px 14px; overflow: hidden;
+    }
+    .side-actions {
+      display: flex; flex-direction: column; gap: 6px;
+      margin-bottom: 10px; flex-shrink: 0;
+    }
+    .side-actions .btn { justify-content: center; width: 100%; }
+    .macro-tabs { display: flex; gap: 4px; margin-bottom: 10px; flex-shrink: 0; }
+    .macro-tab {
+      flex: 1; text-align: center; padding: 5px; font-size: 11px;
+      border-radius: 5px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted); cursor: pointer;
+    }
+    .macro-tab.active { background: var(--surface-2); color: var(--text); border-color: #3f3f46; }
+    .macro-output {
+      flex: 1; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px; line-height: 1.55; color: #a1a1aa;
+      white-space: pre-wrap; overflow: auto; min-height: 0;
+    }
+    .macro-output .key { color: #c4b5fd; }
+    .macro-output .val { color: #e4e4e7; }
+
+    /* Mobile macro toggle (hidden on desktop) */
+    .mobile-macro-toggle { display: none; }
+
+    /* ========== TABLET ≤ 1100px ========== */
+    @media (max-width: 1100px) {
+      .main {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+      }
+      .side-panel {
+        border-left: none;
+        border-top: 1px solid var(--border);
+        max-height: 42vh;
+      }
+      .bank-grid.mode-1 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .bank-grid.mode-3 {
+        grid-template-columns: repeat(6, 1fr);
+      }
+      .pill.hide-tablet { display: none; }
+    }
+
+    /* ========== MOBILE ≤ 720px ========== */
+    @media (max-width: 720px) {
+      body { font-size: 12px; }
+
+      .topbar {
+        height: auto;
+        min-height: 44px;
+        flex-wrap: wrap;
+        padding: 8px 10px;
+        gap: 8px;
+      }
+      .topbar-title {
+        width: 100%;
+        font-size: 11px;
+      }
+      .topbar-meta {
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .search-section { padding: 10px; }
+      .modes-row { gap: 5px; }
+      .mode-btn {
+        padding: 8px 10px;
+        font-size: 11px;
+        flex: 1 1 auto;
+        justify-content: center;
+      }
+      .mode-btn .am-icon-lg { width: 24px; height: 24px; }
+
+      .chip-row { gap: 5px; }
+      .source-chip, .scope-chip { font-size: 10px; padding: 4px 8px; }
+
+      .query-actions { gap: 5px; }
+      .btn-search {
+        width: 100%;
+        justify-content: center;
+        order: 10;
+        margin-top: 4px;
+      }
+      .query-actions .spacer { display: none; }
+
+      .bank-section { padding: 10px; }
+      .bank-header { flex-direction: column; align-items: flex-start; }
+
+      .bank-grid.mode-1,
+      .bank-grid.mode-2 {
+        grid-template-columns: 1fr;
+      }
+      .bank-grid.mode-3 {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+      }
+      .mode-3 .knob-wrap { width: 44px; height: 44px; }
+
+      .mode-2 .param { min-height: 0; }
+      .mode-1 .param { min-height: 0; }
+
+      /* Macro as bottom sheet style */
+      .side-panel {
+        max-height: 38vh;
+      }
+      .side-actions .btn { font-size: 11px; padding: 8px; }
+      .side-actions .btn .am-icon-md { width: 20px; height: 20px; }
+
+      .mobile-macro-toggle {
+        display: flex;
+        position: fixed;
+        bottom: 12px;
+        right: 12px;
+        z-index: 50;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.45);
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .bank-grid.mode-3 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-title">Flowmusic Genesis V3 · Unified Parameter Synthesizer</div>
+    <div class="topbar-meta">
+      <span class="pill hide-tablet">dataset 6669</span>
+      <span class="pill">active 50</span>
+      <div class="topk-wrap">
+        <label>Top-K</label>
+        <input type="number" value="50" min="1" max="200">
+        <button class="btn" style="padding:3px 8px;font-size:11px">Save</button>
+      </div>
+      <button class="btn btn-ghost">Сбросить V3</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="workspace">
+
+      <div class="search-section">
+        <div class="section-label">
+          Semantic Search V3
+          <span>· Single target or dual-state interpolation</span>
+        </div>
+
+        <div class="modes-row">
+          <button class="mode-btn active" id="modeSingle">
+            <span class="am-icon am-icon-lg ic-single">
+              <svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="18" stroke="currentColor" stroke-width="1.7"/><circle cx="32" cy="32" r="6.5" stroke="currentColor" stroke-width="1.55"/><circle cx="32" cy="32" r="2.2" fill="currentColor"/></svg>
+            </span>
+            Single query
+          </button>
+          <button class="mode-btn" id="modeTransition">
+            <span class="am-icon am-icon-lg ic-transition">
+              <svg viewBox="0 0 64 64" fill="none"><circle cx="18" cy="32" r="11.5" stroke="currentColor" stroke-width="1.65"/><circle cx="46" cy="32" r="11.5" stroke="currentColor" stroke-width="1.65"/><line x1="27" y1="32" x2="37" y2="32" stroke="currentColor" stroke-width="1.55" stroke-linecap="round"/><circle cx="18" cy="32" r="2.3" fill="currentColor"/><circle cx="46" cy="32" r="2.3" fill="currentColor"/></svg>
+            </span>
+            Transition mode
+          </button>
+          <button class="btn btn-ghost" title="Открывает popup">
+            <span class="am-icon am-icon-md ic-settings">
+              <svg viewBox="0 0 64 64" fill="none"><rect x="15" y="15" width="13" height="13" stroke="currentColor" stroke-width="1.6"/><rect x="36" y="15" width="13" height="13" stroke="currentColor" stroke-width="1.6"/><rect x="15" y="36" width="13" height="13" stroke="currentColor" stroke-width="1.6"/><rect x="36" y="36" width="13" height="13" stroke="currentColor" stroke-width="1.6"/><circle cx="32" cy="32" r="3.8" stroke="currentColor" stroke-width="1.45"/><circle cx="32" cy="32" r="1.5" fill="currentColor"/></svg>
+            </span>
+            Instruction settings
+          </button>
+        </div>
+
+        <div class="chip-row">
+          <span class="chip-label">Sources</span>
+          <button class="source-chip active">Library</button>
+          <button class="source-chip active">Flowmusic corpus</button>
+          <button class="source-chip">Atoms</button>
+          <button class="source-chip">Published combinations</button>
+          <button class="source-chip">
+            <span class="am-icon am-icon-sm ic-vocal" style="width:14px;height:14px">
+              <svg viewBox="0 0 64 64" fill="none"><rect x="12" y="12" width="17" height="17" stroke="currentColor" stroke-width="1.6"/><rect x="35" y="12" width="17" height="17" stroke="currentColor" stroke-width="1.6"/><rect x="12" y="35" width="17" height="17" stroke="currentColor" stroke-width="1.6"/><rect x="35" y="35" width="17" height="17" stroke="currentColor" stroke-width="1.6"/><circle cx="20.5" cy="20.5" r="2.8" stroke="currentColor" stroke-width="1.35"/><circle cx="43.5" cy="20.5" r="2.8" stroke="currentColor" stroke-width="1.35"/><circle cx="20.5" cy="43.5" r="2.8" stroke="currentColor" stroke-width="1.35"/><circle cx="43.5" cy="43.5" r="2.8" stroke="currentColor" stroke-width="1.35"/></svg>
+            </span>
+            Vocal Matrix
+          </button>
+        </div>
+
+        <div class="chip-row">
+          <span class="chip-label">Scope</span>
+          <button class="scope-chip active">Sound</button>
+          <button class="scope-chip active">Structure</button>
+          <button class="scope-chip">Metadata</button>
+          <button class="scope-chip">Provenance</button>
+          <button class="scope-chip">Administrative</button>
+        </div>
+
+        <div class="query-box">
+          <div class="query-box-header">
+            <div class="query-label">Query A</div>
+            <div class="query-meta">scoped results: 50</div>
+          </div>
+          <textarea class="query-input" rows="2">Паттерн фрактального литургического хора. Темный ритуал. Плавление в адском котле</textarea>
+          <div class="query-actions">
+            <button class="btn btn-ghost">↶ Undo</button>
+            <button class="btn btn-ghost">↷ Redo</button>
+            <button class="btn">Use crystal</button>
+            <div class="spacer"></div>
+            <button class="btn btn-primary btn-search">
+              <span class="am-icon am-icon-lg ic-search">
+                <svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="17" stroke="currentColor" stroke-width="1.7"/><path d="M20 32 C24 24, 28 40, 32 32 C36 24, 40 40, 44 32" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/><circle cx="32" cy="32" r="2.2" fill="currentColor"/></svg>
+              </span>
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bank-section">
+        <div class="bank-header">
+          <div class="bank-title">Anchored Control Bank · 50 channels</div>
+          <div class="view-modes">
+            <button class="view-mode" data-mode="1">Detail</button>
+            <button class="view-mode active" data-mode="2">Standard</button>
+            <button class="view-mode" data-mode="3">Compact</button>
+          </div>
+        </div>
+
+        <div class="bank-grid mode-2" id="bankGrid">
+
+          <div class="param t-violet">
+            <div class="param-top">
+              <div>
+                <div class="param-en">FDN Reverb Matrix Eigenvalue Damping Decay</div>
+                <div class="param-ru">Демпфирование собственных значений матрицы FDN</div>
+                <div class="param-meta"><span class="sim">sim 69%</span><span class="cat">spatial · default</span></div>
+              </div>
+              <div class="param-actions"><button class="icon-btn">ℹ</button><button class="icon-btn">⋮</button></div>
+            </div>
+            <div class="param-values">
+              <span>0.00</span>
+              <div class="value-edit"><button>−</button><span class="cur">0.05</span><button>+</button></div>
+              <span>1.00</span>
+            </div>
+            <div class="hint-keys">← → step · Shift×10</div>
+            <div class="slider"><div class="slider-fill" style="width:5%"></div><div class="slider-thumb" style="left:5%"></div></div>
+            <div class="knob-wrap" style="--knob-pct:5%;--knob-rot:-72deg"><div class="knob-track"><div class="knob-inner"><div class="knob-pointer"></div></div></div></div>
+            <div class="knob-value">0.05</div>
+          </div>
+
+          <div class="param t-orange">
+            <div class="param-top">
+              <div>
+                <div class="param-en">Vocal Spectral Masking Separation Strategy</div>
+                <div class="param-ru">Стратегия спектрального разделения</div>
+                <div class="param-meta"><span class="sim">sim 75%</span><span class="cat">general · default</span></div>
+              </div>
+              <div class="param-actions"><button class="icon-btn">ℹ</button><button class="icon-btn">⋮</button></div>
+            </div>
+            <div class="option-pills">
+              <button class="option-pill selected">lead_vocal_priority</button>
+              <button class="option-pill">balanced</button>
+              <button class="option-pill">sidechain_duck</button>
+              <button class="option-pill">+2 more</button>
+            </div>
+            <select class="param-select"><option selected>lead_vocal_priority_full_spectrum</option><option>balanced</option></select>
+            <div class="knob-wrap" style="--knob-pct:60%;--knob-rot:36deg"><div class="knob-track"><div class="knob-inner"><div class="knob-pointer"></div></div></div></div>
+            <div class="knob-value">opt</div>
+          </div>
+
+          <div class="param t-cyan">
+            <div class="param-top">
+              <div>
+                <div class="param-en">Vibe Simulation Glitch Bitcrusher Downsample Bits</div>
+                <div class="param-ru">Глубина биткраша для цифрового хаоса</div>
+                <div class="param-meta"><span class="sim">sim 74%</span><span class="cat">uncategorized · numeric</span></div>
+              </div>
+              <div class="param-actions"><button class="icon-btn">ℹ</button><button class="icon-btn">⋮</button></div>
+            </div>
+            <div class="param-values">
+              <span>1</span>
+              <div class="value-edit"><button>−</button><span class="cur">8 bit</span><button>+</button></div>
+              <span>16</span>
+            </div>
+            <div class="hint-keys">← → step · Shift×10</div>
+            <div class="slider"><div class="slider-fill" style="width:47%"></div><div class="slider-thumb" style="left:47%"></div></div>
+            <div class="knob-wrap" style="--knob-pct:47%;--knob-rot:0deg"><div class="knob-track"><div class="knob-inner"><div class="knob-pointer"></div></div></div></div>
+            <div class="knob-value">8</div>
+          </div>
+
+          <div class="param t-rose">
+            <div class="param-top">
+              <div>
+                <div class="param-en">Collaboration Parameter Conflict Resolution Mode</div>
+                <div class="param-ru">Режим разрешения конфликтов параметров при коллаборации</div>
+                <div class="param-meta"><span class="sim">sim 65%</span><span class="cat">uncategorized · value_anchor</span></div>
+              </div>
+              <div class="param-actions"><button class="icon-btn">ℹ</button><button class="icon-btn">⋮</button></div>
+            </div>
+            <div class="option-pills">
+              <button class="option-pill selected">average</button>
+              <button class="option-pill">priority_a</button>
+              <button class="option-pill">priority_b</button>
+              <button class="option-pill">override</button>
+            </div>
+            <select class="param-select"><option selected>average</option><option>priority_a</option></select>
+            <div class="knob-wrap" style="--knob-pct:30%;--knob-rot:-36deg"><div class="knob-track"><div class="knob-inner"><div class="knob-pointer"></div></div></div></div>
+            <div class="knob-value">avg</div>
+          </div>
+
+          <div class="param t-emerald">
+            <div class="param-top">
+              <div>
+                <div class="param-en">Vocal Layer Count Active</div>
+                <div class="param-ru">Активное число вокальных слоёв</div>
+                <div class="param-meta"><span class="sim">sim 81%</span><span class="cat">structure · default</span></div>
+              </div>
+              <div class="param-actions"><button class="icon-btn">ℹ</button><button class="icon-btn">⋮</button></div>
+            </div>
+            <div class="param-values">
+              <span>1</span>
+              <div class="value-edit"><button>−</button><span class="cur">3</span><button>+</button></div>
+              <span>8</span>
+            </div>
+            <div class="hint-keys">← → step</div>
+            <div class="slider"><div class="slider-fill" style="width:28%"></div><div class="slider-thumb" style="left:28%"></div></div>
+            <div class="knob-wrap" style="--knob-pct:28%;--knob-rot:-40deg"><div class="knob-track"><div class="knob-inner"><div class="knob-pointer"></div></div></div></div>
+            <div class="knob-value">3</div>
+          </div>
+
+          <div class="param t-violet">
+            <div class="param-top">
+              <div>
+                <div class="param-en">Hybrid Acoustic Electronic Mix Ratio</div>
+                <div class="param-ru">Соотношение акустика / электроника</div>
+                <div class="param-meta"><span class="sim">sim 72%</span><span class="cat">sound · default</span></div>
+              </div>
+              <div class="param-actions"><button class="icon-btn">ℹ</button><button class="icon-btn">⋮</button></div>
+            </div>
+            <div class="param-values">
+              <span>0.00</span>
+              <div class="value-edit"><button>−</button><span class="cur">0.50</span><button>+</button></div>
+              <span>1.00</span>
+            </div>
+            <div class="hint-keys">← → step · Shift×10</div>
+            <div class="slider"><div class="slider-fill" style="width:50%"></div><div class="slider-thumb" style="left:50%"></div></div>
+            <div class="knob-wrap" style="--knob-pct:50%;--knob-rot:0deg"><div class="knob-track"><div class="knob-inner"><div class="knob-pointer"></div></div></div></div>
+            <div class="knob-value">0.50</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="side-panel" id="sidePanel">
+      <div class="side-header">
+        <div class="side-title">
+          <span class="am-icon am-icon-md ic-macro">
+            <svg viewBox="0 0 64 64" fill="none"><rect x="13" y="10" width="38" height="44" rx="2" stroke="currentColor" stroke-width="1.65"/><line x1="21" y1="23" x2="43" y2="23" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="21" y1="32" x2="39" y2="32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="21" y1="41" x2="35" y2="41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+          Clean Macro Output
+        </div>
+        <button class="icon-btn">ℹ</button>
+      </div>
+      <div class="side-body">
+        <div class="side-actions">
+          <button class="btn btn-primary">
+            <span class="am-icon am-icon-md ic-generate">
+              <svg viewBox="0 0 64 64" fill="none"><circle cx="16" cy="20" r="4.5" stroke="currentColor" stroke-width="1.55"/><circle cx="48" cy="20" r="4.5" stroke="currentColor" stroke-width="1.55"/><circle cx="16" cy="44" r="4.5" stroke="currentColor" stroke-width="1.55"/><circle cx="48" cy="44" r="4.5" stroke="currentColor" stroke-width="1.55"/><line x1="20.5" y1="23" x2="27" y2="28.5" stroke="currentColor" stroke-width="1.45"/><line x1="43.5" y1="23" x2="37" y2="28.5" stroke="currentColor" stroke-width="1.45"/><line x1="20.5" y1="41" x2="27" y2="35.5" stroke="currentColor" stroke-width="1.45"/><line x1="43.5" y1="41" x2="37" y2="35.5" stroke="currentColor" stroke-width="1.45"/><circle cx="32" cy="32" r="7.5" stroke="currentColor" stroke-width="1.7"/><circle cx="32" cy="32" r="2.3" fill="currentColor"/></svg>
+            </span>
+            Generate from 50 parameters
+          </button>
+          <div style="display:flex;gap:6px">
+            <button class="btn" style="flex:1">
+              <span class="am-icon am-icon-md ic-copy">
+                <svg viewBox="0 0 64 64" fill="none"><circle cx="24" cy="32" r="12.5" stroke="currentColor" stroke-width="1.7"/><circle cx="40" cy="32" r="12.5" stroke="currentColor" stroke-width="1.7"/><path d="M24 32 L40 32" stroke="currentColor" stroke-width="1.55" stroke-linecap="round"/></svg>
+              </span>
+              Copy
+            </button>
+            <button class="btn" style="flex:1">
+              <span class="am-icon am-icon-md ic-export">
+                <svg viewBox="0 0 64 64" fill="none"><circle cx="24" cy="32" r="9" stroke="currentColor" stroke-width="1.7"/><circle cx="24" cy="32" r="2.4" fill="currentColor"/><path d="M38 20 A16 16 0 0 1 38 44" stroke="currentColor" stroke-width="1.55" stroke-linecap="round"/><path d="M45 14 A23 23 0 0 1 45 50" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="50" y1="32" x2="58" y2="32" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/></svg>
+              </span>
+              Export
+            </button>
+          </div>
+        </div>
+
+        <div class="macro-tabs">
+          <button class="macro-tab active">Short</button>
+          <button class="macro-tab">JSON</button>
+          <button class="macro-tab">Markdown</button>
+        </div>
+
+        <div class="macro-output"><span class="key">subharmonic_vocal_fold_multiplication</span>: <span class="val">2</span>
+<span class="key">vibe_simulation_glitch_bitcrusher_downsample_bits</span>: <span class="val">8-bit</span>
+<span class="key">spring_reverb_tensions_count</span>: <span class="val">1</span>
+<span class="key">omega_operator_convolution_layer_depth</span>: <span class="val">1</span>
+<span class="key">collaboration_parameter_conflict_resolution_mode</span>: <span class="val">average</span>
+<span class="key">time_signature_denominator</span>: <span class="val">4</span>
+<span class="key">fdn_reverb_matrix_eigenvalue_damping_decay</span>: <span class="val">0.05</span>
+<span class="key">hybrid_acoustic_electronic_mix_ratio</span>: <span class="val">0.50</span>
+<span class="key">vocal_layer_count_active</span>: <span class="val">3</span>
+<span class="key">global_key_root_note</span>: <span class="val">E</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile FAB to scroll to macro -->
+  <button class="mobile-macro-toggle" onclick="document.getElementById('sidePanel').scrollIntoView({behavior:'smooth'})" title="Clean Macro">
+    <span class="am-icon am-icon-lg ic-macro">
+      <svg viewBox="0 0 64 64" fill="none"><rect x="13" y="10" width="38" height="44" rx="2" stroke="currentColor" stroke-width="1.65"/><line x1="21" y1="23" x2="43" y2="23" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="21" y1="32" x2="39" y2="32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="21" y1="41" x2="35" y2="41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </span>
+  </button>
+
+  <script>
+    document.getElementById('modeSingle').addEventListener('click', function () {
+      this.classList.add('active');
+      document.getElementById('modeTransition').classList.remove('active');
+    });
+    document.getElementById('modeTransition').addEventListener('click', function () {
+      this.classList.add('active');
+      document.getElementById('modeSingle').classList.remove('active');
+    });
+
+    document.querySelectorAll('.source-chip, .scope-chip').forEach(chip => {
+      chip.addEventListener('click', () => chip.classList.toggle('active'));
+    });
+
+    const grid = document.getElementById('bankGrid');
+    document.querySelectorAll('.view-mode').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-mode').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        grid.className = 'bank-grid mode-' + btn.dataset.mode;
+      });
+    });
+
+    document.querySelectorAll('.option-pill').forEach(pill => {
+      pill.addEventListener('click', function () {
+        this.parentElement.querySelectorAll('.option-pill').forEach(p => p.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+  </script>
+</body>
+</html>

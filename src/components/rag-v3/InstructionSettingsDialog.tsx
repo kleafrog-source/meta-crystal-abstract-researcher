@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { extractInstructionTheses, summarizeInstruction } from "@/lib/rag-v3/instruction-support";
 import { useRagV3Store } from "@/store/rag-v3-store";
 import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
+import { AMIcon } from "@/components/ui/am-icon";
 
 export function InstructionSettingsDialog() {
   const instructionSlots = useRagV3Store((state) => state.instructionSlots);
@@ -27,10 +28,10 @@ export function InstructionSettingsDialog() {
     <Dialog>
       <V3Tooltip content="Открывает до 10 дополнительных инструкций, влияющих на retrieval и macro output.">
         <DialogTrigger asChild>
-          <Button type="button" size="sm" variant="outline"><Settings2 className="size-4" />Instruction settings</Button>
+          <Button type="button" size="sm" variant="outline" className="am-icon-button"><AMIcon name="settings" size="sm" />Instruction settings</Button>
         </DialogTrigger>
       </V3Tooltip>
-      <DialogContent className="max-w-5xl p-0">
+      <DialogContent className="w-[min(80vw,calc(100vw-2rem))] max-w-none max-h-[90dvh] overflow-hidden p-0 sm:max-w-none">
         <DialogHeader className="border-b border-border/60 px-6 py-4">
           <DialogTitle className="flex items-center gap-2 text-base">
             <Settings2 className="size-4 text-primary" />
@@ -60,7 +61,7 @@ export function InstructionSettingsDialog() {
           </div>
         </div>
 
-        <ScrollArea className="h-[72vh]">
+        <ScrollArea className="h-[min(70dvh,760px)]">
           <div className="space-y-4 px-6 py-4">
             {instructionSlots.map((slot, index) => (
               <section key={slot.id} className="rounded-xl border border-border/60 bg-background/50 p-4">

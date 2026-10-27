@@ -5,6 +5,7 @@ import path from "node:path";
 import { NextResponse } from "next/server";
 
 import { readGenesisLibrary } from "@/lib/combinatorial-genesis/library";
+import { getActiveProvider } from "@/lib/llm/factory";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
         donors: parentNames.flatMap((name) => byName.get(name) ? [byName.get(name)] : []),
       };
     });
+    const { provider, settings } = await getActiveProvider();
     const jobId = randomUUID();
     const directory = path.join(DATA_ROOT, "normalization-jobs");
     const filePath = path.join(directory, `${jobId}.json`);
@@ -37,7 +39,8 @@ export async function POST(request: Request) {
       job_id: jobId,
       status: "prepared",
       created_at: new Date().toISOString(),
-      chat_model: typeof body.model === "string" ? body.model : null,
+      chat_provider: provider.id,
+      chat_model: settings.chatModel,
       dataset_version: latest.version_id,
       candidate_count: candidates.length,
       records,

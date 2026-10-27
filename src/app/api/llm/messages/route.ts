@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { deleteChatRouteMetadata, readChatRouteMetadata } from "@/lib/llm/chat-route-metadata";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,6 +19,7 @@ export async function GET(req: Request) {
     });
     // Reverse to chronological order
     msgs.reverse();
+    const routing = await readChatRouteMetadata(msgs.map((message) => message.id));
     return NextResponse.json({
       ok: true,
       messages: msgs.map((m) => ({
@@ -27,6 +29,7 @@ export async function GET(req: Request) {
         ragContext: m.ragContext,
         provider: m.provider,
         model: m.model,
+        ...routing.get(m.id),
         createdAt: m.createdAt,
       })),
     });
@@ -44,6 +47,7 @@ export async function GET(req: Request) {
 export async function DELETE() {
   try {
     await db.chatMessage.deleteMany({});
+    await deleteChatRouteMetadata();
     return NextResponse.json({ ok: true });
   } catch (e) {
     return NextResponse.json(

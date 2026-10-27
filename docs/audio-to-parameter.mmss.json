@@ -1,0 +1,1359 @@
+{
+  "SYNTHESIZED_MMSS_SYSTEM": {
+    "meta": {
+      "artifact_id": "audio_to_parameter_current_implementation",
+      "version": "1.0.0",
+      "language": "ru",
+      "title": "MMSS текущей реализации Audio-to-Parameter",
+      "evidence_convention": {
+        "code_confirmed": "Непосредственно видно в исходном коде; локатор указывает файл и символ или диапазон строк.",
+        "documentation_confirmed": "Утверждение содержится в документации репозитория.",
+        "structural_inference": "Вывод из структуры вызовов или типов, не отдельное утверждение исходного кода.",
+        "proposed_improvement": "Предложение, не описание действующей реализации."
+      }
+    },
+    "task": {
+      "objective": "Точечно сверить и исправить подтверждённые несоответствия в трёх существующих документах Audio-to-Parameter без переписывания MMSS и без изменения исходного кода.",
+      "operation": "repair",
+      "artifact_type": "substack",
+      "foundation": "existing_stack",
+      "working_mode": "one_shot",
+      "scope": [
+        "Загрузка локального аудио, сегментация, CLAP и SigLIP2 retrieval, агрегация и интерполяция временной линии, синхронизация playback, JSON-экспорт.",
+        "Только имеющиеся интерфейсы и поведение, связанные с целевой страницей."
+      ],
+      "constraints": [
+        "Изменяются только три документа в docs.",
+        "Не запускаются UI, тяжёлые пайплайны, модели или построение индексов."
+      ],
+      "acceptance_criteria": [
+        "Композиция связанного пути загрузки, поиска, временной линии и экспорта соответствует реальным компонентам и интерфейсам.",
+        "Заявления имеют проверяемые локаторы; реализация, документация, выводы и предложения различимы.",
+        "JSON разбирается доступным парсером; внутренние ссылки сверены."
+      ],
+      "document_quality_criteria": [
+        "Пути и символы позволяют локально проверить существенные описания.",
+        "Неизвестное, статически выведенное и поведенчески проверенное явно различаются.",
+        "Внутренние ссылки и статусы проверок разрешаются и не преувеличивают объём проверки."
+      ]
+    },
+    "artifact": {
+      "composition_level": "substack",
+      "description": "Связанный путь внутри приложения, объединяющий интерфейс, API Next.js, преобразования временной линии на TypeScript, Python sidecar для CLAP и отдельный Python-процесс Morpho/SigLIP2. Это не самостоятельная пятиагентная система.",
+      "entrypoint": {
+        "path": "src/app/audio-to-parameter-rag-segments/page.tsx",
+        "symbol": "AudioToParameterSegmentsRoute",
+        "behavior": "Подключает AppShell и динамически загружает AudioToParameterPage с ssr:false. Существующий /audio-to-parameter ведёт через PageRenderer, который повторно использует тот же компонент.",
+        "evidence_refs": [
+          "ev_route",
+          "ev_legacy_route"
+        ]
+      },
+      "principles": [
+        {
+          "id": "pr_sample_then_query",
+          "statement": "Положение временного узла и окно аудио для анализа хранятся отдельно.",
+          "conditions": "После задания длительности трека и интервала сегментации.",
+          "mechanism": "buildAudioAnalysisPoints формирует time как точку линии и offset/duration как окно чтения; хвостовое окно сдвигается к концу трека.",
+          "expected_outcomes": "Временная линия включает конечную точку и не требует окна длиннее трека.",
+          "boundaries": "Ожидаемое поведение следует из функции и покрывающих её unit-тестов; качество акустического покрытия не измерялось.",
+          "basis_refs": [
+            "ev_timeline",
+            "ev_timeline_tests"
+          ],
+          "implementation_refs": [
+            "mod_ui",
+            "mod_timeline"
+          ]
+        },
+        {
+          "id": "pr_sequential_mutable_results",
+          "statement": "Пакетный поиск последовательно запрашивает узлы и публикует состояние после каждого ответа.",
+          "conditions": "Пользователь запускает один из движков при наличии файла и узлов.",
+          "mechanism": "Цикл analyze ждёт каждый HTTP-ответ перед переходом к следующему индексу и обновляет статусы/результаты в клиентском состоянии.",
+          "expected_outcomes": "Частичные результаты остаются видимыми при остановке или ошибке последующего узла.",
+          "boundaries": "Существуют независимые запуски CLAP и SigLIP2; параллельная обработка двух движков на странице запрещена общей busy-проверкой.",
+          "basis_refs": [
+            "ev_ui_analysis",
+            "ev_segment_api"
+          ],
+          "implementation_refs": [
+            "mod_ui",
+            "mod_segment_api"
+          ]
+        },
+        {
+          "id": "pr_keep_engine_tracks",
+          "statement": "Результаты движков остаются раздельными до просмотра или явно включённого объединения.",
+          "conditions": "Есть данные CLAP и/или SigLIP2 для одного узла.",
+          "mechanism": "Состояние SegmentPoint хранит отдельные массивы clap и siglip. В обычном UI представлении mergeFrames сохраняет оба набора, а при совпадении technical_name оставляет CLAP; это представление поступает в общую macroParameters/MacroGenerator. Только включённая настройка Blend заменяет объединение на blendParameterFrames с нормализацией score.",
+          "expected_outcomes": "Можно независимо показывать, интерполировать и экспортировать обе ветви.",
+          "boundaries": "Раздельное хранение и обычное объединённое представление не меняют исходные массивы узлов. Одинаковые оценки сходства двух движков не означают эквивалентную калибровку или достоверность значений.",
+          "basis_refs": [
+            "ev_ui_state",
+            "ev_blend",
+            "ev_export"
+          ],
+          "implementation_refs": [
+            "mod_timeline",
+            "mod_ui"
+          ]
+        },
+        {
+          "id": "pr_playback_reads_timeline",
+          "statement": "Текущие параметры воспроизведения выбираются из сглаженных узлов по текущему времени плеера; между допустимыми соседними узлами применяется опциональная интерполяция.",
+          "conditions": "WaveSurfer передаёт событие timeupdate и существует временная линия.",
+          "mechanism": "currentFrame выбирает последний по индексу узел с time <= currentTime; при включённой настройке, существующем следующем узле и строго возрастающем времени вызывает интерполяцию только между узлами одной ветви.",
+          "expected_outcomes": "Панель значений и экспортируемая линия используют общую временную основу.",
+          "boundaries": "Реальная синхронизация аудио/UI не проверялась запуском. Если параметр есть только с одной стороны, interpolateParameterFrames копирует целиком a при ratio < 0.5 или b при ratio >= 0.5.",
+          "basis_refs": [
+            "ev_waveform",
+            "ev_ui_playback",
+            "ev_interpolation"
+          ],
+          "implementation_refs": [
+            "mod_ui",
+            "mod_waveform"
+          ]
+        }
+      ],
+      "modules": [
+        {
+          "id": "mod_ui",
+          "version": null,
+          "purpose": "Состояние и взаимодействие целевой страницы: загрузка файла, создание узлов, запуск поиска, редактирование результатов, playback и экспорт.",
+          "basis_refs": [
+            "ev_route",
+            "ev_ui_state",
+            "ev_ui_analysis",
+            "ev_ui_playback",
+            "ev_export"
+          ],
+          "interfaces": {
+            "inputs": [
+              {
+                "name": "AudioFile",
+                "type": "файл браузера типа File",
+                "required": true,
+                "supplier": "Пользователь через input accept=audio/*, drag/drop или запись WaveSurfer."
+              },
+              {
+                "name": "audioDuration",
+                "type": "number seconds",
+                "required": true,
+                "supplier": "AudioWaveformEditor получает duration из WaveSurfer ready."
+              },
+              {
+                "name": "settings",
+                "type": "состояние клиентского интерфейса",
+                "required": false,
+                "supplier": "Пользовательские элементы UI: interval, topK, engines, спектрограмма, blend, vocal matrix, node interval."
+              }
+            ],
+            "outputs": [
+              {
+                "name": "SegmentPoint[]",
+                "type": "массив временных точек с окнами, отдельными результатами CLAP/SigLIP2 и статусами",
+                "consumer": "Интерфейс, преобразования временной линии и экспорт."
+              },
+              {
+                "name": "JSON downloads",
+                "type": "FLOWMUSIC_PRIORITY_TIMELINE_V1 или FLOWMUSIC_AUDIO_PARAMETER_TIMELINE_V1",
+                "consumer": "локальное скачивание пользователя."
+              }
+            ]
+          },
+          "state": {
+            "owner": "Состояние React в AudioToParameterPage",
+            "fields": [
+              "file",
+              "audioUrl",
+              "audioDuration",
+              "currentTime",
+              "seekRequest",
+              "segments",
+              "busy",
+              "настройки отображения/поиска"
+            ],
+            "persistence": "В рассматриваемом потоке состояние временной линии хранится в памяти компонента; экспорт инициирует локальное скачивание."
+          },
+          "behavior": {
+            "form": "procedure",
+            "steps": [
+              "При выборе файла заменить object URL, сбросить длительность/позицию/сегменты и показать уведомление.",
+              "После ready получить длительность WaveSurfer.",
+              "По команде Авто-разбивка вызвать buildAudioAnalysisPoints и создать узлы со статусами pending.",
+              "По команде CLAP либо SigLIP2 запрашивать каждый узел последовательно; сохранить готовые ответы в соответствующую ветвь.",
+              "Вычислять сглаженные узлы, текущие кадры и, при включённой опции, blended frame.",
+              "При ручном изменении или удалении параметра изменить узел с последним временем <= currentTime.",
+              "По команде скачать выбранный JSON-представление."
+            ],
+            "termination": "Конец массива узлов, AbortController/DELETE или ошибка запроса; выполняется finally, busy сбрасывается."
+          },
+          "preconditions": [
+            "Файл и узлы существуют для анализа.",
+            "SigLIP2-кнопка дополнительно требует morphoStatus.ready."
+          ],
+          "postconditions": [
+            "Успешный ответ записан как complete; ошибка активного узла маркируется error; предыдущие результаты сохраняются."
+          ],
+          "dependencies": [
+            "mod_timeline (обязательный импорт для клиентских преобразований)",
+            "mod_segment_api (HTTP capability только при запросе retrieval или cancellation)",
+            "mod_waveform (источник duration/playback callbacks для полного UI пути)",
+            "mod_export (используется только по запросу экспорта)"
+          ],
+          "failure_modes": [
+            "HTTP/API error или ошибка JSON-поля error прекращает текущую серию узлов.",
+            "Abort прекращает клиентский цикл; DELETE пытается остановить активные sidecar/Morpho задачи.",
+            "Ошибка запроса статуса Morpho не переводится в отдельное состояние в refreshMorphoStatus: состояние меняется только при response.ok."
+          ],
+          "fallback": "Оставить уже готовые узлы; у неуспешного активного узла статус error. Автоматического повторного запуска нет; пользователь может повторить анализ кнопкой движка.",
+          "evidence_refs": [
+            "ev_ui_state",
+            "ev_ui_analysis",
+            "ev_ui_playback",
+            "ev_export"
+          ],
+          "behavioral_acceptance_criteria": [
+            "В браузере воспроизводится проверяемая временная синхронизация и требуемые действия пользователя."
+          ],
+          "documentation_quality_criteria": [
+            "Описания обработчиков и интерфейса имеют проверяемые локаторы."
+          ]
+        },
+        {
+          "id": "mod_timeline",
+          "version": null,
+          "purpose": "Чистые преобразования TypeScript для точек анализа, сглаженных узлов, интерполяции, объединения и компактной Priority Timeline.",
+          "basis_refs": [
+            "ev_timeline",
+            "ev_interpolation",
+            "ev_smoothing",
+            "ev_blend",
+            "ev_export",
+            "ev_timeline_tests"
+          ],
+          "interfaces": {
+            "inputs": [
+              {
+                "name": "AudioAnalysisPoint parameters",
+                "type": "totalDuration:number, interval:number",
+                "required": true,
+                "supplier": "mod_ui, использующий длительность WaveSurfer и настройку segmentInterval."
+              },
+              {
+                "name": "AudioTimelineSegment[]",
+                "type": "time/offset/duration и ActiveParameter[] для clap/siglip",
+                "required": true,
+                "supplier": "Состояние mod_ui после split/analyze."
+              },
+              {
+                "name": "PriorityTimelineOptions",
+                "type": "имя аудио, длительность, интервалы, blend, clapWeight, vocalMatrix",
+                "required": true,
+                "supplier": "mod_ui и состояние настроек."
+              }
+            ],
+            "outputs": [
+              {
+                "name": "AudioAnalysisPoint[]",
+                "type": "time/offset/duration",
+                "consumer": "mod_ui для начального состояния узлов."
+              },
+              {
+                "name": "AudioTimelineSegment[]",
+                "type": "сглаженная линия",
+                "consumer": "playback и оба экспорта."
+              },
+              {
+                "name": "ActiveParameter[]",
+                "type": "выбранный/interpolated/blended кадр",
+                "consumer": "панели значений и MacroGenerator."
+              },
+              {
+                "name": "объект временной линии Priority",
+                "type": "compact JSON payload",
+                "consumer": "mod_export."
+              }
+            ]
+          },
+          "state": {
+            "owner": "нет собственного изменяемого состояния; функции читают входы и возвращают новые структуры",
+            "persistence": "без собственного состояния"
+          },
+          "behavior": {
+            "form": "mapping",
+            "rules": [
+              "buildAudioAnalysisPoints отвергает недопустимую длительность (<0.1 либо non-finite), ограничивает шаг [0.5,30], ставит точки от 0 с последней точкой duration; окна имеют длину min(duration,safeInterval) и offset не выходит за конец.",
+              "smoothTimelineSegments ограничивает node interval [5,360], ставит регулярные узлы до последнего времени, агрегирует исходные узлы в пределах половины интервала или использует ближайший узел; для Range берёт медиану конечных numeric current_value, округляет по step; прочие значения голосуются с весом max(0.01, similarity); фильтрует имена /^[a-z0-9_]+$/.",
+              "interpolateParameterFrames ограничивает progress до [0,1]; общий Range с числовыми значениями линейно интерполирует и привязывает к step/min/max; другие общие параметры переключаются при ratio=0.5; если параметр есть только в одном кадре, целиком копируется параметр из a при ratio < 0.5 или из b при ratio >= 0.5.",
+              "blendParameterFrames отдельно min-max-нормализует similarity каждой ветви; для общего числового значения делает взвешенное среднее, для прочих выбирает ветвь по blended score >= 0.5; параметр только одной ветви остаётся в результате.",
+              "buildPriorityTimeline делает реестр технических имён, сжимает значения парами [registryIndex,value], формирует DSP-name heuristics и vocal events; vocal_allocation_matrix:true сигнализирует режим, но не встраивает отдельную таблицу матрицы."
+            ],
+            "termination": "Каждая функция проходит конечные входные массивы/точки без повторного запроса данных или цикла обратной связи во время выполнения."
+          },
+          "preconditions": [
+            "Входные параметры совместимы с ActiveParameter; функции не валидируют все поля контракта."
+          ],
+          "postconditions": [
+            "Результат является новым значением; внешнее состояние обновляется вызывающим компонентом."
+          ],
+          "dependencies": [
+            "ActiveParameter из src/lib/rag-v3/types.ts"
+          ],
+          "failure_modes": [
+            "Некорректные данные могут быть проигнорированы фильтром имени, непараметрические значения участвуют в голосовании как JSON-строки.",
+            "Нет проверки существования схемы экспортируемого payload или обратной совместимости последующего потребителя."
+          ],
+          "fallback": "При пустых/непригодных входах построение точек/сглаживание возвращает пустой массив; blend и interpolation возвращают пустой массив при пустых ветвях в соответствии с union ключей.",
+          "evidence_refs": [
+            "ev_timeline",
+            "ev_interpolation",
+            "ev_smoothing",
+            "ev_blend",
+            "ev_export",
+            "ev_timeline_tests"
+          ],
+          "behavioral_acceptance_criteria": [
+            "Функции для заданных входов выдают значения по заявленным правилам; unit-сценарии указаны отдельно."
+          ],
+          "documentation_quality_criteria": [
+            "Контракт функций и покрывающие сценарии имеют проверяемые локаторы."
+          ]
+        },
+        {
+          "id": "mod_waveform",
+          "version": null,
+          "purpose": "Отображение и управление аудио в браузере, передача длительности, текущего времени, событий области и выбранного файла.",
+          "basis_refs": [
+            "ev_waveform"
+          ],
+          "interfaces": {
+            "inputs": [
+              {
+                "name": "url, region, callbacks, spectrogram settings",
+                "type": "AudioWaveformEditor Props",
+                "required": true,
+                "supplier": "mod_ui."
+              }
+            ],
+            "outputs": [
+              {
+                "name": "duration, timeupdate, region changes, selected/recorded File",
+                "type": "callbacks",
+                "consumer": "mod_ui."
+              }
+            ]
+          },
+          "state": {
+            "owner": "WaveSurfer instance owns playback position; AudioWaveformEditor owns local controls and region reference."
+          },
+          "behavior": {
+            "form": "mapping",
+            "rules": [
+              "WaveSurfer получает URL локального object URL и плагины Regions/Record, опционально Minimap и один из renderer спектрограммы.",
+              "ready сообщает duration; timeupdate передаёт playback time; seekRequest вызывает setTime при расхождении >=0.05 s.",
+              "Region может перетаскиваться/меняться; регион не зацикливается в целевой странице, loopRegion=false.",
+              "RecordPlugin отдаёт Blob, который превращается в File и передаётся onFile."
+            ]
+          },
+          "preconditions": [
+            "URL указывает на загружаемый аудиоресурс."
+          ],
+          "postconditions": [
+            "События редактора становятся входами клиентского состояния."
+          ],
+          "dependencies": [
+            "wavesurfer-react, wavesurfer.js plugins; mod_ui"
+          ],
+          "failure_modes": [
+            "Ошибки загрузки/декодирования аудио отдельно не преобразуются здесь в описанный MMSS статус."
+          ],
+          "fallback": null,
+          "evidence_refs": [
+            "ev_waveform"
+          ],
+          "behavioral_acceptance_criteria": [
+            "Callbacks WaveSurfer корректно обновляют страницу, а команды управления действуют в браузере."
+          ],
+          "documentation_quality_criteria": [
+            "Описание интеграции интерфейса не выдаёт статический анализ за проверку работы в браузере."
+          ]
+        },
+        {
+          "id": "mod_segment_api",
+          "version": null,
+          "purpose": "Проверить multipart-запрос узла, временно сохранить файл и направить его в CLAP или SigLIP2, вернуть ActiveParameter payload.",
+          "basis_refs": [
+            "ev_segment_api",
+            "ev_jobs",
+            "ev_clap",
+            "ev_siglip_audio",
+            "ev_status_api"
+          ],
+          "interfaces": {
+            "inputs": [
+              {
+                "name": "multipart/form-data",
+                "type": "audio File, engine, offset, duration, top_k, spectrogram_detail/layout, vocal_matrix",
+                "required": true,
+                "supplier": "mod_ui analyze loop."
+              }
+            ],
+            "outputs": [
+              {
+                "name": "JSON",
+                "type": "JSON с engine, parameters, anchored_count, index, необязательной spectrogram либо {error}",
+                "consumer": "mod_ui analyze loop."
+              }
+            ]
+          },
+          "state": {
+            "owner": "mod_segment_api владеет временной директорией запроса; mod_jobs владеет реестром процессов/задач Morpho в памяти; runner движка владеет дескриптором задачи CLAP."
+          },
+          "behavior": {
+            "form": "routing",
+            "rules": [
+              "POST требует непустой файл не более 150 MiB; иначе 400/413.",
+              "engine равен siglip только при точном совпадении; иначе выбирается clap.",
+              "offset clamp минимум 0; duration clamp 0.1..600 с default 10; topK integer clamp 3..100 с default 20.",
+              "При vocal_matrix до retrieval запрашивается как минимум 100, затем применяется isVocalMatrixParameter и requested topK.",
+              "spectrogram_detail нормализуется в low/medium/high; layout — mel/composite/rgb_delta; перед поиском вызывается prepareGpuForExternalModel.",
+              "CLAP запускает python_engine/sidecar.py audio_search через callSidecar; SigLIP2 запускает отдельный процесс python_engine/morpho_siglip.py search-audio через runMorphoAudioSearch.",
+              "DELETE отменяет активные задачи CLAP с taskType audio-to-parameter и вызывает stopMorpho(search); блок finally удаляет временную директорию запроса.",
+              "Готовность Morpho index проверяется отдельным /api/morpho/status; явное перестроение — отдельный POST /api/morpho/index, а не часть анализа сегмента."
+            ],
+            "termination": "Один HTTP-ответ после завершения подзапроса либо error; DELETE отправляет отмену."
+          },
+          "preconditions": [
+            "Multipart содержит валидный непустой аудиофайл."
+          ],
+          "postconditions": [
+            "При успехе возвращается JSON результата одной ветви; временный файл удаляется в finally."
+          ],
+          "dependencies": [
+            "mod_ui",
+            "mod_jobs",
+            "src/lib/engine/runner.ts",
+            "src/lib/ollama-memory.ts",
+            "python_engine/sidecar.py",
+            "python_engine/morpho_siglip.py"
+          ],
+          "failure_modes": [
+            "400 для отсутствующего/пустого аудио; 413 для размера >150 MiB; 500 для исключения retrieval/process.",
+            "SigLIP2 search требует готовый неустаревший Morpho index и согласованных строк/vector размерностей; несовпадение выбрасывает ошибку.",
+            "Morpho job registry отказывает при уже активном поиске; пользовательский цикл страницы в штатном режиме сериализует запросы.",
+            "prepareGpuForExternalModel выгружает Ollama модели и проверяет освобождение до запуска внешней модели; ошибка подготовки прерывает поиск."
+          ],
+          "fallback": "Нет fallback с одного движка на другой. Ошибка возвращается клиенту; уже завершённые узлы остаются.",
+          "evidence_refs": [
+            "ev_segment_api",
+            "ev_jobs",
+            "ev_gpu",
+            "ev_clap",
+            "ev_siglip_audio",
+            "ev_status_api"
+          ],
+          "behavioral_acceptance_criteria": [
+            "API соблюдает условия валидации, маршрутизации и ответа для запросов каждой ветви."
+          ],
+          "documentation_quality_criteria": [
+            "Ограничения и ветвление API описаны по реализации, а не только по руководству."
+          ]
+        },
+        {
+          "id": "mod_jobs",
+          "version": null,
+          "purpose": "Запустить внешний Morpho Python процесс и хранить его статус, прогресс, хвост лога и возможность остановки.",
+          "basis_refs": [
+            "ev_jobs"
+          ],
+          "interfaces": {
+            "inputs": [
+              {
+                "name": "путь аудио, смещение, длительность, topK, детализация, раскладка",
+                "type": "типизированные аргументы",
+                "required": true,
+                "supplier": "mod_segment_api."
+              }
+            ],
+            "outputs": [
+              {
+                "name": "JSON parsed from last stdout line",
+                "type": "Promise с разобранным JSON-объектом",
+                "consumer": "mod_segment_api."
+              },
+              {
+                "name": "job status",
+                "type": "снимок статуса задач индексации/поиска в памяти",
+                "consumer": "/api/morpho/status."
+              }
+            ]
+          },
+          "state": {
+            "owner": "globalThis.__morphoJobs и __morphoChildren в Node process; долговечность между перезапусками не заявлена.",
+            "fields": [
+              "running",
+              "pid",
+              "временные метки",
+              "exit_code",
+              "stop_requested",
+              "last_error",
+              "progress",
+              "log_tail"
+            ]
+          },
+          "behavior": {
+            "form": "procedure",
+            "steps": [
+              "Защитить singleton Morpho search от параллельного старта.",
+              "Spawn python_engine/morpho_siglip.py search-audio с CUDA_VISIBLE_DEVICES пустым и параметрами аудио.",
+              "Собирать stdout/stderr и прогресс JSON событий.",
+              "На закрытии процесса отклонить Promise при ненулевом коде либо разобрать последнюю stdout строку как JSON.",
+              "stopMorpho отправляет taskkill /T /F в Windows либо SIGTERM в других системах; ожидание ограничено жизненным циклом вызванного API/Promise, отдельный таймер завершения Morpho в runMorphoAudioSearch не задан."
+            ],
+            "termination": "Promise resolve/reject выполняется в callback close/error; отдельный timeout в runMorphoAudioSearch не определён. Для CLAP route передаёт runner timeoutMs=10 минут, который может завершить sidecar задачу; это не утверждение о тайм-ауте Morpho-процесса."
+          },
+          "preconditions": [
+            "Python и скрипт доступны; Morpho index и модель нужны для успешного поиска."
+          ],
+          "postconditions": [
+            "Job running сброшен по close; Promise resolve/reject передаёт результат route."
+          ],
+          "dependencies": [
+            "Node child_process, python_engine/morpho_siglip.py"
+          ],
+          "failure_modes": [
+            "Активный поиск блокирует другой search.",
+            "Ненулевой exit code либо невалидный JSON приводит к reject.",
+            "Для runMorphoAudioSearch отдельный таймер timeout в просмотренном коде не обнаружен; длительность route maxDuration сама по себе не подтверждает фактическое завершение процесса по времени.",
+            "Состояние процесса и последние строки журнала — диагностика в памяти Node."
+          ],
+          "fallback": null,
+          "evidence_refs": [
+            "ev_jobs"
+          ],
+          "behavioral_acceptance_criteria": [
+            "Exit-код процесса и отмена корректно завершают job и Promise."
+          ],
+          "documentation_quality_criteria": [
+            "Граница процесса и владельца job status не смешивается с клиентским состоянием узлов."
+          ]
+        },
+        {
+          "id": "mod_export",
+          "version": null,
+          "purpose": "Сериализовать два предусмотренных JSON представления обработанной/сглаженной линии в локальный файл загрузки.",
+          "basis_refs": [
+            "ev_export",
+            "ev_timeline"
+          ],
+          "interfaces": {
+            "inputs": [
+              {
+                "name": "nodeSegments and export settings",
+                "type": "smoothing output plus current file/settings",
+                "required": true,
+                "supplier": "mod_ui and mod_timeline."
+              }
+            ],
+            "outputs": [
+              {
+                "name": "priority-timeline JSON",
+                "type": "FLOWMUSIC_PRIORITY_TIMELINE_V1 с компактными реестрами, временной линией, эвристиками и событиями",
+                "consumer": "browser download"
+              },
+              {
+                "name": "legacy timeline JSON",
+                "type": "FLOWMUSIC_AUDIO_PARAMETER_TIMELINE_V1 с явными именами параметров и значениями",
+                "consumer": "browser download"
+              }
+            ]
+          },
+          "state": {
+            "owner": "данные формируются функцией/handler целевой страницы; постоянного серверного export state нет."
+          },
+          "behavior": {
+            "form": "mapping",
+            "rules": [
+              "downloadJson вызывает JSON.stringify(payload,null,2), создаёт application/json Blob и скачиваемое имя из имени файла.",
+              "Priority export использует buildPriorityTimeline над сглаженными узлами и передаёт raw/node intervals, blend, clapWeight и vocalMatrix.",
+              "Legacy export также использует сглаженные узлы; указывает spectrogram_detail и опции интерполяции, cross_engine:false; значения содержит парами технических имён и current_value.",
+              "Priority exporter записывает sampling.smoothing='weighted_median', хотя агрегатор числовых Range использует обычную median; это несоответствие маркировки и реализации.",
+              "Priority сериализация включает параметр только один раз на имя в registry; в blend mode fusion применяется при каждом узле.",
+              "DSP targets эвристически выводятся из подстрок имени параметра; events строятся для вокальных имён, а не из исполнения DSP графа."
+            ],
+            "termination": "Локальное создание Blob/download; серверная публикация не выполняется."
+          },
+          "preconditions": [
+            "Наличие файла и не менее одного сегмента; кнопки отключены также до появления результатов."
+          ],
+          "postconditions": [
+            "Сформирован browser download; приложение не подтверждает чтение/импорт файла downstream-системой."
+          ],
+          "dependencies": [
+            "mod_timeline",
+            "DOM Blob, URL.createObjectURL"
+          ],
+          "failure_modes": [
+            "Неизвестна downstream-схема потребителя; пользователь может скачать данные с пустыми либо частичными ветвями, когда другая ветвь имеет результат.",
+            "Priority filename сохраняет JSON содержимое только как текст и не включает сам аудиобинарный файл."
+          ],
+          "fallback": "Предусмотрен отдельный Legacy timeline download; это не подтверждённая совместимость со всеми старыми потребителями.",
+          "evidence_refs": [
+            "ev_export",
+            "ev_timeline"
+          ],
+          "behavioral_acceptance_criteria": [
+            "Скачиваемые payload соответствуют выбранному формату и преобразованным nodeSegments."
+          ],
+          "documentation_quality_criteria": [
+            "Сохранены точные schema identifiers и указано реально используемое nodeSegments."
+          ]
+        }
+      ],
+      "logical_role_mapping": [
+        {
+          "role": "SYS4_META_GENESIS",
+          "mapped_components": [
+            "mod_ui file selection and user settings"
+          ],
+          "status": "partial_existing_role_mapping",
+          "rationale": "UI получает файл и параметры запуска; не генерирует формализованные кандидаты MMSS."
+        },
+        {
+          "role": "SYS3_PATTERN_EXTRACTION",
+          "mapped_components": [
+            "python_engine/audio_clap_rag.py search_audio",
+            "python_engine/morpho_siglip.py search_audio/search_image/anchor_values"
+          ],
+          "status": "partial_existing_role_mapping",
+          "rationale": "Реальные retrieval/anchoring механизмы, не MMSS-экстракторы принципов."
+        },
+        {
+          "role": "SYS2_SEMANTIC_WEAVING",
+          "mapped_components": [
+            "mod_segment_api routing",
+            "mod_timeline",
+            "mod_ui orchestration"
+          ],
+          "status": "partial_existing_role_mapping",
+          "rationale": "Соединяют результаты и время без общего orchestrator сервиса."
+        },
+        {
+          "role": "SYS1_LINGUISTIC_GENERATION",
+          "mapped_components": [
+            "mod_export",
+            "MacroGenerator consumer"
+          ],
+          "status": "partial_existing_role_mapping",
+          "rationale": "Формируют JSON timeline и UI macro output; не являются генератором MMSS-спецификаций."
+        },
+        {
+          "role": "LANGUAGE_FIELD",
+          "mapped_components": [
+            "ActiveParameter",
+            "V3 dataset/indexes",
+            "FLOWMUSIC timeline schema strings",
+            "HTTP multipart/JSON contracts"
+          ],
+          "status": "cross_cutting_existing_contracts",
+          "rationale": "Общие типы, данные и форматы интерфейсов; отдельного Language Field сервиса нет."
+        }
+      ],
+      "data_flows": [
+        {
+          "id": "flow_audio_to_nodes",
+          "from": "user AudioFile",
+          "through": [
+            "mod_ui selectFile",
+            "AudioWaveformEditor ready/duration callback",
+            "mod_timeline buildAudioAnalysisPoints"
+          ],
+          "to": "mod_ui SegmentPoint[]",
+          "kind": "data_flow",
+          "evidence_refs": [
+            "ev_ui_state",
+            "ev_waveform",
+            "ev_timeline"
+          ]
+        },
+        {
+          "id": "flow_clap",
+          "from": "SegmentPoint window and browser File",
+          "through": [
+            "mod_ui sequential analyze",
+            "POST /api/audio-to-parameter/segment",
+            "python_engine/sidecar.py audio_search",
+            "python_engine/audio_clap_rag.py search_audio"
+          ],
+          "to": "clap ActiveParameter[] on that node",
+          "kind": "data_flow",
+          "evidence_refs": [
+            "ev_ui_analysis",
+            "ev_segment_api",
+            "ev_sidecar",
+            "ev_clap"
+          ]
+        },
+        {
+          "id": "flow_siglip",
+          "from": "SegmentPoint window and browser File",
+          "through": [
+            "mod_ui sequential analyze",
+            "POST /api/audio-to-parameter/segment",
+            "mod_jobs.runMorphoAudioSearch",
+            "python_engine/morpho_siglip.py audio_spectrogram → search_image → anchor_values"
+          ],
+          "to": "siglip ActiveParameter[] on that node",
+          "kind": "data_flow",
+          "evidence_refs": [
+            "ev_ui_analysis",
+            "ev_segment_api",
+            "ev_jobs",
+            "ev_siglip_audio",
+            "ev_siglip_search"
+          ]
+        },
+        {
+          "id": "flow_timeline_playback",
+          "from": "SegmentPoint[] plus settings",
+          "through": [
+            "smoothTimelineSegments",
+            "currentFrame/interpolateParameterFrames",
+            "optional blendParameterFrames"
+          ],
+          "to": "active panels/MacroGenerator; Priority and legacy downloads",
+          "kind": "data_flow",
+          "evidence_refs": [
+            "ev_smoothing",
+            "ev_ui_playback",
+            "ev_interpolation",
+            "ev_export"
+          ]
+        },
+        {
+          "id": "flow_seek_feedback",
+          "from": "timeline point click",
+          "through": [
+            "seekRequest token",
+            "WaveSurfer setTime",
+            "timeupdate callback"
+          ],
+          "to": "currentTime and active frame",
+          "kind": "data_flow",
+          "state": "seekRequest/currentTime owned by mod_ui; WaveSurfer owns actual playback cursor",
+          "bounds": "One seek request changes time once per token; timeupdate is continuous playback input, not an iterative analysis loop.",
+          "stopping_condition": "No request pending; playback continues under WaveSurfer controls.",
+          "evidence_refs": [
+            "ev_ui_playback",
+            "ev_waveform"
+          ],
+          "description": "Ответный callback-поток playback time после seek; не prerequisite dependency и не feedback-цикл обязательной зависимости."
+        },
+        {
+          "id": "flow_stop",
+          "from": "Stop button",
+          "through": [
+            "AbortController.abort",
+            "DELETE /api/audio-to-parameter/segment",
+            "sidecar cancel and Morpho stop"
+          ],
+          "to": "processing task cancellation attempt and retained completed nodes",
+          "kind": "data_flow",
+          "state": "client busy/status plus server task/job registry",
+          "bounds": "One cancellation request per user action; cancellation race/termination latency are not established.",
+          "stopping_condition": "Request/process closes or client catch/finally completes.",
+          "evidence_refs": [
+            "ev_ui_analysis",
+            "ev_segment_api",
+            "ev_jobs"
+          ],
+          "description": "Поток команды отмены и результата остановки; не prerequisite dependency."
+        }
+      ],
+      "dependencies": [
+        {
+          "from": "mod_ui",
+          "to": "mod_timeline",
+          "kind": "dependency",
+          "reason": "Обязательный кодовый import чистых функций для вычислений timeline."
+        },
+        {
+          "from": "mod_ui",
+          "to": "mod_segment_api",
+          "kind": "dependency",
+          "reason": "HTTP capability используется по действию пользователя (retrieval или cancellation); это не означает, что поиск обязателен для открытия страницы."
+        },
+        {
+          "from": "mod_segment_api",
+          "to": "mod_jobs",
+          "kind": "dependency",
+          "reason": "Обязательная зависимость только для выбранной ветви engine=siglip."
+        },
+        {
+          "from": "mod_segment_api",
+          "to": "CLAP sidecar capability (src/lib/engine/runner.ts → python_engine/sidecar.py)",
+          "kind": "dependency",
+          "reason": "Обязательная зависимость только для выбранной ветви engine=clap."
+        },
+        {
+          "from": "mod_export",
+          "to": "mod_timeline",
+          "kind": "dependency",
+          "reason": "При запросе экспорта использует timeline transforms."
+        }
+      ],
+      "state_ownership": [
+        {
+          "state": "client file, segment nodes, engine outputs/statuses, UI settings, playback time",
+          "owner": "mod_ui / AudioToParameterPage React state",
+          "authority": "React setter callbacks in AudioToParameterPage."
+        },
+        {
+          "state": "actual playback cursor, decoded buffer, region controls",
+          "owner": "WaveSurfer instance in AudioWaveformEditor",
+          "authority": "WaveSurfer events/methods; React receives callbacks/seek requests."
+        },
+        {
+          "state": "active sidecar tasks",
+          "owner": "src/lib/engine/runner.ts in-memory TASKS",
+          "authority": "task handle cancel/done lifecycle."
+        },
+        {
+          "state": "Morpho search/index child job metadata",
+          "owner": "src/lib/morpho/jobs.ts globalThis registry",
+          "authority": "spawn/close/stop callbacks."
+        },
+        {
+          "state": "V3 data and Morpho index",
+          "owner": "repository data/index artifact",
+          "authority": "вне разрешённой области этого анализа; физическое содержимое не инспектировалось."
+        }
+      ],
+      "providers_of_required_inputs": [
+        {
+          "input": "AudioFile bytes and name",
+          "provider": "Пользователь браузера; multipart пересылает исходный файл на каждый узел.",
+          "consumer": "mod_segment_api.",
+          "kind": "supplier"
+        },
+        {
+          "input": "track duration",
+          "provider": "WaveSurfer ready event",
+          "consumer": "buildAudioAnalysisPoints и UI.",
+          "kind": "supplier"
+        },
+        {
+          "input": "segment interval, topK and search settings",
+          "provider": "React UI state/defaults",
+          "consumer": "splitTrack/analyze.",
+          "kind": "supplier"
+        },
+        {
+          "input": "V3 searchable parameter rows/index embeddings",
+          "provider": "Локальные data/combinatorial-genesis artifacts and index",
+          "consumer": "CLAP/Morpho Python retrieval.",
+          "kind": "supplier"
+        },
+        {
+          "input": "CLAP model/runtime dependencies",
+          "provider": "Локальная конфигурация Python/Transformers/CLAP и model identifier CLAP_MODEL",
+          "consumer": "python_engine/audio_clap_rag.py.",
+          "kind": "supplier"
+        },
+        {
+          "input": "SigLIP model",
+          "provider": "MMSS_SIGLIP_MODEL or default local model path D:/hfmodels/siglip2-base-patch16-224",
+          "consumer": "src/lib/morpho/jobs.ts process args.",
+          "kind": "supplier"
+        },
+        {
+          "input": "Morpho index readiness",
+          "provider": "manifest/index in data/combinatorial-genesis/morpho-siglip plus /api/morpho/status",
+          "consumer": "UI SigLIP gate and search_image validation.",
+          "kind": "supplier"
+        },
+        {
+          "input": "Ollama unload and embedding-runtime settings",
+          "provider": "src/lib/ollama-memory.ts and stored embedding settings",
+          "consumer": "prepareGpuForExternalModel before either retrieval branch.",
+          "kind": "supplier"
+        }
+      ],
+      "reusable_component": {
+        "id": "reusable_audio_segment_timeline_library",
+        "status": "code_confirmed_shared_module",
+        "path": "src/lib/audio-segment-timeline.ts",
+        "exports": [
+          "buildAudioAnalysisPoints",
+          "interpolateParameterFrames",
+          "smoothTimelineSegments",
+          "blendParameterFrames",
+          "buildPriorityTimeline"
+        ],
+        "interface": "Pure functions over durations, interval settings and ActiveParameter-bearing timeline segments; no model/runtime/network dependency.",
+        "constraints": "Domain-coupled к ActiveParameter и двум источникам clap/siglip, naming convention для technical_name и FLOWMUSIC-specific export; не является общим аудио SDK.",
+        "evidence_refs": [
+          "ev_timeline",
+          "ev_interpolation",
+          "ev_smoothing",
+          "ev_blend",
+          "ev_export"
+        ]
+      },
+      "callbacks": [
+        {
+          "id": "cb_waveform_to_ui",
+          "source": "AudioWaveformEditor/WaveSurfer",
+          "callback_contracts": [
+            "onDuration(duration) при ready",
+            "onTime(time) при timeupdate",
+            "onRegion(offset,duration) при событиях region",
+            "onFile(file) при выборе/записи"
+          ],
+          "consumer": "AudioToParameterPage обновляет React state",
+          "kind": "callback",
+          "evidence_refs": [
+            "ev_waveform",
+            "ev_ui_playback"
+          ]
+        },
+        {
+          "id": "cb_ui_to_waveform",
+          "source": "AudioToParameterPage seekRequest {time,token}",
+          "callback_contracts": [
+            "useEffect вызывает wavesurfer.setTime при расхождении >= 0.05 s"
+          ],
+          "consumer": "WaveSurfer cursor; последующий timeupdate сообщает время обратно",
+          "kind": "callback",
+          "evidence_refs": [
+            "ev_ui_playback",
+            "ev_waveform"
+          ]
+        }
+      ]
+    },
+    "provenance": {
+      "sources": [
+        {
+          "id": "src_repo_code",
+          "kind": "repository",
+          "title": "mmss-meta-crystal: реализация Audio-to-Parameter",
+          "locator": "Текущий рабочий checkout; см. evidence registry ниже.",
+          "authors_or_origin": "локальный репозиторий пользователя",
+          "publication_date": null,
+          "accessed_at": null,
+          "access_level": "исходники целевых файлов прочитаны; локальные наборы данных/индексы не инспектировались",
+          "scope_used": "маршрут, компонент, timeline utility/tests, waveform editor, API routes, Morpho process, sidecar CLAP и Python search functions",
+          "limitations": "Результаты чтения кода не подтверждают поведение развернутого приложения."
+        },
+        {
+          "id": "src_repo_docs",
+          "kind": "repository_documentation",
+          "title": "Документы режима в репозитории",
+          "locator": "README.md; docs/audio-to-parameter.md",
+          "authors_or_origin": "локальный репозиторий пользователя",
+          "publication_date": null,
+          "accessed_at": null,
+          "access_level": "полный текст двух релевантных файлов",
+          "scope_used": "декларируемый сценарий и пользовательские ограничения",
+          "limitations": "Документация сопоставлена с исходным кодом; не принималась вместо проверки реализации."
+        },
+        {
+          "id": "src_installed_skill",
+          "kind": "skill_file",
+          "title": "MMSS Principle Synthesis",
+          "locator": "C:/Users/abstract/.codex/skills/mmss-principle-synthesis/SKILL.md",
+          "authors_or_origin": "установленный локальный скилл пользователя",
+          "publication_date": null,
+          "accessed_at": null,
+          "access_level": "текст прочитан",
+          "scope_used": "правила existing-stack синтеза, provenance, контрактов, уровней проверки, артефактов и команд",
+          "limitations": "Справочник описывает текст скилла; не подразумевает зарегистрированные команды IDE."
+        }
+      ],
+      "evidence": [
+        {
+          "id": "ev_route",
+          "source_ref": "src_repo_code",
+          "locator": "src/app/audio-to-parameter-rag-segments/page.tsx: AudioToParameterSegmentsRoute",
+          "representation": "paraphrase",
+          "content": "Целевой route подключает AppShell и dynamic-import AudioToParameterPage с ssr:false.",
+          "basis_type": "code_observation",
+          "limitations": null
+        },
+        {
+          "id": "ev_legacy_route",
+          "source_ref": "src_repo_code",
+          "locator": "src/app/audio-to-parameter/page.tsx: AudioToParameterRoute; src/components/layout/PageRenderer.tsx: AudioToParameterPage ветвь",
+          "representation": "paraphrase",
+          "content": "Существующий legacy route может показывать тот же компонент через PageRenderer.",
+          "basis_type": "code_observation",
+          "limitations": "Не смешивать этот маршрут с целевым route."
+        },
+        {
+          "id": "ev_ui_state",
+          "source_ref": "src_repo_code",
+          "locator": "src/components/pages/AudioToParameterPage.tsx: AudioToParameterPage, useState declarations, selectFile, splitTrack",
+          "representation": "paraphrase",
+          "content": "Файл/object URL, длительность, узлы и статусы принадлежат клиентскому React компоненту; сегментация создаёт только metadata узлов и пустые результаты.",
+          "basis_type": "code_observation",
+          "limitations": null
+        },
+        {
+          "id": "ev_ui_analysis",
+          "source_ref": "src_repo_code",
+          "locator": "src/components/pages/AudioToParameterPage.tsx: analyze, stop",
+          "representation": "paraphrase",
+          "content": "Поиск пользовательски запускается отдельно для движка, отправляет узлы по одному и записывает готовые результаты; stop вызывает AbortController и DELETE API.",
+          "basis_type": "code_observation",
+          "limitations": "Нет runtime наблюдения UI."
+        },
+        {
+          "id": "ev_ui_playback",
+          "source_ref": "src_repo_code",
+          "locator": "src/components/pages/AudioToParameterPage.tsx: currentFrame, seekToSegment; src/components/audio/AudioWaveformEditor.tsx: WaveformController",
+          "representation": "paraphrase",
+          "content": "Клик точки меняет time и seek token; WaveSurfer setTime и timeupdate обновляют синхронизированное время страницы.",
+          "basis_type": "code_observation",
+          "limitations": "Не запускалось в браузере."
+        },
+        {
+          "id": "ev_waveform",
+          "source_ref": "src_repo_code",
+          "locator": "src/components/audio/AudioWaveformEditor.tsx: AudioWaveformEditor, WaveformController",
+          "representation": "paraphrase",
+          "content": "WaveSurfer интегрирует Regions/Record и опциональные Minimap/Spectrogram плагины, сообщения ready/timeupdate/seek и локальную запись.",
+          "basis_type": "code_observation",
+          "limitations": "Видимость/производительность плагинов не проверялись."
+        },
+        {
+          "id": "ev_timeline",
+          "source_ref": "src_repo_code",
+          "locator": "src/lib/audio-segment-timeline.ts: buildAudioAnalysisPoints",
+          "representation": "paraphrase",
+          "content": "Чистая функция строит временные точки и окна с ограниченным интервалом; для интервала больше длительности возвращает две точки 0 и totalDuration с окном длины трека.",
+          "basis_type": "code_observation",
+          "limitations": null
+        },
+        {
+          "id": "ev_interpolation",
+          "source_ref": "src_repo_code",
+          "locator": "src/lib/audio-segment-timeline.ts: interpolateParameterFrames; src/components/pages/AudioToParameterPage.tsx: currentFrame",
+          "representation": "paraphrase",
+          "content": "Интерполяция range линейная с округлением/ограничением; прочие типы общих параметров дискретно переключаются при ratio=0.5; текущий кадр выбирает соседние временные узлы в одной ветви.",
+          "basis_type": "code_observation",
+          "limitations": "Описание параметров только на одной стороне требует учитывать fallback base."
+        },
+        {
+          "id": "ev_smoothing",
+          "source_ref": "src_repo_code",
+          "locator": "src/lib/audio-segment-timeline.ts: median, aggregateFrames, smoothTimelineSegments",
+          "representation": "paraphrase",
+          "content": "Сглаживание группирует технические имена около временных узлов; числовые Range сводятся медианой, другие values — weighted votes от similarity.",
+          "basis_type": "code_observation",
+          "limitations": "Не измерялись качество/выигрыш или устойчивость на реальном наборе."
+        },
+        {
+          "id": "ev_blend",
+          "source_ref": "src_repo_code",
+          "locator": "src/lib/audio-segment-timeline.ts: normalizedScores, blendParameterFrames",
+          "representation": "paraphrase",
+          "content": "Blend независимо min-max-нормализует scores каждой ветви, рассчитывает смешанный score; общие числовые values усредняет с clapWeight.",
+          "basis_type": "code_observation",
+          "limitations": "Нормализация в локальном top-K относительная и не является межмодельной калибровкой."
+        },
+        {
+          "id": "ev_export",
+          "source_ref": "src_repo_code",
+          "locator": "src/lib/audio-segment-timeline.ts: buildPriorityTimeline; src/components/pages/AudioToParameterPage.tsx: downloadJson, exportTimeline, exportLegacyTimeline",
+          "representation": "paraphrase",
+          "content": "Оба export сериализуют сглаженные узлы; Priority использует indexed registry, DSP/event mappings, legacy оставляет названия параметров.",
+          "basis_type": "code_observation",
+          "limitations": "Не проверен consumer этих файлов."
+        },
+        {
+          "id": "ev_segment_api",
+          "source_ref": "src_repo_code",
+          "locator": "src/app/api/audio-to-parameter/segment/route.ts: POST, DELETE",
+          "representation": "paraphrase",
+          "content": "API проверяет размер, нормализует параметры, сохраняет временный аудиофайл, освобождает Ollama модели перед поиском и маршрутизирует к CLAP или Morpho.",
+          "basis_type": "code_observation",
+          "limitations": "Не проверено развертывание и реальный HTTP запрос."
+        },
+        {
+          "id": "ev_gpu",
+          "source_ref": "src_repo_code",
+          "locator": "src/lib/ollama-memory.ts: prepareGpuForExternalModel",
+          "representation": "paraphrase",
+          "content": "Общий helper выгружает и проверяет Ollama модели до внешнего модельного пути.",
+          "basis_type": "code_observation",
+          "limitations": "Не запускался."
+        },
+        {
+          "id": "ev_jobs",
+          "source_ref": "src_repo_code",
+          "locator": "src/lib/morpho/jobs.ts: start, stopMorpho, getMorphoStatus, runMorphoAudioSearch",
+          "representation": "paraphrase",
+          "content": "Morho child process запускается с CUDA_VISIBLE_DEVICES пустым; статус/progress/log tail хранятся в globalThis, stdout JSON разбирается по последней строке; stop — taskkill или SIGTERM.",
+          "basis_type": "code_observation",
+          "limitations": "Персистентное/распределённое управление работами не заявлено."
+        },
+        {
+          "id": "ev_status_api",
+          "source_ref": "src_repo_code",
+          "locator": "src/app/api/morpho/status/route.ts: GET; src/app/api/morpho/index/route.ts: POST/DELETE; src/lib/morpho/jobs.ts: getMorphoStatus",
+          "representation": "paraphrase",
+          "content": "Индексный status и rebuild являются отдельными endpoint-операциями; status проверяет snapshot/exclusion hashes.",
+          "basis_type": "code_observation",
+          "limitations": "Пользовательский rebuild endpoint не вызывался; содержимое локального индекса не осматривалось."
+        },
+        {
+          "id": "ev_siglip_audio",
+          "source_ref": "src_repo_code",
+          "locator": "python_engine/morpho_siglip.py: audio_spectrogram, search_audio",
+          "representation": "paraphrase",
+          "content": "SigLIP путь преобразует mono audio окно в mel/composite/RGB-delta PNG (по умолчанию RGB delta), передаёт изображение в search_image и прикладывает параметры аудио к ответу.",
+          "basis_type": "code_observation",
+          "limitations": "Модель/инференс не запускались."
+        },
+        {
+          "id": "ev_siglip_search",
+          "source_ref": "src_repo_code",
+          "locator": "python_engine/morpho_siglip.py: search_image, anchor_values, active_parameter, index_status",
+          "representation": "paraphrase",
+          "content": "Morpho ранжирует V3 параметрические строки по image/text vector similarity и может выводить значения через value anchors, axes, polarity и relations; без anchors current_value остаётся default.",
+          "basis_type": "code_observation",
+          "limitations": "Подробные данные/математика индекса не исполнялись."
+        },
+        {
+          "id": "ev_sidecar",
+          "source_ref": "src_repo_code",
+          "locator": "python_engine/sidecar.py: cmd_audio_search; src/lib/engine/runner.ts: callSidecar",
+          "representation": "paraphrase",
+          "content": "CLAP API передаёт offset/duration/top_k через JSON аргумент sidecar audio_search command.",
+          "basis_type": "code_observation",
+          "limitations": null
+        },
+        {
+          "id": "ev_clap",
+          "source_ref": "src_repo_code",
+          "locator": "python_engine/audio_clap_rag.py: build_index, _active_parameter, search_audio",
+          "representation": "paraphrase",
+          "content": "CLAP строит/переиспользует text index по V3, загружает выбранное mono окно при 48 kHz, агрегирует feature vectors audio chunks и ранжирует parameter text embeddings; current/suggested values выводятся из нормированного score topK.",
+          "basis_type": "code_observation",
+          "limitations": "Это не доказательство точности соответствия аудио контролируемым параметрам; API может задействовать индексный build во время поиска."
+        },
+        {
+          "id": "ev_timeline_tests",
+          "source_ref": "src_repo_code",
+          "locator": "src/lib/audio-segment-timeline.test.ts: describe('audio segment timeline')",
+          "representation": "paraphrase",
+          "content": "Имеются unit-сценарии для endpoint sampling, interpolation, median spike, blend, registry serialization и компактности.",
+          "basis_type": "code_observation",
+          "limitations": "В этой задаче тесты не запускались; их присутствие не доказывает выполнение или UI behavior."
+        },
+        {
+          "id": "ev_docs",
+          "source_ref": "src_repo_docs",
+          "locator": "README.md: раздел Audio-to-Parameter; docs/audio-to-parameter.md: Рабочий процесс, Приоритеты результата, Представления спектрограммы",
+          "representation": "paraphrase",
+          "content": "Документация описывает автоматическую нарезку, последовательный поиск, сглаживание, playback и export; README заявляет совмещение морфологических признаков и retrieval сигналов.",
+          "basis_type": "documented_behavior",
+          "limitations": "Часть заявлений уточнена реализацией: нарезка не запускает retrieval сама, отдельные движки стартуют кнопками; blend опционален; CLAP ищет по аудио окну напрямую, SigLIP2 использует spectrogram image."
+        },
+        {
+          "id": "ev_skill",
+          "source_ref": "src_installed_skill",
+          "locator": "C:/Users/abstract/.codex/skills/mmss-principle-synthesis/SKILL.md: sections 4, 6, 10, 15-18",
+          "representation": "paraphrase",
+          "content": "Скилл требует анализа имеющегося стека, прослеживаемых контрактов, явных поставщиков входов, раздельного описания потоков данных, зависимостей и обратной связи, точных статусов проверок и различения примеров от команд.",
+          "basis_type": "documented_rule",
+          "limitations": null
+        }
+      ]
+    },
+    "meta_formulas": [
+      {
+        "id": "formula_timeline_value_at_time",
+        "expression": "если N_e пуст: []; иначе i = max({j | N_e[j].time <= t}, 0); current = N_e[i].e; next = N_e[i+1], если он существует; если интерполяция выключена, next отсутствует или next.time <= N_e[i].time: вернуть current; иначе вызвать interpolateParameterFrames(current, next.e, (t-N_e[i].time)/(next.time-N_e[i].time))",
+        "primary_role": "symbolic_description",
+        "basis_refs": [
+          "ev_ui_playback",
+          "ev_interpolation"
+        ],
+        "symbols": {
+          "e": "clap или siglip ветвь",
+          "N_e": "сглаженные узлы выбранной ветви",
+          "t": "currentTime WaveSurfer в секундах",
+          "i": "последний индекс узла, где time <= t",
+          "clamp": "ограничение отношения до 0..1",
+          "N_e[i].e": "массив параметров clap либо siglip в узле i"
+        },
+        "domains_or_types": {
+          "t": "конечное неотрицательное время",
+          "N_e": "упорядоченный массив узлов временной линии",
+          "frame_e": "ActiveParameter[]"
+        },
+        "assumptions": [
+          "При отсутствии следующего узла либо выключенной настройке интерполяции UI возвращает текущий узел без преобразования.",
+          "Символическое выражение суммирует конкретные функции и условия UI; оно не задаёт математических гарантий или акустической точности."
+        ],
+        "defined_when": "Для непустого упорядоченного массива узлов. Цикл currentFrame инициализирует i=0, затем заменяет индекс для каждого узла с time <= t; до первого узла остаётся индекс 0. При пустом массиве возвращается [].",
+        "edge_cases": [
+          "Пустая линия: currentFrame немедленно возвращает [].",
+          "До первого узла: выбран N_e[0], поскольку начальный index=0.",
+          "На первом узле: текущий узел имеет time <= t; при следующем узле с большим временем интерполяция начинается с ratio=0.",
+          "После последнего узла: выбран последний узел; next отсутствует, поэтому возвращается current.",
+          "Одинаковое время у current и next: условие next.time <= current.time возвращает current без деления.",
+          "Интерполяция выключена: возвращается current.",
+          "Параметр только в одном кадре при вызове interpolateParameterFrames: копируется целиком из a при ratio < 0.5 или из b при ratio >= 0.5.",
+          "Общий Range интерполируется только если оба кадра содержат ui_element=Range и numeric current_value; остальные общие параметры переключаются при ratio=0.5."
+        ],
+        "evaluation_method": "Статическая сверка currentFrame и interpolateParameterFrames по коду; формула и граничные случаи не исполнялись.",
+        "check_refs": [
+          "check_reference_integrity",
+          "check_contract_review"
+        ]
+      }
+    ],
+    "basis_registry": [
+      {
+        "id": "basis_user_task",
+        "kind": "user_requirement",
+        "statement": "Сформализовать текущую реализацию, не проектировать систему с нуля; локализовать человеческий текст на русском; ограничить изменения тремя файлами docs; проверить JSON/ссылки/контракты и не утверждать неподтверждённое поведение."
+      },
+      {
+        "id": "basis_skill",
+        "kind": "installed_skill",
+        "statement": "Применить методы анализа имеющегося стека из установленного SKILL.md.",
+        "source_ref": "src_installed_skill"
+      },
+      {
+        "id": "basis_repo_docs",
+        "kind": "repository_documentation",
+        "statement": "Документация режима является отдельным основанием для расхождений/сопоставления и не заменяет реализацию.",
+        "source_ref": "src_repo_docs"
+      }
+    ],
+    "assumptions": [
+      {
+        "id": "asm_scope",
+        "statement": "Под основной реализацией понимается целевой route /audio-to-parameter-rag-segments; legacy /audio-to-parameter упоминается только как reuse-компонента.",
+        "basis_refs": [
+          "basis_user_task"
+        ],
+        "consequence": "Посторонние audio/rag режимы описываются только на необходимых границах."
+      },
+      {
+        "id": "asm_data_unread",
+        "statement": "Файлы реальных наборов V3, построенные индексы и локальные конфигурации трактуются как внешние поставщики входов, их содержимое и качество не утверждаются.",
+        "basis_refs": [
+          "basis_user_task"
+        ],
+        "consequence": "Контракты поставщиков указывают на ожидаемые артефакты, а не на проверенное состояние текущей машины."
+      }
+    ],
+    "limitations": [
+      {
+        "id": "lim_static_only",
+        "statement": "Интерфейс, HTTP, воспроизведение, скачивание в браузере, выполнение Python и обработчики ошибок не запускались; анализ исходников не подтверждает пользовательское поведение.",
+        "basis_refs": [
+          "ev_route",
+          "ev_timeline_tests"
+        ]
+      },
+      {
+        "id": "lim_data_models",
+        "statement": "Не инспектировались и не запускались тяжёлые индексы, данные, GPU или модели; не измерялись качество retrieval, временная стабильность, точность значений и ресурсное потребление.",
+        "basis_refs": [
+          "ev_clap",
+          "ev_siglip_search"
+        ]
+      },
+      {
+        "id": "lim_downstream",
+        "statement": "Не задан/не проверен потребитель двух экспортных форматов; экспортирование валидного JSON не означает семантическую совместимость с внешним исполнителем.",
+        "basis_refs": [
+          "ev_export"
+        ]
+      },
+      {
+        "id": "lim_architecture",
+        "statement": "Распределённая координация, персистентное состояние jobs и восстановление после перезапуска из рассмотренных in-memory registry не следуют.",
+        "basis_refs": [
+          "ev_jobs"
+        ]
+      }
+    ],
+    "validation": {
+      "checks": [
+        {
+          "id": "check_scope_inventory",
+          "scope": "Относящиеся к задаче маршруты, интерфейс, API, временная линия, процессы и точки входа Python.",
+          "method": "статическая сверка целевых исходников",
+          "status": "passed",
+          "findings": "Путь и engine branches локализованы; это проверка описания, не поведение."
+        },
+        {
+          "id": "check_reference_integrity",
+          "scope": "внутренние basis/evidence/source/module/check refs",
+          "method": "автоматическая структурная сверка после правки",
+          "status": "passed",
+          "findings": "Внутренние идентификаторы разрешаются в authoritative registry."
+        },
+        {
+          "id": "check_contract_review",
+          "scope": "artifact/composition, branch representation, dependencies, suppliers, callbacks, flows и currentFrame edges",
+          "method": "ручное сопоставление документов с исходными символами",
+          "status": "passed",
+          "findings": "Описания исправлены или подтверждены в пределах перечисленных проверок; интерфейс и процессы не запускались."
+        },
+        {
+          "id": "check_json_parse",
+          "scope": "docs/audio-to-parameter.mmss.json",
+          "method": "PowerShell ConvertFrom-Json после repair",
+          "status": "passed",
+          "findings": "JSON синтаксически разбирается; фактическое выполнение не проверяется."
+        },
+        {
+          "id": "check_ui_runtime",
+          "scope": "Интерфейс браузера, воспроизведение WaveSurfer, обратные вызовы и скачивание.",
+          "method": "не запускалось",
+          "status": "not_run",
+          "findings": "Поведенческое подтверждение остаётся непроверенным."
+        },
+        {
+          "id": "check_audio_runtime",
+          "scope": "Модели CLAP/SigLIP2, поиск параметров и индексы.",
+          "method": "не запускалось",
+          "status": "not_run",
+          "findings": "Модели, вычисления на GPU, аудиопайплайны и построение индексов не запускались."
+        }
+      ],
+      "blocking_issues": [],
+      "warnings": [
+        "Priority timeline содержит метку weighted_median, однако aggregateFrames использует обычную median для числовых параметров Range.",
+        "Документация может звучать как автоматический общий analysis; в коде требуются отдельные кнопочные запуски движка, а SigLIP2/CLAP — разные пути.",
+        "Проверка статуса и перестроение индекса SigLIP — отдельные операции; перестроение не входит в автоматическую сегментацию."
+      ],
+      "repairs": []
+    },
+    "state": {
+      "task_outcome": "completed",
+      "implementation_status": {
+        "scope": "описанные модули приложения и Python entrypoints",
+        "value": "реализация найдена в репозитории; код не менялся"
+      },
+      "execution_status": {
+        "scope": "MMSS synthesis and document checks",
+        "value": "Точечная сверка и ремонт трёх документов выполнены; разбор JSON и статические проверки ссылок/контрактов пройдены."
+      },
+      "deployment_status": null,
+      "artifact_application_status": "applied",
+      "notes": "Завершение задачи означает выполнение документальной сверки в заявленной области, но не подтверждает фактическую работу приложения или качество поиска."
+    }
+  }
+}

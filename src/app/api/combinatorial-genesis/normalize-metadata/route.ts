@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 
 import { readGenesisLibrary } from "@/lib/combinatorial-genesis/library";
 import { getActiveProvider } from "@/lib/llm/factory";
+import { FreeLLMAPIError } from "@/lib/llm/freellmapi";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -142,6 +143,7 @@ recommended is true only if the candidate is coherent, source evidence supports 
     let lastError: unknown = null;
     let resultModel = settings.chatModel;
     let resultProvider = provider.id;
+    let routing: Record<string, string> = {};
     const maxAttempts = context.length + 2;
     for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
       const requestContext = context.filter((candidate) => !collected.has(candidate.technical_name));
@@ -159,6 +161,12 @@ recommended is true only if the candidate is coherent, source evidence supports 
       );
       resultModel = result.model;
       resultProvider = result.provider;
+      routing = {
+        ...(result.requestedModel ? { requestedModel: result.requestedModel } : {}),
+        ...(result.actualRoute ? { actualRoute: result.actualRoute } : {}),
+        ...(result.actualProvider ? { actualProvider: result.actualProvider } : {}),
+        ...(result.actualModel ? { actualModel: result.actualModel } : {}),
+      };
       try {
         const parsed = extractJson(result.text);
         const items = extractCandidateItems(parsed);
@@ -204,12 +212,19 @@ recommended is true only if the candidate is coherent, source evidence supports 
           );
           resultModel = result.model;
           resultProvider = result.provider;
+          routing = {
+            ...(result.requestedModel ? { requestedModel: result.requestedModel } : {}),
+            ...(result.actualRoute ? { actualRoute: result.actualRoute } : {}),
+            ...(result.actualProvider ? { actualProvider: result.actualProvider } : {}),
+            ...(result.actualModel ? { actualModel: result.actualModel } : {}),
+          };
           const item = extractCandidateItems(extractJson(result.text))[0];
           collected.set(candidate.technical_name, validateResult(item, candidate.technical_name));
           candidateError = null;
           break;
         } catch (error) {
           candidateError = error;
+          if (provider.id === "freellmapi") break;
         }
       }
       if (candidateError) {
@@ -219,8 +234,11 @@ recommended is true only if the candidate is coherent, source evidence supports 
 
     normalized = context.map((candidate) => collected.get(candidate.technical_name)!);
     if (normalized.some((item) => !item)) throw new Error("Chat model normalization failed.");
-    return NextResponse.json({ model: resultModel, provider: resultProvider, candidates: normalized });
+    return NextResponse.json({ model: resultModel, provider: resultProvider, ...routing, candidates: normalized });
   } catch (error) {
+    if (error instanceof FreeLLMAPIError) {
+      return NextResponse.json({ error: error.message, provider: "freellmapi", upstreamStatus: error.status }, { status: error.status });
+    }
     return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 422 });
   }
 }

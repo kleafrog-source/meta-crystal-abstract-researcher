@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { ArrowRightLeft, RefreshCw, RotateCcw, Save, Search, Sparkles, Split, X } from "lucide-react";
+import { useEffect, useRef, useState, type ClipboardEvent, type ReactNode } from "react";
+import { ArrowRightLeft, RefreshCw, RotateCcw, Save, Search, Sparkles, Split, X, Undo2, Redo2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,13 +15,7 @@ import { InstructionSettingsDialog } from "./InstructionSettingsDialog";
 import { MetaCrystalPickerDialog } from "./MetaCrystalPickerDialog";
 import { TransitionFlowReport } from "./TransitionFlowReport";
 import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
-
-const SUGGESTIONS: Array<{ label: string; query: string }> = [
-  { label: "Brighter timbre", query: "make the timbre noticeably brighter and a little sharper" },
-  { label: "Slower attack", query: "сделай атаку сильно плавнее и мягче" },
-  { label: "Faster tempo", query: "set tempo to 120 bpm and make the groove faster" },
-  { label: "Stereo width", query: "wide evolving stereo pad with softer movement" },
-];
+import { AMIcon } from "@/components/ui/am-icon";
 
 const TRANSITION_PRESETS = [0, 25, 50, 75, 100] as const;
 const SOURCE_HINTS = {
@@ -53,6 +47,65 @@ export function SemanticSearch() {
   const transitionRatio = useRagV3Store((state) => state.transitionRatio);
   const setQuery = useRagV3Store((state) => state.setQuery);
   const setQueryB = useRagV3Store((state) => state.setQueryB);
+  const queryValues = useRef({ a: query, b: queryB });
+  const queryInputs = useRef<{ a: HTMLTextAreaElement | null; b: HTMLTextAreaElement | null }>({ a: null, b: null });
+  const undoStack = useRef<Array<{ target: "a" | "b"; start: number; removed: string; inserted: string }>>([]);
+  const redoStack = useRef<Array<{ target: "a" | "b"; start: number; removed: string; inserted: string; expected: string }>>([]);
+  const [historyState, setHistoryState] = useState({ canUndo: false, canRedo: false });
+  const syncHistoryState = () => setHistoryState({ canUndo: undoStack.current.length > 0, canRedo: redoStack.current.length > 0 });
+  useEffect(() => { queryValues.current = { a: query, b: queryB }; }, [query, queryB]);
+  const updateQuery = (target: "a" | "b", value: string) => {
+    queryValues.current[target] = value;
+    (target === "a" ? setQuery : setQueryB)(value);
+    syncHistoryState();
+  };
+  const pasteQuery = (target: "a" | "b", event: ClipboardEvent<HTMLTextAreaElement>) => {
+    event.preventDefault();
+    const input = event.currentTarget;
+    const inserted = event.clipboardData.getData("text/plain");
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    if (!inserted) return;
+    const current = input.value;
+    undoStack.current.push({ target, start, removed: current.slice(start, end), inserted });
+    undoStack.current = undoStack.current.slice(-10);
+    redoStack.current = [];
+    updateQuery(target, current.slice(0, start) + inserted + current.slice(end));
+    requestAnimationFrame(() => { input.focus(); input.setSelectionRange(start + inserted.length, start + inserted.length); });
+  };
+  const insertQueryBlock = (target: "a" | "b", next: string) => {
+    const current = queryValues.current[target];
+    if (next.startsWith(current) && next.length > current.length) {
+      undoStack.current.push({ target, start: current.length, removed: "", inserted: next.slice(current.length) });
+      undoStack.current = undoStack.current.slice(-10);
+      redoStack.current = [];
+    }
+    updateQuery(target, next);
+  };
+  const undoPaste = () => {
+    const op = undoStack.current.pop();
+    if (!op) return;
+    const current = queryValues.current[op.target];
+    const end = op.start + op.inserted.length;
+    if (current.slice(op.start, end) !== op.inserted) { syncHistoryState(); return; }
+    const next = current.slice(0, op.start) + op.removed + current.slice(end);
+    redoStack.current.push({ ...op, expected: next });
+    redoStack.current = redoStack.current.slice(-10);
+    updateQuery(op.target, next);
+    requestAnimationFrame(() => { const input = queryInputs.current[op.target]; input?.focus(); input?.setSelectionRange(op.start + op.removed.length, op.start + op.removed.length); });
+  };
+  const redoPaste = () => {
+    const op = redoStack.current.pop();
+    if (!op) return;
+    const current = queryValues.current[op.target];
+    if (current !== op.expected || current.slice(op.start, op.start + op.removed.length) !== op.removed) { syncHistoryState(); return; }
+    const next = current.slice(0, op.start) + op.inserted + current.slice(op.start + op.removed.length);
+    undoStack.current.push(op);
+    undoStack.current = undoStack.current.slice(-10);
+    updateQuery(op.target, next);
+    requestAnimationFrame(() => { const input = queryInputs.current[op.target]; input?.focus(); input?.setSelectionRange(op.start + op.inserted.length, op.start + op.inserted.length); });
+  };
+  const { canUndo, canRedo } = historyState;
   const resetWorkspace = useRagV3Store((state) => state.resetWorkspace);
   const setTopK = useRagV3Store((state) => state.setTopK);
   const setSearchMode = useRagV3Store((state) => state.setSearchMode);
@@ -70,48 +123,48 @@ export function SemanticSearch() {
   const status = useRagV3Store((state) => state.status);
   const handleCrystalInsert = (target: "primary" | "secondary", crystalText: string) => {
     if (target === "primary") {
-      setQuery(mergeQueryWithCrystal(query, crystalText));
+      insertQueryBlock("a", mergeQueryWithCrystal(query, crystalText));
       return;
     }
-    setQueryB(mergeQueryWithCrystal(queryB, crystalText));
+    insertQueryBlock("b", mergeQueryWithCrystal(queryB, crystalText));
   };
 
   return (
-    <section className="console-query-panel space-y-3 rounded-lg border border-white/75 bg-black/65 p-3">
+    <section className="console-query-panel space-y-3 rounded-lg border border-border bg-black/65 p-3">
       <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <Search className="size-4 text-primary" />
+            <AMIcon name="search" size="sm" bright />
             <h2 className="font-mono text-sm font-semibold uppercase tracking-[0.12em] text-white">Semantic Search V3</h2>
             <V3InfoTip content="Выполняет независимый semantic retrieval и выбор значений для каждого отправленного запроса." />
           </div>
           <p className="font-mono text-[10px] text-zinc-500">Single target or dual-state interpolation. Search runs only on explicit submit.</p>
         </div>
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="console-mode-buttons flex flex-wrap items-center gap-1.5">
           <Badge variant="outline">dataset: {status?.total_parameters ?? 0}</Badge>
           <Badge variant="secondary">active: {activeCount}</Badge>
           <Badge variant="outline">Top-K: {topK}</Badge>
           <Badge variant="outline">instructions: {instructionCount}</Badge>
           <V3Tooltip content="Очищает запросы, результаты и ручные изменения текущей рабочей области V3.">
-            <Button type="button" variant="outline" size="sm" onClick={resetWorkspace}><RotateCcw className="size-4" />Сбросить V3</Button>
+            <Button type="button" variant="outline" size="sm" className="semantic-control" onClick={resetWorkspace}><RotateCcw className="size-4" />Сбросить V3</Button>
           </V3Tooltip>
         </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5">
         <V3Tooltip content="Один независимый запрос заново формирует полный набор параметров и значений.">
-          <Button type="button" size="sm" variant={searchMode === "single" ? "default" : "outline"} onClick={() => setSearchMode("single")}>
-            <Search className="size-4" />Single query
+          <Button type="button" size="sm" variant={searchMode === "single" ? "default" : "outline"} aria-pressed={searchMode === "single"} onClick={() => setSearchMode("single")} className="semantic-control">
+            <AMIcon name="single" size="sm" bright />Single query
           </Button>
         </V3Tooltip>
         <V3Tooltip content="Строит два независимых состояния A и B, затем интерполирует их значения.">
-          <Button type="button" size="sm" variant={searchMode === "transition" ? "default" : "outline"} onClick={() => setSearchMode("transition")}>
-            <ArrowRightLeft className="size-4" />Transition mode
+          <Button type="button" size="sm" variant={searchMode === "transition" ? "default" : "outline"} aria-pressed={searchMode === "transition"} onClick={() => setSearchMode("transition")} className="semantic-control">
+            <AMIcon name="transition" size="sm" bright />Transition mode
           </Button>
         </V3Tooltip>
         <InstructionSettingsDialog />
         <V3Tooltip content="Включает целевой разбор языков, TECH4, FX4, вокальных слоёв и I/S/E/A. Обычный V3 остаётся доступен после отключения.">
-          <Button type="button" size="sm" variant={vocalMatrixMode ? "default" : "outline"} onClick={toggleVocalMatrixMode}>Vocal Matrix</Button>
+          <Button type="button" size="sm" variant={vocalMatrixMode ? "default" : "outline"} aria-pressed={vocalMatrixMode} className="semantic-control" onClick={toggleVocalMatrixMode}>Vocal Matrix</Button>
         </V3Tooltip>
         <div className="flex flex-wrap items-center gap-1">
           {([
@@ -121,7 +174,7 @@ export function SemanticSearch() {
             ["generated", "Published combinations"],
           ] as const).map(([source, label]) => (
             <V3Tooltip key={source} content={SOURCE_HINTS[source]}>
-              <Button type="button" size="sm" variant={sources[source] ? "default" : "outline"} onClick={() => toggleSource(source)}>{label}</Button>
+              <Button type="button" size="sm" variant={sources[source] ? "default" : "outline"} aria-pressed={sources[source]} className="semantic-control" onClick={() => toggleSource(source)}>{label}</Button>
             </V3Tooltip>
           ))}
         </div>
@@ -131,10 +184,10 @@ export function SemanticSearch() {
             <Input type="number" min={1} max={200} value={topKDraft} onChange={(event) => setTopKDraft(event.target.value)} className="h-7 w-20 bg-black/60 font-mono text-xs" />
           </V3Tooltip>
           <V3Tooltip content="Сохраняет введённое значение Top-K для последующих запросов.">
-            <Button type="button" size="sm" className="h-7 px-2" onClick={() => setTopK(Number(topKDraft) || topK)}><Save className="size-3.5" />Save</Button>
+            <Button type="button" size="sm" className="semantic-control h-7 px-2" onClick={() => setTopK(Number(topKDraft) || topK)}><Save className="size-3.5" />Save</Button>
           </V3Tooltip>
           <V3Tooltip content="Возвращает поле к последнему сохранённому Top-K.">
-            <Button type="button" size="sm" variant="ghost" className="h-7 px-2" onClick={() => setTopKDraft(String(topK))}><RefreshCw className="size-3.5" /></Button>
+            <Button type="button" size="sm" variant="ghost" className="semantic-control h-7 px-2" onClick={() => setTopKDraft(String(topK))}><RefreshCw className="size-3.5" /></Button>
           </V3Tooltip>
         </div>
       </div>
@@ -149,7 +202,7 @@ export function SemanticSearch() {
           ["administrative", "Administrative"],
         ] as const).map(([scope, label]) => (
           <V3Tooltip key={scope} content={SCOPE_HINTS[scope]}>
-            <Button type="button" size="sm" variant={scopes[scope] ? "default" : "outline"} onClick={() => toggleScope(scope)}>{label}</Button>
+            <Button type="button" size="sm" variant={scopes[scope] ? "default" : "outline"} aria-pressed={scopes[scope]} className="semantic-control" onClick={() => toggleScope(scope)}>{label}</Button>
           </V3Tooltip>
         ))}
       </div>
@@ -161,7 +214,13 @@ export function SemanticSearch() {
           placeholder="Describe the first target sound state..."
           resultCount={primaryCount}
           isSearching={isSearching}
-          onChange={setQuery}
+          onChange={(value) => updateQuery("a", value)}
+          onPaste={(event) => pasteQuery("a", event)}
+          onUndo={undoPaste}
+          onRedo={redoPaste}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          inputRef={(element) => { queryInputs.current.a = element; }}
           onClear={() => setQuery("")}
           onSubmit={() => void proposeParameters(query, "primary")}
           actions={
@@ -178,7 +237,13 @@ export function SemanticSearch() {
             placeholder="Describe the second target sound state..."
             resultCount={secondaryCount}
             isSearching={isSearching}
-            onChange={setQueryB}
+            onChange={(value) => updateQuery("b", value)}
+            onPaste={(event) => pasteQuery("b", event)}
+            onUndo={undoPaste}
+            onRedo={redoPaste}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            inputRef={(element) => { queryInputs.current.b = element; }}
             onClear={() => setQueryB("")}
             onSubmit={() => void proposeParameters(queryB, "secondary")}
             actions={
@@ -189,14 +254,6 @@ export function SemanticSearch() {
             }
           />
         ) : null}
-      </div>
-
-      <div className="flex flex-wrap gap-1.5">
-        {SUGGESTIONS.map((suggestion) => (
-          <V3Tooltip key={suggestion.label} content="Подставляет демонстрационный запрос в Query A без запуска поиска.">
-            <button type="button" className="rounded-full border border-border/70 bg-muted/40 px-2.5 py-1 text-[11px] text-muted-foreground" onClick={() => setQuery(suggestion.query)}>{suggestion.label}</button>
-          </V3Tooltip>
-        ))}
       </div>
 
       {searchMode === "transition" ? (
@@ -267,40 +324,54 @@ function QueryPanel(props: {
   onChange: (value: string) => void;
   onClear: () => void;
   onSubmit: () => void;
+  onPaste: (event: ClipboardEvent<HTMLTextAreaElement>) => void;
+  onUndo: () => void;
+  onRedo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
+  inputRef: (element: HTMLTextAreaElement | null) => void;
   actions?: ReactNode;
 }) {
+  const { title, value, placeholder, resultCount, isSearching, onChange, onClear, onSubmit, onPaste, onUndo, onRedo, canUndo, canRedo, inputRef, actions } = props;
   return (
     <div className="space-y-2 rounded border border-white/20 bg-black/40 p-2.5">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <div className="flex items-center gap-1 font-mono text-xs font-medium uppercase tracking-wide">{props.title}<V3InfoTip content="Опишите целевое звучание. Каждый запуск выполняется независимо от предыдущих запросов." /></div>
+          <div className="flex items-center gap-1 font-mono text-xs font-medium uppercase tracking-wide">{title}<V3InfoTip content="Опишите целевое звучание. Каждый запуск выполняется независимо от предыдущих запросов." /></div>
           <div className="font-mono text-[10px] text-muted-foreground">
-            scoped results: {props.resultCount}
+            scoped results: {resultCount}
           </div>
         </div>
+        <div className="flex items-center gap-1">
+        <Button type="button" variant="outline" size="sm" title="Undo paste (Ctrl/⌘+Z)" aria-label="Undo paste" disabled={!canUndo} onClick={onUndo}><Undo2 className="size-4" /></Button>
+        <Button type="button" variant="outline" size="sm" title="Redo paste (Ctrl/⌘+Shift+Z, Ctrl+Y)" aria-label="Redo paste" disabled={!canRedo} onClick={onRedo}><Redo2 className="size-4" /></Button>
         <V3Tooltip content="Запускает semantic retrieval и anchoring только для содержимого этого поля.">
-          <Button type="button" size="sm" className="h-8 rounded border border-fuchsia-400/50 bg-fuchsia-700/80 font-mono text-[10px] uppercase tracking-wide" onClick={props.onSubmit} disabled={!props.value.trim() || props.isSearching}>
-            <Sparkles className="size-4" />{props.isSearching ? "Searching..." : "Search"}
+          <Button type="button" size="sm" className="console-search-button h-8 rounded border border-fuchsia-400/50 bg-fuchsia-700/80 font-mono text-[10px] uppercase tracking-wide" onClick={onSubmit} disabled={!value.trim() || isSearching}>
+            <AMIcon name="search" size="sm" bright />{isSearching ? "Searching..." : "Search"}
           </Button>
         </V3Tooltip>
+        </div>
       </div>
 
-      {props.actions ? <div className="flex flex-wrap gap-1">{props.actions}</div> : null}
+      {actions ? <div className="flex flex-wrap gap-1">{actions}</div> : null}
 
       <div className="flex items-stretch gap-1.5">
         <div className="relative min-w-0 flex-1">
           <V3Tooltip content="Введите независимое описание цели. Ctrl+Enter запускает поиск.">
-            <Textarea value={props.value} rows={2} className="min-h-[62px] resize-none border-white/15 bg-black/70 py-2 pr-10 font-mono text-xs" placeholder={props.placeholder} onChange={(event) => props.onChange(event.target.value)} onKeyDown={(event) => {
-              if ((event.ctrlKey || event.metaKey) && event.key === "Enter") { event.preventDefault(); props.onSubmit(); }
+            <Textarea ref={inputRef} value={value} rows={2} className="min-h-[62px] resize-none border-white/15 bg-black/70 py-2 pr-10 font-mono text-xs" placeholder={placeholder} onChange={(event) => onChange(event.target.value)} onPaste={onPaste} onKeyDown={(event) => {
+              const mod = event.ctrlKey || event.metaKey;
+              if (mod && event.key.toLowerCase() === "z") { event.preventDefault(); if (event.shiftKey) onRedo(); else onUndo(); return; }
+              if (event.ctrlKey && event.key.toLowerCase() === "y") { event.preventDefault(); onRedo(); return; }
+              if (mod && event.key === "Enter") { event.preventDefault(); onSubmit(); }
             }} />
           </V3Tooltip>
-          {props.value ? (
+          {value ? (
             <V3Tooltip content="Очищает только это поле запроса.">
-              <button type="button" aria-label={`Clear ${props.title}`} className="absolute right-2 top-2 inline-flex size-6 items-center justify-center rounded-md text-muted-foreground" onClick={props.onClear}><X className="size-4" /></button>
+              <button type="button" aria-label={`Clear ${title}`} className="absolute right-2 top-2 inline-flex size-6 items-center justify-center rounded-md text-muted-foreground" onClick={onClear}><X className="size-4" /></button>
             </V3Tooltip>
           ) : null}
         </div>
-        <SpeechInputButtons value={props.value} onChange={props.onChange} label={props.title} />
+        <SpeechInputButtons value={value} onChange={onChange} label={title} />
       </div>
     </div>
   );

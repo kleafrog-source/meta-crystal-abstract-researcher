@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { MAX_CONCURRENT_RUNS, runSidecar, runningTaskCount } from "@/lib/engine/runner";
 import { buildMmssEnv } from "@/lib/mmss";
+import { loadLLMSettings } from "@/lib/llm/factory";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -26,13 +27,22 @@ export async function POST(req: Request) {
           : undefined,
     };
 
+    const llmSettings = await loadLLMSettings();
     const handle = runSidecar({
       command: "mmss_retrain",
       inputFile: params,
       taskType: "mmss_retrain",
       title: "MMSS retrain",
       timeoutMs: 60 * 60 * 1000,
-      extraEnv: buildMmssEnv(body ?? {}),
+      extraEnv: {
+        ...buildMmssEnv(body ?? {}),
+        OLLAMA_BASE_URL: llmSettings.ollamaUrl,
+        MMSS_OLLAMA_CHAT_MODEL: llmSettings.provider === "freellmapi" ? llmSettings.freeLLMApiModel : llmSettings.chatModel,
+        TEXT_LLM_PROVIDER: llmSettings.provider,
+        FREELLMAPI_BASE_URL: llmSettings.freeLLMApiUrl,
+        FREELLMAPI_MODEL: llmSettings.freeLLMApiModel,
+        ...(llmSettings.provider === "freellmapi" ? { FREELLMAPI_API_KEY: process.env.FREELLMAPI_API_KEY ?? "" } : {}),
+      },
     });
 
     return NextResponse.json({

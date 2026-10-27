@@ -1,19 +1,22 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Copy, Download, HardDrive, Loader2, WandSparkles } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { HardDrive, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
 import { buildInstructionOutputBlock } from "@/lib/rag-v3/instruction-support";
 import { buildMacroExport, DEFAULT_MACRO_EXPORT_FIELDS, MACRO_EXPORT_FIELDS, macroExtension, type MacroExportField, type MacroExportFormat } from "@/lib/rag-v3/macro-export";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { useRagV3Store } from "@/store/rag-v3-store";
 import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
+import { AMIcon } from "@/components/ui/am-icon";
+import { resolveDomainStyle } from "./domain-style";
 
 interface AudioExportContext { originalName: string; start: number; end: number; topK: number }
 
-export function MacroGenerator(props: { parameters?: ActiveParameter[]; audioExport?: AudioExportContext } = {}) {
+type SelectionSource = "card" | "macro";
+
+export function MacroGenerator(props: { parameters?: ActiveParameter[]; audioExport?: AudioExportContext; selectedParameterName?: string | null; selectionSource?: SelectionSource; onSelectParameter?: (technicalName: string) => void } = {}) {
   const [copyState, setCopyState] = useState<"idle" | "done" | "error">("idle");
   const [exportState, setExportState] = useState<"idle" | "done" | "error">("idle");
   const [serverState, setServerState] = useState("idle");
@@ -34,6 +37,7 @@ export function MacroGenerator(props: { parameters?: ActiveParameter[]; audioExp
   const macroError = controlled ? controlledError : storeMacroError;
   const shortOutput = controlled ? controlledMacro : composeMacroOutput(storeMacro, instructionSlots);
   const output = useMemo(() => format === "short" ? shortOutput : buildMacroExport(parameters, format, fields), [fields, format, parameters, shortOutput]);
+  useEffect(() => { if (props.selectionSource !== "card" || !props.selectedParameterName) return; document.querySelector(`[data-macro-parameter="${CSS.escape(props.selectedParameterName)}"]`)?.scrollIntoView({ block: "nearest" }); }, [props.selectedParameterName, props.selectionSource, output]);
 
   const generateMacro = async () => {
     if (!controlled) { await storeGenerateMacro(); return; }
@@ -66,23 +70,34 @@ export function MacroGenerator(props: { parameters?: ActiveParameter[]; audioExp
     } catch (error) { setServerState(error instanceof Error ? error.message : "error"); }
   };
 
-  return <Card className="console-macro-panel h-full border border-white/75 bg-black/70">
-    <CardHeader className="border-b border-white/15 px-4 py-3"><CardTitle className="flex items-center gap-2 font-mono text-sm uppercase tracking-[0.12em] text-emerald-300"><WandSparkles className="size-4 text-primary" />Clean Macro Output<V3InfoTip content="Формирует готовый блок параметров из текущего Anchored control bank." /></CardTitle></CardHeader>
+  return <Card className="console-macro-panel h-full border border-border bg-black/70">
+    <CardHeader className="border-b border-white/15 px-4 py-3"><CardTitle className="flex items-center gap-2 font-mono text-sm uppercase tracking-[0.12em] text-primary"><AMIcon name="macro" size="md" bright />Clean Macro Output<V3InfoTip content="Формирует готовый блок параметров из текущего Anchored control bank." /></CardTitle></CardHeader>
     <CardContent className="flex h-[calc(100%-52px)] flex-col gap-3 p-4">
       <V3Tooltip content="Генерирует macro из всех параметров и текущих ручных значений в панели.">
-        <Button type="button" className="h-11 w-full rounded border border-emerald-300/50 bg-emerald-500/80 font-mono text-xs uppercase tracking-[0.12em] text-black hover:bg-emerald-400" onClick={() => void generateMacro()} disabled={!parameters.length || isGeneratingMacro}>{isGeneratingMacro ? <Loader2 className="size-4 animate-spin" /> : <WandSparkles className="size-4" />}Generate from {parameters.length} parameters</Button>
+        <Button type="button" className="macro-generate-button am-icon-button h-11 w-full rounded font-mono text-xs uppercase tracking-[0.12em]" onClick={() => void generateMacro()} disabled={!parameters.length || isGeneratingMacro}>{isGeneratingMacro ? <Loader2 className="size-4 animate-spin" /> : <AMIcon name="generate" bright />}Generate from {parameters.length} parameters</Button>
       </V3Tooltip>
-      <div className="grid grid-cols-3 gap-1">{(["short", "json", "markdown"] as const).map((item) => <V3Tooltip key={item} content={item === "short" ? "Короткий текст только с активными значениями." : item === "json" ? "Расширенный JSON с выбранными метаданными." : "Читаемый Markdown-отчёт с выбранными метаданными."}><Button type="button" size="sm" variant={format === item ? "default" : "outline"} onClick={() => setFormat(item)} className="text-[10px]">{item === "short" ? "Short Text" : item === "json" ? "Extended JSON" : "Markdown"}</Button></V3Tooltip>)}</div>
+      <div className="grid grid-cols-3 gap-1">{(["short", "json", "markdown"] as const).map((item) => <V3Tooltip key={item} content={item === "short" ? "Короткий текст только с активными значениями." : item === "json" ? "Расширенный JSON с выбранными метаданными." : "Читаемый Markdown-отчёт с выбранными метаданными."}><Button type="button" size="sm" variant={format === item ? "default" : "outline"} aria-pressed={format === item} onClick={() => setFormat(item)} className="macro-format-tab">{item === "short" ? "Short Text" : item === "json" ? "Extended JSON" : "Markdown"}</Button></V3Tooltip>)}</div>
       {format !== "short" ? <div className="grid grid-cols-2 gap-x-2 gap-y-1 rounded border border-white/10 p-2">{MACRO_EXPORT_FIELDS.map((field) => <label key={field.key} className="flex items-center gap-1.5 text-[10px] text-zinc-400"><V3Tooltip content={`Включает поле «${field.label}» в расширенный экспорт.`}><input type="checkbox" checked={fields.includes(field.key)} onChange={() => setFields((current) => current.includes(field.key) ? current.filter((key) => key !== field.key) : [...current, field.key])} /></V3Tooltip>{field.label}</label>)}</div> : null}
       <div className="grid grid-cols-2 gap-2">
-        <V3Tooltip content="Копирует текущий output в буфер обмена."><Button type="button" variant="outline" className="h-9 border-white/20 bg-white/[0.06] text-[10px] uppercase" disabled={!output} onClick={async () => { try { await navigator.clipboard.writeText(output); setCopyState("done"); } catch { setCopyState("error"); } finally { window.setTimeout(() => setCopyState("idle"), 1800); } }}><Copy className="size-4" />{copyState === "done" ? "Copied" : copyState === "error" ? "Failed" : "Copy"}</Button></V3Tooltip>
-        <V3Tooltip content="Скачивает output в выбранном формате."><Button type="button" variant="outline" className="h-9 border-white/20 bg-white/[0.06] text-[10px] uppercase" disabled={!output} onClick={download}><Download className="size-4" />{exportState === "done" ? "Exported" : exportState === "error" ? "Failed" : `Export .${extension}`}</Button></V3Tooltip>
+        <V3Tooltip content="Копирует чистый текст макроса в буфер обмена."><Button type="button" variant="outline" className="macro-action-button am-icon-button h-9 text-[10px] uppercase" disabled={!output} onClick={async () => { try { await navigator.clipboard.writeText(output); setCopyState("done"); } catch { setCopyState("error"); } finally { window.setTimeout(() => setCopyState("idle"), 1800); } }}><AMIcon name="copy" size="sm" />{copyState === "done" ? "Copied" : copyState === "error" ? "Failed" : "Copy"}</Button></V3Tooltip>
+        <V3Tooltip content="Скачивает чистый текст output в выбранном формате."><Button type="button" variant="outline" className="macro-action-button am-icon-button h-9 text-[10px] uppercase" disabled={!output} onClick={download}><AMIcon name="export" size="sm" />{exportState === "done" ? "Exported" : exportState === "error" ? "Failed" : `Export .${extension}`}</Button></V3Tooltip>
       </div>
       {props.audioExport ? <V3Tooltip content="Сохраняет macro рядом с выбранным аудиофрагментом в audio_parts."><Button type="button" variant="outline" disabled={!output || serverState === "saving"} onClick={() => void saveBesideAudio()}><HardDrive className="size-4" />{serverState === "saving" ? "Сохранение..." : serverState === "idle" ? "Сохранить в audio_parts" : serverState}</Button></V3Tooltip> : null}
-      <V3Tooltip content="Только для чтения: здесь отображается итоговый macro в выбранном формате."><Textarea value={output} readOnly rows={16} placeholder="Generated overrides will appear here." className="min-h-0 flex-1 resize-none border-white/15 bg-black/70 font-mono text-[11px] leading-6 text-emerald-300" /></V3Tooltip>
+      <V3Tooltip content="Цвета показывают известные параметры и их категории; копирование и экспорт используют исходный чистый текст."><pre className="min-h-0 flex-1 overflow-auto whitespace-pre-wrap break-all rounded border border-white/15 bg-black/70 p-2 font-mono text-[11px] leading-6" aria-label="Clean macro output">{renderColoredMacro(output, parameters, props.selectedParameterName, props.onSelectParameter)}</pre></V3Tooltip>
       {macroError ? <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">{macroError}</div> : null}
     </CardContent>
   </Card>;
+}
+
+function renderColoredMacro(output: string, parameters: ActiveParameter[], selected?: string | null, onSelect?: (technicalName: string) => void) {
+  const known = new Map(parameters.map((parameter) => [parameter.technical_name, resolveDomainStyle(parameter.domain, parameter.technical_name).accentClassName]));
+  return output.split("\n").map((line, index) => {
+    const separator = line.indexOf(":");
+    const name = separator >= 0 ? line.slice(0, separator).trim().replace(/^\"|\"$/g, "") : "";
+    const valueClass = known.get(name);
+    const interactive = valueClass && onSelect; const selectedClass = name === selected ? " bg-primary/25 rounded-sm" : "";
+    return <span key={`${index}-${line}`} data-macro-parameter={valueClass ? name : undefined}>{separator < 0 ? line : <><span role={interactive ? "button" : undefined} tabIndex={interactive ? 0 : undefined} aria-pressed={interactive ? name === selected : undefined} onClick={interactive ? () => onSelect(name) : undefined} onKeyDown={interactive ? (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onSelect(name); } } : undefined} className={`${valueClass ?? "text-muted-foreground"}${selectedClass}${interactive ? " cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring" : ""}`}>{line.slice(0, separator)}</span><span className="text-foreground">:</span><span className={valueClass ? "text-foreground" : "text-muted-foreground"}>{line.slice(separator + 1)}</span></>}{index < output.split("\n").length - 1 ? "\n" : ""}</span>;
+  });
 }
 
 function composeMacroOutput(macro: string, instructionSlots: ReturnType<typeof useRagV3Store.getState>["instructionSlots"]): string {

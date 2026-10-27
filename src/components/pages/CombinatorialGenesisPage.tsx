@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ParameterRegistryPanel } from "@/components/combinatorial-genesis/ParameterRegistryPanel";
 import { V3CatalogPanel } from "@/components/combinatorial-genesis/V3CatalogPanel";
+import { AMIcon } from "@/components/ui/am-icon";
 
 interface PreviewCandidate {
   technical_name: string;
@@ -470,7 +471,7 @@ export function CombinatorialGenesisPage() {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <div className="mb-2 flex items-center gap-2">
-                <Atom className="size-5 text-fuchsia-300" />
+                <AMIcon name="genesis" size="md" bright />
                 <h1 className="font-mono text-lg font-semibold text-white">Combinatorial Genesis Engine</h1>
               </div>
               <p className="max-w-3xl text-sm text-zinc-400">

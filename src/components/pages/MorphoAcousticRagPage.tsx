@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  ImageIcon,
   Loader2,
   RefreshCw,
   Search,
@@ -15,6 +14,7 @@ import { V3InfoTip, V3Tooltip } from "@/components/rag-v3/V3Tooltip";
 import { VirtualizedParamList } from "@/components/rag-v3/VirtualizedParamList";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AMIcon } from "@/components/ui/am-icon";
 import { Input } from "@/components/ui/input";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 
@@ -151,7 +151,7 @@ export function MorphoAcousticRagPage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="flex items-center gap-2 font-mono text-lg font-semibold">
-              <ImageIcon className="size-5 text-fuchsia-300" />
+              <AMIcon name="morpho" size="md" bright />
               Morpho-Acoustic RAG · SigLIP2
             </h1>
             <p className="mt-1 text-xs text-zinc-500">
@@ -299,7 +299,7 @@ export function MorphoAcousticRagPage() {
                 variant={vocalMatrixMode ? "default" : "outline"}
                 onClick={() => setVocalMatrixMode((value) => !value)}
                 disabled={busy}
-              >Vocal Matrix</Button>
+              ><AMIcon name="vocal" size="sm" />Vocal Matrix</Button>
               <div className="flex items-center gap-1 text-xs text-zinc-500">Фильтрует расширенный SigLIP2-поиск до вокальной матрицы.<V3InfoTip content="Работает и с обычным изображением, и с загруженным изображением спектрограммы. Значения выбираются текущим режимом Expressive/Conservative/Default." /></div>
               <Button
                 onClick={() => void search()}
@@ -308,7 +308,7 @@ export function MorphoAcousticRagPage() {
                 {busy ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
-                  <Search className="size-4" />
+                  <AMIcon name="search" size="sm" />
                 )}
                 {busy ? "Поиск…" : "Найти параметры"}
               </Button>

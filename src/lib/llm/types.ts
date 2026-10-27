@@ -9,7 +9,7 @@
  *   - generate_completion(prompt, max_tokens)
  */
 
-export type LLMProviderId = "ollama" | "openai" | "mock";
+export type LLMProviderId = "ollama" | "freellmapi" | "mock";
 
 export interface LLMMessage {
   role: "system" | "user" | "assistant";
@@ -19,6 +19,8 @@ export interface LLMMessage {
 export interface LLMChatOptions {
   /** Model identifier, e.g. "qwen2.5-3b" */
   model?: string;
+  /** Requested model identifier, retained separately from router metadata. */
+  requestedModel?: string;
   /** Sampling temperature 0..1 */
   temperature?: number;
   /** Nucleus sampling probability 0..1 */
@@ -39,7 +41,12 @@ export interface LLMChatOptions {
 
 export interface LLMChatResult {
   text: string;
+  /** Actual model returned by the backend, when known. */
   model: string;
+  requestedModel?: string;
+  actualRoute?: string;
+  actualProvider?: string;
+  actualModel?: string;
   provider: LLMProviderId;
   usage?: {
     promptTokens?: number;
@@ -52,6 +59,10 @@ export interface LLMChatStreamChunk {
   done?: boolean;
   model?: string;
   provider?: LLMProviderId;
+  requestedModel?: string;
+  actualRoute?: string;
+  actualProvider?: string;
+  actualModel?: string;
   usage?: {
     promptTokens?: number;
     completionTokens?: number;

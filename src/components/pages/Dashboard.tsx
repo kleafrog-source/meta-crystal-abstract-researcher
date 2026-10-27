@@ -25,6 +25,7 @@ import {
   ArrowUpRight,
 } from "@/components/icons";
 import { type PageId } from "@/components/layout/Sidebar";
+import { AMCoreLogo } from "@/components/ui/am-core-logo";
 import { useToast } from "@/hooks/use-toast";
 
 interface DashboardData {
@@ -128,6 +129,8 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-semibold tracking-tight flex items-center gap-2">
+              <AMCoreLogo className="!h-14 !w-14" label="Dashboard" />
+              <span className="text-xs font-medium text-muted-foreground">Abstract-Mindfreak</span>
               <span className="text-glow-emerald">Дашборд</span>
               <Badge variant="outline" className="text-[10px] uppercase">
                 v7.2

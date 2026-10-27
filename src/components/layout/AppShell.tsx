@@ -155,7 +155,7 @@ export function AppShell({ children }: AppShellProps) {
           <ChevronRight className="h-4 w-4" /><span className="hidden sm:inline">Меню</span>
         </button>
       )}
-      <main className="flex-1 min-w-0 flex flex-col">
+      <main className={`flex-1 min-w-0 flex flex-col app-shell-main ${sidebarOpen ? "" : "sidebar-collapsed"}`}>
         {children({
           activePage:
             pathnameToPage(pathname) === "dashboard"

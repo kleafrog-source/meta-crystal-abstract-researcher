@@ -2,6 +2,7 @@ import { getActiveProvider } from "@/lib/llm/factory";
 import { buildRAGContext } from "@/lib/rag";
 import { db } from "@/lib/db";
 import type { LLMMessage } from "@/lib/llm/types";
+import { saveChatRouteMetadata } from "@/lib/llm/chat-route-metadata";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -46,6 +47,10 @@ export async function POST(req: Request) {
           let finalText = "";
           let finalModel = body.model ?? settings.chatModel;
           let finalProvider = provider.id;
+          let finalRequestedModel = body.model ?? settings.chatModel;
+          let finalActualRoute: string | undefined;
+          let finalActualProvider: string | undefined;
+          let finalActualModel: string | undefined;
           let finalUsage: any;
 
           if (provider.chatStream) {
@@ -67,12 +72,20 @@ export async function POST(req: Request) {
                 }
                 if (chunk.model) finalModel = chunk.model;
                 if (chunk.provider) finalProvider = chunk.provider;
+                if (chunk.requestedModel) finalRequestedModel = chunk.requestedModel;
+                if (chunk.actualRoute) finalActualRoute = chunk.actualRoute;
+                if (chunk.actualProvider) finalActualProvider = chunk.actualProvider;
+                if (chunk.actualModel) finalActualModel = chunk.actualModel;
                 if (chunk.usage) finalUsage = chunk.usage;
               },
             );
             finalText = result.text;
             finalModel = result.model;
             finalProvider = result.provider;
+            finalRequestedModel = result.requestedModel ?? finalRequestedModel;
+            finalActualRoute = result.actualRoute;
+            finalActualProvider = result.actualProvider;
+            finalActualModel = result.actualModel;
             finalUsage = result.usage;
           } else {
             const result = await provider.chat(messages, {
@@ -87,6 +100,10 @@ export async function POST(req: Request) {
             finalText = result.text;
             finalModel = result.model;
             finalProvider = result.provider;
+            finalRequestedModel = result.requestedModel ?? finalRequestedModel;
+            finalActualRoute = result.actualRoute;
+            finalActualProvider = result.actualProvider;
+            finalActualModel = result.actualModel;
             finalUsage = result.usage;
 
             const parts = result.text.split(/(\s+)/).filter(Boolean);
@@ -107,7 +124,7 @@ export async function POST(req: Request) {
               },
             });
           }
-          await db.chatMessage.create({
+          const assistantMessage = await db.chatMessage.create({
             data: {
               role: "assistant",
               content: finalText,
@@ -116,6 +133,7 @@ export async function POST(req: Request) {
               model: finalModel,
             },
           });
+          await saveChatRouteMetadata(assistantMessage.id, { requestedModel: finalRequestedModel, actualRoute: finalActualRoute, actualProvider: finalActualProvider, actualModel: finalActualModel });
 
           send({
             event: "done",
@@ -124,6 +142,10 @@ export async function POST(req: Request) {
             ragResults,
             provider: finalProvider,
             model: finalModel,
+            requestedModel: finalRequestedModel,
+            ...(finalActualRoute ? { actualRoute: finalActualRoute } : {}),
+            ...(finalActualProvider ? { actualProvider: finalActualProvider } : {}),
+            ...(finalActualModel ? { actualModel: finalActualModel } : {}),
             usage: finalUsage,
           });
           controller.close();

@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
+import { AMCoreLogo } from "@/components/ui/am-core-logo";
+import { AMIcon } from "@/components/ui/am-icon";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -86,12 +88,14 @@ export function AMCoreDashboard({ onNavigate }: { onNavigate: (page: PageId) => 
   };
 
   return (
-    <div className="flex h-full flex-col bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.08),transparent_32%)]">
+    <div className="flex h-full flex-col bg-background">
       <header className="border-b border-border bg-card/30 px-6 py-5 backdrop-blur-sm">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-emerald-300" />
+              <AMCoreLogo className="h-14 w-14" label="AM-Core Dashboard" />
+              <AMIcon name="dashboard" size="md" bright />
+              <span className="text-sm font-medium">Abstract-Mindfreak</span>
               <h1 className="text-xl font-semibold tracking-tight text-glow-emerald">AM-Core Dashboard</h1>
               <Badge variant="outline">canonical V3</Badge>
             </div>

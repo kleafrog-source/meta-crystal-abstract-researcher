@@ -1,5 +1,6 @@
 import { seededRandom, normalize } from "@/lib/metis/math-core";
 import type { MetisProviderConfig, OllamaModelInfo } from "@/lib/metis/types";
+import { getActiveProvider, loadLLMSettings } from "@/lib/llm/factory";
 
 export interface LlmGenerateRequest {
   prompt: string;
@@ -11,6 +12,8 @@ export interface LlmGenerateRequest {
 export interface LlmGenerateResponse {
   text: string;
   modelId: string;
+  requestedModel?: string;
+  actualRoute?: string;
   tokensGenerated: number;
   inferenceMs: number;
 }
@@ -175,6 +178,20 @@ export async function embedText(text: string, config = getMetisProviderConfig())
 
 export async function generateText(request: LlmGenerateRequest, config = getMetisProviderConfig()): Promise<LlmGenerateResponse> {
   const startedAt = Date.now();
+  const appSettings = await loadLLMSettings().catch(() => null);
+  if (appSettings?.provider === "freellmapi" || appSettings?.provider === "ollama") {
+    const { provider, settings } = await getActiveProvider();
+    const result = await provider.chat([{ role: "user", content: request.prompt }], {
+      model: settings.chatModel,
+      system: request.systemPrompt,
+      temperature: request.temperature ?? config.temperature,
+      maxTokens: request.maxTokens ?? config.maxTokens,
+      signal: AbortSignal.timeout(config.requestTimeoutMs),
+    });
+    return { text: result.text, modelId: result.model, requestedModel: result.requestedModel ?? settings.chatModel,
+      ...(result.actualRoute ? { actualRoute: result.actualRoute } : {}),
+      tokensGenerated: result.usage?.completionTokens ?? Math.ceil(result.text.length / 4), inferenceMs: Date.now() - startedAt };
+  }
   if (config.llmProvider === "stub") {
     const text = createStubText(request.prompt);
     return {

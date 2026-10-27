@@ -5,6 +5,7 @@ export interface DomainStyle {
   cardClassName: string;
   badgeClassName: string;
   accentClassName: string;
+  accentColor: string;
 }
 
 const DOMAIN_STYLES: Array<{
@@ -18,6 +19,7 @@ const DOMAIN_STYLES: Array<{
       cardClassName: "border-rose-500/25 bg-rose-500/[0.05]",
       badgeClassName: "border-rose-500/35 bg-rose-500/15 text-rose-200",
       accentClassName: "text-rose-300",
+      accentColor: "#fda4af",
     },
   },
   {
@@ -27,6 +29,7 @@ const DOMAIN_STYLES: Array<{
       cardClassName: "border-violet-500/25 bg-violet-500/[0.05]",
       badgeClassName: "border-violet-500/35 bg-violet-500/15 text-violet-200",
       accentClassName: "text-violet-300",
+      accentColor: "#c4b5fd",
     },
   },
   {
@@ -36,6 +39,7 @@ const DOMAIN_STYLES: Array<{
       cardClassName: "border-cyan-500/25 bg-cyan-500/[0.05]",
       badgeClassName: "border-cyan-500/35 bg-cyan-500/15 text-cyan-200",
       accentClassName: "text-cyan-300",
+      accentColor: "#67e8f9",
     },
   },
   {
@@ -45,6 +49,7 @@ const DOMAIN_STYLES: Array<{
       cardClassName: "border-emerald-500/25 bg-emerald-500/[0.05]",
       badgeClassName: "border-emerald-500/35 bg-emerald-500/15 text-emerald-200",
       accentClassName: "text-emerald-300",
+      accentColor: "#6ee7b7",
     },
   },
   {
@@ -54,6 +59,7 @@ const DOMAIN_STYLES: Array<{
       cardClassName: "border-amber-500/25 bg-amber-500/[0.05]",
       badgeClassName: "border-amber-500/35 bg-amber-500/15 text-amber-200",
       accentClassName: "text-amber-300",
+      accentColor: "#fcd34d",
     },
   },
   {
@@ -63,6 +69,7 @@ const DOMAIN_STYLES: Array<{
       cardClassName: "border-orange-500/25 bg-orange-500/[0.05]",
       badgeClassName: "border-orange-500/35 bg-orange-500/15 text-orange-200",
       accentClassName: "text-orange-300",
+      accentColor: "#fdba74",
     },
   },
 ];
@@ -72,6 +79,7 @@ const FALLBACK_STYLE: DomainStyle = {
   cardClassName: "border-border/60 bg-card/70",
   badgeClassName: "border-border/70 bg-muted/50 text-muted-foreground",
   accentClassName: "text-foreground",
+  accentColor: "var(--primary)",
 };
 
 export function resolveDomainStyle(domain?: string | null, technicalName?: string): DomainStyle {

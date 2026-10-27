@@ -319,6 +319,8 @@ export class MetisStore {
     const content = extractContent(message, op);
     let responseText = "";
     let modelId = "stub:metis-4b@local";
+    let modelRequested: string | undefined;
+    let actualRoute: string | undefined;
     let trace:
       | Awaited<ReturnType<MetisStore["applyMemoryOp"]>>
       | {
@@ -340,6 +342,8 @@ export class MetisStore {
       });
       responseText = llm.text;
       modelId = llm.modelId;
+      modelRequested = llm.requestedModel;
+      actualRoute = llm.actualRoute;
       this.total_tokens += llm.tokensGenerated;
       this.total_inference_ms = this.total_inference_ms === 0 ? llm.inferenceMs : (this.total_inference_ms + llm.inferenceMs) / 2;
     } else if (op === "QUERY") {
@@ -366,6 +370,8 @@ export class MetisStore {
       const llm = await generateText({ prompt: message });
       responseText = llm.text;
       modelId = llm.modelId;
+      modelRequested = llm.requestedModel;
+      actualRoute = llm.actualRoute;
       this.total_tokens += llm.tokensGenerated;
       this.total_inference_ms = this.total_inference_ms === 0 ? llm.inferenceMs : (this.total_inference_ms + llm.inferenceMs) / 2;
       this.importance_W = computeImportanceVector(this.M, new Array(this.config.matrix_dim).fill(0.5), this.config.temperature_tau);
@@ -389,6 +395,8 @@ export class MetisStore {
       detected_op: op,
       response_text: responseText,
       model_id: modelId,
+      ...(modelRequested ? { model_requested: modelRequested } : {}),
+      ...(actualRoute ? { actual_route: actualRoute } : {}),
       internal_trace: {
         hypermemory_importance: this.importance_W.slice(0, 16),
         top_rho_selection: trace.top_rho,

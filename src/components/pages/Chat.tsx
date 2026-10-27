@@ -51,6 +51,10 @@ interface ChatMessage {
   ragContext: string | null;
   provider: string | null;
   model: string | null;
+  requestedModel?: string;
+  actualRoute?: string;
+  actualProvider?: string;
+  actualModel?: string;
   createdAt: string;
 }
 
@@ -124,11 +128,15 @@ export function Chat() {
   const { data: profilesList, refresh: refreshProfiles } = useFetch<ProfilesList>(`/api/profiles?mode=${PROFILE_MODE}`);
 
   useEffect(() => {
+    // Hydrate the editable chat transcript when its server history arrives.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (history?.messages) setMessages(history.messages);
   }, [history]);
 
   useEffect(() => {
     if (engineInfo?.flags?.length) {
+      // Merge newly loaded engine flags into the editable pipeline profile.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPipelineProfile((prev) => withDefaultFlags(prev, engineInfo.flags));
     }
   }, [engineInfo]);
@@ -216,6 +224,10 @@ export function Chat() {
                       ragContext: payload.ragContext ?? null,
                       provider: payload.provider ?? null,
                       model: payload.model ?? null,
+                      requestedModel: payload.requestedModel,
+                      actualRoute: payload.actualRoute,
+                      actualProvider: payload.actualProvider,
+                      actualModel: payload.actualModel,
                     }
                   : msg,
               ),
@@ -546,6 +558,8 @@ function MessageBubble({ message, streaming }: { message: ChatMessage; streaming
         <div className="mt-1 text-[10px] text-muted-foreground flex items-center gap-2">
           <span>{new Date(message.createdAt).toLocaleTimeString("ru-RU")}</span>
           {message.provider && <span className="font-mono">{message.provider}/{message.model ?? "?"}</span>}
+          {message.requestedModel && <span>Requested: <span className="font-mono">{message.requestedModel}</span></span>}
+          {message.actualRoute && <span>Routed: <span className="font-mono">{message.actualProvider ?? "?"}/{message.actualModel ?? message.actualRoute}</span></span>}
           {streaming && <Loader2 className="h-3 w-3 animate-spin" />}
         </div>
       </div>

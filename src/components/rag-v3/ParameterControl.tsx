@@ -29,8 +29,11 @@ import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
 export function ParameterControl(props: {
   param: ActiveParameter;
   index: number;
+  displayMode?: "detail" | "standard" | "compact";
   onChange?: (technicalName: string, value: number | string) => void;
   onRemove?: (technicalName: string) => void;
+  selected?: boolean;
+  onSelect?: (technicalName: string) => void;
 }) {
   const storeUpdateParameterValue = useRagV3Store(
     (state) => state.updateParameterValue,
@@ -69,18 +72,44 @@ export function ParameterControl(props: {
     }
     removeParameter(props.param.technical_name);
   };
+  if (props.displayMode === "compact") {
+    const min = props.param.min_value ?? 0;
+    const max = props.param.max_value ?? 100;
+    const step = props.param.step ?? 0.01;
+    const options = props.param.options ?? [];
+    const selected = options.indexOf(textValue);
+    const percent = props.param.ui_element === "Select" && options.length > 1
+      ? Math.max(0, selected) / (options.length - 1) * 100
+      : Math.max(0, Math.min(100, (numericValue - min) / Math.max(1e-9, max - min) * 100));
+    const fullInfo = [props.param.technical_name, props.param.name_ru, props.param.category, props.param.ui_element, props.param.unit, props.param.source, `default ${String(props.param.default)}`, props.param.detail].filter(Boolean).join(" · ");
+    const compactControl = props.param.ui_element === "Range" ? <div className="console-knob-wrap"><div className="console-knob" style={{ "--knob-pct": `${percent}%`, "--knob-rotation": `${percent * 2.7 - 135}deg` } as React.CSSProperties} aria-hidden="true"><span /></div><input aria-label={`${props.param.technical_name}: ${textValue}`} className="console-knob-input" type="range" min={min} max={max} step={step} value={Math.max(min, Math.min(max, numericValue))} onChange={(event) => updateParameterValue(props.param.technical_name, roundToStep(Number(event.target.value), min, step))} /></div>
+      : props.param.ui_element === "Toggle" ? <RangeControl param={props.param} value={numericValue} onChange={(value) => updateParameterValue(props.param.technical_name, value)} />
+      : props.param.ui_element === "Select" ? <SelectControl param={props.param} value={textValue} displayMode="standard" onChange={(value) => updateParameterValue(props.param.technical_name, value)} />
+      : <TextControl param={props.param} value={textValue} onChange={(value) => updateParameterValue(props.param.technical_name, parseTextValue(value, props.param.ui_element))} />;
+    return <div data-parameter-id={props.param.technical_name} onClick={(event) => { if (!(event.target as HTMLElement).closest("button,input,[role=slider]")) props.onSelect?.(props.param.technical_name); }} style={{ "--domain-accent": domainStyle.accentColor } as React.CSSProperties} className={cn("console-control-module console-compact-card group relative aspect-square min-w-0 rounded-md border border-white/15 p-2", props.selected && "is-selected")} title={`${fullInfo} · value ${textValue}`} aria-label={`${fullInfo} · current value ${textValue}`}>
+      <span className="line-clamp-2 min-h-7 break-words font-mono text-[11px] font-semibold uppercase" title={props.param.technical_name}>{props.param.technical_name.replace(/_/g, " ")}</span>
+      <div className="console-compact-control">{compactControl}</div><output className="block truncate text-center font-mono text-[10px]">{textValue}</output>
+      <div className="console-compact-actions" onClick={(event) => event.stopPropagation()}><V3InfoTip content={<div className="space-y-1 text-[11px]"><b>{props.param.technical_name}</b><div>{resolveRussianDescription(props.param)}</div><div>{props.param.category} · {props.param.source}</div></div>} /><DropdownMenu><V3Tooltip content="Действия параметра"><DropdownMenuTrigger asChild><button type="button" className="console-card-action" aria-label={`Действия: ${props.param.technical_name}`}><MoreVertical className="size-3.5" /></button></DropdownMenuTrigger></V3Tooltip><DropdownMenuContent align="end"><DropdownMenuItem onClick={() => removeParameter(props.param.technical_name)}><X className="size-3" />Убрать из панели</DropdownMenuItem><DropdownMenuItem className="text-red-300" onClick={() => void excludeFromDatabase()}><ArchiveX className="size-3" />Исключить из базы</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
+    </div>;
+  }
   return (
     <div
+      data-parameter-id={props.param.technical_name}
+      onClick={(event) => { if (!(event.target as HTMLElement).closest("button,input,[role=combobox],[role=slider]")) props.onSelect?.(props.param.technical_name); }}
       className={cn(
         "console-control-module group rounded-md border border-white/15 bg-zinc-950/90 px-2 py-2",
+        props.selected && "is-selected",
         domainStyle.cardClassName.replace(/bg-[^ ]+/g, ""),
       )}
+      style={{ "--domain-accent": domainStyle.accentColor } as React.CSSProperties}
     >
+      <div className="contents">
       <div className="min-w-0">
-        <div className="mb-2 flex items-center justify-between gap-1">
+        <div className="mb-2 flex items-start justify-between gap-1">
           <span
             className={cn(
-              "truncate font-mono text-[9px] font-semibold uppercase tracking-tight",
+              "min-w-0 break-words font-mono text-[11px] font-semibold uppercase tracking-tight",
+              props.displayMode === "standard" ? "line-clamp-2" : "truncate",
               domainStyle.accentClassName,
             )}
           >
@@ -117,7 +146,7 @@ export function ParameterControl(props: {
                 <DropdownMenuTrigger asChild>
                   <button
                     type="button"
-                    className="-mr-1 inline-flex size-4 shrink-0 items-center justify-center rounded text-zinc-600 opacity-0 transition-none group-hover:opacity-100 hover:text-white"
+                    className="-mr-1 inline-flex size-6 shrink-0 items-center justify-center rounded text-zinc-400 opacity-100 hover:text-white focus-visible:outline-2 focus-visible:outline-ring"
                     aria-label="Parameter actions"
                   >
                     <MoreVertical className="size-3" />
@@ -143,11 +172,19 @@ export function ParameterControl(props: {
           </div>
         </div>
 
+        {props.displayMode === "detail" ? <div className="console-param-meta mb-2 text-[9px] leading-4 text-muted-foreground">
+          {props.param.name_ru ? <div>{props.param.name_ru}</div> : null}
+          <div>sim {Math.round(props.param.similarity * 100)}% · {props.param.category}</div>
+          <div>{[props.param.ui_element, props.param.unit, props.param.source, `default ${String(props.param.default)}`, props.param.detail].filter(Boolean).join(" · ")}</div>
+        </div> : null}
+        {props.displayMode === "standard" ? <div className="mb-2 flex flex-wrap items-center gap-1 text-[9px] text-muted-foreground">{props.param.name_ru?.trim() ? <span>{props.param.name_ru}</span> : null}<span>sim {Math.round(props.param.similarity * 100)}%</span><span>{props.param.category}</span></div> : null}
+
         {props.param.ui_element === "Range" ||
         props.param.ui_element === "Toggle" ? (
           <RangeControl
             param={props.param}
             value={numericValue}
+            detail={props.displayMode === "detail"}
             onChange={(value) =>
               updateParameterValue(props.param.technical_name, value)
             }
@@ -158,6 +195,7 @@ export function ParameterControl(props: {
           <SelectControl
             param={props.param}
             value={textValue}
+            displayMode={props.displayMode}
             onChange={(value) =>
               updateParameterValue(
                 props.param.technical_name,
@@ -182,6 +220,7 @@ export function ParameterControl(props: {
           />
         ) : null}
       </div>
+      </div>
     </div>
   );
 }
@@ -190,6 +229,7 @@ function RangeControl(props: {
   param: ActiveParameter;
   value: number;
   onChange: (value: number) => void;
+  detail?: boolean;
 }) {
   const min = props.param.min_value ?? 0;
   const max =
@@ -220,10 +260,12 @@ function RangeControl(props: {
         <span className="font-mono text-[9px] text-zinc-500">
           {formatNumber(min, step)}
         </span>
-        <span className="font-mono text-xs font-semibold text-fuchsia-300">
+        {props.detail ? <button type="button" aria-label={`Decrease ${props.param.technical_name}`} title="− (Shift: ×10)" onClick={(event) => props.onChange(clamp(roundToStep(clampedValue - step * (event.shiftKey ? 10 : 1), min, step), min, max))} className="rounded border border-border px-1 text-xs">−</button> : null}
+        <span className="font-mono text-xs font-semibold" style={{ color: resolveDomainStyle(props.param.domain, props.param.technical_name).accentColor }}>
           {formatNumber(clampedValue, step)}
           {props.param.unit ? ` ${props.param.unit}` : ""}
         </span>
+        {props.detail ? <button type="button" aria-label={`Increase ${props.param.technical_name}`} title="+ (Shift: ×10)" onClick={(event) => props.onChange(clamp(roundToStep(clampedValue + step * (event.shiftKey ? 10 : 1), min, step), min, max))} className="rounded border border-border px-1 text-xs">+</button> : null}
         <span className="font-mono text-[9px] text-zinc-500">
           {formatNumber(max, step)}
         </span>
@@ -243,6 +285,7 @@ function RangeControl(props: {
           }}
         />
       </V3Tooltip>
+      {props.detail ? <div className="text-right text-[8px] text-muted-foreground">← → / Shift ×10</div> : null}
     </div>
   );
 }
@@ -251,12 +294,17 @@ function SelectControl(props: {
   param: ActiveParameter;
   value: string;
   onChange: (value: string) => void;
+  displayMode?: "detail" | "standard" | "compact";
 }) {
   const options = props.param.options ?? [];
   const safeValue =
     props.value && options.includes(props.value)
       ? props.value
       : (options[0] ?? "");
+
+  if (props.displayMode !== "standard" && options.length > 1) {
+    return <div className="flex flex-wrap gap-1">{options.map((option) => <button key={option} type="button" aria-pressed={safeValue === option} onClick={() => props.onChange(option)} className={`rounded border px-1.5 py-1 font-mono text-[9px] focus-visible:outline-2 focus-visible:outline-ring ${safeValue === option ? "border-primary/60 bg-primary/15 text-foreground" : "border-border/60 text-muted-foreground hover:border-primary/40"}`}>{option}</button>)}</div>;
+  }
 
   return (
     <div className="space-y-1">

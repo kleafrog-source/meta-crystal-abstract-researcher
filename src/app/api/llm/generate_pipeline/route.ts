@@ -110,6 +110,10 @@ export async function POST(req: Request) {
         ragResults,
         provider: result.provider,
         model: result.model,
+        ...(result.requestedModel ? { requestedModel: result.requestedModel } : {}),
+        ...(result.actualRoute ? { actualRoute: result.actualRoute } : {}),
+        ...(result.actualProvider ? { actualProvider: result.actualProvider } : {}),
+        ...(result.actualModel ? { actualModel: result.actualModel } : {}),
         savedToDb: true,
       });
     }
@@ -121,6 +125,10 @@ export async function POST(req: Request) {
       ragResults,
       provider: result.provider,
       model: result.model,
+      ...(result.requestedModel ? { requestedModel: result.requestedModel } : {}),
+      ...(result.actualRoute ? { actualRoute: result.actualRoute } : {}),
+      ...(result.actualProvider ? { actualProvider: result.actualProvider } : {}),
+      ...(result.actualModel ? { actualModel: result.actualModel } : {}),
     });
   } catch (error) {
     return NextResponse.json(
