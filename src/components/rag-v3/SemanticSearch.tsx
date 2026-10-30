@@ -32,7 +32,7 @@ const SCOPE_HINTS = {
   administrative: "Служебные и административные параметры.",
 } as const;
 
-export function SemanticSearch() {
+export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Query B", collapsible = false }: { primaryLabel?: string; secondaryLabel?: string; collapsible?: boolean } = {}) {
   const query = useRagV3Store((state) => state.query);
   const queryB = useRagV3Store((state) => state.queryB);
   const topK = useRagV3Store((state) => state.topK);
@@ -129,17 +129,17 @@ export function SemanticSearch() {
     insertQueryBlock("b", mergeQueryWithCrystal(queryB, crystalText));
   };
 
-  return (
+  const panel = (
     <section className="console-query-panel space-y-3 rounded-lg border border-border bg-black/65 p-3">
       <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-        <div className="space-y-1">
+        {!collapsible ? <div className="space-y-1">
           <div className="flex items-center gap-2">
             <AMIcon name="search" size="sm" bright />
             <h2 className="font-mono text-sm font-semibold uppercase tracking-[0.12em] text-white">Semantic Search V3</h2>
             <V3InfoTip content="Выполняет независимый semantic retrieval и выбор значений для каждого отправленного запроса." />
           </div>
           <p className="font-mono text-[10px] text-zinc-500">Single target or dual-state interpolation. Search runs only on explicit submit.</p>
-        </div>
+        </div> : <p className="font-mono text-[10px] text-zinc-500">Single target or dual-state interpolation. Search runs only on explicit submit.</p>}
         <div className="console-mode-buttons flex flex-wrap items-center gap-1.5">
           <Badge variant="outline">dataset: {status?.total_parameters ?? 0}</Badge>
           <Badge variant="secondary">active: {activeCount}</Badge>
@@ -209,7 +209,7 @@ export function SemanticSearch() {
 
       <div className={`grid gap-2 ${searchMode === "transition" ? "xl:grid-cols-2" : ""}`}>
         <QueryPanel
-          title="Query A"
+          title={primaryLabel}
           value={query}
           placeholder="Describe the first target sound state..."
           resultCount={primaryCount}
@@ -225,14 +225,14 @@ export function SemanticSearch() {
           onSubmit={() => void proposeParameters(query, "primary")}
           actions={
             <MetaCrystalPickerDialog
-              targetLabel="Query A"
+              targetLabel={primaryLabel}
               onSelect={(value) => handleCrystalInsert("primary", value)}
             />
           }
         />
         {searchMode === "transition" ? (
           <QueryPanel
-            title="Query B"
+            title={secondaryLabel}
             value={queryB}
             placeholder="Describe the second target sound state..."
             resultCount={secondaryCount}
@@ -248,7 +248,7 @@ export function SemanticSearch() {
             onSubmit={() => void proposeParameters(queryB, "secondary")}
             actions={
               <MetaCrystalPickerDialog
-                targetLabel="Query B"
+                targetLabel={secondaryLabel}
                 onSelect={(value) => handleCrystalInsert("secondary", value)}
               />
             }
@@ -313,6 +313,7 @@ export function SemanticSearch() {
 
     </section>
   );
+  return collapsible ? <details open className="min-w-0 rounded-lg border border-border bg-black/65 p-3"><summary className="cursor-pointer font-mono text-xs font-semibold uppercase tracking-[0.12em] text-zinc-200">Semantic Search V3 · {primaryLabel}</summary><div className="mt-2">{panel}</div></details> : panel;
 }
 
 function QueryPanel(props: {

@@ -176,8 +176,8 @@
 .console-compact-card { display:flex;flex-direction:column;justify-content:space-between;overflow:hidden }
 .console-knob-wrap { position:relative;width:52px;height:52px;margin:.2rem auto;flex:none;touch-action:none; }
 .console-knob { --knob-pct:50%;position:relative;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 38% 32%,color-mix(in srgb,var(--card) 88%,white),var(--card) 70%);border:1px solid color-mix(in srgb,var(--foreground) 20%,transparent);box-shadow:inset 0 1px 4px #0009,0 2px 5px #0006; }
-.console-knob::before { content:"";position:absolute;inset:2px;border-radius:50%;background:conic-gradient(from -135deg,var(--primary) var(--knob-pct),color-mix(in srgb,var(--muted-foreground) 28%,transparent) var(--knob-pct));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px)); }
-.console-knob span { position:absolute;left:50%;top:8%;width:2px;height:28%;border-radius:2px;background:var(--foreground);transform:translateX(-50%) rotate(var(--knob-rotation));transform-origin:50% 150% }
+.console-knob::before { content:"";position:absolute;inset:2px;border-radius:50%;background:conic-gradient(from 225deg,var(--domain-accent,#94a3b8) 0deg,var(--domain-accent,#94a3b8) var(--knob-sweep),color-mix(in srgb,var(--muted-foreground) 28%,transparent) var(--knob-sweep),color-mix(in srgb,var(--muted-foreground) 28%,transparent) 270deg);mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px)); }
+.console-knob span { position:absolute;left:50%;top:50%;width:2px;height:36%;border-radius:2px;background:var(--domain-accent,#94a3b8);transform:translate(-50%,-100%) rotate(var(--knob-rotation));transform-origin:50% 100% }
 .console-knob-input { position:absolute;inset:0;width:52px;height:52px;opacity:0;cursor:ns-resize;touch-action:none;border-radius:50%; }
 .console-knob-input:focus-visible { opacity:.08;outline:2px solid var(--ring);outline-offset:2px }
 .console-compact-actions { position:absolute;right:4px;top:4px;display:flex;gap:2px;opacity:0;transition:opacity .15s; }
@@ -382,6 +382,7 @@
 .console-compact-actions:focus-within { opacity:1; }
 .console-compact-actions [data-slot="tooltip-trigger"] { display:inline-flex; }
 .console-compact-card .console-knob-wrap input:disabled { cursor:not-allowed; }
+.console-control-module:has(.console-knob-input), .console-control-module:has([role=slider]) { --primary: var(--domain-accent,#94a3b8); }
 aside nav button:hover .am-icon,aside nav button:focus-visible .am-icon,aside nav button[aria-current="page"] .am-icon { opacity:1;filter:drop-shadow(0 0 4px currentColor); }
 .console-compact-card .console-knob-wrap { isolation:isolate; }
 .console-compact-card .console-knob-input:disabled { cursor:not-allowed; }

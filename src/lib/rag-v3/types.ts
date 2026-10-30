@@ -27,6 +27,7 @@ export interface EnrichedParameter {
   lyria_prompt_tags: string[];
   semantic_keywords: string[];
   domain?: string | null;
+  domain_layer?: string;
   axes: string[];
   quantity_kind?: string | null;
   polarity_override?: number | null;
@@ -64,6 +65,7 @@ export interface ActiveParameter {
   semantic_keywords: string[];
   similarity: number;
   domain?: string | null;
+  domain_layer?: string;
   quantity_kind?: string | null;
   axes: string[];
   retrieval_scope: RetrievalScope;

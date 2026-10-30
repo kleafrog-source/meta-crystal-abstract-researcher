@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import {
   Download,
   Loader2,
@@ -187,20 +188,6 @@ export function AudioToParameterPage() {
       window.clearInterval(timer);
     };
   }, [morphoStatus?.index_job?.running, refreshMorphoStatus]);
-
-  const rebuildSiglipIndex = useCallback(async () => {
-    setError("");
-    const response = await fetch("/api/morpho/index", { method: "POST" });
-    const payload = (await response.json()) as { error?: string };
-    if (!response.ok) {
-      setError(payload.error ?? `HTTP ${response.status}`);
-      return;
-    }
-    setNotice(
-      "Перестройка SigLIP2 index запущена. Прогресс обновляется автоматически.",
-    );
-    await refreshMorphoStatus();
-  }, [refreshMorphoStatus]);
 
   const selectFile = useCallback((nextFile: File) => {
     setAudioUrl((previous) => {
@@ -496,7 +483,7 @@ export function AudioToParameterPage() {
       </header>
 
       <div className="flex-1 overflow-auto p-3">
-        <div className="mx-auto flex max-w-[1920px] flex-col gap-3">
+        <div className="flex w-full min-w-0 flex-col gap-3">
           <section className="grid gap-3 rounded-lg border border-cyan-400/20 bg-black/30 p-4 xl:grid-cols-[minmax(0,1fr)_420px]">
             <div className="min-w-0">
               {!audioUrl ? (
@@ -569,8 +556,8 @@ export function AudioToParameterPage() {
                   />
                 </div>
                 <div>
-                  <FieldLabel label="Node interval, сек" hint="Сглаженные узлы итогового timeline: от 5 до 360 секунд." />
-                  <Input type="number" min={5} max={360} step={1} value={nodeInterval} onChange={(event) => setNodeInterval(Math.max(5, Math.min(360, Number(event.target.value) || 20)))} />
+                  <FieldLabel label="Node interval, сек" hint="Сглаженные узлы итогового timeline: от 0,5 до 360 секунд." />
+                  <Input type="number" min={0.5} max={360} step={0.5} value={nodeInterval} onChange={(event) => setNodeInterval(Math.max(0.5, Math.min(360, Number(event.target.value) || 0.5)))} />
                 </div>
                 <div className="flex items-end">
                   <Button
@@ -811,20 +798,9 @@ export function AudioToParameterPage() {
                       ? `Перестройка index: ${morphoStatus.index_job.progress?.current ?? 0} / ${morphoStatus.index_job.progress?.total ?? 0}`
                       : `SigLIP2 index не готов: ${(morphoStatus?.stale_reasons ?? [morphoStatus?.status ?? "unknown"]).join("; ")}`}
                   </div>
-                  <Button
-                    className="mt-2 w-full"
-                    size="sm"
-                    variant="outline"
-                    disabled={
-                      Boolean(morphoStatus?.index_job?.running) || Boolean(busy)
-                    }
-                    onClick={() => void rebuildSiglipIndex()}
-                  >
-                    {morphoStatus?.index_job?.running ? (
-                      <Loader2 className="size-4 animate-spin" />
-                    ) : null}
-                    Перестроить SigLIP2 index
-                  </Button>
+                  <Link className="mt-2 flex w-full items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent" href="/am-core#service-bay">
+                    Открыть Service Bay
+                  </Link>
                 </div>
               ) : null}
               {busy ? (
@@ -905,16 +881,18 @@ export function AudioToParameterPage() {
           </section>
 
           <div className={`grid min-h-[620px] gap-3 ${blendMode ? "grid-cols-1" : "xl:grid-cols-2"}`}>
-            {blendMode ? <ParameterBank title="Blended CLAP + SigLIP2" accent="cyan" parameters={macroParameters} onChange={(name, value) => { updateValue("clap", name, value); updateValue("siglip", name, value); }} onRemove={(name) => { removeValue("clap", name); removeValue("siglip", name); }} /> : <><ParameterBank
+            {blendMode ? <ParameterBank title="Blended CLAP + SigLIP2" accent="cyan" parameters={macroParameters} useDomainLayerColors onChange={(name, value) => { updateValue("clap", name, value); updateValue("siglip", name, value); }} onRemove={(name) => { removeValue("clap", name); removeValue("siglip", name); }} /> : <><ParameterBank
               title="CLAP Parameters"
               accent="cyan"
               parameters={visibleClap}
+              useDomainLayerColors
               onChange={(name, value) => updateValue("clap", name, value)}
               onRemove={(name) => removeValue("clap", name)}
             /><ParameterBank
               title="SigLIP2 Spectrogram Parameters"
               accent="fuchsia"
               parameters={visibleSiglip}
+              useDomainLayerColors
               onChange={(name, value) => updateValue("siglip", name, value)}
               onRemove={(name) => removeValue("siglip", name)}
             /></>}
@@ -925,6 +903,7 @@ export function AudioToParameterPage() {
             <JournalDraftButton
               modality="audio"
               engine="clap"
+              actionLabel="Сохранить CLAP в Journal"
               parameters={clapFrame}
               model={{ id: "laion/clap-htsat-fused" }}
               settings={{
@@ -937,6 +916,7 @@ export function AudioToParameterPage() {
             <JournalDraftButton
               modality="audio"
               engine="siglip2"
+              actionLabel="Сохранить SigLIP2 в Journal"
               parameters={siglipFrame}
               model={{ id: "google/siglip2-base-patch16-224" }}
               settings={{
@@ -977,12 +957,14 @@ function ParameterBank({
   parameters,
   onChange,
   onRemove,
+  useDomainLayerColors = false,
 }: {
   title: string;
   accent: "cyan" | "fuchsia";
   parameters: ActiveParameter[];
   onChange: (name: string, value: number | string) => void;
   onRemove: (name: string) => void;
+  useDomainLayerColors?: boolean;
 }) {
   return (
     <section
@@ -998,6 +980,7 @@ function ParameterBank({
       </div>
       <VirtualizedParamList
         parameters={parameters}
+        useDomainLayerColors={useDomainLayerColors}
         className="min-h-0 flex-1"
         onChange={onChange}
         onRemove={onRemove}

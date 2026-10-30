@@ -47,6 +47,15 @@ describe("audio segment timeline", () => {
     ]);
   });
 
+  it("keeps gated samples inside the requested original-file time range", () => {
+    expect(buildAudioAnalysisPoints(120, 10, 30, 55)).toEqual([
+      { time: 30, offset: 30, duration: 10 },
+      { time: 40, offset: 40, duration: 10 },
+      { time: 50, offset: 45, duration: 10 },
+      { time: 55, offset: 45, duration: 10 },
+    ]);
+  });
+
   it("interpolates matching Range values and snaps to step", () => {
     expect(
       interpolateParameterFrames(
@@ -60,6 +69,11 @@ describe("audio segment timeline", () => {
   it("rejects a one-sample numeric spike with median smoothing", () => {
     const segments = [0, 2, 4, 6, 8].map((time, index) => ({ time, offset: time, duration: 2, clap: [parameter("drive", index === 2 ? 100 : 10)], siglip: [] }));
     expect(smoothTimelineSegments(segments, 10)[0].clap[0].current_value).toBe(10);
+  });
+
+  it("accepts a 0.5 second node interval", () => {
+    const segments = [0, 0.5, 1].map((time) => ({ time, offset: time, duration: 0.5, clap: [], siglip: [] }));
+    expect(smoothTimelineSegments(segments, 0.5).map((node) => node.time)).toEqual([0, 0.5, 1]);
   });
 
   it("normalizes and fuses shared parameters", () => {

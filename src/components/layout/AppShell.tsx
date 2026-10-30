@@ -36,6 +36,8 @@ function pathnameToPage(pathname: string): PageId {
     return "audiotoparameter";
   }
 
+  if (pathname === "/am-stage") return "amstage";
+
   if (pathname === "/meta-crystal-v3-lab") {
     return "metacrystalv3lab";
   }
@@ -116,6 +118,11 @@ export function AppShell({ children }: AppShellProps) {
 
     if (page === "audiotoparameter") {
       router.push("/audio-to-parameter-rag-segments");
+      return;
+    }
+
+    if (page === "amstage") {
+      router.push("/am-stage");
       return;
     }
 

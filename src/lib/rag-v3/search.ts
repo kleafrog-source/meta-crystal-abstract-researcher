@@ -68,6 +68,7 @@ function normalizeParameter(parameter: GenesisLibraryParameter, source: "library
     lyria_prompt_tags: Array.isArray(parameter.lyria_prompt_tags) ? parameter.lyria_prompt_tags.map(String) : [],
     semantic_keywords: Array.isArray(parameter.semantic_keywords) ? parameter.semantic_keywords.map(String) : [],
     domain: typeof parameter.domain === "string" ? parameter.domain : null,
+    domain_layer: typeof parameter.domain_layer === "string" ? parameter.domain_layer : undefined,
     axes: Array.isArray(parameter.axes) ? parameter.axes.map(String) : [],
     quantity_kind: typeof parameter.quantity_kind === "string" ? parameter.quantity_kind : null,
     polarity_override: typeof parameter.polarity_override === "number" ? parameter.polarity_override : null,

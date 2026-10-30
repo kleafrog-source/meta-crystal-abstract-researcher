@@ -26,25 +26,29 @@ const TECHNICAL_NAME = /^[a-z0-9_]+$/;
 export function buildAudioAnalysisPoints(
   totalDuration: number,
   interval: number,
+  requestedStart = 0,
+  requestedEnd = totalDuration,
 ): AudioAnalysisPoint[] {
   if (!Number.isFinite(totalDuration) || totalDuration < 0.1) return [];
   const safeInterval = Math.max(0.5, Math.min(30, interval || 2));
-  const windowDuration = Math.min(totalDuration, safeInterval);
-  if (safeInterval >= totalDuration) {
+  const start = Math.max(0, Math.min(totalDuration, requestedStart || 0));
+  const end = Math.max(start, Math.min(totalDuration, Number.isFinite(requestedEnd) ? requestedEnd : totalDuration));
+  const rangeDuration = end - start;
+  if (rangeDuration < 0.1) return [];
+  const windowDuration = Math.min(rangeDuration, safeInterval);
+  if (safeInterval >= rangeDuration) {
     return [
-      { time: 0, offset: 0, duration: windowDuration },
-      { time: totalDuration, offset: 0, duration: windowDuration },
+      { time: start, offset: start, duration: windowDuration },
+      { time: end, offset: start, duration: windowDuration },
     ];
   }
 
   const times: number[] = [];
-  for (let time = 0; time < totalDuration; time += safeInterval)
-    times.push(time);
-  if (Math.abs((times.at(-1) ?? 0) - totalDuration) > 0.001)
-    times.push(totalDuration);
+  for (let time = start; time < end; time += safeInterval) times.push(time);
+  if (Math.abs((times.at(-1) ?? start) - end) > 0.001) times.push(end);
   return times.map((time) => ({
     time,
-    offset: Math.min(time, Math.max(0, totalDuration - windowDuration)),
+    offset: Math.min(time, Math.max(start, end - windowDuration)),
     duration: windowDuration,
   }));
 }
@@ -145,7 +149,7 @@ function aggregateFrames(frames: ActiveParameter[][]): ActiveParameter[] {
 
 export function smoothTimelineSegments(segments: AudioTimelineSegment[], nodeInterval: number): AudioTimelineSegment[] {
   if (!segments.length) return [];
-  const interval = Math.max(5, Math.min(360, nodeInterval || 20));
+  const interval = Math.max(0.5, Math.min(360, nodeInterval || 20));
   const lastTime = segments.at(-1)?.time ?? 0;
   const nodes: AudioTimelineSegment[] = [];
   for (let time = 0; time <= lastTime + 0.001; time += interval) {

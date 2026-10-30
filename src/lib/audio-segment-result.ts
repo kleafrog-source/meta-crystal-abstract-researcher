@@ -11,6 +11,10 @@ export interface AudioSegmentResultPoint {
   siglip: ActiveParameter[];
   clapStatus: AudioAnalysisStatus;
   siglipStatus: AudioAnalysisStatus;
+  siglipPreview?: {
+    dataUrl: string;
+    metadata: Record<string, unknown>;
+  };
 }
 
 export function applySuccessfulSegmentResult(
@@ -29,4 +33,27 @@ export function applySuccessfulSegmentResult(
       ? { ...segment, [resultField]: parameters, [statusField]: "complete" }
       : segment,
   );
+}
+
+export function prepareSegmentRun(
+  segments: readonly AudioSegmentResultPoint[],
+  engine: AudioEngine,
+  resume: boolean,
+): AudioSegmentResultPoint[] {
+  if (resume) return segments.map((segment) => ({ ...segment, clap: [...segment.clap], siglip: [...segment.siglip] }));
+  const statusField = engine === "clap" ? "clapStatus" : "siglipStatus";
+  return segments.map((segment) => ({
+    ...segment,
+    [engine]: [],
+    [statusField]: "pending",
+    ...(engine === "siglip" ? { siglipPreview: undefined } : {}),
+  }));
+}
+
+export function getIncompleteSegmentIndexes(
+  segments: readonly AudioSegmentResultPoint[],
+  engine: AudioEngine,
+): number[] {
+  const statusField = engine === "clap" ? "clapStatus" : "siglipStatus";
+  return segments.flatMap((segment, index) => segment[statusField] === "complete" ? [] : [index]);
 }

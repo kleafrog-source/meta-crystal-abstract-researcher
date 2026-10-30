@@ -8,6 +8,7 @@ import { CombinatorialGenesisPage } from "@/components/pages/CombinatorialGenesi
 import { CombinatorialSynthesisPage } from "@/components/pages/CombinatorialSynthesisPage";
 import { AudioClapRagPage } from "@/components/pages/AudioClapRagPage";
 import { AudioToParameterPage } from "@/components/pages/AudioToParameterPage";
+import { AMStagePage } from "@/components/pages/AMStagePage";
 import { MorphoAcousticRagPage } from "@/components/pages/MorphoAcousticRagPage";
 import { VocalAllocationMatrixPage } from "@/components/pages/VocalAllocationMatrixPage";
 import { Settings } from "@/components/pages/Settings";
@@ -77,6 +78,8 @@ export function PageRenderer(props: {
       return <AudioClapRagPage />;
     case "audiotoparameter":
       return <AudioToParameterPage />;
+    case "amstage":
+      return <AMStagePage />;
     case "metacrystalv3lab":
       return <MetaCrystalV3LabPage />;
     case "whitespacediscovery":

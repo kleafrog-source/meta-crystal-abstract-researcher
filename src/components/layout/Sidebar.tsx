@@ -45,6 +45,7 @@ export type PageId =
   | "combinatorialsynthesis"
   | "audioclaprag"
   | "audiotoparameter"
+  | "amstage"
   | "metacrystalv3lab"
   | "whitespacediscovery"
   | "knowledgegraph"
@@ -96,6 +97,12 @@ const PRIMARY_NAV_ITEMS: NavItem[] = [
     label: "Audio-to-Parameter",
     icon: <AMIcon name="audioToParameter" size="sm" className="sidebar-icon sidebar-icon-c6" />,
     description: "Авто-разбивка аудио по таймингам с batch поиском и интерполяцией параметров",
+  },
+  {
+    id: "amstage",
+    label: "AM Tri-Modal Stage",
+    icon: <AMIcon name="audioToParameter" size="sm" className="sidebar-icon sidebar-icon-c6" />,
+    description: "Semantic V3 + segmented CLAP/SigLIP2 analysis in one staged workspace",
   },
   {
     id: "morphoacousticrag",

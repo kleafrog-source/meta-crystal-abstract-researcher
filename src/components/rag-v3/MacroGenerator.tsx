@@ -16,7 +16,7 @@ interface AudioExportContext { originalName: string; start: number; end: number;
 
 type SelectionSource = "card" | "macro";
 
-export function MacroGenerator(props: { parameters?: ActiveParameter[]; audioExport?: AudioExportContext; selectedParameterName?: string | null; selectionSource?: SelectionSource; onSelectParameter?: (technicalName: string) => void } = {}) {
+export function MacroGenerator(props: { parameters?: ActiveParameter[]; audioExport?: AudioExportContext; selectedParameterName?: string | null; selectionSource?: SelectionSource; onSelectParameter?: (technicalName: string) => void; collapsible?: boolean; collapseLabel?: string } = {}) {
   const [copyState, setCopyState] = useState<"idle" | "done" | "error">("idle");
   const [exportState, setExportState] = useState<"idle" | "done" | "error">("idle");
   const [serverState, setServerState] = useState("idle");
@@ -70,9 +70,9 @@ export function MacroGenerator(props: { parameters?: ActiveParameter[]; audioExp
     } catch (error) { setServerState(error instanceof Error ? error.message : "error"); }
   };
 
-  return <Card className="console-macro-panel h-full border border-border bg-black/70">
-    <CardHeader className="border-b border-white/15 px-4 py-3"><CardTitle className="flex items-center gap-2 font-mono text-sm uppercase tracking-[0.12em] text-primary"><AMIcon name="macro" size="md" bright />Clean Macro Output<V3InfoTip content="Формирует готовый блок параметров из текущего Anchored control bank." /></CardTitle></CardHeader>
-    <CardContent className="flex h-[calc(100%-52px)] flex-col gap-3 p-4">
+  const card = <Card className="console-macro-panel h-full border border-border bg-black/70">
+    {!props.collapsible ? <CardHeader className="border-b border-white/15 px-4 py-3"><CardTitle className="flex items-center gap-2 font-mono text-sm uppercase tracking-[0.12em] text-primary"><AMIcon name="macro" size="md" bright />Clean Macro Output<V3InfoTip content="Формирует готовый блок параметров из текущего Anchored control bank." /></CardTitle></CardHeader> : null}
+    <CardContent className={props.collapsible ? "flex min-h-[280px] flex-col gap-3 p-3" : "flex h-[calc(100%-52px)] flex-col gap-3 p-4"}>
       <V3Tooltip content="Генерирует macro из всех параметров и текущих ручных значений в панели.">
         <Button type="button" className="macro-generate-button am-icon-button h-11 w-full rounded font-mono text-xs uppercase tracking-[0.12em]" onClick={() => void generateMacro()} disabled={!parameters.length || isGeneratingMacro}>{isGeneratingMacro ? <Loader2 className="size-4 animate-spin" /> : <AMIcon name="generate" bright />}Generate from {parameters.length} parameters</Button>
       </V3Tooltip>
@@ -87,6 +87,7 @@ export function MacroGenerator(props: { parameters?: ActiveParameter[]; audioExp
       {macroError ? <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">{macroError}</div> : null}
     </CardContent>
   </Card>;
+  return props.collapsible ? <details open className="min-w-0 rounded-lg border border-border bg-black/50 p-2"><summary className="cursor-pointer font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">Clean Macro Output · {props.collapseLabel ?? `${parameters.length} parameters`}</summary><div className="mt-2">{card}</div></details> : card;
 }
 
 function renderColoredMacro(output: string, parameters: ActiveParameter[], selected?: string | null, onSelect?: (technicalName: string) => void) {
