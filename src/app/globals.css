@@ -236,8 +236,8 @@
 :root[data-badge-style="outline"] [data-slot="badge"] { background-color:transparent; }
 :root[data-badge-style="solid"] [data-slot="badge"] { background-color:color-mix(in srgb,currentColor var(--badge-fill-solid,35%),var(--card)); }
 @media(max-width:720px) {
-  .console-mode-buttons { display:flex;flex-wrap:nowrap; }
-  .console-search-button { width:100%; }
+  .flowmusic-console .console-mode-buttons { display:flex;flex-wrap:wrap;max-width:100%;min-width:0; }
+  .flowmusic-console .console-query-panel .console-search-button { width:auto;flex:0 0 auto; }
   .flowmusic-console>header { min-height:44px;height:auto; }
   .console-bank-header { align-items:flex-start; }
   .console-bank-header>div { flex-wrap:wrap; }

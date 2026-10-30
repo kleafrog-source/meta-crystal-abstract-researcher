@@ -1,46 +1,44 @@
-# AM-Stage control bindings
+# AM-Stage hotkeys for Ulanzi Creative Deck
 
-This document describes the stable browser-side targets added for AM-Stage and the optional page-scoped keyboard shortcuts. It does not claim a physical Ulanzi device connection.
+Ulanzi path for this sprint: **Multi Action → System Hotkey**. No plugin API or fader bridge is required or claimed. Each chord is handled only while keyboard focus is inside `[data-am-stage]`, and shortcuts are suppressed in text inputs, textareas, selects, comboboxes and editable content. The implementation uses physical `KeyboardEvent.code` keys so the Latin key mapping does not change with the active keyboard layout.
 
-## Scope and behavior
+| Action | Hotkey | UI control / `data-am-stage-action` | Notes |
+| --- | --- | --- | --- |
+| CLAP start | `Ctrl+Alt+Shift+C` | `clap-start` | Starts a fresh run when enabled. |
+| Stop current batch | `Ctrl+Alt+Shift+X` | `analysis-stop` | One shared stop control for the currently running CLAP or SigLIP2 job. |
+| CLAP continue | `Ctrl+Alt+Shift+R` | `clap-continue` | Uses existing Continue button and its eligibility checks. |
+| SigLIP2 start | `Ctrl+Alt+Shift+S` | `siglip2-start` | Existing readiness and disabled checks apply. |
+| SigLIP2 continue | `Ctrl+Alt+Shift+T` | `siglip2-continue` | Uses existing Continue button and its eligibility checks. |
+| Priority Timeline export | `Ctrl+Alt+Shift+P` | `export-priority-timeline` | Downloads through the existing export handler. |
+| Legacy timeline export | `Ctrl+Alt+Shift+L` | `export-legacy-timeline` | Downloads through the existing export handler. |
+| Focus voice append | `Ctrl+Alt+Shift+V` | `voice-append` | Reserved target; current voice controls do not yet expose this action selector. |
+| Focus voice replace | `Ctrl+Alt+Shift+W` | `voice-replace` | Reserved target; current voice controls do not yet expose this action selector. |
+| Search Brief | `Ctrl+Alt+Shift+B` | `search-a` | Opens parent disclosures and clicks the existing Search button; no-op if its query is empty or search is busy. |
+| Apply test preset | `Ctrl+Alt+Shift+Q` | `test-preset` | Invokes the existing preset control; its busy guard remains active. |
 
-The page root is `[data-am-stage]`. Shortcuts are accepted only while focus is inside that root and outside editable fields, selects, and comboboxes. The listener clicks the same enabled button rendered by the page, so normal React handlers and disabled-state rules remain authoritative.
+For action hotkeys, the handler reveals enclosing native `<details>` sections and clicks the existing button. The `X` shortcut always stops the currently active job; CLAP/SigLIP2 do not have separate stop handlers. Voice hotkeys are reserved until voice controls expose stable action selectors; microphone capture must remain an explicit user gesture.
 
-| Chord | Stable action | Result |
-| --- | --- | --- |
-| `Ctrl+Alt+Shift+C` | `[data-am-stage-action="clap-start"]` | Start a fresh CLAP run |
-| `Ctrl+Alt+Shift+X` | `[data-am-stage-action="analysis-stop"]` | Request stop for the currently running batch |
-| `Ctrl+Alt+Shift+S` | `[data-am-stage-action="siglip2-start"]` | Start a fresh SigLIP2 run |
-| `Ctrl+Alt+Shift+P` | `[data-am-stage-action="export-priority-timeline"]` | Export the Priority Timeline |
-| `Ctrl+Alt+Shift+L` | `[data-am-stage-action="export-legacy-timeline"]` | Export the legacy timeline |
-| `Ctrl+Alt+Shift+V` | `[data-am-stage-action="voice-append"]` | Open Semantic Search if needed and focus the voice-append button; press Space/Enter to start recording |
+## Stable DOM selectors
 
-Shortcuts intentionally do nothing while a text field is being edited. The voice shortcut focuses the control instead of starting microphone capture, preserving the browser's explicit user-gesture and permission flow. SigLIP2 availability and all button disabled states continue to follow the existing UI.
+- Root: `[data-am-stage]`.
+- Zones: `[data-am-stage-zone="top-row"]`, `query-a`/`query-b`, `macro-exports`, `node-seek`, `media`, `timeline`, `timeline-chart`, `modality-banks`.
+- Disclosures: `semantic-search`, `analysis-controls`, `macro-text`/`macro-audio`, `bank-clap`, `bank-siglip2`, `bank-text`.
+- Actions: implemented action selectors are listed in the table, plus `macro-generate-text` / `macro-generate-audio`, and layer/timeline view toggles. Voice append/replace selectors are not currently rendered.
+- Layers: `[data-am-stage-layer="<canonical-layer-id>"]`.
+- Parameters: `[data-am-stage-parameter="<technical_name>"]` with `data-am-stage-control`; compact Range inputs also expose `data-am-stage-fader`.
 
-## DOM targets
-
-Stable `data-am-stage-*` attributes identify the page, zones, collapsible sections, actions, acoustic-layer toggles, parameter cards and compact numeric controls:
-
-- `data-am-stage-zone`: `top-row`, `query-a`/`query-b`, `macro-exports`, `node-seek`, `media`, `timeline`, `timeline-chart`, `modality-banks`.
-- `data-am-stage-disclosure`: `semantic-search`, `analysis-controls`, the macro outputs, and `bank-clap` / `bank-siglip2` / `bank-text`.
-- `data-am-stage-action`: named actions such as `clap-start`, `siglip2-start`, `analysis-stop`, `macro-generate-text` / `macro-generate-audio`, `export-priority-timeline`, `export-legacy-timeline`, `voice-append` and `voice-replace`.
-- `data-am-stage-layer`: the canonical layer ID on each mask option, including the UI-only consensus option.
-- `data-am-stage-parameter` and `data-am-stage-control`: a parameter's stable technical name and control kind. Compact Range inputs also expose `data-am-stage-fader` with that technical name.
-
-For example, an integration can find the current CLAP start button with:
+Example target for Ulanzi/browser tooling:
 
 ```js
 document.querySelector('[data-am-stage-action="clap-start"]')
 ```
 
-## Ulanzi bridge and fader status
+Parameter selectors are discoverability hooks only. **Faders and continuous parameter writes are out of scope.** No supported Ulanzi-to-browser bridge or AM-Stage parameter-write API was found. The installed `ustudio-cli` hook reports AI tool state to a device and does not expose browser actions. No physical button mapping or connected hardware behavior is claimed; the operator can bind the chords above in Ulanzi Studio.
 
-No installed browser-to-AM-Stage bridge, Ulanzi action module, or parameter-write API was found in the project. Ulanzi Studio is installed, but the available bundled `ustudio-cli` hook is for reporting AI tool state to a device; it does not expose browser selectors or AM-Stage parameter controls. The model, firmware and action set for the user's deck are also not established. Therefore no physical button or fader mapping is claimed, and no fader write mechanism was added. The stable DOM identifiers and keyboard path are ready for a compatible bridge once one is identified.
+## QA record
 
-## Validation status
-
-- Source-level zone order, layer IDs/colors, action targets and key-handler reuse were reviewed.
-- Keyboard actions were not fired in a browser; the key map and delegated button clicks were source-reviewed only.
-- `http://localhost:3000/am-stage` returned HTTP 200 during implementation.
-- The requested TypeScript check passed for the workspace (`pnpm exec tsc --noEmit`).
-- Responsive visual checks at 390, 768 and 2K CSS pixels remain unverified. An isolated headless Edge launch was rejected by the local process-launch policy; no existing browser window was automated. The repaired MMSS contract records this limitation rather than treating static inspection as screenshot QA.
+- `pnpm exec tsc --noEmit`: passed (exit code 0).
+- `/am-stage`: HTTP 200.
+- Computer Use verified the selected Edge window `6754596` at responsive widths 400, 768 and 2048 CSS px. The 400px Search/control-row overflow was fixed and visually rechecked; tablet and desktop controls, mask, media area and side panels remained reachable without horizontal overflow.
+- Shortcut execution via `sky.press_key` was inconclusive: Edge kept the address bar as its reported focus despite a page click, so no shortcut success is claimed. Voice actions also lack rendered `data-am-stage-action` targets and are not implemented yet.
+- No audio analysis, microphone capture, model API or Ulanzi hardware was activated during QA.

@@ -3,7 +3,7 @@
     "id": "mmss-am-stage-hybrid-ui-repaired",
     "version": "1.0.0",
     "language": "ru",
-    "status": "implementation_complete_validation_partial"
+    "status": "responsive_visual_qa_passed_hotkey_runtime_unverified"
   },
   "task": {
     "objective": "Согласовать существующие требования AM-Stage к порядку зон, плотности, адаптивной проверке и управлению Ulanzi до реализации и зафиксировать исполнимый контракт.",
@@ -161,9 +161,10 @@
       {"area": "narrow_mask", "result": "internal max-height scrolling and 36px minimum option targets keep the vertical mask bounded and touch-friendly by source inspection"},
       {"area": "icons_and_density", "result": "18px sidebar-style AM icons and explicit disclosure chevrons added; compact grid rule remains auto-fit with at most ten columns"},
       {"area": "ulanzi_targets", "result": "stable page/zone/disclosure/action/layer/parameter data attributes and scoped shortcuts added; no physical device behavior claimed"},
+      {"area": "hotkey_map", "result": "start, shared stop, both continue actions, both timeline exports, Search Brief and test preset are mapped to Ctrl+Alt+Shift plus physical Latin key codes; voice append/replace remain reserved because stable voice selectors are not rendered; runtime execution was inconclusive in Edge; see docs/am-stage-ulanzi-bindings.md"},
       {"area": "faders", "result": "no write mapping implemented because no supported browser-to-AM-Stage Ulanzi bridge or parameter-write API was discoverable; see docs/am-stage-ulanzi-bindings.md"}
     ],
-    "responsive_qa_limit": "An isolated headless Edge process launch was rejected by local process-launch policy. No multi-window or existing-window automation was used. 390px, 768px and 2K visual screenshots remain unverified.",
+    "responsive_qa_limit": "Computer Use selected Edge window 6754596 and captured/reviewed 400px, 768px and 2048px CSS viewport screenshots. Fixed mobile search-row overflow at 400px and rechecked; tablet and desktop had no critical horizontal overflow. Keyboard execution remains unverified because Computer Use could not move focus out of the browser address bar.",
     "server_route": "http://localhost:3000/am-stage returned HTTP 200 during implementation."
   },
   "unknowns": [
@@ -173,10 +174,12 @@
   "validation_plan": [
     {"id": "source_contract_review", "scope": "current task and prior AM-Stage requirements", "method": "manual comparison", "status": "passed"},
     {"id": "source_zone_inventory", "scope": "src/components/pages/AMStagePage.tsx and src/lib/domain-layers.ts", "method": "static source inspection", "status": "passed"},
-    {"id": "responsive_headless_edge_qa", "scope": "390, 768 and 2048 CSS px", "method": "isolated headless Edge/CDP; process launch rejected by local policy, no screenshots captured", "status": "blocked"},
+    {"id": "responsive_computer_use_qa", "scope": "400, 768 and 2048 CSS px", "method": "selected Edge window 6754596; screenshots reviewed; 400px overflow fixed and rechecked", "status": "passed_with_mobile_fix"},
+    {"id": "computer_use_target_selection", "scope": "open Edge windows", "method": "operator selected Edge window 6754596; URL /am-stage confirmed", "status": "passed"},
+    {"id": "hotkey_completion_map", "scope": "AM-Stage start/stop/continue/export/voice/search/preset actions", "method": "source key map reviewed; Edge retained address-bar focus under Computer Use key input; voice selectors absent in rendered source", "status": "runtime_unverified_voice_targets_missing"},
     {"id": "server_route", "scope": "http://localhost:3000/am-stage", "method": "HTTP GET", "status": "passed_200"},
     {"id": "ulanzi_binding_discovery", "scope": "repository and installed Ulanzi tooling", "method": "source/package inspection", "status": "no_supported_bridge_found; fader mapping deferred"},
     {"id": "ulanzi_physical_execution", "scope": "physical Ulanzi actions", "method": "requires identified bridge/device; intentionally not claimed", "status": "blocked_no_bridge"},
-    {"id": "typescript", "scope": "files changed in implementation", "method": "pnpm exec tsc --noEmit", "status": "passed", "exit_code": 0}
+    {"id": "typescript", "scope": "files changed in implementation", "method": "pnpm exec tsc --noEmit", "status": "pending_final_run"}
   ]
 }

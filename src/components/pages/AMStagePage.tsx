@@ -552,25 +552,35 @@ export function AMStagePage() {
       if (!root || !root.contains(event.target as Node) || !event.altKey || !event.shiftKey || !event.ctrlKey || event.metaKey) return;
       const target = event.target;
       if (target instanceof HTMLElement && (target.isContentEditable || target.closest("input,textarea,select,[role=combobox],[contenteditable='true']"))) return;
-      const key = event.key.toLowerCase();
       const actionByKey: Record<string, string> = {
-        c: "clap-start",
-        x: "analysis-stop",
-        s: "siglip2-start",
-        p: "export-priority-timeline",
-        l: "export-legacy-timeline",
+        KeyC: "clap-start",
+        KeyX: "analysis-stop",
+        KeyR: "clap-continue",
+        KeyS: "siglip2-start",
+        KeyT: "siglip2-continue",
+        KeyP: "export-priority-timeline",
+        KeyL: "export-legacy-timeline",
+        KeyB: "search-a",
+        KeyQ: "test-preset",
       };
-      const actionId = actionByKey[key];
-      if (!actionId && key !== "v") return;
+      const actionId = actionByKey[event.code];
+      if (!actionId && event.code !== "KeyV" && event.code !== "KeyW") return;
       event.preventDefault();
       if (actionId) {
-        root.querySelector<HTMLButtonElement>(`[data-am-stage-action="${actionId}"]`)?.click();
+        const actionButton = root.querySelector<HTMLButtonElement>(`[data-am-stage-action="${actionId}"]`);
+        if (!actionButton) return;
+        for (let ancestor = actionButton.parentElement; ancestor; ancestor = ancestor.parentElement) {
+          if (ancestor instanceof HTMLDetailsElement) ancestor.open = true;
+        }
+        actionButton.click();
         return;
       }
-      const voiceButton = root.querySelector<HTMLButtonElement>('[data-am-stage-action="voice-append"]');
+      const voiceMode = event.code === "KeyW" ? "replace" : "append";
+      const voiceButton = root.querySelector<HTMLButtonElement>(`[data-am-stage-action="voice-${voiceMode}"]`);
       if (!voiceButton) return;
-      const closedDisclosure = voiceButton.closest("details:not([open])");
-      if (closedDisclosure instanceof HTMLDetailsElement) closedDisclosure.open = true;
+      for (let ancestor = voiceButton.parentElement; ancestor; ancestor = ancestor.parentElement) {
+        if (ancestor instanceof HTMLDetailsElement) ancestor.open = true;
+      }
       voiceButton.focus();
     };
     window.addEventListener("keydown", handleStageShortcut);

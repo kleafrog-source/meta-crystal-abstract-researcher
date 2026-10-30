@@ -339,14 +339,14 @@ function QueryPanel(props: {
   const { title, value, placeholder, resultCount, isSearching, onChange, onClear, onSubmit, onPaste, onUndo, onRedo, canUndo, canRedo, inputRef, actions, dataScope } = props;
   return (
     <div data-am-stage-zone={dataScope ? `query-${title === "Brief" ? "a" : "b"}` : undefined} className="space-y-2 rounded border border-white/20 bg-black/40 p-2.5">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-1 font-mono text-xs font-medium uppercase tracking-wide">{title}<V3InfoTip content="Опишите целевое звучание. Каждый запуск выполняется независимо от предыдущих запросов." /></div>
           <div className="font-mono text-[10px] text-muted-foreground">
             scoped results: {resultCount}
           </div>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1">
         <Button type="button" variant="outline" size="sm" title="Undo paste (Ctrl/⌘+Z)" aria-label="Undo paste" disabled={!canUndo} onClick={onUndo}><Undo2 className="size-4" /></Button>
         <Button type="button" variant="outline" size="sm" title="Redo paste (Ctrl/⌘+Shift+Z, Ctrl+Y)" aria-label="Redo paste" disabled={!canRedo} onClick={onRedo}><Redo2 className="size-4" /></Button>
         <V3Tooltip content="Запускает semantic retrieval и anchoring только для содержимого этого поля.">
