@@ -38,6 +38,7 @@ export function ParameterControl(props: {
   onSelect?: (technicalName: string) => void;
   useDomainLayerColors?: boolean;
   dataScope?: "am-stage";
+  titleOrder?: "en-ru" | "ru-en";
 }) {
   const storeUpdateParameterValue = useRagV3Store(
     (state) => state.updateParameterValue,
@@ -50,6 +51,14 @@ export function ParameterControl(props: {
       ? props.param.current_value
       : Number(props.param.current_value) || 0;
   const textValue = String(props.param.current_value ?? "");
+  const rawNames = props.param as ActiveParameter & { name_en?: string; name?: string };
+  const englishName = rawNames.name_en?.trim() || rawNames.name?.trim() || props.param.technical_name.replace(/_/g, " ");
+  const russianName = props.param.name_ru?.trim() || "";
+  const showRussianName = Boolean(russianName && russianName.localeCompare(englishName, undefined, { sensitivity: "accent" }) !== 0);
+  const titleOrder = props.titleOrder ?? "ru-en";
+  const primaryName = titleOrder === "ru-en" && russianName ? russianName : englishName;
+  const secondaryName = titleOrder === "ru-en" ? englishName : russianName;
+  const showSecondaryName = Boolean(showRussianName && secondaryName && secondaryName !== primaryName);
   const domainStyle = resolveDomainStyle(
     props.param.domain,
     props.param.technical_name,
@@ -100,7 +109,8 @@ export function ParameterControl(props: {
       : props.param.ui_element === "Select" ? <SelectControl param={props.param} value={textValue} displayMode="standard" accentColor={props.useDomainLayerColors ? layerColor : undefined} onChange={(value) => updateParameterValue(props.param.technical_name, value)} />
       : <TextControl param={props.param} value={textValue} accentColor={props.useDomainLayerColors ? layerColor : undefined} onChange={(value) => updateParameterValue(props.param.technical_name, parseTextValue(value, props.param.ui_element))} />;
     return <div data-parameter-id={props.param.technical_name} data-am-stage-parameter={props.dataScope ? props.param.technical_name : undefined} data-am-stage-control={props.dataScope ? props.param.ui_element.toLowerCase() : undefined} onClick={(event) => { if (!(event.target as HTMLElement).closest("button,input,[role=slider]")) props.onSelect?.(props.param.technical_name); }} style={{ "--domain-accent": layerColor, ...(props.useDomainLayerColors ? { borderColor: `${layerColor}4d`, backgroundColor: "#111114" } : {}) } as React.CSSProperties} className={cn("console-control-module console-compact-card group relative aspect-square min-w-0 rounded-md border border-white/15 p-2", props.selected && "is-selected")} title={`${fullInfo} · value ${textValue}`} aria-label={`${fullInfo} · current value ${textValue}`}>
-      <span className="line-clamp-3 min-h-7 break-words text-[13px] leading-4 font-semibold text-[#d2dde5]" title={props.param.technical_name}>{props.param.name_ru?.trim() || props.param.technical_name.replace(/_/g, " ")}</span>
+      <span className="line-clamp-3 min-h-7 break-words text-[13px] leading-4 font-semibold text-[#d2dde5]" title={props.param.technical_name}>{primaryName}</span>
+      {showSecondaryName ? <span className="line-clamp-2 break-words text-[10px] leading-3 text-muted-foreground">{secondaryName}</span> : null}
       <div className="console-compact-control">{compactControl}</div><output style={props.useDomainLayerColors ? { color: layerColor } : undefined} className="block truncate text-center font-mono text-[10px]">{textValue}</output>
       <div className="console-compact-actions" onClick={(event) => event.stopPropagation()}><V3InfoTip content={<div className="space-y-1 text-[11px]"><b>{props.param.technical_name}</b><div>{resolveRussianDescription(props.param)}</div><div>{props.param.category} · {props.param.source}</div></div>} /><DropdownMenu><V3Tooltip content="Действия параметра"><DropdownMenuTrigger asChild><button type="button" className="console-card-action" aria-label={`Действия: ${props.param.technical_name}`}><MoreVertical className="size-3.5" /></button></DropdownMenuTrigger></V3Tooltip><DropdownMenuContent align="end"><DropdownMenuItem onClick={() => removeParameter(props.param.technical_name)}><X className="size-3" />Убрать из панели</DropdownMenuItem><DropdownMenuItem className="text-red-300" onClick={() => void excludeFromDatabase()}><ArchiveX className="size-3" />Исключить из базы</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
     </div>;
@@ -127,7 +137,7 @@ export function ParameterControl(props: {
               props.displayMode === "standard" ? "line-clamp-2" : "truncate",
             )}
           >
-            {props.param.name_ru?.trim() || props.param.technical_name.replace(/_/g, " ")}
+            {primaryName}
           </span>
           <div className="flex items-center gap-1">
             <V3InfoTip
@@ -187,11 +197,11 @@ export function ParameterControl(props: {
         </div>
 
         {props.displayMode === "detail" ? <div className="console-param-meta mb-2 text-[9px] leading-4 text-muted-foreground">
-          {props.param.name_ru ? <div>{props.param.name_ru}</div> : null}
+          {showSecondaryName ? <div>{secondaryName}</div> : null}
           <div>sim {Math.round(props.param.similarity * 100)}% · {props.param.category}</div>
           <div>{[props.param.ui_element, props.param.unit, props.param.source, `default ${String(props.param.default)}`, props.param.detail].filter(Boolean).join(" · ")}</div>
         </div> : null}
-        {props.displayMode === "standard" ? <div className="mb-2 flex flex-wrap items-center gap-1 text-[9px] text-muted-foreground">{props.param.name_ru?.trim() ? <span>{props.param.name_ru}</span> : null}<span>sim {Math.round(props.param.similarity * 100)}%</span><span>{props.param.category}</span></div> : null}
+        {props.displayMode === "standard" ? <div className="mb-2 flex flex-wrap items-center gap-1 text-[9px] text-muted-foreground">{showSecondaryName ? <span>{secondaryName}</span> : null}<span>sim {Math.round(props.param.similarity * 100)}%</span><span>{props.param.category}</span></div> : null}
 
         {props.param.ui_element === "Range" ||
         props.param.ui_element === "Toggle" ? (

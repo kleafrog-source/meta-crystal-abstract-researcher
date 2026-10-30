@@ -51,6 +51,7 @@ import { ACOUSTIC_DOMAIN_LAYERS, GLOBAL_CONSENSUS_LAYER } from "@/lib/domain-lay
 import { useRagV3Store } from "@/store/rag-v3-store";
 import { classifyDomainLayer } from "@/lib/am-parameters-catalogue/domain-layer-config";
 import { buildLayerTimelineLanes, LAYER_TIMELINE_SERIES_LIMIT, UNCLASSIFIED_TIMELINE_LAYER } from "@/lib/am-stage-layer-timeline";
+import { applyConsensusSmooth, averageParameterFrames, interpolateStageFrames, parameterMatchesLayers, type BlendCurve } from "@/lib/am-stage-blend";
 
 type Engine = AudioEngine;
 type AnalysisStatus = AudioAnalysisStatus;
@@ -154,6 +155,12 @@ export function AMStagePage() {
   const removeV3Parameter = useRagV3Store((state) => state.removeParameter);
   const [selectedLayers, setSelectedLayers] = useState<string[]>(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id));
   const [showGlobalConsensus, setShowGlobalConsensus] = useState(false);
+  const [consensusTopK, setConsensusTopK] = useState(64);
+  const [consensusCentroidPercent, setConsensusCentroidPercent] = useState(35);
+  const [titleOrder, setTitleOrder] = useState<"en-ru" | "ru-en">("en-ru");
+  const [blendPair, setBlendPair] = useState("text-clap");
+  const [blendPercent, setBlendPercent] = useState(50);
+  const [blendCurve, setBlendCurve] = useState<BlendCurve>("linear");
   const [file, setFile] = useState<File | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioDuration, setAudioDuration] = useState(0);
@@ -204,6 +211,18 @@ export function AMStagePage() {
       if (saved === "compact" || saved === "standard" || saved === "expanded") setter(saved);
     }
   }, []);
+  useEffect(() => {
+    const load = () => void fetch("/api/ui-preferences", { cache: "no-store" }).then((response) => response.json()).then((data: { parameterTitleOrder?: string }) => {
+      if (data.parameterTitleOrder === "en-ru" || data.parameterTitleOrder === "ru-en") setTitleOrder(data.parameterTitleOrder);
+    }).catch(() => undefined);
+    const onPreferenceChange = (event: Event) => {
+      const order = (event as CustomEvent<{ parameterTitleOrder?: string }>).detail?.parameterTitleOrder;
+      if (order === "en-ru" || order === "ru-en") setTitleOrder(order);
+    };
+    load();
+    window.addEventListener("ui-preferences:changed", onPreferenceChange);
+    return () => window.removeEventListener("ui-preferences:changed", onPreferenceChange);
+  }, []);
   useEffect(() => { window.sessionStorage.setItem("am-stage-text-bank-view", textBankViewMode); }, [textBankViewMode]);
   useEffect(() => { window.sessionStorage.setItem("am-stage-clap-bank-view", clapBankViewMode); }, [clapBankViewMode]);
   useEffect(() => { window.sessionStorage.setItem("am-stage-siglip-bank-view", siglipBankViewMode); }, [siglipBankViewMode]);
@@ -227,8 +246,30 @@ export function AMStagePage() {
   const filteredV3Parameters = useMemo(() => v3Parameters.filter((parameter) => {
     const storedLayer = (parameter as ActiveParameter & { domain_layer?: string }).domain_layer;
     const layer = storedLayer ?? classifyDomainLayer(parameter.technical_name, parameter.category);
-    return !layer || selectedLayers.includes(layer) || (showGlobalConsensus && layer === GLOBAL_CONSENSUS_LAYER.id);
-  }), [v3Parameters, selectedLayers, showGlobalConsensus]);
+    return layer !== GLOBAL_CONSENSUS_LAYER.id && (!layer || selectedLayers.includes(layer));
+  }), [v3Parameters, selectedLayers]);
+  const layerCounts = useMemo(() => {
+    const names = new Map(ACOUSTIC_DOMAIN_LAYERS.map((layer) => [layer.id, new Set<string>()]));
+    for (const parameter of [...v3Parameters, ...segments.flatMap((segment) => [...segment.clap, ...segment.siglip])]) {
+      const layer = (parameter as ActiveParameter & { domain_layer?: string }).domain_layer ?? classifyDomainLayer(parameter.technical_name, parameter.category);
+      const acousticLayer = ACOUSTIC_DOMAIN_LAYERS.find((item) => item.id === layer);
+      if (acousticLayer) names.get(acousticLayer.id)?.add(parameter.technical_name);
+    }
+    return names;
+  }, [segments, v3Parameters]);
+
+  const saveTitleOrder = async (order: "en-ru" | "ru-en") => {
+    const previous = titleOrder;
+    setTitleOrder(order);
+    try {
+      const response = await fetch("/api/ui-preferences", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ parameterTitleOrder: order }) });
+      if (!response.ok) throw new Error("Не удалось сохранить порядок заголовков.");
+      window.dispatchEvent(new CustomEvent("ui-preferences:changed", { detail: { parameterTitleOrder: order } }));
+    } catch (cause) {
+      setTitleOrder(previous);
+      setError(cause instanceof Error ? cause.message : String(cause));
+    }
+  };
 
   const selectFile = useCallback((nextFile: File) => {
     setAudioUrl((previous) => {
@@ -442,12 +483,27 @@ export function AMStagePage() {
     () => currentFrame(nodeSegments, currentTime, "siglip", interpolateSiglip),
     [currentTime, interpolateSiglip, nodeSegments],
   );
-  const visibleClap = showClap ? clapFrame : [];
-  const visibleSiglip = showSiglip ? siglipFrame : [];
+  const layerClap = useMemo(() => clapFrame.filter((parameter) => parameterMatchesLayers(parameter, selectedLayers)), [clapFrame, selectedLayers]);
+  const layerSiglip = useMemo(() => siglipFrame.filter((parameter) => parameterMatchesLayers(parameter, selectedLayers)), [siglipFrame, selectedLayers]);
+  const consensusFrames = useMemo(() => showGlobalConsensus
+    ? applyConsensusSmooth([filteredV3Parameters, showClap ? layerClap : [], showSiglip ? layerSiglip : []], selectedLayers, consensusTopK, consensusCentroidPercent)
+    : [filteredV3Parameters, showClap ? layerClap : [], showSiglip ? layerSiglip : []],
+  [consensusCentroidPercent, consensusTopK, filteredV3Parameters, layerClap, layerSiglip, selectedLayers, showClap, showGlobalConsensus, showSiglip]);
+  const [textStageParameters, visibleClap, visibleSiglip] = consensusFrames;
   const macroParameters = useMemo(
     () => blendMode ? blendParameterFrames(visibleClap, visibleSiglip, clapWeight) : mergeFrames(visibleClap, visibleSiglip),
     [blendMode, clapWeight, visibleClap, visibleSiglip],
   );
+  const bridgeFrames = useMemo(() => {
+    const pairs: Record<string, [ActiveParameter[], ActiveParameter[]]> = {
+      "text-clap": [textStageParameters, visibleClap],
+      "clap-siglip": [visibleClap, visibleSiglip],
+      "text-siglip": [textStageParameters, visibleSiglip],
+      "tri-modal": [textStageParameters, averageParameterFrames(visibleClap, visibleSiglip)],
+    };
+    const [first, second] = pairs[blendPair] ?? pairs["text-clap"];
+    return interpolateStageFrames(first, second, blendPercent, blendCurve).filter((parameter) => parameterMatchesLayers(parameter, selectedLayers));
+  }, [blendCurve, blendPair, blendPercent, selectedLayers, textStageParameters, visibleClap, visibleSiglip]);
 
   const seekToSegment = (segment: SegmentPoint) => {
     setCurrentTime(segment.time);
@@ -549,9 +605,8 @@ export function AMStagePage() {
   useEffect(() => {
     const handleStageShortcut = (event: KeyboardEvent) => {
       const root = stageRootRef.current;
-      if (!root || !root.contains(event.target as Node) || !event.altKey || !event.shiftKey || !event.ctrlKey || event.metaKey) return;
+      if (!root || event.repeat || !root.contains(event.target as Node) || !event.altKey || !event.shiftKey || !event.ctrlKey || event.metaKey) return;
       const target = event.target;
-      if (target instanceof HTMLElement && (target.isContentEditable || target.closest("input,textarea,select,[role=combobox],[contenteditable='true']"))) return;
       const actionByKey: Record<string, string> = {
         KeyC: "clap-start",
         KeyX: "analysis-stop",
@@ -562,26 +617,20 @@ export function AMStagePage() {
         KeyL: "export-legacy-timeline",
         KeyB: "search-a",
         KeyQ: "test-preset",
+        KeyV: "voice-append",
+        KeyW: "voice-replace",
       };
       const actionId = actionByKey[event.code];
-      if (!actionId && event.code !== "KeyV" && event.code !== "KeyW") return;
+      if (!actionId) return;
+      const allowedFromTextarea = actionId.startsWith("voice-") || actionId === "search-a";
+      if (target instanceof HTMLElement && (target.isContentEditable || target.closest("input,select,[role=combobox],[contenteditable='true']") || (target.closest("textarea") && !allowedFromTextarea))) return;
       event.preventDefault();
-      if (actionId) {
-        const actionButton = root.querySelector<HTMLButtonElement>(`[data-am-stage-action="${actionId}"]`);
-        if (!actionButton) return;
-        for (let ancestor = actionButton.parentElement; ancestor; ancestor = ancestor.parentElement) {
-          if (ancestor instanceof HTMLDetailsElement) ancestor.open = true;
-        }
-        actionButton.click();
-        return;
-      }
-      const voiceMode = event.code === "KeyW" ? "replace" : "append";
-      const voiceButton = root.querySelector<HTMLButtonElement>(`[data-am-stage-action="voice-${voiceMode}"]`);
-      if (!voiceButton) return;
-      for (let ancestor = voiceButton.parentElement; ancestor; ancestor = ancestor.parentElement) {
+      const actionButton = root.querySelector<HTMLButtonElement>(`[data-am-stage-action="${actionId}"]`);
+      if (!actionButton) return;
+      for (let ancestor = actionButton.parentElement; ancestor; ancestor = ancestor.parentElement) {
         if (ancestor instanceof HTMLDetailsElement) ancestor.open = true;
       }
-      voiceButton.focus();
+      actionButton.click();
     };
     window.addEventListener("keydown", handleStageShortcut);
     return () => window.removeEventListener("keydown", handleStageShortcut);
@@ -939,7 +988,7 @@ export function AMStagePage() {
           </details>
             </div>
             <aside data-am-stage-zone="macro-exports" className="flex min-w-0 flex-col gap-2 rounded-lg border border-cyan-400/20 bg-black/30 p-3">
-              <MacroGenerator parameters={filteredV3Parameters} collapsible dataScope="am-stage" collapseLabel={`TEXT · Semantic V3 · ${filteredV3Parameters.length}`} />
+              <MacroGenerator parameters={textStageParameters} collapsible dataScope="am-stage" collapseLabel={`TEXT · Semantic V3 · ${textStageParameters.length}`} />
               <MacroGenerator parameters={macroParameters} collapsible dataScope="am-stage" collapseLabel={`CLAP + SigLIP2 · ${macroParameters.length}`} />
               <div className="grid gap-1.5 sm:grid-cols-2">
                 <Button data-am-stage-action="export-priority-timeline" variant="outline" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportTimeline}><Download className="size-4" />Экспорт Priority Timeline</Button>
@@ -1031,22 +1080,25 @@ export function AMStagePage() {
 
           <div data-am-stage-zone="timeline" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(170px,1fr)_minmax(0,9fr)]">
             <aside aria-label="Domain layer timeline visibility filters" className="max-h-56 overflow-y-auto rounded-lg border border-border bg-background/85 p-3 xl:max-h-[min(70vh,720px)]">
-              <h2 className="mb-2 flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-wider"><AMIcon name="settings" size="sm" bright />Domain layer mask</h2>
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-2"><h2 className="flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-wider"><AMIcon name="settings" size="sm" bright />Layer matrix</h2><select aria-label="Parameter title order" value={titleOrder} onChange={(event) => void saveTitleOrder(event.target.value as "en-ru" | "ru-en")} className="max-w-32 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-[9px]"><option value="en-ru">Title EN → RU</option><option value="ru-en">Title RU → EN</option></select></div>
+              <p className="mb-2 text-[9px] text-muted-foreground">Фильтрует банки и проекцию timeline по акустическим слоям. Consensus — отдельный stage-2 проход.</p>
+              <div className="mb-2 flex flex-wrap gap-1"><button type="button" className="rounded border border-white/15 px-2 py-1 text-[9px]" onClick={() => setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id))}>All 9</button><button type="button" className="rounded border border-white/15 px-2 py-1 text-[9px]" onClick={() => setSelectedLayers([])}>Clear</button></div>
               <div className="flex flex-col gap-1.5">
                 {ACOUSTIC_DOMAIN_LAYERS.map((layer) => {
                   const checked = selectedLayers.includes(layer.id);
-                  return <label key={layer.id} data-am-stage-layer={layer.id} className="flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px]" style={{ borderColor: `${layer.color}70`, color: layer.color }}><input data-am-stage-action={`toggle-layer-${layer.id.toLowerCase()}`} type="checkbox" checked={checked} onChange={() => setSelectedLayers((current) => checked ? current.filter((id) => id !== layer.id) : [...current, layer.id])} />{layer.label}</label>;
+                  const count = layerCounts.get(layer.id)?.size ?? 0;
+                  const countsAvailable = v3Parameters.length > 0 || segments.some((segment) => segment.clap.length > 0 || segment.siglip.length > 0);
+                  return <label key={layer.id} data-am-stage-layer={layer.id} className="flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px]" style={{ borderColor: `${layer.color}70`, color: layer.color }}><input data-am-stage-action={`toggle-layer-${layer.id.toLowerCase()}`} type="checkbox" checked={checked} onChange={() => setSelectedLayers((current) => checked ? current.filter((id) => id !== layer.id) : [...current, layer.id])} /><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: layer.color }} />{layer.label}<span className="ml-auto tabular-nums text-muted-foreground">{countsAvailable ? count : "—"}</span></label>;
                 })}
-                <label data-am-stage-layer={GLOBAL_CONSENSUS_LAYER.id} className="flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px]" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70`, color: GLOBAL_CONSENSUS_LAYER.color }}><input data-am-stage-action="toggle-consensus-visibility" type="checkbox" checked={showGlobalConsensus} onChange={(event) => setShowGlobalConsensus(event.target.checked)} />{GLOBAL_CONSENSUS_LAYER.label}</label>
+                <label data-am-stage-layer={GLOBAL_CONSENSUS_LAYER.id} className="flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px]" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70`, color: GLOBAL_CONSENSUS_LAYER.color }}><input data-am-stage-action="toggle-consensus-visibility" type="checkbox" checked={showGlobalConsensus} onChange={(event) => setShowGlobalConsensus(event.target.checked)} /><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: GLOBAL_CONSENSUS_LAYER.color }} />Stage-2 Consensus</label>
               </div>
+              {showGlobalConsensus ? <div className="mt-2 space-y-2 rounded border p-2" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70` }}><div className="flex items-center justify-between text-[9px]"><span>Query {100 - consensusCentroidPercent}%</span><span>Centroid {consensusCentroidPercent}%</span></div><input aria-label="Consensus centroid weight" className="w-full accent-violet-400" type="range" min="0" max="100" value={consensusCentroidPercent} onChange={(event) => setConsensusCentroidPercent(Number(event.target.value))} /><label className="flex items-center justify-between gap-2 text-[9px]">Centroid pool k<input aria-label="Consensus centroid top k" className="w-16 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-right" type="number" min="1" max="500" value={consensusTopK} onChange={(event) => setConsensusTopK(Math.max(1, Math.min(500, Number(event.target.value) || 1)))} /></label><p className="text-[9px] text-muted-foreground">Stage-2 client smooth · existing retrieved frames only; no server consensus index.</p></div> : null}
             </aside>
           <section data-am-stage-zone="timeline-chart" className="min-w-0 rounded-lg border border-white/10 bg-black/30 p-3">
             <div className="mb-2 flex items-center justify-between gap-2 text-xs text-zinc-400">
               <span>Parameter Timeline · {formatTime(currentTime)}</span>
               <span>Нажмите точку для перемотки</span>
             </div>
-            {showGlobalConsensus ? <p className="mb-2 rounded border px-2 py-1 text-[10px] text-slate-300" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70` }}>GLOBAL_CONSENSUS_LAYER остаётся UI-only: поиск и timeline lane не создаются.</p> : null}
-
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
               <h3 className="font-mono text-[10px] uppercase tracking-wider text-zinc-400">Parameter timeline</h3>
               <div className="flex gap-1 text-xs" role="group" aria-label="Timeline view">
@@ -1069,11 +1121,22 @@ export function AMStagePage() {
 
           </div>
 
-          <section data-am-stage-zone="modality-banks" className="grid min-h-[560px] min-w-0 gap-3 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-            <ParameterBank dataScope="am-stage" title="CLAP Parameters" icon="clap" bankId="clap" accent="cyan" parameters={visibleClap} viewMode={clapBankViewMode} onViewModeChange={setClapBankViewMode} useDomainLayerColors onChange={(name, value) => updateValue("clap", name, value)} onRemove={(name) => removeValue("clap", name)} />
-            <ParameterBank dataScope="am-stage" title="SigLIP2 Spectrogram Parameters" icon="morpho" bankId="siglip2" accent="fuchsia" parameters={visibleSiglip} viewMode={siglipBankViewMode} onViewModeChange={setSiglipBankViewMode} useDomainLayerColors onChange={(name, value) => updateValue("siglip", name, value)} onRemove={(name) => removeValue("siglip", name)} />
+          <section data-am-stage-zone="cross-modal-interpolation" className="space-y-2 rounded-lg border border-violet-400/25 bg-black/30 p-3">
+            <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="font-mono text-xs font-semibold uppercase tracking-wider text-violet-200">Cross-Modal Interpolation Bridge</h2><Badge variant="outline">client preview · no model rerun</Badge></div>
+            <div className="grid gap-3 md:grid-cols-[minmax(140px,1fr)_minmax(180px,2fr)_minmax(150px,1fr)]">
+              <label className="space-y-1 text-[10px] text-muted-foreground">Source pair<select aria-label="Cross-modal source pair" value={blendPair} onChange={(event) => setBlendPair(event.target.value)} className="h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-foreground"><option value="text-clap">Text ↔ CLAP</option><option value="clap-siglip">CLAP ↔ SigLIP2</option><option value="text-siglip">Text ↔ SigLIP2</option><option value="tri-modal">Tri-Modal Blend</option></select></label>
+              <label className="space-y-1 text-[10px] text-muted-foreground">Blend · {blendPercent}%<input aria-label="Cross-modal blend percentage" className="mt-2 w-full accent-violet-400" type="range" min="0" max="100" value={blendPercent} onChange={(event) => setBlendPercent(Number(event.target.value))} /><span className="block text-[9px]">0% = first source · 100% = second source</span></label>
+              <label className="space-y-1 text-[10px] text-muted-foreground">Curve<select aria-label="Cross-modal blend curve" value={blendCurve} onChange={(event) => setBlendCurve(event.target.value as BlendCurve)} className="h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-foreground"><option value="linear">Linear (Lerp)</option><option value="cosine">S-Sigmoid (Cosine)</option><option value="cubic">Cubic-Bezier Spline</option><option value="exponential">Exponential Growth</option></select></label>
+            </div>
+            <p className="text-[9px] text-muted-foreground">Числовые параметры смешиваются по техническому имени; дискретные переключаются на ближайший источник. Учитывается выбранная маска слоёв.</p>
+            <div className="max-h-40 overflow-auto rounded border border-white/10"><div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 p-2 font-mono text-[10px]">{bridgeFrames.slice(0, 64).map((parameter) => <div key={parameter.technical_name} className="contents"><span className="truncate text-zinc-400">{parameter.technical_name}</span><span className="text-violet-200">{String(parameter.current_value)}</span></div>)}{bridgeFrames.length === 0 ? <span className="col-span-2 py-2 text-center text-muted-foreground">Нет пересекающихся параметров в загруженных результатах.</span> : null}</div></div>
           </section>
-          <ParameterBank dataScope="am-stage" title={`TEXT · Semantic V3 · ${filteredV3Parameters.length}/${v3Parameters.length}`} icon="search" bankId="text" accent="cyan" parameters={filteredV3Parameters} viewMode={textBankViewMode} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={updateV3ParameterValue} onRemove={removeV3Parameter} />
+
+          <section data-am-stage-zone="modality-banks" className="grid min-h-[560px] min-w-0 gap-3 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+            <ParameterBank dataScope="am-stage" title="CLAP Parameters" icon="clap" bankId="clap" accent="cyan" parameters={visibleClap} viewMode={clapBankViewMode} titleOrder={titleOrder} onViewModeChange={setClapBankViewMode} useDomainLayerColors onChange={(name, value) => updateValue("clap", name, value)} onRemove={(name) => removeValue("clap", name)} />
+            <ParameterBank dataScope="am-stage" title="SigLIP2 Spectrogram Parameters" icon="morpho" bankId="siglip2" accent="fuchsia" parameters={visibleSiglip} viewMode={siglipBankViewMode} titleOrder={titleOrder} onViewModeChange={setSiglipBankViewMode} useDomainLayerColors onChange={(name, value) => updateValue("siglip", name, value)} onRemove={(name) => removeValue("siglip", name)} />
+          </section>
+          <ParameterBank dataScope="am-stage" title={`TEXT · Semantic V3 · ${textStageParameters.length}/${v3Parameters.length}`} icon="search" bankId="text" accent="cyan" parameters={textStageParameters} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={updateV3ParameterValue} onRemove={removeV3Parameter} />
         </div>
       </div>
     </div>
@@ -1107,6 +1170,7 @@ function ParameterBank({
   onRemove,
   viewMode,
   onViewModeChange,
+  titleOrder,
   useDomainLayerColors = false,
   dataScope,
 }: {
@@ -1118,6 +1182,7 @@ function ParameterBank({
   onChange: (name: string, value: number | string) => void;
   onRemove: (name: string) => void;
   viewMode: "compact" | "standard" | "expanded";
+  titleOrder: "en-ru" | "ru-en";
   onViewModeChange: (mode: "compact" | "standard" | "expanded") => void;
   useDomainLayerColors?: boolean;
   dataScope?: "am-stage";
@@ -1141,6 +1206,7 @@ function ParameterBank({
         parameters={parameters}
         className="min-h-0 flex-1"
         displayMode={viewMode === "expanded" ? "detail" : viewMode}
+        titleOrder={titleOrder}
         useDomainLayerColors={useDomainLayerColors}
         dataScope={dataScope}
         onChange={onChange}

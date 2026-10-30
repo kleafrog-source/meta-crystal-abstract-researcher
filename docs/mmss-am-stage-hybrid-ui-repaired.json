@@ -3,7 +3,7 @@
     "id": "mmss-am-stage-hybrid-ui-repaired",
     "version": "1.0.0",
     "language": "ru",
-    "status": "responsive_visual_qa_passed_hotkey_runtime_unverified"
+    "status": "extended_consensus_titles_bridge_implemented_browser_qa_pending"
   },
   "task": {
     "objective": "Согласовать существующие требования AM-Stage к порядку зон, плотности, адаптивной проверке и управлению Ulanzi до реализации и зафиксировать исполнимый контракт.",
@@ -13,6 +13,11 @@
     "working_mode": "one_shot"
   },
   "provenance": [
+    {
+      "source": "tasks/new/TASK-am-stage-consensus-titles-bridge.md",
+      "kind": "current_operator_requirements",
+      "authority": "primary_for_title_consensus_bridge"
+    },
     {
       "source": "tasks/new/TASK-am-stage-hybrid-ui-ulanzi.md",
       "kind": "current_operator_requirements",
@@ -65,7 +70,8 @@
     "Зафиксированы уже утверждённые элементы: русский заголовок параметра 13px/#d2dde5, граница карточки слоя около 0.3 opacity, независимые сворачиваемые секции и сохранение 0.5s, Continue, preset и независимых режимов банков.",
     "Разделены текущее статическое наблюдение JSX, целевое поведение и отложенные функции; факт существования трёх окон и работоспособность физического Ulanzi оставлены на runtime-проверку.",
     "При реализации обнаружено и исправлено: Domain layer mask ранее меняла checkbox state, но не фильтровала дорожки By layer; выбор слоёв теперь передаётся графику.",
-    "Добавлены stable data-am-stage-* зоны и action targets, page-scoped Ctrl+Alt+Shift hotkeys используют click текущих UI-кнопок, а voice shortcut только фокусирует существующую кнопку, сохраняя явный пользовательский жест."
+    "Добавлены stable data-am-stage-* зоны и action targets, page-scoped Ctrl+Alt+Shift hotkeys используют click текущих UI-кнопок; voice append/replace chords активируют реальные SpeechInputButtons, в том числе из поля Brief.",
+    "Новое задание TASK-am-stage-consensus-titles-bridge.md расширяет контракт без изменения порядка зон: глобальная настройка EN/RU, клиентское stage-2 сглаживание загруженных кадров и cross-modal preview общих technical_name."
   ],
   "zones": {
     "observed_from_source_order": [
@@ -86,6 +92,7 @@
       {"id": "node_seek", "position": "immediately_before_waveform"},
       {"id": "media", "contents": ["waveform", "transport", "spectrogram"]},
       {"id": "timeline", "layout": "vertical_domain_layer_mask_beside_timeline_chart_on_wide_screens", "narrow_behavior": "stack_mask_before_chart_without_page_level_horizontal_overflow"},
+      {"id": "cross_modal_interpolation", "position": "after_timeline_chart_before_modality_banks"},
       {"id": "modality_banks", "contents": ["clap", "siglip2"], "layout": "side_by_side_when_space_allows"},
       {"id": "text_bank", "contents": ["text_semantic_v3"], "layout": "full_content_width"}
     ]
@@ -107,7 +114,7 @@
   ],
   "quick_fixes": [
     {"id": "layer_card_border_alpha", "target": "domain-colored parameter card borders only", "value": 0.3, "state": "previously implemented; verify visually"},
-    {"id": "parameter_title_typography", "target": "Russian parameter names in TEXT/CLAP/SigLIP", "value": {"font_size_px": 13, "color": "#d2dde5"}, "state": "previously implemented; verify at narrow and desktop sizes"},
+    {"id": "parameter_title_typography", "target": "primary/secondary parameter names in TEXT/CLAP/SigLIP", "value": {"font_size_px": 13, "color": "#d2dde5", "default_order": "en-ru"}, "state": "implemented in all three display modes; browser recheck pending"},
     {"id": "collapse_controls", "target": "all sections in collapse list", "state": "previously implemented; verify click and keyboard behavior"},
     {"id": "section_icons", "target": "AM-Stage section headers and actions", "rule": "match existing sidebar icon stroke/visual scale and preserve usable hit targets", "state": "implemented_source_reviewed"},
     {"id": "disclosure_controls", "target": "Semantic, Analysis, macro outputs, CLAP/SigLIP/TEXT banks", "rule": "consistent explicit chevrons and independent native details state", "state": "implemented_source_reviewed"},
@@ -135,40 +142,47 @@
     "MMSS-json repaired and written before UI/Ulanzi implementation.",
     "Zone order matches the target order and all controls remain reachable.",
     "Semantic Search, both macro outputs, Analysis, and all three banks collapse independently.",
-    "Layer mask exposes nine acoustic layers plus UI-only consensus; colors match src/lib/domain-layers.ts; mask remains usable at narrow widths.",
+    "Layer mask exposes nine acoustic layers plus an optional client-side stage-2 control; colors match src/lib/domain-layers.ts; mask remains usable at narrow widths.",
     "No horizontal page overflow at 390-430px; tablet and full 2K layouts are captured and reviewed.",
     "Continue, test preset, node interval minimum 0.5s, layer timeline projection, and independent bank view modes remain available.",
     "Parameter title 13px/#d2dde5 and layer border opacity about 0.3 remain intact.",
-    "Ulanzi action bindings invoke existing handlers; fader bindings are limited to an identified supported bridge and stable parameter IDs.",
+    "Ulanzi action bindings invoke existing handlers, including voice append/replace; fader bindings are limited to an identified supported bridge and stable parameter IDs.",
+    "Parameter titles default to English and use a global EN/RU order preference; duplicate title lines are suppressed.",
+    "Consensus weighting and interpolation controls change previews from loaded frames without model requests or new timeline lanes.",
+    "Stage-2 uses loaded results and moves numeric values toward same-name cross-modal centroids; it creates no server index or timeline lane.",
+    "Cross-modal bridge previews shared technical_name values and does not rerun model requests.",
     "TypeScript check passes for touched files; runtime findings are recorded separately from planned checks."
   ],
   "non_goals": [
-    "Consensus retrieval or a GLOBAL_CONSENSUS parameter lane.",
+    "A server-side GLOBAL_CONSENSUS index or a GLOBAL_CONSENSUS timeline lane.",
     "Parameter-to-text NLP pipeline.",
     "Redesign of the full AM-Core sidebar or unrelated routes.",
     "A custom full MIDI host, speculative hardware integration, or invented Ulanzi device behavior.",
     "Pixel-perfect replication of the Flowmusic mock."
   ],
   "deferred": [
-    {"id": "consensus_retrieval", "reason": "explicit non-goal; consensus remains UI-only"},
+    {"id": "server_consensus_index", "reason": "stage-2 client smoothing uses loaded results; a server-side consensus index remains out of scope"},
     {"id": "parameter_to_text", "source": "tasks/future/mmss-am-stage-param-to-text-future.json"},
     {"id": "hardware_fader_mapping", "condition": "defer only if no supported installed bridge or stable control target is discoverable; record exact blocker"}
   ],
   "implementation_closeout": {
-    "status": "implemented_with_responsive_visual_qa_blocked",
+    "status": "implemented_with_current_edge_visual_qa_blocked",
     "changes": [
-      {"area": "layer_mask", "result": "all nine acoustic layer IDs remain selectable; selected acoustic layers now filter By layer timeline lanes; consensus remains UI-only"},
+      {"area": "layer_mask", "result": "all nine acoustic layer IDs remain selectable and filter By layer timeline lanes; stage-2 smoothing is a separate optional client pass and adds no timeline lane"},
       {"area": "narrow_mask", "result": "internal max-height scrolling and 36px minimum option targets keep the vertical mask bounded and touch-friendly by source inspection"},
       {"area": "icons_and_density", "result": "18px sidebar-style AM icons and explicit disclosure chevrons added; compact grid rule remains auto-fit with at most ten columns"},
       {"area": "ulanzi_targets", "result": "stable page/zone/disclosure/action/layer/parameter data attributes and scoped shortcuts added; no physical device behavior claimed"},
-      {"area": "hotkey_map", "result": "start, shared stop, both continue actions, both timeline exports, Search Brief and test preset are mapped to Ctrl+Alt+Shift plus physical Latin key codes; voice append/replace remain reserved because stable voice selectors are not rendered; runtime execution was inconclusive in Edge; see docs/am-stage-ulanzi-bindings.md"},
+      {"area": "hotkey_map", "result": "start, shared stop, both continue actions, both timeline exports, Search Brief, test preset, voice append and voice replace click existing action controls; microphone chords were not fired during verification; see docs/am-stage-ulanzi-bindings.md"},
+      {"area": "parameter_titles", "result": "AM-Stage parameter cards use English primary titles by default, show distinct Russian secondary titles, and share a persisted EN/RU preference through /api/ui-preferences, exposed in Settings and the layer matrix"},
+      {"area": "consensus_stage_2", "result": "client-side current-frame smoothing moves numeric values toward same-name top-k cross-modal means with explicit query/centroid weights; no server index or timeline lane is claimed"},
+      {"area": "cross_modal_bridge", "result": "client-only preview for Text↔CLAP, CLAP↔SigLIP2, Text↔SigLIP2 and Tri-Modal Blend; selected acoustic layers filter shared technical_name values"},
       {"area": "faders", "result": "no write mapping implemented because no supported browser-to-AM-Stage Ulanzi bridge or parameter-write API was discoverable; see docs/am-stage-ulanzi-bindings.md"}
     ],
-    "responsive_qa_limit": "Computer Use selected Edge window 6754596 and captured/reviewed 400px, 768px and 2048px CSS viewport screenshots. Fixed mobile search-row overflow at 400px and rechecked; tablet and desktop had no critical horizontal overflow. Keyboard execution remains unverified because Computer Use could not move focus out of the browser address bar.",
+    "responsive_qa_limit": "Earlier responsive layout QA used Edge window 6754596 at 400px, 768px and 2048px. During this task Computer Use returned a screenshot from a different app despite Edge metadata, so the newly added controls were not visually verified. Microphone shortcuts were not fired because they start audio capture.",
     "server_route": "http://localhost:3000/am-stage returned HTTP 200 during implementation."
   },
   "unknowns": [
-    "Visual responsive behavior at 390-430, about 768 and full 2K remains unverified; source inspection and an HTTP check do not substitute for rendered browser QA.",
+    "Current Edge screenshots could not be matched to the reported Edge window metadata; new title, layer matrix, consensus and bridge controls remain visually unverified in this task.",
     "Ulanzi model, firmware and physical action execution remain unverified; no supported control bridge/API is present in the inspected project or installed Ulanzi hook."
   ],
   "validation_plan": [
@@ -176,10 +190,12 @@
     {"id": "source_zone_inventory", "scope": "src/components/pages/AMStagePage.tsx and src/lib/domain-layers.ts", "method": "static source inspection", "status": "passed"},
     {"id": "responsive_computer_use_qa", "scope": "400, 768 and 2048 CSS px", "method": "selected Edge window 6754596; screenshots reviewed; 400px overflow fixed and rechecked", "status": "passed_with_mobile_fix"},
     {"id": "computer_use_target_selection", "scope": "open Edge windows", "method": "operator selected Edge window 6754596; URL /am-stage confirmed", "status": "passed"},
-    {"id": "hotkey_completion_map", "scope": "AM-Stage start/stop/continue/export/voice/search/preset actions", "method": "source key map reviewed; Edge retained address-bar focus under Computer Use key input; voice selectors absent in rendered source", "status": "runtime_unverified_voice_targets_missing"},
+    {"id": "hotkey_completion_map", "scope": "AM-Stage start/stop/continue/export/voice/search/preset actions", "method": "source inspection confirms target selectors and click delegation; voice chord runtime intentionally not attempted", "status": "source_pass_voice_runtime_not_run"},
+    {"id": "consensus_bridge_unit", "scope": "centroid smoothing, top-k, numeric interpolation, discrete nearest endpoint and overlap", "method": "pnpm exec vitest run src/lib/am-stage-blend.test.ts src/lib/audio-segment-timeline.test.ts", "status": "passed", "passed": 20},
+    {"id": "consensus_bridge_edge_qa", "scope": "new titles, layer matrix, stage-2 controls and preview", "method": "Computer Use screenshot did not match selected Edge window metadata; no action taken", "status": "not_run_window_capture_mismatch"},
     {"id": "server_route", "scope": "http://localhost:3000/am-stage", "method": "HTTP GET", "status": "passed_200"},
     {"id": "ulanzi_binding_discovery", "scope": "repository and installed Ulanzi tooling", "method": "source/package inspection", "status": "no_supported_bridge_found; fader mapping deferred"},
     {"id": "ulanzi_physical_execution", "scope": "physical Ulanzi actions", "method": "requires identified bridge/device; intentionally not claimed", "status": "blocked_no_bridge"},
-    {"id": "typescript", "scope": "files changed in implementation", "method": "pnpm exec tsc --noEmit", "status": "pending_final_run"}
+    {"id": "typescript", "scope": "workspace TypeScript", "method": "pnpm exec tsc --noEmit", "status": "passed", "exit_code": 0}
   ]
 }
