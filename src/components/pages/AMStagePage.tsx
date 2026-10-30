@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Download,
+  ChevronDown,
   Loader2,
   Scissors,
   Square,
@@ -49,7 +50,7 @@ import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { ACOUSTIC_DOMAIN_LAYERS, GLOBAL_CONSENSUS_LAYER } from "@/lib/domain-layers";
 import { useRagV3Store } from "@/store/rag-v3-store";
 import { classifyDomainLayer } from "@/lib/am-parameters-catalogue/domain-layer-config";
-import { buildLayerTimelineLanes, LAYER_TIMELINE_SERIES_LIMIT } from "@/lib/am-stage-layer-timeline";
+import { buildLayerTimelineLanes, LAYER_TIMELINE_SERIES_LIMIT, UNCLASSIFIED_TIMELINE_LAYER } from "@/lib/am-stage-layer-timeline";
 
 type Engine = AudioEngine;
 type AnalysisStatus = AudioAnalysisStatus;
@@ -146,6 +147,7 @@ function statusClass(status: AnalysisStatus): string {
 }
 
 export function AMStagePage() {
+  const stageRootRef = useRef<HTMLDivElement>(null);
   const v3Parameters = useRagV3Store((state) => state.activeParameters);
   const setV3Query = useRagV3Store((state) => state.setQuery);
   const updateV3ParameterValue = useRagV3Store((state) => state.updateParameterValue);
@@ -544,8 +546,39 @@ export function AMStagePage() {
     }, "legacy-timeline");
   };
 
+  useEffect(() => {
+    const handleStageShortcut = (event: KeyboardEvent) => {
+      const root = stageRootRef.current;
+      if (!root || !root.contains(event.target as Node) || !event.altKey || !event.shiftKey || !event.ctrlKey || event.metaKey) return;
+      const target = event.target;
+      if (target instanceof HTMLElement && (target.isContentEditable || target.closest("input,textarea,select,[role=combobox],[contenteditable='true']"))) return;
+      const key = event.key.toLowerCase();
+      const actionByKey: Record<string, string> = {
+        c: "clap-start",
+        x: "analysis-stop",
+        s: "siglip2-start",
+        p: "export-priority-timeline",
+        l: "export-legacy-timeline",
+      };
+      const actionId = actionByKey[key];
+      if (!actionId && key !== "v") return;
+      event.preventDefault();
+      if (actionId) {
+        root.querySelector<HTMLButtonElement>(`[data-am-stage-action="${actionId}"]`)?.click();
+        return;
+      }
+      const voiceButton = root.querySelector<HTMLButtonElement>('[data-am-stage-action="voice-append"]');
+      if (!voiceButton) return;
+      const closedDisclosure = voiceButton.closest("details:not([open])");
+      if (closedDisclosure instanceof HTMLDetailsElement) closedDisclosure.open = true;
+      voiceButton.focus();
+    };
+    window.addEventListener("keydown", handleStageShortcut);
+    return () => window.removeEventListener("keydown", handleStageShortcut);
+  }, []);
+
   return (
-    <div className="flowmusic-console flex h-full flex-col text-zinc-100">
+    <div ref={stageRootRef} data-am-stage className="flowmusic-console flex h-full min-w-0 flex-col text-zinc-100">
       <header className="border-b border-white/15 bg-black/70 px-4 py-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -585,18 +618,18 @@ export function AMStagePage() {
                 SigLIP index: {morphoStatus?.status ?? "checking"}
               </Badge>
             </Link>
-            <Button size="sm" variant="outline" onClick={() => void applyTestPreset()} disabled={Boolean(busy)}>Проверочный preset</Button>
+            <Button data-am-stage-action="test-preset" size="sm" variant="outline" onClick={() => void applyTestPreset()} disabled={Boolean(busy)}>Проверочный preset</Button>
           </div>
         </div>
       </header>
 
       <div className="flex-1 overflow-auto p-3">
         <div className="flex w-full min-w-0 flex-col gap-3">
-          <section className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
+          <section data-am-stage-zone="top-row" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
             <div className="min-w-0 space-y-3">
-              <SemanticSearch primaryLabel="Brief" secondaryLabel="Transition" collapsible />
-          <details className="rounded-lg border border-white/10 bg-black/30 p-3">
-            <summary className="cursor-pointer font-mono text-xs uppercase tracking-wider text-zinc-300">Analysis controls · sampling, time gate, CLAP / SigLIP2, Continue</summary>
+              <SemanticSearch primaryLabel="Brief" secondaryLabel="Transition" collapsible dataScope="am-stage" />
+          <details data-am-stage-disclosure="analysis-controls" className="rounded-lg border border-white/10 bg-black/30 p-3">
+            <summary className="flex list-none cursor-pointer items-center gap-2 font-mono text-xs uppercase tracking-wider text-zinc-300 [&::-webkit-details-marker]:hidden"><AMIcon name="settings" size="sm" bright />Analysis controls · sampling, time gate, CLAP / SigLIP2, Continue<ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary>
             <div className="mt-3">            <div className="min-w-0 space-y-3">
               <div className="grid grid-cols-2 gap-2">
                 <div>
@@ -842,20 +875,20 @@ export function AMStagePage() {
 
               <div className="grid gap-2 sm:grid-cols-2">
                 <div className="space-y-1.5 rounded border border-cyan-400/20 p-2">
-                  <Button className="w-full bg-cyan-700 hover:bg-cyan-600" disabled={!file || !segments.length || Boolean(busy)} title="Новая обработка CLAP с начала; только CLAP результаты будут заменены." onClick={() => void analyze("clap")}>
+                  <Button data-am-stage-action="clap-start" className="w-full bg-cyan-700 hover:bg-cyan-600" disabled={!file || !segments.length || Boolean(busy)} title="Новая обработка CLAP с начала; только CLAP результаты будут заменены." onClick={() => void analyze("clap")}>
                     {busy === "clap" ? <Loader2 className="size-4 animate-spin" /> : <Zap className="size-4" />}
                     CLAP · с начала
                   </Button>
-                  <Button className="w-full" variant="outline" disabled={!file || Boolean(busy) || !canContinueClap} onClick={() => void analyze("clap", true)}>
+                  <Button data-am-stage-action="clap-continue" className="w-full" variant="outline" disabled={!file || Boolean(busy) || !canContinueClap} onClick={() => void analyze("clap", true)}>
                     Продолжить CLAP ({clapCompleted}/{segments.length})
                   </Button>
                 </div>
                 <div className="space-y-1.5 rounded border border-fuchsia-400/20 p-2">
-                  <Button className="w-full bg-fuchsia-700 hover:bg-fuchsia-600" disabled={!file || !segments.length || Boolean(busy) || !morphoStatus?.ready} title="Новая обработка SigLIP2 с начала; только SigLIP2 результаты будут заменены." onClick={() => void analyze("siglip")}>
+                  <Button data-am-stage-action="siglip2-start" className="w-full bg-fuchsia-700 hover:bg-fuchsia-600" disabled={!file || !segments.length || Boolean(busy) || !morphoStatus?.ready} title="Новая обработка SigLIP2 с начала; только SigLIP2 результаты будут заменены." onClick={() => void analyze("siglip")}>
                     {busy === "siglip" ? <Loader2 className="size-4 animate-spin" /> : <Zap className="size-4" />}
                     SigLIP2 · с начала
                   </Button>
-                  <Button className="w-full" variant="outline" disabled={!file || Boolean(busy) || !morphoStatus?.ready || !canContinueSiglip} onClick={() => void analyze("siglip", true)}>
+                  <Button data-am-stage-action="siglip2-continue" className="w-full" variant="outline" disabled={!file || Boolean(busy) || !morphoStatus?.ready || !canContinueSiglip} onClick={() => void analyze("siglip", true)}>
                     Продолжить SigLIP2 ({siglipCompleted}/{segments.length})
                   </Button>
                 </div>
@@ -873,7 +906,7 @@ export function AMStagePage() {
                 </div>
               ) : null}
               {busy ? (
-                <Button
+                <Button data-am-stage-action="analysis-stop"
                   className="w-full"
                   variant="destructive"
                   onClick={() => void stop()}
@@ -895,19 +928,20 @@ export function AMStagePage() {
             </div></div>
           </details>
             </div>
-            <aside className="flex min-w-0 flex-col gap-2 rounded-lg border border-cyan-400/20 bg-black/30 p-3">
-              <MacroGenerator parameters={filteredV3Parameters} collapsible collapseLabel={`TEXT · Semantic V3 · ${filteredV3Parameters.length}`} />
-              <MacroGenerator parameters={macroParameters} collapsible collapseLabel={`CLAP + SigLIP2 · ${macroParameters.length}`} />
+            <aside data-am-stage-zone="macro-exports" className="flex min-w-0 flex-col gap-2 rounded-lg border border-cyan-400/20 bg-black/30 p-3">
+              <MacroGenerator parameters={filteredV3Parameters} collapsible dataScope="am-stage" collapseLabel={`TEXT · Semantic V3 · ${filteredV3Parameters.length}`} />
+              <MacroGenerator parameters={macroParameters} collapsible dataScope="am-stage" collapseLabel={`CLAP + SigLIP2 · ${macroParameters.length}`} />
               <div className="grid gap-1.5 sm:grid-cols-2">
-                <Button variant="outline" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportTimeline}><Download className="size-4" />Экспорт Priority Timeline</Button>
-                <Button variant="ghost" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportLegacyTimeline}><Download className="size-4" />Экспорт legacy timeline</Button>
+                <Button data-am-stage-action="export-priority-timeline" variant="outline" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportTimeline}><Download className="size-4" />Экспорт Priority Timeline</Button>
+                <Button data-am-stage-action="export-legacy-timeline" variant="ghost" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportLegacyTimeline}><Download className="size-4" />Экспорт legacy timeline</Button>
                 <JournalDraftButton modality="audio" engine="clap" actionLabel="Сохранить CLAP в Journal" parameters={clapFrame} model={{ id: "laion/clap-htsat-fused" }} settings={{ interval_seconds: segmentInterval, timeline_points: segments.length }} asset={file} label={`Segmented CLAP · ${file?.name ?? "track"}`} />
                 <JournalDraftButton modality="audio" engine="siglip2" actionLabel="Сохранить SigLIP2 в Journal" parameters={siglipFrame} model={{ id: "google/siglip2-base-patch16-224" }} settings={{ interval_seconds: segmentInterval, timeline_points: segments.length, spectrogram_detail: spectrogramDetail }} asset={file} label={`Segmented SigLIP2 · ${file?.name ?? "track"}`} />
               </div>
             </aside>
           </section>
 
-          <section className="min-w-0 rounded-lg border border-white/10 bg-black/30 p-2" aria-label="Parameter timeline node seek">
+          <section data-am-stage-zone="node-seek" className="min-w-0 rounded-lg border border-white/10 bg-black/30 p-2" aria-label="Parameter timeline node seek">
+            <div className="mb-1 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-zinc-400"><AMIcon name="audioToParameter" size="sm" bright />Node seek · Parameter Timeline</div>
             <div className="flex gap-1 overflow-x-auto pb-2">
               {segments.map((segment, index) => (
                 <button
@@ -934,8 +968,9 @@ export function AMStagePage() {
             </div>
           </section>
 
-          <section className="min-w-0 rounded-lg border border-cyan-400/20 bg-black/30 p-4">
+          <section data-am-stage-zone="media" className="min-w-0 rounded-lg border border-cyan-400/20 bg-black/30 p-4">
             <div className="min-w-0">
+              <div className="mb-2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-zinc-400"><AMIcon name="audioToParameter" size="sm" bright />Waveform · Spectrogram</div>
               {!audioUrl ? (
                 <label className="flex min-h-52 cursor-pointer items-center justify-center rounded border border-dashed border-cyan-400/30 bg-black/40">
                   <span className="flex items-center gap-2 text-sm text-zinc-400">
@@ -984,34 +1019,36 @@ export function AMStagePage() {
 
           </section>
 
-          <div className="grid min-w-0 gap-3 xl:grid-cols-[minmax(170px,1fr)_minmax(0,9fr)]">
-            <aside className="rounded-lg border border-border bg-background/85 p-3">
-              <h2 className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-wider">Domain layer mask</h2>
+          <div data-am-stage-zone="timeline" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(170px,1fr)_minmax(0,9fr)]">
+            <aside aria-label="Domain layer timeline visibility filters" className="max-h-56 overflow-y-auto rounded-lg border border-border bg-background/85 p-3 xl:max-h-[min(70vh,720px)]">
+              <h2 className="mb-2 flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-wider"><AMIcon name="settings" size="sm" bright />Domain layer mask</h2>
               <div className="flex flex-col gap-1.5">
                 {ACOUSTIC_DOMAIN_LAYERS.map((layer) => {
                   const checked = selectedLayers.includes(layer.id);
-                  return <label key={layer.id} className="flex cursor-pointer items-center gap-1.5 rounded border px-2 py-1 text-[10px]" style={{ borderColor: `${layer.color}70`, color: layer.color }}><input type="checkbox" checked={checked} onChange={() => setSelectedLayers((current) => checked ? current.filter((id) => id !== layer.id) : [...current, layer.id])} />{layer.label}</label>;
+                  return <label key={layer.id} data-am-stage-layer={layer.id} className="flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px]" style={{ borderColor: `${layer.color}70`, color: layer.color }}><input data-am-stage-action={`toggle-layer-${layer.id.toLowerCase()}`} type="checkbox" checked={checked} onChange={() => setSelectedLayers((current) => checked ? current.filter((id) => id !== layer.id) : [...current, layer.id])} />{layer.label}</label>;
                 })}
-                <label className="flex cursor-pointer items-center gap-1.5 rounded border px-2 py-1 text-[10px]" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70`, color: GLOBAL_CONSENSUS_LAYER.color }}><input type="checkbox" checked={showGlobalConsensus} onChange={(event) => setShowGlobalConsensus(event.target.checked)} />{GLOBAL_CONSENSUS_LAYER.label}</label>
+                <label data-am-stage-layer={GLOBAL_CONSENSUS_LAYER.id} className="flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px]" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70`, color: GLOBAL_CONSENSUS_LAYER.color }}><input data-am-stage-action="toggle-consensus-visibility" type="checkbox" checked={showGlobalConsensus} onChange={(event) => setShowGlobalConsensus(event.target.checked)} />{GLOBAL_CONSENSUS_LAYER.label}</label>
               </div>
             </aside>
-          <section className="rounded-lg border border-white/10 bg-black/30 p-3">
+          <section data-am-stage-zone="timeline-chart" className="min-w-0 rounded-lg border border-white/10 bg-black/30 p-3">
             <div className="mb-2 flex items-center justify-between gap-2 text-xs text-zinc-400">
               <span>Parameter Timeline · {formatTime(currentTime)}</span>
               <span>Нажмите точку для перемотки</span>
             </div>
+            {showGlobalConsensus ? <p className="mb-2 rounded border px-2 py-1 text-[10px] text-slate-300" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70` }}>GLOBAL_CONSENSUS_LAYER остаётся UI-only: поиск и timeline lane не создаются.</p> : null}
 
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
               <h3 className="font-mono text-[10px] uppercase tracking-wider text-zinc-400">Parameter timeline</h3>
               <div className="flex gap-1 text-xs" role="group" aria-label="Timeline view">
                 {([ ["modality", "By modality"], ["layer", "By layer"] ] as const).map(([view, label]) => (
-                  <button key={view} type="button" onClick={() => setTimelineView(view)} aria-pressed={timelineView === view} className={`rounded border px-2 py-1 ${timelineView === view ? "border-violet-400 bg-violet-950/40 text-violet-200" : "border-white/15 text-zinc-400 hover:text-white"}`}>{label}</button>
+                  <button key={view} data-am-stage-action={`timeline-view-${view}`} type="button" onClick={() => setTimelineView(view)} aria-pressed={timelineView === view} className={`rounded border px-2 py-1 ${timelineView === view ? "border-violet-400 bg-violet-950/40 text-violet-200" : "border-white/15 text-zinc-400 hover:text-white"}`}>{label}</button>
                 ))}
               </div>
             </div>
             <ParameterTimelineGraph
               segments={nodeSegments}
               textParameters={v3Parameters}
+              selectedLayers={selectedLayers}
               currentTime={currentTime}
               duration={audioDuration}
               showClap={showClap}
@@ -1022,11 +1059,11 @@ export function AMStagePage() {
 
           </div>
 
-          <section className="grid min-h-[560px] gap-3 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-            <ParameterBank title="CLAP Parameters" accent="cyan" parameters={visibleClap} viewMode={clapBankViewMode} onViewModeChange={setClapBankViewMode} useDomainLayerColors onChange={(name, value) => updateValue("clap", name, value)} onRemove={(name) => removeValue("clap", name)} />
-            <ParameterBank title="SigLIP2 Spectrogram Parameters" accent="fuchsia" parameters={visibleSiglip} viewMode={siglipBankViewMode} onViewModeChange={setSiglipBankViewMode} useDomainLayerColors onChange={(name, value) => updateValue("siglip", name, value)} onRemove={(name) => removeValue("siglip", name)} />
+          <section data-am-stage-zone="modality-banks" className="grid min-h-[560px] min-w-0 gap-3 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+            <ParameterBank dataScope="am-stage" title="CLAP Parameters" icon="clap" bankId="clap" accent="cyan" parameters={visibleClap} viewMode={clapBankViewMode} onViewModeChange={setClapBankViewMode} useDomainLayerColors onChange={(name, value) => updateValue("clap", name, value)} onRemove={(name) => removeValue("clap", name)} />
+            <ParameterBank dataScope="am-stage" title="SigLIP2 Spectrogram Parameters" icon="morpho" bankId="siglip2" accent="fuchsia" parameters={visibleSiglip} viewMode={siglipBankViewMode} onViewModeChange={setSiglipBankViewMode} useDomainLayerColors onChange={(name, value) => updateValue("siglip", name, value)} onRemove={(name) => removeValue("siglip", name)} />
           </section>
-          <ParameterBank title={`TEXT · Semantic V3 · ${filteredV3Parameters.length}/${v3Parameters.length}`} accent="cyan" parameters={filteredV3Parameters} viewMode={textBankViewMode} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={updateV3ParameterValue} onRemove={removeV3Parameter} />
+          <ParameterBank dataScope="am-stage" title={`TEXT · Semantic V3 · ${filteredV3Parameters.length}/${v3Parameters.length}`} icon="search" bankId="text" accent="cyan" parameters={filteredV3Parameters} viewMode={textBankViewMode} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={updateV3ParameterValue} onRemove={removeV3Parameter} />
         </div>
       </div>
     </div>
@@ -1052,6 +1089,8 @@ function ToggleRow({
 
 function ParameterBank({
   title,
+  icon,
+  bankId,
   accent,
   parameters,
   onChange,
@@ -1059,8 +1098,11 @@ function ParameterBank({
   viewMode,
   onViewModeChange,
   useDomainLayerColors = false,
+  dataScope,
 }: {
   title: string;
+  icon: "clap" | "morpho" | "search";
+  bankId: "clap" | "siglip2" | "text";
   accent: "cyan" | "fuchsia";
   parameters: ActiveParameter[];
   onChange: (name: string, value: number | string) => void;
@@ -1068,12 +1110,15 @@ function ParameterBank({
   viewMode: "compact" | "standard" | "expanded";
   onViewModeChange: (mode: "compact" | "standard" | "expanded") => void;
   useDomainLayerColors?: boolean;
+  dataScope?: "am-stage";
 }) {
   return (
-    <details open className={`min-w-0 rounded-lg border bg-black/30 p-3 ${accent === "cyan" ? "border-cyan-400/25" : "border-fuchsia-400/25"}`}>
+    <details open data-am-stage-disclosure={dataScope ? `bank-${bankId}` : undefined} className={`min-w-0 rounded-lg border bg-black/30 p-3 ${accent === "cyan" ? "border-cyan-400/25" : "border-fuchsia-400/25"}`}>
       <summary className="mb-2 flex cursor-pointer list-none flex-wrap items-center justify-between gap-2">
-        <h2 className={`font-mono text-xs font-semibold uppercase tracking-[0.18em] ${accent === "cyan" ? "text-cyan-300" : "text-fuchsia-300"}`}>
+        <h2 className={`flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] ${accent === "cyan" ? "text-cyan-300" : "text-fuchsia-300"}`}>
+          <AMIcon name={icon} size="sm" bright />
           {title}
+          <ChevronDown className="am-stage-disclosure-chevron size-3.5" />
         </h2>
         <div className="flex items-center gap-2">
           <div className="flex rounded border border-white/10 p-0.5" role="group" aria-label={`${title} view mode`}>
@@ -1087,6 +1132,7 @@ function ParameterBank({
         className="min-h-0 flex-1"
         displayMode={viewMode === "expanded" ? "detail" : viewMode}
         useDomainLayerColors={useDomainLayerColors}
+        dataScope={dataScope}
         onChange={onChange}
         onRemove={onRemove}
       />
@@ -1097,6 +1143,7 @@ function ParameterBank({
 function ParameterTimelineGraph({
   segments,
   textParameters,
+  selectedLayers,
   currentTime,
   duration,
   showClap,
@@ -1105,13 +1152,14 @@ function ParameterTimelineGraph({
 }: {
   segments: Array<{ time: number; clap: ActiveParameter[]; siglip: ActiveParameter[] }>;
   textParameters: ActiveParameter[];
+  selectedLayers: string[];
   currentTime: number;
   duration: number;
   showClap: boolean;
   showSiglip: boolean;
   view: "modality" | "layer";
 }) {
-  const lanes = useMemo(() => buildLayerTimelineLanes(segments, textParameters, duration, showClap, showSiglip), [duration, segments, showClap, showSiglip, textParameters]);
+  const lanes = useMemo(() => buildLayerTimelineLanes(segments, textParameters, duration, showClap, showSiglip).filter((lane) => lane.id === UNCLASSIFIED_TIMELINE_LAYER.id || selectedLayers.includes(lane.id)), [duration, segments, selectedLayers, showClap, showSiglip, textParameters]);
   const series = useMemo(() => {
     const candidates: GraphSeries[] = [];
     for (const source of ["clap", "siglip"] as const) {

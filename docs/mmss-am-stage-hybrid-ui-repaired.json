@@ -1,0 +1,182 @@
+{
+  "meta": {
+    "id": "mmss-am-stage-hybrid-ui-repaired",
+    "version": "1.0.0",
+    "language": "ru",
+    "status": "implementation_complete_validation_partial"
+  },
+  "task": {
+    "objective": "Согласовать существующие требования AM-Stage к порядку зон, плотности, адаптивной проверке и управлению Ulanzi до реализации и зафиксировать исполнимый контракт.",
+    "operation": "repair_then_extend",
+    "artifact_type": "module",
+    "foundation": "mixed_requirements_and_existing_stack",
+    "working_mode": "one_shot"
+  },
+  "provenance": [
+    {
+      "source": "tasks/new/TASK-am-stage-hybrid-ui-ulanzi.md",
+      "kind": "current_operator_requirements",
+      "authority": "primary"
+    },
+    {
+      "source": "tasks/old/TASK-am-stage-final-layout-typo-commit.md",
+      "kind": "prior_operator_requirements",
+      "authority": "superseded_where_conflicting"
+    },
+    {
+      "source": "tasks/old/TASK-am-stage-layout-colors-width.md",
+      "kind": "prior_operator_requirements",
+      "authority": "superseded_where_conflicting"
+    },
+    {
+      "source": "tasks/old/TASK-am-stage-zones-layer-colors-preset.md",
+      "kind": "prior_operator_requirements",
+      "authority": "superseded_where_conflicting"
+    },
+    {
+      "source": "tasks/old/TASK-am-stage-bootstrap.md",
+      "kind": "prior_operator_requirements",
+      "authority": "preserve_capabilities"
+    },
+    {
+      "source": "tasks/old/TASK-am-stage-layout-continue-ux.md",
+      "kind": "prior_operator_requirements",
+      "authority": "preserve_continue_and_analysis"
+    },
+    {
+      "source": "tasks/old/TASK-am-stage-timeline-by-layer.md",
+      "kind": "prior_operator_requirements",
+      "authority": "preserve_timeline_contract"
+    },
+    {
+      "source": "src/lib/domain-layers.ts",
+      "kind": "existing_stack_canonical_palette",
+      "authority": "canonical_for_layer_colors"
+    },
+    {
+      "source": "src/components/pages/AMStagePage.tsx",
+      "kind": "existing_stack_zone_order_and_controls",
+      "authority": "source_observation"
+    }
+  ],
+  "delta": [
+    "Приоритет отдан новому гибридному контракту и последнему заданию final-layout: Analysis располагается под Semantic Search слева; старое пожелание поместить его в правую колонку отменено.",
+    "Уточнён единый порядок: верхняя строка Semantic Search слева и Clean Macro/экспорт справа; Analysis внутри левой колонки; затем node seek, waveform/spectrogram, timeline с вертикальной маской слоёв, банки CLAP/SigLIP и полноширинный TEXT.",
+    "Зафиксированы уже утверждённые элементы: русский заголовок параметра 13px/#d2dde5, граница карточки слоя около 0.3 opacity, независимые сворачиваемые секции и сохранение 0.5s, Continue, preset и независимых режимов банков.",
+    "Разделены текущее статическое наблюдение JSX, целевое поведение и отложенные функции; факт существования трёх окон и работоспособность физического Ulanzi оставлены на runtime-проверку.",
+    "При реализации обнаружено и исправлено: Domain layer mask ранее меняла checkbox state, но не фильтровала дорожки By layer; выбор слоёв теперь передаётся графику.",
+    "Добавлены stable data-am-stage-* зоны и action targets, page-scoped Ctrl+Alt+Shift hotkeys используют click текущих UI-кнопок, а voice shortcut только фокусирует существующую кнопку, сохраняя явный пользовательский жест."
+  ],
+  "zones": {
+    "observed_from_source_order": [
+      "header_and_test_preset",
+      "top_row: semantic_search_left_and_analysis_controls_below_it; macro_outputs_exports_and_journal_right",
+      "node_seek_strip",
+      "waveform_and_spectrogram",
+      "domain_layer_mask_left_and_parameter_timeline_chart_right",
+      "clap_and_siglip_banks_side_by_side",
+      "text_semantic_v3_bank_full_width"
+    ],
+    "target_order": [
+      {
+        "id": "top_row",
+        "layout": "semantic_search_and_analysis_controls_left; clean_macro_instances_exports_and_journal_right",
+        "constraints": ["analysis_directly_under_semantic_search", "each_macro_collapses_independently"]
+      },
+      {"id": "node_seek", "position": "immediately_before_waveform"},
+      {"id": "media", "contents": ["waveform", "transport", "spectrogram"]},
+      {"id": "timeline", "layout": "vertical_domain_layer_mask_beside_timeline_chart_on_wide_screens", "narrow_behavior": "stack_mask_before_chart_without_page_level_horizontal_overflow"},
+      {"id": "modality_banks", "contents": ["clap", "siglip2"], "layout": "side_by_side_when_space_allows"},
+      {"id": "text_bank", "contents": ["text_semantic_v3"], "layout": "full_content_width"}
+    ]
+  },
+  "collapse": [
+    {"id": "semantic_search", "default": "open"},
+    {"id": "clean_macro_text", "default": "open", "independent": true},
+    {"id": "clean_macro_multimodal", "default": "open", "independent": true},
+    {"id": "analysis_controls", "default": "closed"},
+    {"id": "clap_bank", "default": "open"},
+    {"id": "siglip2_bank", "default": "open"},
+    {"id": "text_bank", "default": "open"}
+  ],
+  "breakpoints": [
+    {"viewport": "390-430 CSS px", "purpose": "narrow/mobile stress; one-column flow; no page-level horizontal trap"},
+    {"viewport": "about 768 CSS px", "purpose": "tablet stress; preserve readable controls and reachable mask"},
+    {"viewport": "full 2K horizontal display", "purpose": "primary dense desktop; use available content width"},
+    {"implementation_note": "Use the existing responsive layout tokens as a starting point; capture actual viewport dimensions and inspect reflow before changing breakpoint thresholds."}
+  ],
+  "quick_fixes": [
+    {"id": "layer_card_border_alpha", "target": "domain-colored parameter card borders only", "value": 0.3, "state": "previously implemented; verify visually"},
+    {"id": "parameter_title_typography", "target": "Russian parameter names in TEXT/CLAP/SigLIP", "value": {"font_size_px": 13, "color": "#d2dde5"}, "state": "previously implemented; verify at narrow and desktop sizes"},
+    {"id": "collapse_controls", "target": "all sections in collapse list", "state": "previously implemented; verify click and keyboard behavior"},
+    {"id": "section_icons", "target": "AM-Stage section headers and actions", "rule": "match existing sidebar icon stroke/visual scale and preserve usable hit targets", "state": "implemented_source_reviewed"},
+    {"id": "disclosure_controls", "target": "Semantic, Analysis, macro outputs, CLAP/SigLIP/TEXT banks", "rule": "consistent explicit chevrons and independent native details state", "state": "implemented_source_reviewed"},
+    {"id": "compact_density", "target": "compact parameter cards", "rule": "auto-fit according to available width, maximum ten columns, minimum one", "state": "preserved_source_reviewed"}
+  ],
+  "ulanzi_binding_targets": {
+    "actions": [
+      {"id": "clap_start", "target": "same handler as CLAP fresh-run button"},
+      {"id": "clap_stop", "target": "same handler as cooperative batch stop"},
+      {"id": "siglip2_start", "target": "same handler as SigLIP2 fresh-run button"},
+      {"id": "siglip2_stop", "target": "same handler as cooperative batch stop"},
+      {"id": "export_priority_timeline", "target": "existing Priority Timeline export handler"},
+      {"id": "export_legacy_timeline", "target": "existing legacy export handler"},
+      {"id": "voice_input", "target": "existing voice append/replace controls; browser permission and user-gesture requirements remain intact"}
+    ],
+    "parameter_controls": {
+      "target": "several active numeric parameters with stable technical-name identifiers and existing min/max/step semantics",
+      "candidate_mapping": "first N visible CLAP Range controls only if the Ulanzi software can address a parameter by stable DOM identifier; otherwise document the exact installed bridge/API or leave the fader mapping unimplemented",
+      "no_full_midi_host": true
+    },
+    "integration_boundary": "Prefer an installed Ulanzi/Creative Deck multi-action or keyboard bridge. Add only stable data attributes and scoped shortcuts if that bridge supports them; do not claim hardware execution until tested on the connected device or simulator.",
+    "unknowns": ["Ulanzi model and firmware", "installed Ulanzi software and available actions", "whether an existing browser hotkey or DOM-target bridge is installed", "which stable parameter IDs are suitable for faders"]
+  },
+  "acceptance": [
+    "MMSS-json repaired and written before UI/Ulanzi implementation.",
+    "Zone order matches the target order and all controls remain reachable.",
+    "Semantic Search, both macro outputs, Analysis, and all three banks collapse independently.",
+    "Layer mask exposes nine acoustic layers plus UI-only consensus; colors match src/lib/domain-layers.ts; mask remains usable at narrow widths.",
+    "No horizontal page overflow at 390-430px; tablet and full 2K layouts are captured and reviewed.",
+    "Continue, test preset, node interval minimum 0.5s, layer timeline projection, and independent bank view modes remain available.",
+    "Parameter title 13px/#d2dde5 and layer border opacity about 0.3 remain intact.",
+    "Ulanzi action bindings invoke existing handlers; fader bindings are limited to an identified supported bridge and stable parameter IDs.",
+    "TypeScript check passes for touched files; runtime findings are recorded separately from planned checks."
+  ],
+  "non_goals": [
+    "Consensus retrieval or a GLOBAL_CONSENSUS parameter lane.",
+    "Parameter-to-text NLP pipeline.",
+    "Redesign of the full AM-Core sidebar or unrelated routes.",
+    "A custom full MIDI host, speculative hardware integration, or invented Ulanzi device behavior.",
+    "Pixel-perfect replication of the Flowmusic mock."
+  ],
+  "deferred": [
+    {"id": "consensus_retrieval", "reason": "explicit non-goal; consensus remains UI-only"},
+    {"id": "parameter_to_text", "source": "tasks/future/mmss-am-stage-param-to-text-future.json"},
+    {"id": "hardware_fader_mapping", "condition": "defer only if no supported installed bridge or stable control target is discoverable; record exact blocker"}
+  ],
+  "implementation_closeout": {
+    "status": "implemented_with_responsive_visual_qa_blocked",
+    "changes": [
+      {"area": "layer_mask", "result": "all nine acoustic layer IDs remain selectable; selected acoustic layers now filter By layer timeline lanes; consensus remains UI-only"},
+      {"area": "narrow_mask", "result": "internal max-height scrolling and 36px minimum option targets keep the vertical mask bounded and touch-friendly by source inspection"},
+      {"area": "icons_and_density", "result": "18px sidebar-style AM icons and explicit disclosure chevrons added; compact grid rule remains auto-fit with at most ten columns"},
+      {"area": "ulanzi_targets", "result": "stable page/zone/disclosure/action/layer/parameter data attributes and scoped shortcuts added; no physical device behavior claimed"},
+      {"area": "faders", "result": "no write mapping implemented because no supported browser-to-AM-Stage Ulanzi bridge or parameter-write API was discoverable; see docs/am-stage-ulanzi-bindings.md"}
+    ],
+    "responsive_qa_limit": "An isolated headless Edge process launch was rejected by local process-launch policy. No multi-window or existing-window automation was used. 390px, 768px and 2K visual screenshots remain unverified.",
+    "server_route": "http://localhost:3000/am-stage returned HTTP 200 during implementation."
+  },
+  "unknowns": [
+    "Visual responsive behavior at 390-430, about 768 and full 2K remains unverified; source inspection and an HTTP check do not substitute for rendered browser QA.",
+    "Ulanzi model, firmware and physical action execution remain unverified; no supported control bridge/API is present in the inspected project or installed Ulanzi hook."
+  ],
+  "validation_plan": [
+    {"id": "source_contract_review", "scope": "current task and prior AM-Stage requirements", "method": "manual comparison", "status": "passed"},
+    {"id": "source_zone_inventory", "scope": "src/components/pages/AMStagePage.tsx and src/lib/domain-layers.ts", "method": "static source inspection", "status": "passed"},
+    {"id": "responsive_headless_edge_qa", "scope": "390, 768 and 2048 CSS px", "method": "isolated headless Edge/CDP; process launch rejected by local policy, no screenshots captured", "status": "blocked"},
+    {"id": "server_route", "scope": "http://localhost:3000/am-stage", "method": "HTTP GET", "status": "passed_200"},
+    {"id": "ulanzi_binding_discovery", "scope": "repository and installed Ulanzi tooling", "method": "source/package inspection", "status": "no_supported_bridge_found; fader mapping deferred"},
+    {"id": "ulanzi_physical_execution", "scope": "physical Ulanzi actions", "method": "requires identified bridge/device; intentionally not claimed", "status": "blocked_no_bridge"},
+    {"id": "typescript", "scope": "files changed in implementation", "method": "pnpm exec tsc --noEmit", "status": "passed", "exit_code": 0}
+  ]
+}

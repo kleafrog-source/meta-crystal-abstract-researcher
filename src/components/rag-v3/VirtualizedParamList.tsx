@@ -15,6 +15,7 @@ export function VirtualizedParamList(props: {
   selectedParameterName?: string | null;
   onSelectParameter?: (technicalName: string) => void;
   useDomainLayerColors?: boolean;
+  dataScope?: "am-stage";
 }) {
   const storeParameters = useRagV3Store((state) => state.activeParameters);
   const isSearching = useRagV3Store((state) => state.isSearching);
@@ -43,7 +44,7 @@ export function VirtualizedParamList(props: {
       ) : (
         <div className={`console-param-grid console-param-grid-${props.displayMode ?? "detail"}`}>
           {parameters.map((parameter, index) => (
-            <ParameterControl key={parameter.technical_name} param={parameter} index={index} displayMode={props.displayMode ?? "detail"} onChange={props.onChange} onRemove={props.onRemove} selected={props.selectedParameterName === parameter.technical_name} onSelect={props.onSelectParameter} useDomainLayerColors={props.useDomainLayerColors} />
+            <ParameterControl key={parameter.technical_name} param={parameter} index={index} displayMode={props.displayMode ?? "detail"} onChange={props.onChange} onRemove={props.onRemove} selected={props.selectedParameterName === parameter.technical_name} onSelect={props.onSelectParameter} useDomainLayerColors={props.useDomainLayerColors} dataScope={props.dataScope} />
           ))}
         </div>
       )}

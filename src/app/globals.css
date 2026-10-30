@@ -387,6 +387,8 @@ aside nav button:hover .am-icon,aside nav button:focus-visible .am-icon,aside na
 .console-compact-card .console-knob-wrap { isolation:isolate; }
 .console-compact-card .console-knob-input:disabled { cursor:not-allowed; }
 .console-control-module .text-fuchsia-300 { color:var(--primary); }
+.flowmusic-console .am-stage-disclosure-chevron { flex:none;transition:transform .16s ease; }
+.flowmusic-console details[open][data-am-stage-disclosure] > summary .am-stage-disclosure-chevron { transform:rotate(180deg); }
 @media(max-width:520px) { .flowmusic-console header h1 { flex-wrap:wrap; }.flowmusic-console header h1 .am-logo { width:44px;height:44px; } }
 
 /* Sidebar icons and surfaces from the AM-Core reference. */

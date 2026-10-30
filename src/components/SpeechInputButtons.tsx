@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Loader2, Mic, Plus, Square } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-export function SpeechInputButtons({ value, onChange, label }: { value: string; onChange: (value: string) => void; label: string }) {
+export function SpeechInputButtons({ value, onChange, label, dataScope }: { value: string; onChange: (value: string) => void; label: string; dataScope?: "am-stage" }) {
   const [state, setState] = useState<"idle" | "recording" | "transcribing">("idle");
   const [mode, setMode] = useState<"replace" | "append" | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -121,15 +121,15 @@ export function SpeechInputButtons({ value, onChange, label }: { value: string; 
   return (
     <div>
       <div className="flex flex-col gap-1">
-        <SpeechButton mode="append" activeMode={mode} state={state} label={label} onClick={() => void toggle("append")} />
-        <SpeechButton mode="replace" activeMode={mode} state={state} label={label} onClick={() => void toggle("replace")} />
+        <SpeechButton mode="append" activeMode={mode} state={state} label={label} dataScope={dataScope} onClick={() => void toggle("append")} />
+        <SpeechButton mode="replace" activeMode={mode} state={state} label={label} dataScope={dataScope} onClick={() => void toggle("replace")} />
       </div>
       {error ? <div className="mt-1 max-w-48 text-[10px] text-destructive">{error}</div> : null}
     </div>
   );
 }
 
-function SpeechButton({ mode, activeMode, state, label, onClick }: { mode: "replace" | "append"; activeMode: "replace" | "append" | null; state: "idle" | "recording" | "transcribing"; label: string; onClick: () => void }) {
+function SpeechButton({ mode, activeMode, state, label, dataScope, onClick }: { mode: "replace" | "append"; activeMode: "replace" | "append" | null; state: "idle" | "recording" | "transcribing"; label: string; dataScope?: "am-stage"; onClick: () => void }) {
   const active = activeMode === mode && state !== "idle";
   const title = mode === "append" ? "Добавить голосом" : "Заменить голосом";
   const hint = active && state === "recording"
@@ -139,7 +139,7 @@ function SpeechButton({ mode, activeMode, state, label, onClick }: { mode: "repl
       : mode === "append"
         ? `Распознаёт речь и добавляет текст в конец поля «${label}».`
         : `Распознаёт речь и заменяет содержимое поля «${label}».`;
-  return <Tooltip><TooltipTrigger asChild><button type="button" aria-label={`${title}: ${label}`} className={`inline-flex size-7 items-center justify-center rounded-md border ${active && state === "recording" ? "border-red-400 bg-red-500/20 text-red-300" : "border-white/15 bg-black/70 text-muted-foreground"}`} onClick={onClick} disabled={state === "transcribing"}>
+  return <Tooltip><TooltipTrigger asChild><button type="button" data-am-stage-action={dataScope ? `voice-${mode}` : undefined} aria-label={`${title}: ${label}`} className={`inline-flex size-7 items-center justify-center rounded-md border ${active && state === "recording" ? "border-red-400 bg-red-500/20 text-red-300" : "border-white/15 bg-black/70 text-muted-foreground"}`} onClick={onClick} disabled={state === "transcribing"}>
     {active && state === "recording" ? <Square className="size-3.5 fill-current" /> : active && state === "transcribing" ? <Loader2 className="size-4 animate-spin" /> : mode === "append" ? <span className="relative"><Mic className="size-4" /><Plus className="absolute -right-1.5 -top-1.5 size-2.5 stroke-[3]" /></span> : <Mic className="size-4" />}
   </button></TooltipTrigger><TooltipContent side="right" sideOffset={6} className="max-w-xs text-left">{hint}</TooltipContent></Tooltip>;
 }

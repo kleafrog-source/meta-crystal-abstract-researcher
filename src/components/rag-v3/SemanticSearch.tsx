@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ClipboardEvent, type ReactNode } from "react";
-import { ArrowRightLeft, RefreshCw, RotateCcw, Save, Search, Sparkles, Split, X, Undo2, Redo2 } from "lucide-react";
+import { ArrowRightLeft, ChevronDown, RefreshCw, RotateCcw, Save, Search, Sparkles, Split, X, Undo2, Redo2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,7 @@ const SCOPE_HINTS = {
   administrative: "Служебные и административные параметры.",
 } as const;
 
-export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Query B", collapsible = false }: { primaryLabel?: string; secondaryLabel?: string; collapsible?: boolean } = {}) {
+export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Query B", collapsible = false, dataScope }: { primaryLabel?: string; secondaryLabel?: string; collapsible?: boolean; dataScope?: "am-stage" } = {}) {
   const query = useRagV3Store((state) => state.query);
   const queryB = useRagV3Store((state) => state.queryB);
   const topK = useRagV3Store((state) => state.topK);
@@ -210,6 +210,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
       <div className={`grid gap-2 ${searchMode === "transition" ? "xl:grid-cols-2" : ""}`}>
         <QueryPanel
           title={primaryLabel}
+          dataScope={dataScope}
           value={query}
           placeholder="Describe the first target sound state..."
           resultCount={primaryCount}
@@ -233,6 +234,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
         {searchMode === "transition" ? (
           <QueryPanel
             title={secondaryLabel}
+            dataScope={dataScope}
             value={queryB}
             placeholder="Describe the second target sound state..."
             resultCount={secondaryCount}
@@ -313,11 +315,12 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
 
     </section>
   );
-  return collapsible ? <details open className="min-w-0 rounded-lg border border-border bg-black/65 p-3"><summary className="cursor-pointer font-mono text-xs font-semibold uppercase tracking-[0.12em] text-zinc-200">Semantic Search V3 · {primaryLabel}</summary><div className="mt-2">{panel}</div></details> : panel;
+  return collapsible ? <details open data-am-stage-disclosure={dataScope ? "semantic-search" : undefined} className="min-w-0 rounded-lg border border-border bg-black/65 p-3"><summary className="flex list-none cursor-pointer items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-zinc-200 [&::-webkit-details-marker]:hidden"><AMIcon name="search" size="sm" bright />Semantic Search V3 · {primaryLabel}<ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary><div className="mt-2">{panel}</div></details> : panel;
 }
 
 function QueryPanel(props: {
   title: string;
+  dataScope?: "am-stage";
   value: string;
   placeholder: string;
   resultCount: number;
@@ -333,9 +336,9 @@ function QueryPanel(props: {
   inputRef: (element: HTMLTextAreaElement | null) => void;
   actions?: ReactNode;
 }) {
-  const { title, value, placeholder, resultCount, isSearching, onChange, onClear, onSubmit, onPaste, onUndo, onRedo, canUndo, canRedo, inputRef, actions } = props;
+  const { title, value, placeholder, resultCount, isSearching, onChange, onClear, onSubmit, onPaste, onUndo, onRedo, canUndo, canRedo, inputRef, actions, dataScope } = props;
   return (
-    <div className="space-y-2 rounded border border-white/20 bg-black/40 p-2.5">
+    <div data-am-stage-zone={dataScope ? `query-${title === "Brief" ? "a" : "b"}` : undefined} className="space-y-2 rounded border border-white/20 bg-black/40 p-2.5">
       <div className="flex items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-1 font-mono text-xs font-medium uppercase tracking-wide">{title}<V3InfoTip content="Опишите целевое звучание. Каждый запуск выполняется независимо от предыдущих запросов." /></div>
@@ -347,7 +350,7 @@ function QueryPanel(props: {
         <Button type="button" variant="outline" size="sm" title="Undo paste (Ctrl/⌘+Z)" aria-label="Undo paste" disabled={!canUndo} onClick={onUndo}><Undo2 className="size-4" /></Button>
         <Button type="button" variant="outline" size="sm" title="Redo paste (Ctrl/⌘+Shift+Z, Ctrl+Y)" aria-label="Redo paste" disabled={!canRedo} onClick={onRedo}><Redo2 className="size-4" /></Button>
         <V3Tooltip content="Запускает semantic retrieval и anchoring только для содержимого этого поля.">
-          <Button type="button" size="sm" className="console-search-button h-8 rounded border border-fuchsia-400/50 bg-fuchsia-700/80 font-mono text-[10px] uppercase tracking-wide" onClick={onSubmit} disabled={!value.trim() || isSearching}>
+          <Button type="button" data-am-stage-action={dataScope ? `search-${title === "Brief" ? "a" : "b"}` : undefined} size="sm" className="console-search-button h-8 rounded border border-fuchsia-400/50 bg-fuchsia-700/80 font-mono text-[10px] uppercase tracking-wide" onClick={onSubmit} disabled={!value.trim() || isSearching}>
             <AMIcon name="search" size="sm" bright />{isSearching ? "Searching..." : "Search"}
           </Button>
         </V3Tooltip>
@@ -372,7 +375,7 @@ function QueryPanel(props: {
             </V3Tooltip>
           ) : null}
         </div>
-        <SpeechInputButtons value={value} onChange={onChange} label={title} />
+        <SpeechInputButtons value={value} onChange={onChange} label={title} dataScope={dataScope} />
       </div>
     </div>
   );
