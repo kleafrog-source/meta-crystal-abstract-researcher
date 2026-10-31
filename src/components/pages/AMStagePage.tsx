@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -16,6 +17,8 @@ import {
 import { AudioWaveformEditor } from "@/components/audio/AudioWaveformEditor";
 import { SemanticSearch } from "@/components/rag-v3/SemanticSearch";
 import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton";
+import { ParamToTextWorkbench } from "@/components/am-stage/ParamToTextWorkbench";
+import type { AmStageSessionData, AmStageSessionSummary, ParamTextWorkbenchSessionState } from "@/lib/am-stage-session";
 import { MacroGenerator } from "@/components/rag-v3/MacroGenerator";
 import { VirtualizedParamList } from "@/components/rag-v3/VirtualizedParamList";
 import { Badge } from "@/components/ui/badge";
@@ -150,7 +153,9 @@ function statusClass(status: AnalysisStatus): string {
 export function AMStagePage() {
   const stageRootRef = useRef<HTMLDivElement>(null);
   const v3Parameters = useRagV3Store((state) => state.activeParameters);
+  const v3Query = useRagV3Store((state) => state.query);
   const setV3Query = useRagV3Store((state) => state.setQuery);
+  const v3Session = useRagV3Store(useShallow((state) => ({ queryB: state.queryB, topK: state.topK, sources: state.sources, scopes: state.scopes, searchMode: state.searchMode, transitionRatio: state.transitionRatio, searchResults: state.searchResults, secondaryResults: state.secondaryResults, activeParameters: state.activeParameters, macro: state.macro })));
   const updateV3ParameterValue = useRagV3Store((state) => state.updateParameterValue);
   const removeV3Parameter = useRagV3Store((state) => state.removeParameter);
   const [selectedLayers, setSelectedLayers] = useState<string[]>(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id));
@@ -162,6 +167,7 @@ export function AMStagePage() {
   const [blendPercent, setBlendPercent] = useState(50);
   const [blendCurve, setBlendCurve] = useState<BlendCurve>("linear");
   const [file, setFile] = useState<File | null>(null);
+  const [audioReferenceName, setAudioReferenceName] = useState<string | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioDuration, setAudioDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -203,6 +209,20 @@ export function AMStagePage() {
   const [clapWeight, setClapWeight] = useState(0.5);
   const [vocalMatrixMode, setVocalMatrixMode] = useState(false);
   const [morphoStatus, setMorphoStatus] = useState<MorphoStatus | null>(null);
+  const [paramTextSessionState, setParamTextSessionState] = useState<ParamTextWorkbenchSessionState | null>(null);
+  const [workbenchSessionKey, setWorkbenchSessionKey] = useState(0);
+  const [activeSession, setActiveSession] = useState<{ id: string; title: string } | null>(null);
+  const [sessionDirty, setSessionDirty] = useState(false);
+  const [sessionModalOpen, setSessionModalOpen] = useState(false);
+  const [sessionSaveChoiceOpen, setSessionSaveChoiceOpen] = useState(false);
+  const [sessionResetConfirmOpen, setSessionResetConfirmOpen] = useState(false);
+  const [sessionRows, setSessionRows] = useState<AmStageSessionSummary[]>([]);
+  const [sessionError, setSessionError] = useState("");
+  const [sessionBusy, setSessionBusy] = useState(false);
+  const [sessionTitleDraft, setSessionTitleDraft] = useState("");
+  const [renamingSessionId, setRenamingSessionId] = useState<string | null>(null);
+  const [pendingSessionAction, setPendingSessionAction] = useState<null | { type: "open"; id: string } | { type: "new" }>(null);
+  const fingerprintRef = useRef("");
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -277,6 +297,7 @@ export function AMStagePage() {
       return URL.createObjectURL(nextFile);
     });
     setFile(nextFile);
+    setAudioReferenceName(nextFile.name);
     setAudioDuration(0);
     setAnalysisStart(0);
     setAnalysisEnd(0);
@@ -485,6 +506,7 @@ export function AMStagePage() {
   );
   const layerClap = useMemo(() => clapFrame.filter((parameter) => parameterMatchesLayers(parameter, selectedLayers)), [clapFrame, selectedLayers]);
   const layerSiglip = useMemo(() => siglipFrame.filter((parameter) => parameterMatchesLayers(parameter, selectedLayers)), [siglipFrame, selectedLayers]);
+  const matchesSelectedLayer = useCallback((parameter: ActiveParameter) => parameterMatchesLayers(parameter, selectedLayers), [selectedLayers]);
   const consensusFrames = useMemo(() => showGlobalConsensus
     ? applyConsensusSmooth([filteredV3Parameters, showClap ? layerClap : [], showSiglip ? layerSiglip : []], selectedLayers, consensusTopK, consensusCentroidPercent)
     : [filteredV3Parameters, showClap ? layerClap : [], showSiglip ? layerSiglip : []],
@@ -504,6 +526,28 @@ export function AMStagePage() {
     const [first, second] = pairs[blendPair] ?? pairs["text-clap"];
     return interpolateStageFrames(first, second, blendPercent, blendCurve).filter((parameter) => parameterMatchesLayers(parameter, selectedLayers));
   }, [blendCurve, blendPair, blendPercent, selectedLayers, textStageParameters, visibleClap, visibleSiglip]);
+  const capturedSessionData = useMemo<AmStageSessionData>(() => ({
+    schema: "am_stage_session_v1",
+    audio: { name: file?.name ?? audioReferenceName, duration_seconds: audioDuration, path: null, missing_on_restore: Boolean(audioReferenceName || file), warning: (audioReferenceName || file) ? "В снимке сохранены результаты и таймкоды, но браузерный аудиофайл не копируется. Выберите исходный файл повторно для воспроизведения и продолжения анализа." : null },
+    analysis_settings: { region_offset: regionOffset, region_duration: regionDuration, analysis_start: analysisStart, analysis_end: analysisEnd, segment_interval: segmentInterval, node_interval: nodeInterval, clap_top_k: clapTopK, siglip_top_k: siglipTopK, spectrogram_scale: spectrogramScale, spectrogram_detail: spectrogramDetail, spectrogram_color: spectrogramColor, spectrogram_renderer: spectrogramRenderer, siglip_spectrogram_layout: siglipSpectrogramLayout, show_spectrogram: showSpectrogram },
+    timeline: { segments: segments.map(({ siglipPreview: _preview, ...segment }) => segment) },
+    banks: { text_parameters: v3Session.activeParameters, clap_parameters: [...new Map(segments.flatMap((segment) => segment.clap).map((parameter) => [parameter.technical_name, parameter])).values()], siglip_parameters: [...new Map(segments.flatMap((segment) => segment.siglip).map((parameter) => [parameter.technical_name, parameter])).values()], text_view: textBankViewMode, clap_view: clapBankViewMode, siglip_view: siglipBankViewMode, show_clap: showClap, show_siglip: showSiglip, interpolate_clap: interpolateClap, interpolate_siglip: interpolateSiglip },
+    layers: { selected: selectedLayers, timeline_view: timelineView, stage2_visible: showGlobalConsensus, stage2_top_k: consensusTopK, stage2_centroid_percent: consensusCentroidPercent },
+    interpolation: { pair: blendPair, percent: blendPercent, curve: blendCurve, blend_enabled: blendMode, clap_weight: clapWeight },
+    vocal_matrix_mode: vocalMatrixMode,
+    param_to_text: paramTextSessionState,
+    v3: { query: v3Query, query_b: v3Session.queryB, top_k: v3Session.topK, sources: v3Session.sources, scopes: v3Session.scopes, search_mode: v3Session.searchMode, transition_ratio: v3Session.transitionRatio, search_results: v3Session.searchResults, secondary_results: v3Session.secondaryResults, active_parameters: v3Session.activeParameters, macro: v3Session.macro },
+  }), [audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, file, interpolateClap, interpolateSiglip, nodeInterval, paramTextSessionState, regionDuration, regionOffset, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, timelineView, v3Query, v3Session, vocalMatrixMode]);
+  useEffect(() => {
+    const fingerprint = JSON.stringify(capturedSessionData);
+    setSessionDirty(Boolean(activeSession) && fingerprint !== fingerprintRef.current);
+  }, [activeSession, capturedSessionData]);
+  const onParamTextStateChange = useCallback((state: ParamTextWorkbenchSessionState) => setParamTextSessionState(state), []);
+  const searchReverseBrief = useCallback((query: string) => {
+    useRagV3Store.setState({ searchMode: "single", queryB: "", secondaryResults: [] });
+    setV3Query(query);
+    void useRagV3Store.getState().proposeParameters(query);
+  }, [setV3Query]);
 
   const seekToSegment = (segment: SegmentPoint) => {
     setCurrentTime(segment.time);
@@ -558,21 +602,24 @@ export function AMStagePage() {
   };
 
   const downloadJson = (payload: unknown, suffix: string) => {
-    if (!file) return;
+    const name = file?.name ?? audioReferenceName;
+    if (!name) return;
     const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
-    const anchor = document.createElement("a"); anchor.href = url; anchor.download = `${file.name.replace(/\.[^.]+$/, "")}-${suffix}.json`; anchor.click(); URL.revokeObjectURL(url);
+    const anchor = document.createElement("a"); anchor.href = url; anchor.download = `${name.replace(/\.[^.]+$/, "")}-${suffix}.json`; anchor.click(); URL.revokeObjectURL(url);
   };
 
   const exportTimeline = () => {
-    if (!file || !segments.length) return;
-    downloadJson(buildPriorityTimeline(nodeSegments, { audioName: file.name, audioDuration, rawInterval: segmentInterval, nodeInterval, blend: blendMode, clapWeight, vocalMatrix: vocalMatrixMode }), "priority-timeline");
+    const audioName = file?.name ?? audioReferenceName;
+    if (!audioName || !segments.length) return;
+    downloadJson(buildPriorityTimeline(nodeSegments, { audioName, audioDuration, rawInterval: segmentInterval, nodeInterval, blend: blendMode, clapWeight, vocalMatrix: vocalMatrixMode }), "priority-timeline");
   };
 
   const exportLegacyTimeline = () => {
-    if (!file || !segments.length) return;
+    const audioName = file?.name ?? audioReferenceName;
+    if (!audioName || !segments.length) return;
     downloadJson({
       schema_version: "FLOWMUSIC_AUDIO_PARAMETER_TIMELINE_V1",
-      audio: { name: file.name, duration_seconds: audioDuration },
+      audio: { name: audioName, duration_seconds: audioDuration },
       sampling: {
         interval_seconds: segmentInterval,
         spectrogram_detail: spectrogramDetail,
@@ -636,6 +683,103 @@ export function AMStagePage() {
     return () => window.removeEventListener("keydown", handleStageShortcut);
   }, []);
 
+  const refreshSessionRows = useCallback(async () => {
+    const response = await fetch("/api/am-stage/sessions", { cache: "no-store" });
+    const result = await response.json() as { sessions?: AmStageSessionSummary[]; error?: string };
+    if (!response.ok) throw new Error(result.error || `HTTP ${response.status}`);
+    setSessionRows(result.sessions ?? []);
+  }, []);
+
+  const saveSession = async (asNew: boolean): Promise<string | null> => {
+    setSessionBusy(true); setSessionError("");
+    try {
+      const title = (asNew || !activeSession ? sessionTitleDraft : activeSession.title).trim() || audioReferenceName || "Сессия AM-Stage";
+      const response = await fetch("/api/am-stage/sessions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...(!asNew && activeSession ? { id: activeSession.id } : {}), title, data: capturedSessionData }) });
+      const result = await response.json() as { snapshot?: { meta: { id: string; title: string } }; error?: string };
+      if (!response.ok || !result.snapshot) throw new Error(result.error || `HTTP ${response.status}`);
+      const current = { id: result.snapshot.meta.id, title: result.snapshot.meta.title };
+      setActiveSession(current); setSessionTitleDraft(current.title); fingerprintRef.current = JSON.stringify(capturedSessionData); setSessionDirty(false); setSessionSaveChoiceOpen(false); setSessionModalOpen(false);
+      await refreshSessionRows().catch(() => undefined);
+      return current.id;
+    } catch (cause) { setSessionError(cause instanceof Error ? cause.message : String(cause)); return null; }
+    finally { setSessionBusy(false); }
+  };
+
+  const openSession = async (id: string) => {
+    setSessionBusy(true); setSessionError("");
+    try {
+      const response = await fetch(`/api/am-stage/sessions/${encodeURIComponent(id)}`, { cache: "no-store" });
+      const result = await response.json() as { snapshot?: { meta: { id: string; title: string }; data: AmStageSessionData }; error?: string };
+      if (!response.ok || !result.snapshot) throw new Error(result.error || `HTTP ${response.status}`);
+      const { meta, data } = result.snapshot;
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+      setAudioUrl(null); setFile(null); setAudioReferenceName(data.audio.name); setAudioDuration(data.audio.duration_seconds);
+      setRegionOffset(data.analysis_settings.region_offset); setRegionDuration(data.analysis_settings.region_duration); setAnalysisStart(data.analysis_settings.analysis_start); setAnalysisEnd(data.analysis_settings.analysis_end);
+      setSegmentInterval(data.analysis_settings.segment_interval); setNodeInterval(data.analysis_settings.node_interval); setClapTopK(data.analysis_settings.clap_top_k); setSiglipTopK(data.analysis_settings.siglip_top_k);
+      setSpectrogramScale(data.analysis_settings.spectrogram_scale as SpectrogramScale); setSpectrogramDetail(data.analysis_settings.spectrogram_detail as SpectrogramDetail); setSpectrogramColor(data.analysis_settings.spectrogram_color as "gray" | "igray" | "roseus"); setSpectrogramRenderer(data.analysis_settings.spectrogram_renderer as SpectrogramRenderer); setSiglipSpectrogramLayout(data.analysis_settings.siglip_spectrogram_layout as SiglipSpectrogramLayout); setShowSpectrogram(data.analysis_settings.show_spectrogram);
+      setSegments(data.timeline.segments); setCurrentTime(0);
+      setTextBankViewMode(data.banks.text_view); setClapBankViewMode(data.banks.clap_view); setSiglipBankViewMode(data.banks.siglip_view); setShowClap(data.banks.show_clap); setShowSiglip(data.banks.show_siglip); setInterpolateClap(data.banks.interpolate_clap); setInterpolateSiglip(data.banks.interpolate_siglip);
+      setSelectedLayers(data.layers.selected); setTimelineView(data.layers.timeline_view); setShowGlobalConsensus(data.layers.stage2_visible); setConsensusTopK(data.layers.stage2_top_k); setConsensusCentroidPercent(data.layers.stage2_centroid_percent);
+      setBlendPair(data.interpolation.pair); setBlendPercent(data.interpolation.percent); setBlendCurve(data.interpolation.curve); setBlendMode(data.interpolation.blend_enabled); setClapWeight(data.interpolation.clap_weight); setVocalMatrixMode(data.vocal_matrix_mode);
+      setParamTextSessionState(data.param_to_text); setWorkbenchSessionKey((key) => key + 1);
+      useRagV3Store.setState({ query: data.v3.query, queryB: data.v3.query_b, topK: data.v3.top_k, sources: data.v3.sources, scopes: data.v3.scopes, searchMode: data.v3.search_mode as "single" | "transition", transitionRatio: data.v3.transition_ratio, searchResults: data.v3.search_results, secondaryResults: data.v3.secondary_results, activeParameters: data.v3.active_parameters, macro: data.v3.macro, isSearching: false, isGeneratingMacro: false, searchError: null, macroError: null });
+      setActiveSession({ id: meta.id, title: meta.title }); setSessionTitleDraft(meta.title); fingerprintRef.current = JSON.stringify(data); setSessionDirty(false); setSessionModalOpen(false); setPendingSessionAction(null);
+      setNotice(data.audio.missing_on_restore ? `Сессия открыта. Результаты и таймлайн восстановлены; для воспроизведения или продолжения анализа повторно выберите ${data.audio.name ?? "исходный аудиофайл"}.` : "Сессия AM-Stage восстановлена.");
+    } catch (cause) { setSessionError(cause instanceof Error ? cause.message : String(cause)); }
+    finally { setSessionBusy(false); }
+  };
+
+  const clearSessionState = () => {
+    abortRef.current?.abort();
+    if (audioUrl) URL.revokeObjectURL(audioUrl);
+    setAudioUrl(null); setFile(null); setAudioReferenceName(null); setAudioDuration(0); setCurrentTime(0); setSeekRequest({ time: 0, token: 0 });
+    setRegionOffset(0); setRegionDuration(10); setAnalysisStart(0); setAnalysisEnd(0); setSegmentInterval(2); setNodeInterval(20); setSegments([]); setClapTopK(20); setSiglipTopK(20);
+    setTextBankViewMode("standard"); setClapBankViewMode("standard"); setSiglipBankViewMode("standard"); setShowClap(true); setShowSiglip(true); setInterpolateClap(true); setInterpolateSiglip(true); setShowSpectrogram(true);
+    setSpectrogramScale("mel"); setSpectrogramDetail("medium"); setSpectrogramColor("roseus"); setSpectrogramRenderer("windowed"); setSiglipSpectrogramLayout("rgb_delta"); setBlendMode(false); setClapWeight(.5); setVocalMatrixMode(false);
+    setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id)); setShowGlobalConsensus(false); setConsensusTopK(64); setConsensusCentroidPercent(35); setTimelineView("modality"); setBlendPair("text-clap"); setBlendPercent(50); setBlendCurve("linear");
+    setParamTextSessionState(null); setWorkbenchSessionKey((key) => key + 1); setActiveSession(null); setSessionDirty(false); fingerprintRef.current = ""; setSessionResetConfirmOpen(false); setPendingSessionAction(null); setSessionModalOpen(false);
+    useRagV3Store.setState({ query: "", queryB: "", topK: 50, sources: { library: true, frozen: true, atoms: true, generated: true }, scopes: { sound: true, structure: true, metadata: false, provenance: false, administrative: false }, vocalMatrixMode: false, searchMode: "single", transitionRatio: 50, searchResults: [], secondaryResults: [], activeParameters: [], macro: "", isSearching: false, isGeneratingMacro: false, searchError: null, macroError: null });
+    setNotice("Создана новая пустая сессия AM-Stage. Сохранённые снимки не удалены."); setError("");
+  };
+
+  const requestNewSession = () => sessionDirty ? setSessionResetConfirmOpen(true) : clearSessionState();
+  const requestOpenSession = (id: string) => sessionDirty ? setPendingSessionAction({ type: "open", id }) : void openSession(id);
+  const saveForPendingAction = async () => {
+    const id = await saveSession(false);
+    if (!id || !pendingSessionAction) return;
+    if (pendingSessionAction.type === "open") await openSession(pendingSessionAction.id);
+    else clearSessionState();
+  };
+
+  const renameSession = async (id: string) => {
+    const title = sessionTitleDraft.trim(); if (!title) return;
+    const response = await fetch(`/api/am-stage/sessions/${encodeURIComponent(id)}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title }) });
+    const result = await response.json() as { snapshot?: { meta: { title: string } }; error?: string };
+    if (!response.ok) { setSessionError(result.error || `HTTP ${response.status}`); return; }
+    if (activeSession?.id === id) setActiveSession({ id, title: result.snapshot?.meta.title ?? title });
+    setRenamingSessionId(null); await refreshSessionRows();
+  };
+
+  const deleteSession = async (id: string) => {
+    const row = sessionRows.find((item) => item.id === id);
+    if (!window.confirm(`Удалить сохранённый снимок «${row?.title ?? id}»? Это удалит его папку и JSON-файл.`)) return;
+    const response = await fetch(`/api/am-stage/sessions/${encodeURIComponent(id)}`, { method: "DELETE" });
+    const result = await response.json() as { error?: string };
+    if (!response.ok) { setSessionError(result.error || `HTTP ${response.status}`); return; }
+    if (activeSession?.id === id) { setActiveSession(null); setSessionDirty(false); fingerprintRef.current = ""; }
+    await refreshSessionRows();
+  };
+
+  const startSessionManager = async () => {
+    setSessionError(""); setSessionModalOpen(true);
+    try { await refreshSessionRows(); } catch (cause) { setSessionError(cause instanceof Error ? cause.message : String(cause)); }
+  };
+  const requestSaveSession = () => {
+    if (activeSession && sessionDirty) { setSessionTitleDraft(`${activeSession.title} — копия`); setSessionSaveChoiceOpen(true); return; }
+    if (!activeSession) setSessionTitleDraft(audioReferenceName ? `${audioReferenceName.replace(/\.[^.]+$/, "")} · AM-Stage` : "Сессия AM-Stage");
+    if (!activeSession) setSessionSaveChoiceOpen(true); else void saveSession(false);
+  };
+
   return (
     <div ref={stageRootRef} data-am-stage className="flowmusic-console flex h-full min-w-0 flex-col text-zinc-100">
       <header className="border-b border-white/15 bg-black/70 px-4 py-3">
@@ -677,6 +821,9 @@ export function AMStagePage() {
                 SigLIP index: {morphoStatus?.status ?? "checking"}
               </Badge>
             </Link>
+            <Button size="sm" variant="outline" onClick={requestSaveSession} disabled={sessionBusy}>{sessionBusy ? "Сохраняю…" : `Сохранить сессию${sessionDirty ? " · изменена" : ""}`}</Button>
+            <Button size="sm" variant="outline" onClick={() => void startSessionManager()} disabled={sessionBusy}>Открыть сессию</Button>
+            <Button size="sm" variant="ghost" onClick={requestNewSession} disabled={Boolean(busy)}>Новая сессия AM-Stage</Button>
             <Button data-am-stage-action="test-preset" size="sm" variant="outline" onClick={() => void applyTestPreset()} disabled={Boolean(busy)}>Проверочный preset</Button>
           </div>
         </div>
@@ -996,6 +1143,7 @@ export function AMStagePage() {
                 <JournalDraftButton modality="audio" engine="clap" actionLabel="Сохранить CLAP в Journal" parameters={clapFrame} model={{ id: "laion/clap-htsat-fused" }} settings={{ interval_seconds: segmentInterval, timeline_points: segments.length }} asset={file} label={`Segmented CLAP · ${file?.name ?? "track"}`} />
                 <JournalDraftButton modality="audio" engine="siglip2" actionLabel="Сохранить SigLIP2 в Journal" parameters={siglipFrame} model={{ id: "google/siglip2-base-patch16-224" }} settings={{ interval_seconds: segmentInterval, timeline_points: segments.length, spectrogram_detail: spectrogramDetail }} asset={file} label={`Segmented SigLIP2 · ${file?.name ?? "track"}`} />
               </div>
+              <ParamToTextWorkbench key={workbenchSessionKey} audioName={file?.name ?? audioReferenceName} audioDuration={audioDuration} currentTime={currentTime} segments={segments} selectedLayers={selectedLayers} brief={v3Query} topK={v3Session.topK} defaultClap={showClap} defaultSiglip={showSiglip} matchesLayer={matchesSelectedLayer} initialState={paramTextSessionState} onStateChange={onParamTextStateChange} onSearchReverse={searchReverseBrief} />
             </aside>
           </section>
 
@@ -1081,7 +1229,7 @@ export function AMStagePage() {
           <div data-am-stage-zone="timeline" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(170px,1fr)_minmax(0,9fr)]">
             <aside aria-label="Domain layer timeline visibility filters" className="max-h-56 overflow-y-auto rounded-lg border border-border bg-background/85 p-3 xl:max-h-[min(70vh,720px)]">
               <div className="mb-2 flex flex-wrap items-center justify-between gap-2"><h2 className="flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-wider"><AMIcon name="settings" size="sm" bright />Layer matrix</h2><select aria-label="Parameter title order" value={titleOrder} onChange={(event) => void saveTitleOrder(event.target.value as "en-ru" | "ru-en")} className="max-w-32 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-[9px]"><option value="en-ru">Title EN → RU</option><option value="ru-en">Title RU → EN</option></select></div>
-              <p className="mb-2 text-[9px] text-muted-foreground">Фильтрует банки и проекцию timeline по акустическим слоям. Consensus — отдельный stage-2 проход.</p>
+              <p className="mb-2 text-[9px] text-muted-foreground">Фильтр показывает девять акустических слоёв. Stage-2 ниже — отдельная постобработка уже найденных кадров, не слой и не новый индекс.</p>
               <div className="mb-2 flex flex-wrap gap-1"><button type="button" className="rounded border border-white/15 px-2 py-1 text-[9px]" onClick={() => setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id))}>All 9</button><button type="button" className="rounded border border-white/15 px-2 py-1 text-[9px]" onClick={() => setSelectedLayers([])}>Clear</button></div>
               <div className="flex flex-col gap-1.5">
                 {ACOUSTIC_DOMAIN_LAYERS.map((layer) => {
@@ -1090,9 +1238,12 @@ export function AMStagePage() {
                   const countsAvailable = v3Parameters.length > 0 || segments.some((segment) => segment.clap.length > 0 || segment.siglip.length > 0);
                   return <label key={layer.id} data-am-stage-layer={layer.id} className="flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px]" style={{ borderColor: `${layer.color}70`, color: layer.color }}><input data-am-stage-action={`toggle-layer-${layer.id.toLowerCase()}`} type="checkbox" checked={checked} onChange={() => setSelectedLayers((current) => checked ? current.filter((id) => id !== layer.id) : [...current, layer.id])} /><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: layer.color }} />{layer.label}<span className="ml-auto tabular-nums text-muted-foreground">{countsAvailable ? count : "—"}</span></label>;
                 })}
-                <label data-am-stage-layer={GLOBAL_CONSENSUS_LAYER.id} className="flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px]" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70`, color: GLOBAL_CONSENSUS_LAYER.color }}><input data-am-stage-action="toggle-consensus-visibility" type="checkbox" checked={showGlobalConsensus} onChange={(event) => setShowGlobalConsensus(event.target.checked)} /><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: GLOBAL_CONSENSUS_LAYER.color }} />Stage-2 Consensus</label>
               </div>
-              {showGlobalConsensus ? <div className="mt-2 space-y-2 rounded border p-2" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70` }}><div className="flex items-center justify-between text-[9px]"><span>Query {100 - consensusCentroidPercent}%</span><span>Centroid {consensusCentroidPercent}%</span></div><input aria-label="Consensus centroid weight" className="w-full accent-violet-400" type="range" min="0" max="100" value={consensusCentroidPercent} onChange={(event) => setConsensusCentroidPercent(Number(event.target.value))} /><label className="flex items-center justify-between gap-2 text-[9px]">Centroid pool k<input aria-label="Consensus centroid top k" className="w-16 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-right" type="number" min="1" max="500" value={consensusTopK} onChange={(event) => setConsensusTopK(Math.max(1, Math.min(500, Number(event.target.value) || 1)))} /></label><p className="text-[9px] text-muted-foreground">Stage-2 client smooth · existing retrieved frames only; no server consensus index.</p></div> : null}
+              <section data-am-stage-zone="stage-2-postprocess" className="mt-2 space-y-2 rounded border p-2" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70` }} aria-label="Stage-2 client post-processing">
+                <label className="flex cursor-pointer items-center gap-2 text-[10px] font-medium" style={{ color: GLOBAL_CONSENSUS_LAYER.color }}><input data-am-stage-action="toggle-consensus-visibility" type="checkbox" checked={showGlobalConsensus} onChange={(event) => setShowGlobalConsensus(event.target.checked)} />Global Consensus · Stage-2</label>
+                <p className="text-[9px] text-muted-foreground">Клиентски сглаживает параметры из текущего результата и CLAP/SigLIP кадров. Новые параметры из индекса не добавляются.</p>
+                {showGlobalConsensus ? <><div className="flex items-center justify-between text-[9px]"><span>Query {100 - consensusCentroidPercent}%</span><span>Centroid {consensusCentroidPercent}%</span></div><input aria-label="Consensus centroid weight" className="w-full accent-violet-400" type="range" min="0" max="100" value={consensusCentroidPercent} onChange={(event) => setConsensusCentroidPercent(Number(event.target.value))} /><label className="flex items-center justify-between gap-2 text-[9px]">Centroid pool k<input aria-label="Consensus centroid top k" className="w-16 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-right" type="number" min="1" max="500" value={consensusTopK} onChange={(event) => setConsensusTopK(Math.max(1, Math.min(500, Number(event.target.value) || 1)))} /></label></> : null}
+              </section>
             </aside>
           <section data-am-stage-zone="timeline-chart" className="min-w-0 rounded-lg border border-white/10 bg-black/30 p-3">
             <div className="mb-2 flex items-center justify-between gap-2 text-xs text-zinc-400">
@@ -1138,6 +1289,12 @@ export function AMStagePage() {
           </section>
           <ParameterBank dataScope="am-stage" title={`TEXT · Semantic V3 · ${textStageParameters.length}/${v3Parameters.length}`} icon="search" bankId="text" accent="cyan" parameters={textStageParameters} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={updateV3ParameterValue} onRemove={removeV3Parameter} />
         </div>
+        {sessionModalOpen ? <div className="fixed inset-0 z-[90] grid place-items-center bg-black/75 p-4" role="presentation"><section role="dialog" aria-modal="true" aria-labelledby="am-stage-sessions-title" className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-violet-400/40 bg-zinc-950 p-4 shadow-xl"><div className="mb-3 flex items-center justify-between gap-2"><h2 id="am-stage-sessions-title" className="font-mono text-sm font-semibold">Сессии AM-Stage</h2><Button size="sm" variant="ghost" onClick={() => { setSessionModalOpen(false); setPendingSessionAction(null); }}>Закрыть</Button></div>
+          {pendingSessionAction ? <div className="mb-3 rounded border border-amber-400/30 bg-amber-950/20 p-3"><p className="text-sm">Есть несохранённые изменения. Сохранить их перед {pendingSessionAction.type === "open" ? "открытием другой сессии" : "созданием новой сессии"}?</p><div className="mt-2 flex flex-wrap gap-2"><Button size="sm" onClick={() => void saveForPendingAction()} disabled={sessionBusy}>Сохранить и продолжить</Button><Button size="sm" variant="outline" onClick={() => pendingSessionAction.type === "open" ? void openSession(pendingSessionAction.id) : clearSessionState()}>Продолжить без сохранения</Button><Button size="sm" variant="ghost" onClick={() => setPendingSessionAction(null)}>Отмена</Button></div></div> : null}
+          {sessionRows.length ? <ul className="space-y-2">{sessionRows.map((row) => <li key={row.id} className="rounded border border-white/10 p-2"><div className="flex flex-wrap items-center justify-between gap-2">{renamingSessionId === row.id ? <div className="flex min-w-0 flex-1 gap-1"><Input aria-label="Название сессии" value={sessionTitleDraft} onChange={(event) => setSessionTitleDraft(event.target.value)} /><Button size="sm" onClick={() => void renameSession(row.id)}>Сохранить имя</Button></div> : <div className="min-w-0"><p className="truncate text-sm font-medium">{row.title}{activeSession?.id === row.id ? <span className="ml-2 text-[10px] text-cyan-300">текущая{sessionDirty ? " · изменена" : ""}</span> : null}</p><p className="text-[10px] text-muted-foreground">{row.audio_name ?? "без аудио"} · {row.segment_count} точек · {row.parameter_count} параметров · обновлена {new Date(row.updated_at).toLocaleString()}</p></div>}<div className="flex flex-wrap gap-1">{renamingSessionId !== row.id ? <><Button size="sm" onClick={() => requestOpenSession(row.id)} disabled={sessionBusy}>Открыть</Button><Button size="sm" variant="outline" onClick={() => { setRenamingSessionId(row.id); setSessionTitleDraft(row.title); }}>Переименовать</Button><Button size="sm" variant="ghost" onClick={() => void deleteSession(row.id)}>Удалить</Button></> : <Button size="sm" variant="ghost" onClick={() => setRenamingSessionId(null)}>Отмена</Button>}</div></div></li>)}</ul> : <p className="rounded border border-white/10 p-4 text-sm text-muted-foreground">Сохранённых сессий пока нет.</p>}
+          {sessionError ? <p role="alert" className="mt-3 text-xs text-rose-300">{sessionError}</p> : null}</section></div> : null}
+        {sessionSaveChoiceOpen ? <div className="fixed inset-0 z-[95] grid place-items-center bg-black/75 p-4"><section role="dialog" aria-modal="true" aria-labelledby="am-stage-save-title" className="w-full max-w-md space-y-3 rounded-lg border border-violet-400/40 bg-zinc-950 p-4"><h2 id="am-stage-save-title" className="font-mono text-sm font-semibold">{activeSession ? "Сохранить изменения сессии" : "Новая сессия"}</h2>{!activeSession ? <label className="block text-xs">Название<Input className="mt-1" value={sessionTitleDraft} onChange={(event) => setSessionTitleDraft(event.target.value)} /></label> : <><p className="text-xs text-muted-foreground">Сохранить изменения в «{activeSession.title}» или создать отдельный снимок.</p>{sessionDirty ? <label className="block text-xs">Название нового снимка<Input className="mt-1" value={sessionTitleDraft} onChange={(event) => setSessionTitleDraft(event.target.value)} /></label> : null}</>}<div className="flex flex-wrap justify-end gap-2"><Button size="sm" variant="ghost" onClick={() => setSessionSaveChoiceOpen(false)}>Отмена</Button>{activeSession && sessionDirty ? <Button size="sm" variant="outline" onClick={() => void saveSession(true)} disabled={sessionBusy}>Сохранить как новую</Button> : null}<Button size="sm" onClick={() => void saveSession(!activeSession)} disabled={sessionBusy}>{sessionBusy ? "Сохраняю…" : activeSession ? "Сохранить текущую" : "Создать снимок"}</Button></div>{sessionError ? <p role="alert" className="text-xs text-rose-300">{sessionError}</p> : null}</section></div> : null}
+        {sessionResetConfirmOpen ? <div className="fixed inset-0 z-[95] grid place-items-center bg-black/75 p-4"><section role="alertdialog" aria-modal="true" aria-labelledby="am-stage-new-title" className="w-full max-w-md space-y-3 rounded-lg border border-amber-400/40 bg-zinc-950 p-4"><h2 id="am-stage-new-title" className="font-mono text-sm font-semibold">Начать новую сессию?</h2><p className="text-xs text-muted-foreground">Несохранённые изменения будут удалены из текущего рабочего состояния. Файлы сохранённых снимков останутся на месте.</p><div className="flex flex-wrap justify-end gap-2"><Button size="sm" variant="ghost" onClick={() => setSessionResetConfirmOpen(false)}>Отмена</Button><Button size="sm" variant="outline" onClick={() => { void (async () => { const id = await saveSession(false); if (id) clearSessionState(); })(); }} disabled={sessionBusy}>Сохранить и начать новую</Button><Button size="sm" onClick={clearSessionState}>Начать без сохранения</Button></div>{sessionError ? <p role="alert" className="text-xs text-rose-300">{sessionError}</p> : null}</section></div> : null}
       </div>
     </div>
   );

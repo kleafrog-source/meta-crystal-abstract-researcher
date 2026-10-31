@@ -197,11 +197,11 @@ function dspTargets(name: string): Array<{ node: string; parameter: string }> {
   return targets;
 }
 
-function stemEvents(segments: AudioTimelineSegment[], blend: boolean) {
+function stemEvents(segments: AudioTimelineSegment[], blend: boolean, clapWeight = 0.5) {
   const events: Array<Record<string, unknown>> = [];
   let previous = new Map<string, string | number>();
   for (const segment of segments) {
-    const frame = blend ? blendParameterFrames(segment.clap, segment.siglip) : [...segment.clap, ...segment.siglip];
+    const frame = blend ? blendParameterFrames(segment.clap, segment.siglip, clapWeight) : [...segment.clap, ...segment.siglip];
     const current = new Map(frame.filter((item) => /^(iso_language_|technique_|fx_chain_)|^vocal_(delivery_archetype|layer_count|layering_count|allocation_)|vocal_spectral_masking|parallel_vocal_spectral/.test(item.technical_name)).map((item) => [item.technical_name, item.current_value]));
     for (const [name, value] of current) if (!previous.has(name) || previous.get(name) !== value) events.push({ t: segment.time, stem: "VOCAL_MAIN", action: previous.has(name) ? (name.includes("layer") || name.includes("language") ? "SET_LAYER_ROUTING" : "SWITCH_FX_CHAIN") : "INITIALIZE_VOCAL_LAYER", parameter: name, value });
     previous = current;
@@ -224,7 +224,7 @@ export function buildPriorityTimeline(segments: AudioTimelineSegment[], options:
     ...(options.blend ? { blended_registry: blendedRegistry } : { clap_registry: clapRegistry, siglip_registry: siglipRegistry }),
     timeline,
     dsp_graph: Object.fromEntries([...new Set(all.map((item) => item.technical_name))].map((name) => [name, dspTargets(name)]).filter(([, targets]) => (targets as unknown[]).length)),
-    events: stemEvents(segments, options.blend),
+    events: stemEvents(segments, options.blend, options.clapWeight),
     vocal_allocation_matrix: options.vocalMatrix ? true : undefined,
   };
 }
