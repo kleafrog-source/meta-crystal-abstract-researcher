@@ -18,12 +18,14 @@ from pathlib import Path
 import numpy as np
 
 from v3_snapshot import DEFAULT_DATA_ROOT, load_v3_snapshot
+from vector_cache import content_key, read_vector, sha256_file, write_vector
 
 MODEL_ID = "google/siglip2-base-patch16-224"
 MODEL_REVISION = "75de2d55ec2d0b4efc50b3e9ad70dba96a7b2fa2"
 DEFAULT_MODEL_PATH = Path(os.environ.get("MMSS_SIGLIP_MODEL", "D:/hfmodels/siglip2-base-patch16-224"))
 DEFAULT_INDEX_DIR = DEFAULT_DATA_ROOT / "morpho-siglip"
 VALUE_CACHE_VERSION = "morpho-values-v1"
+IMAGE_QUERY_CACHE_VERSION = "siglip-image-query-v1"
 
 
 def read_json(path: Path):
@@ -88,7 +90,7 @@ def pooled(output, torch):
     return output if isinstance(output, torch.Tensor) else output.pooler_output
 
 
-def embed_texts_cached(texts: list[str], torch, processor, model, cache_dir: Path, batch_size: int = 64) -> np.ndarray:
+def embed_texts_cached(texts: list[str], torch, processor, model, cache_dir: Path, batch_size: int = 64, model_path: Path | None = None) -> np.ndarray:
     cache_dir.mkdir(parents=True, exist_ok=True)
     hashes = [hashlib.sha256((MODEL_REVISION + "\0" + VALUE_CACHE_VERSION + "\0" + text).encode("utf-8")).hexdigest() for text in texts]
     vectors: list[np.ndarray | None] = []
@@ -98,6 +100,10 @@ def embed_texts_cached(texts: list[str], torch, processor, model, cache_dir: Pat
         vector = np.fromfile(path, dtype="<f4") if path.exists() else np.asarray([], dtype=np.float32)
         if vector.size == 768: vectors.append(vector)
         else: vectors.append(None); pending.append(index)
+    if pending and (torch is None or processor is None or model is None):
+        if model_path is None:
+            raise RuntimeError("SigLIP model path is required for uncached value embeddings")
+        torch, processor, model = load_runtime(model_path)
     for start in range(0, len(pending), batch_size):
         indexes = pending[start:start + batch_size]
         inputs = processor(text=[texts[index] for index in indexes], padding="max_length", truncation=True, return_tensors="pt")
@@ -182,7 +188,7 @@ def load_value_sources(data_root: Path):
     return ranges, selects, axis_rows, polarity, relations
 
 
-def anchor_values(parameters: list[dict[str, object]], image_vector: np.ndarray, mode: str, data_root: Path, cache_dir: Path, torch, processor, model) -> dict[str, dict[str, object]]:
+def anchor_values(parameters: list[dict[str, object]], image_vector: np.ndarray, mode: str, data_root: Path, cache_dir: Path, torch, processor, model, model_path: Path | None = None) -> dict[str, dict[str, object]]:
     if mode == "default": return {}
     ranges, selects, axis_rows, polarity, relations = load_value_sources(data_root)
     requested: list[tuple[str, str, float | str, str]] = []
@@ -200,7 +206,7 @@ def anchor_values(parameters: list[dict[str, object]], image_vector: np.ndarray,
         if str(row["axis"]) in relevant_axes: requested.append((str(row["axis"]), "axis", float(row["level"]), str(row["text"])))
     for relation in relations: requested.append((str(relation.get("id")), "relation", 0.0, str(relation.get("text") or "")))
     if not requested: return {}
-    matrix = embed_texts_cached([item[3] for item in requested], torch, processor, model, cache_dir)
+    matrix = embed_texts_cached([item[3] for item in requested], torch, processor, model, cache_dir, model_path=model_path)
     scores = matrix @ image_vector
     grouped: dict[tuple[str, str], list[tuple[float | str, float]]] = defaultdict(list)
     for item, score in zip(requested, scores): grouped[(item[0], item[1])].append((item[2], float(score)))
@@ -344,21 +350,27 @@ def search_image(image_path: Path, data_root: Path, index_dir: Path, model_path:
     rows, vectors = read_json(index_dir / "rows.json"), read_vectors(index_dir / "embeddings.f32")
     if len(rows) != len(vectors) or vectors.shape[1] != int(status["dimensions"]):
         raise RuntimeError("Morpho index row/vector mismatch")
-    torch, processor, model = load_runtime(model_path)
-    from PIL import Image
-    with Image.open(image_path) as source:
-        image = source.convert("RGB")
-        inputs = processor(images=[image], return_tensors="pt")
-    with torch.inference_mode():
-        query = pooled(model.get_image_features(**inputs), torch)
-        query = torch.nn.functional.normalize(query.float(), dim=-1).cpu().numpy()[0]
+    image_cache_dir = index_dir.parent / "morpho-siglip-row-cache" / "image-query-vectors"
+    image_key = content_key(kind="siglip-image-query", version=IMAGE_QUERY_CACHE_VERSION, model_id=MODEL_ID, model_revision=MODEL_REVISION, image_sha256=sha256_file(image_path), processor="AutoProcessor-local-revision-rgb-v1")
+    query = read_vector(image_cache_dir, image_key, int(status["dimensions"]))
+    torch = processor = model = None
+    if query is None:
+        torch, processor, model = load_runtime(model_path)
+        from PIL import Image
+        with Image.open(image_path) as source:
+            image = source.convert("RGB")
+            inputs = processor(images=[image], return_tensors="pt")
+        with torch.inference_mode():
+            encoded = pooled(model.get_image_features(**inputs), torch)
+            query = torch.nn.functional.normalize(encoded.float(), dim=-1).cpu().numpy()[0]
+        write_vector(image_cache_dir, image_key, query)
     scores = vectors @ query
     count = min(max(1, top_k), len(rows))
     order = np.argsort(-scores)[:count]
     snapshot = load_v3_snapshot(data_root)
     parameters = {item["technical_name"]: item for item in snapshot["parameters"]}
     ranked_parameters = [parameters[rows[int(index)]["technical_name"]] for index in order]
-    anchors = anchor_values(ranked_parameters, query, value_mode, data_root, index_dir.parent / "morpho-siglip-value-cache", torch, processor, model)
+    anchors = anchor_values(ranked_parameters, query, value_mode, data_root, index_dir.parent / "morpho-siglip-value-cache", torch, processor, model, model_path=model_path)
     results = [active_parameter(parameter, float(scores[int(index)]), anchors.get(str(parameter["technical_name"]))) for parameter, index in zip(ranked_parameters, order)]
     return {"results": results, "top_k": count, "value_mode": value_mode, "anchored_count": len(anchors), "index": status, "image": {"name": image_path.name}}
 
