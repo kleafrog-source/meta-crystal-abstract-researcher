@@ -178,15 +178,14 @@ export function AudioToParameterPage() {
     if (response.ok) setMorphoStatus((await response.json()) as MorphoStatus);
   }, []);
   useEffect(() => {
-    const initial = window.setTimeout(() => void refreshMorphoStatus(), 0);
-    const timer = window.setInterval(
-      () => void refreshMorphoStatus(),
-      morphoStatus?.index_job?.running ? 2_000 : 10_000,
-    );
-    return () => {
-      window.clearTimeout(initial);
-      window.clearInterval(timer);
-    };
+    void refreshMorphoStatus();
+  }, [refreshMorphoStatus]);
+  useEffect(() => {
+    if (!morphoStatus?.index_job?.running) return;
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") void refreshMorphoStatus();
+    }, 2_000);
+    return () => window.clearInterval(timer);
   }, [morphoStatus?.index_job?.running, refreshMorphoStatus]);
 
   const selectFile = useCallback((nextFile: File) => {

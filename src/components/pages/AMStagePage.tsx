@@ -16,6 +16,7 @@ import {
 
 import { AudioWaveformEditor } from "@/components/audio/AudioWaveformEditor";
 import { SemanticSearch } from "@/components/rag-v3/SemanticSearch";
+import { useUiText } from "@/lib/ui-i18n";
 import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton";
 import { ParamToTextWorkbench } from "@/components/am-stage/ParamToTextWorkbench";
 import type { AmStageSessionData, AmStageSessionSummary, ParamTextWorkbenchSessionState } from "@/lib/am-stage-session";
@@ -151,6 +152,7 @@ function statusClass(status: AnalysisStatus): string {
 }
 
 export function AMStagePage() {
+  const t = useUiText();
   const stageRootRef = useRef<HTMLDivElement>(null);
   const v3Parameters = useRagV3Store((state) => state.activeParameters);
   const v3Query = useRagV3Store((state) => state.query);
@@ -252,15 +254,14 @@ export function AMStagePage() {
     if (response.ok) setMorphoStatus((await response.json()) as MorphoStatus);
   }, []);
   useEffect(() => {
-    const initial = window.setTimeout(() => void refreshMorphoStatus(), 0);
-    const timer = window.setInterval(
-      () => void refreshMorphoStatus(),
-      morphoStatus?.index_job?.running ? 2_000 : 10_000,
-    );
-    return () => {
-      window.clearTimeout(initial);
-      window.clearInterval(timer);
-    };
+    void refreshMorphoStatus();
+  }, [refreshMorphoStatus]);
+  useEffect(() => {
+    if (!morphoStatus?.index_job?.running) return;
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") void refreshMorphoStatus();
+    }, 2_000);
+    return () => window.clearInterval(timer);
   }, [morphoStatus?.index_job?.running, refreshMorphoStatus]);
 
   const filteredV3Parameters = useMemo(() => v3Parameters.filter((parameter) => {
@@ -821,7 +822,7 @@ export function AMStagePage() {
                 SigLIP index: {morphoStatus?.status ?? "checking"}
               </Badge>
             </Link>
-            <Button size="sm" variant="outline" onClick={requestSaveSession} disabled={sessionBusy}>{sessionBusy ? "Сохраняю…" : `Сохранить сессию${sessionDirty ? " · изменена" : ""}`}</Button>
+            <Button size="sm" variant="outline" title={t("Сохранить текущее состояние анализа и настроек в снимок проекта.")} onClick={requestSaveSession} disabled={sessionBusy}>{sessionBusy ? t("Сохраняю…") : `${t("Сохранить сессию")}${sessionDirty ? ` · ${t("изменена")}` : ""}`}</Button>
             <Button size="sm" variant="outline" onClick={() => void startSessionManager()} disabled={sessionBusy}>Открыть сессию</Button>
             <Button size="sm" variant="ghost" onClick={requestNewSession} disabled={Boolean(busy)}>Новая сессия AM-Stage</Button>
             <Button data-am-stage-action="test-preset" size="sm" variant="outline" onClick={() => void applyTestPreset()} disabled={Boolean(busy)}>Проверочный preset</Button>
@@ -1085,8 +1086,8 @@ export function AMStagePage() {
                     {busy === "clap" ? <Loader2 className="size-4 animate-spin" /> : <Zap className="size-4" />}
                     CLAP · с начала
                   </Button>
-                  <Button data-am-stage-action="clap-continue" className="w-full" variant="outline" disabled={!file || Boolean(busy) || !canContinueClap} onClick={() => void analyze("clap", true)}>
-                    Продолжить CLAP ({clapCompleted}/{segments.length})
+                  <Button data-am-stage-action="clap-continue" title={t("Обработать CLAP только для сегментов без готового результата и продолжить сохранённый прогон.")} className="w-full" variant="outline" disabled={!file || Boolean(busy) || !canContinueClap} onClick={() => void analyze("clap", true)}>
+                    {t("Continue CLAP")} ({clapCompleted}/{segments.length})
                   </Button>
                 </div>
                 <div className="space-y-1.5 rounded border border-fuchsia-400/20 p-2">
@@ -1094,8 +1095,8 @@ export function AMStagePage() {
                     {busy === "siglip" ? <Loader2 className="size-4 animate-spin" /> : <Zap className="size-4" />}
                     SigLIP2 · с начала
                   </Button>
-                  <Button data-am-stage-action="siglip2-continue" className="w-full" variant="outline" disabled={!file || Boolean(busy) || !morphoStatus?.ready || !canContinueSiglip} onClick={() => void analyze("siglip", true)}>
-                    Продолжить SigLIP2 ({siglipCompleted}/{segments.length})
+                  <Button data-am-stage-action="siglip2-continue" title={t("Обработать SigLIP2 только для сегментов без готового результата и продолжить сохранённый прогон.")} className="w-full" variant="outline" disabled={!file || Boolean(busy) || !morphoStatus?.ready || !canContinueSiglip} onClick={() => void analyze("siglip", true)}>
+                    {t("Continue SigLIP2")} ({siglipCompleted}/{segments.length})
                   </Button>
                 </div>
               </div>

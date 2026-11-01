@@ -43,6 +43,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiPost, apiPut, useFetch } from "@/hooks/use-fetch";
 import { AppearanceEditor } from "@/components/settings/AppearanceEditor";
 import { ParameterTitlePreference } from "@/components/settings/ParameterTitlePreference";
+import { InterfaceLanguagePreference } from "@/components/settings/InterfaceLanguagePreference";
 
 interface SettingsData {
   ok: boolean;
@@ -318,6 +319,7 @@ export function Settings() {
       </header>
 
       <div className="max-w-5xl flex-1 space-y-4 overflow-y-auto p-6">
+        <InterfaceLanguagePreference />
         <ParameterTitlePreference />
         <AppearanceEditor />
         <Card>

@@ -70,8 +70,22 @@ export function MorphoAcousticRagPage() {
       }
     };
     void load();
+    return () => {
+      disposed = true;
+    };
+  }, [refresh]);
+  useEffect(() => {
+    if (!status?.index_job.running && !status?.search_job.running) return;
+    let disposed = false;
+    const load = async () => {
+      try {
+        await refresh();
+      } catch (caught) {
+        if (!disposed) setError(String(caught));
+      }
+    };
     const timer = window.setInterval(() => {
-      if (status?.index_job.running || status?.search_job.running) void load();
+      if (document.visibilityState === "visible") void load();
     }, 1200);
     return () => {
       disposed = true;

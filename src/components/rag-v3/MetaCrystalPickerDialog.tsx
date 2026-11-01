@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { buildCrystalPreviewText, buildCrystalQueryText } from "@/lib/rag-v3/crystal-query";
 import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
+import { useUiText } from "@/lib/ui-i18n";
 
 type CrystalListItem = {
   id: string;
@@ -66,6 +67,7 @@ export function MetaCrystalPickerDialog(props: {
   targetLabel: string;
   onSelect: (value: string) => void;
 }) {
+  const t = useUiText();
   const [open, setOpen] = useState(false);
   const [searchDraft, setSearchDraft] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
@@ -132,7 +134,7 @@ export function MetaCrystalPickerDialog(props: {
         }
       }}
     >
-      <V3Tooltip content={`Выбирает мета-кристалл и добавляет его смысловое описание в ${props.targetLabel}.`}>
+      <V3Tooltip content={t("Выбирает мета-кристалл и добавляет его смысловое описание в {targetLabel}.").replace("{targetLabel}", props.targetLabel)}>
         <DialogTrigger asChild>
           <Button type="button" size="sm" variant="outline"><Database className="size-4" />Use crystal</Button>
         </DialogTrigger>

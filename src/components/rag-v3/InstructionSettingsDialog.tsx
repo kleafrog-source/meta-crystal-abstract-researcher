@@ -14,8 +14,10 @@ import { extractInstructionTheses, summarizeInstruction } from "@/lib/rag-v3/ins
 import { useRagV3Store } from "@/store/rag-v3-store";
 import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
 import { AMIcon } from "@/components/ui/am-icon";
+import { useUiText } from "@/lib/ui-i18n";
 
 export function InstructionSettingsDialog() {
+  const t = useUiText();
   const instructionSlots = useRagV3Store((state) => state.instructionSlots);
   const updateInstructionSlot = useRagV3Store((state) => state.updateInstructionSlot);
   const saveInstructionSlots = useRagV3Store((state) => state.saveInstructionSlots);
@@ -26,7 +28,7 @@ export function InstructionSettingsDialog() {
 
   return (
     <Dialog>
-      <V3Tooltip content="Открывает до 10 дополнительных инструкций, влияющих на retrieval и macro output.">
+      <V3Tooltip content={t("Открывает до 10 дополнительных инструкций, влияющих на retrieval и macro output.")}>
         <DialogTrigger asChild>
           <Button type="button" size="sm" variant="outline" className="am-icon-button"><AMIcon name="settings" size="sm" />Instruction settings</Button>
         </DialogTrigger>
