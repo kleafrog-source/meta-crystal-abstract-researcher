@@ -6,6 +6,44 @@
   "required": ["schema"],
   "properties": {
     "schema": { "const": "segment_side_meta_v1" },
+    "acoustic_features": {
+      "type": "object",
+      "required": ["extractor", "ran_at", "feature_version", "sample_rate_hz", "duration_seconds", "rms_mean", "rms_min", "rms_max", "loudness_dbfs_approx", "peak", "spectral_centroid_mean_hz", "spectral_bandwidth_mean_hz", "spectral_rolloff_85_mean_hz", "tempo_bpm_approx", "beat_times_seconds", "onset_times_seconds", "formants", "formant_skip_reason"],
+      "properties": {
+        "extractor": { "const": "librosa" },
+        "ran_at": { "type": "string", "format": "date-time" },
+        "feature_version": { "const": "stage7_librosa_lpc_v1" },
+        "sample_rate_hz": { "const": 16000 },
+        "duration_seconds": { "type": "number", "minimum": 0.25, "maximum": 30 },
+        "rms_mean": { "type": "number", "minimum": 0 },
+        "rms_min": { "type": "number", "minimum": 0 },
+        "rms_max": { "type": "number", "minimum": 0 },
+        "loudness_dbfs_approx": { "type": "number" },
+        "peak": { "type": "number", "minimum": 0, "maximum": 1 },
+        "spectral_centroid_mean_hz": { "type": "number", "minimum": 0 },
+        "spectral_bandwidth_mean_hz": { "type": "number", "minimum": 0 },
+        "spectral_rolloff_85_mean_hz": { "type": "number", "minimum": 0 },
+        "tempo_bpm_approx": { "type": ["number", "null"], "minimum": 0 },
+        "beat_times_seconds": { "$ref": "#/$defs/times" },
+        "onset_times_seconds": { "$ref": "#/$defs/times" },
+        "formants": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "object", "required": ["f1_hz", "f2_hz", "confidence", "voiced_frame_ratio", "method"],
+              "properties": {
+                "f1_hz": { "type": "number", "minimum": 200, "maximum": 1200 },
+                "f2_hz": { "type": "number", "minimum": 700, "maximum": 3000 },
+                "confidence": { "$ref": "#/$defs/probability" },
+                "voiced_frame_ratio": { "$ref": "#/$defs/probability" },
+                "method": { "const": "lpc_heuristic" }
+              }
+            }
+          ]
+        },
+        "formant_skip_reason": { "type": ["string", "null"], "enum": ["helm_negative", "low_energy", "insufficient_voiced_frames", null] }
+      }
+    },
     "helm": {
       "type": "object",
       "required": ["model", "ran_at", "gates"],
@@ -61,6 +99,7 @@
   },
   "$defs": {
     "probability": { "type": "number", "minimum": 0, "maximum": 1 },
+    "times": { "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 30 } },
     "gate": {
       "type": "object", "required": ["value", "probability", "probabilities", "confidence"],
       "properties": {

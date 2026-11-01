@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Copy, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +8,7 @@ import { V3InfoTip } from "@/components/rag-v3/V3Tooltip";
 import { AMIcon } from "@/components/ui/am-icon";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { useUiText } from "@/lib/ui-i18n";
+import { loadVocalMatrixFormants, type VocalMatrixFormantSummary } from "@/lib/acoustic-feature-bridge";
 
 const EXAMPLE = "Три слоя: лид на классической латыни с VGUT и DRV1; высокий хор на древнегреческом с VCLR и RVB1; шепот на арамейском с VWSP и DLY1. I=8, S=7, E=5, A=9.";
 
@@ -15,6 +16,7 @@ export function VocalAllocationMatrixPage() {
   const t = useUiText();
   const [query, setQuery] = useState(EXAMPLE);
   const [detectedLanguageTags, setDetectedLanguageTags] = useState("");
+  const [acousticFormants, setAcousticFormants] = useState<VocalMatrixFormantSummary | null>(null);
   const [results, setResults] = useState<ActiveParameter[]>([]);
   const [parsed, setParsed] = useState<{ languages: string[]; techniques: string[]; effects: string[]; digits: Record<string, number> } | null>(null);
   const [loading, setLoading] = useState(false);
@@ -28,6 +30,13 @@ export function VocalAllocationMatrixPage() {
       `whisper_layer: [${get("iso_language_primary_layer_3")}]-[${get("technique_ambient_whisper_layer")}]-[${get("fx_chain_ambient_whisper")}]`,
     ].join("\n");
   }, [results]);
+
+  useEffect(() => {
+    const refresh = () => setAcousticFormants(loadVocalMatrixFormants());
+    refresh();
+    window.addEventListener("storage", refresh);
+    return () => window.removeEventListener("storage", refresh);
+  }, []);
 
   async function search() {
     setLoading(true); setError("");
@@ -49,6 +58,10 @@ export function VocalAllocationMatrixPage() {
       <h1 className="flex items-center gap-2 font-mono text-lg font-semibold text-fuchsia-200"><AMIcon name="vocal" size="md" bright />Vocal Allocation Matrix · V3<V3InfoTip content={t("Изолированный scoped-поиск языков, TECH4, FX4, слоёв и I/S/E/A поверх актуальной базы V3.")} /></h1>
     </header>
     <main className="flex-1 overflow-auto p-4"><div className="mx-auto max-w-[1600px] space-y-4">
+      {acousticFormants ? <section className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-cyan-400/25 bg-zinc-950 p-3" data-am-vocal-acoustic-features>
+        <div><h2 className="font-mono text-xs font-semibold text-cyan-200">{t("Latest AM-Stage formants")}</h2><p className="mt-1 text-xs text-zinc-300">F1 {Math.round(acousticFormants.f1_hz)} Hz · F2 {Math.round(acousticFormants.f2_hz)} Hz · {t("heuristic confidence")} {acousticFormants.confidence.toFixed(2)}</p><p className="text-[10px] text-zinc-500">{t("Segment")} {acousticFormants.segment_index + 1} · {acousticFormants.offset_seconds.toFixed(1)}–{(acousticFormants.offset_seconds + acousticFormants.duration_seconds).toFixed(1)}s</p></div>
+        <Button size="sm" variant="outline" onClick={() => void navigator.clipboard.writeText(`F1=${Math.round(acousticFormants.f1_hz)}Hz; F2=${Math.round(acousticFormants.f2_hz)}Hz; confidence=${acousticFormants.confidence.toFixed(2)}`)}><Copy className="mr-1 size-3" />{t("Copy formants")}</Button>
+      </section> : null}
       <section className="rounded-lg border border-white/15 bg-zinc-950 p-4">
         <div className="mb-2 flex items-center gap-2 text-sm font-medium">{t("Описание вокальной матрицы")}<V3InfoTip content={t("Можно использовать русские или английские названия языков, ISO-коды, TECH4/FX4 и явные значения I=, S=, E=, A=. Каждый запуск независим.")} /></div>
         <Textarea value={query} onChange={(e) => setQuery(e.target.value)} className="min-h-28 font-mono" />

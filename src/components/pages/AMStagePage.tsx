@@ -22,6 +22,7 @@ import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton"
 import { ParamToTextWorkbench } from "@/components/am-stage/ParamToTextWorkbench";
 import { GemmaMultimodalParameterSearch } from "@/components/am-stage/GemmaMultimodalParameterSearch";
 import { SegmentSideMetadataPanel } from "@/components/am-stage/SegmentSideMetadataPanel";
+import { saveVocalMatrixFormants } from "@/lib/acoustic-feature-bridge";
 import type { AmStageSessionData, AmStageSessionSummary, ParamTextWorkbenchSessionState } from "@/lib/am-stage-session";
 import { MacroGenerator } from "@/components/rag-v3/MacroGenerator";
 import { VirtualizedParamList } from "@/components/rag-v3/VirtualizedParamList";
@@ -1205,6 +1206,20 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             segmentIndex={Math.max(0, activeSegmentIndex)}
             onResult={(patch) => {
               if (activeSegmentIndex < 0) return;
+              if (patch.acoustic_features) {
+                const features = patch.acoustic_features;
+                const formants = features.formants;
+                saveVocalMatrixFormants(formants ? {
+                  schema: "am_stage_formants_v1",
+                  f1_hz: formants.f1_hz,
+                  f2_hz: formants.f2_hz,
+                  confidence: formants.confidence,
+                  segment_index: activeSegmentIndex,
+                  offset_seconds: segments[activeSegmentIndex]?.offset ?? 0,
+                  duration_seconds: features.duration_seconds,
+                  extracted_at: features.ran_at,
+                } : null);
+              }
               setSegments((current) => applySegmentSideMeta(current, activeSegmentIndex, patch));
             }}
           />
