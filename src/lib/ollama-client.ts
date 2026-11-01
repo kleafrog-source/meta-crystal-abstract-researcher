@@ -27,6 +27,7 @@ interface OllamaEmbeddingsResponse {
 export interface OllamaStatus {
   reachable: boolean;
   error: string | null;
+  modelAvailable?: boolean;
 }
 
 function parseTimeout(value: string | undefined, fallback: number): number {
@@ -138,9 +139,20 @@ function extractEmbedding(payload: OllamaEmbeddingsResponse): number[] | null {
 }
 
 export async function probeOllama(): Promise<OllamaStatus> {
+  // Status must never warm a model. /api/tags is metadata-only; inference belongs
+  // to explicit user actions such as Search, Build index, or Rank embeddings.
   try {
-    await requestEmbedding("probe", OLLAMA_PROBE_TIMEOUT_MS);
-    return { reachable: true, error: null };
+    const settings = await loadEmbeddingRuntimeSettings();
+    activeBaseUrl = settings.baseUrl;
+    activeModel = settings.model;
+    const response = await fetch(`${settings.baseUrl}/api/tags`, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(OLLAMA_PROBE_TIMEOUT_MS),
+    });
+    if (!response.ok) throw new Error(`Ollama responded with HTTP ${response.status}`);
+    const payload = await response.json() as { models?: Array<{ name?: string; model?: string }> };
+    const modelAvailable = (payload.models ?? []).some((model) => (model.name ?? model.model)?.trim() === settings.model);
+    return { reachable: true, error: null, modelAvailable };
   } catch (error) {
     return {
       reachable: false,

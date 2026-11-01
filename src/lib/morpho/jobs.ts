@@ -3,6 +3,8 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 
 import { getV3SnapshotIdentity } from "@/lib/rag-v3/snapshot";
+import { GENESIS_DATA_ROOT, GENESIS_LIBRARY_PATH } from "@/lib/combinatorial-genesis/library";
+import { GENESIS_EXCLUDED_PATH } from "@/lib/combinatorial-genesis/registry";
 
 const ROOT = process.cwd();
 const SCRIPT = path.join(ROOT, "python_engine", "morpho_siglip.py");
@@ -16,6 +18,8 @@ const MANIFEST = path.join(INDEX_DIR, "manifest.json");
 const MODEL_PATH =
   process.env.MMSS_SIGLIP_MODEL || "D:/hfmodels/siglip2-base-patch16-224";
 const PYTHON = process.env.PYTHON_EXECUTABLE || "python";
+const LATEST_DATASET = path.join(GENESIS_DATA_ROOT, "datasets", "latest.json");
+let snapshotCache: { signature: string; identity: Awaited<ReturnType<typeof getV3SnapshotIdentity>> } | null = null;
 type Kind = "index" | "search";
 interface Job {
   running: boolean;
@@ -152,7 +156,21 @@ export async function getMorphoStatus() {
   } catch {
     /* not built */
   }
-  const snapshot = await getV3SnapshotIdentity();
+  // Status polling checks only file metadata after the first snapshot hash. If
+  // any source file changes, recompute the canonical identity once.
+  const latest = JSON.parse(await fs.readFile(LATEST_DATASET, "utf8")) as { version_id: string };
+  const sourceFiles = [
+    LATEST_DATASET,
+    GENESIS_LIBRARY_PATH,
+    path.join(GENESIS_DATA_ROOT, "datasets", latest.version_id, "parameters.json"),
+    GENESIS_EXCLUDED_PATH,
+  ];
+  const stats = await Promise.all(sourceFiles.map((file) => fs.stat(file)));
+  const signature = stats.map((stat) => `${stat.size}:${stat.mtimeMs}`).join("|");
+  if (!snapshotCache || snapshotCache.signature !== signature) {
+    snapshotCache = { signature, identity: await getV3SnapshotIdentity() };
+  }
+  const snapshot = snapshotCache.identity;
   const stale: string[] = [];
   if (manifest && manifest.source_snapshot_sha256 !== snapshot.content_sha256)
     stale.push("V3 dataset changed");

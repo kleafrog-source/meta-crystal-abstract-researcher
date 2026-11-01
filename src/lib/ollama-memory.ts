@@ -66,6 +66,8 @@ async function unloadAndVerify(
 export async function prepareGpuForExternalModel(
   waitMs = 7_000,
 ): Promise<string[]> {
+  // Call only from explicit user-triggered model work; status probes must never
+  // launch, warm, or unload models as a side effect.
   const { baseUrl } = await loadEmbeddingRuntimeSettings();
   return unloadAndVerify(baseUrl, [], waitMs);
 }
