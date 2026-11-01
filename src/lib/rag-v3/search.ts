@@ -7,6 +7,8 @@ import { rankRuntimeAtoms } from "@/lib/combinatorial-genesis/runtime-index";
 import { buildEffectiveQuery } from "@/lib/rag-v3/instruction-support";
 import type { ActiveParameter, EnrichedParameter, InstructionContextEntry, ProposeParametersResponse, RetrievalScope, UiElement } from "@/lib/rag-v3/types";
 import { embedText, embedTexts } from "@/lib/ollama-client";
+import { classifyDomainLayer } from "@/lib/am-parameters-catalogue/domain-layer-config";
+import { ACOUSTIC_DOMAIN_LAYERS, GLOBAL_CONSENSUS_LAYER } from "@/lib/domain-layers";
 
 import { rankCompositeNamesMulti } from "./composite-index";
 import { buildRelationAlignment, ensureConceptCoverage } from "./alignment";
@@ -15,6 +17,7 @@ import { runV3AnchoringBridge, type V3AnchorValue } from "./python-bridge";
 import { decomposeQuery } from "./query-concepts";
 import { matchRelations } from "./relation-index";
 import { rankSelectOptionNames } from "./value-index";
+import { selectDomainFirstMmr } from "./domain-mmr";
 
 export interface RagV3Sources {
   library?: boolean;
@@ -68,7 +71,9 @@ function normalizeParameter(parameter: GenesisLibraryParameter, source: "library
     lyria_prompt_tags: Array.isArray(parameter.lyria_prompt_tags) ? parameter.lyria_prompt_tags.map(String) : [],
     semantic_keywords: Array.isArray(parameter.semantic_keywords) ? parameter.semantic_keywords.map(String) : [],
     domain: typeof parameter.domain === "string" ? parameter.domain : null,
-    domain_layer: typeof parameter.domain_layer === "string" ? parameter.domain_layer : undefined,
+    domain_layer: typeof parameter.domain_layer === "string" && parameter.domain_layer.trim()
+      ? parameter.domain_layer.trim()
+      : classifyDomainLayer(name, String(parameter.category ?? "")) ?? undefined,
     axes: Array.isArray(parameter.axes) ? parameter.axes.map(String) : [],
     quantity_kind: typeof parameter.quantity_kind === "string" ? parameter.quantity_kind : null,
     polarity_override: typeof parameter.polarity_override === "number" ? parameter.polarity_override : null,
@@ -83,6 +88,11 @@ function normalizeParameter(parameter: GenesisLibraryParameter, source: "library
     retrieval_scope: classifyRetrievalScope(parameter),
     _v3_source: source,
   };
+}
+
+function parameterDomainLayer(parameter: EnrichedParameter): string | null {
+  if (parameter.domain_layer === GLOBAL_CONSENSUS_LAYER.id) return null;
+  return parameter.domain_layer ?? classifyDomainLayer(parameter.technical_name, parameter.category);
 }
 
 async function readFrozen(): Promise<GenesisLibraryParameter[]> {
@@ -145,6 +155,9 @@ export async function searchV3(params: {
   instructionContext: InstructionContextEntry[];
   sources: RagV3Sources;
   scopes?: Partial<RagV3Scopes>;
+  selectedDomainLayers?: string[];
+  domainLayerWeights?: Record<string, number>;
+  candidateNames?: string[];
 }): Promise<ProposeParametersResponse> {
   const query = params.query.trim();
   if (!query) return { query: "", effective_query: "", results: [], total_candidates: 0, total_scoped: 0, retrieval_cache_size: 0 };
@@ -165,6 +178,10 @@ export async function searchV3(params: {
   }
   for (const item of frozen) if (!records.has(item.technical_name)) records.set(item.technical_name, normalizeParameter(item, "frozen"));
   for (const [name, parameter] of records) if (!scopes[parameter.retrieval_scope]) records.delete(name);
+  if (params.candidateNames) {
+    const allowedNames = new Set(params.candidateNames);
+    for (const name of records.keys()) if (!allowedNames.has(name)) records.delete(name);
+  }
 
   const baseQuery = buildEffectiveQuery(query, params.instructionContext);
   const atomQueryVector = await embedText(baseQuery);
@@ -186,6 +203,15 @@ export async function searchV3(params: {
   const relationAlignment = buildRelationAlignment(activeRelations, new Set(records.keys()));
   const queryVector = atomQueryVector;
   const topK = Math.max(1, Math.min(200, Math.round(params.topK)));
+  const selectedDomainLayers = (params.selectedDomainLayers ?? []).filter((layer) => ACOUSTIC_DOMAIN_LAYERS.some((item) => item.id === layer));
+  const layerWeights = Object.fromEntries(ACOUSTIC_DOMAIN_LAYERS.map((layer) => {
+    const configured = params.domainLayerWeights?.[layer.id];
+    return [layer.id, typeof configured === "number" && Number.isFinite(configured) && configured >= 0
+      ? configured
+      : (params.selectedDomainLayers === undefined ? 1 : Number(selectedDomainLayers.includes(layer.id)))];
+  })) as Record<string, number>;
+  const selectedLayerSet = new Set(selectedDomainLayers);
+  const layerBiasApplied = selectedLayerSet.size > 0 && selectedLayerSet.size < ACOUSTIC_DOMAIN_LAYERS.length;
   const lexicalCandidates = Array.from(records.values())
     .map((parameter) => ({ parameter, lexical: lexicalScore(effectiveQuery, parameter) }))
     .sort((left, right) => right.lexical - left.lexical || left.parameter.technical_name.localeCompare(right.parameter.technical_name))
@@ -209,6 +235,19 @@ export async function searchV3(params: {
     "use", "set", "mode", "option", "sound", "this", "режим", "вариант", "звук", "используй", "установи",
   ]).has(token)).length <= 2;
   const candidateMap = new Map(lexicalCandidates.map(({ parameter, lexical }) => [parameter.technical_name, { parameter, lexical }]));
+  if (layerBiasApplied) {
+    const selectedLexicalCandidates = Array.from(records.values())
+      .filter((parameter) => {
+        const layer = parameterDomainLayer(parameter);
+        return layer !== null && selectedLayerSet.has(layer);
+      })
+      .map((parameter) => ({ parameter, lexical: lexicalScore(effectiveQuery, parameter) }))
+      .sort((left, right) => right.lexical - left.lexical || left.parameter.technical_name.localeCompare(right.parameter.technical_name))
+      .slice(0, Math.max(256, topK * 2));
+    for (const { parameter, lexical } of selectedLexicalCandidates) {
+      if (!candidateMap.has(parameter.technical_name)) candidateMap.set(parameter.technical_name, { parameter, lexical });
+    }
+  }
   for (const parameter of records.values()) {
     if (hasOptionCommand && parameter.ui_element === "Select" && (parameter.options ?? []).some(optionMatchesQuery)) {
       candidateMap.set(parameter.technical_name, { parameter, lexical: lexicalScore(effectiveQuery, parameter) });
@@ -255,9 +294,54 @@ export async function searchV3(params: {
   const conceptIndexes = concepts.length > 1
     ? concepts.slice(1).map((_concept, index) => index + 1)
     : [0];
-  const ranked = optionOnlyQuery
-    ? rankedPool.slice(0, topK)
-    : ensureConceptCoverage(rankedPool, topK, conceptIndexes, relationAlignment.coverageGroups);
+  const candidatePoolSize = Math.min(rankedPool.length, Math.max(256, topK * 2));
+  const baseCandidatePool = optionOnlyQuery
+    ? rankedPool.slice(0, candidatePoolSize)
+    : ensureConceptCoverage(rankedPool, candidatePoolSize, conceptIndexes, relationAlignment.coverageGroups);
+  let candidatePool = baseCandidatePool;
+  if (layerBiasApplied) {
+    const isPreferred = (item: (typeof rankedPool)[number]) => {
+      const parameter = candidateMap.get(item.name)!.parameter;
+      const layer = parameterDomainLayer(parameter);
+      return layer !== null && selectedLayerSet.has(layer);
+    };
+    const allPreferred = rankedPool.filter(isPreferred);
+    const preferredPoolSize = Math.min(
+      allPreferred.length,
+      Math.max(Math.round(candidatePoolSize * 0.7), Math.max(1, Math.round(topK * 0.7))),
+    );
+    const unique = (items: typeof rankedPool) => Array.from(new Map(items.map((item) => [item.name, item])).values());
+    const preferredPool = unique([
+      ...baseCandidatePool.filter(isPreferred),
+      ...allPreferred,
+    ]).slice(0, preferredPoolSize);
+    const preferredNames = new Set(preferredPool.map((item) => item.name));
+    const outsidePoolSize = Math.max(0, candidatePoolSize - preferredPool.length);
+    const outsidePool = unique([
+      ...baseCandidatePool.filter((item) => !isPreferred(item) && !preferredNames.has(item.name)),
+      ...rankedPool.filter((item) => !isPreferred(item) && !preferredNames.has(item.name)),
+    ]).slice(0, outsidePoolSize);
+    candidatePool = [...preferredPool, ...outsidePool];
+  }
+  const mmrCandidates = candidatePool.map((item) => {
+    const parameter = candidateMap.get(item.name)!.parameter;
+    const layer = parameterDomainLayer(parameter);
+    return { ...item, layer, relevance: item.combined, vector: item.vector };
+  });
+  const ranked = selectDomainFirstMmr(mmrCandidates, topK, selectedDomainLayers, layerWeights, RAG_V3_CONFIG.mmrLambda);
+  const selectedTarget = layerBiasApplied ? Math.min(topK, Math.max(1, Math.round(topK * 0.7))) : 0;
+  const selectedAvailable = rankedPool.filter((item) => {
+    const layer = parameterDomainLayer(candidateMap.get(item.name)!.parameter);
+    return layer !== null && selectedLayerSet.has(layer);
+  }).length;
+  const selectedReturned = layerBiasApplied
+    ? ranked.filter((item) => item.layer !== null && selectedLayerSet.has(item.layer)).length
+    : 0;
+  const globalFillReturned = layerBiasApplied ? ranked.length - selectedReturned : 0;
+  const selectedLayerCandidateCounts = Object.fromEntries(selectedDomainLayers.map((layer) => [
+    layer,
+    rankedPool.filter((item) => parameterDomainLayer(candidateMap.get(item.name)!.parameter) === layer).length,
+  ]));
   const anchorBudget = Math.max(1, Math.ceil(ranked.length * RAG_V3_CONFIG.anchorChangeFraction));
   const anchored = await runV3AnchoringBridge({
     query: effectiveQuery,
@@ -272,10 +356,29 @@ export async function searchV3(params: {
     })),
     current_values: params.currentValues,
   });
-  const results = ranked.map(({ name, similarity }) => ({
+  const results = ranked.map(({ name, similarity, layer }) => ({
     ...toActive(candidateMap.get(name)!.parameter, similarity, params.currentValues, anchored[name]),
     excluded: excludedNames.has(name),
+    ...(layerBiasApplied ? { retrieval_group: layer !== null && selectedLayerSet.has(layer) ? "selected_layer" as const : "global_fill" as const } : {}),
   }));
-  return { query, effective_query: effectiveQuery, results, total_candidates: records.size, total_scoped: results.length, retrieval_cache_size: 5043 };
+  return {
+    query,
+    effective_query: effectiveQuery,
+    results,
+    total_candidates: records.size,
+    total_scoped: results.length,
+    retrieval_cache_size: 5043,
+    domain_retrieval: {
+      layer_bias_applied: layerBiasApplied,
+      mmr_lambda: RAG_V3_CONFIG.mmrLambda,
+      selected_layers: selectedDomainLayers,
+      selected_target: selectedTarget,
+      selected_available: selectedAvailable,
+      selected_returned: selectedReturned,
+      global_fill_returned: globalFillReturned,
+      selected_shortfall: Math.max(0, selectedTarget - selectedReturned),
+      selected_layer_candidate_counts: selectedLayerCandidateCounts,
+    },
+  };
 }
 

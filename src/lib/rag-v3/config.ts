@@ -5,6 +5,7 @@ export const RAG_V3_CONFIG = {
   softmaxTempExplicit: 0.02,
   softmaxTempDiffuse: 0.05,
   anchorChangeFraction: 0.30,
+  mmrLambda: 0.7,
   relationAlphaBase: 0.15,
   relationAlphaMax: 0.25,
   enableLlmTextGeneration: false,

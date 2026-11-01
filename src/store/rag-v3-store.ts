@@ -15,9 +15,13 @@ import type {
   StatusResponse,
   UiElement,
 } from "@/lib/rag-v3/types";
+import { ACOUSTIC_DOMAIN_LAYERS } from "@/lib/domain-layers";
 
 type SearchMode = "single" | "transition";
 type SearchTarget = "primary" | "secondary";
+interface SearchRetrievalOptions {
+  selectedDomainLayers?: string[];
+}
 export interface RagV3Sources {
   library: boolean;
   frozen: boolean;
@@ -51,7 +55,7 @@ interface RagV3State {
   fetchStatus: () => Promise<void>;
   startBuildIndex: () => Promise<void>;
   startBuildAnchors: () => Promise<void>;
-  proposeParameters: (query: string, target?: SearchTarget) => Promise<void>;
+  proposeParameters: (query: string, target?: SearchTarget, retrievalOptions?: SearchRetrievalOptions) => Promise<void>;
   applyTransitionBlend: () => void;
   setQuery: (query: string) => void;
   setQueryB: (query: string) => void;
@@ -280,7 +284,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
     }
   },
 
-  async proposeParameters(query, target = "primary") {
+  async proposeParameters(query, target = "primary", retrievalOptions) {
     const normalized = query.trim();
     const state = get();
 
@@ -321,6 +325,13 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
           instruction_context: toInstructionContext(get().instructionSlots),
           sources: get().sources,
           scopes: get().scopes,
+          ...(retrievalOptions?.selectedDomainLayers === undefined ? {} : {
+            domain_layers: retrievalOptions.selectedDomainLayers,
+            domain_layer_weights: Object.fromEntries(ACOUSTIC_DOMAIN_LAYERS.map((layer) => [
+              layer.id,
+              Number(retrievalOptions.selectedDomainLayers!.includes(layer.id)),
+            ])),
+          }),
         }),
       });
 

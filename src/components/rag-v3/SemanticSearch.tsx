@@ -33,7 +33,7 @@ const SCOPE_HINTS = {
   administrative: "Служебные и административные параметры.",
 } as const;
 
-export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Query B", collapsible = false, dataScope }: { primaryLabel?: string; secondaryLabel?: string; collapsible?: boolean; dataScope?: "am-stage" } = {}) {
+export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Query B", collapsible = false, dataScope, selectedDomainLayers }: { primaryLabel?: string; secondaryLabel?: string; collapsible?: boolean; dataScope?: "am-stage"; selectedDomainLayers?: string[] } = {}) {
   const t = useUiText();
   const query = useRagV3Store((state) => state.query);
   const queryB = useRagV3Store((state) => state.queryB);
@@ -224,7 +224,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
           canRedo={canRedo}
           inputRef={(element) => { queryInputs.current.a = element; }}
           onClear={() => setQuery("")}
-          onSubmit={() => void proposeParameters(query, "primary")}
+          onSubmit={() => void proposeParameters(query, "primary", selectedDomainLayers === undefined ? undefined : { selectedDomainLayers })}
           actions={
             <MetaCrystalPickerDialog
               targetLabel={primaryLabel}
@@ -248,7 +248,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
             canRedo={canRedo}
             inputRef={(element) => { queryInputs.current.b = element; }}
             onClear={() => setQueryB("")}
-            onSubmit={() => void proposeParameters(queryB, "secondary")}
+            onSubmit={() => void proposeParameters(queryB, "secondary", selectedDomainLayers === undefined ? undefined : { selectedDomainLayers })}
             actions={
               <MetaCrystalPickerDialog
                 targetLabel={secondaryLabel}

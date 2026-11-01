@@ -108,6 +108,6 @@ export async function rankCompositeNamesMulti(
         conceptIndex = indexValue;
       }
     }
-    return [{ name, similarity, concept_index: conceptIndex, concept_scores: conceptScores, row: entry.row }];
+    return [{ name, similarity, concept_index: conceptIndex, concept_scores: conceptScores, row: entry.row, vector: entry.vector }];
   }).sort((left, right) => right.similarity - left.similarity || left.name.localeCompare(right.name)).slice(0, limit);
 }

@@ -70,6 +70,7 @@ export interface ActiveParameter {
   axes: string[];
   retrieval_scope: RetrievalScope;
   excluded?: boolean;
+  retrieval_group?: "selected_layer" | "global_fill";
 }
 
 export interface InstructionContextEntry {
@@ -133,6 +134,8 @@ export interface ProposeParametersRequest {
   current_values?: Record<string, number | string>;
   instruction_context?: InstructionContextEntry[];
   scopes?: Partial<Record<RetrievalScope, boolean>>;
+  domain_layers?: string[];
+  domain_layer_weights?: Record<string, number>;
 }
 
 export interface ProposeParametersResponse {
@@ -142,6 +145,17 @@ export interface ProposeParametersResponse {
   total_candidates: number;
   total_scoped: number;
   retrieval_cache_size: number;
+  domain_retrieval?: {
+    layer_bias_applied: boolean;
+    mmr_lambda: number;
+    selected_layers: string[];
+    selected_target: number;
+    selected_available: number;
+    selected_returned: number;
+    global_fill_returned: number;
+    selected_shortfall: number;
+    selected_layer_candidate_counts: Record<string, number>;
+  };
 }
 
 export interface GenerateMacroRequest {

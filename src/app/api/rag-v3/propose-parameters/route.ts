@@ -23,6 +23,8 @@ export async function POST(request: Request) {
           : [],
         sources: body.sources ?? {},
         scopes: body.scopes,
+        selectedDomainLayers: body.domain_layers,
+        domainLayerWeights: body.domain_layer_weights,
       }),
     );
   } catch (error) {

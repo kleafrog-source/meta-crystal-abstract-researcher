@@ -265,9 +265,11 @@ export function AMStagePage() {
   }, [morphoStatus?.index_job?.running, refreshMorphoStatus]);
 
   const filteredV3Parameters = useMemo(() => v3Parameters.filter((parameter) => {
+    const noLayerRestriction = selectedLayers.length === 0 || selectedLayers.length === ACOUSTIC_DOMAIN_LAYERS.length;
     const storedLayer = (parameter as ActiveParameter & { domain_layer?: string }).domain_layer;
     const layer = storedLayer ?? classifyDomainLayer(parameter.technical_name, parameter.category);
-    return layer !== GLOBAL_CONSENSUS_LAYER.id && (!layer || selectedLayers.includes(layer));
+    const retrievalGroup = (parameter as ActiveParameter & { retrieval_group?: string }).retrieval_group;
+    return layer !== GLOBAL_CONSENSUS_LAYER.id && (noLayerRestriction || !layer || selectedLayers.includes(layer) || retrievalGroup === "global_fill");
   }), [v3Parameters, selectedLayers]);
   const layerCounts = useMemo(() => {
     const names = new Map(ACOUSTIC_DOMAIN_LAYERS.map((layer) => [layer.id, new Set<string>()]));
@@ -834,7 +836,7 @@ export function AMStagePage() {
         <div className="flex w-full min-w-0 flex-col gap-3">
           <section data-am-stage-zone="top-row" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
             <div className="min-w-0 space-y-3">
-              <SemanticSearch primaryLabel="Brief" secondaryLabel="Transition" collapsible dataScope="am-stage" />
+              <SemanticSearch primaryLabel="Brief" secondaryLabel="Transition" collapsible dataScope="am-stage" selectedDomainLayers={selectedLayers} />
           <details data-am-stage-disclosure="analysis-controls" className="rounded-lg border border-white/10 bg-black/30 p-3">
             <summary className="flex list-none cursor-pointer items-center gap-2 font-mono text-xs uppercase tracking-wider text-zinc-300 [&::-webkit-details-marker]:hidden"><AMIcon name="settings" size="sm" bright />Analysis controls · sampling, time gate, CLAP / SigLIP2, Continue<ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary>
             <div className="mt-3">            <div className="min-w-0 space-y-3">

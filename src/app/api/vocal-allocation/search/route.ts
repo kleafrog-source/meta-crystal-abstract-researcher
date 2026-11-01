@@ -28,12 +28,29 @@ function nearbyRole(query: string, token: string): "lead" | "whisper" | "ritual"
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json() as { query?: string; top_k?: number };
+    const body = await request.json() as { query?: string; top_k?: number; domain_layers?: string[]; domain_layer_weights?: Record<string, number> };
     const query = String(body.query ?? "").trim();
     if (!query) return NextResponse.json({ error: "Введите описание вокальной матрицы." }, { status: 400 });
     await prepareGpuForV3Embedding();
     const parsed = parseVocalQuery(query);
-    const [search, library] = await Promise.all([searchV3({ query, topK: Math.max(80, body.top_k ?? 40), currentValues: {}, instructionContext: [], sources: { library: true, frozen: false, atoms: false, generated: false } }), readGenesisLibrary()]);
+    const library = await readGenesisLibrary();
+    const vocalCandidateNames = library
+      .filter((parameter) => isVocalMatrixParameter({
+        technical_name: String(parameter.technical_name),
+        category: String(parameter.category ?? ""),
+        sub_category: String(parameter.sub_category ?? ""),
+      }))
+      .map((parameter) => String(parameter.technical_name));
+    const search = await searchV3({
+      query,
+      topK: Math.max(80, body.top_k ?? 40),
+      currentValues: {},
+      instructionContext: [],
+      sources: { library: true, frozen: false, atoms: false, generated: false },
+      selectedDomainLayers: body.domain_layers,
+      domainLayerWeights: body.domain_layer_weights,
+      candidateNames: vocalCandidateNames,
+    });
     const byName = new Map(library.map((p) => [String(p.technical_name), p]));
     const results = search.results.filter(isVocalMatrixParameter).slice(0, body.top_k ?? 40);
     const resultMap = new Map(results.map((p) => [p.technical_name, p]));
@@ -49,6 +66,6 @@ export async function POST(request: Request) {
     const digitNames: Record<string, string> = { i: "impact_aggression_digit_i", s: "spatial_stereo_width_digit_s", e: "entropy_chaos_digit_e", a: "vocal_vector_adaptive_alignment_a" };
     Object.entries(parsed.digits).forEach(([key, value]) => set(digitNames[key], value, `${key.toUpperCase()} задан явно`));
     const ordered = [...resultMap.values()].sort((a, b) => Number(/распознан явно|задан явно/.test(b.detail)) - Number(/распознан явно|задан явно/.test(a.detail)));
-    return NextResponse.json({ query, parsed, results: ordered.slice(0, body.top_k ?? 40), total_scoped: resultMap.size });
+    return NextResponse.json({ query, parsed, results: ordered.slice(0, body.top_k ?? 40), total_scoped: resultMap.size, domain_retrieval: search.domain_retrieval });
   } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 }); }
 }
