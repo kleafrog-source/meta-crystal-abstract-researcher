@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import path from "node:path";
 
 import { embeddingProcessEnv, loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
+import { acquireEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 
 export interface V3BuildJobState {
   running: boolean;
@@ -39,6 +40,8 @@ function append(state: V3BuildJobState, chunk: string) {
 function start(kind: "index" | "anchors", command: string, args: string[], env: NodeJS.ProcessEnv, cwd = process.cwd()) {
   const current = jobs[kind];
   if (current.running) return { started: false, reason: "already_running" };
+  const slotOwner = `v3-${kind}-index-build`;
+  if (!acquireEmbeddingModelSlot(slotOwner)) return { started: false, reason: "model_slot_busy" };
   const state = idle();
   state.running = true;
   state.startedAt = Date.now();
@@ -53,8 +56,8 @@ function start(kind: "index" | "anchors", command: string, args: string[], env: 
   child.stderr.setEncoding("utf8");
   child.stdout.on("data", (chunk) => append(state, chunk));
   child.stderr.on("data", (chunk) => { append(state, chunk); state.lastError = chunk.trim() || state.lastError; });
-  child.on("error", (error) => { state.running = false; state.finishedAt = Date.now(); state.exitCode = -1; state.lastError = error.message; });
-  child.on("close", (code) => { state.running = false; state.finishedAt = Date.now(); state.exitCode = code; if (code !== 0 && !state.lastError) state.lastError = `process exited with ${code}`; });
+  child.on("error", (error) => { state.running = false; state.finishedAt = Date.now(); state.exitCode = -1; state.lastError = error.message; releaseEmbeddingModelSlot(slotOwner); });
+  child.on("close", (code) => { state.running = false; state.finishedAt = Date.now(); state.exitCode = code; if (code !== 0 && !state.lastError) state.lastError = `process exited with ${code}`; releaseEmbeddingModelSlot(slotOwner); });
   return { started: true };
 }
 

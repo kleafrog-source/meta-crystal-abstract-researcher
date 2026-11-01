@@ -10,6 +10,7 @@ import type {
   LLMModelInfo,
   LLMProvider,
 } from "./types";
+import { assertOllamaInferenceAvailable } from "@/lib/model-slot";
 
 const DEFAULT_OLLAMA_URL = "http://localhost:11434";
 
@@ -51,6 +52,7 @@ export class OllamaProvider implements LLMProvider {
   }
 
   async chat(messages: LLMMessage[], opts: LLMChatOptions = {}): Promise<LLMChatResult> {
+    assertOllamaInferenceAvailable();
     const model = opts.model || this.defaultModel;
     const body = this.buildChatBody(messages, opts, false);
     const r = await fetch(`${this.baseUrl}/api/chat`, {
@@ -82,6 +84,7 @@ export class OllamaProvider implements LLMProvider {
     opts: LLMChatOptions,
     onChunk: (chunk: LLMChatStreamChunk) => void,
   ): Promise<LLMChatResult> {
+    assertOllamaInferenceAvailable();
     const model = opts.model || this.defaultModel;
     const body = this.buildChatBody(messages, opts, true);
     const r = await fetch(`${this.baseUrl}/api/chat`, {
@@ -135,6 +138,7 @@ export class OllamaProvider implements LLMProvider {
   }
 
   async embed(text: string, model?: string): Promise<number[]> {
+    assertOllamaInferenceAvailable();
     const m = model || this.embedModel;
     const r = await fetch(`${this.baseUrl}/api/embeddings`, {
       method: "POST",

@@ -1,5 +1,6 @@
 import { loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
 import { cachedEmbeddingVectors } from "@/lib/embedding-vector-cache";
+import { assertOllamaInferenceAvailable } from "@/lib/model-slot";
 
 const DEFAULT_OLLAMA_BASE_URL = "http://localhost:11434";
 const DEFAULT_OLLAMA_MODEL = "qwen3-embedding:0.6b";
@@ -49,10 +50,14 @@ function buildOllamaError(message: string, baseUrl = activeBaseUrl, model = acti
 async function requestEmbedding(
   input: string,
   timeoutMs: number,
+  modelOverride?: string,
+  slotOwner?: string,
 ): Promise<number[]> {
+  assertOllamaInferenceAvailable(slotOwner);
   const settings = await loadEmbeddingRuntimeSettings();
   activeBaseUrl = settings.baseUrl;
-  activeModel = settings.model;
+  const model = modelOverride?.trim() || settings.model;
+  activeModel = model;
   const embeddingsEndpoint = `${settings.baseUrl}/api/embeddings`;
   const embedEndpoint = `${settings.baseUrl}/api/embed`;
   const controller = new AbortController();
@@ -65,7 +70,7 @@ async function requestEmbedding(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: settings.model,
+        model,
         prompt: input,
       }),
       signal: controller.signal,
@@ -78,7 +83,7 @@ async function requestEmbedding(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: settings.model,
+          model,
           input,
         }),
         signal: controller.signal,
@@ -163,24 +168,36 @@ export async function probeOllama(): Promise<OllamaStatus> {
 }
 
 export async function embedText(text: string): Promise<number[]> {
+  return embedTextWithModel(text);
+}
+
+export async function embedTextWithModel(text: string, model?: string, slotOwner?: string): Promise<number[]> {
+  assertOllamaInferenceAvailable(slotOwner);
   const normalized = text.trim();
   if (!normalized) {
     throw new Error("Cannot embed an empty string.");
   }
 
   const settings = await loadEmbeddingRuntimeSettings();
-  const namespace = JSON.stringify({ provider: "ollama", baseUrl: settings.baseUrl, model: settings.model, endpoint: "api/embed|api/embeddings", format: "float64-json-v1" });
-  const [vector] = await cachedEmbeddingVectors([normalized], namespace, async () => [await requestEmbedding(normalized, OLLAMA_EMBED_TIMEOUT_MS)]);
+  const requestedModel = model?.trim() || settings.model;
+  const namespace = JSON.stringify({ provider: "ollama", baseUrl: settings.baseUrl, model: requestedModel, endpoint: "api/embed|api/embeddings", format: "float64-json-v1" });
+  const [vector] = await cachedEmbeddingVectors([normalized], namespace, async () => [await requestEmbedding(normalized, OLLAMA_EMBED_TIMEOUT_MS, requestedModel, slotOwner)]);
   return vector;
 }
 
 export async function embedTexts(texts: string[]): Promise<number[][]> {
+  return embedTextsWithModel(texts);
+}
+
+export async function embedTextsWithModel(texts: string[], model?: string, slotOwner?: string): Promise<number[][]> {
+  assertOllamaInferenceAvailable(slotOwner);
   const normalized = texts.map((text) => text.trim());
   if (normalized.length === 0 || normalized.some((text) => !text)) {
     throw new Error("Cannot embed an empty text batch.");
   }
   const settings = await loadEmbeddingRuntimeSettings();
-  const namespace = JSON.stringify({ provider: "ollama", baseUrl: settings.baseUrl, model: settings.model, endpoint: "api/embed|api/embeddings", format: "float64-json-v1" });
+  const requestedModel = model?.trim() || settings.model;
+  const namespace = JSON.stringify({ provider: "ollama", baseUrl: settings.baseUrl, model: requestedModel, endpoint: "api/embed|api/embeddings", format: "float64-json-v1" });
   return cachedEmbeddingVectors(normalized, namespace, async (missing) => {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), OLLAMA_EMBED_TIMEOUT_MS);
@@ -190,10 +207,10 @@ export async function embedTexts(texts: string[]): Promise<number[][]> {
       const response = await fetch(settings.baseUrl + "/api/embed", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: settings.model, input: missing }),
+        body: JSON.stringify({ model: requestedModel, input: missing }),
         signal: controller.signal,
       });
-      if (!response.ok) return Promise.all(missing.map((text) => requestEmbedding(text, OLLAMA_EMBED_TIMEOUT_MS)));
+      if (!response.ok) return Promise.all(missing.map((text) => requestEmbedding(text, OLLAMA_EMBED_TIMEOUT_MS, requestedModel, slotOwner)));
       const payload = (await response.json()) as OllamaEmbeddingsResponse;
       if (!Array.isArray(payload.embeddings) || payload.embeddings.length !== missing.length) {
         throw buildOllamaError("Ollama returned an unexpected embedding batch");

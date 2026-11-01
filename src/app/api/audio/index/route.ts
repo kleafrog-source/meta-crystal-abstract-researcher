@@ -3,6 +3,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 
 import { listTasks, runSidecar } from "@/lib/engine/runner";
+import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 7200;
@@ -43,13 +44,16 @@ export async function GET() {
 }
 
 export async function POST() {
+  const slotOwner = "clap-index-build";
+  if (!acquireEmbeddingModelSlot(slotOwner)) return NextResponse.json({ started: false, reason: `model slot busy: ${getEmbeddingModelSlot()?.owner ?? "unknown"}` }, { status: 409 });
   try {
     const running = listTasks().find((item) => item.taskType === "audio-clap" && item.title === "Build CLAP text index" && item.status === "running");
-    if (running) return NextResponse.json({ started: false, reason: "already_running", taskId: running.taskId }, { status: 409 });
+    if (running) { releaseEmbeddingModelSlot(slotOwner); return NextResponse.json({ started: false, reason: "already_running", taskId: running.taskId }, { status: 409 }); }
     const task = runSidecar({ command: "audio_index", timeoutMs: 2 * 60 * 60_000, taskType: "audio-clap", title: "Build CLAP text index" });
-    void task.done.catch(() => {});
+    void task.done.catch(() => {}).finally(() => releaseEmbeddingModelSlot(slotOwner));
     return NextResponse.json({ started: true, taskId: task.taskId }, { status: 202 });
   } catch (error) {
+    releaseEmbeddingModelSlot(slotOwner);
     return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

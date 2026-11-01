@@ -8,6 +8,7 @@ import { callSidecar, listTasks } from "@/lib/engine/runner";
 import { prepareGpuForExternalModel } from "@/lib/ollama-memory";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { isVocalMatrixParameter } from "@/lib/vocal-allocation/parser";
+import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 7200;
@@ -28,6 +29,8 @@ export async function DELETE() {
 
 export async function POST(request: Request) {
   let tempDir: string | null = null;
+  const slotOwner = "clap-audio-search";
+  if (!acquireEmbeddingModelSlot(slotOwner)) return NextResponse.json({ error: `Model slot busy: ${getEmbeddingModelSlot()?.owner ?? "unknown"}` }, { status: 409 });
   try {
     const form = await request.formData();
     const audio = form.get("audio");
@@ -61,7 +64,7 @@ export async function POST(request: Request) {
       : ".audio";
     const audioPath = path.join(tempDir, `reference${extension}`);
     await fs.writeFile(audioPath, Buffer.from(await audio.arrayBuffer()));
-    await prepareGpuForExternalModel();
+    await prepareGpuForExternalModel(7_000, slotOwner);
     const { result } = await callSidecar("audio_search", {
       args: [audioPath],
       inputFile: { offset, duration, top_k: vocalMatrix ? Math.max(topK, 100) : topK },
@@ -81,6 +84,7 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   } finally {
+    releaseEmbeddingModelSlot(slotOwner);
     if (tempDir)
       await fs
         .rm(tempDir, { recursive: true, force: true })

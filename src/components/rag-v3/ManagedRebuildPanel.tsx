@@ -102,7 +102,7 @@ export function ManagedRebuildPanel() {
 function ArtifactCard(props: { artifact: ArtifactStatus; running: boolean; disabled: boolean; onStart: () => void }) {
   const artifact = props.artifact;
   const buttonLabels: Record<ArtifactKind, string> = {
-    composite: "Перестроить Qwen composite", atoms: "Перестроить runtime atoms", anchors: "Перестроить live axes / anchors",
+    composite: "Rebuild Qwen3 composite", embeddinggemma2_text: "Build EmbeddingGemma 2 text index", atoms: "Перестроить runtime atoms", anchors: "Перестроить live axes / anchors",
     range: "Перестроить Range anchors", select: "Перестроить Select options", relations: "Перестроить relation anchors", clap: "Обновить CLAP-индекс",
   };
   return (
@@ -111,6 +111,7 @@ function ArtifactCard(props: { artifact: ArtifactStatus; running: boolean; disab
       <div className="mt-1 text-[10px] text-zinc-500">{artifact.model ?? "—"} · {artifact.dimensions ?? "—"}D · {artifact.parameter_count} rows</div>
       <div className="text-[10px] text-zinc-500">built: {artifact.built_at ? new Date(artifact.built_at).toLocaleString() : "—"} · +{artifact.added_since_build} / excluded {artifact.excluded_since_build}</div>
       {artifact.reason ? <div className="mt-1 text-[10px] text-amber-300">{artifact.reason}</div> : null}
+      {artifact.fingerprint ? <div className="mt-1 font-mono text-[9px] text-zinc-600" title={artifact.fingerprint}>fp {artifact.fingerprint.slice(0, 16)}</div> : null}
       <V3Tooltip content={`Перестраивает только артефакт «${artifact.label}». Текущий статус: ${artifact.status}.`}>
         <Button className="mt-2 w-full" size="sm" variant="outline" disabled={props.disabled} onClick={props.onStart}>{props.running ? <Loader2 className="size-3.5 animate-spin" /> : null}{buttonLabels[artifact.kind]}</Button>
       </V3Tooltip>

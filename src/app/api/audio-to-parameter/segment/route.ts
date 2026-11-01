@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 import { callSidecar, listTasks } from "@/lib/engine/runner";
 import { runMorphoAudioSearch, stopMorpho } from "@/lib/morpho/jobs";
 import { prepareGpuForExternalModel } from "@/lib/ollama-memory";
+import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { isVocalMatrixParameter } from "@/lib/vocal-allocation/parser";
 
@@ -37,6 +38,7 @@ export async function DELETE() {
 
 export async function POST(request: Request) {
   let tempDir: string | null = null;
+  let slotOwner: string | null = null;
   try {
     const form = await request.formData();
     const audio = form.get("audio");
@@ -83,8 +85,6 @@ export async function POST(request: Request) {
     const audioPath = path.join(tempDir, `source${extension}`);
     await fs.writeFile(audioPath, Buffer.from(await audio.arrayBuffer()));
 
-    await prepareGpuForExternalModel();
-
     if (engine === "siglip") {
       const result = (await runMorphoAudioSearch(
         audioPath,
@@ -102,6 +102,10 @@ export async function POST(request: Request) {
         spectrogram: result.audio,
       });
     }
+
+    slotOwner = "clap-audio-search";
+    if (!acquireEmbeddingModelSlot(slotOwner)) return NextResponse.json({ error: `Model slot busy: ${getEmbeddingModelSlot()?.owner ?? "unknown"}` }, { status: 409 });
+    await prepareGpuForExternalModel(7_000, slotOwner);
 
     const { result: rawResult } = await callSidecar("audio_search", {
       args: [audioPath],
@@ -123,6 +127,7 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   } finally {
+    if (slotOwner) releaseEmbeddingModelSlot(slotOwner);
     if (tempDir)
       await fs
         .rm(tempDir, { recursive: true, force: true })

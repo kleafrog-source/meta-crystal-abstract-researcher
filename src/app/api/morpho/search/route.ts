@@ -3,7 +3,6 @@ import os from "node:os";
 import path from "node:path";
 import { NextResponse } from "next/server";
 import { runMorphoSearch, stopMorpho } from "@/lib/morpho/jobs";
-import { prepareGpuForExternalModel } from "@/lib/ollama-memory";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { isVocalMatrixParameter } from "@/lib/vocal-allocation/parser";
 export const runtime = "nodejs";
@@ -54,7 +53,6 @@ export async function POST(request: Request) {
       : ".image";
     const file = path.join(temporary, `reference${extension}`);
     await fs.writeFile(file, Buffer.from(await image.arrayBuffer()));
-    await prepareGpuForExternalModel();
     const result = await runMorphoSearch(file, vocalMatrix ? Math.max(topK, 100) : topK, valueMode);
     if (vocalMatrix) {
       const payload = result as Record<string, unknown> & { results?: ActiveParameter[] };

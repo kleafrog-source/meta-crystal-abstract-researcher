@@ -6,11 +6,11 @@ import { readExcludedRegistry } from "@/lib/combinatorial-genesis/registry";
 import { rankRuntimeAtoms } from "@/lib/combinatorial-genesis/runtime-index";
 import { buildEffectiveQuery } from "@/lib/rag-v3/instruction-support";
 import type { ActiveParameter, EnrichedParameter, InstructionContextEntry, ProposeParametersResponse, RetrievalScope, UiElement } from "@/lib/rag-v3/types";
-import { embedText, embedTexts } from "@/lib/ollama-client";
+import { embedTextWithModel, embedTextsWithModel } from "@/lib/ollama-client";
 import { classifyDomainLayer } from "@/lib/am-parameters-catalogue/domain-layer-config";
 import { ACOUSTIC_DOMAIN_LAYERS, GLOBAL_CONSENSUS_LAYER } from "@/lib/domain-layers";
 
-import { rankCompositeNamesMulti } from "./composite-index";
+import { rankCompositeNamesMulti, TEXT_INDEX_MODELS, type TextIndexId } from "./composite-index";
 import { buildRelationAlignment, ensureConceptCoverage } from "./alignment";
 import { RAG_V3_CONFIG } from "./config";
 import { runV3AnchoringBridge, type V3AnchorValue } from "./python-bridge";
@@ -158,6 +158,8 @@ export async function searchV3(params: {
   selectedDomainLayers?: string[];
   domainLayerWeights?: Record<string, number>;
   candidateNames?: string[];
+  textIndex?: TextIndexId;
+  modelSlotOwner?: string;
 }): Promise<ProposeParametersResponse> {
   const query = params.query.trim();
   if (!query) return { query: "", effective_query: "", results: [], total_candidates: 0, total_scoped: 0, retrieval_cache_size: 0 };
@@ -184,24 +186,36 @@ export async function searchV3(params: {
   }
 
   const baseQuery = buildEffectiveQuery(query, params.instructionContext);
-  const atomQueryVector = await embedText(baseQuery);
-  const atomRanking = enabled.atoms ? await rankRuntimeAtoms(atomQueryVector, 20) : null;
+  const textIndex = params.textIndex === "embeddinggemma2" ? "embeddinggemma2" : "qwen3";
+  const selectedModel = TEXT_INDEX_MODELS[textIndex];
+  const selectedQueryVector = await embedTextWithModel(baseQuery, selectedModel, params.modelSlotOwner);
+  // Atom, relation, select-option, and anchor artifacts are currently Qwen-indexed.
+  // Keep those paths out of Gemma searches so one request never loads two embedding models
+  // or compares vectors from incompatible spaces.
+  const usesQwenArtifacts = textIndex === "qwen3";
+  const atomRanking = usesQwenArtifacts && enabled.atoms ? await rankRuntimeAtoms(selectedQueryVector, 20) : null;
   const atomExpansion = atomRanking?.atoms.filter((atom) => atom.role !== "unit").slice(0, 12).map((atom) => atom.atom).join(" ") ?? "";
   const effectiveQuery = baseQuery;
   const concepts = decomposeQuery(baseQuery, Array.from(records.values(), retrievalText));
-  const extraConceptVectors = concepts.length > 1 ? await embedTexts(concepts.slice(1).map((concept) => concept.text)) : [];
+  const extraConceptVectors = concepts.length > 1
+    ? await embedTextsWithModel(concepts.slice(1).map((concept) => concept.text), selectedModel, params.modelSlotOwner)
+    : [];
   const conceptVectors = concepts.map((concept, index) => ({
     ...concept,
-    vector: index === 0 ? atomQueryVector : extraConceptVectors[index - 1],
+    vector: index === 0 ? selectedQueryVector : extraConceptVectors[index - 1],
   }));
-  const atomExpansionVector = atomExpansion ? await embedText(`Combinatorial atoms: ${atomExpansion}`) : null;
+  const atomExpansionVector = usesQwenArtifacts && atomExpansion
+    ? await embedTextWithModel(`Combinatorial atoms: ${atomExpansion}`, selectedModel, params.modelSlotOwner)
+    : null;
   const retrievalVectors = [
     ...conceptVectors.map((concept) => ({ vector: concept.vector, weight: concept.weight })),
     ...(atomExpansionVector ? [{ vector: atomExpansionVector, weight: 0.65 }] : []),
   ];
-  const activeRelations = await matchRelations(baseQuery, conceptVectors.map((concept) => concept.vector));
+  const activeRelations = usesQwenArtifacts
+    ? await matchRelations(baseQuery, conceptVectors.map((concept) => concept.vector))
+    : [];
   const relationAlignment = buildRelationAlignment(activeRelations, new Set(records.keys()));
-  const queryVector = atomQueryVector;
+  const queryVector = selectedQueryVector;
   const topK = Math.max(1, Math.min(700, Math.round(params.topK)));
   const selectedDomainLayers = (params.selectedDomainLayers ?? []).filter((layer) => ACOUSTIC_DOMAIN_LAYERS.some((item) => item.id === layer));
   const layerWeights = Object.fromEntries(ACOUSTIC_DOMAIN_LAYERS.map((layer) => {
@@ -226,7 +240,7 @@ export async function searchV3(params: {
       && new RegExp(`(?<![\\p{L}\\p{N}_/.:])${normalizedOption.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\p{L}\\p{N}_/.:])`, "u").test(normalizedQuery);
   };
   const hasOptionCommand = /\b(?:mode|option|режим|вариант)\b/u.test(baseQuery.toLowerCase());
-  const selectMatches = hasOptionCommand
+  const selectMatches = hasOptionCommand && usesQwenArtifacts
     ? (await rankSelectOptionNames(queryVector, new Set(records.keys()), Math.max(32, topK * 2)))
       .filter((match) => optionMatchesQuery(match.option))
     : [];
@@ -265,6 +279,7 @@ export async function searchV3(params: {
     retrievalVectors,
     [...candidateMap.keys()],
     candidateMap.size,
+    textIndex,
   );
   const rankedPool = semanticRanked
     .map((item) => {
@@ -343,7 +358,7 @@ export async function searchV3(params: {
     rankedPool.filter((item) => parameterDomainLayer(candidateMap.get(item.name)!.parameter) === layer).length,
   ]));
   const anchorBudget = Math.max(1, Math.ceil(ranked.length * RAG_V3_CONFIG.anchorChangeFraction));
-  const anchored = await runV3AnchoringBridge({
+  const anchored = usesQwenArtifacts ? await runV3AnchoringBridge({
     query: effectiveQuery,
     concepts: conceptVectors.map((concept) => concept.text),
     query_embeddings: conceptVectors.map((concept) => concept.vector),
@@ -355,7 +370,7 @@ export async function searchV3(params: {
       _anchor_eligible: index < anchorBudget,
     })),
     current_values: params.currentValues,
-  });
+  }) : {};
   const results = ranked.map(({ name, similarity, layer }) => ({
     ...toActive(candidateMap.get(name)!.parameter, similarity, params.currentValues, anchored[name]),
     excluded: excludedNames.has(name),

@@ -1,7 +1,17 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
-const INDEX_DIR = path.join(process.cwd(), "data", "combinatorial-genesis", "v3", "composite-index");
+const INDEX_ROOT = path.join(process.cwd(), "data", "combinatorial-genesis", "v3");
+export type TextIndexId = "qwen3" | "embeddinggemma2";
+
+export const TEXT_INDEX_MODELS: Record<TextIndexId, string> = {
+  qwen3: "qwen3-embedding:0.6b",
+  embeddinggemma2: "embeddinggemma-2:740m",
+};
+
+export function getTextIndexDirectory(index: TextIndexId): string {
+  return path.join(INDEX_ROOT, index === "qwen3" ? "composite-index" : "embeddinggemma2-text-index");
+}
 
 interface CompositeRow {
   technical_name: string;
@@ -29,7 +39,7 @@ interface LoadedIndex {
   rowByName: Map<string, { row: CompositeRow; vector: Float32Array }>;
 }
 
-let cached: LoadedIndex | null = null;
+const cached = new Map<TextIndexId, LoadedIndex>();
 
 function normalized(vector: number[]): Float32Array {
   const norm = Math.sqrt(vector.reduce((sum, value) => sum + value * value, 0));
@@ -42,12 +52,14 @@ function dot(left: Float32Array, right: Float32Array): number {
   return value;
 }
 
-async function loadIndex(): Promise<LoadedIndex> {
-  const manifest = JSON.parse(await fs.readFile(path.join(INDEX_DIR, "manifest.json"), "utf8")) as CompositeManifest;
-  if (cached?.manifest.cache_sha256 === manifest.cache_sha256) return cached;
+async function loadIndex(indexId: TextIndexId): Promise<LoadedIndex> {
+  const indexDir = getTextIndexDirectory(indexId);
+  const manifest = JSON.parse(await fs.readFile(path.join(indexDir, "manifest.json"), "utf8")) as CompositeManifest;
+  const current = cached.get(indexId);
+  if (current?.manifest.cache_sha256 === manifest.cache_sha256) return current;
   const [rows, binary] = await Promise.all([
-    fs.readFile(path.join(INDEX_DIR, manifest.files.rows), "utf8").then((value) => JSON.parse(value) as CompositeRow[]),
-    fs.readFile(path.join(INDEX_DIR, manifest.files.embeddings)),
+    fs.readFile(path.join(indexDir, manifest.files.rows), "utf8").then((value) => JSON.parse(value) as CompositeRow[]),
+    fs.readFile(path.join(indexDir, manifest.files.embeddings)),
   ]);
   const count = binary.readUInt32LE(0);
   const dimensions = binary.readUInt32LE(4);
@@ -64,16 +76,17 @@ async function loadIndex(): Promise<LoadedIndex> {
     }
     rowByName.set(row.technical_name, { row, vector });
   }
-  cached = { manifest, rowByName };
-  return cached;
+  const loaded = { manifest, rowByName };
+  cached.set(indexId, loaded);
+  return loaded;
 }
 
-export async function getCompositeIndexInfo(): Promise<CompositeManifest> {
-  return (await loadIndex()).manifest;
+export async function getCompositeIndexInfo(indexId: TextIndexId = "qwen3"): Promise<CompositeManifest> {
+  return (await loadIndex(indexId)).manifest;
 }
 
-export async function rankCompositeNames(queryVector: number[], names: string[], limit: number) {
-  const index = await loadIndex();
+export async function rankCompositeNames(queryVector: number[], names: string[], limit: number, indexId: TextIndexId = "qwen3") {
+  const index = await loadIndex(indexId);
   const query = normalized(queryVector);
   if (query.length !== index.manifest.dimensions) throw new Error("V3 query/index dimensions differ.");
   return names.flatMap((name) => {
@@ -86,8 +99,9 @@ export async function rankCompositeNamesMulti(
   queryVectors: Array<{ vector: number[]; weight: number }>,
   names: string[],
   limit: number,
+  indexId: TextIndexId = "qwen3",
 ) {
-  const index = await loadIndex();
+  const index = await loadIndex(indexId);
   const queries = queryVectors.map(({ vector, weight }) => ({ vector: normalized(vector), weight }));
   if (queries.some((query) => query.vector.length !== index.manifest.dimensions)) {
     throw new Error("V3 multi-query/index dimensions differ.");

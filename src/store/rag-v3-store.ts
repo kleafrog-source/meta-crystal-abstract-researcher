@@ -21,6 +21,7 @@ type SearchMode = "single" | "transition";
 type SearchTarget = "primary" | "secondary";
 interface SearchRetrievalOptions {
   selectedDomainLayers?: string[];
+  textIndex?: "qwen3" | "embeddinggemma2";
 }
 export interface RagV3Sources {
   library: boolean;
@@ -37,6 +38,7 @@ interface RagV3State {
   query: string;
   queryB: string;
   topK: number;
+  textIndex: "qwen3" | "embeddinggemma2";
   sources: RagV3Sources;
   scopes: RagV3Scopes;
   vocalMatrixMode: boolean;
@@ -60,6 +62,7 @@ interface RagV3State {
   setQuery: (query: string) => void;
   setQueryB: (query: string) => void;
   setTopK: (topK: number) => void;
+  setTextIndex: (textIndex: "qwen3" | "embeddinggemma2") => void;
   toggleSource: (source: keyof RagV3Sources) => void;
   toggleScope: (scope: RetrievalScope) => void;
   toggleVocalMatrixMode: () => void;
@@ -249,6 +252,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
   query: "",
   queryB: "",
   topK: 50,
+  textIndex: "qwen3",
   sources: { library: true, frozen: true, atoms: true, generated: true },
   scopes: { sound: true, structure: true, metadata: false, provenance: false, administrative: false },
   vocalMatrixMode: false,
@@ -325,6 +329,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
           instruction_context: toInstructionContext(get().instructionSlots),
           sources: get().sources,
           scopes: get().scopes,
+          text_index: retrievalOptions?.textIndex ?? get().textIndex,
           ...(retrievalOptions?.selectedDomainLayers === undefined ? {} : {
             domain_layers: retrievalOptions.selectedDomainLayers,
             domain_layer_weights: Object.fromEntries(ACOUSTIC_DOMAIN_LAYERS.map((layer) => [
@@ -447,6 +452,10 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
         activeParameters: mergeActiveParameters(state.activeParameters, nextActive),
       };
     });
+  },
+
+  setTextIndex(textIndex) {
+    set({ textIndex });
   },
 
   toggleSource(source) {
@@ -628,6 +637,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
     instructionSlots: state.instructionSlots,
     instructionSettingsSavedAt: state.instructionSettingsSavedAt,
     topK: state.topK,
+    textIndex: state.textIndex,
     sources: state.sources,
     scopes: state.scopes,
     vocalMatrixMode: state.vocalMatrixMode,

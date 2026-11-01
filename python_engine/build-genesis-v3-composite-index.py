@@ -116,9 +116,8 @@ def embed_batch(endpoint: str, model: str, texts: list[str]) -> list[list[float]
     return [normalize(vector) for vector in vectors]
 
 
-def cached_vectors(model: str) -> dict[str, tuple[list[float], str, str, str]]:
+def cached_vectors(model: str, index_dir: Path, allow_semantic_cache: bool = True) -> dict[str, tuple[list[float], str, str, str]]:
     result: dict[str, tuple[list[float], str, str, str]] = {}
-    index_dir = DATA_ROOT / "v3" / "composite-index"
     manifest_path = index_dir / "manifest.json"
     rows_path = index_dir / "rows.json"
     vectors_path = index_dir / "embeddings.f32"
@@ -141,7 +140,7 @@ def cached_vectors(model: str) -> dict[str, tuple[list[float], str, str, str]]:
     meta_path = output / "semantic_embeddings_meta.json"
     eligible_path = output / "eligible_parameters.json"
     vectors_path = output / "semantic_embeddings.f32"
-    if meta_path.exists() and eligible_path.exists() and vectors_path.exists():
+    if allow_semantic_cache and meta_path.exists() and eligible_path.exists() and vectors_path.exists():
         meta = read_json(meta_path)
         if meta.get("model") == model:
             parameters, vectors = read_json(eligible_path), read_vectors(vectors_path)
@@ -166,7 +165,17 @@ def catalogue_deleted_names() -> set[str]:
     raise ValueError(f"Invalid catalogue tombstone file: {tombstones}")
 
 
-def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], bool]:
+def build(
+    model: str,
+    endpoint: str,
+    batch_size: int,
+    output_dir: Path | None = None,
+    retrieval_text_only: bool = False,
+) -> tuple[dict[str, Any], bool]:
+    index_dir = (output_dir or DATA_ROOT / "v3" / "composite-index").resolve()
+    qwen_index_dir = (DATA_ROOT / "v3" / "composite-index").resolve()
+    if not model.startswith("qwen3-embedding:") and index_dir == qwen_index_dir:
+        raise ValueError("A non-Qwen model cannot write to the Qwen composite index directory")
     library = read_json(DATA_ROOT / "library" / "parameters.json")
     records: dict[str, tuple[dict[str, Any], str]] = {
         str(item["technical_name"]): ({**item, "retrieval_scope": classify_retrieval_scope(item)}, "library") for item in library
@@ -181,16 +190,17 @@ def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], b
         )
         for name, (item, source) in records.items()
     }
-    write_json(DATA_ROOT / "v3" / "dataset.json", [item for item, _source in records.values()])
+    if index_dir == qwen_index_dir:
+        write_json(DATA_ROOT / "v3" / "dataset.json", [item for item, _source in records.values()])
     excluded = excluded_names(DATA_ROOT)
     records = {name: value for name, value in records.items() if name not in excluded}
 
-    cache = cached_vectors(model)
+    cache = cached_vectors(model, index_dir, allow_semantic_cache=not retrieval_text_only)
     planned: list[dict[str, Any]] = []
     reusable_names: set[str] = set()
     for name, (parameter, source) in sorted(records.items()):
         vector_info = cache.get(name)
-        text_kind = vector_info[2] if vector_info else "retrieval"
+        text_kind = "retrieval" if retrieval_text_only else vector_info[2] if vector_info else "retrieval"
         text = semantic_text(parameter) if text_kind == "semantic" else retrieval_text(parameter)
         if vector_info and vector_info[3] != sha256_text(text):
             vector_info = None
@@ -208,7 +218,6 @@ def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], b
         "excluded_sha256": registry_sha256(DATA_ROOT),
         "rows": planned,
     }, ensure_ascii=False, sort_keys=True))
-    index_dir = DATA_ROOT / "v3" / "composite-index"
     manifest_path = index_dir / "manifest.json"
     if manifest_path.exists():
         current = read_json(manifest_path)
@@ -241,6 +250,7 @@ def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], b
         "parameter_count": len(planned),
         "dataset_version": latest["version_id"], "vector_origins": origins,
         "excluded_count": len(excluded), "excluded_sha256": registry_sha256(DATA_ROOT),
+        "text_policy": "retrieval" if retrieval_text_only else "semantic-cache-when-available",
         "source_parameter_count": len(planned),
         "files": {"rows": "rows.json", "embeddings": "embeddings.f32"},
     }
@@ -253,8 +263,10 @@ def main() -> int:
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--endpoint", default=DEFAULT_ENDPOINT)
     parser.add_argument("--batch-size", type=int, default=64)
+    parser.add_argument("--output-dir", type=Path, help="Optional isolated output directory; defaults to the Qwen composite index")
+    parser.add_argument("--retrieval-text-only", action="store_true", help="Use the same retrieval text policy as the Qwen V3 composite index")
     args = parser.parse_args()
-    manifest, created = build(args.model, args.endpoint, max(1, args.batch_size))
+    manifest, created = build(args.model, args.endpoint, max(1, args.batch_size), args.output_dir, args.retrieval_text_only)
     print(json.dumps({"created": created, **manifest}, ensure_ascii=False))
     return 0
 

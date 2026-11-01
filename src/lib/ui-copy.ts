@@ -1744,5 +1744,7 @@ export const UI_COPY: Record<string, BilingualCopy> = {
     "Обработать SigLIP2 только для сегментов без готового результата и продолжить сохранённый прогон.": ["Process only segments without SigLIP2 results and continue the saved run.", "Обработать SigLIP2 только для сегментов без готового результата и продолжить сохранённый прогон."],
     "Continue CLAP": ["Continue CLAP", "Продолжить CLAP"],
     "Continue SigLIP2": ["Continue SigLIP2", "Продолжить SigLIP2"],
-    "изменена": ["modified", "изменена"]
+    "изменена": ["modified", "изменена"],
+    "Text index": ["Text index", "Текстовый индекс"],
+    "The selected text index is searched independently. Qwen3 remains the default and its vectors are never mixed with Gemma vectors.": ["The selected text index is searched independently. Qwen3 remains the default and its vectors are never mixed with Gemma vectors.", "Выбранный текстовый индекс используется отдельно. Qwen3 остаётся по умолчанию; его векторы не смешиваются с векторами Gemma."]
 };

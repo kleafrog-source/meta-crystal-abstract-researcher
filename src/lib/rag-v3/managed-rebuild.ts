@@ -5,8 +5,11 @@ import path from "node:path";
 import { loadEmbeddingRuntimeSettings, embeddingProcessEnv } from "@/lib/embedding-settings";
 import { excludedRegistrySha, readExcludedRegistry } from "@/lib/combinatorial-genesis/registry";
 import { getV3SnapshotIdentity } from "@/lib/rag-v3/snapshot";
+import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
+import { TEXT_INDEX_MODELS, getTextIndexDirectory } from "@/lib/rag-v3/composite-index";
+import { ensureOllamaModelAvailable, prepareGpuForEmbeddingModel } from "@/lib/ollama-memory";
 
-export type RebuildKind = "composite" | "atoms" | "anchors" | "range" | "select" | "relations" | "clap" | "all_qwen" | "catalogue";
+export type RebuildKind = "composite" | "embeddinggemma2_text" | "atoms" | "anchors" | "range" | "select" | "relations" | "clap" | "all_qwen" | "catalogue";
 export type ArtifactKind = Exclude<RebuildKind, "all_qwen" | "catalogue">;
 
 export interface ManagedJob {
@@ -32,6 +35,7 @@ export interface ArtifactStatus {
   added_since_build: number;
   excluded_since_build: number;
   reason: string | null;
+  fingerprint: string | null;
 }
 
 const DATA_ROOT = path.join(process.cwd(), "data", "combinatorial-genesis");
@@ -61,6 +65,7 @@ async function command(kind: ArtifactKind): Promise<{ args: string[]; env: NodeJ
   ];
   const specs: Record<ArtifactKind, string[]> = {
     composite: ["-u", "python_engine/build-genesis-v3-composite-index.py", "--endpoint", settings.baseUrl, "--model", settings.model],
+    embeddinggemma2_text: ["-u", "python_engine/build-genesis-v3-composite-index.py", "--endpoint", settings.baseUrl, "--model", TEXT_INDEX_MODELS.embeddinggemma2, "--batch-size", "16", "--output-dir", getTextIndexDirectory("embeddinggemma2"), "--retrieval-text-only"],
     atoms: ["-u", "python_engine/build-combinatorial-runtime-index.py", "--endpoint", settings.baseUrl, "--model", settings.model],
     anchors: [
       "-u", "python_engine/anchoring_v3/build_anchors.py",
@@ -89,6 +94,10 @@ async function command(kind: ArtifactKind): Promise<{ args: string[]; env: NodeJ
 
 async function runStage(kind: ArtifactKind, job: ManagedJob): Promise<number> {
   job.stage = kind;
+  if (kind === "embeddinggemma2_text") {
+    await ensureOllamaModelAvailable(TEXT_INDEX_MODELS.embeddinggemma2);
+    await prepareGpuForEmbeddingModel(TEXT_INDEX_MODELS.embeddinggemma2, 5_000, "embeddinggemma2-index-build");
+  }
   const spec = await command(kind);
   append(job, `[managed-rebuild] starting ${kind}`);
   return new Promise((resolve) => {
@@ -110,6 +119,8 @@ export function getManagedJob(): ManagedJob {
 export async function startManagedRebuild(kind: RebuildKind) {
   const current = shared.__ragV3ManagedJob!;
   if (current.running) return { started: false, reason: "another rebuild is already running", job: getManagedJob() };
+  const slotOwner = kind === "embeddinggemma2_text" ? "embeddinggemma2-index-build" : `${kind}-index-build`;
+  if (!acquireEmbeddingModelSlot(slotOwner)) return { started: false, reason: `model slot is busy: ${getEmbeddingModelSlot()?.owner ?? "unknown operation"}`, job: getManagedJob() };
   const job = idle();
   job.running = true;
   job.kind = kind;
@@ -122,15 +133,23 @@ export async function startManagedRebuild(kind: RebuildKind) {
       : [kind];
   void (async () => {
     let exitCode = 0;
-    for (const stage of stages) {
-      if (job.stop_requested) { exitCode = 130; break; }
-      exitCode = await runStage(stage, job);
-      if (exitCode !== 0) break;
+    try {
+      for (const stage of stages) {
+        if (job.stop_requested) { exitCode = 130; break; }
+        exitCode = await runStage(stage, job);
+        if (exitCode !== 0) break;
+      }
+    } catch (error) {
+      exitCode = -1;
+      job.last_error = error instanceof Error ? error.message : String(error);
+      append(job, `[managed-rebuild] ${job.last_error}`);
+    } finally {
+      job.running = false;
+      job.exit_code = exitCode;
+      job.finished_at = Date.now();
+      shared.__ragV3ManagedChild = null;
+      releaseEmbeddingModelSlot(slotOwner);
     }
-    job.running = false;
-    job.exit_code = exitCode;
-    job.finished_at = Date.now();
-    shared.__ragV3ManagedChild = null;
     if (exitCode !== 0 && !job.last_error && !job.stop_requested) job.last_error = `rebuild exited with ${exitCode}`;
   })();
   return { started: true, job: getManagedJob() };
@@ -160,6 +179,7 @@ export async function getArtifactStatuses(): Promise<{ artifacts: ArtifactStatus
   const activeCount = snapshot.parameter_count;
   const paths: Record<ArtifactKind, string> = {
     composite: path.join(V3_ROOT, "composite-index", "manifest.json"),
+    embeddinggemma2_text: path.join(getTextIndexDirectory("embeddinggemma2"), "manifest.json"),
     atoms: path.join(DATA_ROOT, "indexes", versionId, "manifest.json"),
     anchors: path.join(V3_ROOT, "anchoring", "anchors_build.json"),
     range: path.join(V3_ROOT, "value-anchors", "manifest.json"),
@@ -168,26 +188,28 @@ export async function getArtifactStatuses(): Promise<{ artifacts: ArtifactStatus
     clap: path.join(DATA_ROOT, "audio-clap-index", "index.json"),
   };
   const labels: Record<ArtifactKind, string> = {
-    composite: "Qwen composite", atoms: "Runtime atoms", anchors: "Live axes / anchors",
+    composite: "Qwen3 composite", embeddinggemma2_text: "EmbeddingGemma 2 (text index)", atoms: "Runtime atoms", anchors: "Live axes / anchors",
     range: "Range value anchors", select: "Select options", relations: "Relation anchors", clap: "CLAP audio index",
   };
   const composite = await readJson(paths.composite);
   const compositeDimensions = Number(composite?.dimensions ?? 0);
   const artifacts = await Promise.all((Object.keys(paths) as ArtifactKind[]).map(async (kind): Promise<ArtifactStatus> => {
     const manifest = await readJson(paths[kind]);
-    if (!manifest) return { kind, label: labels[kind], status: "not_built", built_at: null, model: null, dimensions: null, parameter_count: 0, added_since_build: activeCount, excluded_since_build: registry.entries.length, reason: "manifest not found" };
+    if (!manifest) return { kind, label: labels[kind], status: "not_built", built_at: null, model: null, dimensions: null, parameter_count: 0, added_since_build: activeCount, excluded_since_build: registry.entries.length, reason: "manifest not found", fingerprint: null };
     const model = String(manifest.model ?? "") || null;
     const dimensions = Number(manifest.dimensions ?? manifest.dim ?? 0) || null;
     const count = Number(manifest.parameter_count ?? manifest.source_parameter_count ?? manifest.count ?? manifest.atom_count ?? 0);
     const builtRegistrySha = String(manifest.excluded_sha256 ?? "");
-    const modelMismatch = kind !== "clap" && model !== settings.model;
-    const dimensionMismatch = kind !== "clap" && kind !== "composite" && Boolean(compositeDimensions && dimensions && dimensions !== compositeDimensions);
+    const expectedModel = kind === "embeddinggemma2_text" ? TEXT_INDEX_MODELS.embeddinggemma2 : kind === "composite" ? TEXT_INDEX_MODELS.qwen3 : settings.model;
+    const modelMismatch = kind !== "clap" && model !== expectedModel;
+    const dimensionMismatch = kind !== "clap" && kind !== "composite" && kind !== "embeddinggemma2_text" && Boolean(compositeDimensions && dimensions && dimensions !== compositeDimensions);
     const registryMismatch = builtRegistrySha !== registrySha;
-    const versionMismatch = (kind === "composite" && String(manifest.dataset_version ?? "") !== versionId)
+    const versionMismatch = ((kind === "composite" || kind === "embeddinggemma2_text") && String(manifest.dataset_version ?? "") !== versionId)
       || (kind === "atoms" && String(manifest.version_id ?? "") !== versionId);
-    const stale = modelMismatch || dimensionMismatch || registryMismatch || versionMismatch;
-    const reason = [modelMismatch ? `model ${model} ≠ ${settings.model}` : "", dimensionMismatch ? `dimensions ${dimensions} ≠ ${compositeDimensions}` : "", registryMismatch ? "registry changed" : "", versionMismatch ? "dataset changed" : ""].filter(Boolean).join("; ") || null;
     const sourceCount = Number(manifest.source_parameter_count ?? manifest.parameter_count ?? activeCount);
+    const countMismatch = (kind === "composite" || kind === "embeddinggemma2_text") && sourceCount !== activeCount;
+    const stale = modelMismatch || dimensionMismatch || registryMismatch || versionMismatch || countMismatch;
+    const reason = [modelMismatch ? `model ${model} ≠ ${expectedModel}` : "", dimensionMismatch ? `dimensions ${dimensions} ≠ ${compositeDimensions}` : "", registryMismatch ? "registry changed" : "", versionMismatch ? "dataset changed" : "", countMismatch ? `library count ${activeCount} ≠ indexed ${sourceCount}` : ""].filter(Boolean).join("; ") || null;
     return {
       kind, label: labels[kind], status: stale ? "stale" : "built",
       built_at: String(manifest.created_at ?? manifest.generated_at ?? "") || null,
@@ -195,6 +217,7 @@ export async function getArtifactStatuses(): Promise<{ artifacts: ArtifactStatus
       added_since_build: Math.max(0, activeCount - sourceCount),
       excluded_since_build: registryMismatch ? registry.entries.length : 0,
       reason,
+      fingerprint: String(manifest.cache_sha256 ?? manifest.source_snapshot_sha256 ?? "") || null,
     };
   }));
   return { artifacts, active_model: settings.model, registry_sha256: registrySha, active_parameters: activeCount };

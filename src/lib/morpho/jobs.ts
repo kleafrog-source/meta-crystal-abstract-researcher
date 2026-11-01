@@ -5,6 +5,8 @@ import path from "node:path";
 import { getV3SnapshotIdentity } from "@/lib/rag-v3/snapshot";
 import { GENESIS_DATA_ROOT, GENESIS_LIBRARY_PATH } from "@/lib/combinatorial-genesis/library";
 import { GENESIS_EXCLUDED_PATH } from "@/lib/combinatorial-genesis/registry";
+import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
+import { prepareGpuForExternalModel } from "@/lib/ollama-memory";
 
 const ROOT = process.cwd();
 const SCRIPT = path.join(ROOT, "python_engine", "morpho_siglip.py");
@@ -86,12 +88,14 @@ export function getMorphoJob(kind: Kind) {
   return { ...job, progress: { ...job.progress }, log_tail: [...job.log_tail] };
 }
 function start(kind: Kind, args: string[]) {
+  const slotOwner = kind === "index" ? "siglip-index-build" : "siglip-search";
+  if (!acquireEmbeddingModelSlot(slotOwner)) return { started: false, reason: `model_slot_busy:${getEmbeddingModelSlot()?.owner ?? "unknown"}` };
   if (shared.__morphoJobs![kind].running)
-    return {
+    { releaseEmbeddingModelSlot(slotOwner); return {
       started: false,
       reason: "already_running",
       job: getMorphoJob(kind),
-    };
+    }; }
   const job = idle();
   job.running = true;
   job.started_at = Date.now();
@@ -117,6 +121,7 @@ function start(kind: Kind, args: string[]) {
     job.running = false;
     job.exit_code = -1;
     job.finished_at = Date.now();
+    releaseEmbeddingModelSlot(slotOwner);
   });
   child.on("close", (code) => {
     job.running = false;
@@ -125,6 +130,7 @@ function start(kind: Kind, args: string[]) {
     if (code !== 0 && !job.stop_requested)
       job.last_error = job.log_tail.at(-1) ?? `process exited with ${code}`;
     delete shared.__morphoChildren![kind];
+    releaseEmbeddingModelSlot(slotOwner);
   });
   return { started: true, job: getMorphoJob(kind) };
 }
@@ -191,8 +197,11 @@ export async function runMorphoSearch(
   topK: number,
   valueMode: "expressive" | "conservative" | "default",
 ): Promise<Record<string, unknown>> {
+  const slotOwner = "siglip-search";
+  if (!acquireEmbeddingModelSlot(slotOwner)) throw new Error(`Model slot busy: ${getEmbeddingModelSlot()?.owner ?? "unknown"}`);
   if (shared.__morphoJobs!.search.running)
-    throw new Error("Another Morpho search is already active");
+    { releaseEmbeddingModelSlot(slotOwner); throw new Error("Another Morpho search is already active"); }
+  try { await prepareGpuForExternalModel(7_000, slotOwner); } catch (error) { releaseEmbeddingModelSlot(slotOwner); throw error; }
   const job = idle();
   job.running = true;
   job.started_at = Date.now();
@@ -234,12 +243,13 @@ export async function runMorphoSearch(
       stderr += String(value);
       append("search", String(value));
     });
-    child.on("error", reject);
+    child.on("error", (error) => { releaseEmbeddingModelSlot(slotOwner); reject(error); });
     child.on("close", (code) => {
       job.running = false;
       job.exit_code = code;
       job.finished_at = Date.now();
       delete shared.__morphoChildren!.search;
+      releaseEmbeddingModelSlot(slotOwner);
       if (code !== 0) {
         const message = job.stop_requested
           ? "Morpho search stopped"
@@ -268,8 +278,11 @@ export async function runMorphoAudioSearch(
   detail: "low" | "medium" | "high",
   layout: "mel" | "composite" | "rgb_delta",
 ): Promise<Record<string, unknown>> {
+  const slotOwner = "siglip-search";
+  if (!acquireEmbeddingModelSlot(slotOwner)) throw new Error(`Model slot busy: ${getEmbeddingModelSlot()?.owner ?? "unknown"}`);
   if (shared.__morphoJobs!.search.running)
-    throw new Error("Another Morpho search is already active");
+    { releaseEmbeddingModelSlot(slotOwner); throw new Error("Another Morpho search is already active"); }
+  try { await prepareGpuForExternalModel(7_000, slotOwner); } catch (error) { releaseEmbeddingModelSlot(slotOwner); throw error; }
   const job = idle();
   job.running = true;
   job.started_at = Date.now();
@@ -319,12 +332,13 @@ export async function runMorphoAudioSearch(
       stderr += String(value);
       append("search", String(value));
     });
-    child.on("error", reject);
+    child.on("error", (error) => { releaseEmbeddingModelSlot(slotOwner); reject(error); });
     child.on("close", (code) => {
       job.running = false;
       job.exit_code = code;
       job.finished_at = Date.now();
       delete shared.__morphoChildren!.search;
+      releaseEmbeddingModelSlot(slotOwner);
       if (code !== 0) {
         const message = job.stop_requested
           ? "Morpho audio search stopped"

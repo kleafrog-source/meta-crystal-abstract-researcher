@@ -38,6 +38,8 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
   const query = useRagV3Store((state) => state.query);
   const queryB = useRagV3Store((state) => state.queryB);
   const topK = useRagV3Store((state) => state.topK);
+  const textIndex = useRagV3Store((state) => state.textIndex);
+  const setTextIndex = useRagV3Store((state) => state.setTextIndex);
   const sources = useRagV3Store((state) => state.sources);
   const scopes = useRagV3Store((state) => state.scopes);
   const toggleSource = useRagV3Store((state) => state.toggleSource);
@@ -154,6 +156,14 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5">
+        <label className="flex items-center gap-2 rounded border border-white/15 bg-white/[0.025] px-2 py-1 text-xs text-muted-foreground">
+          {t("Text index")}
+          <select aria-label={t("Text index")} value={textIndex} onChange={(event) => setTextIndex(event.target.value === "embeddinggemma2" ? "embeddinggemma2" : "qwen3")} className="h-7 rounded border border-white/15 bg-black/60 px-2 text-foreground">
+            <option value="qwen3">Qwen3 · existing</option>
+            <option value="embeddinggemma2">EmbeddingGemma 2 · multimodal</option>
+          </select>
+          <V3InfoTip content={t("The selected text index is searched independently. Qwen3 remains the default and its vectors are never mixed with Gemma vectors.")} />
+        </label>
         <V3Tooltip content={t("Один независимый запрос заново формирует полный набор параметров и значений.")}>
           <Button type="button" size="sm" variant={searchMode === "single" ? "default" : "outline"} aria-pressed={searchMode === "single"} onClick={() => setSearchMode("single")} className="semantic-control">
             <AMIcon name="single" size="sm" bright />Single query
@@ -225,7 +235,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
           canRedo={canRedo}
           inputRef={(element) => { queryInputs.current.a = element; }}
           onClear={() => setQuery("")}
-          onSubmit={() => void proposeParameters(query, "primary", selectedDomainLayers === undefined ? undefined : { selectedDomainLayers })}
+          onSubmit={() => void proposeParameters(query, "primary", { ...(selectedDomainLayers === undefined ? {} : { selectedDomainLayers }), textIndex })}
           actions={
             <MetaCrystalPickerDialog
               targetLabel={primaryLabel}
@@ -249,7 +259,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
             canRedo={canRedo}
             inputRef={(element) => { queryInputs.current.b = element; }}
             onClear={() => setQueryB("")}
-            onSubmit={() => void proposeParameters(queryB, "secondary", selectedDomainLayers === undefined ? undefined : { selectedDomainLayers })}
+            onSubmit={() => void proposeParameters(queryB, "secondary", { ...(selectedDomainLayers === undefined ? {} : { selectedDomainLayers }), textIndex })}
             actions={
               <MetaCrystalPickerDialog
                 targetLabel={secondaryLabel}
