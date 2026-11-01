@@ -29,7 +29,7 @@ export interface AmStageSessionData {
     show_clap: boolean; show_siglip: boolean; interpolate_clap: boolean; interpolate_siglip: boolean;
   };
   layers: { selected: string[]; timeline_view: "modality" | "layer"; stage2_visible: boolean; stage2_top_k: number; stage2_centroid_percent: number };
-  interpolation: { pair: string; percent: number; curve: BlendCurve; blend_enabled: boolean; clap_weight: number };
+  interpolation: { pair: string; percent: number; curve: BlendCurve; blend_enabled: boolean; clap_weight: number; trust_threshold?: number; trust_floor?: number };
   vocal_matrix_mode: boolean;
   param_to_text: ParamTextWorkbenchSessionState | null;
   v3: {

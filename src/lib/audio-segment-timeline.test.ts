@@ -80,15 +80,40 @@ describe("audio segment timeline", () => {
     const clap = [parameter("amount", 20), parameter("clap_only", 10)];
     const siglip = [parameter("amount", 80), parameter("siglip_only", 90)];
     const fused = blendParameterFrames(clap, siglip, 0.5);
-    expect(fused.find((item) => item.technical_name === "amount")?.current_value).toBe(50);
+    expect(fused.find((item) => item.technical_name === "amount")?.current_value).toBe(20);
+    expect(fused.find((item) => item.technical_name === "amount")?.detail).toContain("kept CLAP");
+  });
+
+  it("down-weights flat score lists and keeps the higher-trust value on disagreement", () => {
+    const clap = [
+      { ...parameter("amount", 20), similarity: 0.7 },
+      { ...parameter("clap_context", 10), similarity: 0.7 },
+    ];
+    const siglip = [
+      { ...parameter("amount", 80), similarity: 0.1 },
+      { ...parameter("siglip_context", 90), similarity: 0.99 },
+    ];
+    const fused = blendParameterFrames(clap, siglip, 0.5);
+    const amount = fused.find((item) => item.technical_name === "amount")!;
+    expect(amount.current_value).toBe(80);
+    expect(amount.similarity).toBeLessThan(0.2);
+    expect(amount.detail).toContain("kept SigLIP2");
+  });
+
+  it("preserves ordinary averaging for close values with peaked score lists", () => {
+    const clap = [{ ...parameter("amount", 40), similarity: 0.98 }, { ...parameter("clap_context", 10), similarity: 0.1 }];
+    const siglip = [{ ...parameter("amount", 44), similarity: 0.97 }, { ...parameter("siglip_context", 90), similarity: 0.12 }];
+    expect(blendParameterFrames(clap, siglip, 0.5).find((item) => item.technical_name === "amount")?.current_value).toBe(42);
   });
 
   it("serializes compact registries and excludes invalid names", () => {
     const valid = parameter("valid_name", 30);
     const invalid = parameter("invalid-name", 40);
-    const payload = buildPriorityTimeline([{ time: 0, offset: 0, duration: 2, clap: [valid, invalid], siglip: [] }], { audioName: "test.wav", audioDuration: 2, rawInterval: 2, nodeInterval: 10, blend: false });
+    const payload = buildPriorityTimeline([{ time: 0, offset: 0, duration: 2, clap: [valid, invalid], siglip: [] }], { audioName: "test.wav", audioDuration: 2, rawInterval: 2, nodeInterval: 10, blend: false, textScores: [0.98, 0.1] });
     expect("clap_registry" in payload && payload.clap_registry).toEqual(["valid_name"]);
     expect(payload.timeline[0]).toEqual({ t: 0, clap: [[0, 30]], siglip: [] });
+    expect(payload.modality_trust.segments[0].clap_trust).toBeCloseTo(0);
+    expect(payload.modality_trust.text_trust).toBeGreaterThan(0.9);
   });
 
   it("compresses a repeated timeline by more than fifty percent", () => {

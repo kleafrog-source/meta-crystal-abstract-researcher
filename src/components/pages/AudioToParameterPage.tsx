@@ -42,6 +42,7 @@ import {
   type AudioSegmentResultPoint,
 } from "@/lib/audio-segment-result";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
+import { computeModalityTrust, DEFAULT_MODALITY_TRUST_CONFIG } from "@/lib/modality-trust";
 
 type Engine = AudioEngine;
 type AnalysisStatus = AudioAnalysisStatus;
@@ -169,6 +170,9 @@ export function AudioToParameterPage() {
     useState<SiglipSpectrogramLayout>("rgb_delta");
   const [blendMode, setBlendMode] = useState(false);
   const [clapWeight, setClapWeight] = useState(0.5);
+  const [trustThreshold, setTrustThreshold] = useState(DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold);
+  const [trustFloor, setTrustFloor] = useState(DEFAULT_MODALITY_TRUST_CONFIG.floorWeight);
+  const modalityTrustConfig = useMemo(() => ({ ...DEFAULT_MODALITY_TRUST_CONFIG, lowTrustThreshold: trustThreshold, floorWeight: trustFloor }), [trustFloor, trustThreshold]);
   const [vocalMatrixMode, setVocalMatrixMode] = useState(false);
   const [morphoStatus, setMorphoStatus] = useState<MorphoStatus | null>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -338,9 +342,11 @@ export function AudioToParameterPage() {
   );
   const visibleClap = showClap ? clapFrame : [];
   const visibleSiglip = showSiglip ? siglipFrame : [];
+  const clapTrust = useMemo(() => computeModalityTrust(visibleClap.map((parameter) => parameter.similarity)), [visibleClap]);
+  const siglipTrust = useMemo(() => computeModalityTrust(visibleSiglip.map((parameter) => parameter.similarity)), [visibleSiglip]);
   const macroParameters = useMemo(
-    () => blendMode ? blendParameterFrames(visibleClap, visibleSiglip, clapWeight) : mergeFrames(visibleClap, visibleSiglip),
-    [blendMode, clapWeight, visibleClap, visibleSiglip],
+    () => blendMode ? blendParameterFrames(visibleClap, visibleSiglip, clapWeight, modalityTrustConfig) : mergeFrames(visibleClap, visibleSiglip),
+    [blendMode, clapWeight, modalityTrustConfig, visibleClap, visibleSiglip],
   );
 
   const seekToSegment = (segment: SegmentPoint) => {
@@ -403,7 +409,7 @@ export function AudioToParameterPage() {
 
   const exportTimeline = () => {
     if (!file || !segments.length) return;
-    downloadJson(buildPriorityTimeline(nodeSegments, { audioName: file.name, audioDuration, rawInterval: segmentInterval, nodeInterval, blend: blendMode, clapWeight, vocalMatrix: vocalMatrixMode }), "priority-timeline");
+    downloadJson(buildPriorityTimeline(nodeSegments, { audioName: file.name, audioDuration, rawInterval: segmentInterval, nodeInterval, blend: blendMode, clapWeight, trustConfig: modalityTrustConfig, vocalMatrix: vocalMatrixMode }), "priority-timeline");
   };
 
   const exportLegacyTimeline = () => {
@@ -757,7 +763,7 @@ export function AudioToParameterPage() {
                   onChange={setInterpolateSiglip}
                 />
               </div>
-              {blendMode ? <div><FieldLabel label={`Вес CLAP: ${Math.round(clapWeight * 100)}%`} hint="Остаток веса принадлежит SigLIP2. Scores нормализуются отдельно перед объединением." /><Input type="range" min={0} max={1} step={0.05} value={clapWeight} onChange={(event) => setClapWeight(Number(event.target.value))} /></div> : null}
+              {blendMode ? <div className="space-y-1"><FieldLabel label={`Вес CLAP: ${Math.round(clapWeight * 100)}%`} hint="Остаток веса принадлежит SigLIP2. Scores нормализуются отдельно перед объединением." /><Input type="range" min={0} max={1} step={0.05} value={clapWeight} onChange={(event) => setClapWeight(Number(event.target.value))} /><div className="grid grid-cols-2 gap-2 text-[9px] text-muted-foreground"><span>CLAP trust · {clapTrust.sampleCount ? `${Math.round(clapTrust.trust * 100)}%` : "—"}</span><span>SigLIP2 trust · {siglipTrust.sampleCount ? `${Math.round(siglipTrust.trust * 100)}%` : "—"}</span><label>Low-trust threshold · {Math.round(trustThreshold * 100)}%<input aria-label="Modality low-trust threshold" className="w-full accent-cyan-400" type="range" min="0" max="1" step="0.05" value={trustThreshold} onChange={(event) => setTrustThreshold(Number(event.target.value))} /></label><label>Minimum modality weight · {Math.round(trustFloor * 100)}%<input aria-label="Modality trust floor weight" className="w-full accent-cyan-400" type="range" min="0" max="0.5" step="0.05" value={trustFloor} onChange={(event) => setTrustFloor(Number(event.target.value))} /></label></div></div> : null}
 
               <div className="grid grid-cols-2 gap-2">
                 <Button

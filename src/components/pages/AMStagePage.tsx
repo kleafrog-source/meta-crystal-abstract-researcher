@@ -56,6 +56,7 @@ import { useRagV3Store } from "@/store/rag-v3-store";
 import { classifyDomainLayer } from "@/lib/am-parameters-catalogue/domain-layer-config";
 import { buildLayerTimelineLanes, LAYER_TIMELINE_SERIES_LIMIT, UNCLASSIFIED_TIMELINE_LAYER } from "@/lib/am-stage-layer-timeline";
 import { applyConsensusSmooth, averageParameterFrames, interpolateStageFrames, parameterMatchesLayers, type BlendCurve } from "@/lib/am-stage-blend";
+import { computeModalityTrust, DEFAULT_MODALITY_TRUST_CONFIG } from "@/lib/modality-trust";
 
 type Engine = AudioEngine;
 type AnalysisStatus = AudioAnalysisStatus;
@@ -168,6 +169,8 @@ export function AMStagePage() {
   const [blendPair, setBlendPair] = useState("text-clap");
   const [blendPercent, setBlendPercent] = useState(50);
   const [blendCurve, setBlendCurve] = useState<BlendCurve>("linear");
+  const [trustThreshold, setTrustThreshold] = useState(DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold);
+  const [trustFloor, setTrustFloor] = useState(DEFAULT_MODALITY_TRUST_CONFIG.floorWeight);
   const [file, setFile] = useState<File | null>(null);
   const [audioReferenceName, setAudioReferenceName] = useState<string | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -509,15 +512,19 @@ export function AMStagePage() {
   );
   const layerClap = useMemo(() => clapFrame.filter((parameter) => parameterMatchesLayers(parameter, selectedLayers)), [clapFrame, selectedLayers]);
   const layerSiglip = useMemo(() => siglipFrame.filter((parameter) => parameterMatchesLayers(parameter, selectedLayers)), [siglipFrame, selectedLayers]);
+  const modalityTrustConfig = useMemo(() => ({ ...DEFAULT_MODALITY_TRUST_CONFIG, lowTrustThreshold: trustThreshold, floorWeight: trustFloor }), [trustFloor, trustThreshold]);
+  const textTrust = useMemo(() => computeModalityTrust(filteredV3Parameters.map((parameter) => parameter.similarity)), [filteredV3Parameters]);
+  const clapTrust = useMemo(() => computeModalityTrust(layerClap.map((parameter) => parameter.similarity)), [layerClap]);
+  const siglipTrust = useMemo(() => computeModalityTrust(layerSiglip.map((parameter) => parameter.similarity)), [layerSiglip]);
   const matchesSelectedLayer = useCallback((parameter: ActiveParameter) => parameterMatchesLayers(parameter, selectedLayers), [selectedLayers]);
   const consensusFrames = useMemo(() => showGlobalConsensus
-    ? applyConsensusSmooth([filteredV3Parameters, showClap ? layerClap : [], showSiglip ? layerSiglip : []], selectedLayers, consensusTopK, consensusCentroidPercent)
+    ? applyConsensusSmooth([filteredV3Parameters, showClap ? layerClap : [], showSiglip ? layerSiglip : []], selectedLayers, consensusTopK, consensusCentroidPercent, modalityTrustConfig)
     : [filteredV3Parameters, showClap ? layerClap : [], showSiglip ? layerSiglip : []],
-  [consensusCentroidPercent, consensusTopK, filteredV3Parameters, layerClap, layerSiglip, selectedLayers, showClap, showGlobalConsensus, showSiglip]);
+  [consensusCentroidPercent, consensusTopK, filteredV3Parameters, layerClap, layerSiglip, modalityTrustConfig, selectedLayers, showClap, showGlobalConsensus, showSiglip]);
   const [textStageParameters, visibleClap, visibleSiglip] = consensusFrames;
   const macroParameters = useMemo(
-    () => blendMode ? blendParameterFrames(visibleClap, visibleSiglip, clapWeight) : mergeFrames(visibleClap, visibleSiglip),
-    [blendMode, clapWeight, visibleClap, visibleSiglip],
+    () => blendMode ? blendParameterFrames(visibleClap, visibleSiglip, clapWeight, modalityTrustConfig) : mergeFrames(visibleClap, visibleSiglip),
+    [blendMode, clapWeight, modalityTrustConfig, visibleClap, visibleSiglip],
   );
   const bridgeFrames = useMemo(() => {
     const pairs: Record<string, [ActiveParameter[], ActiveParameter[]]> = {
@@ -536,11 +543,11 @@ export function AMStagePage() {
     timeline: { segments: segments.map(({ siglipPreview: _preview, ...segment }) => segment) },
     banks: { text_parameters: v3Session.activeParameters, clap_parameters: [...new Map(segments.flatMap((segment) => segment.clap).map((parameter) => [parameter.technical_name, parameter])).values()], siglip_parameters: [...new Map(segments.flatMap((segment) => segment.siglip).map((parameter) => [parameter.technical_name, parameter])).values()], text_view: textBankViewMode, clap_view: clapBankViewMode, siglip_view: siglipBankViewMode, show_clap: showClap, show_siglip: showSiglip, interpolate_clap: interpolateClap, interpolate_siglip: interpolateSiglip },
     layers: { selected: selectedLayers, timeline_view: timelineView, stage2_visible: showGlobalConsensus, stage2_top_k: consensusTopK, stage2_centroid_percent: consensusCentroidPercent },
-    interpolation: { pair: blendPair, percent: blendPercent, curve: blendCurve, blend_enabled: blendMode, clap_weight: clapWeight },
+    interpolation: { pair: blendPair, percent: blendPercent, curve: blendCurve, blend_enabled: blendMode, clap_weight: clapWeight, trust_threshold: trustThreshold, trust_floor: trustFloor },
     vocal_matrix_mode: vocalMatrixMode,
     param_to_text: paramTextSessionState,
     v3: { query: v3Query, query_b: v3Session.queryB, top_k: v3Session.topK, sources: v3Session.sources, scopes: v3Session.scopes, search_mode: v3Session.searchMode, transition_ratio: v3Session.transitionRatio, search_results: v3Session.searchResults, secondary_results: v3Session.secondaryResults, active_parameters: v3Session.activeParameters, macro: v3Session.macro },
-  }), [audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, file, interpolateClap, interpolateSiglip, nodeInterval, paramTextSessionState, regionDuration, regionOffset, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, timelineView, v3Query, v3Session, vocalMatrixMode]);
+  }), [audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, file, interpolateClap, interpolateSiglip, nodeInterval, paramTextSessionState, regionDuration, regionOffset, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, timelineView, trustFloor, trustThreshold, v3Query, v3Session, vocalMatrixMode]);
   useEffect(() => {
     const fingerprint = JSON.stringify(capturedSessionData);
     setSessionDirty(Boolean(activeSession) && fingerprint !== fingerprintRef.current);
@@ -614,7 +621,7 @@ export function AMStagePage() {
   const exportTimeline = () => {
     const audioName = file?.name ?? audioReferenceName;
     if (!audioName || !segments.length) return;
-    downloadJson(buildPriorityTimeline(nodeSegments, { audioName, audioDuration, rawInterval: segmentInterval, nodeInterval, blend: blendMode, clapWeight, vocalMatrix: vocalMatrixMode }), "priority-timeline");
+    downloadJson(buildPriorityTimeline(nodeSegments, { audioName, audioDuration, rawInterval: segmentInterval, nodeInterval, blend: blendMode, clapWeight, trustConfig: modalityTrustConfig, textScores: filteredV3Parameters.map((parameter) => parameter.similarity), vocalMatrix: vocalMatrixMode }), "priority-timeline");
   };
 
   const exportLegacyTimeline = () => {
@@ -723,10 +730,10 @@ export function AMStagePage() {
       setSegments(data.timeline.segments); setCurrentTime(0);
       setTextBankViewMode(data.banks.text_view); setClapBankViewMode(data.banks.clap_view); setSiglipBankViewMode(data.banks.siglip_view); setShowClap(data.banks.show_clap); setShowSiglip(data.banks.show_siglip); setInterpolateClap(data.banks.interpolate_clap); setInterpolateSiglip(data.banks.interpolate_siglip);
       setSelectedLayers(data.layers.selected); setTimelineView(data.layers.timeline_view); setShowGlobalConsensus(data.layers.stage2_visible); setConsensusTopK(data.layers.stage2_top_k); setConsensusCentroidPercent(data.layers.stage2_centroid_percent);
-      setBlendPair(data.interpolation.pair); setBlendPercent(data.interpolation.percent); setBlendCurve(data.interpolation.curve); setBlendMode(data.interpolation.blend_enabled); setClapWeight(data.interpolation.clap_weight); setVocalMatrixMode(data.vocal_matrix_mode);
+      setBlendPair(data.interpolation.pair); setBlendPercent(data.interpolation.percent); setBlendCurve(data.interpolation.curve); setBlendMode(data.interpolation.blend_enabled); setClapWeight(data.interpolation.clap_weight); setTrustThreshold(data.interpolation.trust_threshold ?? DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold); setTrustFloor(data.interpolation.trust_floor ?? DEFAULT_MODALITY_TRUST_CONFIG.floorWeight); setVocalMatrixMode(data.vocal_matrix_mode);
       setParamTextSessionState(data.param_to_text); setWorkbenchSessionKey((key) => key + 1);
       useRagV3Store.setState({ query: data.v3.query, queryB: data.v3.query_b, topK: data.v3.top_k, sources: data.v3.sources, scopes: data.v3.scopes, searchMode: data.v3.search_mode as "single" | "transition", transitionRatio: data.v3.transition_ratio, searchResults: data.v3.search_results, secondaryResults: data.v3.secondary_results, activeParameters: data.v3.active_parameters, macro: data.v3.macro, isSearching: false, isGeneratingMacro: false, searchError: null, macroError: null });
-      setActiveSession({ id: meta.id, title: meta.title }); setSessionTitleDraft(meta.title); fingerprintRef.current = JSON.stringify(data); setSessionDirty(false); setSessionModalOpen(false); setPendingSessionAction(null);
+      setActiveSession({ id: meta.id, title: meta.title }); setSessionTitleDraft(meta.title); fingerprintRef.current = JSON.stringify({ ...data, interpolation: { ...data.interpolation, trust_threshold: data.interpolation.trust_threshold ?? DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold, trust_floor: data.interpolation.trust_floor ?? DEFAULT_MODALITY_TRUST_CONFIG.floorWeight } }); setSessionDirty(false); setSessionModalOpen(false); setPendingSessionAction(null);
       setNotice(data.audio.missing_on_restore ? `Сессия открыта. Результаты и таймлайн восстановлены; для воспроизведения или продолжения анализа повторно выберите ${data.audio.name ?? "исходный аудиофайл"}.` : "Сессия AM-Stage восстановлена.");
     } catch (cause) { setSessionError(cause instanceof Error ? cause.message : String(cause)); }
     finally { setSessionBusy(false); }
@@ -738,7 +745,7 @@ export function AMStagePage() {
     setAudioUrl(null); setFile(null); setAudioReferenceName(null); setAudioDuration(0); setCurrentTime(0); setSeekRequest({ time: 0, token: 0 });
     setRegionOffset(0); setRegionDuration(10); setAnalysisStart(0); setAnalysisEnd(0); setSegmentInterval(2); setNodeInterval(20); setSegments([]); setClapTopK(20); setSiglipTopK(20);
     setTextBankViewMode("standard"); setClapBankViewMode("standard"); setSiglipBankViewMode("standard"); setShowClap(true); setShowSiglip(true); setInterpolateClap(true); setInterpolateSiglip(true); setShowSpectrogram(true);
-    setSpectrogramScale("mel"); setSpectrogramDetail("medium"); setSpectrogramColor("roseus"); setSpectrogramRenderer("windowed"); setSiglipSpectrogramLayout("rgb_delta"); setBlendMode(false); setClapWeight(.5); setVocalMatrixMode(false);
+    setSpectrogramScale("mel"); setSpectrogramDetail("medium"); setSpectrogramColor("roseus"); setSpectrogramRenderer("windowed"); setSiglipSpectrogramLayout("rgb_delta"); setBlendMode(false); setClapWeight(.5); setTrustThreshold(DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold); setTrustFloor(DEFAULT_MODALITY_TRUST_CONFIG.floorWeight); setVocalMatrixMode(false);
     setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id)); setShowGlobalConsensus(false); setConsensusTopK(64); setConsensusCentroidPercent(35); setTimelineView("modality"); setBlendPair("text-clap"); setBlendPercent(50); setBlendCurve("linear");
     setParamTextSessionState(null); setWorkbenchSessionKey((key) => key + 1); setActiveSession(null); setSessionDirty(false); fingerprintRef.current = ""; setSessionResetConfirmOpen(false); setPendingSessionAction(null); setSessionModalOpen(false);
     useRagV3Store.setState({ query: "", queryB: "", topK: 50, sources: { library: true, frozen: true, atoms: true, generated: true }, scopes: { sound: true, structure: true, metadata: false, provenance: false, administrative: false }, vocalMatrixMode: false, searchMode: "single", transitionRatio: 50, searchResults: [], secondaryResults: [], activeParameters: [], macro: "", isSearching: false, isGeneratingMacro: false, searchError: null, macroError: null });
@@ -1081,6 +1088,11 @@ export function AMStagePage() {
                 <div className="min-w-0 text-[10px] text-zinc-400"><h3 className="mb-1 font-mono uppercase text-fuchsia-300">SigLIP input frame · {formatTime(activeSiglipSegment.offset)}</h3><p>Тот же PNG, который передаётся в SigLIP2. Активная точка: {formatTime(activeSiglipSegment.time)}.</p><p className="mt-1 break-words">{String(activeSiglipSegment.siglipPreview.metadata.layout ?? "rgb_delta")} · {String(activeSiglipSegment.siglipPreview.metadata.detail ?? "medium")} · crop {String(activeSiglipSegment.siglipPreview.metadata.duration ?? activeSiglipSegment.duration)} s · {JSON.stringify(activeSiglipSegment.siglipPreview.metadata.panels ?? [])}</p></div>
               </section> : null}
               {blendMode ? <div><FieldLabel label={`Вес CLAP: ${Math.round(clapWeight * 100)}%`} hint="Остаток веса принадлежит SigLIP2. Scores нормализуются отдельно перед объединением." /><Input type="range" min={0} max={1} step={0.05} value={clapWeight} onChange={(event) => setClapWeight(Number(event.target.value))} /></div> : null}
+              {blendMode || showGlobalConsensus ? <div className="grid grid-cols-2 gap-2 rounded border border-white/10 bg-black/20 p-2 text-[9px] text-muted-foreground">
+                <span>TEXT trust · {textTrust.sampleCount ? `${Math.round(textTrust.trust * 100)}%` : "—"}</span><span>CLAP trust · {clapTrust.sampleCount ? `${Math.round(clapTrust.trust * 100)}%` : "—"}</span><span>SigLIP2 trust · {siglipTrust.sampleCount ? `${Math.round(siglipTrust.trust * 100)}%` : "—"}</span>
+                <label className="space-y-1">Low-trust threshold · {Math.round(trustThreshold * 100)}%<input aria-label="Modality low-trust threshold" className="w-full accent-cyan-400" type="range" min="0" max="1" step="0.05" value={trustThreshold} onChange={(event) => setTrustThreshold(Number(event.target.value))} /></label>
+                <label className="space-y-1">Minimum modality weight · {Math.round(trustFloor * 100)}%<input aria-label="Modality trust floor weight" className="w-full accent-cyan-400" type="range" min="0" max="0.5" step="0.05" value={trustFloor} onChange={(event) => setTrustFloor(Number(event.target.value))} /></label>
+              </div> : null}
 
               <div className="grid gap-2 sm:grid-cols-2">
                 <div className="space-y-1.5 rounded border border-cyan-400/20 p-2">

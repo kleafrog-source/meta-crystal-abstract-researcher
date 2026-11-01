@@ -36,6 +36,25 @@ describe("AM-Stage frame blend", () => {
     expect(left[1].current_value).toBe(20);
   });
 
+  it("skips centroid smoothing when shared modality values strongly disagree", () => {
+    const [left, right] = applyConsensusSmooth([
+      [parameter("shared", 10)],
+      [parameter("shared", 90)],
+    ], [], 64, 100);
+    expect(left[0].current_value).toBe(10);
+    expect(right[0].current_value).toBe(90);
+    expect(left[0].source).toBe("audio_similarity");
+  });
+
+  it("trust-weights the centroid and attenuates low-trust smoothing", () => {
+    const flatFrame = [parameter("shared", 0, 0.5), parameter("flat_context", 10, 0.5)];
+    const peakedFrame = [parameter("shared", 30, 0.99), parameter("peak_context", 10, 0.1)];
+    const [flatResult] = applyConsensusSmooth([flatFrame, peakedFrame], [], 64, 100);
+    const smoothed = Number(flatResult.find((item) => item.technical_name === "shared")?.current_value);
+    expect(smoothed).toBeGreaterThan(10);
+    expect(smoothed).toBeLessThan(20);
+  });
+
   it("interpolates shared values, holds discrete values at the nearest endpoint and omits non-overlaps", () => {
     const start = parameter("shared", 0);
     const end = parameter("shared", 100);

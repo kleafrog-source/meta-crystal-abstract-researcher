@@ -1,4 +1,13 @@
 import type { ActiveParameter } from "@/lib/rag-v3/types";
+import {
+  computeModalityTrust,
+  computeTrustAdjustedWeights,
+  DEFAULT_MODALITY_TRUST_CONFIG,
+  parameterDivergence,
+  parameterTrustEvidence,
+  normalizeModalityTrustConfig,
+  type ModalityTrustConfig,
+} from "@/lib/modality-trust";
 
 export interface AudioAnalysisPoint {
   time: number;
@@ -18,6 +27,8 @@ export interface PriorityTimelineOptions {
   nodeInterval: number;
   blend: boolean;
   clapWeight?: number;
+  trustConfig?: ModalityTrustConfig;
+  textScores?: number[];
   vocalMatrix?: boolean;
 }
 
@@ -166,24 +177,42 @@ export function smoothTimelineSegments(segments: AudioTimelineSegment[], nodeInt
 
 function normalizedScores(parameters: ActiveParameter[]): Map<string, number> {
   if (!parameters.length) return new Map();
-  const scores = parameters.map((item) => item.similarity);
+  const scores = parameters.map((item) => Number.isFinite(item.similarity) ? item.similarity : 0);
   const low = Math.min(...scores), high = Math.max(...scores), span = high - low;
-  return new Map(parameters.map((item) => [item.technical_name, span > 1e-9 ? (item.similarity - low) / span : 1]));
+  return new Map(parameters.map((item, index) => [item.technical_name, span > 1e-9 ? (scores[index] - low) / span : 1]));
 }
 
-export function blendParameterFrames(clap: ActiveParameter[], siglip: ActiveParameter[], clapWeight = 0.5): ActiveParameter[] {
-  const weight = Math.max(0, Math.min(1, clapWeight));
+export function blendParameterFrames(
+  clap: ActiveParameter[],
+  siglip: ActiveParameter[],
+  clapWeight = 0.5,
+  trustConfig: ModalityTrustConfig = DEFAULT_MODALITY_TRUST_CONFIG,
+): ActiveParameter[] {
+  const safeTrustConfig = normalizeModalityTrustConfig(trustConfig);
+  const baselineWeight = Number.isFinite(clapWeight) ? Math.max(0, Math.min(1, clapWeight)) : 0.5;
+  const clapTrust = computeModalityTrust(clap.map((item) => item.similarity)).trust;
+  const siglipTrust = computeModalityTrust(siglip.map((item) => item.similarity)).trust;
+  const trustWeights = computeTrustAdjustedWeights(baselineWeight, clapTrust, siglipTrust, safeTrustConfig);
   const cScores = normalizedScores(clap), sScores = normalizedScores(siglip);
   const cMap = new Map(clap.map((item) => [item.technical_name, item]));
   const sMap = new Map(siglip.map((item) => [item.technical_name, item]));
   return [...new Set([...cMap.keys(), ...sMap.keys()])].map((name) => {
     const c = cMap.get(name), s = sMap.get(name), base = c ?? s!;
     const both = Boolean(c && s);
-    const score = both ? (cScores.get(name) ?? 0) * weight + (sScores.get(name) ?? 0) * (1 - weight) : c ? (cScores.get(name) ?? 0) : (sScores.get(name) ?? 0);
+    const score = both ? (cScores.get(name) ?? 0) * trustWeights.first + (sScores.get(name) ?? 0) * trustWeights.second : c ? (cScores.get(name) ?? 0) : (sScores.get(name) ?? 0);
     let value = (score >= 0.5 ? (c ?? s) : (s ?? c))!.current_value;
-    if (c && s && typeof c.current_value === "number" && typeof s.current_value === "number") value = snap(c.current_value * weight + s.current_value * (1 - weight), base.step);
-    return { ...base, current_value: value, suggested_value: value, similarity: score, source: "consensus" as const, detail: both ? `CLAP/SigLIP fusion ${Math.round(weight * 100)}/${Math.round((1 - weight) * 100)}` : `Single-source normalized score` };
-  }).sort((a, b) => b.similarity - a.similarity);
+    const divergence = c && s ? parameterDivergence(parameterTrustEvidence(c), parameterTrustEvidence(s)) : 0;
+    const preferClap = trustWeights.first >= trustWeights.second;
+    const blockedAverage = Boolean(c && s && divergence > safeTrustConfig.divergenceThreshold);
+    if (c && s && !blockedAverage && typeof c.current_value === "number" && typeof s.current_value === "number") {
+      value = snap(c.current_value * trustWeights.first + s.current_value * trustWeights.second, base.step);
+    } else if (c && s && blockedAverage) {
+      value = (preferClap ? c : s).current_value;
+    }
+    const weightDetail = both ? `CLAP/SigLIP trust-adjusted fusion ${Math.round(trustWeights.first * 100)}/${Math.round(trustWeights.second * 100)}` : "Single-source normalized score";
+    const divergenceDetail = blockedAverage ? ` · divergence ${divergence.toFixed(2)}; kept ${preferClap ? "CLAP" : "SigLIP2"}` : "";
+    return { ...base, current_value: value, suggested_value: value, similarity: score, source: "consensus" as const, detail: `${weightDetail}${divergenceDetail}` };
+  }).sort((a, b) => (Number.isFinite(b.similarity) ? b.similarity : Number.NEGATIVE_INFINITY) - (Number.isFinite(a.similarity) ? a.similarity : Number.NEGATIVE_INFINITY));
 }
 
 function dspTargets(name: string): Array<{ node: string; parameter: string }> {
@@ -197,11 +226,11 @@ function dspTargets(name: string): Array<{ node: string; parameter: string }> {
   return targets;
 }
 
-function stemEvents(segments: AudioTimelineSegment[], blend: boolean, clapWeight = 0.5) {
+function stemEvents(segments: AudioTimelineSegment[], blend: boolean, clapWeight = 0.5, trustConfig: ModalityTrustConfig = DEFAULT_MODALITY_TRUST_CONFIG) {
   const events: Array<Record<string, unknown>> = [];
   let previous = new Map<string, string | number>();
   for (const segment of segments) {
-    const frame = blend ? blendParameterFrames(segment.clap, segment.siglip, clapWeight) : [...segment.clap, ...segment.siglip];
+    const frame = blend ? blendParameterFrames(segment.clap, segment.siglip, clapWeight, trustConfig) : [...segment.clap, ...segment.siglip];
     const current = new Map(frame.filter((item) => /^(iso_language_|technique_|fx_chain_)|^vocal_(delivery_archetype|layer_count|layering_count|allocation_)|vocal_spectral_masking|parallel_vocal_spectral/.test(item.technical_name)).map((item) => [item.technical_name, item.current_value]));
     for (const [name, value] of current) if (!previous.has(name) || previous.get(name) !== value) events.push({ t: segment.time, stem: "VOCAL_MAIN", action: previous.has(name) ? (name.includes("layer") || name.includes("language") ? "SET_LAYER_ROUTING" : "SWITCH_FX_CHAIN") : "INITIALIZE_VOCAL_LAYER", parameter: name, value });
     previous = current;
@@ -210,21 +239,51 @@ function stemEvents(segments: AudioTimelineSegment[], blend: boolean, clapWeight
 }
 
 export function buildPriorityTimeline(segments: AudioTimelineSegment[], options: PriorityTimelineOptions) {
+  const trustConfig = normalizeModalityTrustConfig(options.trustConfig ?? DEFAULT_MODALITY_TRUST_CONFIG);
   const valid = (items: ActiveParameter[]) => items.filter((item) => TECHNICAL_NAME.test(item.technical_name));
   const clapRegistry = [...new Set(segments.flatMap((segment) => valid(segment.clap).map((item) => item.technical_name)))];
   const siglipRegistry = [...new Set(segments.flatMap((segment) => valid(segment.siglip).map((item) => item.technical_name)))];
-  const blendedRegistry = [...new Set(segments.flatMap((segment) => blendParameterFrames(valid(segment.clap), valid(segment.siglip), options.clapWeight).map((item) => item.technical_name)))];
+  const blendedRegistry = [...new Set(segments.flatMap((segment) => blendParameterFrames(valid(segment.clap), valid(segment.siglip), options.clapWeight, trustConfig).map((item) => item.technical_name)))];
   const pairs = (items: ActiveParameter[], registry: string[]) => items.map((item) => [registry.indexOf(item.technical_name), item.current_value]);
-  const timeline = segments.map((segment) => options.blend ? { t: segment.time, blended: pairs(blendParameterFrames(valid(segment.clap), valid(segment.siglip), options.clapWeight), blendedRegistry) } : { t: segment.time, clap: pairs(valid(segment.clap), clapRegistry), siglip: pairs(valid(segment.siglip), siglipRegistry) });
-  const all = segments.flatMap((segment) => options.blend ? blendParameterFrames(segment.clap, segment.siglip, options.clapWeight) : [...segment.clap, ...segment.siglip]);
+  const timeline = segments.map((segment) => options.blend ? { t: segment.time, blended: pairs(blendParameterFrames(valid(segment.clap), valid(segment.siglip), options.clapWeight, trustConfig), blendedRegistry) } : { t: segment.time, clap: pairs(valid(segment.clap), clapRegistry), siglip: pairs(valid(segment.siglip), siglipRegistry) });
+  const all = segments.flatMap((segment) => options.blend ? blendParameterFrames(segment.clap, segment.siglip, options.clapWeight, trustConfig) : [...segment.clap, ...segment.siglip]);
+  const modalityTrust = segments.map((segment) => {
+    const clapTrust = computeModalityTrust(segment.clap.map((item) => item.similarity));
+    const siglipTrust = computeModalityTrust(segment.siglip.map((item) => item.similarity));
+    const siglipByName = new Map(segment.siglip.map((item) => [item.technical_name, item]));
+    const divergences = segment.clap.flatMap((item) => {
+      const peer = siglipByName.get(item.technical_name);
+      return peer ? [parameterDivergence(parameterTrustEvidence(item), parameterTrustEvidence(peer))] : [];
+    });
+    return {
+      t: segment.time,
+      clap_trust: clapTrust.trust,
+      siglip_trust: siglipTrust.trust,
+      mean_shared_value_divergence: divergences.length ? divergences.reduce((sum, value) => sum + value, 0) / divergences.length : null,
+      high_divergence_names: divergences.length
+        ? segment.clap.filter((item) => {
+          const peer = siglipByName.get(item.technical_name);
+          return peer && parameterDivergence(parameterTrustEvidence(item), parameterTrustEvidence(peer)) > trustConfig.divergenceThreshold;
+        }).map((item) => item.technical_name)
+        : [],
+    };
+  });
   return {
     schema: "FLOWMUSIC_PRIORITY_TIMELINE_V1",
     audio: { name: options.audioName, duration_seconds: options.audioDuration },
     sampling: { interval_seconds: options.rawInterval, node_interval_seconds: options.nodeInterval, smoothing: "weighted_median" },
+    modality_trust: {
+      method: "one_minus_normalized_softmax_entropy",
+      low_trust_threshold: trustConfig.lowTrustThreshold,
+      floor_weight: trustConfig.floorWeight,
+      divergence_threshold: trustConfig.divergenceThreshold,
+      ...(options.textScores ? { text_trust: computeModalityTrust(options.textScores).trust } : {}),
+      segments: modalityTrust,
+    },
     ...(options.blend ? { blended_registry: blendedRegistry } : { clap_registry: clapRegistry, siglip_registry: siglipRegistry }),
     timeline,
     dsp_graph: Object.fromEntries([...new Set(all.map((item) => item.technical_name))].map((name) => [name, dspTargets(name)]).filter(([, targets]) => (targets as unknown[]).length)),
-    events: stemEvents(segments, options.blend, options.clapWeight),
+    events: stemEvents(segments, options.blend, options.clapWeight, trustConfig),
     vocal_allocation_matrix: options.vocalMatrix ? true : undefined,
   };
 }
