@@ -14,6 +14,7 @@ const EXAMPLE = "Три слоя: лид на классической латы�
 export function VocalAllocationMatrixPage() {
   const t = useUiText();
   const [query, setQuery] = useState(EXAMPLE);
+  const [detectedLanguageTags, setDetectedLanguageTags] = useState("");
   const [results, setResults] = useState<ActiveParameter[]>([]);
   const [parsed, setParsed] = useState<{ languages: string[]; techniques: string[]; effects: string[]; digits: Record<string, number> } | null>(null);
   const [loading, setLoading] = useState(false);
@@ -31,7 +32,7 @@ export function VocalAllocationMatrixPage() {
   async function search() {
     setLoading(true); setError("");
     try {
-      const response = await fetch("/api/vocal-allocation/search", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query, top_k: 40 }) });
+      const response = await fetch("/api/vocal-allocation/search", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query, detected_language_tags: detectedLanguageTags, top_k: 40 }) });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error ?? "Поиск не выполнен");
       setResults(payload.results ?? []); setParsed(payload.parsed ?? null);
@@ -51,6 +52,9 @@ export function VocalAllocationMatrixPage() {
       <section className="rounded-lg border border-white/15 bg-zinc-950 p-4">
         <div className="mb-2 flex items-center gap-2 text-sm font-medium">{t("Описание вокальной матрицы")}<V3InfoTip content={t("Можно использовать русские или английские названия языков, ISO-коды, TECH4/FX4 и явные значения I=, S=, E=, A=. Каждый запуск независим.")} /></div>
         <Textarea value={query} onChange={(e) => setQuery(e.target.value)} className="min-h-28 font-mono" />
+        <label className="mt-2 flex flex-col gap-1 text-xs text-zinc-400">{t("Detected Indic language tags · optional")}
+          <input value={detectedLanguageTags} onChange={(event) => setDetectedLanguageTags(event.target.value)} placeholder="hi-IN, ta-IN" className="h-9 rounded border border-white/15 bg-black/50 px-2 font-mono text-xs text-zinc-100" />
+        </label>
         <div className="mt-3 flex flex-wrap items-center gap-2"><Button className="am-icon-button" onClick={search} disabled={loading || !query.trim()}><AMIcon name="search" size="sm" bright />{loading ? t("Поиск…") : t("Собрать матрицу")}</Button>
           {parsed && <span className="text-xs text-zinc-400">{t("Языки:")} {parsed.languages.join(", ") || "—"} · TECH4: {parsed.techniques.join(", ") || "—"} · FX4: {parsed.effects.join(", ") || "—"}</span>}</div>
         {error && <p className="mt-2 text-sm text-red-400">{error}</p>}

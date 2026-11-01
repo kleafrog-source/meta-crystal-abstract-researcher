@@ -1,6 +1,10 @@
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 
 export const LANGUAGE_ALIASES: Record<string, string[]> = {
+  "en-IN": ["english india"], "hi-IN": ["hindi india"], "or-IN": ["odia india", "oriya india"],
+  "bn-IN": ["bengali india"], "ta-IN": ["tamil india"], "te-IN": ["telugu india"],
+  "kn-IN": ["kannada india"], "ml-IN": ["malayalam india"], "mr-IN": ["marathi india"],
+  "gu-IN": ["gujarati india"], "pa-IN": ["punjabi india"], "as-IN": ["assamese india"],
   lat: ["latin", "classical latin", "латын", "латинск"], prg: ["old prussian", "древнепрусск"],
   grc: ["ancient greek", "древнегреч"], sux: ["sumerian", "шумерск"], san: ["sanskrit", "vedic", "санскрит", "ведическ"],
   akk: ["akkadian", "аккадский"], non: ["old norse", "древнескандинавский"], got: ["gothic", "готский"],

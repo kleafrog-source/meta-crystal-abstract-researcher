@@ -21,6 +21,7 @@ import { useUiText } from "@/lib/ui-i18n";
 import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton";
 import { ParamToTextWorkbench } from "@/components/am-stage/ParamToTextWorkbench";
 import { GemmaMultimodalParameterSearch } from "@/components/am-stage/GemmaMultimodalParameterSearch";
+import { SegmentSideMetadataPanel } from "@/components/am-stage/SegmentSideMetadataPanel";
 import type { AmStageSessionData, AmStageSessionSummary, ParamTextWorkbenchSessionState } from "@/lib/am-stage-session";
 import { MacroGenerator } from "@/components/rag-v3/MacroGenerator";
 import { VirtualizedParamList } from "@/components/rag-v3/VirtualizedParamList";
@@ -46,6 +47,7 @@ import {
   smoothTimelineSegments,
 } from "@/lib/audio-segment-timeline";
 import {
+  applySegmentSideMeta,
   applySuccessfulSegmentResult,
   getIncompleteSegmentIndexes,
   prepareSegmentRun,
@@ -496,6 +498,12 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   );
   const clapCompleted = segments.filter((segment) => segment.clapStatus === "complete").length;
   const siglipCompleted = segments.filter((segment) => segment.siglipStatus === "complete").length;
+  const activeSegmentIndex = useMemo(() => {
+    if (!segments.length) return -1;
+    let index = 0;
+    for (let current = 0; current < segments.length; current += 1) if (segments[current].time <= currentTime) index = current;
+    return index;
+  }, [currentTime, segments]);
   const canContinueClap = stoppedEngine === "clap" && clapCompleted > 0 && clapCompleted < segments.length;
   const canContinueSiglip = stoppedEngine === "siglip" && siglipCompleted > 0 && siglipCompleted < segments.length;
   const activeSiglipSegment = useMemo(() => {
@@ -1189,6 +1197,17 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
               ))}
             </div>
           </section>
+
+          <SegmentSideMetadataPanel
+            key={activeSegmentIndex}
+            file={file}
+            segment={activeSegmentIndex >= 0 ? segments[activeSegmentIndex] : null}
+            segmentIndex={Math.max(0, activeSegmentIndex)}
+            onResult={(patch) => {
+              if (activeSegmentIndex < 0) return;
+              setSegments((current) => applySegmentSideMeta(current, activeSegmentIndex, patch));
+            }}
+          />
 
           <section data-am-stage-zone="media" className="min-w-0 rounded-lg border border-cyan-400/20 bg-black/30 p-4">
             <div className="min-w-0">

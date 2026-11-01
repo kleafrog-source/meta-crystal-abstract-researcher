@@ -1,4 +1,5 @@
 import type { ActiveParameter } from "./rag-v3/types";
+import type { SegmentSideMeta } from "./segment-side-meta";
 
 export type AudioEngine = "clap" | "siglip";
 export type AudioAnalysisStatus = "pending" | "processing" | "complete" | "error";
@@ -15,6 +16,7 @@ export interface AudioSegmentResultPoint {
     dataUrl: string;
     metadata: Record<string, unknown>;
   };
+  sideMeta?: SegmentSideMeta;
 }
 
 export function applySuccessfulSegmentResult(
@@ -33,6 +35,18 @@ export function applySuccessfulSegmentResult(
       ? { ...segment, [resultField]: parameters, [statusField]: "complete" }
       : segment,
   );
+}
+
+export function applySegmentSideMeta(
+  segments: readonly AudioSegmentResultPoint[],
+  index: number,
+  patch: Partial<SegmentSideMeta>,
+): AudioSegmentResultPoint[] {
+  if (!Number.isInteger(index) || index < 0 || index >= segments.length)
+    throw new RangeError("Segment index is out of range");
+  return segments.map((segment, currentIndex) => currentIndex === index
+    ? { ...segment, sideMeta: { schema: "segment_side_meta_v1", ...segment.sideMeta, ...patch } }
+    : segment);
 }
 
 export function prepareSegmentRun(

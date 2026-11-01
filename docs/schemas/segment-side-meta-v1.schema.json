@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mmss-meta-crystal.local/schemas/segment-side-meta-v1.schema.json",
+  "title": "AM-Stage SegmentSideMeta v1",
+  "type": "object",
+  "required": ["schema"],
+  "properties": {
+    "schema": { "const": "segment_side_meta_v1" },
+    "helm": {
+      "type": "object",
+      "required": ["model", "ran_at", "gates"],
+      "properties": {
+        "model": { "type": "string" },
+        "ran_at": { "type": "string", "format": "date-time" },
+        "gates": {
+          "type": "object",
+          "required": ["has_vocals", "has_speech", "aggressive_vocal", "is_ambient_noise"],
+          "additionalProperties": { "$ref": "#/$defs/gate" },
+          "properties": {
+            "has_vocals": { "$ref": "#/$defs/gate" },
+            "has_speech": { "$ref": "#/$defs/gate" },
+            "aggressive_vocal": { "$ref": "#/$defs/gate" },
+            "is_ambient_noise": { "$ref": "#/$defs/gate" }
+          }
+        }
+      }
+    },
+    "gender": {
+      "type": "object",
+      "required": ["model", "ran_at", "label", "score", "probabilities", "semantics"],
+      "properties": {
+        "model": { "type": "string" },
+        "ran_at": { "type": "string", "format": "date-time" },
+        "label": { "enum": ["male", "female", "unknown"] },
+        "score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "probabilities": {
+          "type": "object", "required": ["male", "female"],
+          "properties": { "male": { "$ref": "#/$defs/probability" }, "female": { "$ref": "#/$defs/probability" } }
+        },
+        "semantics": { "const": "acoustic_voice_presentation" }
+      }
+    },
+    "language": {
+      "type": "object",
+      "required": ["model", "ran_at", "tags", "top_confidence"],
+      "properties": {
+        "model": { "type": "string" },
+        "ran_at": { "type": "string", "format": "date-time" },
+        "tags": {
+          "type": "array", "items": {
+            "type": "object", "required": ["code", "label", "confidence"],
+            "properties": {
+              "code": { "enum": ["en-IN", "hi-IN", "or-IN", "bn-IN", "ta-IN", "te-IN", "kn-IN", "ml-IN", "mr-IN", "gu-IN", "pa-IN", "as-IN"] },
+              "label": { "type": "string" }, "confidence": { "$ref": "#/$defs/probability" }
+            }
+          }
+        },
+        "top_confidence": { "$ref": "#/$defs/probability" }
+      }
+    }
+  },
+  "$defs": {
+    "probability": { "type": "number", "minimum": 0, "maximum": 1 },
+    "gate": {
+      "type": "object", "required": ["value", "probability", "probabilities", "confidence"],
+      "properties": {
+        "value": { "type": ["boolean", "null"] },
+        "probability": { "anyOf": [{ "$ref": "#/$defs/probability" }, { "type": "null" }] },
+        "probabilities": {
+          "type": "object", "required": ["true", "false"],
+          "properties": {
+            "true": { "anyOf": [{ "$ref": "#/$defs/probability" }, { "type": "null" }] },
+            "false": { "anyOf": [{ "$ref": "#/$defs/probability" }, { "type": "null" }] }
+          }
+        },
+        "confidence": { "anyOf": [{ "$ref": "#/$defs/probability" }, { "type": "null" }] }
+      }
+    }
+  }
+}

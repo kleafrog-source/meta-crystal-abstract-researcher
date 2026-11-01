@@ -3,7 +3,9 @@ import { readGenesisLibrary, type GenesisLibraryParameter } from "@/lib/combinat
 import { searchV3 } from "@/lib/rag-v3/search";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { prepareGpuForV3Embedding } from "@/lib/ollama-memory";
+import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 import { isVocalMatrixParameter, parseVocalQuery, selectOption } from "@/lib/vocal-allocation/parser";
+import { normalizeIndicLanguageTags } from "@/lib/segment-side-meta";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -28,11 +30,15 @@ function nearbyRole(query: string, token: string): "lead" | "whisper" | "ritual"
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json() as { query?: string; top_k?: number; domain_layers?: string[]; domain_layer_weights?: Record<string, number> };
+    const body = await request.json() as { query?: string; detected_language_tags?: unknown; top_k?: number; domain_layers?: string[]; domain_layer_weights?: Record<string, number> };
     const query = String(body.query ?? "").trim();
     if (!query) return NextResponse.json({ error: "Введите описание вокальной матрицы." }, { status: 400 });
-    await prepareGpuForV3Embedding();
+    const detectedLanguages = normalizeIndicLanguageTags(body.detected_language_tags);
+    const slotOwner = "vocal-allocation-search";
+    if (!acquireEmbeddingModelSlot(slotOwner)) return NextResponse.json({ error: `Model slot busy: ${getEmbeddingModelSlot()?.owner ?? "another operation"}` }, { status: 409 });
+    await prepareGpuForV3Embedding(5_000, undefined, slotOwner);
     const parsed = parseVocalQuery(query);
+    parsed.languages = [...new Set([...parsed.languages, ...detectedLanguages])];
     const library = await readGenesisLibrary();
     const vocalCandidateNames = library
       .filter((parameter) => isVocalMatrixParameter({
@@ -42,7 +48,7 @@ export async function POST(request: Request) {
       }))
       .map((parameter) => String(parameter.technical_name));
     const search = await searchV3({
-      query,
+      query: detectedLanguages.length ? `${query}\nDetected Indic audio language tags: ${detectedLanguages.join(", ")}` : query,
       topK: Math.max(80, body.top_k ?? 40),
       currentValues: {},
       instructionContext: [],
@@ -50,6 +56,7 @@ export async function POST(request: Request) {
       selectedDomainLayers: body.domain_layers,
       domainLayerWeights: body.domain_layer_weights,
       candidateNames: vocalCandidateNames,
+      modelSlotOwner: slotOwner,
     });
     const byName = new Map(library.map((p) => [String(p.technical_name), p]));
     const results = search.results.filter(isVocalMatrixParameter).slice(0, body.top_k ?? 40);
@@ -68,4 +75,5 @@ export async function POST(request: Request) {
     const ordered = [...resultMap.values()].sort((a, b) => Number(/распознан явно|задан явно/.test(b.detail)) - Number(/распознан явно|задан явно/.test(a.detail)));
     return NextResponse.json({ query, parsed, results: ordered.slice(0, body.top_k ?? 40), total_scoped: resultMap.size, domain_retrieval: search.domain_retrieval });
   } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 }); }
+  finally { releaseEmbeddingModelSlot("vocal-allocation-search"); }
 }
