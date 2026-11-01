@@ -20,6 +20,7 @@ import { V3InfoTip } from "@/components/rag-v3/V3Tooltip";
 import { useUiText } from "@/lib/ui-i18n";
 import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton";
 import { ParamToTextWorkbench } from "@/components/am-stage/ParamToTextWorkbench";
+import { GemmaMultimodalParameterSearch } from "@/components/am-stage/GemmaMultimodalParameterSearch";
 import type { AmStageSessionData, AmStageSessionSummary, ParamTextWorkbenchSessionState } from "@/lib/am-stage-session";
 import { MacroGenerator } from "@/components/rag-v3/MacroGenerator";
 import { VirtualizedParamList } from "@/components/rag-v3/VirtualizedParamList";
@@ -843,6 +844,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
           <section data-am-stage-zone="top-row" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
             <div className="min-w-0 space-y-3">
               <SemanticSearch primaryLabel="Brief" secondaryLabel="Transition" collapsible dataScope="am-stage" selectedDomainLayers={selectedLayers} />
+              <GemmaMultimodalParameterSearch selectedLayers={selectedLayers} spectrogramFrame={activeSiglipSegment?.siglipPreview ? { dataUrl: activeSiglipSegment.siglipPreview.dataUrl, offset: activeSiglipSegment.offset } : undefined} />
           <details data-am-stage-disclosure="analysis-controls" className="rounded-lg border border-white/10 bg-black/30 p-3">
             <summary className="flex list-none cursor-pointer items-center gap-2 font-mono text-xs uppercase tracking-wider text-zinc-300 [&::-webkit-details-marker]:hidden"><AMIcon name="settings" size="sm" bright />Analysis controls · sampling, time gate, CLAP / SigLIP2, Continue<ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary>
             <div className="mt-3">            <div className="min-w-0 space-y-3">

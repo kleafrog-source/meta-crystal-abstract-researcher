@@ -1746,5 +1746,18 @@ export const UI_COPY: Record<string, BilingualCopy> = {
     "Continue SigLIP2": ["Continue SigLIP2", "Продолжить SigLIP2"],
     "изменена": ["modified", "изменена"],
     "Text index": ["Text index", "Текстовый индекс"],
-    "The selected text index is searched independently. Qwen3 remains the default and its vectors are never mixed with Gemma vectors.": ["The selected text index is searched independently. Qwen3 remains the default and its vectors are never mixed with Gemma vectors.", "Выбранный текстовый индекс используется отдельно. Qwen3 остаётся по умолчанию; его векторы не смешиваются с векторами Gemma."]
+    "The selected text index is searched independently. Qwen3 remains the default and its vectors are never mixed with Gemma vectors.": ["The selected text index is searched independently. Qwen3 remains the default and its vectors are never mixed with Gemma vectors.", "Выбранный текстовый индекс используется отдельно. Qwen3 остаётся по умолчанию; его векторы не смешиваются с векторами Gemma."],
+    "Experimental · EmbeddingGemma audio / spectrogram → parameters": ["Experimental · EmbeddingGemma audio / spectrogram → parameters", "Эксперимент · аудио / спектрограмма EmbeddingGemma → параметры"],
+    "Manual only · no idle load": ["Manual only · no idle load", "Только вручную · без фоновой загрузки"],
+    "Embeds a short PCM WAV or the current SigLIP spectrogram PNG with EmbeddingGemma 2 and searches the existing Gemma text-parameter index. This is experimental and does not replace CLAP or SigLIP2.": ["Embeds a short PCM WAV or the current SigLIP spectrogram PNG with EmbeddingGemma 2 and searches the existing Gemma text-parameter index. This is experimental and does not replace CLAP or SigLIP2.", "Создаёт embedding короткого PCM WAV или текущего PNG-кадра спектрограммы SigLIP моделью EmbeddingGemma 2 и ищет в существующем текстовом индексе параметров Gemma. Режим экспериментальный и не заменяет CLAP или SigLIP2."],
+    "This mode retrieves parameter identities; suggested values remain at catalogue defaults.": ["This mode retrieves parameter identities; suggested values remain at catalogue defaults.", "Режим находит параметры; предлагаемые значения остаются каталожными значениями по умолчанию."],
+    "Choose PCM WAV · up to 30 seconds": ["Choose PCM WAV · up to 30 seconds", "Выберите PCM WAV · до 30 секунд"],
+    "Embedding media…": ["Embedding media…", "Создание media embedding…"],
+    "Search with WAV": ["Search with WAV", "Искать по WAV"],
+    "Search current SigLIP frame": ["Search current SigLIP frame", "Искать по текущему кадру SigLIP"],
+    "Invalid spectrogram image data.": ["Invalid spectrogram image data.", "Некорректные данные изображения спектрограммы."],
+    "Gemma audio search failed.": ["Gemma audio search failed.", "Ошибка аудиопоиска Gemma."],
+    "Audio query matched {count} candidates · {duration}s · {dimensions}D": ["Audio query matched {count} candidates · {duration}s · {dimensions}D", "Аудиозапрос: {count} кандидатов · {duration} с · {dimensions}D"],
+    "SigLIP spectrogram at {offset}s · {count} candidates · {dimensions}D": ["SigLIP spectrogram at {offset}s · {count} candidates · {dimensions}D", "Спектрограмма SigLIP {offset} с · {count} кандидатов · {dimensions}D"],
+    "Similarity": ["Similarity", "Сходство"]
 };

@@ -160,9 +160,11 @@ export async function searchV3(params: {
   candidateNames?: string[];
   textIndex?: TextIndexId;
   modelSlotOwner?: string;
+  queryEmbedding?: number[];
 }): Promise<ProposeParametersResponse> {
   const query = params.query.trim();
-  if (!query) return { query: "", effective_query: "", results: [], total_candidates: 0, total_scoped: 0, retrieval_cache_size: 0 };
+  const hasExternalEmbedding = Array.isArray(params.queryEmbedding) && params.queryEmbedding.length > 0;
+  if (!query && !hasExternalEmbedding) return { query: "", effective_query: "", results: [], total_candidates: 0, total_scoped: 0, retrieval_cache_size: 0 };
   const enabled = { library: true, frozen: true, atoms: true, generated: true, ...params.sources };
   const scopes = { ...DEFAULT_SCOPES, ...params.scopes };
   const [library, frozen, excludedRegistry] = await Promise.all([
@@ -185,10 +187,10 @@ export async function searchV3(params: {
     for (const name of records.keys()) if (!allowedNames.has(name)) records.delete(name);
   }
 
-  const baseQuery = buildEffectiveQuery(query, params.instructionContext);
+  const baseQuery = hasExternalEmbedding ? "Audio input" : buildEffectiveQuery(query, params.instructionContext);
   const textIndex = params.textIndex === "embeddinggemma2" ? "embeddinggemma2" : "qwen3";
   const selectedModel = TEXT_INDEX_MODELS[textIndex];
-  const selectedQueryVector = await embedTextWithModel(baseQuery, selectedModel, params.modelSlotOwner);
+  const selectedQueryVector = params.queryEmbedding ?? await embedTextWithModel(baseQuery, selectedModel, params.modelSlotOwner);
   // Atom, relation, select-option, and anchor artifacts are currently Qwen-indexed.
   // Keep those paths out of Gemma searches so one request never loads two embedding models
   // or compares vectors from incompatible spaces.
@@ -196,7 +198,9 @@ export async function searchV3(params: {
   const atomRanking = usesQwenArtifacts && enabled.atoms ? await rankRuntimeAtoms(selectedQueryVector, 20) : null;
   const atomExpansion = atomRanking?.atoms.filter((atom) => atom.role !== "unit").slice(0, 12).map((atom) => atom.atom).join(" ") ?? "";
   const effectiveQuery = baseQuery;
-  const concepts = decomposeQuery(baseQuery, Array.from(records.values(), retrievalText));
+  const concepts = hasExternalEmbedding
+    ? [{ text: baseQuery, weight: 1 }]
+    : decomposeQuery(baseQuery, Array.from(records.values(), retrievalText));
   const extraConceptVectors = concepts.length > 1
     ? await embedTextsWithModel(concepts.slice(1).map((concept) => concept.text), selectedModel, params.modelSlotOwner)
     : [];
@@ -227,9 +231,9 @@ export async function searchV3(params: {
   const selectedLayerSet = new Set(selectedDomainLayers);
   const layerBiasApplied = selectedLayerSet.size > 0 && selectedLayerSet.size < ACOUSTIC_DOMAIN_LAYERS.length;
   const lexicalCandidates = Array.from(records.values())
-    .map((parameter) => ({ parameter, lexical: lexicalScore(effectiveQuery, parameter) }))
+    .map((parameter) => ({ parameter, lexical: hasExternalEmbedding ? 0 : lexicalScore(effectiveQuery, parameter) }))
     .sort((left, right) => right.lexical - left.lexical || left.parameter.technical_name.localeCompare(right.parameter.technical_name))
-    .slice(0, Math.min(records.size, Math.max(256, topK * 4)));
+    .slice(0, hasExternalEmbedding ? records.size : Math.min(records.size, Math.max(256, topK * 4)));
   const optionMatchesQuery = (option: string | number | null) => {
     if (option === null) return false;
     const normalizedOption = String(option).toLowerCase().replaceAll("_", " ").trim();
