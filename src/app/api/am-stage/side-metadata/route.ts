@@ -7,9 +7,9 @@ import { promisify } from "node:util";
 
 import { NextResponse } from "next/server";
 
-import { loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 import { prepareGpuForExternalModel } from "@/lib/ollama-memory";
+import { getSainaHelmBaseUrl } from "@/lib/saina-helm-runtime";
 import { INDIC_LANGUAGE_TAGS, type HelmGateValue, type SegmentSideMeta } from "@/lib/segment-side-meta";
 
 export const dynamic = "force-dynamic";
@@ -49,7 +49,7 @@ async function installedLocalModel(kind: Exclude<Specialist, "helm">): Promise<b
 
 async function installedHelm(baseUrl: string): Promise<boolean> {
   const response = await fetch(`${baseUrl}/api/tags`, { cache: "no-store", signal: AbortSignal.timeout(10_000) });
-  if (!response.ok) return false;
+  if (!response.ok) throw new Error(`Saina runtime responded with HTTP ${response.status} while checking installed models.`);
   const payload = await response.json() as { models?: Array<{ name?: string; model?: string }> };
   const expected = HELM_MODEL.toLowerCase();
   return (payload.models ?? []).some((item) => {
@@ -143,14 +143,15 @@ export async function POST(request: Request) {
   const maxDuration = kind === "helm" ? 10 : 30;
   if (!Number.isFinite(duration) || duration < 0.25 || duration > maxDuration) return NextResponse.json({ error: `Select a ${kind === "helm" ? "0.25–10" : "0.25–30"}-second segment.` }, { status: 400 });
 
-  const { baseUrl } = await loadEmbeddingRuntimeSettings();
+  let helmBaseUrl: string | null = null;
   if (kind === "helm") {
     try {
-      if (!(await installedHelm(process.env.AM_STAGE_SAINA_BASE_URL || baseUrl))) {
-        return NextResponse.json({ error: `Saina Helm 3 is not installed on this Ollama runtime. Install the Saina Ollama build (https://github.com/ramarlina/ollama/tree/saina-helm-3), install ${HELM_MODEL}, and retry.`, install_hint: true }, { status: 409 });
+      helmBaseUrl = getSainaHelmBaseUrl();
+      if (!(await installedHelm(helmBaseUrl))) {
+        return NextResponse.json({ error: `Saina Helm model ${HELM_MODEL} is missing from ${helmBaseUrl}. Start the isolated Saina runtime and pull the model; see docs/am-stage-side-metadata.md.`, install_hint: true }, { status: 409 });
       }
     } catch (error) {
-      return NextResponse.json({ error: `Cannot reach the configured Saina/Ollama runtime: ${error instanceof Error ? error.message : String(error)}` }, { status: 503 });
+      return NextResponse.json({ error: `Cannot reach the configured Saina runtime (AM_STAGE_SAINA_BASE_URL, default http://127.0.0.1:11435): ${error instanceof Error ? error.message : String(error)}. Start scripts/start-saina-serve.ps1; stock Ollama on 11434 is not used for Helm.` }, { status: 503 });
     }
   } else if (!(await installedLocalModel(kind))) {
     const installCommand = kind === "gender"
@@ -171,7 +172,8 @@ export async function POST(request: Request) {
     await prepareGpuForExternalModel(5_000, slotOwner);
     let rawResult: Record<string, unknown>;
     if (kind === "helm") {
-      const runtimeUrl = (process.env.AM_STAGE_SAINA_BASE_URL || baseUrl).replace(/\/+$/, "");
+      const runtimeUrl = helmBaseUrl;
+      if (!runtimeUrl) throw new Error("Saina Helm runtime URL was not initialized.");
       const response = await fetch(`${runtimeUrl}/v1/systemone`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
