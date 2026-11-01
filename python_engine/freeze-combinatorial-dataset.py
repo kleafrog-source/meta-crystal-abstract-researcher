@@ -10,6 +10,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from published_parameter_schema import clean_published_parameter, out_of_band_fields
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE_DIR = PROJECT_ROOT / "data" / "combinatorial-genesis" / "flowmusic-output"
@@ -66,6 +68,12 @@ def load_artifacts(source_dir: Path) -> tuple[dict[str, Any], dict[str, str], st
 
 def freeze_dataset(source_dir: Path, datasets_dir: Path) -> tuple[Path, dict[str, Any], bool]:
     payloads, source_hashes, content_hash = load_artifacts(source_dir)
+    provenance = {
+        str(row.get("technical_name")): out_of_band_fields(row)
+        for row in payloads["parameters"]
+        if isinstance(row, dict) and row.get("technical_name") and out_of_band_fields(row)
+    }
+    payloads["parameters"] = [clean_published_parameter(row) for row in payloads["parameters"] if isinstance(row, dict)]
     version_id = f"cg-v1-{content_hash[:12]}"
     version_dir = datasets_dir / version_id
     manifest_path = version_dir / "manifest.json"
@@ -85,6 +93,7 @@ def freeze_dataset(source_dir: Path, datasets_dir: Path) -> tuple[Path, dict[str
 
     version_dir.mkdir(parents=True, exist_ok=False)
     write_json(version_dir / "parameters.json", payloads["parameters"])
+    write_json(version_dir / "provenance.json", provenance)
     write_json(version_dir / "atoms.json", payloads["atoms"])
     write_json(version_dir / "semantic_groups.json", payloads["semantic_groups"])
     manifest = {
@@ -103,6 +112,7 @@ def freeze_dataset(source_dir: Path, datasets_dir: Path) -> tuple[Path, dict[str
         "source_sha256": source_hashes,
         "files": {
             "parameters": "parameters.json",
+            "provenance": "provenance.json",
             "atoms": "atoms.json",
             "semantic_groups": "semantic_groups.json",
         },

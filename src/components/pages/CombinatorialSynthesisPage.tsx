@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { AMIcon } from "@/components/ui/am-icon";
 import { resolveNormalizationBatch, selectPendingNormalizationCandidates } from "@/lib/combinatorial-genesis/normalization-selection";
+import { V3InfoTip } from "@/components/rag-v3/V3Tooltip";
+import { useUiText } from "@/lib/ui-i18n";
 
 interface Candidate {
   technical_name: string;
@@ -95,6 +97,7 @@ interface V3SourceResult {
 }
 
 export function CombinatorialSynthesisPage() {
+  const t = useUiText();
   const [model, setModel] = useState<string>("—");
   const [chatModel, setChatModel] = useState<string>("—");
   const [textProvider, setTextProvider] = useState<string>("—");
@@ -144,7 +147,7 @@ export function CombinatorialSynthesisPage() {
       setError("Сначала заполните поле «Семантическая цель».");
       return;
     }
-    const count = Math.max(3, Math.min(30, Math.trunc(Number(sourceCount) || 3)));
+    const count = Math.max(1, Math.min(700, Math.trunc(Number(sourceCount) || 3)));
     setSourceCount(String(count));
     setSourceBusy(true);
     setError(null);
@@ -166,7 +169,7 @@ export function CombinatorialSynthesisPage() {
         const value = item.suggested_value ?? item.current_value ?? item.default ?? 0.5;
         return `${item.technical_name}: ${String(value).replace(/\s+/g, " ").trim()}`;
       });
-      if (lines.length < 3) throw new Error(`V3 вернул только ${lines.length} структурных источника.`);
+      if (!lines.length) throw new Error("V3 не вернул источники для заданной цели.");
       setMacro(lines.join("\n"));
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : String(caught));
@@ -480,8 +483,7 @@ export function CombinatorialSynthesisPage() {
         <header className="rounded-lg border border-fuchsia-400/30 bg-fuchsia-950/10 p-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <div className="flex items-center gap-2"><AMIcon name="synthesis" size="md" bright /><h1 className="font-mono text-lg font-semibold">Combinatorial Parameter Synthesis</h1></div>
-              <p className="mt-2 max-w-4xl text-sm text-zinc-400">Создание новых technical_name из frozen atoms, qwen3-embedding-ранжирование без LLM, ручной отбор и контролируемая публикация в автономную библиотеку Genesis.</p>
+              <div className="flex items-center gap-2"><AMIcon name="synthesis" size="md" bright /><h1 className="font-mono text-lg font-semibold">Combinatorial Parameter Synthesis</h1><V3InfoTip content="Создание новых technical_name из frozen atoms, qwen3-embedding-ранжирование без LLM, ручной отбор и контролируемая публикация в автономную библиотеку Genesis." /></div>
             </div>
             <div className="flex flex-wrap gap-2"><Badge variant="outline">Embeddings model: {model}</Badge><Badge variant="outline">description normalization: {textProvider} · {chatModel}</Badge><Badge variant="outline">index: {indexModel}</Badge><Badge variant="outline">V3 protected</Badge></div>
           </div>
@@ -490,7 +492,7 @@ export function CombinatorialSynthesisPage() {
         {model !== "—" && indexModel !== "—" && model !== indexModel ? <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-400/30 bg-amber-950/20 p-4 text-sm text-amber-100"><div><div className="font-semibold">Индекс построен другой embedding-моделью</div><div className="mt-1 text-xs text-amber-200/70">Активная модель: {model}; индекс: {indexModel}. Сначала перестройте inbox/index, иначе сравнение векторов запрещено.</div></div><Button variant="outline" asChild><a href="/combinatorial-genesis">Открыть управление индексом</a></Button></div> : null}
 
         <section className="space-y-3 rounded-lg border border-cyan-400/20 bg-cyan-950/10 p-4">
-          <div><h2 className="font-mono text-sm font-semibold uppercase tracking-wide">1 · Источники и семантическая цель</h2><p className="mt-1 text-xs text-zinc-400">Вставьте минимум три существующих technical_name из V3 macro output. Они задают структурные источники; запрос задаёт смысловое направление embeddings модели</p></div>
+          <div><h2 className="flex items-center gap-1 font-mono text-sm font-semibold uppercase tracking-wide">{t("1 · Источники и семантическая цель")}<V3InfoTip content={t("Вставьте минимум три существующих technical_name из V3 macro output. Они задают структурные источники; запрос задаёт смысловое направление embeddings модели")} /></h2></div>
           <div className="grid gap-1.5">
             <FieldLabel label="Структурные источники" hint="Минимум три technical_name из датасета V3, по одному на строку. Значения после двоеточия можно редактировать вручную." />
             <Textarea value={macro} onChange={(event) => setMacro(event.target.value)} rows={7} className="font-mono text-xs" placeholder={"spectral_flux_density_ratio: 0.4\ngranular_texture_variance: 0.6\nspatial_reflection_diffusion: 0.5"} />
@@ -498,15 +500,15 @@ export function CombinatorialSynthesisPage() {
           <div className="grid gap-1.5">
             <FieldLabel label="Семантическая цель" hint="Опишите желаемое звучание на русском, английском или смешанно. Цель используется embedding-моделью для поиска источников и создания комбинаций." />
             <div className="flex items-start gap-1.5">
-              <Input className="min-w-0 flex-1" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Например: unstable organic granular space with slowly dispersing reflections" />
+              <Input className="min-w-0 flex-1" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("Например: unstable organic granular space with slowly dispersing reflections")} />
               <SpeechInputButtons value={query} onChange={setQuery} label="Семантическая цель" />
               <FieldHint hint="Верхняя кнопка добавляет распознанную речь к цели, нижняя полностью заменяет её. Запись остановится после трёх секунд тишины." />
             </div>
           </div>
           <div className="flex flex-wrap items-end gap-2 rounded border border-white/10 bg-black/20 p-2.5">
             <div className="grid gap-1">
-              <FieldLabel label="Количество источников" hint="Сколько наиболее близких параметров V3 подставить в поле структурных источников. Допустимо от 3 до 30." />
-              <Input className="w-28" type="number" min={3} max={30} value={sourceCount} onChange={(event) => setSourceCount(event.target.value)} onBlur={() => setSourceCount(String(Math.max(3, Math.min(30, Math.trunc(Number(sourceCount) || 3)))))} />
+              <FieldLabel label="Количество источников" hint="Сколько наиболее близких параметров V3 подставить в поле структурных источников. Допустимо от 1 до 700." />
+              <Input className="w-28" type="number" min={1} max={700} value={sourceCount} onChange={(event) => setSourceCount(event.target.value)} onBlur={() => setSourceCount(String(Math.max(1, Math.min(700, Math.trunc(Number(sourceCount) || 3)))))} />
             </div>
             <div className="flex items-center gap-1">
               <Button type="button" variant="outline" onClick={() => void selectSources()} disabled={sourceBusy || !query.trim()}><Search className="size-4" />{sourceBusy ? "Подбор..." : "Подбор источников"}</Button>

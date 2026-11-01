@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
 import os
+import re
 import shutil
 import struct
 import sys
@@ -26,6 +28,13 @@ DEFAULT_MODEL_PATH = Path(os.environ.get("MMSS_SIGLIP_MODEL", "D:/hfmodels/sigli
 DEFAULT_INDEX_DIR = DEFAULT_DATA_ROOT / "morpho-siglip"
 VALUE_CACHE_VERSION = "morpho-values-v1"
 IMAGE_QUERY_CACHE_VERSION = "siglip-image-query-v1"
+MIN_CLEAR_ANCHOR_MARGIN = 0.001
+ACOUSTIC_DOMAIN_LAYERS = {
+    "VOCAL_MORPHOLOGY_LAYER", "SYNTHESIS_PHYSICS_LAYER", "SPECTRAL_DSP_LAYER",
+    "SPATIAL_BINAURAL_LAYER", "DYNAMICS_ENVELOPE_LAYER", "TEMPORAL_RHYTHM_LAYER",
+    "GENERATIVE_CHAOS_LAYER", "COMPOSITIONAL_VECTOR_LAYER", "MODULATION_PERFORMANCE_LAYER",
+}
+NON_ACOUSTIC_NAMESPACE = re.compile(r"(^|[_\W])(ui|metric_monitoring|metrics|tier_management|ui_interaction|visual_effects|system_ui|dashboard|telemetry)([_\W]|$)", re.IGNORECASE)
 
 
 def read_json(path: Path):
@@ -41,7 +50,7 @@ def atomic_json(path: Path, payload: object) -> None:
 
 def retrieval_text(parameter: dict[str, object]) -> str:
     name = str(parameter.get("technical_name") or "")
-    values = [name.replace("_", " "), parameter.get("name_ru"), parameter.get("description_en"), parameter.get("description_ru"), parameter.get("category"), parameter.get("sub_category"), parameter.get("quantity_kind"), parameter.get("domain")]
+    values = [name.replace("_", " "), parameter.get("name_ru"), parameter.get("description_en"), parameter.get("description_ru"), parameter.get("category"), parameter.get("sub_category"), parameter.get("quantity_kind"), parameter.get("domain"), parameter.get("domain_layer")]
     values.extend(parameter.get("axes") or [])
     values.extend(parameter.get("semantic_keywords") or [])
     values.extend(parameter.get("lyria_prompt_tags") or [])
@@ -53,9 +62,18 @@ def text_hash(text: str) -> str:
 
 
 def eligible(parameter: dict[str, object]) -> bool:
-    if str(parameter.get("retrieval_scope") or "sound") not in {"sound", "structure"}:
-        return False
     name = str(parameter.get("technical_name") or "").lower()
+    namespace = " ".join(str(parameter.get(key) or "") for key in ("category", "sub_category", "domain", "technical_name")).lower()
+    if NON_ACOUSTIC_NAMESPACE.search(namespace):
+        return False
+    layer = str(parameter.get("domain_layer") or "").strip().upper()
+    if layer == "GLOBAL_CONSENSUS_LAYER":
+        return False  # retrieval-time pass only; never a SigLIP shard
+    if layer:
+        if layer not in ACOUSTIC_DOMAIN_LAYERS:
+            return False
+    elif str(parameter.get("retrieval_scope") or "sound") not in {"sound", "structure"}:
+        return False  # legacy rows fall back to the established acoustic scope
     blocked_prefixes = ("validation_json_", "provenance_", "descriptive_metadata_", "classification_", "semantic_concept_", "smart_contract_", "licensing_", "contract_address_")
     return not name.startswith(blocked_prefixes) and "ownership_proof" not in name
 
@@ -128,6 +146,10 @@ def expressive_position(scores: np.ndarray, levels: np.ndarray) -> tuple[float, 
     order = np.argsort(levels); ordered_scores, ordered_levels = scores[order], levels[order]
     winner = int(np.argmax(ordered_scores)); ranked = np.argsort(-ordered_scores)
     margin = float(ordered_scores[ranked[0]] - ordered_scores[ranked[1]]) if len(ranked) > 1 else 1.0
+    # A near-tie has no defensible winning level. np.argmax breaks ties at index 0,
+    # which used to force the minimum for Range and the first option for Select.
+    if margin < MIN_CLEAR_ANCHOR_MARGIN:
+        return weighted_position(scores, levels)
     if winner == 0 or winner == len(ordered_levels) - 1:
         return float(ordered_levels[winner]), margin
     left, center, right = (float(ordered_scores[index]) for index in (winner - 1, winner, winner + 1))
@@ -172,19 +194,23 @@ def load_value_sources(data_root: Path):
         context = retrieval_text(parameter)
         for row in rows:
             level = float(row.get("level", 0.5)); label = str(row.get("label") or level_phrases.get(level, "scaled intensity"))
-            ranges[str(name)].append({**row, "technical_name": name, "text": f"{context}; visual and acoustic expression is {label}: {level_phrases.get(level, label)}"})
+            # Put the varying anchor before the long catalogue description: the local
+            # SigLIP2 tokenizer truncates long text, which previously erased this suffix.
+            anchor = f"Acoustic parameter level {level:.3f}: {label}; {level_phrases.get(level, label)}"
+            ranges[str(name)].append({**row, "technical_name": name, "text": f"{anchor}. Parameter: {str(name).replace('_', ' ')}. Context: {context}"})
     for name, rows in select_manifest.get("parameters", {}).items():
         parameter = parameters.get(str(name))
         if not parameter: continue
         context = retrieval_text(parameter); aliases = parameter.get("option_aliases") or {}
         for row in rows:
             option = str(row.get("option") or ""); option_aliases = ", ".join(str(item) for item in aliases.get(option, [])) if isinstance(aliases, dict) else ""
-            selects[str(name)].append({**row, "technical_name": name, "text": f"{context}; selected mode or option: {option.replace('_', ' ')}; {option_aliases}"})
+            selects[str(name)].append({**row, "technical_name": name, "text": f"Selected mode or option: {option.replace('_', ' ')}; aliases: {option_aliases}. Parameter: {str(name).replace('_', ' ')}. Context: {context}"})
     axis_rows = []
     for axis in axes:
         for anchor in axis.get("anchors", []):
             text = " | ".join(str(item.get("text")) for item in anchor.get("paraphrases", []) if item.get("text"))
-            axis_rows.append({"axis": axis.get("id"), "level": anchor.get("target_value"), "text": text})
+            level = float(anchor.get("target_value", 0.5))
+            axis_rows.append({"axis": axis.get("id"), "level": level, "text": f"Axis target level {level:.3f}: {text}"})
     return ranges, selects, axis_rows, polarity, relations
 
 
@@ -200,7 +226,7 @@ def anchor_values(parameters: list[dict[str, object]], image_vector: np.ndarray,
         elif ui == "Select":
             for row in selects.get(name, []): requested.append((name, "select", str(row.get("option") or ""), str(row.get("text") or "")))
         elif ui == "Toggle":
-            context = retrieval_text(parameter); requested.extend([(name, "toggle", "0", f"{context}; disabled, absent, inactive, switched off"), (name, "toggle", "1", f"{context}; enabled, present, active, switched on")])
+            context = retrieval_text(parameter); requested.extend([(name, "toggle", "0", f"Toggle state disabled, absent, inactive, switched off. Parameter: {name.replace('_', ' ')}. Context: {context}"), (name, "toggle", "1", f"Toggle state enabled, present, active, switched on. Parameter: {name.replace('_', ' ')}. Context: {context}")])
     relevant_axes = {str(axis) for item in parameters for axis in (item.get("axes") or [])}
     for row in axis_rows:
         if str(row["axis"]) in relevant_axes: requested.append((str(row["axis"]), "axis", float(row["level"]), str(row["text"])))
@@ -232,9 +258,12 @@ def anchor_values(parameters: list[dict[str, object]], image_vector: np.ndarray,
         ui = str(parameter.get("ui_element") or "")
         if ui == "Range":
             entries = grouped.get((name, "range"), [])
-            if len(entries) < 2: continue
+            if len(entries) < 2:
+                result[name] = {"value": parameter.get("default", parameter.get("min_value", 0)), "source": "default", "detail": f"SigLIP Range anchors unavailable ({len(entries)}/5); retained V3 default", "value_confidence": 0.0}
+                continue
             scorer = expressive_position if mode == "expressive" else weighted_position
             direct, margin = scorer(np.asarray([score for _, score in entries]), np.asarray([float(level) for level, _ in entries]))
+            ambiguous = mode == "expressive" and margin < MIN_CLEAR_ANCHOR_MARGIN
             axis_values = []
             kind = str(parameter.get("quantity_kind") or "amount"); override = parameter.get("polarity_override")
             for axis in parameter.get("axes") or []:
@@ -246,13 +275,20 @@ def anchor_values(parameters: list[dict[str, object]], image_vector: np.ndarray,
             target = max(0.0, min(1.0, target + relation_adjustments[name]))
             strength = 1.0 if mode == "expressive" else 0.35
             position = default_position(parameter) + (target - default_position(parameter)) * strength
-            result[name] = {"value": numeric_value(parameter, position), "source": "morpho_value_anchor", "detail": f"Morpho Range anchors · mode {mode} · target {target:.3f} · margin {margin:.4f} · axes {len(axis_values)} · relations {','.join(relation_hits[name]) or 'none'}", "value_confidence": min(1.0, max(0.0, margin / 0.01)), "anchor_target": target}
+            detail = f"Morpho Range anchors · mode {mode} · target {target:.3f} · margin {margin:.4f} · axes {len(axis_values)} · relations {','.join(relation_hits[name]) or 'none'}"
+            if ambiguous:
+                detail += " · ambiguous scores; weighted neutral estimate used"
+            result[name] = {"value": numeric_value(parameter, position), "source": "morpho_value_anchor", "detail": detail, "value_confidence": min(1.0, max(0.0, margin / 0.01)), "anchor_target": target}
         elif ui in {"Select", "Toggle"}:
             entries = grouped.get((name, ui.lower()), [])
-            if len(entries) < 2: continue
+            if len(entries) < 2:
+                result[name] = {"value": parameter.get("default", 0), "source": "default", "detail": f"SigLIP {ui} anchors unavailable ({len(entries)} options); retained V3 default", "value_confidence": 0.0}
+                continue
             ordered = sorted(entries, key=lambda item: -item[1]); margin = ordered[0][1] - ordered[1][1]
-            threshold = 0.0 if mode == "expressive" else 0.006
-            if margin < threshold: continue
+            threshold = MIN_CLEAR_ANCHOR_MARGIN if mode == "expressive" else 0.006
+            if margin < threshold:
+                result[name] = {"value": parameter.get("default", 0), "source": "default", "detail": f"SigLIP {ui} anchors ambiguous · margin {margin:.4f} < {threshold:.4f}; retained V3 default", "value_confidence": 0.0}
+                continue
             value: object = ordered[0][0]
             if ui == "Toggle": value = numeric_value(parameter, float(value))
             result[name] = {"value": value, "source": "morpho_value_anchor", "detail": f"Morpho {ui} anchors · mode {mode} · margin {margin:.4f}", "value_confidence": min(1.0, margin / 0.01), "anchor_target": value}
@@ -478,7 +514,11 @@ def search_audio(audio_path: Path, data_root: Path, index_dir: Path, model_path:
         image_path = Path(directory) / "spectrogram.png"
         spectrogram = audio_spectrogram(audio_path, image_path, offset, duration, detail, layout)
         result = search_image(image_path, data_root, index_dir, model_path, top_k, value_mode)
-        result["audio"] = {"name": audio_path.name, **spectrogram}
+        result["audio"] = {
+            "name": audio_path.name,
+            **spectrogram,
+            "image_base64": base64.b64encode(image_path.read_bytes()).decode("ascii"),
+        }
         return result
 
 

@@ -1,0 +1,263 @@
+{
+  "version": "1.0.0",
+  "purpose": "Canonical category rename map for AM Parameters Catalogue. All keys are normalized lookup forms; values are target snake_case categories.",
+  "normalization_rules": {
+    "steps": [
+      "trim",
+      "replace HTML entities (&amp; -> &)",
+      "lowercase",
+      "replace / and - and & and whitespace runs with single underscore",
+      "collapse multiple underscores",
+      "strip leading/trailing underscores",
+      "apply synonym_map (exact match on normalized form)",
+      "if no map hit: keep normalized snake_case as category"
+    ],
+    "empty_tokens": ["", "без категории", "none", "null", "n/a", "undefined"]
+  },
+  "synonym_map": {
+    "acoustic_physics": "acoustic_physics",
+    "acoustic physics": "acoustic_physics",
+    "acoustic_modeling": "acoustic_physics",
+
+    "aleatoric_generation": "aleatoric_generation",
+
+    "algorithmic_composition": "algorithmic_composition",
+
+    "binaural_modeling": "binaural_modeling",
+
+    "chaotic_modulation": "chaotic_modulation",
+
+    "combinatorial_genesis": "combinatorial_genesis",
+    "combinatorial genesis": "combinatorial_genesis",
+
+    "compositional_structures": "compositional_structures",
+
+    "cross_domain_control": "cross_domain_controls",
+    "cross_domain_controls": "cross_domain_controls",
+    "cross-domain_controls": "cross_domain_controls",
+    "cross domain controls": "cross_domain_controls",
+
+    "digital_distortion": "digital_distortion",
+
+    "dsp_and_fx_processing": "dsp_processing",
+    "dsp_processing": "dsp_processing",
+
+    "dynamics": "dynamics",
+    "dynamics_processing": "dynamics",
+    "dynamics_nonlinear_systems": "dynamics",
+    "dynamics_&_nonlinear_systems": "dynamics",
+    "dynamics & nonlinear systems": "dynamics",
+
+    "envelope_shaping": "envelope_shaping",
+
+    "evolutionary_control": "evolutionary_control",
+
+    "experimental_processing": "experimental_processing",
+
+    "generative_algorithms": "generative_algorithms",
+    "generative algorithms": "generative_algorithms",
+    "generative_sequencing": "generative_algorithms",
+
+    "glossolalia_generation": "glossolalia_generation",
+
+    "granular_physics": "granular_physics",
+
+    "hybrid_processing": "hybrid_processing",
+
+    "language_and_phonetics": "language_and_phonetics",
+    "language_fusion": "language_and_phonetics",
+    "language_selection": "language_and_phonetics",
+    "linguistic_entropy": "language_and_phonetics",
+    "lyrical_prosody": "language_and_phonetics",
+    "polyglot_fusion": "language_and_phonetics",
+
+    "mastering": "mastering",
+    "mastering_bus": "mastering",
+
+    "material_physics": "material_physics",
+
+    "matrix_routing": "matrix_routing",
+
+    "meta_tagging": "meta_tagging",
+
+    "metric_monitoring": "metric_monitoring",
+
+    "midi_control": "midi_control",
+    "midi_mapping": "midi_control",
+
+    "mix_engineering": "mix_engineering",
+
+    "modular_synthesis": "modular_synthesis",
+
+    "modulation": "modulation",
+    "modulation_matrix": "modulation",
+    "real_time_modulation": "modulation",
+    "rhythmic_modulation": "modulation",
+
+    "nonlinear_systems": "nonlinear_systems",
+    "nonlinear systems": "nonlinear_systems",
+    "nonlinear_dynamics": "nonlinear_systems",
+
+    "omega_sequence": "omega_sequence",
+
+    "organic_textures": "organic_textures",
+    "organic textures": "organic_textures",
+
+    "performance_articulations": "performance_expression",
+    "performance_expression": "performance_expression",
+
+    "phase_control": "time_and_phase",
+
+    "physical_modeling": "physical_modeling",
+
+    "psychoacoustics": "psychoacoustics",
+
+    "recursion_engine": "recursion_engine",
+
+    "rhythm": "rhythm_and_structure",
+    "rhythm_and_structure": "rhythm_and_structure",
+    "rhythm and structure": "rhythm_and_structure",
+    "rhythm_structure": "rhythm_and_structure",
+
+    "sampler_engine": "sampler_engine",
+
+    "sound": "sound",
+
+    "spatial_perception": "spatial_audio",
+    "spatial perception": "spatial_audio",
+    "spatial_and_mastering": "spatial_audio",
+    "spatial_audio": "spatial_audio",
+    "stereo_imaging": "spatial_audio",
+
+    "spectral_processing": "spectral_processing",
+    "spectral processing": "spectral_processing",
+    "spectral_analysis": "spectral_processing",
+
+    "stability_control": "stability_control",
+
+    "stochastic_effects": "stochastic_effects",
+
+    "structural": "structure",
+    "structure": "structure",
+
+    "synthesis": "synthesis",
+    "synthesis_engine": "synthesis",
+
+    "temporal": "time_and_phase",
+    "temporal_structure": "time_and_phase",
+    "time_and_phase": "time_and_phase",
+    "time and phase": "time_and_phase",
+    "time_phase": "time_and_phase",
+
+    "tier_management": "tier_management",
+
+    "transport_control": "transport_control",
+
+    "ui_interaction": "ui_interaction",
+
+    "vector_control": "vector_control",
+
+    "vocal_morphology": "vocal_morphology",
+    "vocal morphology": "vocal_morphology",
+    "vocal_layering": "vocal_morphology",
+    "vocal_production": "vocal_morphology",
+    "vocal_prosody": "vocal_morphology",
+
+    "fractal_structures": "structure",
+    "фрактальные_структуры": "structure"
+  },
+  "sub_category_rules": {
+    "description": "After category remap, normalize sub_category with same string rules. If sub_category equals category or is empty, set sub_category to null/empty. Preserve distinct technical subs as snake_case.",
+    "promote_to_sub_when_merged": {
+      "acoustic_modeling": { "category": "acoustic_physics", "sub_category": "modeling" },
+      "dynamics_processing": { "category": "dynamics", "sub_category": "processing" },
+      "mastering_bus": { "category": "mastering", "sub_category": "bus" },
+      "midi_mapping": { "category": "midi_control", "sub_category": "mapping" },
+      "modulation_matrix": { "category": "modulation", "sub_category": "matrix" },
+      "real_time_modulation": { "category": "modulation", "sub_category": "realtime" },
+      "rhythmic_modulation": { "category": "modulation", "sub_category": "rhythmic" },
+      "generative_sequencing": { "category": "generative_algorithms", "sub_category": "sequencing" },
+      "language_fusion": { "category": "language_and_phonetics", "sub_category": "fusion" },
+      "language_selection": { "category": "language_and_phonetics", "sub_category": "selection" },
+      "linguistic_entropy": { "category": "language_and_phonetics", "sub_category": "entropy" },
+      "lyrical_prosody": { "category": "language_and_phonetics", "sub_category": "prosody" },
+      "polyglot_fusion": { "category": "language_and_phonetics", "sub_category": "polyglot" },
+      "performance_articulations": { "category": "performance_expression", "sub_category": "articulations" },
+      "vocal_layering": { "category": "vocal_morphology", "sub_category": "layering" },
+      "vocal_production": { "category": "vocal_morphology", "sub_category": "production" },
+      "vocal_prosody": { "category": "vocal_morphology", "sub_category": "prosody" },
+      "spectral_analysis": { "category": "spectral_processing", "sub_category": "analysis" },
+      "stereo_imaging": { "category": "spatial_audio", "sub_category": "stereo_imaging" },
+      "spatial_and_mastering": { "category": "spatial_audio", "sub_category": "mastering" },
+      "dsp_and_fx_processing": { "category": "dsp_processing", "sub_category": "fx" },
+      "synthesis_engine": { "category": "synthesis", "sub_category": "engine" },
+      "phase_control": { "category": "time_and_phase", "sub_category": "phase" },
+      "temporal_structure": { "category": "time_and_phase", "sub_category": "structure" },
+      "time_phase": { "category": "time_and_phase", "sub_category": "phase" },
+      "nonlinear_dynamics": { "category": "nonlinear_systems", "sub_category": "dynamics" },
+      "cross_domain_control": { "category": "cross_domain_controls", "sub_category": null }
+    }
+  },
+  "domain_rules": {
+    "description": "Deterministic domain assignment from canonical category. Override only if domain already set and force=false.",
+    "default_domain": "sound",
+    "map": {
+      "acoustic_physics": "sound",
+      "aleatoric_generation": "structure",
+      "algorithmic_composition": "structure",
+      "binaural_modeling": "sound",
+      "chaotic_modulation": "sound",
+      "combinatorial_genesis": "metadata",
+      "compositional_structures": "structure",
+      "cross_domain_controls": "metadata",
+      "digital_distortion": "sound",
+      "dsp_processing": "sound",
+      "dynamics": "sound",
+      "envelope_shaping": "sound",
+      "evolutionary_control": "structure",
+      "experimental_processing": "sound",
+      "generative_algorithms": "structure",
+      "glossolalia_generation": "sound",
+      "granular_physics": "sound",
+      "hybrid_processing": "sound",
+      "language_and_phonetics": "sound",
+      "mastering": "sound",
+      "material_physics": "sound",
+      "matrix_routing": "sound",
+      "meta_tagging": "metadata",
+      "metric_monitoring": "administrative",
+      "midi_control": "structure",
+      "mix_engineering": "sound",
+      "modular_synthesis": "sound",
+      "modulation": "sound",
+      "nonlinear_systems": "sound",
+      "omega_sequence": "structure",
+      "organic_textures": "sound",
+      "performance_expression": "sound",
+      "physical_modeling": "sound",
+      "psychoacoustics": "sound",
+      "recursion_engine": "structure",
+      "rhythm_and_structure": "structure",
+      "sampler_engine": "sound",
+      "sound": "sound",
+      "spatial_audio": "sound",
+      "spectral_processing": "sound",
+      "stability_control": "sound",
+      "stochastic_effects": "sound",
+      "structure": "structure",
+      "synthesis": "sound",
+      "time_and_phase": "structure",
+      "tier_management": "administrative",
+      "transport_control": "structure",
+      "ui_interaction": "administrative",
+      "vector_control": "sound",
+      "vocal_morphology": "sound"
+    }
+  },
+  "notes": [
+    "Combinatorial Genesis as category is meta-provenance of source pipeline; domain metadata.",
+    "Russian fractal label mapped into structure.",
+    "Title-Case and spaced labels collapse into snake_case canonicals.",
+    "When merging fine-grained labels into a parent, prefer promote_to_sub_when_merged so information is not lost."
+  ]
+}

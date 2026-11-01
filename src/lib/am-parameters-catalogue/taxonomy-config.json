@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "priority_categories": [
+    "vocal_morphology",
+    "psychoacoustics",
+    "spatial_audio",
+    "spectral_processing",
+    "dynamics",
+    "synthesis",
+    "modulation",
+    "rhythm_and_structure",
+    "language_and_phonetics",
+    "acoustic_physics"
+  ]
+}

@@ -2,6 +2,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 
 import { NextResponse } from "next/server";
+import { cleanPublishedParameter } from "@/lib/combinatorial-genesis/parameter-schema";
 
 import {
   ensureGenesisLibrary,
@@ -36,7 +37,8 @@ function exportedParameter(candidate: Record<string, unknown>) {
   const inference = candidate.value_inference as Record<string, unknown>;
   const metadata = candidate.metadata as Record<string, unknown>;
   const uiElement = String(inference.ui_element);
-  return {
+  const domainByCategory: Record<string, string> = { synthesis: "sound", spectral_processing: "sound", dynamics: "sound", spatial_audio: "sound", rhythm_and_structure: "structure", language_and_phonetics: "metadata", provenance: "provenance", administrative: "administrative" };
+  return cleanPublishedParameter({
     technical_name: name,
     name_ru: metadata.name_ru,
     description_en: metadata.description_en,
@@ -54,20 +56,9 @@ function exportedParameter(candidate: Record<string, unknown>) {
     ...(uiElement === "Select" ? { options: inference.options } : {}),
     lyria_prompt_tags: metadata.lyria_prompt_tags,
     semantic_keywords: metadata.semantic_keywords,
-    domain: "experimental_combinatorial_genesis",
-    axes: [],
+    domain: domainByCategory[String(metadata.category)] ?? "sound",
     quantity_kind: inference.quantity_kind,
-    polarity_override: null,
-    vibe_id: null,
-    select_typing: uiElement === "Select" ? "nominal" : null,
-    option_positions: null,
-    option_aliases: null,
-    genesis: {
-      package_id: candidate.package_id,
-      parent_parameters: candidate.parent_parameters,
-      selection_score: candidate.selection_score,
-    },
-  };
+  });
 }
 
 function validateExports(parameters: Array<Record<string, unknown>>): string[] {

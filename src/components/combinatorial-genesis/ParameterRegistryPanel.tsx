@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { V3InfoTip } from "@/components/rag-v3/V3Tooltip";
+import { useUiText } from "@/lib/ui-i18n";
 
 interface RegistryParameter {
   technical_name: string;
@@ -27,6 +29,7 @@ interface RegistryPayload {
 }
 
 export function ParameterRegistryPanel() {
+  const t = useUiText();
   const [payload, setPayload] = useState<RegistryPayload | null>(null);
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"active" | "excluded">("active");
@@ -93,6 +96,7 @@ export function ParameterRegistryPanel() {
           <div className="flex items-center gap-2">
             <ArchiveX className="size-4 text-amber-300" />
             <h2 className="font-mono text-sm font-semibold uppercase tracking-wide text-white">Parameter registry</h2>
+            <V3InfoTip content={t("Tombstone-реестр с сохранением автора, времени, причины и scope.")} />
             <TooltipProvider delayDuration={150}>
               <Tooltip>
                 <TooltipTrigger asChild><Info className="size-3.5 text-zinc-500" /></TooltipTrigger>
@@ -100,7 +104,6 @@ export function ParameterRegistryPanel() {
               </Tooltip>
             </TooltipProvider>
           </div>
-          <p className="mt-1 text-xs text-zinc-400">Tombstone-реестр с сохранением автора, времени, причины и scope.</p>
         </div>
         <div className="flex gap-2">
           <Badge variant="secondary">active: {(payload?.parameters.length ?? 0) - excludedCount}</Badge>
@@ -142,14 +145,14 @@ export function ParameterRegistryPanel() {
       <div className="flex flex-wrap items-center gap-2">
         {view === "active" ? (
           <>
-            <Input value={reason} onChange={(event) => setReason(event.target.value)} className="min-w-64 flex-1" placeholder="Причина исключения" />
+            <Input value={reason} onChange={(event) => setReason(event.target.value)} className="min-w-64 flex-1" placeholder={t("Причина исключения")} />
             <Button variant="destructive" disabled={busy || selected.size === 0} onClick={() => void mutate("POST")}>
-              <ArchiveX className="size-4" />Исключить выбранные ({selected.size})
+              <ArchiveX className="size-4" />{t("Исключить выбранные")} ({selected.size})
             </Button>
           </>
         ) : (
           <Button variant="outline" disabled={busy || selected.size === 0} onClick={() => void mutate("DELETE")}>
-            <RotateCcw className="size-4" />Вернуть выбранные ({selected.size})
+            <RotateCcw className="size-4" />{t("Вернуть выбранные")} ({selected.size})
           </Button>
         )}
         <Button variant="ghost" onClick={() => void refresh()} disabled={busy}>Обновить</Button>

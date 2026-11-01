@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Loader2, Mic, Plus, Square } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useUiText } from "@/lib/ui-i18n";
 
 export function SpeechInputButtons({ value, onChange, label, dataScope }: { value: string; onChange: (value: string) => void; label: string; dataScope?: "am-stage" }) {
   const [state, setState] = useState<"idle" | "recording" | "transcribing">("idle");
@@ -130,16 +131,18 @@ export function SpeechInputButtons({ value, onChange, label, dataScope }: { valu
 }
 
 function SpeechButton({ mode, activeMode, state, label, dataScope, onClick }: { mode: "replace" | "append"; activeMode: "replace" | "append" | null; state: "idle" | "recording" | "transcribing"; label: string; dataScope?: "am-stage"; onClick: () => void }) {
+  const t = useUiText();
   const active = activeMode === mode && state !== "idle";
-  const title = mode === "append" ? "Добавить голосом" : "Заменить голосом";
+  const title = t(mode === "append" ? "Добавить голосом" : "Заменить голосом");
+  const localizedLabel = t(label);
   const hint = active && state === "recording"
-    ? "Останавливает текущую запись и отправляет её на распознавание."
+    ? t("Останавливает текущую запись и отправляет её на распознавание.")
     : active && state === "transcribing"
-      ? "Аудио распознаётся локальной STT-моделью."
+      ? t("Аудио распознаётся локальной STT-моделью.")
       : mode === "append"
-        ? `Распознаёт речь и добавляет текст в конец поля «${label}».`
-        : `Распознаёт речь и заменяет содержимое поля «${label}».`;
-  return <Tooltip><TooltipTrigger asChild><button type="button" data-am-stage-action={dataScope ? `voice-${mode}` : undefined} aria-label={`${title}: ${label}`} className={`inline-flex size-7 items-center justify-center rounded-md border ${active && state === "recording" ? "border-red-400 bg-red-500/20 text-red-300" : "border-white/15 bg-black/70 text-muted-foreground"}`} onClick={onClick} disabled={state === "transcribing"}>
+        ? t("Распознаёт речь и добавляет текст в конец поля «{label}».").replace("{label}", localizedLabel)
+        : t("Распознаёт речь и заменяет содержимое поля «{label}».").replace("{label}", localizedLabel);
+  return <Tooltip><TooltipTrigger asChild><button type="button" data-am-stage-action={dataScope ? `voice-${mode}` : undefined} aria-label={`${title}: ${localizedLabel}`} className={`inline-flex size-7 items-center justify-center rounded-md border ${active && state === "recording" ? "border-red-400 bg-red-500/20 text-red-300" : "border-white/15 bg-black/70 text-muted-foreground"}`} onClick={onClick} disabled={state === "transcribing"}>
     {active && state === "recording" ? <Square className="size-3.5 fill-current" /> : active && state === "transcribing" ? <Loader2 className="size-4 animate-spin" /> : mode === "append" ? <span className="relative"><Mic className="size-4" /><Plus className="absolute -right-1.5 -top-1.5 size-2.5 stroke-[3]" /></span> : <Mic className="size-4" />}
   </button></TooltipTrigger><TooltipContent side="right" sideOffset={6} className="max-w-xs text-left">{hint}</TooltipContent></Tooltip>;
 }

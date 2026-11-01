@@ -19,8 +19,6 @@ interface CompositeManifest {
   model: string;
   dimensions: number;
   parameter_count: number;
-  library_count: number;
-  frozen_count: number;
   dataset_version: string;
   vector_origins: Record<string, number>;
   files: { rows: string; embeddings: string };

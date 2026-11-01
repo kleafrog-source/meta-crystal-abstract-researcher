@@ -16,6 +16,7 @@ import {
 
 import { AudioWaveformEditor } from "@/components/audio/AudioWaveformEditor";
 import { SemanticSearch } from "@/components/rag-v3/SemanticSearch";
+import { V3InfoTip } from "@/components/rag-v3/V3Tooltip";
 import { useUiText } from "@/lib/ui-i18n";
 import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton";
 import { ParamToTextWorkbench } from "@/components/am-stage/ParamToTextWorkbench";
@@ -24,6 +25,7 @@ import { MacroGenerator } from "@/components/rag-v3/MacroGenerator";
 import { VirtualizedParamList } from "@/components/rag-v3/VirtualizedParamList";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { FieldLabel } from "@/components/ui/field-hint";
 import { Input } from "@/components/ui/input";
 import {
@@ -152,7 +154,7 @@ function statusClass(status: AnalysisStatus): string {
   return "border-white/15 bg-zinc-950 text-zinc-400";
 }
 
-export function AMStagePage() {
+export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const t = useUiText();
   const stageRootRef = useRef<HTMLDivElement>(null);
   const v3Parameters = useRagV3Store((state) => state.activeParameters);
@@ -257,15 +259,15 @@ export function AMStagePage() {
     if (response.ok) setMorphoStatus((await response.json()) as MorphoStatus);
   }, []);
   useEffect(() => {
-    void refreshMorphoStatus();
-  }, [refreshMorphoStatus]);
+    if (active) void refreshMorphoStatus();
+  }, [active, refreshMorphoStatus]);
   useEffect(() => {
-    if (!morphoStatus?.index_job?.running) return;
+    if (!active || !morphoStatus?.index_job?.running) return;
     const timer = window.setInterval(() => {
       if (document.visibilityState === "visible") void refreshMorphoStatus();
     }, 2_000);
     return () => window.clearInterval(timer);
-  }, [morphoStatus?.index_job?.running, refreshMorphoStatus]);
+  }, [active, morphoStatus?.index_job?.running, refreshMorphoStatus]);
 
   const filteredV3Parameters = useMemo(() => v3Parameters.filter((parameter) => {
     const noLayerRestriction = selectedLayers.length === 0 || selectedLayers.length === ACOUSTIC_DOMAIN_LAYERS.length;
@@ -796,13 +798,10 @@ export function AMStagePage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="flex items-center gap-2 font-mono text-lg font-semibold">
-              <AMIcon name="audioToParameter" size="md" bright />
+              <AMIcon name="amStage" size="md" bright />
               AM Tri-Modal Stage · AM-Stage
+              <V3InfoTip content="Последовательный анализ временных точек, независимая интерполяция и синхронное воспроизведение." />
             </h1>
-            <p className="mt-1 text-xs text-zinc-500">
-              Последовательный анализ временных точек, независимая интерполяция
-              и синхронное воспроизведение.
-            </p>
           </div>
           <div className="flex flex-wrap gap-2 text-[10px]">
             <Badge variant="outline">{formatTime(audioDuration)}</Badge>
@@ -831,10 +830,10 @@ export function AMStagePage() {
                 SigLIP index: {morphoStatus?.status ?? "checking"}
               </Badge>
             </Link>
-            <Button size="sm" variant="outline" title={t("Сохранить текущее состояние анализа и настроек в снимок проекта.")} onClick={requestSaveSession} disabled={sessionBusy}>{sessionBusy ? t("Сохраняю…") : `${t("Сохранить сессию")}${sessionDirty ? ` · ${t("изменена")}` : ""}`}</Button>
-            <Button size="sm" variant="outline" onClick={() => void startSessionManager()} disabled={sessionBusy}>Открыть сессию</Button>
-            <Button size="sm" variant="ghost" onClick={requestNewSession} disabled={Boolean(busy)}>Новая сессия AM-Stage</Button>
-            <Button data-am-stage-action="test-preset" size="sm" variant="outline" onClick={() => void applyTestPreset()} disabled={Boolean(busy)}>Проверочный preset</Button>
+            <Tooltip><TooltipTrigger asChild><Button size="sm" variant="outline" onClick={requestSaveSession} disabled={sessionBusy}>{sessionBusy ? t("Сохраняю…") : `${t("Сохранить сессию")}${sessionDirty ? ` · ${t("изменена")}` : ""}`}</Button></TooltipTrigger><TooltipContent>{t("Сохранить текущее состояние анализа и настроек в снимок проекта.")}</TooltipContent></Tooltip>
+            <Tooltip><TooltipTrigger asChild><Button size="sm" variant="outline" onClick={() => void startSessionManager()} disabled={sessionBusy}>{t("Открыть сессию")}</Button></TooltipTrigger><TooltipContent>{t("Открыть, переименовать или удалить ранее сохранённый снимок AM-Stage.")}</TooltipContent></Tooltip>
+            <Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" onClick={requestNewSession} disabled={Boolean(busy)}>{t("Новая сессия AM-Stage")}</Button></TooltipTrigger><TooltipContent>{t("Сбросить рабочее состояние и начать новый анализ.")}</TooltipContent></Tooltip>
+            <Button data-am-stage-action="test-preset" size="sm" variant="outline" onClick={() => void applyTestPreset()} disabled={Boolean(busy)}>{t("Проверочный preset")}</Button>
           </div>
         </div>
       </header>
@@ -875,14 +874,13 @@ export function AMStagePage() {
                 </div>
                 <div className="col-span-2 rounded border border-white/10 p-2">
                   <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-[11px] text-zinc-300">Analysis time gate · timestamps relative to original file</span>
+                    <span className="flex items-center gap-1 text-[11px] text-zinc-300">Analysis time gate · timestamps relative to original file<V3InfoTip content="Auto-split and both model runs stay inside this range. Export times remain relative to the original file." /></span>
                     <button type="button" className="text-[10px] text-cyan-300 hover:underline" onClick={() => { setAnalysisStart(regionOffset); setAnalysisEnd(Math.min(audioDuration, regionOffset + regionDuration)); }}>Use waveform selection</button>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <label className="text-[10px] text-zinc-500">Start (s)<Input type="number" min={0} max={audioDuration} step={0.1} value={analysisStart} onChange={(event) => setAnalysisStart(Math.max(0, Math.min(audioDuration, Number(event.target.value) || 0)))} /></label>
                     <label className="text-[10px] text-zinc-500">End (s)<Input type="number" min={0} max={audioDuration} step={0.1} value={analysisEnd || audioDuration} onChange={(event) => setAnalysisEnd(Math.max(0, Math.min(audioDuration, Number(event.target.value) || 0)))} /></label>
                   </div>
-                  <p className="mt-1 text-[9px] text-zinc-500">Auto-split and both model runs stay inside this range. Export times remain relative to the original file.</p>
                 </div>
                 <div className="flex items-end">
                   <Button
@@ -892,7 +890,7 @@ export function AMStagePage() {
                     disabled={!audioDuration || Boolean(busy)}
                   >
                     <Scissors className="size-4" />
-                    Авто-разбивка
+                    {t("Авто-разбивка")}
                   </Button>
                 </div>
                 <div>
@@ -940,7 +938,7 @@ export function AMStagePage() {
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
                 <div>
                   <FieldLabel
-                    label="Шкала"
+                    label={t("Шкала")}
                     hint="Вертикальная шкала Wavesurfer Spectrogram."
                   />
                   <Select
@@ -965,7 +963,7 @@ export function AMStagePage() {
                 </div>
                 <div>
                   <FieldLabel
-                    label="Рендер"
+                    label={t("Рендер")}
                     hint="Windowed считает только видимую область и стабильнее работает с длинными треками."
                   />
                   <Select
@@ -1058,17 +1056,17 @@ export function AMStagePage() {
                 <ToggleRow label="Blend CLAP & SigLIP" checked={blendMode} onChange={setBlendMode} />
                 <ToggleRow label="Vocal Allocation Matrix" checked={vocalMatrixMode} onChange={setVocalMatrixMode} />
                 <ToggleRow
-                  label="Показывать спектрограмму"
+                  label={t("Показывать спектрограмму")}
                   checked={showSpectrogram}
                   onChange={setShowSpectrogram}
                 />
                 <ToggleRow
-                  label="Показывать CLAP"
+                  label={t("Показывать CLAP")}
                   checked={showClap}
                   onChange={setShowClap}
                 />
                 <ToggleRow
-                  label="Показывать SigLIP2"
+                  label={t("Показывать SigLIP2")}
                   checked={showSiglip}
                   onChange={setShowSiglip}
                 />
@@ -1089,9 +1087,9 @@ export function AMStagePage() {
               </section> : null}
               {blendMode ? <div><FieldLabel label={`Вес CLAP: ${Math.round(clapWeight * 100)}%`} hint="Остаток веса принадлежит SigLIP2. Scores нормализуются отдельно перед объединением." /><Input type="range" min={0} max={1} step={0.05} value={clapWeight} onChange={(event) => setClapWeight(Number(event.target.value))} /></div> : null}
               {blendMode || showGlobalConsensus ? <div className="grid grid-cols-2 gap-2 rounded border border-white/10 bg-black/20 p-2 text-[9px] text-muted-foreground">
-                <span>TEXT trust · {textTrust.sampleCount ? `${Math.round(textTrust.trust * 100)}%` : "—"}</span><span>CLAP trust · {clapTrust.sampleCount ? `${Math.round(clapTrust.trust * 100)}%` : "—"}</span><span>SigLIP2 trust · {siglipTrust.sampleCount ? `${Math.round(siglipTrust.trust * 100)}%` : "—"}</span>
-                <label className="space-y-1">Low-trust threshold · {Math.round(trustThreshold * 100)}%<input aria-label="Modality low-trust threshold" className="w-full accent-cyan-400" type="range" min="0" max="1" step="0.05" value={trustThreshold} onChange={(event) => setTrustThreshold(Number(event.target.value))} /></label>
-                <label className="space-y-1">Minimum modality weight · {Math.round(trustFloor * 100)}%<input aria-label="Modality trust floor weight" className="w-full accent-cyan-400" type="range" min="0" max="0.5" step="0.05" value={trustFloor} onChange={(event) => setTrustFloor(Number(event.target.value))} /></label>
+                <span>{t("TEXT trust")} · {textTrust.sampleCount ? `${Math.round(textTrust.trust * 100)}%` : "—"}</span><span>{t("CLAP trust")} · {clapTrust.sampleCount ? `${Math.round(clapTrust.trust * 100)}%` : "—"}</span><span>{t("SigLIP2 trust")} · {siglipTrust.sampleCount ? `${Math.round(siglipTrust.trust * 100)}%` : "—"}</span>
+                <label className="space-y-1">{t("Low-trust threshold")} · {Math.round(trustThreshold * 100)}%<input aria-label="Modality low-trust threshold" className="w-full accent-cyan-400" type="range" min="0" max="1" step="0.05" value={trustThreshold} onChange={(event) => setTrustThreshold(Number(event.target.value))} /></label>
+                <label className="space-y-1">{t("Minimum modality weight")} · {Math.round(trustFloor * 100)}%<input aria-label="Modality trust floor weight" className="w-full accent-cyan-400" type="range" min="0" max="0.5" step="0.05" value={trustFloor} onChange={(event) => setTrustFloor(Number(event.target.value))} /></label>
               </div> : null}
 
               <div className="grid gap-2 sm:grid-cols-2">
@@ -1127,7 +1125,7 @@ export function AMStagePage() {
                 </div>
               ) : null}
               {busy ? (
-                <Button data-am-stage-action="analysis-stop"
+                <Button data-am-stage-action="analysis-stop" title="Остановить пакетный анализ после текущего активного запроса."
                   className="w-full"
                   variant="destructive"
                   onClick={() => void stop()}
@@ -1153,8 +1151,8 @@ export function AMStagePage() {
               <MacroGenerator parameters={textStageParameters} collapsible dataScope="am-stage" collapseLabel={`TEXT · Semantic V3 · ${textStageParameters.length}`} />
               <MacroGenerator parameters={macroParameters} collapsible dataScope="am-stage" collapseLabel={`CLAP + SigLIP2 · ${macroParameters.length}`} />
               <div className="grid gap-1.5 sm:grid-cols-2">
-                <Button data-am-stage-action="export-priority-timeline" variant="outline" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportTimeline}><Download className="size-4" />Экспорт Priority Timeline</Button>
-                <Button data-am-stage-action="export-legacy-timeline" variant="ghost" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportLegacyTimeline}><Download className="size-4" />Экспорт legacy timeline</Button>
+                <Button data-am-stage-action="export-priority-timeline" title="Экспортировать текущие сегментные результаты и выбранные параметры в Priority Timeline JSON." variant="outline" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportTimeline}><Download className="size-4" />Экспорт Priority Timeline</Button>
+                <Button data-am-stage-action="export-legacy-timeline" title="Скачать совместимый legacy-формат временной шкалы." variant="ghost" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportLegacyTimeline}><Download className="size-4" />Экспорт legacy timeline</Button>
                 <JournalDraftButton modality="audio" engine="clap" actionLabel="Сохранить CLAP в Journal" parameters={clapFrame} model={{ id: "laion/clap-htsat-fused" }} settings={{ interval_seconds: segmentInterval, timeline_points: segments.length }} asset={file} label={`Segmented CLAP · ${file?.name ?? "track"}`} />
                 <JournalDraftButton modality="audio" engine="siglip2" actionLabel="Сохранить SigLIP2 в Journal" parameters={siglipFrame} model={{ id: "google/siglip2-base-patch16-224" }} settings={{ interval_seconds: segmentInterval, timeline_points: segments.length, spectrogram_detail: spectrogramDetail }} asset={file} label={`Segmented SigLIP2 · ${file?.name ?? "track"}`} />
               </div>
@@ -1197,7 +1195,7 @@ export function AMStagePage() {
                 <label className="flex min-h-52 cursor-pointer items-center justify-center rounded border border-dashed border-cyan-400/30 bg-black/40">
                   <span className="flex items-center gap-2 text-sm text-zinc-400">
                     <Upload className="size-5" />
-                    Выбрать аудиофайл
+                    {t("Выбрать аудиофайл")}
                   </span>
                   <input
                     className="hidden"
@@ -1243,30 +1241,30 @@ export function AMStagePage() {
 
           <div data-am-stage-zone="timeline" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(170px,1fr)_minmax(0,9fr)]">
             <aside aria-label="Domain layer timeline visibility filters" className="max-h-56 overflow-y-auto rounded-lg border border-border bg-background/85 p-3 xl:max-h-[min(70vh,720px)]">
-              <div className="mb-2 flex flex-wrap items-center justify-between gap-2"><h2 className="flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-wider"><AMIcon name="settings" size="sm" bright />Layer matrix</h2><select aria-label="Parameter title order" value={titleOrder} onChange={(event) => void saveTitleOrder(event.target.value as "en-ru" | "ru-en")} className="max-w-32 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-[9px]"><option value="en-ru">Title EN → RU</option><option value="ru-en">Title RU → EN</option></select></div>
-              <p className="mb-2 text-[9px] text-muted-foreground">Фильтр показывает девять акустических слоёв. Stage-2 ниже — отдельная постобработка уже найденных кадров, не слой и не новый индекс.</p>
-              <div className="mb-2 flex flex-wrap gap-1"><button type="button" className="rounded border border-white/15 px-2 py-1 text-[9px]" onClick={() => setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id))}>All 9</button><button type="button" className="rounded border border-white/15 px-2 py-1 text-[9px]" onClick={() => setSelectedLayers([])}>Clear</button></div>
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-2"><h2 className="flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-wider"><AMIcon name="settings" size="sm" bright />Layer matrix</h2><select title={t("Изменить порядок английского и русского названий параметров")} aria-label="Parameter title order" value={titleOrder} onChange={(event) => void saveTitleOrder(event.target.value as "en-ru" | "ru-en")} className="max-w-32 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-[9px]"><option value="en-ru">Title EN → RU</option><option value="ru-en">Title RU → EN</option></select></div>
+              <div className="mb-2 flex justify-end"><V3InfoTip content="Фильтр показывает девять акустических слоёв. Stage-2 ниже — отдельная постобработка уже найденных кадров, не слой и не новый индекс." /></div>
+              <div className="mb-2 flex flex-wrap gap-1"><button type="button" title="Включить все девять акустических слоёв" className="rounded border border-white/15 px-2 py-1 text-[9px]" onClick={() => setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id))}>All 9</button><button type="button" title="Снять выбор со всех акустических слоёв" className="rounded border border-white/15 px-2 py-1 text-[9px]" onClick={() => setSelectedLayers([])}>Clear</button></div>
               <div className="flex flex-col gap-1.5">
                 {ACOUSTIC_DOMAIN_LAYERS.map((layer) => {
                   const checked = selectedLayers.includes(layer.id);
                   const count = layerCounts.get(layer.id)?.size ?? 0;
                   const countsAvailable = v3Parameters.length > 0 || segments.some((segment) => segment.clap.length > 0 || segment.siglip.length > 0);
-                  return <label key={layer.id} data-am-stage-layer={layer.id} className="flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px]" style={{ borderColor: `${layer.color}70`, color: layer.color }}><input data-am-stage-action={`toggle-layer-${layer.id.toLowerCase()}`} type="checkbox" checked={checked} onChange={() => setSelectedLayers((current) => checked ? current.filter((id) => id !== layer.id) : [...current, layer.id])} /><span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: layer.color }} />{layer.label}<span className="ml-auto tabular-nums text-muted-foreground">{countsAvailable ? count : "—"}</span></label>;
+                  return <label key={layer.id} data-am-stage-layer={layer.id} title={`${t(layer.label)} · ${count} ${t("параметров")}`} className="flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px] transition-colors hover:bg-white/5" style={{ borderColor: `${layer.color}70`, color: layer.color }}><input className="peer sr-only" data-am-stage-action={`toggle-layer-${layer.id.toLowerCase()}`} type="checkbox" checked={checked} onChange={() => setSelectedLayers((current) => checked ? current.filter((id) => id !== layer.id) : [...current, layer.id])} /><AMIcon name={layer.icon} size="sm" className={`h-7 w-7 ${checked ? "opacity-100" : "opacity-60"}`} /><span>{t(layer.label)}</span><span className="ml-auto tabular-nums text-muted-foreground">{countsAvailable ? count : "—"}</span></label>;
                 })}
               </div>
               <section data-am-stage-zone="stage-2-postprocess" className="mt-2 space-y-2 rounded border p-2" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70` }} aria-label="Stage-2 client post-processing">
-                <label className="flex cursor-pointer items-center gap-2 text-[10px] font-medium" style={{ color: GLOBAL_CONSENSUS_LAYER.color }}><input data-am-stage-action="toggle-consensus-visibility" type="checkbox" checked={showGlobalConsensus} onChange={(event) => setShowGlobalConsensus(event.target.checked)} />Global Consensus · Stage-2</label>
-                <p className="text-[9px] text-muted-foreground">Клиентски сглаживает параметры из текущего результата и CLAP/SigLIP кадров. Новые параметры из индекса не добавляются.</p>
+                <label title="Включает клиентское сглаживание уже загруженных параметров; новые retrieval не выполняются." className="flex cursor-pointer items-center gap-2 text-[10px] font-medium" style={{ color: GLOBAL_CONSENSUS_LAYER.color }}><input data-am-stage-action="toggle-consensus-visibility" type="checkbox" checked={showGlobalConsensus} onChange={(event) => setShowGlobalConsensus(event.target.checked)} /><AMIcon name="layerVector" size="sm" />Global Consensus · Stage-2</label>
+                <div className="flex justify-end"><V3InfoTip content="Клиентски сглаживает параметры из текущего результата и CLAP/SigLIP кадров. Новые параметры из индекса не добавляются." /></div>
                 {showGlobalConsensus ? <><div className="flex items-center justify-between text-[9px]"><span>Query {100 - consensusCentroidPercent}%</span><span>Centroid {consensusCentroidPercent}%</span></div><input aria-label="Consensus centroid weight" className="w-full accent-violet-400" type="range" min="0" max="100" value={consensusCentroidPercent} onChange={(event) => setConsensusCentroidPercent(Number(event.target.value))} /><label className="flex items-center justify-between gap-2 text-[9px]">Centroid pool k<input aria-label="Consensus centroid top k" className="w-16 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-right" type="number" min="1" max="500" value={consensusTopK} onChange={(event) => setConsensusTopK(Math.max(1, Math.min(500, Number(event.target.value) || 1)))} /></label></> : null}
               </section>
             </aside>
           <section data-am-stage-zone="timeline-chart" className="min-w-0 rounded-lg border border-white/10 bg-black/30 p-3">
             <div className="mb-2 flex items-center justify-between gap-2 text-xs text-zinc-400">
               <span>Parameter Timeline · {formatTime(currentTime)}</span>
-              <span>Нажмите точку для перемотки</span>
+              <V3InfoTip content={t("Нажмите точку для перемотки")} />
             </div>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-              <h3 className="font-mono text-[10px] uppercase tracking-wider text-zinc-400">Parameter timeline</h3>
+              <div className="flex items-center gap-1"><h3 className="font-mono text-[10px] uppercase tracking-wider text-zinc-400">Parameter timeline</h3><V3InfoTip content={t("До {limit} наиболее изменяющихся серий на слой; C = CLAP, S = SigLIP2, T = TEXT brief. GLOBAL_CONSENSUS исключён. Пустая шкала появится после анализа.").replace("{limit}", String(LAYER_TIMELINE_SERIES_LIMIT))} /></div>
               <div className="flex gap-1 text-xs" role="group" aria-label="Timeline view">
                 {([ ["modality", "By modality"], ["layer", "By layer"] ] as const).map(([view, label]) => (
                   <button key={view} data-am-stage-action={`timeline-view-${view}`} type="button" onClick={() => setTimelineView(view)} aria-pressed={timelineView === view} className={`rounded border px-2 py-1 ${timelineView === view ? "border-violet-400 bg-violet-950/40 text-violet-200" : "border-white/15 text-zinc-400 hover:text-white"}`}>{label}</button>
@@ -1288,13 +1286,12 @@ export function AMStagePage() {
           </div>
 
           <section data-am-stage-zone="cross-modal-interpolation" className="space-y-2 rounded-lg border border-violet-400/25 bg-black/30 p-3">
-            <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="font-mono text-xs font-semibold uppercase tracking-wider text-violet-200">Cross-Modal Interpolation Bridge</h2><Badge variant="outline">client preview · no model rerun</Badge></div>
-            <div className="grid gap-3 md:grid-cols-[minmax(140px,1fr)_minmax(180px,2fr)_minmax(150px,1fr)]">
-              <label className="space-y-1 text-[10px] text-muted-foreground">Source pair<select aria-label="Cross-modal source pair" value={blendPair} onChange={(event) => setBlendPair(event.target.value)} className="h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-foreground"><option value="text-clap">Text ↔ CLAP</option><option value="clap-siglip">CLAP ↔ SigLIP2</option><option value="text-siglip">Text ↔ SigLIP2</option><option value="tri-modal">Tri-Modal Blend</option></select></label>
-              <label className="space-y-1 text-[10px] text-muted-foreground">Blend · {blendPercent}%<input aria-label="Cross-modal blend percentage" className="mt-2 w-full accent-violet-400" type="range" min="0" max="100" value={blendPercent} onChange={(event) => setBlendPercent(Number(event.target.value))} /><span className="block text-[9px]">0% = first source · 100% = second source</span></label>
-              <label className="space-y-1 text-[10px] text-muted-foreground">Curve<select aria-label="Cross-modal blend curve" value={blendCurve} onChange={(event) => setBlendCurve(event.target.value as BlendCurve)} className="h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-foreground"><option value="linear">Linear (Lerp)</option><option value="cosine">S-Sigmoid (Cosine)</option><option value="cubic">Cubic-Bezier Spline</option><option value="exponential">Exponential Growth</option></select></label>
+            <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="flex items-center gap-1 font-mono text-xs font-semibold uppercase tracking-wider text-violet-200">Cross-Modal Interpolation Bridge<V3InfoTip content="Числовые параметры смешиваются по техническому имени; дискретные переключаются на ближайший источник. Учитывается выбранная маска слоёв." /></h2><Badge variant="outline">client preview · no model rerun</Badge></div>
+              <div className="grid gap-3 md:grid-cols-[minmax(140px,1fr)_minmax(180px,2fr)_minmax(150px,1fr)]">
+              <label title="Выбирает источники данных для клиентской интерполяции." className="space-y-1 text-[10px] text-muted-foreground">Source pair<select aria-label="Cross-modal source pair" value={blendPair} onChange={(event) => setBlendPair(event.target.value)} className="h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-foreground"><option value="text-clap">Text ↔ CLAP</option><option value="clap-siglip">CLAP ↔ SigLIP2</option><option value="text-siglip">Text ↔ SigLIP2</option><option value="tri-modal">Tri-Modal Blend</option></select></label>
+              <label title="Определяет долю второго источника при интерполяции." className="space-y-1 text-[10px] text-muted-foreground">Blend · {blendPercent}%<input aria-label="Cross-modal blend percentage" className="mt-2 w-full accent-violet-400" type="range" min="0" max="100" value={blendPercent} onChange={(event) => setBlendPercent(Number(event.target.value))} /><span className="block text-[9px]">0% = first source · 100% = second source</span></label>
+              <label title="Форма перехода между числовыми значениями источников." className="space-y-1 text-[10px] text-muted-foreground">Curve<select aria-label="Cross-modal blend curve" value={blendCurve} onChange={(event) => setBlendCurve(event.target.value as BlendCurve)} className="h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-foreground"><option value="linear">Linear (Lerp)</option><option value="cosine">S-Sigmoid (Cosine)</option><option value="cubic">Cubic-Bezier Spline</option><option value="exponential">Exponential Growth</option></select></label>
             </div>
-            <p className="text-[9px] text-muted-foreground">Числовые параметры смешиваются по техническому имени; дискретные переключаются на ближайший источник. Учитывается выбранная маска слоёв.</p>
             <div className="max-h-40 overflow-auto rounded border border-white/10"><div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 p-2 font-mono text-[10px]">{bridgeFrames.slice(0, 64).map((parameter) => <div key={parameter.technical_name} className="contents"><span className="truncate text-zinc-400">{parameter.technical_name}</span><span className="text-violet-200">{String(parameter.current_value)}</span></div>)}{bridgeFrames.length === 0 ? <span className="col-span-2 py-2 text-center text-muted-foreground">Нет пересекающихся параметров в загруженных результатах.</span> : null}</div></div>
           </section>
 
@@ -1407,6 +1404,7 @@ function ParameterTimelineGraph({
   showSiglip: boolean;
   view: "modality" | "layer";
 }) {
+  const t = useUiText();
   const lanes = useMemo(() => buildLayerTimelineLanes(segments, textParameters, duration, showClap, showSiglip).filter((lane) => lane.id === UNCLASSIFIED_TIMELINE_LAYER.id || selectedLayers.includes(lane.id)), [duration, segments, selectedLayers, showClap, showSiglip, textParameters]);
   const series = useMemo(() => {
     const candidates: GraphSeries[] = [];
@@ -1458,13 +1456,10 @@ function ParameterTimelineGraph({
 
   if (!duration || (view === "modality" ? !series.length : !lanes.length))
     return (
-      <div className="mt-3 flex h-44 items-center justify-center rounded border border-white/10 bg-black text-xs text-zinc-600">
-        {view === "layer" ? "После появления числовых результатов здесь отобразятся слои. Текстовые параметры появятся после выбора brief." : "После анализа здесь появятся наиболее активно изменяющиеся числовые параметры."}
-      </div>
+      <div className="mt-3 h-44 rounded border border-white/10 bg-black" aria-label={t("Пустая временная шкала параметров")} />
     );
   if (view === "layer") return (
     <div className="mt-3 space-y-2 rounded border border-white/10 bg-black p-2">
-      <p className="text-[9px] text-zinc-500">До {LAYER_TIMELINE_SERIES_LIMIT} наиболее изменяющихся серий на слой; C = CLAP, S = SigLIP2, T = TEXT brief. GLOBAL_CONSENSUS исключён.</p>
       {lanes.map((lane) => (
         <section key={lane.id} className="rounded border border-white/10 bg-zinc-950/70 p-2">
           <div className="mb-1 flex items-center justify-between gap-2 text-[10px]">

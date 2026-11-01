@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ClipboardEvent, type ReactNode } from "react";
-import { ArrowRightLeft, ChevronDown, RefreshCw, RotateCcw, Save, Search, Sparkles, Split, X, Undo2, Redo2 } from "lucide-react";
+import { ArrowRightLeft, ChevronDown, Info, RefreshCw, RotateCcw, Save, Search, Sparkles, Split, X, Undo2, Redo2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -138,7 +138,8 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
           <div className="flex items-center gap-2">
             <AMIcon name="search" size="sm" bright />
             <h2 className="font-mono text-sm font-semibold uppercase tracking-[0.12em] text-white">Semantic Search V3</h2>
-            <V3InfoTip content={t("Выполняет независимый semantic retrieval и выбор значений для каждого отправленного запроса.")} />
+            <V3InfoTip content="Выполняет независимый semantic retrieval и выбор значений для каждого отправленного запроса." />
+            <V3InfoTip content="Single target or dual-state interpolation. Search runs only on explicit submit." />
           </div>
         </div> : null}
         <div className="console-mode-buttons flex flex-wrap items-center gap-1.5">
@@ -184,17 +185,17 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
           <V3Tooltip content={t("Введите Top-K от 1 до 200. Значение применяется только после нажатия Save.")}>
             <Input type="number" min={1} max={200} value={topKDraft} onChange={(event) => setTopKDraft(event.target.value)} className="h-7 w-20 bg-black/60 font-mono text-xs" />
           </V3Tooltip>
-          <V3Tooltip content={t("Сохраняет введённое значение Top-K для последующих запросов.")}>
+          <V3Tooltip content="Сохраняет введённое значение Top-K для последующих запросов.">
             <Button type="button" size="sm" className="semantic-control h-7 px-2" onClick={() => setTopK(Number(topKDraft) || topK)}><Save className="size-3.5" />Save</Button>
           </V3Tooltip>
-          <V3Tooltip content={t("Возвращает поле к последнему сохранённому Top-K.")}>
+          <V3Tooltip content="Возвращает поле к последнему сохранённому Top-K.">
             <Button type="button" size="sm" variant="ghost" className="semantic-control h-7 px-2" onClick={() => setTopKDraft(String(topK))}><RefreshCw className="size-3.5" /></Button>
           </V3Tooltip>
         </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5 rounded border border-white/15 bg-white/[0.025] p-2">
-        <span className="mr-1 flex items-center gap-1 font-mono text-[10px] uppercase tracking-wide text-muted-foreground">Retrieval scope<V3InfoTip content={t("Ограничивает поиск выбранными смысловыми классами параметров.")} /></span>
+        <span className="mr-1 flex items-center gap-1 font-mono text-[10px] uppercase tracking-wide text-muted-foreground">Retrieval scope<V3InfoTip content="Ограничивает поиск выбранными смысловыми классами параметров." /></span>
         {([
           ["sound", "Sound"],
           ["structure", "Structure"],
@@ -316,7 +317,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
 
     </section>
   );
-  return collapsible ? <details open data-am-stage-disclosure={dataScope ? "semantic-search" : undefined} className="min-w-0 rounded-lg border border-border bg-black/65 p-3"><summary className="flex list-none cursor-pointer items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-zinc-200 [&::-webkit-details-marker]:hidden"><AMIcon name="search" size="sm" bright />{primaryLabel === "Brief" ? t("Semantic Search · Brief") : `Semantic Search V3 · ${primaryLabel}`}<V3InfoTip content={t("Single target or dual-state interpolation. Search runs only on explicit submit.")} /><ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary><div className="mt-2">{panel}</div></details> : panel;
+  return collapsible ? <details open data-am-stage-disclosure={dataScope ? "semantic-search" : undefined} className="min-w-0 rounded-lg border border-border bg-black/65 p-3"><summary className="flex list-none cursor-pointer items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-zinc-200 [&::-webkit-details-marker]:hidden"><AMIcon name="search" size="sm" bright />{primaryLabel === "Brief" ? t("Semantic Search · Brief") : `Semantic Search V3 · ${primaryLabel}`}<V3Tooltip content={t("Single target or dual-state interpolation. Search runs only on explicit submit.")}><span className="inline-flex size-5 items-center justify-center rounded text-muted-foreground"><Info className="size-3.5" /></span></V3Tooltip><ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary><div className="mt-2">{panel}</div></details> : panel;
 }
 
 function QueryPanel(props: {
@@ -349,6 +350,7 @@ function QueryPanel(props: {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-1">
+        {actions}
         <Button type="button" variant="outline" size="sm" title="Undo paste (Ctrl/⌘+Z)" aria-label="Undo paste" disabled={!canUndo} onClick={onUndo}><Undo2 className="size-4" /></Button>
         <Button type="button" variant="outline" size="sm" title="Redo paste (Ctrl/⌘+Shift+Z, Ctrl+Y)" aria-label="Redo paste" disabled={!canRedo} onClick={onRedo}><Redo2 className="size-4" /></Button>
         <V3Tooltip content={t("Запускает semantic retrieval и anchoring только для содержимого этого поля.")}>
@@ -358,8 +360,6 @@ function QueryPanel(props: {
         </V3Tooltip>
         </div>
       </div>
-
-      {actions ? <div className="flex flex-wrap gap-1">{actions}</div> : null}
 
       <div className="flex items-stretch gap-1.5">
         <div className="relative min-w-0 flex-1">

@@ -10,7 +10,7 @@ export interface CandidateValueInference {
   min_value?: number;
   max_value?: number;
   step?: number;
-  default?: number | string;
+  default?: number | string | number[];
   options?: string[];
   donor_parameters: string[];
   explanation: string[];

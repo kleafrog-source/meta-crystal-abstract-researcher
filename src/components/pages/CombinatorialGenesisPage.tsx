@@ -11,6 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { ParameterRegistryPanel } from "@/components/combinatorial-genesis/ParameterRegistryPanel";
 import { V3CatalogPanel } from "@/components/combinatorial-genesis/V3CatalogPanel";
 import { AMIcon } from "@/components/ui/am-icon";
+import { V3InfoTip } from "@/components/rag-v3/V3Tooltip";
+import { useUiText } from "@/lib/ui-i18n";
 
 interface PreviewCandidate {
   technical_name: string;
@@ -191,6 +193,7 @@ interface InvalidBatchDetail {
 }
 
 export function CombinatorialGenesisPage() {
+  const t = useUiText();
   const [macro, setMacro] = useState("");
   const [query, setQuery] = useState("");
   const [seed, setSeed] = useState("0");
@@ -473,11 +476,8 @@ export function CombinatorialGenesisPage() {
               <div className="mb-2 flex items-center gap-2">
                 <AMIcon name="genesis" size="md" bright />
                 <h1 className="font-mono text-lg font-semibold text-white">Combinatorial Genesis Engine</h1>
+                <V3InfoTip content="Автономная лаборатория для сбора данных, атомизации параметров, построения новых комбинаций и сохранения проверенных результатов в собственную базу." />
               </div>
-              <p className="max-w-3xl text-sm text-zinc-400">
-                Автономная лаборатория для сбора данных, атомизации параметров, построения новых
-                комбинаций и сохранения проверенных результатов в собственную базу.
-              </p>
             </div>
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline"><ShieldCheck className="mr-1 size-3" />V3 protected</Badge>
@@ -501,20 +501,9 @@ export function CombinatorialGenesisPage() {
               <div className="flex items-center gap-2">
                 <FileCheck2 className="size-4 text-emerald-300" />
                 <h2 className="font-mono text-sm font-semibold uppercase tracking-wide text-white">Dataset Lab · response inspector</h2>
+                <V3InfoTip content={t("Используйте один и тот же запрос во всех аккаунтах. Полный датасет прикреплять не нужно: при необходимости используйте raw-ссылки из V3 technical-name catalog. Вставьте полный JSON-ответ Flowmusic; проверка ничего не сохраняет.")} />
+                <Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={() => void showCollectionPrompt()}>{t("Открыть prompt")}</Button>
               </div>
-              <p className="mt-1 max-w-4xl text-xs text-zinc-400">
-                Используйте один и тот же запрос во всех аккаунтах. {" "}
-                <button
-                  type="button"
-                  className="font-mono text-emerald-300 underline decoration-dotted underline-offset-2 hover:text-emerald-200"
-                  onClick={() => void showCollectionPrompt()}
-                >
-                  Открыть FLOWMUSIC_COLLECTION_PROMPT_V1.md
-                </button>
-                . {" "}
-                Полный датасет прикреплять не нужно: при необходимости используйте raw-ссылки из V3 technical-name catalog. Вставьте сюда полный JSON-ответ Flowmusic;
-                проверка пока ничего не сохраняет.
-              </p>
             </div>
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline">inspect only</Badge>
@@ -580,13 +569,13 @@ export function CombinatorialGenesisPage() {
             ) : null}
             {pipelineRun ? (
               <div className={`mt-2 text-xs ${pipelineRun.status === "completed" ? "text-emerald-300" : "text-amber-300"}`}>
-                {pipelineRun.status} · файлов: {pipelineRun.inbox_files.length} · версия: {pipelineRun.version_after ?? "—"}
-                {pipelineRun.new_version_created ? " · создана новая версия" : " · данные не изменились"}
+                {pipelineRun.status} · {t("файлов:")} {pipelineRun.inbox_files.length} · {t("версия:")} {pipelineRun.version_after ?? "—"}
+                {pipelineRun.new_version_created ? ` · ${t("создана новая версия")}` : ` · ${t("данные не изменились")}`}
               </div>
             ) : null}
             {collectionStats?.invalid_batch_details?.length ? (
               <div className="mt-3 max-h-72 space-y-2 overflow-auto rounded border border-amber-400/20 bg-amber-950/10 p-3 text-xs">
-                <div className="font-medium text-amber-200">Причины карантина</div>
+                <div className="font-medium text-amber-200">{t("Причины карантина")}</div>
                 {collectionStats.invalid_batch_details.map((batch) => (
                   <div key={batch.batch_id} className="rounded border border-white/10 bg-black/30 p-2">
                     <div className="font-mono text-zinc-300">{batch.source_file.split(/[\\/]/).pop()} · {batch.batch_id} · {batch.parameter_count} параметров</div>
@@ -649,11 +638,8 @@ export function CombinatorialGenesisPage() {
                 <div className="flex items-center gap-2">
                   <GitCompareArrows className="size-4 text-cyan-300" />
                   <h2 className="font-mono text-sm font-semibold uppercase tracking-wide text-white">Embedding model semantic review</h2>
+                  <V3InfoTip content="Алгоритм сам классифицирует пары как same, related или distinct. Ручные кнопки оставлены только как необязательный override; исходный корпус не изменяется." />
                 </div>
-                <p className="mt-1 max-w-4xl text-xs text-zinc-400">
-                  Алгоритм сам классифицирует пары как same, related или distinct. Ручные кнопки оставлены
-                  только как необязательный override; исходный корпус не изменяется.
-                </p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary">model: {collectionStats?.semantic_model ?? "qwen3-embedding:0.6b"}</Badge>
@@ -732,7 +718,7 @@ export function CombinatorialGenesisPage() {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 className="bg-black/60"
-                placeholder="Например: вязкая инфразвуковая текстура с нестабильной спектральной плотностью"
+                placeholder={t("Например: вязкая инфразвуковая текстура с нестабильной спектральной плотностью")}
               />
             </label>
             <div className="flex flex-wrap items-end gap-3">
@@ -749,14 +735,7 @@ export function CombinatorialGenesisPage() {
           </div>
 
           <aside className="space-y-3 rounded-lg border border-white/15 bg-white/[0.03] p-4">
-            <h2 className="font-mono text-sm font-semibold uppercase tracking-wide text-white">Safety boundary</h2>
-            <div className="space-y-2 text-xs text-zinc-400">
-              <p>1. Стартовые 2733 параметра скопированы в автономную библиотеку CG.</p>
-              <p>2. Генерация, проверка дублей и значения работают на автономных данных Combinatorial Genesis.</p>
-              <p>3. Frozen atom index и qwen3-embedding:0.6b ранжируют атомы и готовые кандидаты.</p>
-              <p>4. Рабочий датасет и retrieval index V3 изменяются только отдельной операцией публикации.</p>
-              <p>5. Публикация добавляет только auto-resolved кандидаты в собственную базу CG с резервной копией.</p>
-            </div>
+            <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase tracking-wide text-white">Safety boundary<V3InfoTip content={<div className="space-y-1"><p>{t("1. Стартовые 2733 параметра скопированы в автономную библиотеку CG.")}</p><p>{t("2. Генерация, проверка дублей и значения работают на автономных данных Combinatorial Genesis.")}</p><p>{t("3. Frozen atom index и qwen3-embedding:0.6b ранжируют атомы и готовые кандидаты.")}</p><p>{t("4. Рабочий датасет и retrieval index V3 изменяются только отдельной операцией публикации.")}</p><p>{t("5. Публикация добавляет только auto-resolved кандидаты в собственную базу CG с резервной копией.")}</p></div>} /></h2>
           </aside>
         </section>
 

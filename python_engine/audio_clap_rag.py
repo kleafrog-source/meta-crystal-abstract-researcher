@@ -17,6 +17,7 @@ import numpy as np
 
 from parameter_registry import excluded_names, read_registry, registry_sha256
 from vector_cache import content_key, read_vector, sha256_file, write_vector
+from published_parameter_schema import clean_published_parameter, parameter_text
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_ROOT = PROJECT_ROOT / "data" / "combinatorial-genesis"
@@ -45,27 +46,19 @@ def _load_v3_parameters() -> list[dict[str, Any]]:
         for row in rows:
             name = str(row.get("technical_name", "")).strip()
             if name and name not in records:
-                records[name] = {**row, "_v3_source": source}
+                records[name] = clean_published_parameter(row)
     excluded = excluded_names(DATA_ROOT)
     return [parameter for name, parameter in records.items() if name not in excluded]
 
 
 def _canonical_hash(parameter: dict[str, Any]) -> str:
-    raw = json.dumps(parameter, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    raw = parameter_text(parameter)
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 def _text_chunks(parameter: dict[str, Any]) -> list[str]:
-    priority = ["technical_name", "name_ru", "description_en", "description_ru", "category", "sub_category", "semantic_keywords", "lyria_prompt_tags", "domain", "axes", "quantity_kind"]
-    ordered_keys = priority + [key for key in parameter if key not in priority]
-    fields = []
-    for key in ordered_keys:
-        value = parameter.get(key)
-        if key.startswith("_") or value in (None, "", [], {}):
-            continue
-        rendered = json.dumps(value, ensure_ascii=False, separators=(",", ":")) if isinstance(value, (list, dict)) else str(value)
-        fields.append(f"{key.replace('_', ' ')}: {rendered}")
-    return [". ".join(fields)]
+    """CLAP retrieval text is restricted to the documented published lexical allowlist."""
+    return [parameter_text(parameter)]
 
 
 def _load_clap():
@@ -126,6 +119,18 @@ def _source_fingerprint(parameters: list[dict[str, Any]]) -> str:
         digest.update(str(parameter.get("technical_name", "")).encode("utf-8"))
         digest.update(_canonical_hash(parameter).encode("ascii"))
     return digest.hexdigest()
+def _index_summary(payload: dict[str, Any]) -> dict[str, Any]:
+    """Small polling manifest; never expose or repeatedly parse embedding vectors."""
+    return {
+        "ready": True,
+        "model": payload.get("model"),
+        "device": payload.get("device"),
+        "created_at": payload.get("created_at"),
+        "parameter_count": payload.get("parameter_count", 0),
+        "dimensions": payload.get("dimensions", 0),
+        "excluded_count": payload.get("excluded_count", 0),
+        "source_parameter_count": payload.get("source_parameter_count", 0),
+    }
 
 
 def _write_status(payload: dict[str, Any]) -> None:
@@ -251,7 +256,7 @@ def index_status() -> dict[str, Any]:
     payload = _read_json(INDEX_PATH)
     status = {"ready": True, "model": payload.get("model"), "device": payload.get("device"), "parameter_count": payload.get("parameter_count", 0), "dimensions": payload.get("dimensions", 0), "created_at": payload.get("created_at"), "excluded_count": payload.get("excluded_count", 0), "source_parameter_count": payload.get("source_parameter_count", 0)}
     _write_status(status)
-    return status
+    return {**status, "path": str(INDEX_PATH)}
 
 
 def _round_step(value: float, minimum: float, step: float | None) -> float:

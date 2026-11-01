@@ -13,10 +13,17 @@ async function readPreferences(): Promise<{ parameterTitleOrder: TitleOrder; lan
   if (!row) return { parameterTitleOrder: "en-ru", language: "ru" };
   try {
     const value = JSON.parse(row.value) as { parameterTitleOrder?: unknown; language?: unknown };
-    return { parameterTitleOrder: value.parameterTitleOrder === "ru-en" ? "ru-en" : "en-ru", language: value.language === "en" || value.language === "de" ? value.language : "ru" };
+    return {
+      parameterTitleOrder: value.parameterTitleOrder === "ru-en" ? "ru-en" : "en-ru",
+      language: value.language === "en" || value.language === "de" ? value.language : "ru",
+    };
   } catch {
     return { parameterTitleOrder: "en-ru", language: "ru" };
   }
+}
+
+async function readTitleOrder(): Promise<TitleOrder> {
+  return (await readPreferences()).parameterTitleOrder;
 }
 
 export async function GET() {
@@ -35,7 +42,13 @@ export async function PUT(request: Request) {
     const value = JSON.stringify({ parameterTitleOrder: nextTitleOrder, language: nextLanguage });
     await db.setting.upsert({ where: { key: KEY }, create: { key: KEY, value }, update: { value } });
     const response = NextResponse.json({ ok: true, parameterTitleOrder: nextTitleOrder, language: nextLanguage });
-    response.cookies.set("am_locale", nextLanguage, { httpOnly: false, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", maxAge: 60 * 60 * 24 * 365 });
+    response.cookies.set("am_locale", nextLanguage, {
+      httpOnly: false,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+    });
     return response;
   } catch (error) {
     return NextResponse.json({ ok: false, error: error instanceof Error ? error.message : "Could not save UI preferences" }, { status: 500 });

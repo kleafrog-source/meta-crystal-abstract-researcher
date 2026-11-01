@@ -142,11 +142,8 @@ export function KnowledgeGraphPage() {
                   Parameter Knowledge Graph
                 </h1>
                 <V3InfoTip content="Read-only граф связей параметров V3. Он не меняет базу, значения или индексы." />
+                <V3InfoTip content="Фактические связи таксономии и атомов плюс взаимные семантические соседи из текущего composite index." />
               </div>
-              <p className="mt-2 text-sm text-zinc-400">
-                Фактические связи таксономии и атомов плюс взаимные
-                семантические соседи из текущего composite index.
-              </p>
             </div>
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline">{status?.status ?? "loading"}</Badge>

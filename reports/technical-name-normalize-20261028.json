@@ -1,0 +1,229 @@
+{
+  "task": "technical_name normalization and forced description_en application",
+  "date": "2026-10-28",
+  "backup_dir": "D:\\dev\\personal\\projects\\mmss-meta-crystal\\data\\combinatorial-genesis\\library\\history\\technical-name-normalize-20261028T130000",
+  "report_path": "D:\\dev\\personal\\projects\\mmss-meta-crystal\\reports\\technical-name-normalize-20261028.json",
+  "source_file": "D:\\dev\\personal\\projects\\mmss-meta-crystal\\data\\extra-data-description_en.md",
+  "source_sha256": "583ecd67149cabb007ca388fdcbe50b5663d5c245d084f2971fb1a1d53d406e4",
+  "catalogue_before_count": 6557,
+  "catalogue_after_count": 6557,
+  "frozen_version_id": "cg-v1-50d190c44987",
+  "counts": {
+    "md_lines_parsed": 1698,
+    "unique_keys_in_md": 1658,
+    "matched_and_written": 867,
+    "matched_overwrote_existing": 454,
+    "matched_filled_empty": 413,
+    "skipped_not_in_catalogue": 791,
+    "skipped_empty_desc": 0,
+    "name_normalize_renames": 16,
+    "already_canonical": 6541,
+    "collision": 0,
+    "description_unchanged": 0,
+    "queue_name_references_updated": 171,
+    "provenance_keys_updated": 0,
+    "tombstone_names_normalized": 0
+  },
+  "name_changes": [
+    {
+      "before": "asymmetric_delay_cross_channel_gain_imbalance_dB",
+      "after": "asymmetric_delay_cross_channel_gain_imbalance_db"
+    },
+    {
+      "before": "asymmetric_feedback_loop_cross_attenuation_dB",
+      "after": "asymmetric_feedback_loop_cross_attenuation_db"
+    },
+    {
+      "before": "comb_filter_array_harmonic_notch_depth_dB",
+      "after": "comb_filter_array_harmonic_notch_depth_db"
+    },
+    {
+      "before": "fdn_matrix_binaural_cross_feed_attenuation_dB",
+      "after": "fdn_matrix_binaural_cross_feed_attenuation_db"
+    },
+    {
+      "before": "glottal_closure_harmonic_overtone_boost_dB",
+      "after": "glottal_closure_harmonic_overtone_boost_db"
+    },
+    {
+      "before": "performance_punch‑in/out_smoothing",
+      "after": "performance_punch_in_out_smoothing"
+    },
+    {
+      "before": "stability_threshold_curve_by_R",
+      "after": "stability_threshold_curve_by_r"
+    },
+    {
+      "before": "transient_recovery_neural_envelope_attack_gain_dB",
+      "after": "transient_recovery_neural_envelope_attack_gain_db"
+    },
+    {
+      "before": "vfe_meta_ED",
+      "after": "vfe_meta_ed"
+    },
+    {
+      "before": "vfe_meta_MFS",
+      "after": "vfe_meta_mfs"
+    },
+    {
+      "before": "vfe_meta_NC",
+      "after": "vfe_meta_nc"
+    },
+    {
+      "before": "vfe_metric_D",
+      "after": "vfe_metric_d"
+    },
+    {
+      "before": "vfe_metric_D_f",
+      "after": "vfe_metric_d_f"
+    },
+    {
+      "before": "vfe_metric_R_T",
+      "after": "vfe_metric_r_t"
+    },
+    {
+      "before": "vfe_metric_S",
+      "after": "vfe_metric_s"
+    },
+    {
+      "before": "vfe_metric_V",
+      "after": "vfe_metric_v"
+    }
+  ],
+  "collisions": [],
+  "md_duplicates_last_wins": {
+    "vocal_tract_elongation_factor": 1,
+    "asymmetric_feedback_cross_channel_leakage": 1,
+    "gamma_band_40hz_phase_locking_value_plv": 1,
+    "hrtf_3d_elevation_azimuth_matrix_blend": 1,
+    "macro_breakdown_pad_texture_highpass_cutoff_hz": 1,
+    "hrtf_pinna_azimuth_notch_frequency_scaling": 1,
+    "tb303_diode_ladder_cutoff_resonance_thermal_noise_floor": 1,
+    "tape_oxide_dropout_hf_attenuation_depth_db": 1,
+    "hrtf_pinna_elevation_shadow_attenuation_db": 1,
+    "vinyl_groove_inner_diameter_hf_loss_db": 1,
+    "sruti_autocorrect_restoration_rate_cents_sec": 1,
+    "sruti_microshift_autocorrect_window_ms": 1,
+    "sargam_microtonal_loop_quantization_snap_ratio": 1,
+    "topological_current_j_geom_spatial_oscillation_hz": 1,
+    "sruti_microtonal_drone_sympathetic_resonance_gain": 1,
+    "sruti_interval_microglide_velocity_cents_ms": 1,
+    "omega_operator_commute_pole_hysteresis_exponent": 1,
+    "multitap_delay_feedback_saturation_knee_curve": 1,
+    "multitap_delay_tap_amplitude_decay_exponent": 1,
+    "isochronic_sub_pulse_duty_cycle": 1,
+    "eqgft_topological_soliton_velocity_v": 1,
+    "topological_vortex_charge_density_q0": 1,
+    "covariant_derivative_j_geom_divergence_damping": 1,
+    "bbd_delay_clock_jitter_wobble_depth": 1,
+    "bbd_delay_clock_noise_leakage_db": 1,
+    "bbd_delay_compander_noise_reduction_ratio": 1,
+    "bbd_delay_clock_phase_noise_floor_db": 1,
+    "isochronic_theta_pulse_duty_cycle_jitter_ms": 1,
+    "sruti_raga_arohana_avarohana_asymmetry_factor": 1,
+    "sruti_raga_chalan_asymmetry_weight": 1,
+    "fdn_matrix_unitary_rotation_angle": 1,
+    "crest_factor_envelope_follower_speed": 1,
+    "compressor_secondary_ratio_slope": 1,
+    "envelope_follower_transient_bypass_gate": 1,
+    "structural_anchor_recurrence_weight": 1,
+    "percussive_consonant_mridangam_mapping_weight": 1,
+    "geometric_current_stereo_field_pan_rate": 1,
+    "asymmetric_feedback_cross_channel_phase_bleed": 1,
+    "vocal_tract_epiglottal_tilt_angle_deg": 1,
+    "raga_avirbhava_tirobhava_tension_index": 1
+  },
+  "warnings": {
+    "maybe_weak_range_desc": [
+      {
+        "key": "omega_operator_convolution_layer_depth",
+        "line": 13
+      },
+      {
+        "key": "recursion_loop_depth_state_ceiling_order",
+        "line": 114
+      },
+      {
+        "key": "ping_pong_cross_channel",
+        "line": 363
+      },
+      {
+        "key": "extreme_bpm_transient_anti_aliasing_oversampling",
+        "line": 387
+      },
+      {
+        "key": "speedcore_transient_preservation_oversampling_mode",
+        "line": 483
+      },
+      {
+        "key": "asymmetric_delay_feedback_phase_inversion_toggle",
+        "line": 800
+      },
+      {
+        "key": "cellular_automata_grid_wrap_torus_mode",
+        "line": 879
+      },
+      {
+        "key": "comb_filter_array_negative_feedback_phase_inversion",
+        "line": 919
+      },
+      {
+        "key": "vocal_meta_tag_syntax_validator_lock",
+        "line": 1006
+      },
+      {
+        "key": "grama_murchhana_modal_shift_index",
+        "line": 1092
+      },
+      {
+        "key": "topological_winding_number_pi3_s3_index",
+        "line": 1120
+      },
+      {
+        "key": "microtonal_sruti_interval_ratio_bhatkhande",
+        "line": 1132
+      },
+      {
+        "key": "comb_filter_array_feedback_phase_polarity",
+        "line": 1174
+      },
+      {
+        "key": "reversing_window_granular_sync_quantization",
+        "line": 1199
+      },
+      {
+        "key": "fractal_self_similar_polyrhythm_ratio",
+        "line": 1357
+      },
+      {
+        "key": "auto_recursion_texture_mode_viscous_metal_blend",
+        "line": 1384
+      },
+      {
+        "key": "ancient_indian_microtonal_scale_mode_index",
+        "line": 1617
+      },
+      {
+        "key": "22_sruti_modal_transposition_selector",
+        "line": 1618
+      }
+    ],
+    "description_not_starting_with_letter": [],
+    "truncations": []
+  },
+  "skipped_empty_records": [],
+  "indexes_dirty": true,
+  "index_rebuild_started": false,
+  "queue_status_counts": {
+    "done": 17277,
+    "applying": 10
+  },
+  "validation": {
+    "published_names_canonical": true,
+    "normalized_collisions": 0,
+    "catalogue_row_count_preserved": true,
+    "description_matches": true,
+    "new_parameters_created": 0,
+    "frozen_dataset_modified": false
+  }
+}

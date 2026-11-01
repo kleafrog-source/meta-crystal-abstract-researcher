@@ -25,7 +25,6 @@ export function InterfaceLanguagePreference() {
     try {
       const response = await fetch("/api/ui-preferences", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ language: next }) });
       if (!response.ok) throw new Error(t("Не удалось сохранить язык интерфейса."));
-      window.dispatchEvent(new CustomEvent("ui-preferences:changed", { detail: { language: next } }));
       router.refresh();
     } catch (cause) {
       setLanguage(initialLanguage);
@@ -35,5 +34,5 @@ export function InterfaceLanguagePreference() {
     }
   };
 
-  return <Card><CardHeader><CardTitle>{t("Язык интерфейса")}</CardTitle><CardDescription>{t("Выберите язык приложения. Для немецкого используется английский.")}</CardDescription></CardHeader><CardContent className="space-y-2"><Label htmlFor="interface-language">{t("Язык")}</Label><Select value={language} onValueChange={(value) => void update(value as UiLanguage)} disabled={busy}><SelectTrigger id="interface-language" className="max-w-sm"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="en">English</SelectItem><SelectItem value="ru">Русский</SelectItem><SelectItem value="de">Deutsch</SelectItem></SelectContent></Select>{error ? <p role="alert" className="text-xs text-destructive">{error}</p> : null}</CardContent></Card>;
+  return <Card><CardHeader><CardTitle>{t("Язык интерфейса")}</CardTitle><CardDescription>{t("Выберите язык приложения. Переводы на русский и английский применяются сразу; для немецкого используется английский.")}</CardDescription></CardHeader><CardContent className="space-y-2"><Label htmlFor="interface-language">{t("Язык")}</Label><Select value={language} onValueChange={(value) => void update(value as UiLanguage)} disabled={busy}><SelectTrigger id="interface-language" className="max-w-sm"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="en">English</SelectItem><SelectItem value="ru">Русский</SelectItem><SelectItem value="de">Deutsch</SelectItem></SelectContent></Select>{error ? <p role="alert" className="text-xs text-destructive">{error}</p> : null}</CardContent></Card>;
 }

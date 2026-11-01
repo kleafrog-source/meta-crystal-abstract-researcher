@@ -167,6 +167,10 @@
 .am-icon-sm { width:18px;height:18px }.am-icon-md { width:22px;height:22px }.am-icon-lg { width:28px;height:28px }.am-icon-xl { width:36px;height:36px }
 .ic-engine { color:#7B6BB8 }.ic-vocal { color:#B85CAA }.ic-settings { color:#2A9B8C }.ic-single { color:#B87A3A }.ic-transition { color:#6B78C0 }.ic-search { color:#B85A5A }.ic-copy { color:#3A9B5A }.ic-generate { color:#8B6BB8 }.ic-export { color:#4A8BC8 }.ic-macro { color:#7AAA2A }
 .ic-dashboard { color:#4A9AAB }.ic-genesis { color:#2E9B72 }.ic-synthesis { color:#B85A8E }.ic-clap { color:#3A8BB8 }.ic-audioToParameter { color:#B8923A }.ic-morpho { color:#7B88C8 }
+.ic-whitespace { color:#5B8A6E }.ic-graph { color:#5B6E9A }.ic-crossmodal { color:#8A6B4A }
+.app-sidebar nav button:hover .ic-whitespace,.app-sidebar nav button[aria-current="page"] .ic-whitespace { color:#4ADE80 }
+.app-sidebar nav button:hover .ic-graph,.app-sidebar nav button[aria-current="page"] .ic-graph { color:#60A5FA }
+.app-sidebar nav button:hover .ic-crossmodal,.app-sidebar nav button[aria-current="page"] .ic-crossmodal { color:#FBBF24 }
 .am-icon.is-bright,button:hover:not(:disabled)>.am-icon,.am-icon-button:focus-visible>.am-icon,.am-icon-button:active>.am-icon { opacity:1;filter:drop-shadow(0 0 5px currentColor);transform:scale(1.04) }
 .am-icon-button { display:inline-flex;align-items:center;gap:.4rem }.am-icon-button:focus-visible { outline:2px solid var(--ring);outline-offset:2px }
 .console-param-grid { display:grid;gap:.5rem;align-content:start }
@@ -473,3 +477,6 @@ aside nav button:hover .am-icon,aside nav button:focus-visible .am-icon,aside na
 .console-macro-panel button.macro-action-button:hover:not(:disabled) { background:#1f1f23!important;color:#e4e4e7!important; }
 .flowmusic-console .console-compact-card { aspect-ratio:auto;min-height:132px; }
 @media(max-width:720px) { .console-engine-layout { gap:.65rem; }.console-engine-layout>#sidePanel { min-height:380px; }.console-engine-left>.console-bank { min-height:440px; } }
+html[data-ui-locale-cookie="missing"][data-ui-has-saved-locale="false"]:not([data-ui-ready="true"]) body {
+  visibility: hidden;
+}

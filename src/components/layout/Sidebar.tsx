@@ -23,6 +23,8 @@ import { SidebarSpoiler } from "./SidebarSpoiler";
 import { AMCoreLogo } from "@/components/ui/am-core-logo";
 import { AMIcon } from "@/components/ui/am-icon";
 import { AppearancePicker } from "./AppearancePicker";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useUiText } from "@/lib/ui-i18n";
 
 export type PageId =
   | "dashboard"
@@ -42,6 +44,7 @@ export type PageId =
   | "map"
   | "ragparametersv3"
   | "combinatorialgenesis"
+  | "amparameterscatalogue"
   | "combinatorialsynthesis"
   | "audioclaprag"
   | "audiotoparameter"
@@ -52,6 +55,7 @@ export type PageId =
   | "morphoacousticrag"
   | "crossmodalconsensus"
   | "vocalallocationmatrix"
+  | "lexiconstatus"
   | "settings";
 
 interface NavItem {
@@ -69,52 +73,58 @@ const PRIMARY_NAV_ITEMS: NavItem[] = [
     description: "Статистика и последние алмазы",
   },
   {
+    id: "amstage",
+    label: "AM Tri-Modal Stage",
+    icon: <AMIcon name="amStage" size="sm" className="sidebar-icon sidebar-icon-c6" />,
+    description: "Semantic V3 + segmented CLAP/SigLIP2 analysis in one staged workspace",
+  },
+  {
     id: "ragparametersv3",
     label: "AM-Core Engine",
     icon: <AMIcon name="engine" size="sm" className="sidebar-icon sidebar-icon-c2" />,
     description: "Unified semantic search over the autonomous library, Flowmusic corpus and Combinatorial Atoms",
   },
   {
-    id: "combinatorialgenesis",
-    label: "Combinatorial Genesis",
-    icon: <AMIcon name="genesis" size="sm" className="sidebar-icon sidebar-icon-c3" />,
-    description: "Изолированная лаборатория новых комбинаций без прямой записи в рабочий датасет V3",
-  },
-  {
-    id: "combinatorialsynthesis",
-    label: "Combinatorial Synthesis",
-    icon: <AMIcon name="synthesis" size="sm" className="sidebar-icon sidebar-icon-c4" />,
-    description: "Embedding-генерация, отбор и публикация новых параметров из Combinatorial Atoms",
+    id: "audiotoparameter",
+    label: "Audio-to-Parameter",
+    icon: <AMIcon name="audioToParameter" size="sm" className="sidebar-icon sidebar-icon-c3" />,
+    description: "Авто-разбивка аудио по таймингам с batch поиском и интерполяцией параметров",
   },
   {
     id: "audioclaprag",
     label: "Audio CLAP RAG",
-    icon: <AMIcon name="clap" size="sm" className="sidebar-icon sidebar-icon-c5" />,
+    icon: <AMIcon name="clap" size="sm" className="sidebar-icon sidebar-icon-c4" />,
     description: "Cross-modal search of V3 parameters from an audio reference with LAION-CLAP",
-  },
-  {
-    id: "audiotoparameter",
-    label: "Audio-to-Parameter",
-    icon: <AMIcon name="audioToParameter" size="sm" className="sidebar-icon sidebar-icon-c6" />,
-    description: "Авто-разбивка аудио по таймингам с batch поиском и интерполяцией параметров",
-  },
-  {
-    id: "amstage",
-    label: "AM Tri-Modal Stage",
-    icon: <AMIcon name="audioToParameter" size="sm" className="sidebar-icon sidebar-icon-c6" />,
-    description: "Semantic V3 + segmented CLAP/SigLIP2 analysis in one staged workspace",
   },
   {
     id: "morphoacousticrag",
     label: "Morpho-Acoustic RAG",
-    icon: <AMIcon name="morpho" size="sm" className="sidebar-icon sidebar-icon-c7" />,
+    icon: <AMIcon name="morpho" size="sm" className="sidebar-icon sidebar-icon-c5" />,
     description: "CPU-поиск параметров V3 по изображению через локальный SigLIP2",
   },
   {
     id: "vocalallocationmatrix",
     label: "AM-Vocal Morphology Matrix",
-    icon: <AMIcon name="vocal" size="sm" className="sidebar-icon sidebar-icon-c8" />,
+    icon: <AMIcon name="vocal" size="sm" className="sidebar-icon sidebar-icon-c6" />,
     description: "Целевой подбор языков, TECH4, FX4 и слоёв вокальной матрицы",
+  },
+  {
+    id: "combinatorialgenesis",
+    label: "Combinatorial Genesis",
+    icon: <AMIcon name="genesis" size="sm" className="sidebar-icon sidebar-icon-c7" />,
+    description: "Изолированная лаборатория новых комбинаций без прямой записи в рабочий датасет V3",
+  },
+  {
+    id: "combinatorialsynthesis",
+    label: "Combinatorial Synthesis",
+    icon: <AMIcon name="synthesis" size="sm" className="sidebar-icon sidebar-icon-c8" />,
+    description: "Embedding-генерация, отбор и публикация новых параметров из Combinatorial Atoms",
+  },
+  {
+    id: "amparameterscatalogue",
+    label: "Каталог параметров",
+    icon: <AMIcon name="settings" size="sm" className="sidebar-icon sidebar-icon-c2" />,
+    description: "Полный каталог опубликованных параметров, пробелы, импорт и очередь изменений",
   },
   {
     id: "settings",
@@ -122,6 +132,9 @@ const PRIMARY_NAV_ITEMS: NavItem[] = [
     icon: <AMIcon name="settings" size="sm" className="sidebar-icon sidebar-icon-c9" />,
     description: "Модели, провайдеры и параметры AM-Core",
   },
+  { id: "whitespacediscovery", label: "White Space Discovery", icon: <AMIcon name="whiteSpace" size="sm" className="sidebar-icon" />, description: "Анализ пробелов AM-Core" },
+  { id: "knowledgegraph", label: "Knowledge Graph", icon: <AMIcon name="knowledgeGraph" size="sm" className="sidebar-icon" />, description: "Граф связей AM-Core" },
+  { id: "crossmodalconsensus", label: "Cross-Modal Consensus", icon: <AMIcon name="crossModal" size="sm" className="sidebar-icon" />, description: "Исследовательская мультимодальная верификация" },
 ];
 
 const LEGACY_NAV_ITEMS: NavItem[] = [
@@ -135,9 +148,6 @@ const LEGACY_NAV_ITEMS: NavItem[] = [
   { id: "torusatlas", label: "Torus Atlas", icon: <Database className="h-4 w-4" />, description: "Legacy torus visualization" },
   { id: "map", label: "Map · Crystal UMAP", icon: <CircleDot className="h-4 w-4" />, description: "UMAP старой библиотеки кристаллов" },
   { id: "metacrystalv3lab", label: "Meta-Crystal V3 Lab", icon: <Brain className="h-4 w-4" />, description: "Мост от AM-Crystal к V3" },
-  { id: "whitespacediscovery", label: "White Space Discovery", icon: <Search className="h-4 w-4" />, description: "Анализ пробелов AM-Core" },
-  { id: "knowledgegraph", label: "Knowledge Graph", icon: <Workflow className="h-4 w-4" />, description: "Граф связей AM-Core" },
-  { id: "crossmodalconsensus", label: "Cross-Modal Consensus", icon: <BookOpen className="h-4 w-4" />, description: "Исследовательская мультимодальная верификация" },
 ];
 
 interface SidebarProps {
@@ -148,6 +158,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ active, onNavigate, activeRuns, onClose }: SidebarProps) {
+  const t = useUiText();
   const [engineOk, setEngineOk] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -191,9 +202,10 @@ export function Sidebar({ active, onNavigate, activeRuns, onClose }: SidebarProp
                     : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground border border-transparent",
                 )}
                 aria-current={active === item.id ? "page" : undefined}
-                title={item.description}
+                title={t(item.description)}
               >
-                <span
+                <Tooltip>
+                <TooltipTrigger asChild><span
                   className={cn("sidebar-nav-icon",
                     "shrink-0 transition-colors",
                     active === item.id
@@ -202,8 +214,8 @@ export function Sidebar({ active, onNavigate, activeRuns, onClose }: SidebarProp
                   )}
                 >
                   {item.icon}
-                </span>
-                <span className="flex-1 text-left truncate">{item.label}</span>
+                </span></TooltipTrigger><TooltipContent side="right" className="max-w-xs">{t(item.description)}</TooltipContent></Tooltip>
+                <span className="flex-1 text-left truncate">{t(item.label)}</span>
                 {item.id === "generation" && activeRuns > 0 && (
                   <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 animate-pulse">
                     {activeRuns}
@@ -213,12 +225,12 @@ export function Sidebar({ active, onNavigate, activeRuns, onClose }: SidebarProp
             </li>
           ))}
         </ul>
-        <SidebarSpoiler title="Архив / Legacy & Research">
+        <SidebarSpoiler title={t("Архив / Legacy & Research")}>
           <ul className="space-y-0.5">
             {LEGACY_NAV_ITEMS.map((item) => (
               <li key={item.id}>
-                <button onClick={() => onNavigate(item.id)} className={cn("w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm border transition-colors", active === item.id ? "bg-primary/15 border-primary/30 text-primary-foreground" : "border-transparent text-muted-foreground hover:bg-sidebar-accent")} title={item.description}>
-                  <span className="sidebar-nav-icon shrink-0">{item.icon}</span><span className="flex-1 truncate text-left">{item.label}</span>
+                <button onClick={() => onNavigate(item.id)} className={cn("w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm border transition-colors", active === item.id ? "bg-primary/15 border-primary/30 text-primary-foreground" : "border-transparent text-muted-foreground hover:bg-sidebar-accent")} title={t(item.description)}>
+                  <Tooltip><TooltipTrigger asChild><span className="sidebar-nav-icon shrink-0">{item.icon}</span></TooltipTrigger><TooltipContent side="right" className="max-w-xs">{t(item.description)}</TooltipContent></Tooltip><span className="flex-1 truncate text-left">{t(item.label)}</span>
                 </button>
               </li>
             ))}
@@ -228,7 +240,7 @@ export function Sidebar({ active, onNavigate, activeRuns, onClose }: SidebarProp
 
       {/* Status footer */}
       <div className="px-3 py-3 border-t border-border space-y-2">
-        {onClose && <button onClick={onClose} className="mb-2 flex w-full items-center justify-center gap-2 rounded-md border border-border px-2 py-1.5 text-xs text-muted-foreground hover:bg-sidebar-accent"><ChevronLeft className="h-3.5 w-3.5" />Скрыть панель</button>}
+        {onClose && <button onClick={onClose} className="mb-2 flex w-full items-center justify-center gap-2 rounded-md border border-border px-2 py-1.5 text-xs text-muted-foreground hover:bg-sidebar-accent"><ChevronLeft className="h-3.5 w-3.5" />{t("Скрыть панель")}</button>}
         <AppearancePicker page={active} />
         <div className="flex items-center justify-between text-[11px]">
           <span className="text-muted-foreground">Engine</span>
@@ -244,7 +256,7 @@ export function Sidebar({ active, onNavigate, activeRuns, onClose }: SidebarProp
               )}
             />
             <span className={engineOk ? "text-emerald-300" : "text-muted-foreground"}>
-              {engineOk === null ? "проверка…" : engineOk ? "готов" : "недоступен"}
+              {t(engineOk === null ? "проверка…" : engineOk ? "готов" : "недоступен")}
             </span>
           </div>
         </div>

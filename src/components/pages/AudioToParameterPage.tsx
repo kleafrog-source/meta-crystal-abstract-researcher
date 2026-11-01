@@ -14,6 +14,7 @@ import {
 import { AudioWaveformEditor } from "@/components/audio/AudioWaveformEditor";
 import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton";
 import { MacroGenerator } from "@/components/rag-v3/MacroGenerator";
+import { V3InfoTip } from "@/components/rag-v3/V3Tooltip";
 import { VirtualizedParamList } from "@/components/rag-v3/VirtualizedParamList";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,7 @@ import {
 } from "@/lib/audio-segment-result";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { computeModalityTrust, DEFAULT_MODALITY_TRUST_CONFIG } from "@/lib/modality-trust";
+import { useUiText } from "@/lib/ui-i18n";
 
 type Engine = AudioEngine;
 type AnalysisStatus = AudioAnalysisStatus;
@@ -136,7 +138,8 @@ function statusClass(status: AnalysisStatus): string {
   return "border-white/15 bg-zinc-950 text-zinc-400";
 }
 
-export function AudioToParameterPage() {
+export function AudioToParameterPage({ active = true }: { active?: boolean } = {}) {
+  const t = useUiText();
   const [file, setFile] = useState<File | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioDuration, setAudioDuration] = useState(0);
@@ -182,15 +185,15 @@ export function AudioToParameterPage() {
     if (response.ok) setMorphoStatus((await response.json()) as MorphoStatus);
   }, []);
   useEffect(() => {
-    void refreshMorphoStatus();
-  }, [refreshMorphoStatus]);
+    if (active) void refreshMorphoStatus();
+  }, [active, refreshMorphoStatus]);
   useEffect(() => {
-    if (!morphoStatus?.index_job?.running) return;
+    if (!active || !morphoStatus?.index_job?.running) return;
     const timer = window.setInterval(() => {
       if (document.visibilityState === "visible") void refreshMorphoStatus();
     }, 2_000);
     return () => window.clearInterval(timer);
-  }, [morphoStatus?.index_job?.running, refreshMorphoStatus]);
+  }, [active, morphoStatus?.index_job?.running, refreshMorphoStatus]);
 
   const selectFile = useCallback((nextFile: File) => {
     setAudioUrl((previous) => {
@@ -204,9 +207,9 @@ export function AudioToParameterPage() {
     setSegments([]);
     setError("");
     setNotice(
-      "Файл загружен. Нажмите «Авто-разбивка» после появления длительности.",
+      t("Файл загружен. Нажмите «Авто-разбивка» после появления длительности."),
     );
-  }, []);
+  }, [t]);
 
   const splitTrack = useCallback(() => {
     const points = buildAudioAnalysisPoints(audioDuration, segmentInterval);
@@ -224,9 +227,9 @@ export function AudioToParameterPage() {
       Math.min(segmentInterval, audioDuration || segmentInterval),
     );
     setCurrentTime(0);
-    setNotice(`Подготовлено точек анализа: ${points.length}.`);
+    setNotice(`${t("Подготовлено точек анализа:")} ${points.length}.`);
     setError("");
-  }, [audioDuration, segmentInterval]);
+  }, [audioDuration, segmentInterval, t]);
   const handleWaveDuration = useCallback(
     (duration: number) => {
       setAudioDuration(duration);
@@ -289,7 +292,7 @@ export function AudioToParameterPage() {
           working = nextWorking;
           setSegments(nextWorking);
           setNotice(
-            `${engine === "clap" ? "CLAP" : "SigLIP2"}: обработано ${index + 1} / ${working.length}.`,
+            `${engine === "clap" ? "CLAP" : "SigLIP2"}: ${t("Обработано")} ${index + 1} / ${working.length}.`,
           );
         }
       } catch (caught) {
@@ -298,7 +301,7 @@ export function AudioToParameterPage() {
         );
         if (active) active[statusField] = "error";
         setSegments([...working]);
-        if (controller.signal.aborted) setNotice("Пакетный анализ остановлен.");
+        if (controller.signal.aborted) setNotice(t("Пакетный анализ остановлен."));
         else
           setError(caught instanceof Error ? caught.message : String(caught));
       } finally {
@@ -314,6 +317,7 @@ export function AudioToParameterPage() {
       siglipTopK,
       siglipSpectrogramLayout,
       spectrogramDetail,
+      t,
       vocalMatrixMode,
     ],
   );
@@ -325,8 +329,8 @@ export function AudioToParameterPage() {
     );
     abortRef.current = null;
     setBusy(null);
-    setNotice("Остановка анализа запрошена.");
-  }, []);
+    setNotice(t("Остановка анализа запрошена."));
+  }, [t]);
 
   const nodeSegments = useMemo(
     () => smoothTimelineSegments(segments, nodeInterval),
@@ -453,14 +457,11 @@ export function AudioToParameterPage() {
               <AMIcon name="audioToParameter" size="md" bright />
               Audio-to-Parameter · Segmented CLAP + SigLIP2
             </h1>
-            <p className="mt-1 text-xs text-zinc-500">
-              Последовательный анализ временных точек, независимая интерполяция
-              и синхронное воспроизведение.
-            </p>
+            <V3InfoTip content={t("Последовательный анализ временных точек, независимая интерполяция и синхронное воспроизведение.")} />
           </div>
           <div className="flex flex-wrap gap-2 text-[10px]">
             <Badge variant="outline">{formatTime(audioDuration)}</Badge>
-            <Badge variant="outline">точек: {segments.length}</Badge>
+            <Badge variant="outline">{t("Точек:")} {segments.length}</Badge>
             <Badge
               variant="outline"
               className="border-cyan-400/40 text-cyan-300"
@@ -495,7 +496,7 @@ export function AudioToParameterPage() {
                 <label className="flex min-h-52 cursor-pointer items-center justify-center rounded border border-dashed border-cyan-400/30 bg-black/40">
                   <span className="flex items-center gap-2 text-sm text-zinc-400">
                     <Upload className="size-5" />
-                    Выбрать аудиофайл
+                    {t("Выбрать аудиофайл")}
                   </span>
                   <input
                     className="hidden"
@@ -541,8 +542,8 @@ export function AudioToParameterPage() {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <FieldLabel
-                    label="Raw sampling, сек"
-                    hint="Высокочастотный сбор от 0.5 до 30 секунд. По умолчанию 2 секунды."
+                    label={t("Raw sampling, сек")}
+                    hint={t("Высокочастотный сбор от 0.5 до 30 секунд. По умолчанию 2 секунды.")}
                   />
                   <Input
                     type="number"
@@ -561,7 +562,7 @@ export function AudioToParameterPage() {
                   />
                 </div>
                 <div>
-                  <FieldLabel label="Node interval, сек" hint="Сглаженные узлы итогового timeline: от 0,5 до 360 секунд." />
+                  <FieldLabel label={t("Node interval, сек")} hint={t("Сглаженные узлы итогового timeline: от 0,5 до 360 секунд.")} />
                   <Input type="number" min={0.5} max={360} step={0.5} value={nodeInterval} onChange={(event) => setNodeInterval(Math.max(0.5, Math.min(360, Number(event.target.value) || 0.5)))} />
                 </div>
                 <div className="flex items-end">
@@ -572,13 +573,13 @@ export function AudioToParameterPage() {
                     disabled={!audioDuration || Boolean(busy)}
                   >
                     <Scissors className="size-4" />
-                    Авто-разбивка
+                    {t("Авто-разбивка")}
                   </Button>
                 </div>
                 <div>
                   <FieldLabel
                     label="CLAP Top-K"
-                    hint="Число параметров для каждой временной точки CLAP."
+                    hint={t("Число параметров для каждой временной точки CLAP.")}
                   />
                   <Input
                     type="number"
@@ -598,7 +599,7 @@ export function AudioToParameterPage() {
                 <div>
                   <FieldLabel
                     label="SigLIP Top-K"
-                    hint="Число параметров для каждой спектрограммы SigLIP2."
+                    hint={t("Число параметров для каждой спектрограммы SigLIP2.")}
                   />
                   <Input
                     type="number"
@@ -620,8 +621,8 @@ export function AudioToParameterPage() {
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
                 <div>
                   <FieldLabel
-                    label="Шкала"
-                    hint="Вертикальная шкала Wavesurfer Spectrogram."
+                    label={t("Шкала")}
+                    hint={t("Вертикальная шкала Wavesurfer Spectrogram.")}
                   />
                   <Select
                     value={spectrogramScale}
@@ -645,8 +646,8 @@ export function AudioToParameterPage() {
                 </div>
                 <div>
                   <FieldLabel
-                    label="Рендер"
-                    hint="Windowed считает только видимую область и стабильнее работает с длинными треками."
+                    label={t("Рендер")}
+                    hint={t("Windowed считает только видимую область и стабильнее работает с длинными треками.")}
                   />
                   <Select
                     value={spectrogramRenderer}
@@ -665,8 +666,8 @@ export function AudioToParameterPage() {
                 </div>
                 <div>
                   <FieldLabel
-                    label="SigLIP кадр"
-                    hint="Mel — один mel-график. Composite — mel, STFT, chroma и spectral contrast в одном изображении."
+                    label={t("SigLIP кадр")}
+                    hint={t("Mel — один mel-график. Composite — mel, STFT, chroma и spectral contrast в одном изображении.")}
                   />
                   <Select
                     value={siglipSpectrogramLayout}
@@ -688,8 +689,8 @@ export function AudioToParameterPage() {
                 </div>
                 <div>
                   <FieldLabel
-                    label="Детализация"
-                    hint="FFT: low 512, medium 1024, high 2048. То же качество применяется к изображениям для SigLIP2."
+                    label={t("Детализация")}
+                    hint={t("FFT: low 512, medium 1024, high 2048. То же качество применяется к изображениям для SigLIP2.")}
                   />
                   <Select
                     value={spectrogramDetail}
@@ -711,8 +712,8 @@ export function AudioToParameterPage() {
                 </div>
                 <div>
                   <FieldLabel
-                    label="Палитра"
-                    hint="Палитра видимой спектрограммы."
+                    label={t("Палитра")}
+                    hint={t("Палитра видимой спектрограммы.")}
                   />
                   <Select
                     value={spectrogramColor}
@@ -735,35 +736,35 @@ export function AudioToParameterPage() {
               </div>
 
               <div className="grid gap-2 sm:grid-cols-2">
-                <ToggleRow label="Blend CLAP & SigLIP" checked={blendMode} onChange={setBlendMode} />
-                <ToggleRow label="Vocal Allocation Matrix" checked={vocalMatrixMode} onChange={setVocalMatrixMode} />
+                <ToggleRow label={t("Blend CLAP & SigLIP")} checked={blendMode} onChange={setBlendMode} />
+                <ToggleRow label={t("Vocal Allocation Matrix")} checked={vocalMatrixMode} onChange={setVocalMatrixMode} />
                 <ToggleRow
-                  label="Показывать спектрограмму"
+                  label={t("Показывать спектрограмму")}
                   checked={showSpectrogram}
                   onChange={setShowSpectrogram}
                 />
                 <ToggleRow
-                  label="Показывать CLAP"
+                  label={t("Показывать CLAP")}
                   checked={showClap}
                   onChange={setShowClap}
                 />
                 <ToggleRow
-                  label="Показывать SigLIP2"
+                  label={t("Показывать SigLIP2")}
                   checked={showSiglip}
                   onChange={setShowSiglip}
                 />
                 <ToggleRow
-                  label="Интерполяция CLAP"
+                  label={t("Интерполяция CLAP")}
                   checked={interpolateClap}
                   onChange={setInterpolateClap}
                 />
                 <ToggleRow
-                  label="Интерполяция SigLIP2"
+                  label={t("Интерполяция SigLIP2")}
                   checked={interpolateSiglip}
                   onChange={setInterpolateSiglip}
                 />
               </div>
-              {blendMode ? <div className="space-y-1"><FieldLabel label={`Вес CLAP: ${Math.round(clapWeight * 100)}%`} hint="Остаток веса принадлежит SigLIP2. Scores нормализуются отдельно перед объединением." /><Input type="range" min={0} max={1} step={0.05} value={clapWeight} onChange={(event) => setClapWeight(Number(event.target.value))} /><div className="grid grid-cols-2 gap-2 text-[9px] text-muted-foreground"><span>CLAP trust · {clapTrust.sampleCount ? `${Math.round(clapTrust.trust * 100)}%` : "—"}</span><span>SigLIP2 trust · {siglipTrust.sampleCount ? `${Math.round(siglipTrust.trust * 100)}%` : "—"}</span><label>Low-trust threshold · {Math.round(trustThreshold * 100)}%<input aria-label="Modality low-trust threshold" className="w-full accent-cyan-400" type="range" min="0" max="1" step="0.05" value={trustThreshold} onChange={(event) => setTrustThreshold(Number(event.target.value))} /></label><label>Minimum modality weight · {Math.round(trustFloor * 100)}%<input aria-label="Modality trust floor weight" className="w-full accent-cyan-400" type="range" min="0" max="0.5" step="0.05" value={trustFloor} onChange={(event) => setTrustFloor(Number(event.target.value))} /></label></div></div> : null}
+              {blendMode ? <div className="space-y-1"><FieldLabel label={`${t("Вес CLAP:")} ${Math.round(clapWeight * 100)}%`} hint={t("Остаток веса принадлежит SigLIP2. Scores нормализуются отдельно перед объединением.")} /><Input type="range" min={0} max={1} step={0.05} value={clapWeight} onChange={(event) => setClapWeight(Number(event.target.value))} /><div className="grid grid-cols-2 gap-2 text-[9px] text-muted-foreground"><span>CLAP trust · {clapTrust.sampleCount ? `${Math.round(clapTrust.trust * 100)}%` : "—"}</span><span>SigLIP2 trust · {siglipTrust.sampleCount ? `${Math.round(siglipTrust.trust * 100)}%` : "—"}</span><label>Low-trust threshold · {Math.round(trustThreshold * 100)}%<input aria-label="Modality low-trust threshold" className="w-full accent-cyan-400" type="range" min="0" max="1" step="0.05" value={trustThreshold} onChange={(event) => setTrustThreshold(Number(event.target.value))} /></label><label>Minimum modality weight · {Math.round(trustFloor * 100)}%<input aria-label="Modality trust floor weight" className="w-full accent-cyan-400" type="range" min="0" max="0.5" step="0.05" value={trustFloor} onChange={(event) => setTrustFloor(Number(event.target.value))} /></label></div></div> : null}
 
               <div className="grid grid-cols-2 gap-2">
                 <Button
@@ -776,7 +777,7 @@ export function AudioToParameterPage() {
                   ) : (
                     <Zap className="size-4" />
                   )}
-                  Запустить CLAP
+                  {t("Запустить CLAP")}
                 </Button>
                 <Button
                   className="bg-fuchsia-700 hover:bg-fuchsia-600"
@@ -793,18 +794,18 @@ export function AudioToParameterPage() {
                   ) : (
                     <Zap className="size-4" />
                   )}
-                  Запустить SigLIP2
+                  {t("Запустить SigLIP2")}
                 </Button>
               </div>
               {!morphoStatus?.ready ? (
                 <div className="rounded border border-amber-400/25 bg-amber-950/20 p-2 text-xs text-amber-200">
                   <div>
                     {morphoStatus?.index_job?.running
-                      ? `Перестройка index: ${morphoStatus.index_job.progress?.current ?? 0} / ${morphoStatus.index_job.progress?.total ?? 0}`
-                      : `SigLIP2 index не готов: ${(morphoStatus?.stale_reasons ?? [morphoStatus?.status ?? "unknown"]).join("; ")}`}
+                      ? `${t("Перестройка индекса:")} ${morphoStatus.index_job.progress?.current ?? 0} / ${morphoStatus.index_job.progress?.total ?? 0}`
+                      : `${t("Индекс SigLIP2 не готов:")} ${(morphoStatus?.stale_reasons ?? [morphoStatus?.status ?? "unknown"]).join("; ")}`}
                   </div>
                   <Link className="mt-2 flex w-full items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent" href="/am-core#service-bay">
-                    Открыть Service Bay
+                    {t("Открыть Service Bay")}
                   </Link>
                 </div>
               ) : null}
@@ -815,7 +816,7 @@ export function AudioToParameterPage() {
                   onClick={() => void stop()}
                 >
                   <Square className="size-4" />
-                  Остановить пакетный анализ
+                  {t("Остановить пакетный анализ")}
                 </Button>
               ) : null}
               <Button
@@ -829,10 +830,10 @@ export function AudioToParameterPage() {
                 onClick={exportTimeline}
               >
                 <Download className="size-4" />
-                Экспорт Priority Timeline
+                {t("Экспорт Priority Timeline")}
               </Button>
               <Button className="w-full" variant="ghost" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportLegacyTimeline}>
-                <Download className="size-4" />Экспорт legacy timeline
+                <Download className="size-4" />{t("Экспорт legacy timeline")}
               </Button>
               {notice ? (
                 <div className="rounded border border-cyan-400/20 bg-cyan-950/20 p-2 text-xs text-cyan-200">
@@ -850,7 +851,7 @@ export function AudioToParameterPage() {
           <section className="rounded-lg border border-white/10 bg-black/30 p-3">
             <div className="mb-2 flex items-center justify-between gap-2 text-xs text-zinc-400">
               <span>Parameter Timeline · {formatTime(currentTime)}</span>
-              <span>Нажмите точку для перемотки</span>
+              <V3InfoTip content={t("Нажмите точку для перемотки")} />
             </div>
             <div className="flex gap-1 overflow-x-auto pb-2">
               {segments.map((segment, index) => (
@@ -1007,6 +1008,7 @@ function ParameterTimelineGraph({
   showClap: boolean;
   showSiglip: boolean;
 }) {
+  const t = useUiText();
   const series = useMemo(() => {
     const candidates: GraphSeries[] = [];
     for (const source of ["clap", "siglip"] as const) {
@@ -1058,8 +1060,7 @@ function ParameterTimelineGraph({
   if (!series.length || !duration)
     return (
       <div className="mt-3 flex h-44 items-center justify-center rounded border border-white/10 bg-black text-xs text-zinc-600">
-        После анализа здесь появятся наиболее активно изменяющиеся числовые
-        параметры.
+        <V3InfoTip content={t("После анализа здесь появятся наиболее активно изменяющиеся числовые параметры.")} />
       </div>
     );
   return (
@@ -1068,7 +1069,7 @@ function ParameterTimelineGraph({
         viewBox="0 0 1000 220"
         className="h-52 w-full"
         role="img"
-        aria-label="График параметров во времени"
+        aria-label={t("График параметров во времени")}
       >
         {[0, 0.25, 0.5, 0.75, 1].map((ratio) => (
           <line

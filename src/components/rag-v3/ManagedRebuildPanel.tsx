@@ -92,13 +92,6 @@ export function ManagedRebuildPanel() {
         ))}
       </div>
 
-      {status?.artifacts.find((artifact) => artifact.kind === "clap") ? (
-        <div className="rounded border border-fuchsia-400/25 bg-fuchsia-950/10 p-3">
-          <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-fuchsia-200"><Waves className="size-4" />Независимый CLAP-индекс<V3InfoTip content="CLAP использует отдельную аудио-текстовую модель и не входит в общую embedding-перестройку V3." /></div>
-          <ArtifactCard artifact={status.artifacts.find((artifact) => artifact.kind === "clap")!} running={status.job.running && status.job.stage === "clap"} onStart={() => void start("clap")} disabled={loading || status.job.running} />
-        </div>
-      ) : null}
-
       {status?.job.running ? <div className="text-xs text-cyan-200"><Loader2 className="mr-1 inline size-3.5 animate-spin" />Выполняется: {status.job.stage}</div> : null}
       {status?.job.log_tail.length ? <pre className="max-h-36 overflow-auto rounded border border-white/10 bg-black/50 p-2 text-[10px] text-zinc-400">{status.job.log_tail.join("\n")}</pre> : null}
       {error ? <div className="text-xs text-red-300">{error}</div> : null}

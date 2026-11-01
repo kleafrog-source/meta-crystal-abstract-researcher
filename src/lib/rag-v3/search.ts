@@ -202,7 +202,7 @@ export async function searchV3(params: {
   const activeRelations = await matchRelations(baseQuery, conceptVectors.map((concept) => concept.vector));
   const relationAlignment = buildRelationAlignment(activeRelations, new Set(records.keys()));
   const queryVector = atomQueryVector;
-  const topK = Math.max(1, Math.min(200, Math.round(params.topK)));
+  const topK = Math.max(1, Math.min(700, Math.round(params.topK)));
   const selectedDomainLayers = (params.selectedDomainLayers ?? []).filter((layer) => ACOUSTIC_DOMAIN_LAYERS.some((item) => item.id === layer));
   const layerWeights = Object.fromEntries(ACOUSTIC_DOMAIN_LAYERS.map((layer) => {
     const configured = params.domainLayerWeights?.[layer.id];

@@ -1,15 +1,1 @@
-"use client";
-
-import { AppShell } from "@/components/layout/AppShell";
-import { PageRenderer } from "@/components/layout/PageRenderer";
-
-export default function CombinatorialGenesisRoute() {
-  return (
-    <AppShell>
-      {({ activePage, setActivePage }) => (
-        <PageRenderer activePage={activePage} setActivePage={setActivePage} />
-      )}
-    </AppShell>
-  );
-}
-
+export default function RouteEntry() { return null; }

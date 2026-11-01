@@ -17,6 +17,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from parameter_registry import excluded_names, registry_sha256  # noqa: E402
+from published_parameter_schema import clean_published_parameter  # noqa: E402
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -68,7 +69,8 @@ def retrieval_text(parameter: dict[str, Any]) -> str:
     parts = [
         parameter.get("technical_name", ""), parameter.get("category", ""),
         parameter.get("sub_category", ""), parameter.get("domain", ""),
-        parameter.get("quantity_kind", ""), *(parameter.get("semantic_keywords") or []),
+        parameter.get("quantity_kind", ""), parameter.get("domain_layer", ""),
+        *(parameter.get("semantic_keywords") or []),
         *(parameter.get("lyria_prompt_tags") or []),
     ]
     return " | ".join(str(part) for part in parts if part)
@@ -80,6 +82,7 @@ def semantic_text(parameter: dict[str, Any]) -> str:
         name.replace("_", " "), str(parameter.get("name_ru", "")),
         str(parameter.get("description_en", "")), str(parameter.get("description_ru", "")),
         f"category {parameter.get('category', '')}", f"subcategory {parameter.get('sub_category', '')}",
+        f"domain layer {parameter.get('domain_layer', '')}",
         "tags " + ", ".join(map(str, parameter.get("lyria_prompt_tags", []))),
         "keywords " + ", ".join(map(str, parameter.get("semantic_keywords", []))),
         f"unit {parameter.get('unit', '')}",
@@ -150,15 +153,34 @@ def cached_vectors(model: str) -> dict[str, tuple[list[float], str, str, str]]:
     return result
 
 
+def catalogue_deleted_names() -> set[str]:
+    """Keep catalogue physical deletions excluded from the published retrieval set."""
+    tombstones = DATA_ROOT / "library" / "catalogue-deleted.json"
+    if not tombstones.exists():
+        return set()
+    value = read_json(tombstones)
+    if isinstance(value, list):
+        return {str(name) for name in value if isinstance(name, str) and name}
+    if isinstance(value, dict) and isinstance(value.get("technical_names"), list):
+        return {str(name) for name in value["technical_names"] if isinstance(name, str) and name}
+    raise ValueError(f"Invalid catalogue tombstone file: {tombstones}")
+
+
 def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], bool]:
     library = read_json(DATA_ROOT / "library" / "parameters.json")
-    latest = read_json(DATA_ROOT / "datasets" / "latest.json")
-    frozen = read_json(DATA_ROOT / "datasets" / latest["version_id"] / "parameters.json")
     records: dict[str, tuple[dict[str, Any], str]] = {
         str(item["technical_name"]): ({**item, "retrieval_scope": classify_retrieval_scope(item)}, "library") for item in library
     }
-    for item in frozen:
-        records.setdefault(str(item["technical_name"]), ({**item, "retrieval_scope": classify_retrieval_scope(item)}, "frozen"))
+    latest = read_json(DATA_ROOT / "datasets" / "latest.json")
+    deleted_names = catalogue_deleted_names()
+    records = {name: value for name, value in records.items() if name not in deleted_names}
+    records = {
+        name: (
+            {**clean_published_parameter(item), "retrieval_scope": classify_retrieval_scope(item)},
+            source,
+        )
+        for name, (item, source) in records.items()
+    }
     write_json(DATA_ROOT / "v3" / "dataset.json", [item for item, _source in records.values()])
     excluded = excluded_names(DATA_ROOT)
     records = {name: value for name, value in records.items() if name not in excluded}
@@ -172,7 +194,6 @@ def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], b
         text = semantic_text(parameter) if text_kind == "semantic" else retrieval_text(parameter)
         if vector_info and vector_info[3] != sha256_text(text):
             vector_info = None
-            text = retrieval_text(parameter)
         if vector_info:
             reusable_names.add(name)
         planned.append({
@@ -217,7 +238,7 @@ def build(model: str, endpoint: str, batch_size: int) -> tuple[dict[str, Any], b
     manifest = {
         "schema_version": 1, "created_at": datetime.now(timezone.utc).isoformat(),
         "cache_sha256": cache_hash, "model": model, "dimensions": dimensions,
-        "parameter_count": len(planned), "library_count": len(library), "frozen_count": len(frozen),
+        "parameter_count": len(planned),
         "dataset_version": latest["version_id"], "vector_origins": origins,
         "excluded_count": len(excluded), "excluded_sha256": registry_sha256(DATA_ROOT),
         "source_parameter_count": len(planned),

@@ -37,8 +37,10 @@ import type {
 } from "@/lib/cross-modal/types";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { interpolateTransition } from "@/lib/cross-modal/transition";
+import { useUiText } from "@/lib/ui-i18n";
 
 export function CrossModalConsensusPage() {
+  const t = useUiText();
   const [records, setRecords] = useState<JournalRecord[]>([]);
   const [busy, setBusy] = useState(false);
   const [verifying, setVerifying] = useState<string | null>(null);
@@ -415,11 +417,6 @@ export function CrossModalConsensusPage() {
               Cross-Modal Journal
               <V3InfoTip content="Записи неизменяемы и адресуются SHA-256. Проверки цикла сохраняются отдельно, поэтому повторная проверка не уничтожает историю." />
             </div>
-            <p className="mt-2 text-xs text-zinc-400">
-              Сохраните результат одного из поисковых режимов, затем запустите
-              Reverse Query → независимый повторный поиск V3. Система покажет
-              совпадение состава, рангов, значений и scope.
-            </p>
           </section>
           <section className="space-y-3 rounded-lg border border-fuchsia-400/25 bg-fuchsia-950/10 p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -452,8 +449,8 @@ export function CrossModalConsensusPage() {
                     <RefreshCw className="size-4" />
                   )}
                   {bridgeStatus?.ready
-                    ? "Обновить Bridge index"
-                    : "Построить Bridge index"}
+                    ? t("Обновить Bridge index")
+                    : t("Построить Bridge index")}
                 </Button>
               </V3Tooltip>
             </div>
@@ -464,7 +461,7 @@ export function CrossModalConsensusPage() {
                 onChange={(event) => setBridgeRecord(event.target.value)}
               >
                 <option value="">
-                  Выберите verified Audio или Image запись
+                  {t("Выберите verified Audio или Image запись")}
                 </option>
                 {bridgeRecords.map((record) => (
                   <option key={record.id} value={record.id}>
@@ -482,7 +479,7 @@ export function CrossModalConsensusPage() {
                     setBridgeMatches([]);
                   }}
                 />
-                Включить review
+                {t("Включить review")}
               </label>
               <V3Tooltip content="Ищет записи противоположной модальности. Совпадение самой записи и одинакового media asset исключается.">
                 <Button
@@ -502,8 +499,7 @@ export function CrossModalConsensusPage() {
             </div>
             {!bridgeRecords.length ? (
               <div className="rounded border border-dashed border-white/10 p-3 text-xs text-zinc-500">
-                Нет подходящих verified{includeReview ? "/review" : ""}{" "}
-                Audio/Image записей. Rejected записи намеренно не индексируются.
+                {t("Нет подходящих verified Audio/Image записей. Rejected записи намеренно не индексируются.").replace("verified", `verified${includeReview ? "/review" : ""}`)}
               </div>
             ) : null}
             {bridgeMatches.length ? (
@@ -720,7 +716,7 @@ export function CrossModalConsensusPage() {
                 }}
                 className="h-9 min-w-0 w-full truncate rounded border border-white/15 bg-black/50 px-3 text-xs"
               >
-                <option value="">Точка A</option>
+                <option value="">{t("Точка A")}</option>
                 {records.map((record) => (
                   <option key={record.id} value={record.id}>
                     {record.snapshot.modality} · {record.label}
@@ -739,7 +735,7 @@ export function CrossModalConsensusPage() {
                 }}
                 className="h-9 min-w-0 w-full truncate rounded border border-white/15 bg-black/50 px-3 text-xs"
               >
-                <option value="">Точка B</option>
+                <option value="">{t("Точка B")}</option>
                 {records.map((record) => (
                   <option key={record.id} value={record.id}>
                     {record.snapshot.modality} · {record.label}
@@ -872,8 +868,7 @@ export function CrossModalConsensusPage() {
           ) : null}
           {!records.length && !busy ? (
             <div className="rounded-lg border border-dashed border-white/15 bg-black/20 p-10 text-center text-sm text-zinc-500">
-              Journal пока пуст. Выполните поиск в одном из трёх режимов и
-              сохраните результат.
+              {t("Journal пока пуст. Выполните поиск в одном из трёх режимов и сохраните результат.")}
             </div>
           ) : null}
           <section className="space-y-2">
@@ -1070,8 +1065,8 @@ export function CrossModalConsensusPage() {
                                 <RotateCcw className="size-4" />
                               )}
                               {verification
-                                ? "Проверить повторно"
-                                : "Проверить цикл"}
+                                ? t("Проверить повторно")
+                                : t("Проверить цикл")}
                             </Button>
                           </V3Tooltip>
                           {verifying === record.id ? (
@@ -1136,7 +1131,7 @@ export function CrossModalConsensusPage() {
                               disabled={busy}
                             >
                               <Check className="size-4" />
-                              Подтвердить
+                              {t("Подтвердить")}
                             </Button>
                           </V3Tooltip>
                           <V3Tooltip content="Сохраняет ручное отклонение отдельно от машинного результата.">
@@ -1148,7 +1143,7 @@ export function CrossModalConsensusPage() {
                               disabled={busy}
                             >
                               <X className="size-4" />
-                              Отклонить
+                              {t("Отклонить")}
                             </Button>
                           </V3Tooltip>
                         </div>

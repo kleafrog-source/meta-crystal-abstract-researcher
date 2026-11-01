@@ -4,15 +4,11 @@ import { Sidebar, type PageId } from "./Sidebar";
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronRight } from "@/components/icons";
-
-interface AppShellProps {
-  children: (props: {
-    activePage: PageId;
-    setActivePage: (p: PageId) => void;
-  }) => React.ReactNode;
-}
+import { PageRenderer } from "./PageRenderer";
+import { UiLocaleProvider } from "@/lib/ui-i18n";
 
 function pathnameToPage(pathname: string): PageId {
+  if (pathname === "/am-parameters-catalogue") return "amparameterscatalogue";
   if (pathname === "/rag-parameters-v3" || pathname === "/am-core") {
     return "ragparametersv3";
   }
@@ -37,6 +33,7 @@ function pathnameToPage(pathname: string): PageId {
   }
 
   if (pathname === "/am-stage") return "amstage";
+  if (pathname === "/lexicon-status") return "lexiconstatus";
 
   if (pathname === "/meta-crystal-v3-lab") {
     return "metacrystalv3lab";
@@ -59,7 +56,11 @@ function pathnameToPage(pathname: string): PageId {
   return "dashboard";
 }
 
-export function AppShell({ children }: AppShellProps) {
+export function AppShell({ initialLanguage }: { initialLanguage: "en" | "ru" | "de" }) {
+  return <UiLocaleProvider initialLanguage={initialLanguage}><AppShellContent /></UiLocaleProvider>;
+}
+
+function AppShellContent() {
   const pathname = usePathname();
   const router = useRouter();
   const [activePage, setActivePage] = useState<PageId>("dashboard");
@@ -98,6 +99,11 @@ export function AppShell({ children }: AppShellProps) {
 
     if (page === "ragparametersv3") {
       router.push("/am-core");
+      return;
+    }
+
+    if (page === "amparameterscatalogue") {
+      router.push("/am-parameters-catalogue");
       return;
     }
 
@@ -163,13 +169,10 @@ export function AppShell({ children }: AppShellProps) {
         </button>
       )}
       <main className={`flex-1 min-w-0 flex flex-col app-shell-main ${sidebarOpen ? "" : "sidebar-collapsed"}`}>
-        {children({
-          activePage:
-            pathnameToPage(pathname) === "dashboard"
-              ? activePage
-              : pathnameToPage(pathname),
-          setActivePage,
-        })}
+        <PageRenderer
+          activePage={pathnameToPage(pathname) === "dashboard" ? activePage : pathnameToPage(pathname)}
+          setActivePage={setActivePage}
+        />
       </main>
     </div>
   );

@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { Contrast, Moon, Sun } from "lucide-react";
 import { applyAppearance, DEFAULT_APPEARANCE, normalizeAppearance, PALETTES, type AppearanceConfig, type PaletteId, type ThemeMode } from "@/lib/appearance";
 import type { PageId } from "./Sidebar";
+import { useUiText } from "@/lib/ui-i18n";
 
 export function AppearancePicker({ page }: { page: PageId }) {
+  const t = useUiText();
   const [config, setConfig] = useState<AppearanceConfig>(DEFAULT_APPEARANCE);
   const choice = config.activeByMode[page] ?? { palette: "emerald" as PaletteId, mode: "dark" as ThemeMode };
   useEffect(() => {
@@ -28,8 +30,8 @@ export function AppearancePicker({ page }: { page: PageId }) {
     applyAppearance(updated, updated.activeByMode[page].palette, updated.activeByMode[page].mode);
     void fetch("/api/appearance", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ appearance: updated }) }).then(() => window.dispatchEvent(new Event("appearance:changed"))).catch(() => {});
   };
-  return <div className="appearance-picker space-y-2 border-t border-border px-3 py-2" aria-label="Оформление">
-    <div className="flex items-center justify-between" role="group" aria-label="Цветовой пресет">{PALETTES.map((palette) => <button key={palette.id} type="button" aria-label={`Пресет ${palette.label}`} aria-pressed={choice.palette === palette.id} title={palette.label} onClick={() => select({ palette: palette.id })} className="appearance-swatch" style={{ "--swatch": `hsl(${config.palettes[palette.id][choice.mode].activeHue} 68% 58%)` } as React.CSSProperties} />)}</div>
-    <div className="flex items-center justify-center gap-2" role="group" aria-label="Цветовая тема">{([ ["dark", Moon, "Тёмная"], ["light", Sun, "Светлая"], ["medium", Contrast, "Средняя"] ] as const).map(([mode, Icon, label]) => <button key={mode} type="button" aria-label={label} aria-pressed={choice.mode === mode} title={label} onClick={() => select({ mode })} className={`appearance-mode ${choice.mode === mode ? "selected" : ""}`}><Icon className="size-4" /></button>)}</div>
+  return <div className="appearance-picker space-y-2 border-t border-border px-3 py-2" aria-label={t("Оформление")}>
+    <div className="flex items-center justify-between" role="group" aria-label={t("Цветовой пресет")}>{PALETTES.map((palette) => <button key={palette.id} type="button" aria-label={t(`Пресет ${palette.label}`)} aria-pressed={choice.palette === palette.id} title={palette.label} onClick={() => select({ palette: palette.id })} className="appearance-swatch" style={{ "--swatch": `hsl(${config.palettes[palette.id][choice.mode].activeHue} 68% 58%)` } as React.CSSProperties} />)}</div>
+    <div className="flex items-center justify-center gap-2" role="group" aria-label={t("Цветовая тема")}>{([ ["dark", Moon, "Тёмная"], ["light", Sun, "Светлая"], ["medium", Contrast, "Средняя"] ] as const).map(([mode, Icon, label]) => <button key={mode} type="button" aria-label={t(label)} aria-pressed={choice.mode === mode} title={t(label)} onClick={() => select({ mode })} className={`appearance-mode ${choice.mode === mode ? "selected" : ""}`}><Icon className="size-4" /></button>)}</div>
   </div>;
 }

@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { cleanPublishedParameter } from "./parameter-schema";
 
 export interface RuntimeAtomRow {
   atom: string;
@@ -26,11 +27,12 @@ export interface RuntimeParameterRecord {
   min_value?: number;
   max_value?: number;
   step?: number;
-  default?: number | string;
+  default?: number | string | number[];
   options?: string[];
   quantity_kind?: string | null;
   lyria_prompt_tags?: string[];
   semantic_keywords?: string[];
+  domain?: string;
 }
 
 interface RuntimeIndexManifest {
@@ -117,7 +119,7 @@ async function loadRuntimeIndex(): Promise<LoadedRuntimeIndex> {
     rows,
     vectors: readVectors(binary, manifest.atom_count, manifest.dimensions),
     frozenNames: new Set(parameters.flatMap((item) => item.technical_name ? [item.technical_name] : [])),
-    frozenParameters: parameters,
+    frozenParameters: parameters.map((item) => cleanPublishedParameter(item as unknown as Record<string, unknown>) as RuntimeParameterRecord),
   };
   return cached;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
   Loader2,
   RefreshCw,
@@ -17,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { AMIcon } from "@/components/ui/am-icon";
 import { Input } from "@/components/ui/input";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
+import { useUiText } from "@/lib/ui-i18n";
 
 interface Status {
   ready: boolean;
@@ -41,7 +43,8 @@ interface Job {
 }
 type ValueMode = "expressive" | "conservative" | "default";
 
-export function MorphoAcousticRagPage() {
+export function MorphoAcousticRagPage({ active = true }: { active?: boolean } = {}) {
+  const t = useUiText();
   const [status, setStatus] = useState<Status | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -61,37 +64,16 @@ export function MorphoAcousticRagPage() {
     setStatus(payload);
   }, []);
   useEffect(() => {
-    let disposed = false;
-    const load = async () => {
-      try {
-        await refresh();
-      } catch (caught) {
-        if (!disposed) setError(String(caught));
-      }
-    };
-    void load();
-    return () => {
-      disposed = true;
-    };
-  }, [refresh]);
+    if (!active) return;
+    void refresh().catch((caught) => setError(String(caught)));
+  }, [active, refresh]);
   useEffect(() => {
-    if (!status?.index_job.running && !status?.search_job.running) return;
-    let disposed = false;
-    const load = async () => {
-      try {
-        await refresh();
-      } catch (caught) {
-        if (!disposed) setError(String(caught));
-      }
-    };
+    if (!active || (!status?.index_job.running && !status?.search_job.running)) return;
     const timer = window.setInterval(() => {
-      if (document.visibilityState === "visible") void load();
+      if (document.visibilityState === "visible") void refresh().catch(() => undefined);
     }, 1200);
-    return () => {
-      disposed = true;
-      window.clearInterval(timer);
-    };
-  }, [refresh, status?.index_job.running, status?.search_job.running]);
+    return () => window.clearInterval(timer);
+  }, [active, refresh, status?.index_job.running, status?.search_job.running]);
   useEffect(
     () => () => {
       if (preview) URL.revokeObjectURL(preview);
@@ -107,14 +89,6 @@ export function MorphoAcousticRagPage() {
     setParameters([]);
     setAnchoredCount(0);
     setError("");
-  };
-  const indexAction = async (method: "POST" | "DELETE") => {
-    setError("");
-    const response = await fetch("/api/morpho/index", { method });
-    const payload = await response.json();
-    if (!response.ok)
-      setError(payload.error ?? payload.reason ?? `HTTP ${response.status}`);
-    await refresh();
   };
   const search = async () => {
     if (!file) return;
@@ -167,11 +141,8 @@ export function MorphoAcousticRagPage() {
             <h1 className="flex items-center gap-2 font-mono text-lg font-semibold">
               <AMIcon name="morpho" size="md" bright />
               Morpho-Acoustic RAG · SigLIP2
+              <V3InfoTip content={t("Изображение → релевантные параметры V3 → значения из SigLIP2 anchors, axes и relations.")} />
             </h1>
-            <p className="mt-1 text-xs text-zinc-500">
-              Изображение → релевантные параметры V3 → значения из SigLIP2
-              anchors, axes и relations.
-            </p>
           </div>
           <div className="flex gap-2">
             <Badge variant="outline">{status?.status ?? "loading"}</Badge>
@@ -199,47 +170,11 @@ export function MorphoAcousticRagPage() {
                   </div>
                 ) : null}
               </div>
-              <div className="flex gap-2">
-                <V3Tooltip content="Кодирует новые и изменённые тексты параметров; неизменённые векторы переиспользуются.">
-                  <Button
-                    size="sm"
-                    onClick={() => void indexAction("POST")}
-                    disabled={status?.index_job.running}
-                  >
-                    <RefreshCw
-                      className={
-                        status?.index_job.running
-                          ? "size-4 animate-spin"
-                          : "size-4"
-                      }
-                    />
-                    Построить индекс
-                  </Button>
-                </V3Tooltip>
-                <V3Tooltip content="Останавливает построение, не повреждая предыдущий готовый индекс.">
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => void indexAction("DELETE")}
-                    disabled={!status?.index_job.running}
-                  >
-                    <Square className="size-4" />
-                    Остановить
-                  </Button>
-                </V3Tooltip>
-              </div>
+              <Link className="text-xs underline underline-offset-4" href="/am-core#service-bay">{t("Перейти в Service Bay для управления индексом")}</Link>
             </div>
-            {status?.index_job.running ? (
-              <div className="mt-2 text-xs text-cyan-200">
-                <Loader2 className="mr-1 inline size-4 animate-spin" />
-                {status.index_job.progress.stage ?? "загрузка модели"} ·{" "}
-                {status.index_job.progress.current}/
-                {status.index_job.progress.total}
-              </div>
-            ) : null}
             {status?.manifest ? (
               <div className="mt-2 text-xs text-zinc-500">
-                Параметров: {status.manifest.parameter_count} · encoded:{" "}
+                {t("Параметров:")} {status.manifest.parameter_count} · encoded:{" "}
                 {status.manifest.encoded} · reused: {status.manifest.reused}
               </div>
             ) : null}
@@ -256,7 +191,7 @@ export function MorphoAcousticRagPage() {
                 ) : (
                   <span className="flex items-center gap-2 text-sm text-zinc-400">
                     <Upload className="size-5" />
-                    Выбрать изображение
+                    {t("Выбрать изображение")}
                   </span>
                 )}
                 <input
@@ -269,7 +204,7 @@ export function MorphoAcousticRagPage() {
             </div>
             <div className="flex flex-col gap-3">
               <div className="text-sm font-semibold">
-                Поиск
+                {t("Поиск")}
                 <V3InfoTip content="Cosine similarity ранжирует параметры по близости к изображению. Затем выбранный режим определяет значения Range, Select и Toggle по SigLIP2-анкорам." />
               </div>
               <label className="grid gap-1 text-xs">
@@ -284,7 +219,7 @@ export function MorphoAcousticRagPage() {
               </label>
               <div className="grid gap-1">
                 <div className="flex items-center gap-1 text-xs">
-                  Режим значений
+                  {t("Режим значений")}
                   <V3InfoTip content="Expressive применяет найденные позиции полностью. Conservative смешивает их с default. Default only отключает автоматический выбор значений." />
                 </div>
                 <div className="grid grid-cols-3 gap-1">
@@ -314,7 +249,7 @@ export function MorphoAcousticRagPage() {
                 onClick={() => setVocalMatrixMode((value) => !value)}
                 disabled={busy}
               ><AMIcon name="vocal" size="sm" />Vocal Matrix</Button>
-              <div className="flex items-center gap-1 text-xs text-zinc-500">Фильтрует расширенный SigLIP2-поиск до вокальной матрицы.<V3InfoTip content="Работает и с обычным изображением, и с загруженным изображением спектрограммы. Значения выбираются текущим режимом Expressive/Conservative/Default." /></div>
+              <div className="flex items-center gap-1 text-xs text-zinc-500"><V3InfoTip content={t("Фильтрует расширенный SigLIP2-поиск до вокальной матрицы. Работает и с обычным изображением, и с изображением спектрограммы.")} /></div>
               <Button
                 onClick={() => void search()}
                 disabled={!file || !status?.ready || busy}
@@ -352,7 +287,7 @@ export function MorphoAcousticRagPage() {
               <div className="text-xs text-zinc-500">
                 Файл: {file?.name ?? "не выбран"}
                 <br />
-                Результатов: {parameters.length} · значений подобрано:{" "}
+                {t("Результатов:")} {parameters.length} · {t("значений подобрано:")}{" "}
                 {anchoredCount}
               </div>
               {error ? (

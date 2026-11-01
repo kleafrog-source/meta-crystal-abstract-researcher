@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { V3InfoTip, V3Tooltip } from "@/components/rag-v3/V3Tooltip";
+import { useUiText } from "@/lib/ui-i18n";
 
 interface Gap {
   gap_id: string;
@@ -65,6 +66,7 @@ const labels: Record<Gap["kind"], string> = {
 };
 
 export function WhiteSpaceDiscoveryPage() {
+  const t = useUiText();
   const router = useRouter();
   const [status, setStatus] = useState<Status | null>(null);
   const [error, setError] = useState("");
@@ -153,11 +155,8 @@ export function WhiteSpaceDiscoveryPage() {
                   White Space Discovery
                 </h1>
                 <V3InfoTip content="Ищет проверяемые пробелы покрытия. Режим ничего не публикует и не запускает LLM автоматически." />
+                <V3InfoTip content={t("Таксономические, атомные и локально-разреженные области текущей V3. UMAP не используется как доказательство лакуны.")} />
               </div>
-              <p className="mt-2 max-w-4xl text-sm text-zinc-400">
-                Таксономические, атомные и локально-разреженные области текущей
-                V3. UMAP не используется как доказательство лакуны.
-              </p>
             </div>
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline">{status?.status ?? "loading"}</Badge>
@@ -166,8 +165,8 @@ export function WhiteSpaceDiscoveryPage() {
               </Badge>
               <Badge variant="outline">
                 {status?.report
-                  ? `${status.report.parameter_count} параметров`
-                  : "нет отчёта"}
+                  ? `${t("Параметров:")} ${status.report.parameter_count}`
+                  : t("нет отчёта")}
               </Badge>
             </div>
           </div>
@@ -252,7 +251,7 @@ export function WhiteSpaceDiscoveryPage() {
                   key={item}
                   className="rounded-lg border border-white/10 bg-black/30 p-3"
                 >
-                  <div className="text-xs text-zinc-500">{labels[item]}</div>
+                  <div className="text-xs text-zinc-500">{t(labels[item])}</div>
                   <div className="mt-1 text-2xl font-semibold text-cyan-200">
                     {status.report?.summary[item] ?? 0}
                   </div>
@@ -324,7 +323,7 @@ export function WhiteSpaceDiscoveryPage() {
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline">{labels[item.kind]}</Badge>
+                        <Badge variant="outline">{t(labels[item.kind])}</Badge>
                         <span className="text-[10px] text-zinc-500">
                           P {item.priority.toFixed(3)} · C{" "}
                           {item.confidence.toFixed(3)}

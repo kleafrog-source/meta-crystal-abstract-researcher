@@ -5,6 +5,8 @@ import { ListChecks, SearchX } from "lucide-react";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { useRagV3Store } from "@/store/rag-v3-store";
 import { ParameterControl } from "./ParameterControl";
+import { V3InfoTip } from "./V3Tooltip";
+import { useUiText } from "@/lib/ui-i18n";
 
 export function VirtualizedParamList(props: {
   parameters?: ActiveParameter[];
@@ -18,6 +20,7 @@ export function VirtualizedParamList(props: {
   dataScope?: "am-stage";
   titleOrder?: "en-ru" | "ru-en";
 }) {
+  const t = useUiText();
   const storeParameters = useRagV3Store((state) => state.activeParameters);
   const isSearching = useRagV3Store((state) => state.isSearching);
   const parameters = props.parameters ?? storeParameters;
@@ -33,12 +36,10 @@ export function VirtualizedParamList(props: {
           </div>
           <div className="space-y-1">
             <p className="text-sm font-medium">
-              {isSearching ? "Scoping and anchoring parameters..." : "No active parameters yet"}
+              {isSearching ? t("Scoping and anchoring parameters...") : t("No active parameters yet")}
             </p>
             {!isSearching ? (
-              <p className="text-xs text-muted-foreground">
-                Run a semantic query above and the unified V3 parameters will appear here.
-              </p>
+              <V3InfoTip content={t("Run a semantic query above and the unified V3 parameters will appear here.")} />
             ) : null}
           </div>
         </div>

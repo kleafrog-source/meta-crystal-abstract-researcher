@@ -6,8 +6,8 @@ import { loadEmbeddingRuntimeSettings, embeddingProcessEnv } from "@/lib/embeddi
 import { excludedRegistrySha, readExcludedRegistry } from "@/lib/combinatorial-genesis/registry";
 import { getV3SnapshotIdentity } from "@/lib/rag-v3/snapshot";
 
-export type RebuildKind = "composite" | "atoms" | "anchors" | "range" | "select" | "relations" | "clap" | "all_qwen";
-export type ArtifactKind = Exclude<RebuildKind, "all_qwen">;
+export type RebuildKind = "composite" | "atoms" | "anchors" | "range" | "select" | "relations" | "clap" | "all_qwen" | "catalogue";
+export type ArtifactKind = Exclude<RebuildKind, "all_qwen" | "catalogue">;
 
 export interface ManagedJob {
   running: boolean;
@@ -117,7 +117,9 @@ export async function startManagedRebuild(kind: RebuildKind) {
   shared.__ragV3ManagedJob = job;
   const stages: ArtifactKind[] = kind === "all_qwen"
     ? ["composite", "atoms", "anchors", "range", "select", "relations"]
-    : [kind];
+    : kind === "catalogue"
+      ? ["composite", "anchors"]
+      : [kind];
   void (async () => {
     let exitCode = 0;
     for (const stage of stages) {

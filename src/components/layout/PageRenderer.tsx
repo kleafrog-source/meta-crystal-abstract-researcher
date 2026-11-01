@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 
 import { AMCoreDashboard } from "@/components/pages/AMCoreDashboard";
 import { RagParametersV3Page } from "@/components/pages/RagParametersV3Page";
+import { AMParametersCataloguePage } from "@/components/pages/AMParametersCataloguePage";
 import { CombinatorialGenesisPage } from "@/components/pages/CombinatorialGenesisPage";
 import { CombinatorialSynthesisPage } from "@/components/pages/CombinatorialSynthesisPage";
 import { AudioClapRagPage } from "@/components/pages/AudioClapRagPage";
@@ -12,7 +13,20 @@ import { AMStagePage } from "@/components/pages/AMStagePage";
 import { MorphoAcousticRagPage } from "@/components/pages/MorphoAcousticRagPage";
 import { VocalAllocationMatrixPage } from "@/components/pages/VocalAllocationMatrixPage";
 import { Settings } from "@/components/pages/Settings";
+import LexiconStatusPage from "@/app/lexicon-status/page";
 import type { PageId } from "@/components/layout/Sidebar";
+import { useEffect, useState } from "react";
+
+const SESSION_PAGES = new Set<PageId>([
+  "amparameterscatalogue",
+  "ragparametersv3",
+  "combinatorialgenesis",
+  "combinatorialsynthesis",
+  "audioclaprag",
+  "audiotoparameter",
+  "amstage",
+  "morphoacousticrag",
+]);
 
 const SemanticPlane = dynamic(() => import("@/components/pages/SemanticPlane").then((module) => module.SemanticPlane));
 const Generation = dynamic(() => import("@/components/pages/Generation").then((module) => module.Generation));
@@ -37,7 +51,17 @@ export function PageRenderer(props: {
   activePage: PageId;
   setActivePage: (page: PageId) => void;
 }) {
-  switch (props.activePage) {
+  const [visited, setVisited] = useState<PageId[]>([props.activePage]);
+  useEffect(() => {
+    if (SESSION_PAGES.has(props.activePage)) {
+      setVisited((current) => current.includes(props.activePage) ? current : [...current, props.activePage]);
+    }
+  }, [props.activePage]);
+
+  const renderPage = (page: PageId) => {
+  switch (page) {
+    case "amparameterscatalogue":
+      return <AMParametersCataloguePage />;
     case "dashboard":
       return <AMCoreDashboard onNavigate={props.setActivePage} />;
     case "generation":
@@ -77,9 +101,9 @@ export function PageRenderer(props: {
     case "audioclaprag":
       return <AudioClapRagPage />;
     case "audiotoparameter":
-      return <AudioToParameterPage />;
+      return <AudioToParameterPage active={page === props.activePage} />;
     case "amstage":
-      return <AMStagePage />;
+      return <AMStagePage active={page === props.activePage} />;
     case "metacrystalv3lab":
       return <MetaCrystalV3LabPage />;
     case "whitespacediscovery":
@@ -87,14 +111,26 @@ export function PageRenderer(props: {
     case "knowledgegraph":
       return <KnowledgeGraphPage />;
     case "morphoacousticrag":
-      return <MorphoAcousticRagPage />;
+      return <MorphoAcousticRagPage active={page === props.activePage} />;
     case "crossmodalconsensus":
       return <CrossModalConsensusPage />;
     case "vocalallocationmatrix":
       return <VocalAllocationMatrixPage />;
     case "settings":
       return <Settings />;
+    case "lexiconstatus":
+      return <LexiconStatusPage />;
     default:
       return <AMCoreDashboard onNavigate={props.setActivePage} />;
   }
+  };
+
+  const pagesToRender = visited.includes(props.activePage) ? visited : [...visited, props.activePage];
+  return <>
+    {pagesToRender.map((page) => (
+      <div key={page} className="flex-1 min-w-0" hidden={page !== props.activePage} aria-hidden={page !== props.activePage}>
+        {renderPage(page)}
+      </div>
+    ))}
+  </>;
 }
