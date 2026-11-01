@@ -6,10 +6,19 @@ import numpy as np
 import soundfile as sf
 from scipy.signal import lfilter
 
-from stage7_acoustic_features import analyze_segment
+from stage7_acoustic_features import _load_audio_range, analyze_segment
 
 
 class Stage7AcousticFeaturesTest(unittest.TestCase):
+    def test_loads_the_requested_offset_range_without_double_slicing(self):
+        sample_rate = 16_000
+        audio = np.linspace(-0.5, 0.5, sample_rate * 4, dtype=np.float32)
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "range.wav"
+            sf.write(source, audio, sample_rate)
+            waveform = _load_audio_range(source, 1.0, 2.0)
+        self.assertEqual(len(waveform), sample_rate * 2)
+
     def test_extracts_levels_spectral_stats_and_timeline_seconds(self):
         sample_rate = 16_000
         time = np.arange(sample_rate * 3) / sample_rate

@@ -56,6 +56,15 @@ import {
   type AudioEngine,
   type AudioSegmentResultPoint,
 } from "@/lib/audio-segment-result";
+import {
+  buildAlignedAudioAnalysisPoints,
+  collectStage7WindowEvents,
+  loadStage7RhythmSources,
+  resetSegmentsForWindowMode,
+  stage7FeaturesCoverRange,
+  type AudioWindowMode,
+  type Stage7RhythmSource,
+} from "@/lib/audio-window-modes";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { ACOUSTIC_DOMAIN_LAYERS, GLOBAL_CONSENSUS_LAYER } from "@/lib/domain-layers";
 import { useRagV3Store } from "@/store/rag-v3-store";
@@ -188,6 +197,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [analysisStart, setAnalysisStart] = useState(0);
   const [analysisEnd, setAnalysisEnd] = useState(0);
   const [segmentInterval, setSegmentInterval] = useState(2);
+  const [windowMode, setWindowMode] = useState<AudioWindowMode>("uniform");
+  const [windowSourceSegments, setWindowSourceSegments] = useState<Stage7RhythmSource[]>([]);
+  const [windowModeBusy, setWindowModeBusy] = useState(false);
   const [nodeInterval, setNodeInterval] = useState(20);
   const [segments, setSegments] = useState<SegmentPoint[]>([]);
   const [clapTopK, setClapTopK] = useState(20);
@@ -316,6 +328,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setCurrentTime(0);
     setRegionOffset(0);
     setSegments([]);
+    setWindowMode("uniform");
+    setWindowSourceSegments([]);
     setStoppedEngine(null);
     setError("");
     setNotice(
@@ -323,35 +337,60 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     );
   }, []);
 
-  const splitTrack = useCallback((overrides?: { duration?: number; interval?: number; start?: number; end?: number }) => {
+  const regenerateWindowMode = useCallback(async (
+    mode: AudioWindowMode,
+    overrides?: { duration?: number; interval?: number; start?: number; end?: number },
+  ) => {
     const duration = overrides?.duration ?? audioDuration;
     const interval = overrides?.interval ?? segmentInterval;
     const start = overrides?.start ?? analysisStart;
     const end = overrides?.end ?? (analysisEnd || duration);
-    const points = buildAudioAnalysisPoints(duration, interval, start, end);
-    if (!points.length) {
-      setError("Укажите корректный временной диапазон: конец должен быть позже начала минимум на 0,1 секунды.");
-      setSegments([]);
+    const uniformPoints = buildAudioAnalysisPoints(duration, interval, start, end);
+    if (!uniformPoints.length) { setError(t("Укажите корректный временной диапазон: конец должен быть позже начала минимум на 0,1 секунды.")); return; }
+    setError("");
+
+    if (mode === "uniform") {
+      setWindowMode(mode);
+      setSegments(resetSegmentsForWindowMode(uniformPoints));
+      setRegionOffset(uniformPoints[0].offset);
+      setRegionDuration(uniformPoints[0].duration);
+      setCurrentTime(uniformPoints[0].time);
+      setStoppedEngine(null);
+      setNotice(`${t("Uniform windows prepared")}: ${uniformPoints.length}.`);
       return;
     }
-    setSegments(
-      points.map((point) => ({
-        ...point,
-        clap: [],
-        siglip: [],
-        clapStatus: "pending",
-        siglipStatus: "pending",
-      })),
-    );
-    setRegionOffset(0);
-    setRegionDuration(
-      Math.min(interval, duration || interval),
-    );
-    setCurrentTime(0);
-    setStoppedEngine(null);
-    setNotice(`Подготовлено точек анализа: ${points.length}.`);
-    setError("");
-  }, [analysisEnd, analysisStart, audioDuration, segmentInterval]);
+    if (windowModeBusy || busy) return;
+    setWindowModeBusy(true);
+    try {
+      let sources = windowSourceSegments;
+      if (!stage7FeaturesCoverRange(sources, start, end)) {
+        sources = stage7FeaturesCoverRange(segments, start, end) ? segments : resetSegmentsForWindowMode(uniformPoints);
+      }
+      if (!file && !stage7FeaturesCoverRange(sources, start, end)) throw new Error(t("Load the audio file to compute Stage 7 beat/onset events."));
+      if (file) sources = await loadStage7RhythmSources(file, start, end, sources, (progress) => {
+        if (progress === "start") setNotice(t("Preparing Stage 7 rhythm events"));
+      });
+      setWindowSourceSegments(sources);
+      const events = collectStage7WindowEvents(sources, mode);
+      const points = buildAlignedAudioAnalysisPoints(duration, interval, start, end, events);
+      if (!points.length) throw new Error(t(mode === "beat" ? "No beat events found in this time range." : "No onset events found in this time range."));
+      setWindowMode(mode);
+      setSegments(resetSegmentsForWindowMode(points));
+      setRegionOffset(points[0].offset);
+      setRegionDuration(points[0].duration);
+      setCurrentTime(points[0].time);
+      setStoppedEngine(null);
+      setNotice(`${t(mode === "beat" ? "Beat-aligned windows ready" : "Transient-aligned windows ready")}: ${points.length}. ${t("Previous CLAP/SigLIP results were cleared for the new node list.")}`);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause));
+    } finally {
+      setWindowModeBusy(false);
+    }
+  }, [analysisEnd, analysisStart, audioDuration, busy, file, segmentInterval, segments, t, windowModeBusy, windowSourceSegments]);
+
+  const splitTrack = useCallback((overrides?: { duration?: number; interval?: number; start?: number; end?: number }, mode = windowMode) => {
+    void regenerateWindowMode(mode, overrides);
+  }, [regenerateWindowMode, windowMode]);
   const applyTestPreset = useCallback(async () => {
     setError("");
     setNotice("Загружаю проверочный аудиофайл…");
@@ -377,8 +416,10 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       setNodeInterval(5);
       setAnalysisStart(0);
       setAnalysisEnd(duration);
+      setWindowMode("uniform");
+      setWindowSourceSegments([]);
       setV3Query(TEST_PRESET_BRIEF);
-      splitTrack({ duration, interval: 5, start: 0, end: duration });
+      splitTrack({ duration, interval: 5, start: 0, end: duration }, "uniform");
       setNotice(`Проверочный preset готов: SPEZ.mp3 · ${formatTime(duration)} · raw/node 5 s · авторазбивка создана. Модели не запущены.`);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : String(caught));
@@ -400,7 +441,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
 
   const analyze = useCallback(
     async (engine: Engine, resume = false) => {
-      if (!file || !segments.length || busy) return;
+      if (!file || !segments.length || busy || windowModeBusy) return;
       const controller = new AbortController();
       abortRef.current = controller;
       setBusy(engine);
@@ -481,6 +522,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       siglipSpectrogramLayout,
       spectrogramDetail,
       vocalMatrixMode,
+      windowModeBusy,
     ],
   );
 
@@ -551,15 +593,15 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const capturedSessionData = useMemo<AmStageSessionData>(() => ({
     schema: "am_stage_session_v1",
     audio: { name: file?.name ?? audioReferenceName, duration_seconds: audioDuration, path: null, missing_on_restore: Boolean(audioReferenceName || file), warning: (audioReferenceName || file) ? "В снимке сохранены результаты и таймкоды, но браузерный аудиофайл не копируется. Выберите исходный файл повторно для воспроизведения и продолжения анализа." : null },
-    analysis_settings: { region_offset: regionOffset, region_duration: regionDuration, analysis_start: analysisStart, analysis_end: analysisEnd, segment_interval: segmentInterval, node_interval: nodeInterval, clap_top_k: clapTopK, siglip_top_k: siglipTopK, spectrogram_scale: spectrogramScale, spectrogram_detail: spectrogramDetail, spectrogram_color: spectrogramColor, spectrogram_renderer: spectrogramRenderer, siglip_spectrogram_layout: siglipSpectrogramLayout, show_spectrogram: showSpectrogram },
-    timeline: { segments: segments.map(({ siglipPreview: _preview, ...segment }) => segment) },
+    analysis_settings: { region_offset: regionOffset, region_duration: regionDuration, analysis_start: analysisStart, analysis_end: analysisEnd, segment_interval: segmentInterval, node_interval: nodeInterval, clap_top_k: clapTopK, siglip_top_k: siglipTopK, spectrogram_scale: spectrogramScale, spectrogram_detail: spectrogramDetail, spectrogram_color: spectrogramColor, spectrogram_renderer: spectrogramRenderer, siglip_spectrogram_layout: siglipSpectrogramLayout, show_spectrogram: showSpectrogram, window_mode: windowMode },
+    timeline: { segments: segments.map(({ siglipPreview: _preview, ...segment }) => segment), window_source_segments: windowSourceSegments },
     banks: { text_parameters: v3Session.activeParameters, clap_parameters: [...new Map(segments.flatMap((segment) => segment.clap).map((parameter) => [parameter.technical_name, parameter])).values()], siglip_parameters: [...new Map(segments.flatMap((segment) => segment.siglip).map((parameter) => [parameter.technical_name, parameter])).values()], text_view: textBankViewMode, clap_view: clapBankViewMode, siglip_view: siglipBankViewMode, show_clap: showClap, show_siglip: showSiglip, interpolate_clap: interpolateClap, interpolate_siglip: interpolateSiglip },
     layers: { selected: selectedLayers, timeline_view: timelineView, stage2_visible: showGlobalConsensus, stage2_top_k: consensusTopK, stage2_centroid_percent: consensusCentroidPercent },
     interpolation: { pair: blendPair, percent: blendPercent, curve: blendCurve, blend_enabled: blendMode, clap_weight: clapWeight, trust_threshold: trustThreshold, trust_floor: trustFloor },
     vocal_matrix_mode: vocalMatrixMode,
     param_to_text: paramTextSessionState,
     v3: { query: v3Query, query_b: v3Session.queryB, top_k: v3Session.topK, sources: v3Session.sources, scopes: v3Session.scopes, search_mode: v3Session.searchMode, transition_ratio: v3Session.transitionRatio, search_results: v3Session.searchResults, secondary_results: v3Session.secondaryResults, active_parameters: v3Session.activeParameters, macro: v3Session.macro },
-  }), [audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, file, interpolateClap, interpolateSiglip, nodeInterval, paramTextSessionState, regionDuration, regionOffset, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, timelineView, trustFloor, trustThreshold, v3Query, v3Session, vocalMatrixMode]);
+  }), [audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, file, interpolateClap, interpolateSiglip, nodeInterval, paramTextSessionState, regionDuration, regionOffset, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, timelineView, trustFloor, trustThreshold, v3Query, v3Session, vocalMatrixMode, windowMode, windowSourceSegments]);
   useEffect(() => {
     const fingerprint = JSON.stringify(capturedSessionData);
     setSessionDirty(Boolean(activeSession) && fingerprint !== fingerprintRef.current);
@@ -738,6 +780,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       setAudioUrl(null); setFile(null); setAudioReferenceName(data.audio.name); setAudioDuration(data.audio.duration_seconds);
       setRegionOffset(data.analysis_settings.region_offset); setRegionDuration(data.analysis_settings.region_duration); setAnalysisStart(data.analysis_settings.analysis_start); setAnalysisEnd(data.analysis_settings.analysis_end);
       setSegmentInterval(data.analysis_settings.segment_interval); setNodeInterval(data.analysis_settings.node_interval); setClapTopK(data.analysis_settings.clap_top_k); setSiglipTopK(data.analysis_settings.siglip_top_k);
+      setWindowMode(data.analysis_settings.window_mode ?? "uniform"); setWindowSourceSegments(data.timeline.window_source_segments ?? []);
       setSpectrogramScale(data.analysis_settings.spectrogram_scale as SpectrogramScale); setSpectrogramDetail(data.analysis_settings.spectrogram_detail as SpectrogramDetail); setSpectrogramColor(data.analysis_settings.spectrogram_color as "gray" | "igray" | "roseus"); setSpectrogramRenderer(data.analysis_settings.spectrogram_renderer as SpectrogramRenderer); setSiglipSpectrogramLayout(data.analysis_settings.siglip_spectrogram_layout as SiglipSpectrogramLayout); setShowSpectrogram(data.analysis_settings.show_spectrogram);
       setSegments(data.timeline.segments); setCurrentTime(0);
       setTextBankViewMode(data.banks.text_view); setClapBankViewMode(data.banks.clap_view); setSiglipBankViewMode(data.banks.siglip_view); setShowClap(data.banks.show_clap); setShowSiglip(data.banks.show_siglip); setInterpolateClap(data.banks.interpolate_clap); setInterpolateSiglip(data.banks.interpolate_siglip);
@@ -755,7 +798,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     abortRef.current?.abort();
     if (audioUrl) URL.revokeObjectURL(audioUrl);
     setAudioUrl(null); setFile(null); setAudioReferenceName(null); setAudioDuration(0); setCurrentTime(0); setSeekRequest({ time: 0, token: 0 });
-    setRegionOffset(0); setRegionDuration(10); setAnalysisStart(0); setAnalysisEnd(0); setSegmentInterval(2); setNodeInterval(20); setSegments([]); setClapTopK(20); setSiglipTopK(20);
+    setRegionOffset(0); setRegionDuration(10); setAnalysisStart(0); setAnalysisEnd(0); setSegmentInterval(2); setNodeInterval(20); setWindowMode("uniform"); setWindowSourceSegments([]); setSegments([]); setClapTopK(20); setSiglipTopK(20);
     setTextBankViewMode("standard"); setClapBankViewMode("standard"); setSiglipBankViewMode("standard"); setShowClap(true); setShowSiglip(true); setInterpolateClap(true); setInterpolateSiglip(true); setShowSpectrogram(true);
     setSpectrogramScale("mel"); setSpectrogramDetail("medium"); setSpectrogramColor("roseus"); setSpectrogramRenderer("windowed"); setSiglipSpectrogramLayout("rgb_delta"); setBlendMode(false); setClapWeight(.5); setTrustThreshold(DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold); setTrustFloor(DEFAULT_MODALITY_TRUST_CONFIG.floorWeight); setVocalMatrixMode(false);
     setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id)); setShowGlobalConsensus(false); setConsensusTopK(64); setConsensusCentroidPercent(35); setTimelineView("modality"); setBlendPair("text-clap"); setBlendPercent(50); setBlendCurve("linear");
@@ -842,8 +885,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             </Link>
             <Tooltip><TooltipTrigger asChild><Button size="sm" variant="outline" onClick={requestSaveSession} disabled={sessionBusy}>{sessionBusy ? t("Сохраняю…") : `${t("Сохранить сессию")}${sessionDirty ? ` · ${t("изменена")}` : ""}`}</Button></TooltipTrigger><TooltipContent>{t("Сохранить текущее состояние анализа и настроек в снимок проекта.")}</TooltipContent></Tooltip>
             <Tooltip><TooltipTrigger asChild><Button size="sm" variant="outline" onClick={() => void startSessionManager()} disabled={sessionBusy}>{t("Открыть сессию")}</Button></TooltipTrigger><TooltipContent>{t("Открыть, переименовать или удалить ранее сохранённый снимок AM-Stage.")}</TooltipContent></Tooltip>
-            <Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" onClick={requestNewSession} disabled={Boolean(busy)}>{t("Новая сессия AM-Stage")}</Button></TooltipTrigger><TooltipContent>{t("Сбросить рабочее состояние и начать новый анализ.")}</TooltipContent></Tooltip>
-            <Button data-am-stage-action="test-preset" size="sm" variant="outline" onClick={() => void applyTestPreset()} disabled={Boolean(busy)}>{t("Проверочный preset")}</Button>
+            <Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" onClick={requestNewSession} disabled={Boolean(busy) || windowModeBusy}>{t("Новая сессия AM-Stage")}</Button></TooltipTrigger><TooltipContent>{t("Сбросить рабочее состояние и начать новый анализ.")}</TooltipContent></Tooltip>
+            <Button data-am-stage-action="test-preset" size="sm" variant="outline" onClick={() => void applyTestPreset()} disabled={Boolean(busy) || windowModeBusy}>{t("Проверочный preset")}</Button>
           </div>
         </div>
       </header>
@@ -879,6 +922,15 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                     }
                   />
                 </div>
+                <label className="block text-[10px] text-zinc-400">
+                  {t("Analysis window placement")}
+                  <select aria-label={t("Analysis window placement")} value={windowMode} disabled={!audioDuration || Boolean(busy) || windowModeBusy} onChange={(event) => void regenerateWindowMode(event.target.value as AudioWindowMode)} className="mt-1 h-9 w-full rounded border border-white/15 bg-zinc-950 px-2 text-xs text-zinc-100">
+                    <option value="uniform">{t("Uniform grid")}</option>
+                    <option value="beat">{t("Beat aligned")}</option>
+                    <option value="onset">{t("Transient / onset aligned")}</option>
+                  </select>
+                  <span className="mt-1 block text-[10px] text-zinc-500">{windowModeBusy ? t("Preparing Stage 7 rhythm events") : t("Beat/onset modes reuse Stage 7 data; nodes closer than 0.5 s are merged.")}</span>
+                </label>
                 <div>
                   <FieldLabel label="Node interval, сек" hint="Сглаженные узлы итогового timeline: от 0,5 до 360 секунд." />
                   <Input type="number" min={0.5} max={360} step={0.5} value={nodeInterval} onChange={(event) => setNodeInterval(Math.max(0.5, Math.min(360, Number(event.target.value) || 0.5)))} />
@@ -898,7 +950,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                     className="w-full"
                     variant="outline"
                     onClick={() => splitTrack()}
-                    disabled={!audioDuration || Boolean(busy)}
+                    disabled={!audioDuration || Boolean(busy) || windowModeBusy}
                   >
                     <Scissors className="size-4" />
                     {t("Авто-разбивка")}
@@ -1105,20 +1157,20 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
 
               <div className="grid gap-2 sm:grid-cols-2">
                 <div className="space-y-1.5 rounded border border-cyan-400/20 p-2">
-                  <Button data-am-stage-action="clap-start" className="w-full bg-cyan-700 hover:bg-cyan-600" disabled={!file || !segments.length || Boolean(busy)} title="Новая обработка CLAP с начала; только CLAP результаты будут заменены." onClick={() => void analyze("clap")}>
+                  <Button data-am-stage-action="clap-start" className="w-full bg-cyan-700 hover:bg-cyan-600" disabled={!file || !segments.length || Boolean(busy) || windowModeBusy} title="Новая обработка CLAP с начала; только CLAP результаты будут заменены." onClick={() => void analyze("clap")}>
                     {busy === "clap" ? <Loader2 className="size-4 animate-spin" /> : <Zap className="size-4" />}
                     CLAP · с начала
                   </Button>
-                  <Button data-am-stage-action="clap-continue" title={t("Обработать CLAP только для сегментов без готового результата и продолжить сохранённый прогон.")} className="w-full" variant="outline" disabled={!file || Boolean(busy) || !canContinueClap} onClick={() => void analyze("clap", true)}>
+                  <Button data-am-stage-action="clap-continue" title={t("Обработать CLAP только для сегментов без готового результата и продолжить сохранённый прогон.")} className="w-full" variant="outline" disabled={!file || Boolean(busy) || windowModeBusy || !canContinueClap} onClick={() => void analyze("clap", true)}>
                     {t("Continue CLAP")} ({clapCompleted}/{segments.length})
                   </Button>
                 </div>
                 <div className="space-y-1.5 rounded border border-fuchsia-400/20 p-2">
-                  <Button data-am-stage-action="siglip2-start" className="w-full bg-fuchsia-700 hover:bg-fuchsia-600" disabled={!file || !segments.length || Boolean(busy) || !morphoStatus?.ready} title="Новая обработка SigLIP2 с начала; только SigLIP2 результаты будут заменены." onClick={() => void analyze("siglip")}>
+                  <Button data-am-stage-action="siglip2-start" className="w-full bg-fuchsia-700 hover:bg-fuchsia-600" disabled={!file || !segments.length || Boolean(busy) || windowModeBusy || !morphoStatus?.ready} title="Новая обработка SigLIP2 с начала; только SigLIP2 результаты будут заменены." onClick={() => void analyze("siglip")}>
                     {busy === "siglip" ? <Loader2 className="size-4 animate-spin" /> : <Zap className="size-4" />}
                     SigLIP2 · с начала
                   </Button>
-                  <Button data-am-stage-action="siglip2-continue" title={t("Обработать SigLIP2 только для сегментов без готового результата и продолжить сохранённый прогон.")} className="w-full" variant="outline" disabled={!file || Boolean(busy) || !morphoStatus?.ready || !canContinueSiglip} onClick={() => void analyze("siglip", true)}>
+                  <Button data-am-stage-action="siglip2-continue" title={t("Обработать SigLIP2 только для сегментов без готового результата и продолжить сохранённый прогон.")} className="w-full" variant="outline" disabled={!file || Boolean(busy) || windowModeBusy || !morphoStatus?.ready || !canContinueSiglip} onClick={() => void analyze("siglip", true)}>
                     {t("Continue SigLIP2")} ({siglipCompleted}/{segments.length})
                   </Button>
                 </div>

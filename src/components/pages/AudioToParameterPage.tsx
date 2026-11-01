@@ -42,6 +42,15 @@ import {
   type AudioEngine,
   type AudioSegmentResultPoint,
 } from "@/lib/audio-segment-result";
+import {
+  buildAlignedAudioAnalysisPoints,
+  collectStage7WindowEvents,
+  loadStage7RhythmSources,
+  resetSegmentsForWindowMode,
+  stage7FeaturesCoverRange,
+  type AudioWindowMode,
+  type Stage7RhythmSource,
+} from "@/lib/audio-window-modes";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { computeModalityTrust, DEFAULT_MODALITY_TRUST_CONFIG } from "@/lib/modality-trust";
 import { useUiText } from "@/lib/ui-i18n";
@@ -148,6 +157,9 @@ export function AudioToParameterPage({ active = true }: { active?: boolean } = {
   const [regionOffset, setRegionOffset] = useState(0);
   const [regionDuration, setRegionDuration] = useState(10);
   const [segmentInterval, setSegmentInterval] = useState(2);
+  const [windowMode, setWindowMode] = useState<AudioWindowMode>("uniform");
+  const [windowSourceSegments, setWindowSourceSegments] = useState<Stage7RhythmSource[]>([]);
+  const [windowModeBusy, setWindowModeBusy] = useState(false);
   const [nodeInterval, setNodeInterval] = useState(20);
   const [segments, setSegments] = useState<SegmentPoint[]>([]);
   const [clapTopK, setClapTopK] = useState(20);
@@ -205,31 +217,64 @@ export function AudioToParameterPage({ active = true }: { active?: boolean } = {
     setCurrentTime(0);
     setRegionOffset(0);
     setSegments([]);
+    setWindowMode("uniform");
+    setWindowSourceSegments([]);
     setError("");
     setNotice(
       t("Файл загружен. Нажмите «Авто-разбивка» после появления длительности."),
     );
   }, [t]);
 
-  const splitTrack = useCallback(() => {
-    const points = buildAudioAnalysisPoints(audioDuration, segmentInterval);
-    setSegments(
-      points.map((point) => ({
-        ...point,
-        clap: [],
-        siglip: [],
-        clapStatus: "pending",
-        siglipStatus: "pending",
-      })),
-    );
-    setRegionOffset(0);
-    setRegionDuration(
-      Math.min(segmentInterval, audioDuration || segmentInterval),
-    );
-    setCurrentTime(0);
-    setNotice(`${t("Подготовлено точек анализа:")} ${points.length}.`);
+  const regenerateWindowMode = useCallback(async (
+    mode: AudioWindowMode,
+    overrides?: { duration?: number; interval?: number; start?: number; end?: number },
+  ) => {
+    const duration = overrides?.duration ?? audioDuration;
+    const interval = overrides?.interval ?? segmentInterval;
+    const start = overrides?.start ?? 0;
+    const end = overrides?.end ?? duration;
+    const uniformPoints = buildAudioAnalysisPoints(duration, interval, start, end);
+    if (!uniformPoints.length) { setError(t("Укажите корректный временной диапазон: конец должен быть позже начала минимум на 0,1 секунды.")); return; }
     setError("");
-  }, [audioDuration, segmentInterval, t]);
+
+    if (mode === "uniform") {
+      setWindowMode(mode);
+      setSegments(resetSegmentsForWindowMode(uniformPoints));
+      setRegionOffset(uniformPoints[0].offset);
+      setRegionDuration(uniformPoints[0].duration);
+      setCurrentTime(uniformPoints[0].time);
+      setNotice(`${t("Uniform windows prepared")}: ${uniformPoints.length}.`);
+      return;
+    }
+    if (windowModeBusy || busy) return;
+    setWindowModeBusy(true);
+    try {
+      let sources = windowSourceSegments;
+      if (!stage7FeaturesCoverRange(sources, start, end)) {
+        sources = stage7FeaturesCoverRange(segments, start, end) ? segments : resetSegmentsForWindowMode(uniformPoints);
+      }
+      if (!file && !stage7FeaturesCoverRange(sources, start, end)) throw new Error(t("Load the audio file to compute Stage 7 beat/onset events."));
+      if (file) sources = await loadStage7RhythmSources(file, start, end, sources, (progress) => {
+        if (progress === "start") setNotice(t("Preparing Stage 7 rhythm events"));
+      });
+      setWindowSourceSegments(sources);
+      const events = collectStage7WindowEvents(sources, mode);
+      const points = buildAlignedAudioAnalysisPoints(duration, interval, start, end, events);
+      if (!points.length) throw new Error(t(mode === "beat" ? "No beat events found in this time range." : "No onset events found in this time range."));
+      setWindowMode(mode);
+      setSegments(resetSegmentsForWindowMode(points));
+      setRegionOffset(points[0].offset);
+      setRegionDuration(points[0].duration);
+      setCurrentTime(points[0].time);
+      setNotice(`${t(mode === "beat" ? "Beat-aligned windows ready" : "Transient-aligned windows ready")}: ${points.length}. ${t("Previous CLAP/SigLIP results were cleared for the new node list.")}`);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause));
+    } finally {
+      setWindowModeBusy(false);
+    }
+  }, [audioDuration, busy, file, segmentInterval, segments, t, windowModeBusy, windowSourceSegments]);
+
+  const splitTrack = useCallback(() => { void regenerateWindowMode(windowMode); }, [regenerateWindowMode, windowMode]);
   const handleWaveDuration = useCallback(
     (duration: number) => {
       setAudioDuration(duration);
@@ -244,7 +289,7 @@ export function AudioToParameterPage({ active = true }: { active?: boolean } = {
 
   const analyze = useCallback(
     async (engine: Engine) => {
-      if (!file || !segments.length || busy) return;
+      if (!file || !segments.length || busy || windowModeBusy) return;
       const controller = new AbortController();
       abortRef.current = controller;
       setBusy(engine);
@@ -319,6 +364,7 @@ export function AudioToParameterPage({ active = true }: { active?: boolean } = {
       spectrogramDetail,
       t,
       vocalMatrixMode,
+      windowModeBusy,
     ],
   );
 
@@ -561,6 +607,15 @@ export function AudioToParameterPage({ active = true }: { active?: boolean } = {
                     }
                   />
                 </div>
+                <label className="col-span-2 block text-[10px] text-zinc-400">
+                  {t("Analysis window placement")}
+                  <select aria-label={t("Analysis window placement")} value={windowMode} disabled={!file || !audioDuration || Boolean(busy) || windowModeBusy} onChange={(event) => void regenerateWindowMode(event.target.value as AudioWindowMode)} className="mt-1 h-9 w-full rounded border border-white/15 bg-zinc-950 px-2 text-xs text-zinc-100">
+                    <option value="uniform">{t("Uniform grid")}</option>
+                    <option value="beat">{t("Beat aligned")}</option>
+                    <option value="onset">{t("Transient / onset aligned")}</option>
+                  </select>
+                  <span className="mt-1 block text-[10px] text-zinc-500">{windowModeBusy ? t("Preparing Stage 7 rhythm events") : t("Beat/onset modes reuse Stage 7 data; nodes closer than 0.5 s are merged.")}</span>
+                </label>
                 <div>
                   <FieldLabel label={t("Node interval, сек")} hint={t("Сглаженные узлы итогового timeline: от 0,5 до 360 секунд.")} />
                   <Input type="number" min={0.5} max={360} step={0.5} value={nodeInterval} onChange={(event) => setNodeInterval(Math.max(0.5, Math.min(360, Number(event.target.value) || 0.5)))} />
@@ -570,7 +625,7 @@ export function AudioToParameterPage({ active = true }: { active?: boolean } = {
                     className="w-full"
                     variant="outline"
                     onClick={splitTrack}
-                    disabled={!audioDuration || Boolean(busy)}
+                    disabled={!audioDuration || Boolean(busy) || windowModeBusy}
                   >
                     <Scissors className="size-4" />
                     {t("Авто-разбивка")}
@@ -769,7 +824,7 @@ export function AudioToParameterPage({ active = true }: { active?: boolean } = {
               <div className="grid grid-cols-2 gap-2">
                 <Button
                   className="bg-cyan-700 hover:bg-cyan-600"
-                  disabled={!file || !segments.length || Boolean(busy)}
+                  disabled={!file || !segments.length || Boolean(busy) || windowModeBusy}
                   onClick={() => void analyze("clap")}
                 >
                   {busy === "clap" ? (
@@ -785,6 +840,7 @@ export function AudioToParameterPage({ active = true }: { active?: boolean } = {
                     !file ||
                     !segments.length ||
                     Boolean(busy) ||
+                    windowModeBusy ||
                     !morphoStatus?.ready
                   }
                   onClick={() => void analyze("siglip")}

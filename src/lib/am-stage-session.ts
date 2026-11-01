@@ -2,6 +2,7 @@ import type { AudioSegmentResultPoint } from "@/lib/audio-segment-result";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import type { ParamToTextEntry, ParamToTextSnapshot } from "@/lib/param-to-text";
 import type { BlendCurve } from "@/lib/am-stage-blend";
+import type { AudioWindowMode, Stage7RhythmSource } from "@/lib/audio-window-modes";
 
 export interface ParamTextWorkbenchSessionState {
   snapshot: ParamToTextSnapshot | null;
@@ -21,8 +22,9 @@ export interface AmStageSessionData {
     segment_interval: number; node_interval: number; clap_top_k: number; siglip_top_k: number;
     spectrogram_scale: string; spectrogram_detail: string; spectrogram_color: string;
     spectrogram_renderer: string; siglip_spectrogram_layout: string; show_spectrogram: boolean;
+    window_mode?: AudioWindowMode;
   };
-  timeline: { segments: AudioSegmentResultPoint[] };
+  timeline: { segments: AudioSegmentResultPoint[]; window_source_segments?: Stage7RhythmSource[] };
   banks: {
     text_parameters: ActiveParameter[]; clap_parameters: ActiveParameter[]; siglip_parameters: ActiveParameter[];
     text_view: "compact" | "standard" | "expanded"; clap_view: "compact" | "standard" | "expanded"; siglip_view: "compact" | "standard" | "expanded";

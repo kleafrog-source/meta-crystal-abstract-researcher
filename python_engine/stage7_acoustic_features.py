@@ -18,21 +18,30 @@ MAX_SEGMENT_SECONDS = 30.0
 FORMANT_RMS_GATE = 0.008
 
 
-def _load_segment(path: Path, offset: float, duration: float) -> np.ndarray:
-    if not np.isfinite(offset) or offset < 0 or not np.isfinite(duration) or not 0.25 <= duration <= MAX_SEGMENT_SECONDS:
-        raise ValueError("Select an audio segment from 0.25 to 30 seconds.")
+def _load_audio_range(path: Path, offset: float, duration: float) -> np.ndarray:
+    if not np.isfinite(offset) or offset < 0 or not np.isfinite(duration) or duration < 0.25:
+        raise ValueError("Select an audio range of at least 0.25 seconds.")
     try:
-        audio, sample_rate = sf.read(path, dtype="float32", always_2d=True)
+        with sf.SoundFile(path) as source:
+            sample_rate = source.samplerate
+            start = min(len(source), int(offset * sample_rate))
+            end = min(len(source), int((offset + duration) * sample_rate))
+            source.seek(start)
+            audio = source.read(end - start, dtype="float32", always_2d=True)
     except Exception as error:
         raise ValueError("This runtime can read audio formats supported by soundfile; convert the source to PCM WAV or FLAC and retry.") from error
-    start = min(len(audio), int(offset * sample_rate))
-    end = min(len(audio), int((offset + duration) * sample_rate))
-    if end <= start or (end - start) / sample_rate < 0.25:
+    if len(audio) / sample_rate < 0.25:
         raise ValueError("The selected audio window must contain at least 0.25 seconds of audio.")
-    mono = np.nan_to_num(audio[start:end].mean(axis=1), copy=False)
+    mono = np.nan_to_num(audio.mean(axis=1), copy=False)
     if sample_rate != SAMPLE_RATE:
         mono = librosa.resample(mono, orig_sr=sample_rate, target_sr=SAMPLE_RATE)
     return np.clip(mono, -1.0, 1.0).astype(np.float32, copy=False)
+
+
+def _load_segment(path: Path, offset: float, duration: float) -> np.ndarray:
+    if not np.isfinite(duration) or duration > MAX_SEGMENT_SECONDS:
+        raise ValueError("Select an audio segment from 0.25 to 30 seconds.")
+    return _load_audio_range(path, offset, duration)
 
 
 def _is_voiced(frame: np.ndarray, sample_rate: int, rms: float) -> bool:
@@ -110,14 +119,9 @@ def _estimate_formants(waveform: np.ndarray, helm_has_vocals: bool | None) -> tu
     }, None
 
 
-def analyze_segment(path: Path, offset: float, duration: float, helm_has_vocals: bool | None = None) -> dict:
-    waveform = _load_segment(path, offset, duration)
+def analyze_rhythm_events(waveform: np.ndarray) -> dict:
+    """Stage 7's shared librosa beat/onset pass, without unrelated DSP features."""
     actual_duration = len(waveform) / SAMPLE_RATE
-    rms = librosa.feature.rms(y=waveform, frame_length=2048, hop_length=HOP_LENGTH, center=True)[0]
-    spectrum_args = {"y": waveform, "sr": SAMPLE_RATE, "n_fft": 2048, "hop_length": HOP_LENGTH}
-    centroid = librosa.feature.spectral_centroid(**spectrum_args)[0]
-    bandwidth = librosa.feature.spectral_bandwidth(**spectrum_args)[0]
-    rolloff = librosa.feature.spectral_rolloff(**spectrum_args, roll_percent=0.85)[0]
     onset_envelope = librosa.onset.onset_strength(y=waveform, sr=SAMPLE_RATE, hop_length=HOP_LENGTH)
     onset_frames = librosa.onset.onset_detect(
         onset_envelope=onset_envelope,
@@ -134,6 +138,17 @@ def analyze_segment(path: Path, offset: float, duration: float, helm_has_vocals:
         tempo_bpm = round(tempo_value, 2) if np.isfinite(tempo_value) and tempo_value > 0 else None
         beat_times = [round(float(value), 4) for value in librosa.frames_to_time(beat_frames, sr=SAMPLE_RATE, hop_length=HOP_LENGTH) if value <= actual_duration]
     onset_times = [round(float(value), 4) for value in librosa.frames_to_time(onset_frames, sr=SAMPLE_RATE, hop_length=HOP_LENGTH) if value <= actual_duration]
+    return {"tempo_bpm_approx": tempo_bpm, "beat_times_seconds": beat_times, "onset_times_seconds": onset_times}
+
+
+def analyze_waveform(waveform: np.ndarray, helm_has_vocals: bool | None = None) -> dict:
+    actual_duration = len(waveform) / SAMPLE_RATE
+    rms = librosa.feature.rms(y=waveform, frame_length=2048, hop_length=HOP_LENGTH, center=True)[0]
+    spectrum_args = {"y": waveform, "sr": SAMPLE_RATE, "n_fft": 2048, "hop_length": HOP_LENGTH}
+    centroid = librosa.feature.spectral_centroid(**spectrum_args)[0]
+    bandwidth = librosa.feature.spectral_bandwidth(**spectrum_args)[0]
+    rolloff = librosa.feature.spectral_rolloff(**spectrum_args, roll_percent=0.85)[0]
+    rhythm = analyze_rhythm_events(waveform)
     formants, formant_skip_reason = _estimate_formants(waveform, helm_has_vocals)
     rms_mean = float(np.sqrt(np.mean(np.square(waveform))))
     return {
@@ -148,12 +163,14 @@ def analyze_segment(path: Path, offset: float, duration: float, helm_has_vocals:
         "spectral_centroid_mean_hz": round(float(np.mean(centroid)), 2),
         "spectral_bandwidth_mean_hz": round(float(np.mean(bandwidth)), 2),
         "spectral_rolloff_85_mean_hz": round(float(np.mean(rolloff)), 2),
-        "tempo_bpm_approx": tempo_bpm,
-        "beat_times_seconds": beat_times,
-        "onset_times_seconds": onset_times,
+        **rhythm,
         "formants": formants,
         "formant_skip_reason": formant_skip_reason,
     }
+
+
+def analyze_segment(path: Path, offset: float, duration: float, helm_has_vocals: bool | None = None) -> dict:
+    return analyze_waveform(_load_segment(path, offset, duration), helm_has_vocals)
 
 
 def main() -> int:
