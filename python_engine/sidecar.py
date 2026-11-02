@@ -194,8 +194,15 @@ def cmd_audio_save_fragment(audio_path, params_path):
         str(params.get("output_path")),
         float(params.get("offset", 0)),
         float(params.get("duration", 8)),
+        int(params["sample_rate"]) if params.get("sample_rate") else None,
+        bool(params.get("mono", False)),
     )
     emit_done(result)
+
+
+def cmd_audio_info(audio_path):
+    from audio_clap_rag import audio_duration
+    emit_done(audio_duration(audio_path))
 
 
 # ============================================================
@@ -1361,6 +1368,11 @@ def main():
                 emit_error("Не указаны аудиофайл и параметры фрагмента")
                 return
             cmd_audio_save_fragment(sys.argv[2], sys.argv[3])
+        elif cmd == "audio_info":
+            if len(sys.argv) < 3:
+                emit_error("Не указан аудиофайл")
+                return
+            cmd_audio_info(sys.argv[2])
         else:
             emit_error(f"Неизвестная команда: {cmd}")
     except KeyboardInterrupt:

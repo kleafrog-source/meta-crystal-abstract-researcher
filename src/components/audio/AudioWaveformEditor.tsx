@@ -9,6 +9,7 @@ import RecordPlugin from "wavesurfer.js/dist/plugins/record.esm.js";
 import SpectrogramPlugin from "wavesurfer.js/dist/plugins/spectrogram.esm.js";
 import WindowedSpectrogramPlugin from "wavesurfer.js/dist/plugins/spectrogram-windowed.esm.js";
 import MinimapPlugin from "wavesurfer.js/dist/plugins/minimap.esm.js";
+import TimelinePlugin from "wavesurfer.js/dist/plugins/timeline.esm.js";
 import { Button } from "@/components/ui/button";
 
 interface Props {
@@ -40,6 +41,7 @@ export function AudioWaveformEditor(props: Props) {
   const instanceId = props.instanceId ?? "clap";
   const waveformId = `${instanceId}-waveform`;
   const spectrogramId = `${instanceId}-spectrogram`;
+  const timelineId = `${instanceId}-timeline`;
   const spectrumVisible = props.spectrogram?.visible ?? showSpectrum;
   const fftSamples =
     props.spectrogram?.detail === "low"
@@ -55,6 +57,11 @@ export function AudioWaveformEditor(props: Props) {
         key: "record",
         options: { renderRecordedAudio: false },
       },
+      {
+        plugin: TimelinePlugin,
+        key: "timeline",
+        options: { container: `#${timelineId}`, height: 22, style: "color:#a1a1aa;font-size:10px", formatTimeCallback: (time: number) => time >= 60 ? `${Math.floor(time / 60)}:${String(Math.floor(time % 60)).padStart(2, "0")}` : `${time.toFixed(1)}s` },
+      } as never,
     ];
     if (props.minimap)
       items.push({
@@ -102,6 +109,7 @@ export function AudioWaveformEditor(props: Props) {
     props.spectrogram?.scale,
     props.minimap,
     spectrogramId,
+    timelineId,
     spectrumVisible,
   ]);
 
@@ -136,6 +144,7 @@ export function AudioWaveformEditor(props: Props) {
         <div className="overflow-hidden rounded">
           <WaveForm id={waveformId} />
         </div>
+        <div id={timelineId} className="min-h-5 overflow-hidden text-zinc-400" aria-label="Audio time axis" />
         <WaveformController
           {...props}
           wavesurfer={mounted}
@@ -206,6 +215,7 @@ function WaveformController({
   const [dragSeek, setDragSeek] = useState(true);
   const [recording, setRecording] = useState(false);
   const [zoom, setZoom] = useState(4);
+  const [currentTime, setCurrentTime] = useState(0);
   useEffect(() => {
     loopRef.current = loop;
   }, [loop]);
@@ -231,8 +241,12 @@ function WaveformController({
   }, [onPlayingChange, playing]);
   useEffect(() => {
     if (!wavesurfer || !onTime) return;
-    return wavesurfer.on("timeupdate", onTime);
+    return wavesurfer.on("timeupdate", (time) => { setCurrentTime(time); onTime(time); });
   }, [onTime, wavesurfer]);
+  useEffect(() => {
+    if (!wavesurfer) return;
+    return wavesurfer.on("timeupdate", setCurrentTime);
+  }, [wavesurfer]);
   useEffect(() => {
     if (
       !wavesurfer ||
@@ -319,6 +333,7 @@ function WaveformController({
   };
   return (
     <div className="mt-3 flex flex-wrap items-center gap-2">
+      <output aria-live="off" className="mr-auto rounded border border-cyan-400/20 bg-black/40 px-2 py-1 font-mono text-[11px] tabular-nums text-cyan-100">{formatAudioTime(currentTime)} / {formatAudioTime(totalDuration)}</output>
       <Button
         type="button"
         size="sm"
@@ -387,4 +402,11 @@ function WaveformController({
       />
     </div>
   );
+}
+
+function formatAudioTime(seconds: number) {
+  const safe = Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
+  const minutes = Math.floor(safe / 60);
+  const remainder = (safe % 60).toFixed(1).padStart(4, "0");
+  return `${minutes}:${remainder}`;
 }

@@ -8,6 +8,8 @@ import {
   Download,
   ChevronDown,
   Loader2,
+  Pin,
+  PinOff,
   Scissors,
   Square,
   Upload,
@@ -39,6 +41,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { AMIcon } from "@/components/ui/am-icon";
 import {
   blendParameterFrames,
@@ -183,6 +187,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const updateV3ParameterValue = useRagV3Store((state) => state.updateParameterValue);
   const removeV3Parameter = useRagV3Store((state) => state.removeParameter);
   const [selectedLayers, setSelectedLayers] = useState<string[]>(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id));
+  const [isAxisPinned, setIsAxisPinned] = useState(false);
   const [showGlobalConsensus, setShowGlobalConsensus] = useState(false);
   const [consensusTopK, setConsensusTopK] = useState(64);
   const [consensusCentroidPercent, setConsensusCentroidPercent] = useState(35);
@@ -207,6 +212,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [regionDuration, setRegionDuration] = useState(10);
   const [analysisStart, setAnalysisStart] = useState(0);
   const [analysisEnd, setAnalysisEnd] = useState(0);
+  const [gateNeedsResplit, setGateNeedsResplit] = useState(false);
   const [segmentInterval, setSegmentInterval] = useState(2);
   const [windowMode, setWindowMode] = useState<AudioWindowMode>("uniform");
   const [windowSourceSegments, setWindowSourceSegments] = useState<Stage7RhythmSource[]>([]);
@@ -347,6 +353,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   };
 
   const selectFile = useCallback((nextFile: File) => {
+    setIsAxisPinned(true);
     setAudioUrl((previous) => {
       if (previous) URL.revokeObjectURL(previous);
       return URL.createObjectURL(nextFile);
@@ -356,6 +363,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setAudioDuration(0);
     setAnalysisStart(0);
     setAnalysisEnd(0);
+    setGateNeedsResplit(false);
     setCurrentTime(0);
     setRegionOffset(0);
     setSegments([]);
@@ -383,8 +391,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     if (mode === "uniform") {
       setWindowMode(mode);
       setSegments(resetSegmentsForWindowMode(uniformPoints));
-      setRegionOffset(uniformPoints[0].offset);
-      setRegionDuration(uniformPoints[0].duration);
+      setGateNeedsResplit(false);
       setCurrentTime(uniformPoints[0].time);
       setStoppedEngine(null);
       setNotice(`${t("Uniform windows prepared")}: ${uniformPoints.length}.`);
@@ -407,8 +414,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       if (!points.length) throw new Error(t(mode === "beat" ? "No beat events found in this time range." : "No onset events found in this time range."));
       setWindowMode(mode);
       setSegments(resetSegmentsForWindowMode(points));
-      setRegionOffset(points[0].offset);
-      setRegionDuration(points[0].duration);
+      setGateNeedsResplit(false);
       setCurrentTime(points[0].time);
       setStoppedEngine(null);
       setNotice(`${t(mode === "beat" ? "Beat-aligned windows ready" : "Transient-aligned windows ready")}: ${points.length}. ${t("Previous CLAP/SigLIP results were cleared for the new node list.")}`);
@@ -461,18 +467,28 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     (duration: number) => {
       setAudioDuration(duration);
       setAnalysisEnd((current) => current > 0 ? Math.min(current, duration) : duration);
-      setRegionDuration(Math.min(segmentInterval, duration));
+      setRegionDuration(duration);
     },
-    [segmentInterval],
+    [],
   );
+  const updateAnalysisGate = useCallback((startValue: number, endValue: number) => {
+    if (!audioDuration) return;
+    const start = Math.max(0, Math.min(audioDuration - 0.1, Number.isFinite(startValue) ? startValue : 0));
+    const end = Math.max(start + 0.1, Math.min(audioDuration, Number.isFinite(endValue) ? endValue : audioDuration));
+    setAnalysisStart(start);
+    setAnalysisEnd(end);
+    setGateNeedsResplit(segments.length > 0);
+    setRegionOffset(start);
+    setRegionDuration(end - start);
+  }, [audioDuration, segments.length]);
   const handleRegion = useCallback((offset: number, duration: number) => {
-    setRegionOffset(offset);
-    setRegionDuration(duration);
-  }, []);
+    updateAnalysisGate(offset, offset + duration);
+  }, [updateAnalysisGate]);
 
   const analyze = useCallback(
     async (engine: Engine, resume = false) => {
       if (!file || !segments.length || busy || windowModeBusy) return;
+      if (gateNeedsResplit) { setError(t("The time gate changed. Run Auto-split before analyzing these nodes.")); return; }
       const controller = new AbortController();
       abortRef.current = controller;
       setBusy(engine);
@@ -548,10 +564,12 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       busy,
       clapTopK,
       file,
+      gateNeedsResplit,
       segments,
       siglipTopK,
       siglipSpectrogramLayout,
       spectrogramDetail,
+      t,
       vocalMatrixMode,
       windowModeBusy,
     ],
@@ -687,8 +705,6 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       time: segment.time,
       token: current.token + 1,
     }));
-    setRegionOffset(segment.offset);
-    setRegionDuration(segment.duration);
   };
 
   const updateValue = (
@@ -846,7 +862,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       const { meta, data } = result.snapshot;
       if (audioUrl) URL.revokeObjectURL(audioUrl);
       setAudioUrl(null); setFile(null); setAudioReferenceName(data.audio.name); setAudioDuration(data.audio.duration_seconds);
-      setRegionOffset(data.analysis_settings.region_offset); setRegionDuration(data.analysis_settings.region_duration); setAnalysisStart(data.analysis_settings.analysis_start); setAnalysisEnd(data.analysis_settings.analysis_end);
+      setRegionOffset(data.analysis_settings.region_offset); setRegionDuration(data.analysis_settings.region_duration); setAnalysisStart(data.analysis_settings.analysis_start); setAnalysisEnd(data.analysis_settings.analysis_end); setGateNeedsResplit(false);
       setSegmentInterval(data.analysis_settings.segment_interval); setNodeInterval(data.analysis_settings.node_interval); setClapTopK(data.analysis_settings.clap_top_k); setSiglipTopK(data.analysis_settings.siglip_top_k);
       setWindowMode(data.analysis_settings.window_mode ?? "uniform"); setWindowSourceSegments(data.timeline.window_source_segments ?? []);
       setSpectrogramScale(data.analysis_settings.spectrogram_scale as SpectrogramScale); setSpectrogramDetail(data.analysis_settings.spectrogram_detail as SpectrogramDetail); setSpectrogramColor(data.analysis_settings.spectrogram_color as "gray" | "igray" | "roseus"); setSpectrogramRenderer(data.analysis_settings.spectrogram_renderer as SpectrogramRenderer); setSiglipSpectrogramLayout(data.analysis_settings.siglip_spectrogram_layout as SiglipSpectrogramLayout); setShowSpectrogram(data.analysis_settings.show_spectrogram);
@@ -866,7 +882,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     abortRef.current?.abort();
     if (audioUrl) URL.revokeObjectURL(audioUrl);
     setAudioUrl(null); setFile(null); setAudioReferenceName(null); setAudioDuration(0); setCurrentTime(0); setSeekRequest({ time: 0, token: 0 });
-    setRegionOffset(0); setRegionDuration(10); setAnalysisStart(0); setAnalysisEnd(0); setSegmentInterval(2); setNodeInterval(20); setWindowMode("uniform"); setWindowSourceSegments([]); setSegments([]); setClapTopK(20); setSiglipTopK(20);
+    setIsAxisPinned(false);
+    setRegionOffset(0); setRegionDuration(10); setAnalysisStart(0); setAnalysisEnd(0); setGateNeedsResplit(false); setSegmentInterval(2); setNodeInterval(20); setWindowMode("uniform"); setWindowSourceSegments([]); setSegments([]); setClapTopK(20); setSiglipTopK(20);
     setTextBankViewMode("standard"); setClapBankViewMode("standard"); setSiglipBankViewMode("standard"); setShowClap(true); setShowSiglip(true); setInterpolateClap(true); setInterpolateSiglip(true); setShowSpectrogram(true);
     setSpectrogramScale("mel"); setSpectrogramDetail("medium"); setSpectrogramColor("roseus"); setSpectrogramRenderer("windowed"); setSiglipSpectrogramLayout("rgb_delta"); setBlendMode(false); setClapWeight(.5); setTrustThreshold(DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold); setTrustFloor(DEFAULT_MODALITY_TRUST_CONFIG.floorWeight); setVocalMatrixMode(false);
     setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id)); setShowGlobalConsensus(false); setConsensusTopK(64); setConsensusCentroidPercent(35); setTimelineView("modality"); setBlendPair("text-clap"); setBlendPercent(50); setBlendCurve("linear");
@@ -959,10 +976,53 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
         </div>
       </header>
 
-      <div className="flex-1 overflow-auto p-3">
-        <div className="flex w-full min-w-0 flex-col gap-3">
+      <div className={`flex-1 min-h-0 p-3 ${isAxisPinned ? "overflow-hidden" : "overflow-auto"}`}>
+        <div className="mb-2 flex justify-end">
+          <Button data-am-stage-action="toggle-work-axis-pin" size="sm" variant={isAxisPinned ? "secondary" : "outline"} aria-pressed={isAxisPinned} onClick={() => setIsAxisPinned((value) => !value)}>
+            {isAxisPinned ? <Pin className="size-3.5" /> : <PinOff className="size-3.5" />}
+            {isAxisPinned ? t("Work axis pinned") : t("Pin work axis")}
+          </Button>
+        </div>
+        <ResizablePanelGroup direction="vertical" data-pinned={isAxisPinned ? "true" : "false"} className={`am-stage-main-split min-h-0 ${isAxisPinned ? "h-[calc(100%-2.5rem)]" : "h-auto"}`}>
+          <ResizablePanel id="am-stage-work-axis-panel" defaultSize={66} minSize={38} maxSize={72} className={isAxisPinned ? "min-h-0" : "!flex-none !basis-auto !grow-0 overflow-visible"}>
+            <ScrollArea className={isAxisPinned ? "h-full" : "h-auto overflow-visible"}>
+              <div className="am-stage-axis-column min-w-0 space-y-3 pr-3">
+                <section id="am-stage-media" data-am-stage-layer="L0" data-am-stage-zone="media" className="am-stage-media-column min-w-0 rounded-lg border border-cyan-400/20 bg-black/30 p-4">
+                  <div className="min-w-0">
+                    <h2 className="am-stage-module-heading mb-2"><span>01</span>{t("Work axis")} · {t("Waveform · Spectrogram")}</h2>
+                    {!audioUrl ? (
+                      <label className="flex min-h-52 cursor-pointer items-center justify-center rounded border border-dashed border-cyan-400/30 bg-black/40">
+                        <span className="flex items-center gap-2 text-sm text-zinc-400"><Upload className="size-5" />{t("Выбрать аудиофайл")}</span>
+                        <input className="hidden" type="file" accept="audio/*" onChange={(event) => { const selected = event.target.files?.[0]; if (selected) selectFile(selected); }} />
+                      </label>
+                    ) : (
+                      <AudioWaveformEditor instanceId="audio-segments" url={audioUrl} offset={regionOffset} duration={regionDuration} totalDuration={audioDuration} onDuration={handleWaveDuration} onRegion={handleRegion} onFile={selectFile} onTime={setCurrentTime} seekRequest={seekRequest} loopRegion={false} minimap spectrogram={{ visible: showSpectrogram, scale: spectrogramScale, detail: spectrogramDetail, colorMap: spectrogramColor, renderer: spectrogramRenderer }} />
+                    )}
+                    {file ? <div className="mt-2 truncate text-xs text-zinc-500">{file.name}</div> : null}
+                  </div>
+                </section>
+                <section data-am-stage-layer="L0" data-am-stage-zone="node-seek" className="am-stage-node-seek-column min-w-0 rounded-lg border border-white/10 bg-black/30 p-2" aria-label="Parameter timeline node seek">
+                  <div className="mb-1 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-zinc-400"><AMIcon name="audioToParameter" size="sm" bright />Node seek · Parameter Timeline</div>
+                  <div className="flex gap-1 overflow-x-auto pb-2">{segments.map((segment, index) => <button key={`${segment.time}-${index}`} type="button" onClick={() => seekToSegment(segment)} aria-current={Math.abs(currentTime - segment.time) < 0.05 ? "time" : undefined} className={`min-w-28 rounded border px-2 py-2 text-left text-[10px] ${Math.abs(currentTime - segment.time) < 0.05 ? "border-white bg-white/10 text-white" : "border-white/10 bg-black/40 text-zinc-400"}`}><div className="font-mono">{formatTime(segment.time)}</div><div className="mt-1 flex gap-1"><span className={`rounded border px-1 ${statusClass(segment.clapStatus)}`}>C {segment.clap.length}</span><span className={`rounded border px-1 ${statusClass(segment.siglipStatus)}`}>S {segment.siglip.length}</span></div></button>)}</div>
+                </section>
+              </div>
+            </ScrollArea>
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel id="am-stage-analysis-panel" defaultSize={34} minSize={28} className={isAxisPinned ? "min-h-0" : "!flex-none !basis-auto !grow-0 overflow-visible"}>
+            <ScrollArea className={isAxisPinned ? "h-full" : "h-auto overflow-visible"}>
+        <div className="am-stage-workspace flex w-full min-w-0 flex-col gap-3">
+          <nav className="am-stage-pipeline-rail" aria-label={t("AM-Stage pipeline")}>
+            {([
+              ["am-stage-media", "01", "Work axis"],
+              ["am-stage-extract", "02", "Extract"],
+              ["am-stage-reconcile", "03", "Reconcile"],
+              ["am-stage-project", "04", "Project"],
+            ] as const).map(([target, rank, label]) => <a key={target} href={`#${target}`}><span>{rank}</span>{t(label)}</a>)}
+          </nav>
           <section data-am-stage-zone="top-row" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
-            <div className="min-w-0 space-y-3">
+            <section id="am-stage-extract" data-am-stage-layer="L1" className="am-stage-extract-column min-w-0 space-y-3">
+              <h2 className="am-stage-module-heading"><span>02</span>{t("Extract")}</h2>
               <SemanticSearch primaryLabel="Brief" secondaryLabel="Transition" collapsible dataScope="am-stage" selectedDomainLayers={selectedLayers} />
               <GemmaMultimodalParameterSearch selectedLayers={selectedLayers} spectrogramFrame={activeSiglipSegment?.siglipPreview ? { dataUrl: activeSiglipSegment.siglipPreview.dataUrl, offset: activeSiglipSegment.offset } : undefined} />
           <details data-am-stage-disclosure="analysis-controls" className="rounded-lg border border-white/10 bg-black/30 p-3">
@@ -1006,11 +1066,16 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                 <div className="col-span-2 rounded border border-white/10 p-2">
                   <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                     <span className="flex items-center gap-1 text-[11px] text-zinc-300">Analysis time gate · timestamps relative to original file<V3InfoTip content="Auto-split and both model runs stay inside this range. Export times remain relative to the original file." /></span>
-                    <button type="button" className="text-[10px] text-cyan-300 hover:underline" onClick={() => { setAnalysisStart(regionOffset); setAnalysisEnd(Math.min(audioDuration, regionOffset + regionDuration)); }}>Use waveform selection</button>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <Badge variant="outline">{formatTime(Math.max(0, (analysisEnd || audioDuration) - analysisStart))} {t("gate")}</Badge>
+                      <button type="button" className="rounded border border-cyan-400/30 px-2 py-1 text-[10px] text-cyan-200 hover:bg-cyan-950/30" onClick={() => updateAnalysisGate(regionOffset, Math.min(audioDuration, regionOffset + regionDuration))}>{t("Use waveform selection")}</button>
+                      <button type="button" className="rounded border border-white/15 px-2 py-1 text-[10px] text-zinc-300 hover:bg-white/5" onClick={() => updateAnalysisGate(0, audioDuration)}>{t("Full file")}</button>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <label className="text-[10px] text-zinc-500">Start (s)<Input type="number" min={0} max={audioDuration} step={0.1} value={analysisStart} onChange={(event) => setAnalysisStart(Math.max(0, Math.min(audioDuration, Number(event.target.value) || 0)))} /></label>
-                    <label className="text-[10px] text-zinc-500">End (s)<Input type="number" min={0} max={audioDuration} step={0.1} value={analysisEnd || audioDuration} onChange={(event) => setAnalysisEnd(Math.max(0, Math.min(audioDuration, Number(event.target.value) || 0)))} /></label>
+                    {gateNeedsResplit ? <p role="status" className="mb-2 text-[10px] text-amber-200">{t("The time gate changed. Run Auto-split before analyzing these nodes.")}</p> : null}
+                    <div className="grid grid-cols-2 gap-2 opacity-80">
+                    <label className="text-[10px] text-zinc-500">Start (s)<Input type="number" min={0} max={Math.max(0, audioDuration - 0.1)} step={0.1} value={analysisStart} onChange={(event) => updateAnalysisGate(Number(event.target.value) || 0, analysisEnd || audioDuration)} /></label>
+                    <label className="text-[10px] text-zinc-500">End (s)<Input type="number" min={analysisStart + 0.1} max={audioDuration} step={0.1} value={analysisEnd || audioDuration} onChange={(event) => updateAnalysisGate(analysisStart, Number(event.target.value) || 0)} /></label>
                   </div>
                 </div>
                 <div className="flex items-end">
@@ -1277,8 +1342,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
               ) : null}
             </div></div>
           </details>
-            </div>
-            <aside data-am-stage-zone="macro-exports" className="flex min-w-0 flex-col gap-2 rounded-lg border border-cyan-400/20 bg-black/30 p-3">
+            </section>
+            <aside id="am-stage-project" data-am-stage-layer="L3" data-am-stage-zone="macro-exports" className="am-stage-project-column flex min-w-0 flex-col gap-2 rounded-lg border border-cyan-400/20 bg-black/30 p-3">
+              <h2 className="am-stage-module-heading"><span>04</span>{t("Project")}</h2>
               <MacroGenerator parameters={textStageParameters} collapsible dataScope="am-stage" collapseLabel={`TEXT · Semantic V3 · ${textStageParameters.length}`} />
               <MacroGenerator parameters={macroParameters} collapsible dataScope="am-stage" collapseLabel={`CLAP + SigLIP2${includeServerStage2InMacro && serverStage2Results.length ? " + Stage-2" : ""} · ${macroParameters.length}`} />
               <div className="grid gap-1.5 sm:grid-cols-2">
@@ -1291,40 +1357,13 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             </aside>
           </section>
 
-          <section data-am-stage-zone="node-seek" className="min-w-0 rounded-lg border border-white/10 bg-black/30 p-2" aria-label="Parameter timeline node seek">
-            <div className="mb-1 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-zinc-400"><AMIcon name="audioToParameter" size="sm" bright />Node seek · Parameter Timeline</div>
-            <div className="flex gap-1 overflow-x-auto pb-2">
-              {segments.map((segment, index) => (
-                <button
-                  key={`${segment.time}-${index}`}
-                  type="button"
-                  onClick={() => seekToSegment(segment)}
-                  className={`min-w-28 rounded border px-2 py-2 text-left text-[10px] ${Math.abs(currentTime - segment.time) < 0.05 ? "border-white bg-white/10 text-white" : "border-white/10 bg-black/40 text-zinc-400"}`}
-                >
-                  <div className="font-mono">{formatTime(segment.time)}</div>
-                  <div className="mt-1 flex gap-1">
-                    <span
-                      className={`rounded border px-1 ${statusClass(segment.clapStatus)}`}
-                    >
-                      C {segment.clap.length}
-                    </span>
-                    <span
-                      className={`rounded border px-1 ${statusClass(segment.siglipStatus)}`}
-                    >
-                      S {segment.siglip.length}
-                    </span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </section>
-
+          <div className="am-stage-specialists-column" data-am-stage-layer="L1">
           <SegmentSideMetadataPanel
             key={activeSegmentIndex}
             file={file}
             segment={activeSegmentIndex >= 0 ? segments[activeSegmentIndex] : null}
             segmentIndex={Math.max(0, activeSegmentIndex)}
-            window={{ offset: regionOffset, duration: regionDuration }}
+            window={activeSegmentIndex >= 0 ? { offset: segments[activeSegmentIndex].offset, duration: segments[activeSegmentIndex].duration } : { offset: regionOffset, duration: regionDuration }}
             journalParameters={lfmJournalParameters}
             onCopyToBrief={setV3Query}
             onSeedReverseQuery={seedLfm3ReverseQuery}
@@ -1347,69 +1386,21 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
               setSegments((current) => applySegmentSideMeta(current, activeSegmentIndex, patch));
             }}
           />
+          </div>
 
-          <section data-am-stage-zone="media" className="min-w-0 rounded-lg border border-cyan-400/20 bg-black/30 p-4">
-            <div className="min-w-0">
-              <div className="mb-2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-zinc-400"><AMIcon name="audioToParameter" size="sm" bright />Waveform · Spectrogram</div>
-              {!audioUrl ? (
-                <label className="flex min-h-52 cursor-pointer items-center justify-center rounded border border-dashed border-cyan-400/30 bg-black/40">
-                  <span className="flex items-center gap-2 text-sm text-zinc-400">
-                    <Upload className="size-5" />
-                    {t("Выбрать аудиофайл")}
-                  </span>
-                  <input
-                    className="hidden"
-                    type="file"
-                    accept="audio/*"
-                    onChange={(event) => {
-                      const selected = event.target.files?.[0];
-                      if (selected) selectFile(selected);
-                    }}
-                  />
-                </label>
-              ) : (
-                <AudioWaveformEditor
-                  instanceId="audio-segments"
-                  url={audioUrl}
-                  offset={regionOffset}
-                  duration={regionDuration}
-                  totalDuration={audioDuration}
-                  onDuration={handleWaveDuration}
-                  onRegion={handleRegion}
-                  onFile={selectFile}
-                  onTime={setCurrentTime}
-                  seekRequest={seekRequest}
-                  loopRegion={false}
-                  minimap
-                  spectrogram={{
-                    visible: showSpectrogram,
-                    scale: spectrogramScale,
-                    detail: spectrogramDetail,
-                    colorMap: spectrogramColor,
-                    renderer: spectrogramRenderer,
-                  }}
-                />
-              )}
-              {file ? (
-                <div className="mt-2 truncate text-xs text-zinc-500">
-                  {file.name}
-                </div>
-              ) : null}
-            </div>
-
-          </section>
-
+          <section id="am-stage-reconcile" data-am-stage-layer="L2" className="am-stage-reconcile-column min-w-0 space-y-3">
+          <h2 className="am-stage-module-heading"><span>03</span>{t("Reconcile")}</h2>
           <div data-am-stage-zone="timeline" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(170px,1fr)_minmax(0,9fr)]">
             <aside aria-label="Domain layer timeline visibility filters" className="max-h-56 overflow-y-auto rounded-lg border border-border bg-background/85 p-3 xl:max-h-[min(70vh,720px)]">
               <div className="mb-2 flex flex-wrap items-center justify-between gap-2"><h2 className="flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-wider"><AMIcon name="settings" size="sm" bright />Layer matrix</h2><select title={t("Изменить порядок английского и русского названий параметров")} aria-label="Parameter title order" value={titleOrder} onChange={(event) => void saveTitleOrder(event.target.value as "en-ru" | "ru-en")} className="max-w-32 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-[9px]"><option value="en-ru">Title EN → RU</option><option value="ru-en">Title RU → EN</option></select></div>
                 <div className="mb-2 flex justify-end"><V3InfoTip content={t("Фильтр показывает девять акустических слоёв. Клиентское Stage-2 ниже сглаживает уже найденные кадры; серверное Stage-2 — отдельный повторный поиск по текстовому индексу.")} /></div>
-              <div className="mb-2 flex flex-wrap gap-1"><button type="button" title="Включить все девять акустических слоёв" className="rounded border border-white/15 px-2 py-1 text-[9px]" onClick={() => setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id))}>All 9</button><button type="button" title="Снять выбор со всех акустических слоёв" className="rounded border border-white/15 px-2 py-1 text-[9px]" onClick={() => setSelectedLayers([])}>Clear</button></div>
+              <div className="mb-2 flex flex-wrap items-center gap-1"><button type="button" aria-pressed={selectedLayers.length === ACOUSTIC_DOMAIN_LAYERS.length} title="Включить все девять акустических слоёв" className={`rounded border px-2 py-1 text-[9px] transition-colors ${selectedLayers.length === ACOUSTIC_DOMAIN_LAYERS.length ? "border-cyan-300/60 bg-cyan-950/40 text-cyan-100" : "border-white/15 text-zinc-400 hover:bg-white/5"}`} onClick={() => setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id))}>All 9</button><button type="button" aria-pressed={selectedLayers.length === 0} title="Снять выбор со всех акустических слоёв" className={`rounded border px-2 py-1 text-[9px] transition-colors ${selectedLayers.length === 0 ? "border-zinc-400/50 bg-zinc-800 text-zinc-100" : "border-white/15 text-zinc-400 hover:bg-white/5"}`} onClick={() => setSelectedLayers([])}>Clear</button><Badge variant="outline" className="ml-auto text-[9px]">{selectedLayers.length}/{ACOUSTIC_DOMAIN_LAYERS.length} {t("active")}</Badge></div>
               <div className="flex flex-col gap-1.5">
                 {ACOUSTIC_DOMAIN_LAYERS.map((layer) => {
                   const checked = selectedLayers.includes(layer.id);
                   const count = layerCounts.get(layer.id)?.size ?? 0;
                   const countsAvailable = v3Parameters.length > 0 || segments.some((segment) => segment.clap.length > 0 || segment.siglip.length > 0);
-                  return <label key={layer.id} data-am-stage-layer={layer.id} title={`${t(layer.label)} · ${count} ${t("параметров")}`} className="flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px] transition-colors hover:bg-white/5" style={{ borderColor: `${layer.color}70`, color: layer.color }}><input className="peer sr-only" data-am-stage-action={`toggle-layer-${layer.id.toLowerCase()}`} type="checkbox" checked={checked} onChange={() => setSelectedLayers((current) => checked ? current.filter((id) => id !== layer.id) : [...current, layer.id])} /><AMIcon name={layer.icon} size="sm" className={`h-7 w-7 ${checked ? "opacity-100" : "opacity-60"}`} /><span>{t(layer.label)}</span><span className="ml-auto tabular-nums text-muted-foreground">{countsAvailable ? count : "—"}</span></label>;
+                  return <label key={layer.id} data-am-stage-layer={layer.id} data-active={checked ? "true" : "false"} title={`${t(layer.label)} · ${count} ${t("параметров")}`} className={`flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px] transition-all ${checked ? "shadow-[inset_2px_0_0_var(--layer-accent)]" : "grayscale"}`} style={{ "--layer-accent": layer.color, borderColor: checked ? `${layer.color}9a` : "rgba(113,113,122,.35)", color: checked ? layer.color : "#71717a", backgroundColor: checked ? `color-mix(in srgb, ${layer.color} 11%, transparent)` : "rgba(39,39,42,.35)" } as React.CSSProperties}><input className="peer sr-only" data-am-stage-action={`toggle-layer-${layer.id.toLowerCase()}`} type="checkbox" checked={checked} onChange={() => setSelectedLayers((current) => checked ? current.filter((id) => id !== layer.id) : [...current, layer.id])} /><AMIcon name={layer.icon} size="sm" className={`h-7 w-7 ${checked ? "opacity-100" : "opacity-55"}`} /><span>{t(layer.label)}</span><span className={`ml-auto tabular-nums ${checked ? "text-foreground/70" : "text-muted-foreground"}`}>{countsAvailable ? count : "—"}</span></label>;
                 })}
               </div>
               <section data-am-stage-zone="stage-2-postprocess" className="mt-2 space-y-2 rounded border p-2" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70` }} aria-label={t("Client Stage-2 smoothing")}>
@@ -1470,13 +1461,17 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             </div>
             <div className="max-h-40 overflow-auto rounded border border-white/10"><div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 p-2 font-mono text-[10px]">{bridgeFrames.slice(0, 64).map((parameter) => <div key={parameter.technical_name} className="contents"><span className="truncate text-zinc-400">{parameter.technical_name}</span><span className="text-violet-200">{String(parameter.current_value)}</span></div>)}{bridgeFrames.length === 0 ? <span className="col-span-2 py-2 text-center text-muted-foreground">Нет пересекающихся параметров в загруженных результатах.</span> : null}</div></div>
           </section>
+          </section>
 
-          <section data-am-stage-zone="modality-banks" className="grid min-h-[560px] min-w-0 gap-3 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+          <section data-am-stage-layer="L3" data-am-stage-zone="modality-banks" className="am-stage-banks-column grid min-w-0 gap-3 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
             <ParameterBank dataScope="am-stage" title="CLAP Parameters" icon="clap" bankId="clap" accent="cyan" parameters={visibleClap} viewMode={clapBankViewMode} titleOrder={titleOrder} onViewModeChange={setClapBankViewMode} useDomainLayerColors onChange={(name, value) => updateValue("clap", name, value)} onRemove={(name) => removeValue("clap", name)} />
             <ParameterBank dataScope="am-stage" title="SigLIP2 Spectrogram Parameters" icon="morpho" bankId="siglip2" accent="fuchsia" parameters={visibleSiglip} viewMode={siglipBankViewMode} titleOrder={titleOrder} onViewModeChange={setSiglipBankViewMode} useDomainLayerColors onChange={(name, value) => updateValue("siglip", name, value)} onRemove={(name) => removeValue("siglip", name)} />
           </section>
-          <ParameterBank dataScope="am-stage" title={`TEXT · Semantic V3 · ${textStageParameters.length}/${v3Parameters.length}`} icon="search" bankId="text" accent="cyan" parameters={textStageParameters} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={updateV3ParameterValue} onRemove={removeV3Parameter} />
+          <div className="am-stage-text-bank-column" data-am-stage-layer="L3"><ParameterBank dataScope="am-stage" title={`TEXT · Semantic V3 · ${textStageParameters.length}/${v3Parameters.length}`} icon="search" bankId="text" accent="cyan" parameters={textStageParameters} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={updateV3ParameterValue} onRemove={removeV3Parameter} /></div>
         </div>
+            </ScrollArea>
+          </ResizablePanel>
+        </ResizablePanelGroup>
         {sessionModalOpen ? <div className="fixed inset-0 z-[90] grid place-items-center bg-black/75 p-4" role="presentation"><section role="dialog" aria-modal="true" aria-labelledby="am-stage-sessions-title" className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-violet-400/40 bg-zinc-950 p-4 shadow-xl"><div className="mb-3 flex items-center justify-between gap-2"><h2 id="am-stage-sessions-title" className="font-mono text-sm font-semibold">Сессии AM-Stage</h2><Button size="sm" variant="ghost" onClick={() => { setSessionModalOpen(false); setPendingSessionAction(null); }}>Закрыть</Button></div>
           {pendingSessionAction ? <div className="mb-3 rounded border border-amber-400/30 bg-amber-950/20 p-3"><p className="text-sm">Есть несохранённые изменения. Сохранить их перед {pendingSessionAction.type === "open" ? "открытием другой сессии" : "созданием новой сессии"}?</p><div className="mt-2 flex flex-wrap gap-2"><Button size="sm" onClick={() => void saveForPendingAction()} disabled={sessionBusy}>Сохранить и продолжить</Button><Button size="sm" variant="outline" onClick={() => pendingSessionAction.type === "open" ? void openSession(pendingSessionAction.id) : clearSessionState()}>Продолжить без сохранения</Button><Button size="sm" variant="ghost" onClick={() => setPendingSessionAction(null)}>Отмена</Button></div></div> : null}
           {sessionRows.length ? <ul className="space-y-2">{sessionRows.map((row) => <li key={row.id} className="rounded border border-white/10 p-2"><div className="flex flex-wrap items-center justify-between gap-2">{renamingSessionId === row.id ? <div className="flex min-w-0 flex-1 gap-1"><Input aria-label="Название сессии" value={sessionTitleDraft} onChange={(event) => setSessionTitleDraft(event.target.value)} /><Button size="sm" onClick={() => void renameSession(row.id)}>Сохранить имя</Button></div> : <div className="min-w-0"><p className="truncate text-sm font-medium">{row.title}{activeSession?.id === row.id ? <span className="ml-2 text-[10px] text-cyan-300">текущая{sessionDirty ? " · изменена" : ""}</span> : null}</p><p className="text-[10px] text-muted-foreground">{row.audio_name ?? "без аудио"} · {row.segment_count} точек · {row.parameter_count} параметров · обновлена {new Date(row.updated_at).toLocaleString()}</p></div>}<div className="flex flex-wrap gap-1">{renamingSessionId !== row.id ? <><Button size="sm" onClick={() => requestOpenSession(row.id)} disabled={sessionBusy}>Открыть</Button><Button size="sm" variant="outline" onClick={() => { setRenamingSessionId(row.id); setSessionTitleDraft(row.title); }}>Переименовать</Button><Button size="sm" variant="ghost" onClick={() => void deleteSession(row.id)}>Удалить</Button></> : <Button size="sm" variant="ghost" onClick={() => setRenamingSessionId(null)}>Отмена</Button>}</div></div></li>)}</ul> : <p className="rounded border border-white/10 p-4 text-sm text-muted-foreground">Сохранённых сессий пока нет.</p>}

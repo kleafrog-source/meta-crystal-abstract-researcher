@@ -377,19 +377,27 @@ def search_audio(audio_path: str, offset: float, duration: float, top_k: int, pr
     return {"model": MODEL_NAME, "offset": offset, "duration": duration, "fragment_chunks": chunk_count, "results": results, "index": build}
 
 
-def save_audio_fragment(audio_path: str, output_path: str, offset: float, duration: float) -> dict[str, Any]:
+def save_audio_fragment(audio_path: str, output_path: str, offset: float, duration: float, sample_rate: int | None = None, mono: bool = False) -> dict[str, Any]:
     try:
         import librosa
         import soundfile as sf
     except ImportError as exc:
         raise RuntimeError("librosa and soundfile are required for saving audio fragments") from exc
     duration = max(1.0, min(800.0, duration))
-    audio, sample_rate = librosa.load(audio_path, sr=None, mono=False, offset=max(0.0, offset), duration=duration)
+    audio, output_sample_rate = librosa.load(audio_path, sr=sample_rate, mono=mono, offset=max(0.0, offset), duration=duration)
     if audio.size == 0:
         raise ValueError("Selected audio fragment is empty")
     if audio.ndim > 1:
         audio = audio.T
     target = Path(output_path)
     target.parent.mkdir(parents=True, exist_ok=True)
-    sf.write(target, audio, sample_rate, subtype="PCM_16")
-    return {"filename": target.name, "path": str(target), "offset": offset, "duration": duration}
+    sf.write(target, audio, output_sample_rate, subtype="PCM_16")
+    return {"filename": target.name, "path": str(target), "offset": offset, "duration": duration, "sample_rate": output_sample_rate, "mono": mono}
+
+
+def audio_duration(audio_path: str) -> dict[str, float]:
+    import librosa
+    duration = float(librosa.get_duration(path=audio_path))
+    if duration <= 0:
+        raise ValueError("Audio file has no decodable duration")
+    return {"duration_seconds": duration}
