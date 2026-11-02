@@ -53,7 +53,7 @@ export interface ActiveParameter {
   suggested_value: number | string;
   current_value: number | string;
   before: number | string;
-  source: "numeric" | "value_anchor" | "morpho_value_anchor" | "lexical" | "relation" | "axis" | "retrieval" | "not_generated" | "default" | "neutral" | "audio_similarity" | "consensus" | "transition";
+  source: "numeric" | "value_anchor" | "morpho_value_anchor" | "lexical" | "relation" | "axis" | "retrieval" | "not_generated" | "default" | "neutral" | "audio_similarity" | "consensus" | "transition" | "stage2";
   value_confidence?: number;
   anchor_target?: number | string | null;
   detail: string;

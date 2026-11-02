@@ -477,6 +477,22 @@ export const UI_COPY: Record<string, BilingualCopy> = {
         "Smooths parameters from the current result and CLAP/SigLIP frames in the client. It does not add parameters from the index.",
         "Клиентски сглаживает параметры из текущего результата и кадров CLAP/SigLIP. Новые параметры из индекса не добавляются."
     ],
+    "Фильтр показывает девять акустических слоёв. Клиентское Stage-2 ниже сглаживает уже найденные кадры; серверное Stage-2 — отдельный повторный поиск по текстовому индексу.": ["This filter shows nine acoustic layers. Client Stage-2 smooths retrieved frames; server Stage-2 runs a separate second search in the text index.", "Фильтр показывает девять акустических слоёв. Клиентское Stage-2 ниже сглаживает уже найденные кадры; серверное Stage-2 — отдельный повторный поиск по текстовому индексу."],
+    "Client Stage-2 smoothing": ["Client Stage-2 smoothing", "Клиентское сглаживание Stage-2"],
+    "Enables client smoothing of already retrieved parameters; it does not run a new retrieval.": ["Enables client smoothing of already retrieved parameters; it does not run a new retrieval.", "Включает клиентское сглаживание уже найденных параметров без повторного поиска."],
+    "Client smooth · Stage-2": ["Client smooth · Stage-2", "Клиентское сглаживание · Stage-2"],
+    "Server Stage-2 retrieval": ["Server Stage-2 retrieval", "Серверный поиск Stage-2"],
+    "Second vector search": ["Second vector search", "Второй векторный поиск"],
+    "Builds a weighted centroid from Stage-1 text vectors, then searches the same index while excluding every Stage-1 name.": ["Builds a weighted centroid from Stage-1 text vectors, then searches the same index while excluding every Stage-1 name.", "Строит взвешенный центроид текстовых векторов Stage-1 и повторно ищет в том же индексе, исключив все имена Stage-1."],
+    "Top-K2": ["Top-K2", "Top-K второго прохода"],
+    "Run retrieval": ["Run retrieval", "Запустить поиск"],
+    "Searching…": ["Searching…", "Поиск…"],
+    "Stage-1 seeds": ["Stage-1 seeds", "Начальные параметры Stage-1"],
+    "Include Stage-2 results in macro output": ["Include Stage-2 results in macro output", "Добавить результаты Stage-2 в выходной макрос"],
+    "Stage-2 results": ["Stage-2 results", "Результаты Stage-2"],
+    "Weighted centroid seeds": ["Weighted centroid seeds", "Параметры центроида"],
+    "Stage-1 names excluded": ["Stage-1 names excluded", "Исключено имён Stage-1"],
+    "Stage-2 retrieval returned no new parameters.": ["Stage-2 retrieval returned no new parameters.", "Поиск Stage-2 не нашёл новых параметров."],
     "Нажмите точку для перемотки": [
         "Select a point to seek",
         "Нажмите точку, чтобы перемотать"

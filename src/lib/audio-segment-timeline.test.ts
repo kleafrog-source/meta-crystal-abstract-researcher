@@ -84,6 +84,27 @@ describe("audio segment timeline", () => {
     expect(fused.find((item) => item.technical_name === "amount")?.detail).toContain("kept CLAP");
   });
 
+  it("exports server Stage-2 hits with explicit provenance outside the audio node frames", () => {
+    const timeline = buildPriorityTimeline([], {
+      audioName: "fixture.wav",
+      audioDuration: 5,
+      rawInterval: 2,
+      nodeInterval: 5,
+      blend: false,
+      serverStage2: {
+        index: "qwen3",
+        results: [{ ...parameter("coherence_anchor", 42), source: "stage2" }],
+      },
+    }) as unknown as { server_stage2?: { index: string; results: Array<{ technical_name: string; source: string }> }; timeline: unknown[] };
+
+    expect(timeline.timeline).toEqual([]);
+    expect(timeline.server_stage2).toEqual({
+      index: "qwen3",
+      query_method: "weighted_centroid_of_stage1_text_vectors",
+      results: [{ technical_name: "coherence_anchor", similarity: 0.9, current_value: 42, source: "stage2" }],
+    });
+  });
+
   it("down-weights flat score lists and keeps the higher-trust value on disagreement", () => {
     const clap = [
       { ...parameter("amount", 20), similarity: 0.7 },

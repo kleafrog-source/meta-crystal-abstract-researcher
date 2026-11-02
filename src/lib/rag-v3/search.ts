@@ -161,6 +161,7 @@ export async function searchV3(params: {
   textIndex?: TextIndexId;
   modelSlotOwner?: string;
   queryEmbedding?: number[];
+  externalQueryText?: string;
 }): Promise<ProposeParametersResponse> {
   const query = params.query.trim();
   const hasExternalEmbedding = Array.isArray(params.queryEmbedding) && params.queryEmbedding.length > 0;
@@ -187,7 +188,9 @@ export async function searchV3(params: {
     for (const name of records.keys()) if (!allowedNames.has(name)) records.delete(name);
   }
 
-  const baseQuery = hasExternalEmbedding ? "Audio input" : buildEffectiveQuery(query, params.instructionContext);
+  const baseQuery = hasExternalEmbedding
+    ? params.externalQueryText?.trim() || "Audio input"
+    : buildEffectiveQuery(query, params.instructionContext);
   const textIndex = params.textIndex === "embeddinggemma2" ? "embeddinggemma2" : "qwen3";
   const selectedModel = TEXT_INDEX_MODELS[textIndex];
   const selectedQueryVector = params.queryEmbedding ?? await embedTextWithModel(baseQuery, selectedModel, params.modelSlotOwner);

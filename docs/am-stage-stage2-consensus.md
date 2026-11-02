@@ -2,9 +2,9 @@
 
 Codebase audit for `TASK-am-stage-snapshot-reverse-query.md`.
 
-## 1. Stage-2: client smoothing vs a second vector search
+## 1. Stage-2 paths
 
-AM-Stage Stage-2 is client-side post-processing. `AMStagePage` derives
+**Client Stage-2 smoothing** remains client-side post-processing. `AMStagePage` derives
 `consensusFrames` with `applyConsensusSmooth`, passing the already available
 V3, CLAP, and SigLIP frames. `applyConsensusSmooth` filters and truncates each
 input frame, computes per-parameter numeric centroids over those frames, and
@@ -13,20 +13,37 @@ a query embedding, or retrieve another Top-K. See
 `src/components/pages/AMStagePage.tsx` (`consensusFrames`) and
 `src/lib/am-stage-blend.ts` (`applyConsensusSmooth`).
 
-A separate server route exists at `src/app/api/cross-modal/consensus/route.ts`
+**Server Stage-2 retrieval** is a separate explicit action in the Layer Matrix.
+It takes the current Stage-1 V3 hit names and scores, reads their vectors from
+the selected Qwen3 or EmbeddingGemma 2 text index, and builds a similarity-
+weighted centroid from up to 32 highest-scoring seeds. It searches that same
+index for new names, excluding every Stage-1 name, then applies the normal V3
+scope, selected-layer, and domain-first MMR handling. It uses stored vectors
+and does not call an embedding model. The current implementation is text-only;
+cross-modal Stage-3 trust does not apply to this single-modality query. The
+route is `POST /api/rag-v3/stage2-retrieval`.
+
+| Path | Retrieval | New names beyond Stage-1? | Trigger |
+| --- | --- | --- | --- |
+| Client Stage-2 smoothing | Existing V3/CLAP/SigLIP frames only | No | Local visibility toggle |
+| Server Stage-2 retrieval | Second search in selected text index; excludes Stage-1 names | Yes | Explicit **Run retrieval** button |
+| Journal consensus | Journal source records plus optional graph neighbors | Separate workflow | Journal action |
+
+A separate Journal route exists at `src/app/api/cross-modal/consensus/route.ts`
 (`POST`). It fuses selected immutable Journal records with `buildConsensus`;
 when requested, it can add one-hop knowledge-graph neighbors with a penalty.
 That route reads the parameter union for metadata and uses `loadGraph`; it does
-not run a second vector search or compute a Stage-1 centroid. It is not the
-AM-Stage Stage-2 operation.
+not run the AM-Stage text-index second pass.
 
-## 2. Client limitation
+## 2. Provenance and client limitation
 
-A parameter missing from every Stage-1 input frame cannot be introduced by
-AM-Stage Stage-2. The function only maps over the original frames and only
-changes numeric values for names present in its retrieved-value map. A missing
-stability or phase-alignment parameter needs a separate retrieval stage to
-become a Stage-2 result.
+A parameter missing from every Stage-1 input frame cannot be introduced by the
+client smoothing path. Only explicit server retrieval can introduce a new name.
+Server hits remain in a distinct Stage-2 results list. The optional macro-output
+checkbox adds them to the current macro projection without mutating or replacing
+Stage-1 results. Priority Timeline JSON records them separately at
+`server_stage2.results`, each marked `source: "stage2"`; they are not silently
+inserted into audio-node frames or stored as `GLOBAL_CONSENSUS_LAYER`.
 
 ## 3. Priority Timeline JSON
 
@@ -37,19 +54,19 @@ The writer is `buildPriorityTimeline` in
 and nodes store independent `clap` / `siglip` pairs. In either case `events`
 come from `stemEvents`. The event stream now receives the same CLAP blend
 weight; before this change it silently used the default 50/50 weight even when
-the timeline used a custom weight. The writer does not add
-`GLOBAL_CONSENSUS_LAYER`, a Stage-2 flag, or Stage-2-smoothed values. The page
-calls it with raw/node segments and the Blend weight in
-`AMStagePage.exportTimeline`.
+the timeline used a custom weight. Client smoothing is not written to the
+Priority Timeline. When server Stage-2 results exist, `AMStagePage.exportTimeline`
+adds their names, scores, current values, selected index, query method, and
+explicit source to the root `server_stage2` object. Node frames remain the
+existing CLAP/SigLIP audio timeline contract. Stage-2 parameters retain their
+catalogue acoustic layer; `GLOBAL_CONSENSUS_LAYER` remains UI-only.
 
 ## 4. Roadmap status
 
-The code supports a working client-side smoothing preview today. The UI labels
-it as a post-process of retrieved frames, not a corpus layer or a new index.
-The codebase does not implement an AM-Stage server-side second retrieval pass
-for coherence anchors. Treat server Stage-2 retrieval as a follow-up feature,
-not as an existing path or a completed guarantee; no TODO by itself establishes
-that roadmap commitment.
+Both paths are implemented: client smoothing previews current frames; server
+Stage-2 is an explicit second text-vector retrieval that can introduce new
+parameter names. Server results are a separate collection, not a corpus shard
+or a replacement for the client preview.
 
 ## 5. Blend CLAP & SigLIP and the interpolation bridge
 

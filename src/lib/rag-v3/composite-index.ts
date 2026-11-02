@@ -85,6 +85,18 @@ export async function getCompositeIndexInfo(indexId: TextIndexId = "qwen3"): Pro
   return (await loadIndex(indexId)).manifest;
 }
 
+export async function getCompositeParameterNames(indexId: TextIndexId = "qwen3"): Promise<string[]> {
+  return Array.from((await loadIndex(indexId)).rowByName.keys());
+}
+
+export async function getCompositeVectorsByNames(names: string[], indexId: TextIndexId = "qwen3"): Promise<Array<{ name: string; vector: number[] }>> {
+  const index = await loadIndex(indexId);
+  return names.flatMap((name) => {
+    const entry = index.rowByName.get(name);
+    return entry ? [{ name, vector: Array.from(entry.vector) }] : [];
+  });
+}
+
 export async function rankCompositeNames(queryVector: number[], names: string[], limit: number, indexId: TextIndexId = "qwen3") {
   const index = await loadIndex(indexId);
   const query = normalized(queryVector);

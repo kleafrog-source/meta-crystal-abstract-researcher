@@ -30,6 +30,7 @@ export interface PriorityTimelineOptions {
   trustConfig?: ModalityTrustConfig;
   textScores?: number[];
   vocalMatrix?: boolean;
+  serverStage2?: { index: "qwen3" | "embeddinggemma2"; results: ActiveParameter[] };
 }
 
 const TECHNICAL_NAME = /^[a-z0-9_]+$/;
@@ -280,6 +281,18 @@ export function buildPriorityTimeline(segments: AudioTimelineSegment[], options:
       ...(options.textScores ? { text_trust: computeModalityTrust(options.textScores).trust } : {}),
       segments: modalityTrust,
     },
+    ...(options.serverStage2?.results.length ? {
+      server_stage2: {
+        index: options.serverStage2.index,
+        query_method: "weighted_centroid_of_stage1_text_vectors",
+        results: valid(options.serverStage2.results).map((item) => ({
+          technical_name: item.technical_name,
+          similarity: item.similarity,
+          current_value: item.current_value,
+          source: "stage2" as const,
+        })),
+      },
+    } : {}),
     ...(options.blend ? { blended_registry: blendedRegistry } : { clap_registry: clapRegistry, siglip_registry: siglipRegistry }),
     timeline,
     dsp_graph: Object.fromEntries([...new Set(all.map((item) => item.technical_name))].map((name) => [name, dspTargets(name)]).filter(([, targets]) => (targets as unknown[]).length)),

@@ -107,6 +107,12 @@ interface GraphSeries {
   movement: number;
 }
 
+interface ServerStage2Run {
+  fingerprint: string;
+  results: ActiveParameter[];
+  meta: { text_index: "qwen3" | "embeddinggemma2"; model: string; dimensions: number; query_method: string; seed_names: string[]; excluded_stage1_names: number };
+}
+
 const COLORS = [
   "#22d3ee",
   "#a78bfa",
@@ -173,13 +179,18 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const v3Parameters = useRagV3Store((state) => state.activeParameters);
   const v3Query = useRagV3Store((state) => state.query);
   const setV3Query = useRagV3Store((state) => state.setQuery);
-  const v3Session = useRagV3Store(useShallow((state) => ({ queryB: state.queryB, topK: state.topK, sources: state.sources, scopes: state.scopes, searchMode: state.searchMode, transitionRatio: state.transitionRatio, searchResults: state.searchResults, secondaryResults: state.secondaryResults, activeParameters: state.activeParameters, macro: state.macro })));
+  const v3Session = useRagV3Store(useShallow((state) => ({ queryB: state.queryB, topK: state.topK, textIndex: state.textIndex, sources: state.sources, scopes: state.scopes, searchMode: state.searchMode, transitionRatio: state.transitionRatio, searchResults: state.searchResults, secondaryResults: state.secondaryResults, activeParameters: state.activeParameters, macro: state.macro })));
   const updateV3ParameterValue = useRagV3Store((state) => state.updateParameterValue);
   const removeV3Parameter = useRagV3Store((state) => state.removeParameter);
   const [selectedLayers, setSelectedLayers] = useState<string[]>(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id));
   const [showGlobalConsensus, setShowGlobalConsensus] = useState(false);
   const [consensusTopK, setConsensusTopK] = useState(64);
   const [consensusCentroidPercent, setConsensusCentroidPercent] = useState(35);
+  const [serverStage2TopK, setServerStage2TopK] = useState(10);
+  const [serverStage2Run, setServerStage2Run] = useState<ServerStage2Run | null>(null);
+  const [serverStage2Busy, setServerStage2Busy] = useState(false);
+  const [serverStage2Error, setServerStage2Error] = useState("");
+  const [includeServerStage2InMacro, setIncludeServerStage2InMacro] = useState(false);
   const [titleOrder, setTitleOrder] = useState<"en-ru" | "ru-en">("en-ru");
   const [blendPair, setBlendPair] = useState("text-clap");
   const [blendPercent, setBlendPercent] = useState(50);
@@ -292,6 +303,26 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     const retrievalGroup = (parameter as ActiveParameter & { retrieval_group?: string }).retrieval_group;
     return layer !== GLOBAL_CONSENSUS_LAYER.id && (noLayerRestriction || !layer || selectedLayers.includes(layer) || retrievalGroup === "global_fill");
   }), [v3Parameters, selectedLayers]);
+  const stage1SeedParameters = useMemo(() => {
+    const primaryAndSecondary = [...v3Session.searchResults, ...(v3Session.searchMode === "transition" ? v3Session.secondaryResults : [])];
+    const unique = new Map<string, ActiveParameter>();
+    for (const parameter of primaryAndSecondary) {
+      const existing = unique.get(parameter.technical_name);
+      if (!existing || parameter.similarity > existing.similarity) unique.set(parameter.technical_name, parameter);
+    }
+    return [...unique.values()].sort((left, right) => right.similarity - left.similarity || left.technical_name.localeCompare(right.technical_name));
+  }, [v3Session.searchMode, v3Session.searchResults, v3Session.secondaryResults]);
+  const stage2Fingerprint = useMemo(() => JSON.stringify({
+    textIndex: v3Session.textIndex,
+    topK: serverStage2TopK,
+    query: v3Query,
+    layers: selectedLayers,
+    scopes: v3Session.scopes,
+    sources: v3Session.sources,
+    seeds: stage1SeedParameters.map(({ technical_name, similarity }) => [technical_name, similarity]),
+  }), [selectedLayers, serverStage2TopK, stage1SeedParameters, v3Query, v3Session.scopes, v3Session.sources, v3Session.textIndex]);
+  const currentServerStage2Run = serverStage2Run?.fingerprint === stage2Fingerprint ? serverStage2Run : null;
+  const serverStage2Results = currentServerStage2Run?.results ?? [];
   const layerCounts = useMemo(() => {
     const names = new Map(ACOUSTIC_DOMAIN_LAYERS.map((layer) => [layer.id, new Set<string>()]));
     for (const parameter of [...v3Parameters, ...segments.flatMap((segment) => [...segment.clap, ...segment.siglip])]) {
@@ -576,9 +607,13 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     : [filteredV3Parameters, showClap ? layerClap : [], showSiglip ? layerSiglip : []],
   [consensusCentroidPercent, consensusTopK, filteredV3Parameters, layerClap, layerSiglip, modalityTrustConfig, selectedLayers, showClap, showGlobalConsensus, showSiglip]);
   const [textStageParameters, visibleClap, visibleSiglip] = consensusFrames;
-  const macroParameters = useMemo(
+  const audioMacroParameters = useMemo(
     () => blendMode ? blendParameterFrames(visibleClap, visibleSiglip, clapWeight, modalityTrustConfig) : mergeFrames(visibleClap, visibleSiglip),
     [blendMode, clapWeight, modalityTrustConfig, visibleClap, visibleSiglip],
+  );
+  const macroParameters = useMemo(
+    () => includeServerStage2InMacro ? mergeFrames(audioMacroParameters, serverStage2Results) : audioMacroParameters,
+    [audioMacroParameters, includeServerStage2InMacro, serverStage2Results],
   );
   const bridgeFrames = useMemo(() => {
     const pairs: Record<string, [ActiveParameter[], ActiveParameter[]]> = {
@@ -612,6 +647,34 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setV3Query(query);
     void useRagV3Store.getState().proposeParameters(query);
   }, [setV3Query]);
+  const runServerStage2 = useCallback(async () => {
+    if (!stage1SeedParameters.length || serverStage2Busy) return;
+    setServerStage2Busy(true);
+    setServerStage2Error("");
+    try {
+      const response = await fetch("/api/rag-v3/stage2-retrieval", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          stage1_hits: stage1SeedParameters.map(({ technical_name, similarity }) => ({ technical_name, similarity })),
+          source_query: v3Query,
+          top_k: serverStage2TopK,
+          text_index: v3Session.textIndex,
+          sources: v3Session.sources,
+          scopes: v3Session.scopes,
+          domain_layers: selectedLayers,
+          domain_layer_weights: Object.fromEntries(ACOUSTIC_DOMAIN_LAYERS.map((layer) => [layer.id, Number(selectedLayers.includes(layer.id))])),
+        }),
+      });
+      const payload = await response.json() as { stage2_hits?: ActiveParameter[]; stage2_meta?: ServerStage2Run["meta"]; error?: string };
+      if (!response.ok || !Array.isArray(payload.stage2_hits) || !payload.stage2_meta) throw new Error(payload.error || `Stage-2 retrieval failed (HTTP ${response.status}).`);
+      setServerStage2Run({ fingerprint: stage2Fingerprint, results: payload.stage2_hits, meta: payload.stage2_meta });
+    } catch (cause) {
+      setServerStage2Error(cause instanceof Error ? cause.message : String(cause));
+    } finally {
+      setServerStage2Busy(false);
+    }
+  }, [selectedLayers, serverStage2Busy, serverStage2TopK, stage1SeedParameters, stage2Fingerprint, v3Query, v3Session.scopes, v3Session.sources, v3Session.textIndex]);
 
   const seekToSegment = (segment: SegmentPoint) => {
     setCurrentTime(segment.time);
@@ -673,9 +736,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   };
 
   const exportTimeline = () => {
-    const audioName = file?.name ?? audioReferenceName;
-    if (!audioName || !segments.length) return;
-    downloadJson(buildPriorityTimeline(nodeSegments, { audioName, audioDuration, rawInterval: segmentInterval, nodeInterval, blend: blendMode, clapWeight, trustConfig: modalityTrustConfig, textScores: filteredV3Parameters.map((parameter) => parameter.similarity), vocalMatrix: vocalMatrixMode }), "priority-timeline");
+    const audioName = file?.name ?? audioReferenceName ?? "am-stage";
+    if (!segments.length && !serverStage2Results.length) return;
+    downloadJson(buildPriorityTimeline(nodeSegments, { audioName, audioDuration, rawInterval: segmentInterval, nodeInterval, blend: blendMode, clapWeight, trustConfig: modalityTrustConfig, textScores: filteredV3Parameters.map((parameter) => parameter.similarity), vocalMatrix: vocalMatrixMode, ...(currentServerStage2Run ? { serverStage2: { index: currentServerStage2Run.meta.text_index, results: serverStage2Results } } : {}) }), "priority-timeline");
   };
 
   const exportLegacyTimeline = () => {
@@ -1212,9 +1275,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             </div>
             <aside data-am-stage-zone="macro-exports" className="flex min-w-0 flex-col gap-2 rounded-lg border border-cyan-400/20 bg-black/30 p-3">
               <MacroGenerator parameters={textStageParameters} collapsible dataScope="am-stage" collapseLabel={`TEXT · Semantic V3 · ${textStageParameters.length}`} />
-              <MacroGenerator parameters={macroParameters} collapsible dataScope="am-stage" collapseLabel={`CLAP + SigLIP2 · ${macroParameters.length}`} />
+              <MacroGenerator parameters={macroParameters} collapsible dataScope="am-stage" collapseLabel={`CLAP + SigLIP2${includeServerStage2InMacro && serverStage2Results.length ? " + Stage-2" : ""} · ${macroParameters.length}`} />
               <div className="grid gap-1.5 sm:grid-cols-2">
-                <Button data-am-stage-action="export-priority-timeline" title="Экспортировать текущие сегментные результаты и выбранные параметры в Priority Timeline JSON." variant="outline" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportTimeline}><Download className="size-4" />Экспорт Priority Timeline</Button>
+                <Button data-am-stage-action="export-priority-timeline" title="Экспортировать текущие сегментные результаты и выбранные параметры в Priority Timeline JSON." variant="outline" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length) && !serverStage2Results.length} onClick={exportTimeline}><Download className="size-4" />Экспорт Priority Timeline</Button>
                 <Button data-am-stage-action="export-legacy-timeline" title="Скачать совместимый legacy-формат временной шкалы." variant="ghost" disabled={!segments.some((segment) => segment.clap.length || segment.siglip.length)} onClick={exportLegacyTimeline}><Download className="size-4" />Экспорт legacy timeline</Button>
                 <JournalDraftButton modality="audio" engine="clap" actionLabel="Сохранить CLAP в Journal" parameters={clapFrame} model={{ id: "laion/clap-htsat-fused" }} settings={{ interval_seconds: segmentInterval, timeline_points: segments.length }} asset={file} label={`Segmented CLAP · ${file?.name ?? "track"}`} />
                 <JournalDraftButton modality="audio" engine="siglip2" actionLabel="Сохранить SigLIP2 в Journal" parameters={siglipFrame} model={{ id: "google/siglip2-base-patch16-224" }} settings={{ interval_seconds: segmentInterval, timeline_points: segments.length, spectrogram_detail: spectrogramDetail }} asset={file} label={`Segmented SigLIP2 · ${file?.name ?? "track"}`} />
@@ -1330,7 +1393,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
           <div data-am-stage-zone="timeline" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(170px,1fr)_minmax(0,9fr)]">
             <aside aria-label="Domain layer timeline visibility filters" className="max-h-56 overflow-y-auto rounded-lg border border-border bg-background/85 p-3 xl:max-h-[min(70vh,720px)]">
               <div className="mb-2 flex flex-wrap items-center justify-between gap-2"><h2 className="flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-wider"><AMIcon name="settings" size="sm" bright />Layer matrix</h2><select title={t("Изменить порядок английского и русского названий параметров")} aria-label="Parameter title order" value={titleOrder} onChange={(event) => void saveTitleOrder(event.target.value as "en-ru" | "ru-en")} className="max-w-32 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-[9px]"><option value="en-ru">Title EN → RU</option><option value="ru-en">Title RU → EN</option></select></div>
-              <div className="mb-2 flex justify-end"><V3InfoTip content="Фильтр показывает девять акустических слоёв. Stage-2 ниже — отдельная постобработка уже найденных кадров, не слой и не новый индекс." /></div>
+                <div className="mb-2 flex justify-end"><V3InfoTip content={t("Фильтр показывает девять акустических слоёв. Клиентское Stage-2 ниже сглаживает уже найденные кадры; серверное Stage-2 — отдельный повторный поиск по текстовому индексу.")} /></div>
               <div className="mb-2 flex flex-wrap gap-1"><button type="button" title="Включить все девять акустических слоёв" className="rounded border border-white/15 px-2 py-1 text-[9px]" onClick={() => setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id))}>All 9</button><button type="button" title="Снять выбор со всех акустических слоёв" className="rounded border border-white/15 px-2 py-1 text-[9px]" onClick={() => setSelectedLayers([])}>Clear</button></div>
               <div className="flex flex-col gap-1.5">
                 {ACOUSTIC_DOMAIN_LAYERS.map((layer) => {
@@ -1340,10 +1403,26 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                   return <label key={layer.id} data-am-stage-layer={layer.id} title={`${t(layer.label)} · ${count} ${t("параметров")}`} className="flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px] transition-colors hover:bg-white/5" style={{ borderColor: `${layer.color}70`, color: layer.color }}><input className="peer sr-only" data-am-stage-action={`toggle-layer-${layer.id.toLowerCase()}`} type="checkbox" checked={checked} onChange={() => setSelectedLayers((current) => checked ? current.filter((id) => id !== layer.id) : [...current, layer.id])} /><AMIcon name={layer.icon} size="sm" className={`h-7 w-7 ${checked ? "opacity-100" : "opacity-60"}`} /><span>{t(layer.label)}</span><span className="ml-auto tabular-nums text-muted-foreground">{countsAvailable ? count : "—"}</span></label>;
                 })}
               </div>
-              <section data-am-stage-zone="stage-2-postprocess" className="mt-2 space-y-2 rounded border p-2" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70` }} aria-label="Stage-2 client post-processing">
-                <label title="Включает клиентское сглаживание уже загруженных параметров; новые retrieval не выполняются." className="flex cursor-pointer items-center gap-2 text-[10px] font-medium" style={{ color: GLOBAL_CONSENSUS_LAYER.color }}><input data-am-stage-action="toggle-consensus-visibility" type="checkbox" checked={showGlobalConsensus} onChange={(event) => setShowGlobalConsensus(event.target.checked)} /><AMIcon name="layerVector" size="sm" />Global Consensus · Stage-2</label>
+              <section data-am-stage-zone="stage-2-postprocess" className="mt-2 space-y-2 rounded border p-2" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70` }} aria-label={t("Client Stage-2 smoothing")}>
+                <label title={t("Enables client smoothing of already retrieved parameters; it does not run a new retrieval.")} className="flex cursor-pointer items-center gap-2 text-[10px] font-medium" style={{ color: GLOBAL_CONSENSUS_LAYER.color }}><input data-am-stage-action="toggle-consensus-visibility" type="checkbox" checked={showGlobalConsensus} onChange={(event) => setShowGlobalConsensus(event.target.checked)} /><AMIcon name="layerVector" size="sm" />{t("Client smooth · Stage-2")}</label>
                 <div className="flex justify-end"><V3InfoTip content="Клиентски сглаживает параметры из текущего результата и CLAP/SigLIP кадров. Новые параметры из индекса не добавляются." /></div>
                 {showGlobalConsensus ? <><div className="flex items-center justify-between text-[9px]"><span>Query {100 - consensusCentroidPercent}%</span><span>Centroid {consensusCentroidPercent}%</span></div><input aria-label="Consensus centroid weight" className="w-full accent-violet-400" type="range" min="0" max="100" value={consensusCentroidPercent} onChange={(event) => setConsensusCentroidPercent(Number(event.target.value))} /><label className="flex items-center justify-between gap-2 text-[9px]">Centroid pool k<input aria-label="Consensus centroid top k" className="w-16 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-right" type="number" min="1" max="500" value={consensusTopK} onChange={(event) => setConsensusTopK(Math.max(1, Math.min(500, Number(event.target.value) || 1)))} /></label></> : null}
+              </section>
+              <section data-am-stage-zone="stage-2-server-retrieval" className="mt-2 space-y-2 rounded border border-violet-400/30 p-2" aria-label={t("Server Stage-2 retrieval")}>
+                <div className="flex items-center justify-between gap-2"><h3 className="font-mono text-[9px] font-semibold uppercase tracking-wider text-violet-200">{t("Server Stage-2 retrieval")}</h3><Badge variant="outline">{t("Second vector search")}</Badge></div>
+                <p className="text-[9px] leading-relaxed text-zinc-500">{t("Builds a weighted centroid from Stage-1 text vectors, then searches the same index while excluding every Stage-1 name.")}</p>
+                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-2">
+                  <label className="text-[9px] text-zinc-400">{t("Top-K2")}<input aria-label={t("Top-K2")} className="mt-1 h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-right text-xs" type="number" min={1} max={30} value={serverStage2TopK} onChange={(event) => setServerStage2TopK(Math.max(1, Math.min(30, Number(event.target.value) || 1)))} /></label>
+                  <Button data-am-stage-action="run-server-stage2-retrieval" size="sm" variant="outline" disabled={!stage1SeedParameters.length || serverStage2Busy} onClick={() => void runServerStage2()}>{serverStage2Busy ? <Loader2 className="size-3.5 animate-spin" /> : <AMIcon name="layerVector" size="sm" />}{serverStage2Busy ? t("Searching…") : t("Run retrieval")}</Button>
+                </div>
+                <div className="text-[9px] text-zinc-500">{t("Text index")}: {v3Session.textIndex === "embeddinggemma2" ? "EmbeddingGemma 2" : "Qwen3"} · {t("Stage-1 seeds")}: {stage1SeedParameters.length}</div>
+                <label className="flex items-start gap-1.5 text-[9px] text-zinc-400"><input data-am-stage-action="include-stage2-in-macro" type="checkbox" checked={includeServerStage2InMacro} disabled={!serverStage2Results.length} onChange={(event) => setIncludeServerStage2InMacro(event.target.checked)} /><span>{t("Include Stage-2 results in macro output")}</span></label>
+                {serverStage2Error ? <div role="alert" className="rounded border border-red-400/30 bg-red-950/20 p-1.5 text-[9px] text-red-200">{serverStage2Error}</div> : null}
+                {currentServerStage2Run ? <div className="space-y-1 rounded border border-violet-400/15 bg-violet-950/10 p-1.5">
+                  <div className="flex items-center justify-between text-[9px]"><span>{t("Stage-2 results")} · {currentServerStage2Run.meta.model}</span><Badge variant="outline">{serverStage2Results.length}</Badge></div>
+                  <div className="text-[8px] text-zinc-500">{t("Weighted centroid seeds")}: {currentServerStage2Run.meta.seed_names.length} · {t("Stage-1 names excluded")}: {currentServerStage2Run.meta.excluded_stage1_names}</div>
+                  {serverStage2Results.length ? <ul className="max-h-40 space-y-1 overflow-y-auto">{serverStage2Results.map((parameter) => <li key={parameter.technical_name} className="flex items-center justify-between gap-2 text-[9px]"><span className="min-w-0 truncate font-mono text-zinc-200">{parameter.technical_name}</span><Badge className="shrink-0 border-violet-400/40 text-violet-200" variant="outline">Stage-2 · {parameter.similarity.toFixed(3)}</Badge></li>)}</ul> : <div className="text-[9px] text-zinc-500">{t("Stage-2 retrieval returned no new parameters.")}</div>}
+                </div> : null}
               </section>
             </aside>
           <section data-am-stage-zone="timeline-chart" className="min-w-0 rounded-lg border border-white/10 bg-black/30 p-3">
