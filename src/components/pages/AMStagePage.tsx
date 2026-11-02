@@ -615,6 +615,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     () => includeServerStage2InMacro ? mergeFrames(audioMacroParameters, serverStage2Results) : audioMacroParameters,
     [audioMacroParameters, includeServerStage2InMacro, serverStage2Results],
   );
+  const lfmJournalParameters = useMemo(() => mergeFrames(macroParameters, v3Parameters), [macroParameters, v3Parameters]);
   const bridgeFrames = useMemo(() => {
     const pairs: Record<string, [ActiveParameter[], ActiveParameter[]]> = {
       "text-clap": [textStageParameters, visibleClap],
@@ -646,6 +647,10 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     useRagV3Store.setState({ searchMode: "single", queryB: "", secondaryResults: [] });
     setV3Query(query);
     void useRagV3Store.getState().proposeParameters(query);
+  }, [setV3Query]);
+  const seedLfm3ReverseQuery = useCallback((text: string) => {
+    setV3Query(text);
+    stageRootRef.current?.querySelector<HTMLElement>('[data-am-stage-zone="reverse-query"]')?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [setV3Query]);
   const runServerStage2 = useCallback(async () => {
     if (!stage1SeedParameters.length || serverStage2Busy) return;
@@ -1319,6 +1324,10 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             file={file}
             segment={activeSegmentIndex >= 0 ? segments[activeSegmentIndex] : null}
             segmentIndex={Math.max(0, activeSegmentIndex)}
+            window={{ offset: regionOffset, duration: regionDuration }}
+            journalParameters={lfmJournalParameters}
+            onCopyToBrief={setV3Query}
+            onSeedReverseQuery={seedLfm3ReverseQuery}
             onResult={(patch) => {
               if (activeSegmentIndex < 0) return;
               if (patch.acoustic_features) {

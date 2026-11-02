@@ -42,6 +42,16 @@ export interface HelmGateValue {
 export interface SegmentSideMeta {
   schema: "segment_side_meta_v1";
   acoustic_features?: SegmentAcousticFeatures;
+  lfm3_description?: {
+    model: string;
+    runtime: "llama.cpp" | "ollama";
+    quantization: string | null;
+    mode: "describe" | "asr";
+    ran_at: string;
+    text: string;
+    offset_seconds: number;
+    duration_seconds: number;
+  };
   helm?: {
     model: string;
     ran_at: string;

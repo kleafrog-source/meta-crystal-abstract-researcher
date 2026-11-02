@@ -6,6 +6,7 @@ export type CrossModalEngine =
   | "siglip2"
   | "semantic-v3"
   | "consensus"
+  | "lfm3-audio"
   | "transition";
 
 export interface ConsensusParameter {

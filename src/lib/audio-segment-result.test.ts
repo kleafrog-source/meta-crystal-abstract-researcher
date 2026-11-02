@@ -34,6 +34,16 @@ describe("audio segment resume state", () => {
     expect(withFeatures[0].sideMeta).toBeUndefined();
   });
 
+  it("stores an accepted LFM3 description on only the selected segment", () => {
+    const described = applySegmentSideMeta(segments, 2, { lfm3_description: {
+      model: "LiquidAI/LFM3-Audio-2B-GGUF", runtime: "ollama", quantization: "Q4_K_M", mode: "describe",
+      ran_at: "2026-11-02T00:00:00.000Z", text: "Electronic drums and a synth bass.", offset_seconds: 4, duration_seconds: 2,
+    } });
+
+    expect(described[2].sideMeta?.lfm3_description?.text).toBe("Electronic drums and a synth bass.");
+    expect(described[0].sideMeta).toBeUndefined();
+  });
+
   it("continues from incomplete indexes and retains completed values", () => {
     const resumed = prepareSegmentRun(segments, "clap", true);
     expect(getIncompleteSegmentIndexes(resumed, "clap")).toEqual([1, 2]);

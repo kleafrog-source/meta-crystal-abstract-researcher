@@ -3,14 +3,17 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
+import { Copy, Loader2, WandSparkles } from "lucide-react";
 import type { SegmentAcousticFeatures } from "@/lib/segment-side-meta";
 import { useUiText } from "@/lib/ui-i18n";
 import type { AudioSegmentResultPoint } from "@/lib/audio-segment-result";
 import type { SegmentSideMeta } from "@/lib/segment-side-meta";
+import type { ActiveParameter } from "@/lib/rag-v3/types";
+import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton";
+import type { Lfm3PromptMode, Lfm3Runtime } from "@/lib/lfm3-audio";
 
 type Specialist = "helm" | "gender" | "language";
-type BusyAction = Specialist | "acoustic";
+type BusyAction = Specialist | "acoustic" | "lfm3";
 
 const SPECIALISTS: Array<{ id: Specialist; label: string }> = [
   { id: "helm", label: "Run Helm gates" },
@@ -23,15 +26,50 @@ export function SegmentSideMetadataPanel({
   segment,
   segmentIndex,
   onResult,
+  window,
+  journalParameters,
+  onCopyToBrief,
+  onSeedReverseQuery,
 }: {
   file: File | null;
   segment: AudioSegmentResultPoint | null;
   segmentIndex: number;
   onResult: (patch: Partial<SegmentSideMeta>) => void;
+  window: { offset: number; duration: number };
+  journalParameters: ActiveParameter[];
+  onCopyToBrief: (text: string) => void;
+  onSeedReverseQuery: (text: string) => void;
 }) {
   const t = useUiText();
   const [busy, setBusy] = useState<BusyAction | null>(null);
   const [error, setError] = useState("");
+  const [lfmRuntime, setLfmRuntime] = useState<Lfm3Runtime>("llama.cpp");
+  const [lfmMode, setLfmMode] = useState<Lfm3PromptMode>("describe");
+  const [lfmResult, setLfmResult] = useState<NonNullable<SegmentSideMeta["lfm3_description"]> | null>(null);
+  const acceptedLfm3Description = segment?.sideMeta?.lfm3_description;
+
+  const runLfm3 = async () => {
+    if (!file || busy) return;
+    setBusy("lfm3");
+    setError("");
+    setLfmResult(null);
+    try {
+      const form = new FormData();
+      form.set("audio", file, file.name);
+      form.set("runtime", lfmRuntime);
+      form.set("mode", lfmMode);
+      form.set("offset", String(segment?.offset ?? window.offset));
+      form.set("duration", String(segment?.duration ?? window.duration));
+      const response = await fetch("/api/am-stage/lfm3-audio", { method: "POST", body: form });
+      const payload = await response.json() as { text?: string; model?: string; runtime?: Lfm3Runtime; quantization?: string | null; mode?: Lfm3PromptMode; ran_at?: string; offset_seconds?: number; duration_seconds?: number; error?: string };
+      if (!response.ok || !payload.text || !payload.model || !payload.runtime || !payload.ran_at) throw new Error(payload.error || t("LFM3 description failed."));
+      setLfmResult({ model: payload.model, runtime: payload.runtime, quantization: payload.quantization ?? null, mode: payload.mode ?? lfmMode, ran_at: payload.ran_at, text: payload.text, offset_seconds: payload.offset_seconds ?? window.offset, duration_seconds: payload.duration_seconds ?? window.duration });
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause));
+    } finally {
+      setBusy(null);
+    }
+  };
 
   const run = async (specialist: Specialist) => {
     if (!file || !segment || busy) return;
@@ -87,6 +125,26 @@ export function SegmentSideMetadataPanel({
     <div className="flex flex-wrap gap-1.5">
       {SPECIALISTS.map(({ id, label }) => <Button key={id} size="sm" variant="outline" data-am-stage-action={`side-meta-${id}`} disabled={!file || !segment || busy !== null || (id === "helm" && (segment.duration < 0.25 || segment.duration > 10))} title={id === "helm" && segment && segment.duration > 10 ? t("Helm audio windows are limited to 10 seconds.") : undefined} onClick={() => void run(id)}>{busy === id ? t("Running…") : t(label)}</Button>)}
       <Button size="sm" variant="outline" data-am-stage-action="extract-acoustic-features" disabled={!file || !segment || busy !== null || (segment.duration < 0.25 || segment.duration > 30)} title={segment && segment.duration > 30 ? t("Acoustic feature windows are limited to 30 seconds.") : undefined} onClick={() => void runAcousticExtraction()}>{busy === "acoustic" ? t("Extracting…") : t("Extract acoustic features")}</Button>
+    </div>
+    <div data-am-stage-zone="lfm3-audio-description" className="space-y-2 rounded border border-cyan-400/20 bg-black/25 p-2">
+      <div className="flex flex-wrap items-center justify-between gap-2"><h3 className="font-mono text-[10px] font-semibold uppercase tracking-wider text-cyan-200">LFM3 · Audio to text</h3><Badge variant="outline">{segment ? `${t("Segment")} ${segmentIndex + 1}` : t("Current audio range")}</Badge></div>
+      <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+        <label className="text-[9px] text-zinc-400">{t("Runtime")}<select aria-label={t("Runtime")} value={lfmRuntime} disabled={busy !== null} onChange={(event) => setLfmRuntime(event.target.value as Lfm3Runtime)} className="mt-1 h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-xs text-zinc-200"><option value="llama.cpp">{t("llama.cpp · GGUF")}</option><option value="ollama">{t("Ollama · verified local")}</option></select></label>
+        <label className="text-[9px] text-zinc-400">{t("Task")}<select aria-label={t("Task")} value={lfmMode} disabled={busy !== null} onChange={(event) => setLfmMode(event.target.value as Lfm3PromptMode)} className="mt-1 h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-xs text-zinc-200"><option value="describe">{t("Sound description · EN")}</option><option value="asr">{t("Speech recognition · EN")}</option></select></label>
+        <Button size="sm" variant="outline" data-am-stage-action="describe-segment-lfm3" disabled={!file || busy !== null || (segment ? segment.duration < 0.25 || segment.duration > 30 : window.duration < 0.25 || window.duration > 30)} onClick={() => void runLfm3()}>{busy === "lfm3" ? <Loader2 className="size-3.5 animate-spin" /> : <WandSparkles className="size-3.5" />}{busy === "lfm3" ? t("Listening…") : t("Describe segment / clip (LFM3)")}</Button>
+      </div>
+      <p className="text-[9px] text-zinc-500">{t("Explicit run only · max 30 seconds · one model at a time. llama.cpp GGUF is preferred; Ollama is a verified fallback on this machine.")}</p>
+      {lfmResult ? <div className="space-y-2 rounded border border-cyan-400/15 bg-black/35 p-2">
+        <textarea aria-label={t("LFM3 result") } readOnly value={lfmResult.text} className="min-h-20 w-full resize-y rounded border border-white/10 bg-black/35 p-2 text-xs leading-relaxed text-zinc-200" />
+        <div className="flex flex-wrap items-center gap-1 text-[9px] text-zinc-500"><span>{lfmResult.model}</span><span>·</span><span>{lfmResult.runtime}</span>{lfmResult.quantization ? <><span>·</span><span>{lfmResult.quantization}</span></> : null}<span>·</span><span>{lfmResult.offset_seconds.toFixed(1)}–{(lfmResult.offset_seconds + lfmResult.duration_seconds).toFixed(1)}s</span></div>
+        <div className="flex flex-wrap gap-1.5">
+          {segment ? <Button size="sm" variant="secondary" data-am-stage-action="accept-lfm3-segment-description" onClick={() => { onResult({ lfm3_description: lfmResult }); setLfmResult(null); }}>{t("Keep on segment")}</Button> : <span className="self-center text-[9px] text-zinc-500">{t("Create segments to store this description in a session snapshot.")}</span>}
+          <Button size="sm" variant="outline" data-am-stage-action="lfm3-copy-to-brief" onClick={() => onCopyToBrief(lfmResult.text)}>{t("Copy to Brief")}</Button>
+          <Button size="sm" variant="outline" data-am-stage-action="lfm3-seed-reverse-query" onClick={() => onSeedReverseQuery(lfmResult.text)}>{t("Seed Reverse Query")}</Button>
+          {journalParameters.length ? <JournalDraftButton modality="audio" engine="lfm3-audio" parameters={journalParameters} model={{ id: lfmResult.model, ...(lfmResult.quantization ? { revision: lfmResult.quantization } : {}) }} settings={{ runtime: lfmResult.runtime, mode: lfmResult.mode, offset: lfmResult.offset_seconds, duration: lfmResult.duration_seconds }} query={lfmResult.text} asset={file} label={`LFM3 audio description · ${file?.name ?? "clip"}`} actionLabel="Save to Journal" /> : <span className="self-center text-[9px] text-zinc-500">{t("Run a parameter analysis before saving this clip to Journal.")}</span>}
+        </div>
+      </div> : null}
+      {acceptedLfm3Description && !lfmResult ? <div className="space-y-1 rounded border border-cyan-400/15 bg-black/35 p-2"><div className="flex items-center justify-between gap-2 text-[9px] text-zinc-500"><span>{t("Accepted LFM3 description")}</span><span>{acceptedLfm3Description.runtime} · {acceptedLfm3Description.quantization ?? "GGUF"}</span></div><p className="text-xs leading-relaxed text-zinc-200">{acceptedLfm3Description.text}</p><div className="flex flex-wrap gap-1.5"><Button size="sm" variant="outline" onClick={() => onCopyToBrief(acceptedLfm3Description.text)}>{t("Copy to Brief")}</Button><Button size="sm" variant="outline" onClick={() => onSeedReverseQuery(acceptedLfm3Description.text)}>{t("Seed Reverse Query")}</Button></div></div> : null}
     </div>
     {error ? <p role="alert" className="break-words rounded border border-red-400/30 bg-red-950/20 p-2 text-[10px] text-red-200">{error}</p> : null}
     {segment?.sideMeta ? <div className="space-y-1 text-[10px] text-zinc-300">
