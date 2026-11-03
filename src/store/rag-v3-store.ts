@@ -22,6 +22,7 @@ type SearchTarget = "primary" | "secondary";
 interface SearchRetrievalOptions {
   selectedDomainLayers?: string[];
   textIndex?: "qwen3" | "embeddinggemma2";
+  signal?: AbortSignal;
 }
 export interface RagV3Sources {
   library: boolean;
@@ -341,6 +342,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
             ])),
           }),
         }),
+        signal: retrievalOptions?.signal,
       });
 
       if (!response.ok) {
@@ -375,6 +377,10 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
       });
       return nextActive;
     } catch (error) {
+      if (retrievalOptions?.signal?.aborted) {
+        set({ isSearching: false });
+        return null;
+      }
       if (get().textIndex === requestedTextIndex) set({
           isSearching: false,
           searchError: error instanceof Error ? error.message : String(error),

@@ -44,6 +44,13 @@ describe("audio segment resume state", () => {
     expect(described[0].sideMeta).toBeUndefined();
   });
 
+  it("clears a stale voice presentation when Helm rules out vocals", () => {
+    const withGender = applySegmentSideMeta(segments, 0, { gender: { model: "fixture", ran_at: "now", label: "female", score: 0.8, probabilities: { male: 0.2, female: 0.8 }, semantics: "acoustic_voice_presentation" } });
+    const noVocals = { value: false, probability: 0.99, probabilities: { true: 0.01, false: 0.99 }, confidence: 0.99 };
+    const withoutGender = applySegmentSideMeta(withGender, 0, { helm: { model: "fixture", ran_at: "now", gates: { has_vocals: noVocals, has_speech: noVocals, aggressive_vocal: noVocals, is_ambient_noise: noVocals } } });
+    expect(withoutGender[0].sideMeta?.gender).toBeUndefined();
+  });
+
   it("continues from incomplete indexes and retains completed values", () => {
     const resumed = prepareSegmentRun(segments, "clap", true);
     expect(getIncompleteSegmentIndexes(resumed, "clap")).toEqual([1, 2]);

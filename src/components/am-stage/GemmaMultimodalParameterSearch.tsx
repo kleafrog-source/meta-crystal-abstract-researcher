@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { Loader2, Search, Square, Upload } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -20,10 +20,13 @@ interface GemmaAudioSearchResponse {
   current?: number;
   total?: number;
   chunks?: number;
-  results?: ActiveParameter[];
+  results?: GemmaAudioParameter[];
 }
 
-export function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogramFrame, onResults }: { selectedLayers?: string[]; spectrogramFrame?: { dataUrl: string; offset: number }; onResults?: (results: ActiveParameter[]) => void }) {
+export type GemmaAudioParameter = ActiveParameter & { source_window?: { offset_seconds: number; duration_seconds: number } };
+export interface GemmaMultimodalParameterSearchHandle { searchAudio: (audioFile?: File) => Promise<GemmaAudioParameter[] | null>; cancel: () => void }
+
+export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParameterSearchHandle, { selectedLayers?: string[]; spectrogramFrame?: { dataUrl: string; offset: number }; onResults?: (results: GemmaAudioParameter[], modality: "audio" | "image") => void; onFileChange?: (file: File | null) => void }>(function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogramFrame, onResults, onFileChange }, ref) {
   const t = useUiText();
   const [file, setFile] = useState<File | null>(null);
   const [topK, setTopK] = useState(30);
@@ -36,17 +39,19 @@ export function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogra
   const [results, setResults] = useState<GemmaAudioSearchResponse | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
 
-  const search = async (modality: "audio" | "image") => {
-    if (modality === "audio" && !file) return;
-    if (modality === "image" && !spectrogramFrame) return;
+  const search = async (modality: "audio" | "image", audioOverride?: File): Promise<GemmaAudioParameter[] | null> => {
+    const audioInput = audioOverride ?? file;
+    if (modality === "audio" && !audioInput) return null;
+    if (modality === "image" && !spectrogramFrame) return null;
     const controller = new AbortController();
     controllerRef.current = controller;
     setBusy(true); setError(null); setResults(null); setProgress(modality === "audio" ? t("Preparing audio…") : t("Searching spectrogram frame…"));
+    let finalResults: GemmaAudioParameter[] | null = null;
     try {
       const form = new FormData();
       form.set("modality", modality);
       if (modality === "audio" && file) {
-        form.set("audio", file, file.name);
+        form.set("audio", audioInput!, audioInput!.name);
         form.set("chunk_seconds", String(chunkSeconds));
         form.set("overlap_seconds", String(overlapSeconds));
       } else if (modality === "image" && spectrogramFrame) {
@@ -67,7 +72,8 @@ export function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogra
       if (modality === "image") {
         const payload = await response.json() as GemmaAudioSearchResponse;
         setResults(payload); setTotalChunks(1); setProgress("");
-        onResults?.(payload.results ?? []);
+        onResults?.(payload.results ?? [], modality);
+        finalResults = payload.results ?? [];
       } else {
         if (!response.body) throw new Error(t("Audio search returned no progress stream."));
         const reader = response.body.getReader();
@@ -76,7 +82,7 @@ export function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogra
         let completed = false;
         const handleLine = (line: string) => {
           if (!line.trim()) return;
-          const event = JSON.parse(line) as GemmaAudioSearchResponse;
+            const event = JSON.parse(line) as GemmaAudioSearchResponse;
           if (event.type === "error") throw new Error(event.error || t("Gemma audio search failed."));
           if (event.type === "progress") {
             setTotalChunks(event.total ?? 0);
@@ -88,7 +94,8 @@ export function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogra
             setTotalChunks(event.chunks ?? 0);
             setResults(event);
             setProgress("");
-            onResults?.(event.results ?? []);
+            onResults?.(event.results ?? [], modality);
+            finalResults = event.results ?? [];
           }
         };
         while (true) {
@@ -104,11 +111,15 @@ export function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogra
     } catch (cause) {
       if (controller.signal.aborted) setProgress(t("Search cancelled."));
       else setError(cause instanceof Error ? cause.message : String(cause));
+      return null;
     } finally {
       controllerRef.current = null;
       setBusy(false);
     }
+    return finalResults;
   };
+
+  useImperativeHandle(ref, () => ({ searchAudio: (audioFile) => search("audio", audioFile), cancel: () => controllerRef.current?.abort() }), [file, chunkSeconds, overlapSeconds, selectedLayers, topK]);
 
   return (
     <details data-am-stage-zone="gemma-audio-query" className="rounded-lg border border-violet-400/25 bg-black/30 p-3">
@@ -121,7 +132,7 @@ export function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogra
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded border border-border bg-background/60 px-3 py-2 text-xs text-muted-foreground">
           <Upload className="size-4 shrink-0" /><span className="truncate">{file?.name ?? t("Choose audio file")}</span>
-          <input className="sr-only" type="file" accept="audio/*,.wav,.mp3,.m4a,.flac,.ogg,.webm" onChange={(event) => { setFile(event.target.files?.[0] ?? null); setError(null); setResults(null); }} />
+          <input className="sr-only" type="file" accept="audio/*,.wav,.mp3,.m4a,.flac,.ogg,.webm" onChange={(event) => { const nextFile = event.target.files?.[0] ?? null; setFile(nextFile); onFileChange?.(nextFile); setError(null); setResults(null); }} />
         </label>
         <label className="flex items-center gap-1.5 text-xs text-muted-foreground">{t("Chunk s")}<input className="h-9 w-16 rounded border border-border bg-background px-2 text-foreground" aria-label={t("Chunk seconds")} type="number" min={1} max={30} value={chunkSeconds} onChange={(event) => setChunkSeconds(Math.max(1, Math.min(30, Number(event.target.value) || 1)))} /></label>
         <label className="flex items-center gap-1.5 text-xs text-muted-foreground">{t("Overlap s")}<input className="h-9 w-14 rounded border border-border bg-background px-2 text-foreground" aria-label={t("Overlap seconds")} type="number" min={0} max={2} step={0.5} value={overlapSeconds} onChange={(event) => setOverlapSeconds(Math.max(0, Math.min(2, Number(event.target.value) || 0)))} /></label>
@@ -141,4 +152,4 @@ export function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogra
       </div> : null}
     </details>
   );
-}
+});

@@ -73,8 +73,24 @@ export interface SegmentSideMeta {
   language?: {
     model: string;
     ran_at: string;
+    status?: "detected" | "no_indic";
     tags: Array<{ code: IndicLanguageTag; label: string; confidence: number }>;
     top_confidence: number;
+    threshold?: number;
+  };
+}
+
+export function classifyIndicLanguage<T extends { confidence: number }>(
+  tags: T[],
+  threshold: number,
+) {
+  const safeThreshold = Number.isFinite(threshold) ? Math.min(0.99, Math.max(0.5, threshold)) : 0.78;
+  const qualified = tags.filter((tag) => Number.isFinite(tag.confidence) && tag.confidence >= safeThreshold);
+  return {
+    tags: qualified.slice(0, 3),
+    top_confidence: Math.max(0, ...tags.map((tag) => Number.isFinite(tag.confidence) ? tag.confidence : 0)),
+    status: qualified.length ? "detected" as const : "no_indic" as const,
+    threshold: safeThreshold,
   };
 }
 

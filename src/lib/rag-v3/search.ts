@@ -162,6 +162,7 @@ export async function searchV3(params: {
   modelSlotOwner?: string;
   queryEmbedding?: number[];
   externalQueryText?: string;
+  anchorAllCandidates?: boolean;
 }): Promise<ProposeParametersResponse> {
   const query = params.query.trim();
   const hasExternalEmbedding = Array.isArray(params.queryEmbedding) && params.queryEmbedding.length > 0;
@@ -364,7 +365,7 @@ export async function searchV3(params: {
     layer,
     rankedPool.filter((item) => parameterDomainLayer(candidateMap.get(item.name)!.parameter) === layer).length,
   ]));
-  const anchorBudget = Math.max(1, Math.ceil(ranked.length * RAG_V3_CONFIG.anchorChangeFraction));
+  const anchorBudget = params.anchorAllCandidates ? ranked.length : Math.max(1, Math.ceil(ranked.length * RAG_V3_CONFIG.anchorChangeFraction));
   const anchored = usesQwenArtifacts ? await runV3AnchoringBridge({
     query: effectiveQuery,
     concepts: conceptVectors.map((concept) => concept.text),

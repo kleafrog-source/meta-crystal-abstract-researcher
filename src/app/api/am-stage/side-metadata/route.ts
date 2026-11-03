@@ -10,7 +10,7 @@ import { NextResponse } from "next/server";
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 import { prepareGpuForExternalModel } from "@/lib/ollama-memory";
 import { getSainaHelmBaseUrl } from "@/lib/saina-helm-runtime";
-import { INDIC_LANGUAGE_TAGS, type HelmGateValue, type SegmentSideMeta } from "@/lib/segment-side-meta";
+import { classifyIndicLanguage, INDIC_LANGUAGE_TAGS, type HelmGateValue, type SegmentSideMeta } from "@/lib/segment-side-meta";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -121,7 +121,9 @@ function specialistFromResult(kind: Specialist, result: Record<string, unknown>)
     if (confidence === null) return [];
     return [{ code: code as (typeof INDIC_LANGUAGE_TAGS)[number], label: String(item.label ?? code), confidence }];
   }) : [];
-  return { language: { model: String(result.model ?? LANGUAGE_MODEL), ran_at, tags, top_confidence: normalizeProbability(result.top_confidence) ?? tags[0]?.confidence ?? 0 } };
+  const thresholdValue = Number(process.env.AM_STAGE_INDIC_CONFIDENCE_THRESHOLD ?? 0.78);
+  const calibrated = classifyIndicLanguage(tags, thresholdValue);
+  return { language: { model: String(result.model ?? LANGUAGE_MODEL), ran_at, ...calibrated } };
 }
 
 const HELM_QUESTIONS = {
@@ -142,6 +144,7 @@ export async function POST(request: Request) {
   const duration = Number(form.get("duration"));
   const maxDuration = kind === "helm" ? 10 : 30;
   if (!Number.isFinite(duration) || duration < 0.25 || duration > maxDuration) return NextResponse.json({ error: `Select a ${kind === "helm" ? "0.25–10" : "0.25–30"}-second segment.` }, { status: 400 });
+  if (kind === "gender" && form.get("helm_has_vocals") !== "true") return NextResponse.json({ error: "Run Helm first and confirm has_vocals=true before estimating voice presentation." }, { status: 412 });
 
   let helmBaseUrl: string | null = null;
   if (kind === "helm") {

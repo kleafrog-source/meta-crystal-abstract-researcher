@@ -44,9 +44,12 @@ export function applySegmentSideMeta(
 ): AudioSegmentResultPoint[] {
   if (!Number.isInteger(index) || index < 0 || index >= segments.length)
     throw new RangeError("Segment index is out of range");
-  return segments.map((segment, currentIndex) => currentIndex === index
-    ? { ...segment, sideMeta: { schema: "segment_side_meta_v1", ...segment.sideMeta, ...patch } }
-    : segment);
+  return segments.map((segment, currentIndex) => {
+    if (currentIndex !== index) return segment;
+    const sideMeta = { schema: "segment_side_meta_v1" as const, ...segment.sideMeta, ...patch };
+    if (patch.helm && patch.helm.gates.has_vocals.value !== true) delete sideMeta.gender;
+    return { ...segment, sideMeta };
+  });
 }
 
 export function prepareSegmentRun(

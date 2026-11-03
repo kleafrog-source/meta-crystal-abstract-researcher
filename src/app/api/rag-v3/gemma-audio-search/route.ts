@@ -149,7 +149,7 @@ async function streamAudioSearch(request: Request, form: FormData) {
         const cancelConversions = () => listTasks().filter((task) => task.status === "running" && task.title === jobTitle).forEach((task) => task.cancel());
         request.signal.addEventListener("abort", cancelConversions, { once: true });
         void (async () => {
-          const best = new Map<string, ActiveParameter>();
+          const best = new Map<string, ActiveParameter & { source_window: { offset_seconds: number; duration_seconds: number } }>();
           let dimensions = artifact.dimensions ?? 0;
           let totalCandidates = 0;
           try {
@@ -172,7 +172,7 @@ async function streamAudioSearch(request: Request, form: FormData) {
               totalCandidates = Math.max(totalCandidates, search.total_candidates);
               for (const parameter of search.results as ActiveParameter[]) {
                 const previous = best.get(parameter.technical_name);
-                if (!previous || parameter.similarity > previous.similarity) best.set(parameter.technical_name, parameter);
+                if (!previous || parameter.similarity > previous.similarity) best.set(parameter.technical_name, { ...parameter, source_window: { offset_seconds: window.offset, duration_seconds: chunkInfo.durationSeconds } });
               }
               const merged = [...best.values()].sort((a, b) => b.similarity - a.similarity).slice(0, topK);
               emit({ type: "progress", current: index + 1, total: windows.length, offset_seconds: window.offset, duration_seconds: chunkInfo.durationSeconds, results: merged, total_candidates: totalCandidates, dimensions });

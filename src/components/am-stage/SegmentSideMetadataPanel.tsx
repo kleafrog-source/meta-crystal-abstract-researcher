@@ -81,6 +81,7 @@ export function SegmentSideMetadataPanel({
       form.set("audio", file, file.name);
       form.set("offset", String(segment.offset));
       form.set("duration", String(segment.duration));
+      if (specialist === "gender") form.set("helm_has_vocals", String(segment.sideMeta?.helm?.gates.has_vocals.value === true));
       const response = await fetch("/api/am-stage/side-metadata", { method: "POST", body: form });
       const payload = await response.json() as { side_meta?: Partial<SegmentSideMeta>; error?: string };
       if (!response.ok || !payload.side_meta) throw new Error(payload.error || t("Specialist analysis failed."));
@@ -123,7 +124,7 @@ export function SegmentSideMetadataPanel({
       <Badge variant="outline" className="border-fuchsia-400/25 text-fuchsia-200">{t("Manual run · unloads after use")}</Badge>
     </div>
     <div className="flex flex-wrap gap-1.5">
-      {SPECIALISTS.map(({ id, label }) => <Button key={id} size="sm" variant="outline" data-am-stage-action={`side-meta-${id}`} disabled={!file || !segment || busy !== null || (id === "helm" && (segment.duration < 0.25 || segment.duration > 10))} title={id === "helm" && segment && segment.duration > 10 ? t("Helm audio windows are limited to 10 seconds.") : undefined} onClick={() => void run(id)}>{busy === id ? t("Running…") : t(label)}</Button>)}
+      {SPECIALISTS.map(({ id, label }) => <Button key={id} size="sm" variant="outline" data-am-stage-action={`side-meta-${id}`} disabled={!file || !segment || busy !== null || (id === "helm" && (segment.duration < 0.25 || segment.duration > 10)) || (id === "gender" && segment.sideMeta?.helm?.gates.has_vocals.value !== true)} title={id === "helm" && segment && segment.duration > 10 ? t("Helm audio windows are limited to 10 seconds.") : id === "gender" ? t("Run Helm first; voice presentation is available only when vocals are detected.") : undefined} onClick={() => void run(id)}>{busy === id ? t("Running…") : t(label)}</Button>)}
       <Button size="sm" variant="outline" data-am-stage-action="extract-acoustic-features" disabled={!file || !segment || busy !== null || (segment.duration < 0.25 || segment.duration > 30)} title={segment && segment.duration > 30 ? t("Acoustic feature windows are limited to 30 seconds.") : undefined} onClick={() => void runAcousticExtraction()}>{busy === "acoustic" ? t("Extracting…") : t("Extract acoustic features")}</Button>
     </div>
     <div data-am-stage-zone="lfm3-audio-description" className="space-y-2 rounded border border-cyan-400/20 bg-black/25 p-2">
@@ -150,7 +151,7 @@ export function SegmentSideMetadataPanel({
     {segment?.sideMeta ? <div className="space-y-1 text-[10px] text-zinc-300">
       {segment.sideMeta.helm ? <p><span className="text-fuchsia-200">Helm:</span> {Object.entries(segment.sideMeta.helm.gates).map(([name, gate]) => `${t(name)} ${gate.value === null ? "—" : gate.value ? t("Yes") : t("No")} (${gate.probability === null ? "—" : gate.probability.toFixed(2)})`).join(" · ")}</p> : null}
       {segment.sideMeta.gender ? <p><span className="text-fuchsia-200">{t("Voice presentation")}:</span> {t(segment.sideMeta.gender.label)} · {segment.sideMeta.gender.score.toFixed(2)}</p> : null}
-      {segment.sideMeta.language ? <div className="flex flex-wrap items-center gap-1"><p className="min-w-0 flex-1"><span className="text-fuchsia-200">{t("Indic languages")}:</span> {segment.sideMeta.language.tags.map((tag) => `${tag.code} ${tag.label} (${tag.confidence.toFixed(2)})`).join(" · ") || t("No language above confidence threshold.")}</p>{segment.sideMeta.language.tags.length ? <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" onClick={() => void navigator.clipboard.writeText(segment.sideMeta?.language?.tags.map((tag) => tag.code).join(", ") ?? "")}><Copy className="mr-1 size-3" />{t("Copy tags")}</Button> : null}</div> : null}
+      {segment.sideMeta.language ? <div className="flex flex-wrap items-center gap-1"><p className="min-w-0 flex-1"><span className="text-fuchsia-200">{t("Indic languages")}:</span> {segment.sideMeta.language.tags.map((tag) => `${tag.code} ${tag.label} (${tag.confidence.toFixed(2)})`).join(" · ") || `${t(segment.sideMeta.language.status === "no_indic" ? "No Indic language detected" : "No language above confidence threshold.")} · ${t("top")} ${segment.sideMeta.language.top_confidence.toFixed(2)} / τ ${segment.sideMeta.language.threshold?.toFixed(2) ?? "0.78"}`}</p>{segment.sideMeta.language.tags.length ? <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" onClick={() => void navigator.clipboard.writeText(segment.sideMeta?.language?.tags.map((tag) => tag.code).join(", ") ?? "")}><Copy className="mr-1 size-3" />{t("Copy tags")}</Button> : null}</div> : null}
       {segment.sideMeta.acoustic_features ? <AcousticFeatureSummary features={segment.sideMeta.acoustic_features} t={t} /> : null}
     </div> : null}
   </section>;

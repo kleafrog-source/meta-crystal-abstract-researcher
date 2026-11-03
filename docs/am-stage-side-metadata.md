@@ -12,6 +12,8 @@ The shared TypeScript/Python payload is defined by [`schemas/segment-side-meta-v
 
 The Vocal Allocation Matrix accepts comma-separated detected tags such as `hi-IN, ta-IN`. On an explicit matrix run, recognized tags bias the scoped text query and fill ISO language slots using the existing deterministic parser. This does not silently apply values to AM-Stage segments. Copy or enter the tags you want to use.
 
+Calibration order is **Helm → voice presentation → Indic**. Voice presentation is enabled only after the selected segment has an explicit Helm `has_vocals=true` result; both UI and API enforce this gate, and a later negative/unknown Helm result clears any stale voice-presentation label. Vakgyata predictions below `AM_STAGE_INDIC_CONFIDENCE_THRESHOLD` (default `0.78`, accepted range `0.5–0.99`) produce `status: no_indic` with an empty tag list. Empty results cannot be copied into the Vocal Allocation Matrix, and no detected tags are written to Journal automatically. The score is a filtering threshold, not a claim of calibrated model probability.
+
 ## Runtimes and installation
 
 The API route is `POST /api/am-stage/side-metadata`, with multipart fields `specialist=helm|gender|language`, `audio`, `offset`, and `duration`. The server extracts/downmixes the selected WAV or FLAC window to mono PCM WAV at 16 kHz. Audio decoding is limited to formats supported by the local `soundfile` installation. Helm windows are 0.25–10 seconds; the two classifiers accept 0.25–30 seconds.
@@ -23,6 +25,7 @@ AM_STAGE_SAINA_BASE_URL=http://127.0.0.1:11435
 AM_STAGE_SAINA_HELM_MODEL=run-saina/saina-helm-3-0.8b
 AM_STAGE_GENDER_MODEL_PATH=data/models/am-stage/gender-detection
 AM_STAGE_VAKGYATA_MODEL_PATH=data/models/am-stage/vakgyata-tiny
+AM_STAGE_INDIC_CONFIDENCE_THRESHOLD=0.78
 PYTHON_EXECUTABLE=python
 ```
 

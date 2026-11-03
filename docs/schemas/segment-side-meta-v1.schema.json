@@ -93,7 +93,9 @@
             }
           }
         },
-        "top_confidence": { "$ref": "#/$defs/probability" }
+        "top_confidence": { "$ref": "#/$defs/probability" },
+        "status": { "enum": ["detected", "no_indic"] },
+        "threshold": { "type": "number", "minimum": 0, "maximum": 1 }
       }
     }
   },

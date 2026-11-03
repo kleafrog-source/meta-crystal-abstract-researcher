@@ -5,6 +5,8 @@ import { getCompositeIndexInfo, getCompositeParameterNames, getCompositeVectorsB
 import { searchV3, type RagV3Sources, type RagV3Scopes } from "@/lib/rag-v3/search";
 import type { ActiveParameter, RetrievalScope } from "@/lib/rag-v3/types";
 import { buildStage2Centroid, keepOnlyNewStage2Hits } from "@/lib/server-stage2-consensus";
+import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
+import { prepareGpuForV3Embedding } from "@/lib/ollama-memory";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -37,6 +39,8 @@ export async function POST(request: Request) {
   if (stage1Hits.length === 0) return NextResponse.json({ error: "Run a Stage-1 text search before Stage-2 retrieval." }, { status: 400 });
   const textIndex: TextIndexId = body.text_index === "embeddinggemma2" ? "embeddinggemma2" : "qwen3";
   const topK = Number.isFinite(body.top_k) ? Math.max(1, Math.min(30, Math.round(body.top_k!))) : 10;
+  const slotOwner = "am-stage-server-stage2";
+  if (!acquireEmbeddingModelSlot(slotOwner)) return NextResponse.json({ error: `Model slot is busy: ${getEmbeddingModelSlot()?.owner ?? "another operation"}` }, { status: 409 });
 
   try {
     if (textIndex === "embeddinggemma2") {
@@ -46,6 +50,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: `EmbeddingGemma 2 text index is unavailable.${detail}` }, { status: 409 });
       }
     }
+    await prepareGpuForV3Embedding(5_000, TEXT_INDEX_MODELS[textIndex], slotOwner);
 
     const seedNames = [...new Set(stage1Hits.map((hit) => hit.technical_name))];
     const storedVectors = await getCompositeVectorsByNames(seedNames, textIndex);
@@ -77,6 +82,7 @@ export async function POST(request: Request) {
       domainLayerWeights: body.domain_layer_weights,
       candidateNames,
       textIndex,
+      modelSlotOwner: slotOwner,
       queryEmbedding: centroid.vector,
       externalQueryText,
     });
@@ -100,5 +106,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+  } finally {
+    releaseEmbeddingModelSlot(slotOwner);
   }
 }

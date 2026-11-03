@@ -3,6 +3,9 @@ import type { ActiveParameter } from "@/lib/rag-v3/types";
 import type { ParamToTextEntry, ParamToTextSnapshot } from "@/lib/param-to-text";
 import type { BlendCurve } from "@/lib/am-stage-blend";
 import type { AudioWindowMode, Stage7RhythmSource } from "@/lib/audio-window-modes";
+import type { AmStageMacroId, AmStageMacroStep } from "@/lib/am-stage-macros";
+
+export type GemmaSessionParameter = ActiveParameter & { source_window?: { offset_seconds: number; duration_seconds: number } };
 
 export interface ParamTextWorkbenchSessionState {
   snapshot: ParamToTextSnapshot | null;
@@ -26,7 +29,9 @@ export interface AmStageSessionData {
   };
   timeline: { segments: AudioSegmentResultPoint[]; window_source_segments?: Stage7RhythmSource[] };
   banks: {
-    text_parameters: ActiveParameter[]; text_parameters_qwen3?: ActiveParameter[]; text_parameters_gemma?: ActiveParameter[]; clap_parameters: ActiveParameter[]; siglip_parameters: ActiveParameter[];
+    text_parameters: ActiveParameter[]; text_parameters_qwen3?: ActiveParameter[]; text_parameters_gemma?: ActiveParameter[]; text_parameters_gemma_resolved?: ActiveParameter[];
+    audio_parameters_gemma?: GemmaSessionParameter[]; audio_parameters_gemma_resolved?: ActiveParameter[];
+    clap_parameters: ActiveParameter[]; siglip_parameters: ActiveParameter[];
     text_view: "compact" | "standard" | "expanded"; clap_view: "compact" | "standard" | "expanded"; siglip_view: "compact" | "standard" | "expanded";
     show_clap: boolean; show_siglip: boolean; interpolate_clap: boolean; interpolate_siglip: boolean;
   };
@@ -39,6 +44,7 @@ export interface AmStageSessionData {
     scopes: { sound: boolean; structure: boolean; metadata: boolean; provenance: boolean; administrative: boolean }; search_mode: string; transition_ratio: number; text_index?: "qwen3" | "embeddinggemma2"; search_results: ActiveParameter[];
     secondary_results: ActiveParameter[]; active_parameters: ActiveParameter[]; macro: string;
   };
+  workflow?: { macro_profile: AmStageMacroId; require_gemma_resolution: boolean; include_stage2: boolean; custom_steps: AmStageMacroStep[]; macro_source_bank?: string };
 }
 
 export interface AmStageSessionSnapshot {
