@@ -50,6 +50,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / "python_engine"))
+from v3_snapshot import load_v3_snapshot  # noqa: E402
 from parameter_registry import filter_parameters, read_registry, registry_sha256  # noqa: E402
 
 
@@ -705,6 +706,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="Composite index rows.json used for autonomous parameter vectors.")
     ap.add_argument("--param-embeddings",
                     help="Composite index embeddings.f32 aligned with --param-rows.")
+    ap.add_argument("--live-snapshot", action="store_true",
+                    help="Build per-parameter anchor mappings from the current V3 catalogue snapshot.")
     ap.add_argument("--stub", action="store_true",
                     help="Сгенерировать заглушку (без Ollama): lexical-only режим.")
     ap.add_argument("--timeout", type=float, default=60.0)
@@ -712,7 +715,8 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"[build_anchors] stub={args.stub} model={args.model} endpoint={args.endpoint}")
     registry_root = PROJECT_ROOT / "data" / "combinatorial-genesis"
-    dataset = filter_parameters(load_json(args.dataset), registry_root)
+    dataset = load_v3_snapshot(registry_root)["parameters"] if args.live_snapshot else load_json(args.dataset)
+    dataset = filter_parameters(dataset, registry_root)
     axes_doc = load_json(args.axes)
     axes = axes_doc["axes"]
     polarity = load_json(args.polarity)
@@ -818,6 +822,11 @@ def main(argv: list[str] | None = None) -> int:
         "excluded_sha256": registry_sha256(registry_root),
         "excluded_count": len(read_registry(registry_root)["entries"]),
         "source_parameter_count": len(dataset),
+        "source_snapshot_sha256": load_v3_snapshot(PROJECT_ROOT / "data" / "combinatorial-genesis")["content_sha256"],
+        "vector_fingerprint": hashlib.sha256(json.dumps(
+            {"model": args.model, "dimensions": client.dim, "axes": axes_vectors, "a_home": a_home},
+            ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+        ).encode("utf-8")).hexdigest(),
         "generated_at": _now_iso(),
         "axes": axes_vectors,
         "a_home": a_home,

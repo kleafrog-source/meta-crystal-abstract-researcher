@@ -45,8 +45,8 @@ export async function POST(request: Request) {
   try {
     if (textIndex === "embeddinggemma2") {
       const artifact = (await getArtifactStatuses()).artifacts.find((item) => item.kind === "embeddinggemma2_text");
-      if (!artifact || artifact.status !== "built") {
-        const detail = artifact?.status === "stale" ? ` Rebuild it: ${artifact.reason ?? "source catalogue changed"}.` : " Build it from Service Bay first.";
+      if (!artifact || !["built", "ready"].includes(artifact.status)) {
+        const detail = artifact?.status === "stale" || artifact?.status === "stale_data" || artifact?.status === "stale_vectors" || artifact?.status === "partial" ? ` Rebuild it: ${artifact.reason ?? "source catalogue changed"}.` : " Build it from Service Bay first.";
         return NextResponse.json({ error: `EmbeddingGemma 2 text index is unavailable.${detail}` }, { status: 409 });
       }
     }

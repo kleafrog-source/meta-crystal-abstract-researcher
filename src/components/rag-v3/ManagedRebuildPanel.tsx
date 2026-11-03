@@ -6,11 +6,11 @@ import { Database, Loader2, RefreshCw, Square, Waves } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { ArtifactKind, ArtifactStatus, ManagedJob, RebuildKind } from "@/lib/rag-v3/managed-rebuild";
-import { cn } from "@/lib/utils";
 import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
 
 interface RebuildStatus {
   artifacts: ArtifactStatus[];
+  banks: Array<{ mode_id: string; input: string; encoder: string; value_policy: string; status: string; dependencies: string[] }>;
   active_model: string;
   registry_sha256: string;
   active_parameters: number;
@@ -74,22 +74,40 @@ export function ManagedRebuildPanel() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 text-sm font-semibold">
-            <Database className="size-4 text-cyan-300" />Управляемая перестройка V3
-            <V3InfoTip content="Каждый индекс перестраивается отдельно. Общая кнопка выполняет шесть embedding-этапов последовательно и никогда не запускает CLAP." />
+            <Database className="size-4 text-cyan-300" />Index coverage · V3
+            <V3InfoTip content="Обновить статус — read-only аудит файлов и fingerprints; модель не загружается. Qwen3 и EmbeddingGemma 2 имеют отдельные хранилища и отдельные rebuild jobs. Длинные rebuild запускаются только вручную." />
           </div>
           <div className="mt-1 text-xs text-zinc-500">Активная модель: <code>{status?.active_model ?? "—"}</code> · параметров: {status?.active_parameters ?? "—"}</div>
         </div>
         <div className="flex gap-2">
-          <V3Tooltip content="Последовательно обновляет composite, atoms, live anchors, Range, Select и relation anchors активной моделью."><Button size="sm" onClick={() => void start("all_qwen")} disabled={loading || status?.job.running}>Перестроить всё (кроме CLAP)</Button></V3Tooltip>
+          <V3Tooltip content="Последовательно обновляет только набор Qwen3. Артефакты EmbeddingGemma 2 не затрагиваются."><Button size="sm" onClick={() => void start("all_qwen")} disabled={loading || status?.job.running}>Rebuild all · Qwen3</Button></V3Tooltip>
           <V3Tooltip content="Останавливает активный управляемый процесс после завершения текущей операции."><Button size="sm" variant="destructive" onClick={() => void stop()} disabled={!status?.job.running}><Square className="size-3.5" />Остановить</Button></V3Tooltip>
-          <V3Tooltip content="Обновляет состояния индексов и текущего фонового процесса."><Button size="sm" variant="outline" onClick={() => void refresh()} disabled={loading}><RefreshCw className="size-3.5" />Обновить</Button></V3Tooltip>
+          <V3Tooltip content="Read-only audit: пересчитывает ожидаемое покрытие и сравнивает fingerprints. Не загружает модель и не запускает rebuild."><Button size="sm" variant="outline" onClick={() => void refresh()} disabled={loading}><RefreshCw className="size-3.5" />Refresh index status</Button></V3Tooltip>
         </div>
       </div>
 
-      <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-        {(status?.artifacts ?? []).filter((artifact) => artifact.kind !== "clap").map((artifact) => (
-          <ArtifactCard key={artifact.kind} artifact={artifact} running={status?.job.running === true && status.job.stage === artifact.kind} onStart={() => void start(artifact.kind)} disabled={loading || status?.job.running === true} />
-        ))}
+      <div className="overflow-x-auto rounded border border-white/10">
+        <table className="w-full min-w-[900px] text-left text-[11px]">
+          <thead className="bg-white/5 text-zinc-400"><tr><th className="p-2">Artifact</th><th className="p-2">Encoder</th><th className="p-2">Status</th><th className="p-2">Rows / expected</th><th className="p-2">Built</th><th className="p-2">Fingerprints</th><th className="p-2">Action</th></tr></thead>
+          <tbody>{(status?.artifacts ?? []).map((artifact) => (
+            <tr key={artifact.kind} className="border-t border-white/5 align-top">
+              <td className="p-2"><div className="font-medium">{artifact.label}</div><div className="mt-0.5 max-w-64 text-[9px] text-zinc-500">{artifact.description}</div></td>
+              <td className="p-2">{artifact.model ?? "—"}<div className="text-zinc-500">{artifact.dimensions ?? "—"}D</div></td>
+              <td className="p-2"><Badge variant={artifact.status === "ready" || artifact.status === "built" ? "secondary" : "outline"}>{artifact.status}</Badge>{artifact.reason ? <div className="mt-1 max-w-56 text-[9px] text-amber-300">{artifact.reason}</div> : null}</td>
+              <td className="p-2 font-mono">{artifact.row_count} / {artifact.expected_count}</td>
+              <td className="p-2 whitespace-nowrap">{artifact.built_at ? new Date(artifact.built_at).toLocaleString() : "—"}</td>
+              <td className="p-2 font-mono text-[9px] text-zinc-500">D {artifact.data_fingerprint?.slice(0, 12) ?? "—"}<br/>V {artifact.vector_fingerprint?.slice(0, 12) ?? "—"}</td>
+              <td className="p-2">{artifact.kind === "siglip" ? <a className="text-cyan-300 underline" href="/am-core#service-bay">Open Morpho Service Bay</a> : <Button size="sm" variant="outline" disabled={loading || status?.job.running === true} onClick={() => void start(artifact.kind as RebuildKind)}>{status?.job.running && status.job.stage === artifact.kind ? <Loader2 className="size-3.5 animate-spin" /> : null}{buttonLabels[artifact.kind]}</Button>}</td>
+            </tr>
+          ))}</tbody>
+        </table>
+      </div>
+
+      <div className="overflow-x-auto rounded border border-white/10">
+        <table className="w-full min-w-[680px] text-left text-[10px]">
+          <thead className="bg-white/5 text-zinc-400"><tr><th className="p-2">Mode / bank</th><th className="p-2">Input</th><th className="p-2">Encoder</th><th className="p-2">Value policy</th><th className="p-2">Readiness</th><th className="p-2">Dependencies</th></tr></thead>
+          <tbody>{(status?.banks ?? []).map((bank) => <tr key={bank.mode_id} className="border-t border-white/5"><td className="p-2 font-mono">{bank.mode_id}</td><td className="p-2">{bank.input}</td><td className="p-2">{bank.encoder}</td><td className="p-2">{bank.value_policy}</td><td className="p-2"><Badge variant={bank.status === "ready" ? "secondary" : "outline"}>{bank.status}</Badge></td><td className="p-2 text-zinc-500">{bank.dependencies.join(" · ")}</td></tr>)}</tbody>
+        </table>
       </div>
 
       {status?.job.running ? <div className="text-xs text-cyan-200"><Loader2 className="mr-1 inline size-3.5 animate-spin" />Выполняется: {status.job.stage}</div> : null}
@@ -99,22 +117,10 @@ export function ManagedRebuildPanel() {
   );
 }
 
-function ArtifactCard(props: { artifact: ArtifactStatus; running: boolean; disabled: boolean; onStart: () => void }) {
-  const artifact = props.artifact;
-  const buttonLabels: Record<ArtifactKind, string> = {
+const buttonLabels: Record<ArtifactKind, string> = {
     composite: "Rebuild Qwen3 composite", embeddinggemma2_text: "Build EmbeddingGemma 2 text index", atoms: "Перестроить runtime atoms", anchors: "Перестроить live axes / anchors",
     range: "Перестроить Range anchors", select: "Перестроить Select options", relations: "Перестроить relation anchors", clap: "Обновить CLAP-индекс",
-  };
-  return (
-    <div className={cn("rounded border p-2", artifact.status === "stale" ? "border-amber-400/40 bg-amber-950/15" : "border-white/10 bg-black/30")}>
-      <div className="flex items-center justify-between gap-2"><span className="text-xs font-medium">{artifact.label}</span><Badge variant={artifact.status === "built" ? "secondary" : "outline"}>{artifact.status}</Badge></div>
-      <div className="mt-1 text-[10px] text-zinc-500">{artifact.model ?? "—"} · {artifact.dimensions ?? "—"}D · {artifact.parameter_count} rows</div>
-      <div className="text-[10px] text-zinc-500">built: {artifact.built_at ? new Date(artifact.built_at).toLocaleString() : "—"} · +{artifact.added_since_build} / excluded {artifact.excluded_since_build}</div>
-      {artifact.reason ? <div className="mt-1 text-[10px] text-amber-300">{artifact.reason}</div> : null}
-      {artifact.fingerprint ? <div className="mt-1 font-mono text-[9px] text-zinc-600" title={artifact.fingerprint}>fp {artifact.fingerprint.slice(0, 16)}</div> : null}
-      <V3Tooltip content={`Перестраивает только артефакт «${artifact.label}». Текущий статус: ${artifact.status}.`}>
-        <Button className="mt-2 w-full" size="sm" variant="outline" disabled={props.disabled} onClick={props.onStart}>{props.running ? <Loader2 className="size-3.5 animate-spin" /> : null}{buttonLabels[artifact.kind]}</Button>
-      </V3Tooltip>
-    </div>
-  );
-}
+    gemma2_atoms: "Rebuild Gemma 2 runtime atoms", gemma2_anchors: "Rebuild Gemma 2 live axes / anchors", gemma2_range: "Rebuild Gemma 2 Range anchors",
+    gemma2_select: "Rebuild Gemma 2 Select anchors", gemma2_relations: "Rebuild Gemma 2 relation anchors",
+    siglip: "Open Morpho Service Bay",
+};

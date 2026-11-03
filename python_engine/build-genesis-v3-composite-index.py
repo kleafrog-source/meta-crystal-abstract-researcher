@@ -18,6 +18,7 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from parameter_registry import excluded_names, registry_sha256  # noqa: E402
 from published_parameter_schema import clean_published_parameter  # noqa: E402
+from v3_snapshot import load_v3_snapshot  # noqa: E402
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -215,6 +216,7 @@ def build(
     cache_hash = sha256_text(json.dumps({
         "model": model,
         "dataset_version": latest["version_id"],
+        "source_snapshot_sha256": load_v3_snapshot(DATA_ROOT)["content_sha256"],
         "excluded_sha256": registry_sha256(DATA_ROOT),
         "rows": planned,
     }, ensure_ascii=False, sort_keys=True))
@@ -249,6 +251,7 @@ def build(
         "cache_sha256": cache_hash, "model": model, "dimensions": dimensions,
         "parameter_count": len(planned),
         "dataset_version": latest["version_id"], "vector_origins": origins,
+        "source_snapshot_sha256": load_v3_snapshot(DATA_ROOT)["content_sha256"],
         "excluded_count": len(excluded), "excluded_sha256": registry_sha256(DATA_ROOT),
         "text_policy": "retrieval" if retrieval_text_only else "semantic-cache-when-available",
         "source_parameter_count": len(planned),

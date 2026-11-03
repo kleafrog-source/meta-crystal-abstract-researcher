@@ -19,6 +19,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "python_engine"))
 from parameter_registry import filter_parameters, read_registry, registry_sha256  # noqa: E402
+from v3_snapshot import load_v3_snapshot  # noqa: E402
 DEFAULT_DATASET = ROOT / "data" / "combinatorial-genesis" / "v3" / "dataset.json"
 DEFAULT_OUTPUT = ROOT / "data" / "combinatorial-genesis" / "v3" / "relations"
 
@@ -88,9 +89,11 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--endpoint", default="http://localhost:11434")
     parser.add_argument("--model", default="qwen3-embedding:4b")
+    parser.add_argument("--live-snapshot", action="store_true", help="Build current relation bindings from the V3 catalogue snapshot.")
     args = parser.parse_args()
     data_root = ROOT / "data" / "combinatorial-genesis"
-    dataset = filter_parameters(read_json(args.dataset), data_root)
+    dataset = load_v3_snapshot(data_root)["parameters"] if args.live_snapshot else read_json(args.dataset)
+    dataset = filter_parameters(dataset, data_root)
     rows = []
     for index, relation in enumerate(RELATIONS):
         rows.append({
@@ -102,11 +105,19 @@ def main() -> int:
         {"model": args.model, "relations": rows},
         ensure_ascii=False, sort_keys=True, separators=(",", ":"),
     ).encode("utf-8")).hexdigest()
+    source_snapshot_sha256 = load_v3_snapshot(data_root)["content_sha256"]
     manifest_path = args.output / "manifest.json"
     if manifest_path.exists():
         existing = read_json(manifest_path)
         vectors_path = args.output / str(existing.get("vectors_file") or "embeddings.f32")
         if existing.get("cache_sha256") == cache_sha256 and vectors_path.exists():
+            existing["source_snapshot_sha256"] = source_snapshot_sha256
+            existing["source_parameter_count"] = len(dataset)
+            existing["excluded_sha256"] = registry_sha256(data_root)
+            existing["excluded_count"] = len(read_registry(data_root)["entries"])
+            temporary = args.output / "manifest.json.tmp"
+            temporary.write_text(json.dumps(existing, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            os.replace(temporary, manifest_path)
             print(json.dumps({
                 "relations": len(rows), "dimensions": existing.get("dimensions"),
                 "model": args.model, "reused": True,
@@ -127,6 +138,7 @@ def main() -> int:
         "excluded_sha256": registry_sha256(data_root),
         "excluded_count": len(read_registry(data_root)["entries"]),
         "source_parameter_count": len(dataset),
+        "source_snapshot_sha256": source_snapshot_sha256,
         "alpha_base": 0.15, "alpha_max": 0.25, "activation_threshold": 0.55,
         "vectors_file": vectors_path.name, "relations": rows,
     }

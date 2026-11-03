@@ -27,13 +27,14 @@ function lexical(
 }
 
 export async function getV3SnapshotIdentity(): Promise<V3SnapshotIdentity> {
-  const [latestRaw, library, registry] = await Promise.all([
+  const [latestRaw, library, registry, tombstonesRaw] = await Promise.all([
     fs.readFile(
       path.join(GENESIS_DATA_ROOT, "datasets", "latest.json"),
       "utf8",
     ),
     readGenesisLibrary(),
     readExcludedRegistry(),
+    fs.readFile(path.join(GENESIS_DATA_ROOT, "library", "catalogue-deleted.json"), "utf8").catch((error: NodeJS.ErrnoException) => error.code === "ENOENT" ? "[]" : Promise.reject(error)),
   ]);
   const latest = JSON.parse(latestRaw) as { version_id: string };
   const libraryPath = path.join(
@@ -52,8 +53,10 @@ export async function getV3SnapshotIdentity(): Promise<V3SnapshotIdentity> {
   for (const item of library)
     records.set(String(item.technical_name), { ...item, source: "library" });
   const excluded = new Set(registry.entries.map((item) => item.technical_name));
+  const tombstonePayload = JSON.parse(tombstonesRaw) as unknown;
+  const tombstones = new Set(Array.isArray(tombstonePayload) ? tombstonePayload.filter((name): name is string => typeof name === "string") : tombstonePayload && typeof tombstonePayload === "object" && Array.isArray((tombstonePayload as { technical_names?: unknown }).technical_names) ? (tombstonePayload as { technical_names: unknown[] }).technical_names.filter((name): name is string => typeof name === "string") : []);
   const parameters = [...records.entries()]
-    .filter(([name]) => !excluded.has(name))
+    .filter(([name]) => !excluded.has(name) && !tombstones.has(name))
     .sort(lexical)
     .map(([, item]) => item);
   return {
@@ -62,6 +65,6 @@ export async function getV3SnapshotIdentity(): Promise<V3SnapshotIdentity> {
     excluded_count: registry.entries.length,
     excluded_sha256: excludedRegistrySha(registry),
     // Keep byte-for-byte parity with python_engine/v3_snapshot.py.
-    content_sha256: createHash("sha256").update(Buffer.concat([frozenBuffer, Buffer.from([0]), libraryBuffer])).digest("hex"),
+    content_sha256: createHash("sha256").update(Buffer.concat([frozenBuffer, Buffer.from([0]), libraryBuffer, Buffer.from([0]), Buffer.from(tombstonesRaw)])).digest("hex"),
   };
 }

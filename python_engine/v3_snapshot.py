@@ -39,6 +39,10 @@ def load_v3_snapshot(data_root: Path = DEFAULT_DATA_ROOT) -> dict[str, Any]:
     library_path = data_root / "library" / "parameters.json"
     frozen = _read(frozen_path)
     library = _read(library_path)
+    tombstone_path = data_root / "library" / "catalogue-deleted.json"
+    tombstone_raw = tombstone_path.read_bytes() if tombstone_path.exists() else b"[]"
+    tombstone_payload = json.loads(tombstone_raw.decode("utf-8"))
+    deleted = set(tombstone_payload if isinstance(tombstone_payload, list) else tombstone_payload.get("technical_names", []))
     registry_path = data_root / "registry" / "excluded.json"
     registry = _read(registry_path) if registry_path.exists() else {"entries": []}
     excluded = sorted({str(item.get("technical_name", "")) for item in registry.get("entries", []) if item.get("technical_name")})
@@ -54,7 +58,7 @@ def load_v3_snapshot(data_root: Path = DEFAULT_DATA_ROOT) -> dict[str, Any]:
         if name:
             records[name] = {**item, "source": "library"}
 
-    parameters = [records[name] for name in sorted(records) if name not in excluded_set]
+    parameters = [records[name] for name in sorted(records) if name not in excluded_set and name not in deleted]
     excluded_sha = _sha(excluded)
     return {
         "schema_version": 1,
@@ -64,6 +68,6 @@ def load_v3_snapshot(data_root: Path = DEFAULT_DATA_ROOT) -> dict[str, Any]:
         "frozen_count": sum(item["source"] == "frozen" for item in parameters),
         "excluded_count": len(excluded),
         "excluded_sha256": excluded_sha,
-        "content_sha256": hashlib.sha256(frozen_path.read_bytes() + b"\0" + library_path.read_bytes()).hexdigest(),
+        "content_sha256": hashlib.sha256(frozen_path.read_bytes() + b"\0" + library_path.read_bytes() + b"\0" + tombstone_raw).hexdigest(),
         "parameters": parameters,
     }

@@ -343,7 +343,8 @@ def build_index(data_root: Path, index_dir: Path, model_path: Path, batch_size: 
     write_vectors(staging / "embeddings.f32", matrix)
     stored_rows = [{"technical_name": row["technical_name"], "text_sha256": value} for row, value in zip(rows, hashes)]
     atomic_json(staging / "rows.json", stored_rows)
-    manifest = {"schema_version": 1, "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "model_id": MODEL_ID, "model_revision": MODEL_REVISION, "model_path": str(model_path), "device": "cpu", "dtype": "float32", "normalization": "l2", "parameter_count": len(rows), "dimensions": int(matrix.shape[1]), "source_snapshot_sha256": snapshot["content_sha256"], "dataset_version": snapshot["dataset_version"], "excluded_sha256": snapshot["excluded_sha256"], "encoded": encoded, "reused": len(rows) - encoded, "scopes": ["sound", "structure"]}
+    vector_fingerprint = hashlib.sha256((MODEL_REVISION + "\0" + "\n".join(hashes)).encode("utf-8")).hexdigest()
+    manifest = {"schema_version": 1, "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "model_id": MODEL_ID, "model_revision": MODEL_REVISION, "model_path": str(model_path), "device": "cpu", "dtype": "float32", "normalization": "l2", "parameter_count": len(rows), "dimensions": int(matrix.shape[1]), "source_snapshot_sha256": snapshot["content_sha256"], "vector_fingerprint": vector_fingerprint, "dataset_version": snapshot["dataset_version"], "excluded_sha256": snapshot["excluded_sha256"], "encoded": encoded, "reused": len(rows) - encoded, "scopes": ["sound", "structure"]}
     atomic_json(staging / "manifest.json", manifest)
     backup = index_dir.with_name(f"{index_dir.name}.previous")
     shutil.rmtree(backup, ignore_errors=True)

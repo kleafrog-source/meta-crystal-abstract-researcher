@@ -1,4 +1,7 @@
 import { spawn } from "node:child_process";
+import type { TextIndexId } from "./composite-index";
+import { TEXT_INDEX_MODELS } from "./composite-index";
+import { loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
 
 export interface V3AnchorValue {
   value: number | string;
@@ -14,11 +17,15 @@ export function runV3AnchoringBridge(payload: {
   relation_hints?: Record<string, { direction: number; confidence: number; relation: string }>;
   scoped_params: Array<Record<string, unknown>>;
   current_values: Record<string, number | string>;
+  text_index?: TextIndexId;
+  value_anchors_ready?: boolean;
+  select_anchors_ready?: boolean;
 }): Promise<Record<string, V3AnchorValue>> {
-  return new Promise((resolve, reject) => {
+  return loadEmbeddingRuntimeSettings().then((settings) => new Promise((resolve, reject) => {
+    const textIndex = payload.text_index ?? "qwen3";
     const child = spawn(process.env.PYTHON_EXECUTABLE || "python", ["python_engine/anchoring_v3/bridge.py"], {
       cwd: process.cwd(),
-      env: { ...process.env, PYTHONUTF8: "1", PYTHONIOENCODING: "utf-8" },
+      env: { ...process.env, PYTHONUTF8: "1", PYTHONIOENCODING: "utf-8", RAG_V3_TEXT_INDEX: textIndex, OLLAMA_BASE_URL: settings.baseUrl, OLLAMA_EMBED_MODEL: TEXT_INDEX_MODELS[textIndex] },
       stdio: ["pipe", "pipe", "pipe"],
       windowsHide: true,
     });
@@ -38,5 +45,5 @@ export function runV3AnchoringBridge(payload: {
       }
     });
     child.stdin.end(JSON.stringify(payload));
-  });
+  }));
 }

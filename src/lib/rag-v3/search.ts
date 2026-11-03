@@ -11,6 +11,7 @@ import { classifyDomainLayer } from "@/lib/am-parameters-catalogue/domain-layer-
 import { ACOUSTIC_DOMAIN_LAYERS, GLOBAL_CONSENSUS_LAYER } from "@/lib/domain-layers";
 
 import { rankCompositeNamesMulti, TEXT_INDEX_MODELS, type TextIndexId } from "./composite-index";
+import { getArtifactStatuses } from "./managed-rebuild";
 import { buildRelationAlignment, ensureConceptCoverage } from "./alignment";
 import { RAG_V3_CONFIG } from "./config";
 import { runV3AnchoringBridge, type V3AnchorValue } from "./python-bridge";
@@ -194,12 +195,14 @@ export async function searchV3(params: {
     : buildEffectiveQuery(query, params.instructionContext);
   const textIndex = params.textIndex === "embeddinggemma2" ? "embeddinggemma2" : "qwen3";
   const selectedModel = TEXT_INDEX_MODELS[textIndex];
+  const artifactAudit = await getArtifactStatuses();
+  const isReady = (kind: string) => {
+    const item = artifactAudit.artifacts.find((artifact) => artifact.kind === kind);
+    return item?.status === "ready" || item?.status === "built";
+  };
   const selectedQueryVector = params.queryEmbedding ?? await embedTextWithModel(baseQuery, selectedModel, params.modelSlotOwner);
-  // Atom, relation, select-option, and anchor artifacts are currently Qwen-indexed.
-  // Keep those paths out of Gemma searches so one request never loads two embedding models
-  // or compares vectors from incompatible spaces.
-  const usesQwenArtifacts = textIndex === "qwen3";
-  const atomRanking = usesQwenArtifacts && enabled.atoms ? await rankRuntimeAtoms(selectedQueryVector, 20) : null;
+  const atomKind = textIndex === "qwen3" ? "atoms" : "gemma2_atoms";
+  const atomRanking = enabled.atoms && isReady(atomKind) ? await rankRuntimeAtoms(selectedQueryVector, 20, textIndex).catch(() => null) : null;
   const atomExpansion = atomRanking?.atoms.filter((atom) => atom.role !== "unit").slice(0, 12).map((atom) => atom.atom).join(" ") ?? "";
   const effectiveQuery = baseQuery;
   const concepts = hasExternalEmbedding
@@ -212,16 +215,15 @@ export async function searchV3(params: {
     ...concept,
     vector: index === 0 ? selectedQueryVector : extraConceptVectors[index - 1],
   }));
-  const atomExpansionVector = usesQwenArtifacts && atomExpansion
+  const atomExpansionVector = atomExpansion
     ? await embedTextWithModel(`Combinatorial atoms: ${atomExpansion}`, selectedModel, params.modelSlotOwner)
     : null;
   const retrievalVectors = [
     ...conceptVectors.map((concept) => ({ vector: concept.vector, weight: concept.weight })),
     ...(atomExpansionVector ? [{ vector: atomExpansionVector, weight: 0.65 }] : []),
   ];
-  const activeRelations = usesQwenArtifacts
-    ? await matchRelations(baseQuery, conceptVectors.map((concept) => concept.vector))
-    : [];
+  const relationKind = textIndex === "qwen3" ? "relations" : "gemma2_relations";
+  const activeRelations = isReady(relationKind) ? await matchRelations(baseQuery, conceptVectors.map((concept) => concept.vector), textIndex) : [];
   const relationAlignment = buildRelationAlignment(activeRelations, new Set(records.keys()));
   const queryVector = selectedQueryVector;
   const topK = Math.max(1, Math.min(700, Math.round(params.topK)));
@@ -248,8 +250,9 @@ export async function searchV3(params: {
       && new RegExp(`(?<![\\p{L}\\p{N}_/.:])${normalizedOption.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\p{L}\\p{N}_/.:])`, "u").test(normalizedQuery);
   };
   const hasOptionCommand = /\b(?:mode|option|режим|вариант)\b/u.test(baseQuery.toLowerCase());
-  const selectMatches = hasOptionCommand && usesQwenArtifacts
-    ? (await rankSelectOptionNames(queryVector, new Set(records.keys()), Math.max(32, topK * 2)))
+  const selectKind = textIndex === "qwen3" ? "select" : "gemma2_select";
+  const selectMatches = hasOptionCommand && isReady(selectKind)
+    ? (await rankSelectOptionNames(queryVector, new Set(records.keys()), Math.max(32, topK * 2), textIndex))
       .filter((match) => optionMatchesQuery(match.option))
     : [];
   const selectByName = new Map(selectMatches.map((match) => [match.name, match]));
@@ -366,7 +369,10 @@ export async function searchV3(params: {
     rankedPool.filter((item) => parameterDomainLayer(candidateMap.get(item.name)!.parameter) === layer).length,
   ]));
   const anchorBudget = params.anchorAllCandidates ? ranked.length : Math.max(1, Math.ceil(ranked.length * RAG_V3_CONFIG.anchorChangeFraction));
-  const anchored = usesQwenArtifacts ? await runV3AnchoringBridge({
+  const anchorKind = textIndex === "qwen3" ? "anchors" : "gemma2_anchors";
+  const rangeKind = textIndex === "qwen3" ? "range" : "gemma2_range";
+  const anchorReady = isReady(anchorKind);
+  const anchored = anchorReady ? await runV3AnchoringBridge({
     query: effectiveQuery,
     concepts: conceptVectors.map((concept) => concept.text),
     query_embeddings: conceptVectors.map((concept) => concept.vector),
@@ -378,6 +384,9 @@ export async function searchV3(params: {
       _anchor_eligible: index < anchorBudget,
     })),
     current_values: params.currentValues,
+    text_index: textIndex,
+    value_anchors_ready: isReady(rangeKind),
+    select_anchors_ready: isReady(selectKind),
   }) : {};
   const results = ranked.map(({ name, similarity, layer }) => ({
     ...toActive(candidateMap.get(name)!.parameter, similarity, params.currentValues, anchored[name]),
@@ -404,4 +413,3 @@ export async function searchV3(params: {
     },
   };
 }
-

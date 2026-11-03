@@ -24,6 +24,6 @@ export async function POST(request: NextRequest) {
     const failed_count = queue.items.filter((item) => item.status === "failed").length;
     queue.items = queue.items.filter((item) => item.status !== "done");
     await writeQueue(queue);
-    return NextResponse.json({ ok: true, ...result, backup_path: `data/combinatorial-genesis/library/history/${result.backup}`, queue_backup_path: `data/combinatorial-genesis/library/history/${queueBackup}`, failed_count, skipped_count: Math.max(0, ids.length - result.queue_ids.length), rebuild: false, indexes_dirty: true });
+    return NextResponse.json({ ok: true, ...result, backup_path: `data/combinatorial-genesis/library/history/${result.backup}`, registry_backup_path: `data/combinatorial-genesis/library/history/${result.registry_backup}`, tombstones_backup_path: `data/combinatorial-genesis/library/history/${result.tombstones_backup}`, queue_backup_path: `data/combinatorial-genesis/library/history/${queueBackup}`, failed_count, skipped_count: Math.max(0, ids.length - result.queue_ids.length), rebuild: false, indexes_dirty: true });
   } catch (error) { const message = error instanceof Error ? error.message : String(error); if (ids.length) await finishCatalogueQueue(ids, message).catch(() => undefined); return NextResponse.json({ error: message }, { status: 400 }); }
 }

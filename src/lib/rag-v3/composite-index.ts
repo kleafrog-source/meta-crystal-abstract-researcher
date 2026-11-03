@@ -13,6 +13,10 @@ export function getTextIndexDirectory(index: TextIndexId): string {
   return path.join(INDEX_ROOT, index === "qwen3" ? "composite-index" : "embeddinggemma2-text-index");
 }
 
+export function getEncoderArtifactDirectory(index: TextIndexId, artifact: "anchors" | "range-anchors" | "relations" | "runtime-atoms"): string {
+  return path.join(INDEX_ROOT, index === "qwen3" ? "qwen3" : "embeddinggemma2", artifact);
+}
+
 interface CompositeRow {
   technical_name: string;
   source: "library" | "frozen";

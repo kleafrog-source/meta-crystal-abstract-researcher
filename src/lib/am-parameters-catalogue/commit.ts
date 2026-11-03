@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
 import { GENESIS_LIBRARY_MANIFEST_PATH, GENESIS_LIBRARY_PATH, readGenesisLibrary, readGenesisLibraryManifest } from "@/lib/combinatorial-genesis/library";
 import { cleanPublishedParameter } from "@/lib/combinatorial-genesis/parameter-schema";
+import { GENESIS_EXCLUDED_PATH, readExcludedRegistry } from "@/lib/combinatorial-genesis/registry";
 import { HISTORY_DIR, TOMBSTONES_PATH, readCatalogueRevision, readCatalogueState, readQueue, withCatalogueLock, writeCatalogueState, writeQueue } from "./catalogue";
 
 export async function commitCatalogueQueue(ids: string[]) {
@@ -26,17 +27,26 @@ export async function commitCatalogueQueue(ids: string[]) {
     await fs.mkdir(HISTORY_DIR, { recursive: true });
     const backupName = `parameters-${now.replace(/[:.]/g, "-")}.json`;
     await fs.copyFile(GENESIS_LIBRARY_PATH, `${HISTORY_DIR}/${backupName}`);
+    const legacyRegistry = await readExcludedRegistry();
+    const purgedRegistry = { ...legacyRegistry, updated_at: now, entries: legacyRegistry.entries.filter((entry) => !tombstoneNames.has(entry.technical_name) && nextLibrary.some((row) => row.technical_name === entry.technical_name)) };
+    const registryBackup = `excluded-${now.replace(/[:.]/g, "-")}.json`;
+    await fs.copyFile(GENESIS_EXCLUDED_PATH, `${HISTORY_DIR}/${registryBackup}`).catch((error: NodeJS.ErrnoException) => { if (error.code !== "ENOENT") throw error; });
+    const tombstonesBackup = `catalogue-deleted-${now.replace(/[:.]/g, "-")}.json`;
+    await fs.copyFile(TOMBSTONES_PATH, `${HISTORY_DIR}/${tombstonesBackup}`).catch((error: NodeJS.ErrnoException) => { if (error.code !== "ENOENT") throw error; });
     const tempLibrary = `${GENESIS_LIBRARY_PATH}.${randomUUID()}.tmp`; const tempManifest = `${GENESIS_LIBRARY_MANIFEST_PATH}.${randomUUID()}.tmp`;
     await fs.writeFile(tempLibrary, serialized, "utf8");
     await fs.writeFile(tempManifest, `${JSON.stringify({ ...manifest, updated_at: now, parameter_count: nextLibrary.length }, null, 2)}\n`, "utf8");
     const tempTombstones = `${TOMBSTONES_PATH}.${randomUUID()}.tmp`;
     await fs.writeFile(tempTombstones, `${JSON.stringify([...tombstoneNames].sort(), null, 2)}\n`, "utf8");
+    const tempRegistry = `${GENESIS_EXCLUDED_PATH}.${randomUUID()}.tmp`;
+    await fs.writeFile(tempRegistry, `${JSON.stringify(purgedRegistry, null, 2)}\n`, "utf8");
     await fs.rename(tempLibrary, GENESIS_LIBRARY_PATH); await fs.rename(tempManifest, GENESIS_LIBRARY_MANIFEST_PATH); await fs.rename(tempTombstones, TOMBSTONES_PATH);
+    await fs.rename(tempRegistry, GENESIS_EXCLUDED_PATH);
     const revision = await readCatalogueRevision();
     const fresh = await readCatalogueState(); fresh.revision = revision; fresh.indexes_dirty = true; fresh.last_commit_at = now;
     fresh.last_commit_counts = { added: selected.filter((item) => item.operation === "add").length, updated: selected.filter((item) => item.operation === "update").length, deleted: selected.filter((item) => item.operation === "delete").length };
     await writeCatalogueState(fresh);
-    return { changed: selected.length, count: nextLibrary.length, queue_ids: selected.map((item) => item.id), backup: backupName };
+    return { changed: selected.length, count: nextLibrary.length, queue_ids: selected.map((item) => item.id), backup: backupName, registry_backup: registryBackup, tombstones_backup: tombstonesBackup };
   });
 }
 

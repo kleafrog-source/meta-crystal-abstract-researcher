@@ -43,15 +43,25 @@ def main() -> int:
     module_dir = project_root / "python_engine" / "anchoring_v3"
     artifacts = project_root / "data" / "combinatorial-genesis" / "v3"
     anchoring_dir = artifacts / "anchoring"
+    index_id = os.environ.get("RAG_V3_TEXT_INDEX", "qwen3")
+    if index_id == "embeddinggemma2":
+        encoder_root = artifacts / "embeddinggemma2"
+        active_anchoring_dir = encoder_root / "anchors"
+        value_dir = encoder_root / "range-anchors"
+        index_dir = artifacts / "embeddinggemma2-text-index"
+    else:
+        active_anchoring_dir = anchoring_dir
+        value_dir = artifacts / "value-anchors"
+        index_dir = artifacts / "composite-index"
     sys.path.insert(0, str(module_dir))
     from anchoring import Config, anchor_query  # type: ignore
 
     payload = json.load(sys.stdin)
-    anchors_path = anchoring_dir / "anchors_build.json"
+    anchors_path = active_anchoring_dir / "anchors_build.json"
     anchors = json.loads(anchors_path.read_text(encoding="utf-8"))
-    vectors, row_by_name = load_composite_index(artifacts / "composite-index")
-    value_vectors, value_parameters = load_value_artifact(artifacts / "value-anchors" / "manifest.json")
-    select_vectors, select_parameters = load_value_artifact(artifacts / "value-anchors" / "select-options.json")
+    vectors, row_by_name = load_composite_index(index_dir)
+    value_vectors, value_parameters = load_value_artifact(value_dir / "manifest.json") if payload.get("value_anchors_ready") else (None, {})
+    select_vectors, select_parameters = load_value_artifact(value_dir / "select-options.json") if payload.get("select_anchors_ready") else (None, {})
     runtime_config = json.loads((module_dir / "config.json").read_text(encoding="utf-8"))
     cfg = Config(
         dataset_path=str(artifacts / "dataset.json"),

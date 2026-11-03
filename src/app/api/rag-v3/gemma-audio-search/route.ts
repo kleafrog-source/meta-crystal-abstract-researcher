@@ -100,7 +100,7 @@ export async function POST(request: Request) {
     if (inputFile.size > MAX_IMAGE_BYTES) return NextResponse.json({ error: "Spectrogram image exceeds the 10 MiB limit." }, { status: 413 });
     const mediaBuffer = Buffer.from(await inputFile.arrayBuffer()); inspectPng(mediaBuffer);
     const artifact = (await getArtifactStatuses()).artifacts.find((item) => item.kind === "embeddinggemma2_text");
-    if (!artifact || artifact.status !== "built") return NextResponse.json({ error: `EmbeddingGemma 2 text index is unavailable${artifact?.reason ? `: ${artifact.reason}` : ". Build it from Service Bay first."}` }, { status: 409 });
+    if (!artifact || !["built", "ready"].includes(artifact.status)) return NextResponse.json({ error: `EmbeddingGemma 2 text index is unavailable${artifact?.reason ? `: ${artifact.reason}` : ". Build it from Service Bay first."}` }, { status: 409 });
     await ensureOllamaModelAvailable(model); await prepareGpuForEmbeddingModel(model, 5_000, SLOT_OWNER);
     const response = await fetch(`${baseUrl}/api/embed`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model, input: { image: mediaBuffer.toString("base64") }, keep_alive: 0 }), signal: AbortSignal.any([request.signal, AbortSignal.timeout(120_000)]) });
     if (!response.ok) throw new Error(`Ollama spectrogram embedding failed (HTTP ${response.status}): ${(await response.text()).slice(0, 1_000)}`);
@@ -133,7 +133,7 @@ async function streamAudioSearch(request: Request, form: FormData) {
     const durationSeconds = Number((info as { duration_seconds?: unknown } | null)?.duration_seconds);
     if (!Number.isFinite(durationSeconds) || durationSeconds < 0.25) throw new MediaInputError("Audio must be at least 0.25 seconds and decodable by the CLAP audio pipeline.");
     const artifact = (await getArtifactStatuses()).artifacts.find((item) => item.kind === "embeddinggemma2_text");
-    if (!artifact || artifact.status !== "built") throw new Error(`EmbeddingGemma 2 text index is unavailable${artifact?.reason ? `: ${artifact.reason}` : ". Build it from Service Bay first."}`);
+    if (!artifact || !["built", "ready"].includes(artifact.status)) throw new Error(`EmbeddingGemma 2 text index is unavailable${artifact?.reason ? `: ${artifact.reason}` : ". Build it from Service Bay first."}`);
     const model = TEXT_INDEX_MODELS.embeddinggemma2;
     await ensureOllamaModelAvailable(model);
     const { baseUrl } = await loadEmbeddingRuntimeSettings();

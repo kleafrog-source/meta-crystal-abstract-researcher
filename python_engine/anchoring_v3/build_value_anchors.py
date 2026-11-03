@@ -22,6 +22,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "python_engine"))
 from parameter_registry import filter_parameters, read_registry, registry_sha256  # noqa: E402
+from v3_snapshot import load_v3_snapshot  # noqa: E402
 DEFAULT_DATASET = ROOT / "data" / "combinatorial-genesis" / "v3" / "dataset.json"
 DEFAULT_OUTPUT = ROOT / "data" / "combinatorial-genesis" / "v3" / "value-anchors"
 LEVELS = ((0.0, "minimum"), (0.25, "low"), (0.5, "default"), (0.75, "high"), (1.0, "maximum"))
@@ -237,8 +238,7 @@ def build_artifact(*, label: str, rows: list[dict], manifest_path: Path, vectors
     return manifest
 
 
-def load_composite(dataset_root: Path) -> tuple[dict[str, int], np.memmap, int]:
-    index_dir = dataset_root / "composite-index"
+def load_composite(index_dir: Path) -> tuple[dict[str, int], np.memmap, int]:
     manifest = read_json(index_dir / "manifest.json")
     rows = read_json(index_dir / manifest["files"]["rows"])
     vectors_path = index_dir / manifest["files"]["embeddings"]
@@ -366,18 +366,25 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--composite-dir", type=Path, default=DEFAULT_DATASET.parent / "composite-index")
     parser.add_argument("--endpoint", default="http://localhost:11434")
     parser.add_argument("--model", default=os.environ.get("OLLAMA_EMBED_MODEL", "qwen3-embedding:0.6b"))
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--timeout", type=int, default=1200)
     parser.add_argument("--target", choices=("all", "range", "select"), default="all")
     parser.add_argument("--direct", action="store_true", help="Embed every complete anchor text instead of factorized Qwen vectors")
+    parser.add_argument("--live-snapshot", action="store_true", help="Build against the current library-over-frozen V3 snapshot.")
     args = parser.parse_args()
     data_root = ROOT / "data" / "combinatorial-genesis"
-    dataset = filter_parameters(read_json(args.dataset), data_root)
+    dataset = load_v3_snapshot(data_root)["parameters"] if args.live_snapshot else read_json(args.dataset)
+    dataset = filter_parameters(dataset, data_root)
     range_rows, select_rows = build_rows(dataset)
     args.output.mkdir(parents=True, exist_ok=True)
-    row_by_name, base_vectors, dimensions = load_composite(args.dataset.parent)
+    row_by_name, base_vectors, dimensions = load_composite(args.composite_dir)
+    missing_names = sorted({str(row.get("technical_name") or "") for row in dataset} - set(row_by_name))
+    if missing_names:
+        base_vectors._mmap.close()
+        raise ValueError(f"Selected composite index misses {len(missing_names)} source parameters; rebuild that text index first.")
     range_manifest = None
     select_manifest = None
     if args.direct:
@@ -439,11 +446,13 @@ def main() -> int:
             option_prototype_vectors._mmap.close()
     base_vectors._mmap.close()
     excluded_sha = registry_sha256(data_root)
+    source_snapshot_sha256 = load_v3_snapshot(data_root)["content_sha256"]
     for manifest, manifest_path in ((range_manifest, args.output / "manifest.json"), (select_manifest, args.output / "select-options.json")):
         if manifest is not None:
             manifest["excluded_sha256"] = excluded_sha
             manifest["excluded_count"] = len(read_registry(data_root)["entries"])
             manifest["source_parameter_count"] = len(dataset)
+            manifest["source_snapshot_sha256"] = source_snapshot_sha256
             write_json(manifest_path, manifest)
     print(json.dumps({
         "model": args.model, "dimensions": dimensions,

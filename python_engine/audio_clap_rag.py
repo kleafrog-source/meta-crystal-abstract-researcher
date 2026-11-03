@@ -48,7 +48,13 @@ def _load_v3_parameters() -> list[dict[str, Any]]:
             if name and name not in records:
                 records[name] = clean_published_parameter(row)
     excluded = excluded_names(DATA_ROOT)
-    return [parameter for name, parameter in records.items() if name not in excluded]
+    tombstones_path = DATA_ROOT / "library" / "catalogue-deleted.json"
+    if tombstones_path.exists():
+        payload = _read_json(tombstones_path)
+        deleted = set(payload if isinstance(payload, list) else payload.get("technical_names", []))
+    else:
+        deleted = set()
+    return [parameter for name, parameter in records.items() if name not in excluded and name not in deleted]
 
 
 def _canonical_hash(parameter: dict[str, Any]) -> str:

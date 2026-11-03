@@ -1,7 +1,8 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { getEncoderArtifactDirectory, type TextIndexId } from "./composite-index";
 
-const RELATIONS_DIR = path.join(process.cwd(), "data", "combinatorial-genesis", "v3", "relations");
+const ROOT = path.join(process.cwd(), "data", "combinatorial-genesis", "v3");
 
 interface RelationRow {
   id: string;
@@ -37,7 +38,7 @@ export interface ActiveRelation extends RelationRow {
   concept_index: number;
 }
 
-let cached: LoadedRelations | null = null;
+const cached = new Map<TextIndexId, LoadedRelations>();
 
 function normalize(vector: number[]): Float32Array {
   const norm = Math.sqrt(vector.reduce((sum, value) => sum + value * value, 0));
@@ -50,11 +51,12 @@ function dot(left: Float32Array, right: Float32Array): number {
   return score;
 }
 
-async function loadRelations(): Promise<LoadedRelations | null> {
+async function loadRelations(indexId: TextIndexId): Promise<LoadedRelations | null> {
+  const relationsDir = indexId === "qwen3" ? path.join(ROOT, "relations") : getEncoderArtifactDirectory(indexId, "relations");
   try {
-    const manifest = JSON.parse(await fs.readFile(path.join(RELATIONS_DIR, "manifest.json"), "utf8")) as RelationManifest;
-    if (cached?.manifest.created_at === manifest.created_at) return cached;
-    const binary = await fs.readFile(path.join(RELATIONS_DIR, manifest.vectors_file));
+    const manifest = JSON.parse(await fs.readFile(path.join(relationsDir, "manifest.json"), "utf8")) as RelationManifest;
+    if (cached.get(indexId)?.manifest.created_at === manifest.created_at) return cached.get(indexId)!;
+    const binary = await fs.readFile(path.join(relationsDir, manifest.vectors_file));
     if (binary.readUInt32LE(0) !== manifest.count || binary.readUInt32LE(4) !== manifest.dimensions) {
       throw new Error("V3 relation index header mismatch.");
     }
@@ -68,16 +70,17 @@ async function loadRelations(): Promise<LoadedRelations | null> {
       }
       vectors.push(vector);
     }
-    cached = { manifest, vectors };
-    return cached;
+    const loaded = { manifest, vectors };
+    cached.set(indexId, loaded);
+    return loaded;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
     throw error;
   }
 }
 
-export async function matchRelations(queryText: string, queryVectors: number[][]): Promise<ActiveRelation[]> {
-  const index = await loadRelations();
+export async function matchRelations(queryText: string, queryVectors: number[][], indexId: TextIndexId = "qwen3"): Promise<ActiveRelation[]> {
+  const index = await loadRelations(indexId);
   if (!index || !queryVectors.length) return [];
   const normalizedQuery = queryText.toLowerCase();
   const queries = queryVectors.map(normalize);

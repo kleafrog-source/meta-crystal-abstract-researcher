@@ -5,7 +5,7 @@ import { getArtifactStatuses, getManagedJob, startManagedRebuild, stopManagedReb
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const KINDS = new Set<RebuildKind>(["composite", "embeddinggemma2_text", "atoms", "anchors", "range", "select", "relations", "clap", "all_qwen", "catalogue"]);
+const KINDS = new Set<RebuildKind>(["composite", "embeddinggemma2_text", "atoms", "anchors", "range", "select", "relations", "clap", "gemma2_atoms", "gemma2_anchors", "gemma2_range", "gemma2_select", "gemma2_relations", "all_qwen", "catalogue"]);
 
 export async function GET() {
   return NextResponse.json({ ...(await getArtifactStatuses()), job: getManagedJob() });

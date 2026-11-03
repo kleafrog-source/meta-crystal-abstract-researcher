@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { cleanPublishedParameter } from "./parameter-schema";
+import { getEncoderArtifactDirectory, type TextIndexId } from "@/lib/rag-v3/composite-index";
 
 export interface RuntimeAtomRow {
   atom: string;
@@ -53,7 +54,7 @@ interface LoadedRuntimeIndex {
 }
 
 const DATA_ROOT = path.join(process.cwd(), "data", "combinatorial-genesis");
-let cached: LoadedRuntimeIndex | null = null;
+const cached = new Map<TextIndexId, LoadedRuntimeIndex>();
 
 function normalize(vector: number[]): Float32Array {
   const norm = Math.sqrt(vector.reduce((sum, value) => sum + value * value, 0));
@@ -91,19 +92,19 @@ function readVectors(buffer: Buffer, expectedCount: number, expectedDimensions: 
   return vectors;
 }
 
-async function loadRuntimeIndex(): Promise<LoadedRuntimeIndex> {
+async function loadRuntimeIndex(indexId: TextIndexId = "qwen3"): Promise<LoadedRuntimeIndex> {
   const latest = JSON.parse(
     await fs.readFile(path.join(DATA_ROOT, "datasets", "latest.json"), "utf8"),
   ) as { version_id: string };
-  const indexDir = path.join(DATA_ROOT, "indexes", latest.version_id);
+  const indexDir = indexId === "qwen3" ? path.join(DATA_ROOT, "indexes", latest.version_id) : getEncoderArtifactDirectory(indexId, "runtime-atoms");
   const versionDir = path.join(DATA_ROOT, "datasets", latest.version_id);
   const manifest = JSON.parse(
     await fs.readFile(path.join(indexDir, "manifest.json"), "utf8"),
   ) as RuntimeIndexManifest & { cache_sha256: string };
   if (
-    cached?.manifest.version_id === latest.version_id &&
-    cached.cacheSha256 === manifest.cache_sha256
-  ) return cached;
+    cached.get(indexId)?.manifest.version_id === latest.version_id &&
+    cached.get(indexId)?.cacheSha256 === manifest.cache_sha256
+  ) return cached.get(indexId)!;
   if (manifest.version_id !== latest.version_id) throw new Error("Runtime index version mismatch.");
   const [rows, binary, parameters] = await Promise.all([
     fs.readFile(path.join(indexDir, manifest.files.rows), "utf8").then((value) => JSON.parse(value) as RuntimeAtomRow[]),
@@ -113,7 +114,7 @@ async function loadRuntimeIndex(): Promise<LoadedRuntimeIndex> {
     ),
   ]);
   if (rows.length !== manifest.atom_count) throw new Error("Runtime atom row count mismatch.");
-  cached = {
+  const loaded = {
     cacheSha256: manifest.cache_sha256,
     manifest,
     rows,
@@ -121,24 +122,25 @@ async function loadRuntimeIndex(): Promise<LoadedRuntimeIndex> {
     frozenNames: new Set(parameters.flatMap((item) => item.technical_name ? [item.technical_name] : [])),
     frozenParameters: parameters.map((item) => cleanPublishedParameter(item as unknown as Record<string, unknown>) as RuntimeParameterRecord),
   };
-  return cached;
+  cached.set(indexId, loaded);
+  return loaded;
 }
 
-export async function getFrozenRuntimeParameters(): Promise<{
+export async function getFrozenRuntimeParameters(indexId: TextIndexId = "qwen3"): Promise<{
   versionId: string;
   parameters: RuntimeParameterRecord[];
 }> {
-  const index = await loadRuntimeIndex();
+  const index = await loadRuntimeIndex(indexId);
   return { versionId: index.manifest.version_id, parameters: index.frozenParameters };
 }
 
-export async function rankRuntimeAtoms(queryEmbedding: number[], limit = 160): Promise<{
+export async function rankRuntimeAtoms(queryEmbedding: number[], limit = 160, indexId: TextIndexId = "qwen3"): Promise<{
   versionId: string;
   model: string;
   frozenNames: ReadonlySet<string>;
   atoms: RankedRuntimeAtom[];
 }> {
-  const index = await loadRuntimeIndex();
+  const index = await loadRuntimeIndex(indexId);
   const query = normalize(queryEmbedding);
   if (query.length !== index.manifest.dimensions) {
     throw new Error(

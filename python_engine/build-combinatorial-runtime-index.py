@@ -79,6 +79,7 @@ def build_runtime_index(
     endpoint: str,
     batch_size: int,
     embedder: Callable[[str, str, list[str]], list[list[float]]] = embed_batch,
+    output_dir: Path | None = None,
 ) -> tuple[Path, dict[str, Any], bool]:
     latest = json.loads((data_root / "datasets" / "latest.json").read_text(encoding="utf-8"))
     version_id = str(latest["version_id"])
@@ -86,6 +87,13 @@ def build_runtime_index(
     manifest = json.loads((version_dir / "manifest.json").read_text(encoding="utf-8"))
     atoms = json.loads((version_dir / "atoms.json").read_text(encoding="utf-8"))
     excluded = excluded_names(data_root)
+    tombstones_path = data_root / "library" / "catalogue-deleted.json"
+    if tombstones_path.exists():
+        stored_tombstones = json.loads(tombstones_path.read_text(encoding="utf-8"))
+        deleted_names = set(stored_tombstones if isinstance(stored_tombstones, list) else stored_tombstones.get("technical_names", []))
+    else:
+        deleted_names = set()
+    excluded |= deleted_names
     filtered_atoms = []
     for atom in atoms:
         sources = [name for name in atom.get("source_parameters", []) if name not in excluded]
@@ -101,6 +109,7 @@ def build_runtime_index(
                 "model": model,
                 "texts": texts,
                 "excluded_sha256": registry_sha256(data_root),
+                "deleted_names": sorted(deleted_names),
                 "source_parameters": [atom.get("source_parameters", []) for atom in atoms],
             },
             ensure_ascii=False,
@@ -108,7 +117,7 @@ def build_runtime_index(
             separators=(",", ":"),
         ).encode("utf-8")
     ).hexdigest()
-    index_dir = data_root / "indexes" / version_id
+    index_dir = output_dir.resolve() if output_dir else data_root / "indexes" / version_id
     index_manifest_path = index_dir / "manifest.json"
     if index_manifest_path.exists():
         index_manifest = json.loads(index_manifest_path.read_text(encoding="utf-8"))
@@ -154,6 +163,7 @@ def build_runtime_index(
         "schema_version": 1,
         "version_id": version_id,
         "frozen_content_sha256": manifest["content_sha256"],
+        "source_snapshot_sha256": manifest["content_sha256"],
         "created_at": datetime.now(timezone.utc).isoformat(),
         "cache_sha256": cache_hash,
         "model": model,
@@ -176,13 +186,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--endpoint", default=DEFAULT_ENDPOINT)
     parser.add_argument("--batch-size", type=int, default=64)
+    parser.add_argument("--output-dir", type=Path, help="Optional isolated artifact directory for another encoder.")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     index_dir, manifest, created = build_runtime_index(
-        args.data_root.resolve(), args.model, args.endpoint, max(1, args.batch_size)
+        args.data_root.resolve(), args.model, args.endpoint, max(1, args.batch_size), output_dir=args.output_dir
     )
     print(
         f"{'Created' if created else 'Reused'} atom index for {manifest['version_id']}: "
