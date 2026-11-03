@@ -57,7 +57,7 @@ interface RagV3State {
   fetchStatus: () => Promise<void>;
   startBuildIndex: () => Promise<void>;
   startBuildAnchors: () => Promise<void>;
-  proposeParameters: (query: string, target?: SearchTarget, retrievalOptions?: SearchRetrievalOptions) => Promise<void>;
+  proposeParameters: (query: string, target?: SearchTarget, retrievalOptions?: SearchRetrievalOptions) => Promise<ActiveParameter[] | null>;
   applyTransitionBlend: () => void;
   setQuery: (query: string) => void;
   setQueryB: (query: string) => void;
@@ -291,27 +291,30 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
   async proposeParameters(query, target = "primary", retrievalOptions) {
     const normalized = query.trim();
     const state = get();
+    const requestedTextIndex = retrievalOptions?.textIndex ?? state.textIndex;
 
     if (!normalized) {
+      let nextActive: ActiveParameter[] = [];
       if (target === "primary") {
+        nextActive = state.searchMode === "transition" && state.secondaryResults.length > 0
+          ? mergeActiveParameters(state.activeParameters, state.secondaryResults.slice(0, state.topK))
+          : [];
         set({
           query: "",
           searchResults: [],
-          activeParameters:
-            state.searchMode === "transition" && state.secondaryResults.length > 0
-              ? mergeActiveParameters(state.activeParameters, state.secondaryResults.slice(0, state.topK))
-              : [],
+          activeParameters: nextActive,
           searchError: null,
         });
       } else {
+        nextActive = mergeActiveParameters(state.activeParameters, state.searchResults.slice(0, state.topK));
         set({
           queryB: "",
           secondaryResults: [],
-          activeParameters: mergeActiveParameters(state.activeParameters, state.searchResults.slice(0, state.topK)),
+          activeParameters: nextActive,
           searchError: null,
         });
       }
-      return;
+      return nextActive;
     }
 
     set({ isSearching: true, searchError: null });
@@ -345,11 +348,13 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
       }
 
       const payload = (await response.json()) as ProposeParametersResponse;
+      if (get().textIndex !== requestedTextIndex) return null;
+      let nextActive: ActiveParameter[] = [];
       set((current) => {
         const nextPrimary = target === "primary" ? payload.results : current.searchResults;
         const nextSecondary =
           target === "secondary" ? payload.results : current.secondaryResults;
-        const nextActive =
+        nextActive =
           current.searchMode === "transition" && nextSecondary.length > 0
             ? buildTransitionResults(
                 nextPrimary,
@@ -368,11 +373,13 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
           searchError: null,
         };
       });
+      return nextActive;
     } catch (error) {
-      set({
-        isSearching: false,
-        searchError: error instanceof Error ? error.message : String(error),
-      });
+      if (get().textIndex === requestedTextIndex) set({
+          isSearching: false,
+          searchError: error instanceof Error ? error.message : String(error),
+        });
+      return null;
     }
   },
 
@@ -455,7 +462,18 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
   },
 
   setTextIndex(textIndex) {
-    set({ textIndex });
+    set((state) => state.textIndex === textIndex ? state : {
+      textIndex,
+      // A transition may contain two queries from different vector spaces.
+      // Keep those banks in the AM-Stage view, but never blend their live results.
+      searchResults: [],
+      secondaryResults: [],
+      activeParameters: [],
+      isSearching: false,
+      macro: "",
+      searchError: null,
+      macroError: null,
+    });
   },
 
   toggleSource(source) {

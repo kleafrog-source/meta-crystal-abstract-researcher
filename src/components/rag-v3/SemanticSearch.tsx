@@ -33,7 +33,7 @@ const SCOPE_HINTS = {
   administrative: "Служебные и административные параметры.",
 } as const;
 
-export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Query B", collapsible = false, dataScope, selectedDomainLayers }: { primaryLabel?: string; secondaryLabel?: string; collapsible?: boolean; dataScope?: "am-stage"; selectedDomainLayers?: string[] } = {}) {
+export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Query B", collapsible = false, dataScope, selectedDomainLayers, onSearchResults, onTextIndexChange }: { primaryLabel?: string; secondaryLabel?: string; collapsible?: boolean; dataScope?: "am-stage"; selectedDomainLayers?: string[]; onSearchResults?: (textIndex: "qwen3" | "embeddinggemma2", parameters: import("@/lib/rag-v3/types").ActiveParameter[]) => void; onTextIndexChange?: (textIndex: "qwen3" | "embeddinggemma2") => void } = {}) {
   const t = useUiText();
   const query = useRagV3Store((state) => state.query);
   const queryB = useRagV3Store((state) => state.queryB);
@@ -132,10 +132,19 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
     }
     insertQueryBlock("b", mergeQueryWithCrystal(queryB, crystalText));
   };
+  const submitSearch = async (value: string, target: "primary" | "secondary") => {
+    const results = await proposeParameters(value, target, { ...(selectedDomainLayers === undefined ? {} : { selectedDomainLayers }), textIndex });
+    if (results) onSearchResults?.(textIndex, results);
+  };
+  const changeTextIndex = (value: string) => {
+    const nextIndex = value === "embeddinggemma2" ? "embeddinggemma2" : "qwen3";
+    setTextIndex(nextIndex);
+    onTextIndexChange?.(nextIndex);
+  };
 
   const panel = (
-    <section className="console-query-panel space-y-3 rounded-lg border border-border bg-black/65 p-3">
-      <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+    <section data-am-stage-density={dataScope ? "compact" : undefined} className={`console-query-panel rounded-lg border border-border bg-black/65 ${dataScope ? "space-y-2 p-2" : "space-y-3 p-3"}`}>
+      <div className={`flex flex-col lg:flex-row lg:items-center lg:justify-between ${dataScope ? "gap-1.5" : "gap-2"}`}>
         {!collapsible ? <div className="space-y-1">
           <div className="flex items-center gap-2">
             <AMIcon name="search" size="sm" bright />
@@ -155,10 +164,10 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-1.5">
+      <div className={`flex flex-wrap items-center ${dataScope ? "gap-1" : "gap-1.5"}`}>
         <label className="flex items-center gap-2 rounded border border-white/15 bg-white/[0.025] px-2 py-1 text-xs text-muted-foreground">
           {t("Text index")}
-          <select aria-label={t("Text index")} value={textIndex} onChange={(event) => setTextIndex(event.target.value === "embeddinggemma2" ? "embeddinggemma2" : "qwen3")} className="h-7 rounded border border-white/15 bg-black/60 px-2 text-foreground">
+          <select aria-label={t("Text index")} value={textIndex} onChange={(event) => changeTextIndex(event.target.value)} className="h-7 rounded border border-white/15 bg-black/60 px-2 text-foreground">
             <option value="qwen3">Qwen3 · existing</option>
             <option value="embeddinggemma2">EmbeddingGemma 2 · multimodal</option>
           </select>
@@ -204,7 +213,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-1.5 rounded border border-white/15 bg-white/[0.025] p-2">
+      <div className={`flex flex-wrap items-center rounded border border-white/15 bg-white/[0.025] ${dataScope ? "gap-1 p-1.5" : "gap-1.5 p-2"}`}>
         <span className="mr-1 flex items-center gap-1 font-mono text-[10px] uppercase tracking-wide text-muted-foreground">Retrieval scope<V3InfoTip content="Ограничивает поиск выбранными смысловыми классами параметров." /></span>
         {([
           ["sound", "Sound"],
@@ -219,7 +228,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
         ))}
       </div>
 
-      <div className={`grid gap-2 ${searchMode === "transition" ? "xl:grid-cols-2" : ""}`}>
+      <div className={`grid ${dataScope ? "gap-1.5" : "gap-2"} ${searchMode === "transition" ? "xl:grid-cols-2" : ""}`}>
         <QueryPanel
           title={primaryLabel}
           dataScope={dataScope}
@@ -235,7 +244,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
           canRedo={canRedo}
           inputRef={(element) => { queryInputs.current.a = element; }}
           onClear={() => setQuery("")}
-          onSubmit={() => void proposeParameters(query, "primary", { ...(selectedDomainLayers === undefined ? {} : { selectedDomainLayers }), textIndex })}
+          onSubmit={() => void submitSearch(query, "primary")}
           actions={
             <MetaCrystalPickerDialog
               targetLabel={primaryLabel}
@@ -259,7 +268,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
             canRedo={canRedo}
             inputRef={(element) => { queryInputs.current.b = element; }}
             onClear={() => setQueryB("")}
-            onSubmit={() => void proposeParameters(queryB, "secondary", { ...(selectedDomainLayers === undefined ? {} : { selectedDomainLayers }), textIndex })}
+            onSubmit={() => void submitSearch(queryB, "secondary")}
             actions={
               <MetaCrystalPickerDialog
                 targetLabel={secondaryLabel}
@@ -327,7 +336,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
 
     </section>
   );
-  return collapsible ? <details open data-am-stage-disclosure={dataScope ? "semantic-search" : undefined} className="min-w-0 rounded-lg border border-border bg-black/65 p-3"><summary className="flex list-none cursor-pointer items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-zinc-200 [&::-webkit-details-marker]:hidden"><AMIcon name="search" size="sm" bright />{primaryLabel === "Brief" ? t("Semantic Search · Brief") : `Semantic Search V3 · ${primaryLabel}`}<V3Tooltip content={t("Single target or dual-state interpolation. Search runs only on explicit submit.")}><span className="inline-flex size-5 items-center justify-center rounded text-muted-foreground"><Info className="size-3.5" /></span></V3Tooltip><ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary><div className="mt-2">{panel}</div></details> : panel;
+  return collapsible ? <details open data-am-stage-disclosure={dataScope ? "semantic-search" : undefined} className={`min-w-0 rounded-lg border border-border bg-black/65 ${dataScope ? "p-2" : "p-3"}`}><summary className="flex list-none cursor-pointer items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-zinc-200 [&::-webkit-details-marker]:hidden"><AMIcon name="search" size="sm" bright />{primaryLabel === "Brief" ? t("Semantic Search · Brief") : `Semantic Search V3 · ${primaryLabel}`}<V3Tooltip content={t("Single target or dual-state interpolation. Search runs only on explicit submit.")}><span className="inline-flex size-5 items-center justify-center rounded text-muted-foreground"><Info className="size-3.5" /></span></V3Tooltip><ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary><div className="mt-1.5">{panel}</div></details> : panel;
 }
 
 function QueryPanel(props: {
@@ -351,7 +360,7 @@ function QueryPanel(props: {
   const t = useUiText();
   const { title, value, placeholder, resultCount, isSearching, onChange, onClear, onSubmit, onPaste, onUndo, onRedo, canUndo, canRedo, inputRef, actions, dataScope } = props;
   return (
-    <div data-am-stage-zone={dataScope ? `query-${title === "Brief" ? "a" : "b"}` : undefined} className="space-y-2 rounded border border-white/20 bg-black/40 p-2.5">
+    <div data-am-stage-zone={dataScope ? `query-${title === "Brief" ? "a" : "b"}` : undefined} className={`rounded border border-white/20 bg-black/40 ${dataScope ? "space-y-1 p-1.5" : "space-y-2 p-2.5"}`}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-1 font-mono text-xs font-medium uppercase tracking-wide">{title}<V3InfoTip content={t("Опишите целевое звучание. Каждый запуск выполняется независимо от предыдущих запросов.")} /></div>
@@ -374,7 +383,7 @@ function QueryPanel(props: {
       <div className="flex items-stretch gap-1.5">
         <div className="relative min-w-0 flex-1">
           <V3Tooltip content={t("Введите независимое описание цели. Ctrl+Enter запускает поиск.")}>
-            <Textarea ref={inputRef} value={value} rows={2} className="min-h-[62px] resize-none border-white/15 bg-black/70 py-2 pr-10 font-mono text-xs" placeholder={placeholder} onChange={(event) => onChange(event.target.value)} onPaste={onPaste} onKeyDown={(event) => {
+          <Textarea ref={inputRef} value={value} rows={2} className={`resize-none border-white/15 bg-black/70 py-1.5 pr-10 font-mono text-xs ${dataScope ? "min-h-[48px]" : "min-h-[62px]"}`} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} onPaste={onPaste} onKeyDown={(event) => {
               const mod = event.ctrlKey || event.metaKey;
               if (mod && event.key.toLowerCase() === "z") { event.preventDefault(); if (event.shiftKey) onRedo(); else onUndo(); return; }
               if (event.ctrlKey && event.key.toLowerCase() === "y") { event.preventDefault(); onRedo(); return; }

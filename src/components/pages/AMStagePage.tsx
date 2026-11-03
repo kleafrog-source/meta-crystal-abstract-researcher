@@ -197,6 +197,25 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [serverStage2Error, setServerStage2Error] = useState("");
   const [includeServerStage2InMacro, setIncludeServerStage2InMacro] = useState(false);
   const [titleOrder, setTitleOrder] = useState<"en-ru" | "ru-en">("en-ru");
+  const [textBanks, setTextBanks] = useState<Record<"qwen3" | "embeddinggemma2", ActiveParameter[]>>(() => ({
+    qwen3: v3Session.textIndex === "qwen3" ? v3Session.activeParameters : [],
+    embeddinggemma2: v3Session.textIndex === "embeddinggemma2" ? v3Session.activeParameters : [],
+  }));
+  const updateTextBank = useCallback((index: "qwen3" | "embeddinggemma2", name: string, value: number | string) => {
+    setTextBanks((banks) => ({ ...banks, [index]: banks[index].map((parameter) => parameter.technical_name === name ? { ...parameter, current_value: value, suggested_value: value } : parameter) }));
+    if (v3Session.textIndex === index) useRagV3Store.getState().updateParameterValue(name, value);
+  }, [v3Session.textIndex]);
+  const removeTextBankParameter = useCallback((index: "qwen3" | "embeddinggemma2", name: string) => {
+    setTextBanks((banks) => ({ ...banks, [index]: banks[index].filter((parameter) => parameter.technical_name !== name) }));
+    if (v3Session.textIndex === index) useRagV3Store.getState().removeParameter(name);
+  }, [v3Session.textIndex]);
+  const handleTextSearchResults = useCallback((index: "qwen3" | "embeddinggemma2", parameters: ActiveParameter[]) => {
+    setTextBanks((banks) => ({ ...banks, [index]: parameters }));
+  }, []);
+  const selectTextBank = useCallback((index: "qwen3" | "embeddinggemma2") => {
+    const parameters = textBanks[index];
+    useRagV3Store.setState({ searchResults: parameters, secondaryResults: [], activeParameters: parameters, macro: "", searchError: null });
+  }, [textBanks]);
   const [blendPair, setBlendPair] = useState("text-clap");
   const [blendPercent, setBlendPercent] = useState(50);
   const [blendCurve, setBlendCurve] = useState<BlendCurve>("linear");
@@ -649,13 +668,13 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     audio: { name: file?.name ?? audioReferenceName, duration_seconds: audioDuration, path: null, missing_on_restore: Boolean(audioReferenceName || file), warning: (audioReferenceName || file) ? "В снимке сохранены результаты и таймкоды, но браузерный аудиофайл не копируется. Выберите исходный файл повторно для воспроизведения и продолжения анализа." : null },
     analysis_settings: { region_offset: regionOffset, region_duration: regionDuration, analysis_start: analysisStart, analysis_end: analysisEnd, segment_interval: segmentInterval, node_interval: nodeInterval, clap_top_k: clapTopK, siglip_top_k: siglipTopK, spectrogram_scale: spectrogramScale, spectrogram_detail: spectrogramDetail, spectrogram_color: spectrogramColor, spectrogram_renderer: spectrogramRenderer, siglip_spectrogram_layout: siglipSpectrogramLayout, show_spectrogram: showSpectrogram, window_mode: windowMode },
     timeline: { segments: segments.map(({ siglipPreview: _preview, ...segment }) => segment), window_source_segments: windowSourceSegments },
-    banks: { text_parameters: v3Session.activeParameters, clap_parameters: [...new Map(segments.flatMap((segment) => segment.clap).map((parameter) => [parameter.technical_name, parameter])).values()], siglip_parameters: [...new Map(segments.flatMap((segment) => segment.siglip).map((parameter) => [parameter.technical_name, parameter])).values()], text_view: textBankViewMode, clap_view: clapBankViewMode, siglip_view: siglipBankViewMode, show_clap: showClap, show_siglip: showSiglip, interpolate_clap: interpolateClap, interpolate_siglip: interpolateSiglip },
+    banks: { text_parameters: v3Session.activeParameters, text_parameters_qwen3: textBanks.qwen3, text_parameters_gemma: textBanks.embeddinggemma2, clap_parameters: [...new Map(segments.flatMap((segment) => segment.clap).map((parameter) => [parameter.technical_name, parameter])).values()], siglip_parameters: [...new Map(segments.flatMap((segment) => segment.siglip).map((parameter) => [parameter.technical_name, parameter])).values()], text_view: textBankViewMode, clap_view: clapBankViewMode, siglip_view: siglipBankViewMode, show_clap: showClap, show_siglip: showSiglip, interpolate_clap: interpolateClap, interpolate_siglip: interpolateSiglip },
     layers: { selected: selectedLayers, timeline_view: timelineView, stage2_visible: showGlobalConsensus, stage2_top_k: consensusTopK, stage2_centroid_percent: consensusCentroidPercent },
     interpolation: { pair: blendPair, percent: blendPercent, curve: blendCurve, blend_enabled: blendMode, clap_weight: clapWeight, trust_threshold: trustThreshold, trust_floor: trustFloor },
     vocal_matrix_mode: vocalMatrixMode,
     param_to_text: paramTextSessionState,
-    v3: { query: v3Query, query_b: v3Session.queryB, top_k: v3Session.topK, sources: v3Session.sources, scopes: v3Session.scopes, search_mode: v3Session.searchMode, transition_ratio: v3Session.transitionRatio, search_results: v3Session.searchResults, secondary_results: v3Session.secondaryResults, active_parameters: v3Session.activeParameters, macro: v3Session.macro },
-  }), [audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, file, interpolateClap, interpolateSiglip, nodeInterval, paramTextSessionState, regionDuration, regionOffset, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, timelineView, trustFloor, trustThreshold, v3Query, v3Session, vocalMatrixMode, windowMode, windowSourceSegments]);
+    v3: { query: v3Query, query_b: v3Session.queryB, top_k: v3Session.topK, sources: v3Session.sources, scopes: v3Session.scopes, search_mode: v3Session.searchMode, transition_ratio: v3Session.transitionRatio, text_index: v3Session.textIndex, search_results: v3Session.searchResults, secondary_results: v3Session.secondaryResults, active_parameters: v3Session.activeParameters, macro: v3Session.macro },
+  }), [audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, file, interpolateClap, interpolateSiglip, nodeInterval, paramTextSessionState, regionDuration, regionOffset, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, textBanks, timelineView, trustFloor, trustThreshold, v3Query, v3Session, vocalMatrixMode, windowMode, windowSourceSegments]);
   useEffect(() => {
     const fingerprint = JSON.stringify(capturedSessionData);
     setSessionDirty(Boolean(activeSession) && fingerprint !== fingerprintRef.current);
@@ -867,11 +886,12 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       setWindowMode(data.analysis_settings.window_mode ?? "uniform"); setWindowSourceSegments(data.timeline.window_source_segments ?? []);
       setSpectrogramScale(data.analysis_settings.spectrogram_scale as SpectrogramScale); setSpectrogramDetail(data.analysis_settings.spectrogram_detail as SpectrogramDetail); setSpectrogramColor(data.analysis_settings.spectrogram_color as "gray" | "igray" | "roseus"); setSpectrogramRenderer(data.analysis_settings.spectrogram_renderer as SpectrogramRenderer); setSiglipSpectrogramLayout(data.analysis_settings.siglip_spectrogram_layout as SiglipSpectrogramLayout); setShowSpectrogram(data.analysis_settings.show_spectrogram);
       setSegments(data.timeline.segments); setCurrentTime(0);
+      setTextBanks({ qwen3: data.banks.text_parameters_qwen3 ?? (data.v3.text_index === "qwen3" ? data.banks.text_parameters : []), embeddinggemma2: data.banks.text_parameters_gemma ?? (data.v3.text_index === "embeddinggemma2" ? data.banks.text_parameters : []) });
       setTextBankViewMode(data.banks.text_view); setClapBankViewMode(data.banks.clap_view); setSiglipBankViewMode(data.banks.siglip_view); setShowClap(data.banks.show_clap); setShowSiglip(data.banks.show_siglip); setInterpolateClap(data.banks.interpolate_clap); setInterpolateSiglip(data.banks.interpolate_siglip);
       setSelectedLayers(data.layers.selected); setTimelineView(data.layers.timeline_view); setShowGlobalConsensus(data.layers.stage2_visible); setConsensusTopK(data.layers.stage2_top_k); setConsensusCentroidPercent(data.layers.stage2_centroid_percent);
       setBlendPair(data.interpolation.pair); setBlendPercent(data.interpolation.percent); setBlendCurve(data.interpolation.curve); setBlendMode(data.interpolation.blend_enabled); setClapWeight(data.interpolation.clap_weight); setTrustThreshold(data.interpolation.trust_threshold ?? DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold); setTrustFloor(data.interpolation.trust_floor ?? DEFAULT_MODALITY_TRUST_CONFIG.floorWeight); setVocalMatrixMode(data.vocal_matrix_mode);
       setParamTextSessionState(data.param_to_text); setWorkbenchSessionKey((key) => key + 1);
-      useRagV3Store.setState({ query: data.v3.query, queryB: data.v3.query_b, topK: data.v3.top_k, sources: data.v3.sources, scopes: data.v3.scopes, searchMode: data.v3.search_mode as "single" | "transition", transitionRatio: data.v3.transition_ratio, searchResults: data.v3.search_results, secondaryResults: data.v3.secondary_results, activeParameters: data.v3.active_parameters, macro: data.v3.macro, isSearching: false, isGeneratingMacro: false, searchError: null, macroError: null });
+      useRagV3Store.setState({ query: data.v3.query, queryB: data.v3.query_b, topK: data.v3.top_k, sources: data.v3.sources, scopes: data.v3.scopes, searchMode: data.v3.search_mode as "single" | "transition", transitionRatio: data.v3.transition_ratio, textIndex: data.v3.text_index ?? "qwen3", searchResults: data.v3.search_results, secondaryResults: data.v3.secondary_results, activeParameters: data.v3.active_parameters, macro: data.v3.macro, isSearching: false, isGeneratingMacro: false, searchError: null, macroError: null });
       setActiveSession({ id: meta.id, title: meta.title }); setSessionTitleDraft(meta.title); fingerprintRef.current = JSON.stringify({ ...data, interpolation: { ...data.interpolation, trust_threshold: data.interpolation.trust_threshold ?? DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold, trust_floor: data.interpolation.trust_floor ?? DEFAULT_MODALITY_TRUST_CONFIG.floorWeight } }); setSessionDirty(false); setSessionModalOpen(false); setPendingSessionAction(null);
       setNotice(data.audio.missing_on_restore ? `Сессия открыта. Результаты и таймлайн восстановлены; для воспроизведения или продолжения анализа повторно выберите ${data.audio.name ?? "исходный аудиофайл"}.` : "Сессия AM-Stage восстановлена.");
     } catch (cause) { setSessionError(cause instanceof Error ? cause.message : String(cause)); }
@@ -885,6 +905,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setIsAxisPinned(false);
     setRegionOffset(0); setRegionDuration(10); setAnalysisStart(0); setAnalysisEnd(0); setGateNeedsResplit(false); setSegmentInterval(2); setNodeInterval(20); setWindowMode("uniform"); setWindowSourceSegments([]); setSegments([]); setClapTopK(20); setSiglipTopK(20);
     setTextBankViewMode("standard"); setClapBankViewMode("standard"); setSiglipBankViewMode("standard"); setShowClap(true); setShowSiglip(true); setInterpolateClap(true); setInterpolateSiglip(true); setShowSpectrogram(true);
+    setTextBanks({ qwen3: [], embeddinggemma2: [] });
     setSpectrogramScale("mel"); setSpectrogramDetail("medium"); setSpectrogramColor("roseus"); setSpectrogramRenderer("windowed"); setSiglipSpectrogramLayout("rgb_delta"); setBlendMode(false); setClapWeight(.5); setTrustThreshold(DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold); setTrustFloor(DEFAULT_MODALITY_TRUST_CONFIG.floorWeight); setVocalMatrixMode(false);
     setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id)); setShowGlobalConsensus(false); setConsensusTopK(64); setConsensusCentroidPercent(35); setTimelineView("modality"); setBlendPair("text-clap"); setBlendPercent(50); setBlendCurve("linear");
     setParamTextSessionState(null); setWorkbenchSessionKey((key) => key + 1); setActiveSession(null); setSessionDirty(false); fingerprintRef.current = ""; setSessionResetConfirmOpen(false); setPendingSessionAction(null); setSessionModalOpen(false);
@@ -934,64 +955,47 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     <div ref={stageRootRef} data-am-stage className="flowmusic-console flex h-full min-w-0 flex-col text-zinc-100">
       <header className="border-b border-white/15 bg-black/70 px-4 py-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h1 className="flex items-center gap-2 font-mono text-lg font-semibold">
-              <AMIcon name="amStage" size="md" bright />
-              AM Tri-Modal Stage · AM-Stage
-              <V3InfoTip content="Последовательный анализ временных точек, независимая интерполяция и синхронное воспроизведение." />
-            </h1>
+          <div className="flex min-w-0 flex-wrap items-center gap-1.5 text-[10px]">
+            <div data-am-stage-header-group="status" className="flex min-w-0 flex-wrap items-center gap-1 rounded-md border border-white/10 bg-black/20 p-1">
+              <Badge variant="outline" className="h-7 px-2">{formatTime(audioDuration)}</Badge>
+              <Badge variant="outline" className="h-7 px-2">{t("points")}: {segments.length}</Badge>
+              <Badge variant="outline" className="h-7 px-2 border-cyan-400/40 text-cyan-300">CLAP {clapCompleted}/{segments.length} · K{clapTopK}</Badge>
+              <Badge variant="outline" className="h-7 px-2 border-fuchsia-400/40 text-fuchsia-300">SigLIP2 {siglipCompleted}/{segments.length} · K{siglipTopK}</Badge>
+              <Link href="/am-core#service-bay" title="Open Service Bay status and rebuild controls" className="inline-flex">
+                <Badge variant="outline" className={`h-7 px-2 whitespace-nowrap ${morphoStatus?.ready ? "border-emerald-400/40 text-emerald-300" : "border-amber-400/40 text-amber-300"}`}>SigLIP index: {morphoStatus?.status ?? "checking"}</Badge>
+              </Link>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2 text-[10px]">
-            <Badge variant="outline">{formatTime(audioDuration)}</Badge>
-            <Badge variant="outline">точек: {segments.length}</Badge>
-            <Badge
-              variant="outline"
-              className="border-cyan-400/40 text-cyan-300"
-            >
-              CLAP {clapCompleted}/{segments.length} · K{clapTopK}
-            </Badge>
-            <Badge
-              variant="outline"
-              className="border-fuchsia-400/40 text-fuchsia-300"
-            >
-              SigLIP2 {siglipCompleted}/{segments.length} · K{siglipTopK}
-            </Badge>
-            <Link href="/am-core#service-bay" title="Open Service Bay status and rebuild controls">
-              <Badge
-                variant="outline"
-                className={
-                  morphoStatus?.ready
-                    ? "border-emerald-400/40 text-emerald-300"
-                    : "border-amber-400/40 text-amber-300"
-                }
-              >
-                SigLIP index: {morphoStatus?.status ?? "checking"}
-              </Badge>
-            </Link>
-            <Tooltip><TooltipTrigger asChild><Button size="sm" variant="outline" onClick={requestSaveSession} disabled={sessionBusy}>{sessionBusy ? t("Сохраняю…") : `${t("Сохранить сессию")}${sessionDirty ? ` · ${t("изменена")}` : ""}`}</Button></TooltipTrigger><TooltipContent>{t("Сохранить текущее состояние анализа и настроек в снимок проекта.")}</TooltipContent></Tooltip>
-            <Tooltip><TooltipTrigger asChild><Button size="sm" variant="outline" onClick={() => void startSessionManager()} disabled={sessionBusy}>{t("Открыть сессию")}</Button></TooltipTrigger><TooltipContent>{t("Открыть, переименовать или удалить ранее сохранённый снимок AM-Stage.")}</TooltipContent></Tooltip>
-            <Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" onClick={requestNewSession} disabled={Boolean(busy) || windowModeBusy}>{t("Новая сессия AM-Stage")}</Button></TooltipTrigger><TooltipContent>{t("Сбросить рабочее состояние и начать новый анализ.")}</TooltipContent></Tooltip>
-            <Button data-am-stage-action="test-preset" size="sm" variant="outline" onClick={() => void applyTestPreset()} disabled={Boolean(busy) || windowModeBusy}>{t("Проверочный preset")}</Button>
+          <div className="ml-auto flex min-w-0 flex-wrap items-center gap-1.5 text-[10px]">
+            <div data-am-stage-header-group="session" className="flex items-center gap-1 rounded-md border border-white/10 bg-black/20 p-1">
+              <Tooltip><TooltipTrigger asChild><Button size="sm" className="h-7 px-2" variant="outline" onClick={requestSaveSession} disabled={sessionBusy}>{sessionBusy ? t("Saving…") : `${t("Save")}${sessionDirty ? " · *" : ""}`}</Button></TooltipTrigger><TooltipContent>{t("Сохранить текущее состояние анализа и настроек в снимок проекта.")}</TooltipContent></Tooltip>
+              <Tooltip><TooltipTrigger asChild><Button size="sm" className="h-7 px-2" variant="outline" onClick={() => void startSessionManager()} disabled={sessionBusy}>{t("Open")}</Button></TooltipTrigger><TooltipContent>{t("Открыть, переименовать или удалить ранее сохранённый снимок AM-Stage.")}</TooltipContent></Tooltip>
+              <Tooltip><TooltipTrigger asChild><Button size="sm" className="h-7 px-2" variant="secondary" onClick={requestNewSession} disabled={Boolean(busy) || windowModeBusy}>{t("New")}</Button></TooltipTrigger><TooltipContent>{t("Сбросить рабочее состояние и начать новый анализ.")}</TooltipContent></Tooltip>
+            </div>
+            <Tooltip><TooltipTrigger asChild><Button data-am-stage-action="toggle-work-axis-pin" size="sm" className="h-7 px-2" variant={isAxisPinned ? "secondary" : "outline"} aria-pressed={isAxisPinned} onClick={() => setIsAxisPinned((value) => !value)}>{isAxisPinned ? <Pin className="size-3.5" /> : <PinOff className="size-3.5" />}{isAxisPinned ? t("Pinned") : t("Pin")}</Button></TooltipTrigger><TooltipContent>{isAxisPinned ? t("Unpin work axis") : t("Pin work axis")}</TooltipContent></Tooltip>
+            <Button data-am-stage-action="test-preset" size="sm" className="h-7 px-2" variant="outline" onClick={() => void applyTestPreset()} disabled={Boolean(busy) || windowModeBusy}>{t("Проверочный preset")}</Button>
           </div>
         </div>
+        <nav className="am-stage-pipeline-rail am-stage-header-pipeline" aria-label={t("AM-Stage pipeline")}>
+          {([
+            ["am-stage-media", "01", "Work axis"],
+            ["am-stage-extract", "02", "Extract"],
+            ["am-stage-reconcile", "03", "Reconcile"],
+            ["am-stage-project", "04", "Project"],
+          ] as const).map(([target, rank, label]) => <a key={target} href={`#${target}`}><span>{rank}</span>{t(label)}</a>)}
+        </nav>
       </header>
 
       <div className={`flex-1 min-h-0 p-3 ${isAxisPinned ? "overflow-hidden" : "overflow-auto"}`}>
-        <div className="mb-2 flex justify-end">
-          <Button data-am-stage-action="toggle-work-axis-pin" size="sm" variant={isAxisPinned ? "secondary" : "outline"} aria-pressed={isAxisPinned} onClick={() => setIsAxisPinned((value) => !value)}>
-            {isAxisPinned ? <Pin className="size-3.5" /> : <PinOff className="size-3.5" />}
-            {isAxisPinned ? t("Work axis pinned") : t("Pin work axis")}
-          </Button>
-        </div>
         <ResizablePanelGroup direction="vertical" data-pinned={isAxisPinned ? "true" : "false"} className={`am-stage-main-split min-h-0 ${isAxisPinned ? "h-[calc(100%-2.5rem)]" : "h-auto"}`}>
-          <ResizablePanel id="am-stage-work-axis-panel" defaultSize={66} minSize={38} maxSize={72} className={isAxisPinned ? "min-h-0" : "!flex-none !basis-auto !grow-0 overflow-visible"}>
+          <ResizablePanel id="am-stage-work-axis-panel" defaultSize={38} minSize={16} maxSize={72} className={isAxisPinned ? "min-h-0" : "!flex-none !basis-auto !grow-0 overflow-visible"}>
             <ScrollArea className={isAxisPinned ? "h-full" : "h-auto overflow-visible"}>
               <div className="am-stage-axis-column min-w-0 space-y-3 pr-3">
-                <section id="am-stage-media" data-am-stage-layer="L0" data-am-stage-zone="media" className="am-stage-media-column min-w-0 rounded-lg border border-cyan-400/20 bg-black/30 p-4">
+                <section id="am-stage-media" data-am-stage-layer="L0" data-am-stage-zone="media" className="am-stage-media-column min-w-0 rounded-lg border border-cyan-400/20 bg-black/30 p-2">
                   <div className="min-w-0">
                     <h2 className="am-stage-module-heading mb-2"><span>01</span>{t("Work axis")} · {t("Waveform · Spectrogram")}</h2>
                     {!audioUrl ? (
-                      <label className="flex min-h-52 cursor-pointer items-center justify-center rounded border border-dashed border-cyan-400/30 bg-black/40">
+                        <label className="flex min-h-32 cursor-pointer items-center justify-center rounded border border-dashed border-cyan-400/30 bg-black/40">
                         <span className="flex items-center gap-2 text-sm text-zinc-400"><Upload className="size-5" />{t("Выбрать аудиофайл")}</span>
                         <input className="hidden" type="file" accept="audio/*" onChange={(event) => { const selected = event.target.files?.[0]; if (selected) selectFile(selected); }} />
                       </label>
@@ -1001,30 +1005,22 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                     {file ? <div className="mt-2 truncate text-xs text-zinc-500">{file.name}</div> : null}
                   </div>
                 </section>
-                <section data-am-stage-layer="L0" data-am-stage-zone="node-seek" className="am-stage-node-seek-column min-w-0 rounded-lg border border-white/10 bg-black/30 p-2" aria-label="Parameter timeline node seek">
-                  <div className="mb-1 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-zinc-400"><AMIcon name="audioToParameter" size="sm" bright />Node seek · Parameter Timeline</div>
-                  <div className="flex gap-1 overflow-x-auto pb-2">{segments.map((segment, index) => <button key={`${segment.time}-${index}`} type="button" onClick={() => seekToSegment(segment)} aria-current={Math.abs(currentTime - segment.time) < 0.05 ? "time" : undefined} className={`min-w-28 rounded border px-2 py-2 text-left text-[10px] ${Math.abs(currentTime - segment.time) < 0.05 ? "border-white bg-white/10 text-white" : "border-white/10 bg-black/40 text-zinc-400"}`}><div className="font-mono">{formatTime(segment.time)}</div><div className="mt-1 flex gap-1"><span className={`rounded border px-1 ${statusClass(segment.clapStatus)}`}>C {segment.clap.length}</span><span className={`rounded border px-1 ${statusClass(segment.siglipStatus)}`}>S {segment.siglip.length}</span></div></button>)}</div>
-                </section>
+                <details data-am-stage-layer="L0" data-am-stage-zone="node-seek" className="am-stage-node-seek-column min-w-0 rounded-lg border border-white/10 bg-black/30 p-2" aria-label="Parameter timeline node seek">
+                  <summary className="flex cursor-pointer list-none items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-zinc-400 [&::-webkit-details-marker]:hidden"><AMIcon name="audioToParameter" size="sm" bright />Node seek · Parameter Timeline · {formatTime(currentTime)}<ChevronDown className="am-stage-disclosure-chevron ml-auto size-3.5" /></summary>
+                  <div className="mt-1 flex gap-1 overflow-x-auto pb-1">{segments.map((segment, index) => <button key={`${segment.time}-${index}`} type="button" onClick={() => seekToSegment(segment)} aria-current={Math.abs(currentTime - segment.time) < 0.05 ? "time" : undefined} className={`min-w-28 rounded border px-2 py-1.5 text-left text-[10px] ${Math.abs(currentTime - segment.time) < 0.05 ? "border-white bg-white/10 text-white" : "border-white/10 bg-black/40 text-zinc-400"}`}><div className="font-mono">{formatTime(segment.time)}</div><div className="mt-1 flex gap-1"><span className={`rounded border px-1 ${statusClass(segment.clapStatus)}`}>C {segment.clap.length}</span><span className={`rounded border px-1 ${statusClass(segment.siglipStatus)}`}>S {segment.siglip.length}</span></div></button>)}</div>
+                </details>
               </div>
             </ScrollArea>
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel id="am-stage-analysis-panel" defaultSize={34} minSize={28} className={isAxisPinned ? "min-h-0" : "!flex-none !basis-auto !grow-0 overflow-visible"}>
+          <ResizablePanel id="am-stage-analysis-panel" defaultSize={62} minSize={20} className={isAxisPinned ? "min-h-0" : "!flex-none !basis-auto !grow-0 overflow-visible"}>
             <ScrollArea className={isAxisPinned ? "h-full" : "h-auto overflow-visible"}>
         <div className="am-stage-workspace flex w-full min-w-0 flex-col gap-3">
-          <nav className="am-stage-pipeline-rail" aria-label={t("AM-Stage pipeline")}>
-            {([
-              ["am-stage-media", "01", "Work axis"],
-              ["am-stage-extract", "02", "Extract"],
-              ["am-stage-reconcile", "03", "Reconcile"],
-              ["am-stage-project", "04", "Project"],
-            ] as const).map(([target, rank, label]) => <a key={target} href={`#${target}`}><span>{rank}</span>{t(label)}</a>)}
-          </nav>
           <section data-am-stage-zone="top-row" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
             <section id="am-stage-extract" data-am-stage-layer="L1" className="am-stage-extract-column min-w-0 space-y-3">
               <h2 className="am-stage-module-heading"><span>02</span>{t("Extract")}</h2>
-              <SemanticSearch primaryLabel="Brief" secondaryLabel="Transition" collapsible dataScope="am-stage" selectedDomainLayers={selectedLayers} />
-              <GemmaMultimodalParameterSearch selectedLayers={selectedLayers} spectrogramFrame={activeSiglipSegment?.siglipPreview ? { dataUrl: activeSiglipSegment.siglipPreview.dataUrl, offset: activeSiglipSegment.offset } : undefined} />
+              <SemanticSearch primaryLabel="Brief" secondaryLabel="Transition" collapsible dataScope="am-stage" selectedDomainLayers={selectedLayers} onSearchResults={handleTextSearchResults} onTextIndexChange={selectTextBank} />
+              <GemmaMultimodalParameterSearch selectedLayers={selectedLayers} onResults={(parameters) => handleTextSearchResults("embeddinggemma2", parameters)} spectrogramFrame={activeSiglipSegment?.siglipPreview ? { dataUrl: activeSiglipSegment.siglipPreview.dataUrl, offset: activeSiglipSegment.offset } : undefined} />
           <details data-am-stage-disclosure="analysis-controls" className="rounded-lg border border-white/10 bg-black/30 p-3">
             <summary className="flex list-none cursor-pointer items-center gap-2 font-mono text-xs uppercase tracking-wider text-zinc-300 [&::-webkit-details-marker]:hidden"><AMIcon name="settings" size="sm" bright />Analysis controls · sampling, time gate, CLAP / SigLIP2, Continue<ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary>
             <div className="mt-3">            <div className="min-w-0 space-y-3">
@@ -1391,16 +1387,18 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
           <section id="am-stage-reconcile" data-am-stage-layer="L2" className="am-stage-reconcile-column min-w-0 space-y-3">
           <h2 className="am-stage-module-heading"><span>03</span>{t("Reconcile")}</h2>
           <div data-am-stage-zone="timeline" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(170px,1fr)_minmax(0,9fr)]">
-            <aside aria-label="Domain layer timeline visibility filters" className="max-h-56 overflow-y-auto rounded-lg border border-border bg-background/85 p-3 xl:max-h-[min(70vh,720px)]">
-              <div className="mb-2 flex flex-wrap items-center justify-between gap-2"><h2 className="flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-wider"><AMIcon name="settings" size="sm" bright />Layer matrix</h2><select title={t("Изменить порядок английского и русского названий параметров")} aria-label="Parameter title order" value={titleOrder} onChange={(event) => void saveTitleOrder(event.target.value as "en-ru" | "ru-en")} className="max-w-32 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-[9px]"><option value="en-ru">Title EN → RU</option><option value="ru-en">Title RU → EN</option></select></div>
-                <div className="mb-2 flex justify-end"><V3InfoTip content={t("Фильтр показывает девять акустических слоёв. Клиентское Stage-2 ниже сглаживает уже найденные кадры; серверное Stage-2 — отдельный повторный поиск по текстовому индексу.")} /></div>
-              <div className="mb-2 flex flex-wrap items-center gap-1"><button type="button" aria-pressed={selectedLayers.length === ACOUSTIC_DOMAIN_LAYERS.length} title="Включить все девять акустических слоёв" className={`rounded border px-2 py-1 text-[9px] transition-colors ${selectedLayers.length === ACOUSTIC_DOMAIN_LAYERS.length ? "border-cyan-300/60 bg-cyan-950/40 text-cyan-100" : "border-white/15 text-zinc-400 hover:bg-white/5"}`} onClick={() => setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id))}>All 9</button><button type="button" aria-pressed={selectedLayers.length === 0} title="Снять выбор со всех акустических слоёв" className={`rounded border px-2 py-1 text-[9px] transition-colors ${selectedLayers.length === 0 ? "border-zinc-400/50 bg-zinc-800 text-zinc-100" : "border-white/15 text-zinc-400 hover:bg-white/5"}`} onClick={() => setSelectedLayers([])}>Clear</button><Badge variant="outline" className="ml-auto text-[9px]">{selectedLayers.length}/{ACOUSTIC_DOMAIN_LAYERS.length} {t("active")}</Badge></div>
-              <div className="flex flex-col gap-1.5">
+            <aside aria-label="Domain layer timeline visibility filters" className="max-h-56 overflow-y-auto rounded-lg border border-border bg-background/85 p-2 xl:max-h-[min(70vh,720px)]">
+              <details open data-am-stage-disclosure="layer-matrix" className="min-w-0">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-2 font-mono text-[10px] font-semibold uppercase tracking-wider [&::-webkit-details-marker]:hidden"><span className="flex items-center gap-1.5"><AMIcon name="settings" size="sm" bright />Layer matrix</span><span className="flex items-center gap-1.5"><Badge variant="outline" className="text-[9px]">{selectedLayers.length}/{ACOUSTIC_DOMAIN_LAYERS.length}</Badge><ChevronDown className="am-stage-disclosure-chevron size-3.5" /></span></summary>
+                <div className="mt-2">
+              <div className="mb-2 flex items-center justify-between gap-1"><select title={t("Изменить порядок английского и русского названий параметров")} aria-label="Parameter title order" value={titleOrder} onChange={(event) => void saveTitleOrder(event.target.value as "en-ru" | "ru-en")} className="max-w-32 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-[9px]"><option value="en-ru">Title EN → RU</option><option value="ru-en">Title RU → EN</option></select><V3InfoTip content={t("Фильтр показывает девять акустических слоёв. Клиентское Stage-2 ниже сглаживает уже найденные кадры; серверное Stage-2 — отдельный повторный поиск по текстовому индексу.")} /></div>
+              <div className="mb-2 flex flex-wrap items-center gap-1"><button type="button" aria-pressed={selectedLayers.length === ACOUSTIC_DOMAIN_LAYERS.length} title="Включить все девять акустических слоёв" className={`rounded border px-2 py-1 text-[9px] transition-colors ${selectedLayers.length === ACOUSTIC_DOMAIN_LAYERS.length ? "border-cyan-300/60 bg-cyan-950/40 text-cyan-100" : "border-white/15 text-zinc-400 hover:bg-white/5"}`} onClick={() => setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id))}>All 9</button><button type="button" aria-pressed={selectedLayers.length === 0} title="Снять выбор со всех акустических слоёв" className={`rounded border px-2 py-1 text-[9px] transition-colors ${selectedLayers.length === 0 ? "border-zinc-400/50 bg-zinc-800 text-zinc-100" : "border-white/15 text-zinc-400 hover:bg-white/5"}`} onClick={() => setSelectedLayers([])}>Clear</button></div>
+              <div className="flex flex-col gap-1">
                 {ACOUSTIC_DOMAIN_LAYERS.map((layer) => {
                   const checked = selectedLayers.includes(layer.id);
                   const count = layerCounts.get(layer.id)?.size ?? 0;
                   const countsAvailable = v3Parameters.length > 0 || segments.some((segment) => segment.clap.length > 0 || segment.siglip.length > 0);
-                  return <label key={layer.id} data-am-stage-layer={layer.id} data-active={checked ? "true" : "false"} title={`${t(layer.label)} · ${count} ${t("параметров")}`} className={`flex min-h-9 cursor-pointer items-center gap-2 rounded border px-2 py-1 text-[10px] transition-all ${checked ? "shadow-[inset_2px_0_0_var(--layer-accent)]" : "grayscale"}`} style={{ "--layer-accent": layer.color, borderColor: checked ? `${layer.color}9a` : "rgba(113,113,122,.35)", color: checked ? layer.color : "#71717a", backgroundColor: checked ? `color-mix(in srgb, ${layer.color} 11%, transparent)` : "rgba(39,39,42,.35)" } as React.CSSProperties}><input className="peer sr-only" data-am-stage-action={`toggle-layer-${layer.id.toLowerCase()}`} type="checkbox" checked={checked} onChange={() => setSelectedLayers((current) => checked ? current.filter((id) => id !== layer.id) : [...current, layer.id])} /><AMIcon name={layer.icon} size="sm" className={`h-7 w-7 ${checked ? "opacity-100" : "opacity-55"}`} /><span>{t(layer.label)}</span><span className={`ml-auto tabular-nums ${checked ? "text-foreground/70" : "text-muted-foreground"}`}>{countsAvailable ? count : "—"}</span></label>;
+                  return <label key={layer.id} data-am-stage-layer={layer.id} data-active={checked ? "true" : "false"} title={`${t(layer.label)} · ${count} ${t("параметров")}`} className={`flex min-h-8 cursor-pointer items-center gap-1.5 rounded border px-1.5 py-0.5 text-[10px] transition-all ${checked ? "shadow-[inset_2px_0_0_var(--layer-accent)]" : "grayscale"}`} style={{ "--layer-accent": layer.color, borderColor: checked ? `${layer.color}9a` : "rgba(113,113,122,.35)", color: checked ? layer.color : "#71717a", backgroundColor: checked ? `color-mix(in srgb, ${layer.color} 11%, transparent)` : "rgba(39,39,42,.35)" } as React.CSSProperties}><input className="peer sr-only" data-am-stage-action={`toggle-layer-${layer.id.toLowerCase()}`} type="checkbox" checked={checked} onChange={() => setSelectedLayers((current) => checked ? current.filter((id) => id !== layer.id) : [...current, layer.id])} /><AMIcon name={layer.icon} size="sm" className={`h-5 w-5 ${checked ? "opacity-100" : "opacity-55"}`} /><span>{t(layer.label)}</span><span className={`ml-auto tabular-nums ${checked ? "text-foreground/70" : "text-muted-foreground"}`}>{countsAvailable ? count : "—"}</span></label>;
                 })}
               </div>
               <section data-am-stage-zone="stage-2-postprocess" className="mt-2 space-y-2 rounded border p-2" style={{ borderColor: `${GLOBAL_CONSENSUS_LAYER.color}70` }} aria-label={t("Client Stage-2 smoothing")}>
@@ -1409,8 +1407,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                 {showGlobalConsensus ? <><div className="flex items-center justify-between text-[9px]"><span>Query {100 - consensusCentroidPercent}%</span><span>Centroid {consensusCentroidPercent}%</span></div><input aria-label="Consensus centroid weight" className="w-full accent-violet-400" type="range" min="0" max="100" value={consensusCentroidPercent} onChange={(event) => setConsensusCentroidPercent(Number(event.target.value))} /><label className="flex items-center justify-between gap-2 text-[9px]">Centroid pool k<input aria-label="Consensus centroid top k" className="w-16 rounded border border-white/15 bg-black/50 px-1.5 py-1 text-right" type="number" min="1" max="500" value={consensusTopK} onChange={(event) => setConsensusTopK(Math.max(1, Math.min(500, Number(event.target.value) || 1)))} /></label></> : null}
               </section>
               <section data-am-stage-zone="stage-2-server-retrieval" className="mt-2 space-y-2 rounded border border-violet-400/30 p-2" aria-label={t("Server Stage-2 retrieval")}>
-                <div className="flex items-center justify-between gap-2"><h3 className="font-mono text-[9px] font-semibold uppercase tracking-wider text-violet-200">{t("Server Stage-2 retrieval")}</h3><Badge variant="outline">{t("Second vector search")}</Badge></div>
-                <p className="text-[9px] leading-relaxed text-zinc-500">{t("Builds a weighted centroid from Stage-1 text vectors, then searches the same index while excluding every Stage-1 name.")}</p>
+                <div className="flex items-center justify-between gap-2"><div className="flex items-center gap-1"><h3 className="font-mono text-[9px] font-semibold uppercase tracking-wider text-violet-200">{t("Server Stage-2 retrieval")}</h3><V3InfoTip content={t("Builds a weighted centroid from Stage-1 text vectors, then searches the same index while excluding every Stage-1 name.")} /></div><Badge variant="outline">{t("Second vector search")}</Badge></div>
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-2">
                   <label className="text-[9px] text-zinc-400">{t("Top-K2")}<input aria-label={t("Top-K2")} className="mt-1 h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-right text-xs" type="number" min={1} max={30} value={serverStage2TopK} onChange={(event) => setServerStage2TopK(Math.max(1, Math.min(30, Number(event.target.value) || 1)))} /></label>
                   <Button data-am-stage-action="run-server-stage2-retrieval" size="sm" variant="outline" disabled={!stage1SeedParameters.length || serverStage2Busy} onClick={() => void runServerStage2()}>{serverStage2Busy ? <Loader2 className="size-3.5 animate-spin" /> : <AMIcon name="layerVector" size="sm" />}{serverStage2Busy ? t("Searching…") : t("Run retrieval")}</Button>
@@ -1424,12 +1421,13 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                   {serverStage2Results.length ? <ul className="max-h-40 space-y-1 overflow-y-auto">{serverStage2Results.map((parameter) => <li key={parameter.technical_name} className="flex items-center justify-between gap-2 text-[9px]"><span className="min-w-0 truncate font-mono text-zinc-200">{parameter.technical_name}</span><Badge className="shrink-0 border-violet-400/40 text-violet-200" variant="outline">Stage-2 · {parameter.similarity.toFixed(3)}</Badge></li>)}</ul> : <div className="text-[9px] text-zinc-500">{t("Stage-2 retrieval returned no new parameters.")}</div>}
                 </div> : null}
               </section>
+                </div>
+              </details>
             </aside>
-          <section data-am-stage-zone="timeline-chart" className="min-w-0 rounded-lg border border-white/10 bg-black/30 p-3">
-            <div className="mb-2 flex items-center justify-between gap-2 text-xs text-zinc-400">
-              <span>Parameter Timeline · {formatTime(currentTime)}</span>
-              <V3InfoTip content={t("Нажмите точку для перемотки")} />
-            </div>
+          <details open data-am-stage-zone="timeline-chart" className="min-w-0 rounded-lg border border-white/10 bg-black/30 p-2">
+            <summary className="mb-1 flex cursor-pointer list-none items-center justify-between gap-2 text-xs text-zinc-400 [&::-webkit-details-marker]:hidden">
+              <span>Parameter Timeline · {formatTime(currentTime)}<V3InfoTip content={t("Нажмите точку для перемотки")} /></span><ChevronDown className="am-stage-disclosure-chevron size-3.5" />
+            </summary>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-1"><h3 className="font-mono text-[10px] uppercase tracking-wider text-zinc-400">Parameter timeline</h3><V3InfoTip content={t("До {limit} наиболее изменяющихся серий на слой; C = CLAP, S = SigLIP2, T = TEXT brief. GLOBAL_CONSENSUS исключён. Пустая шкала появится после анализа.").replace("{limit}", String(LAYER_TIMELINE_SERIES_LIMIT))} /></div>
               <div className="flex gap-1 text-xs" role="group" aria-label="Timeline view">
@@ -1448,26 +1446,30 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
               showSiglip={showSiglip}
               view={timelineView}
             />
-          </section>
-
+          </details>
           </div>
 
-          <section data-am-stage-zone="cross-modal-interpolation" className="space-y-2 rounded-lg border border-violet-400/25 bg-black/30 p-3">
-            <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="flex items-center gap-1 font-mono text-xs font-semibold uppercase tracking-wider text-violet-200">Cross-Modal Interpolation Bridge<V3InfoTip content="Числовые параметры смешиваются по техническому имени; дискретные переключаются на ближайший источник. Учитывается выбранная маска слоёв." /></h2><Badge variant="outline">client preview · no model rerun</Badge></div>
+          <details open data-am-stage-zone="cross-modal-interpolation" data-am-stage-disclosure="cross-modal-interpolation" className="min-w-0 rounded-lg border border-violet-400/25 bg-black/30 p-2">
+            <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-2 [&::-webkit-details-marker]:hidden"><h2 className="flex items-center gap-1 font-mono text-xs font-semibold uppercase tracking-wider text-violet-200">Cross-Modal Interpolation Bridge<V3InfoTip content="Числовые параметры смешиваются по техническому имени; дискретные переключаются на ближайший источник. Учитывается выбранная маска слоёв." /></h2><span className="flex items-center gap-1.5"><Badge variant="outline">client preview · no model rerun</Badge><ChevronDown className="am-stage-disclosure-chevron size-3.5 text-muted-foreground" /></span></summary>
+            <div className="mt-2 space-y-2">
               <div className="grid gap-3 md:grid-cols-[minmax(140px,1fr)_minmax(180px,2fr)_minmax(150px,1fr)]">
               <label title="Выбирает источники данных для клиентской интерполяции." className="space-y-1 text-[10px] text-muted-foreground">Source pair<select aria-label="Cross-modal source pair" value={blendPair} onChange={(event) => setBlendPair(event.target.value)} className="h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-foreground"><option value="text-clap">Text ↔ CLAP</option><option value="clap-siglip">CLAP ↔ SigLIP2</option><option value="text-siglip">Text ↔ SigLIP2</option><option value="tri-modal">Tri-Modal Blend</option></select></label>
               <label title="Определяет долю второго источника при интерполяции." className="space-y-1 text-[10px] text-muted-foreground">Blend · {blendPercent}%<input aria-label="Cross-modal blend percentage" className="mt-2 w-full accent-violet-400" type="range" min="0" max="100" value={blendPercent} onChange={(event) => setBlendPercent(Number(event.target.value))} /><span className="block text-[9px]">0% = first source · 100% = second source</span></label>
               <label title="Форма перехода между числовыми значениями источников." className="space-y-1 text-[10px] text-muted-foreground">Curve<select aria-label="Cross-modal blend curve" value={blendCurve} onChange={(event) => setBlendCurve(event.target.value as BlendCurve)} className="h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-foreground"><option value="linear">Linear (Lerp)</option><option value="cosine">S-Sigmoid (Cosine)</option><option value="cubic">Cubic-Bezier Spline</option><option value="exponential">Exponential Growth</option></select></label>
             </div>
             <div className="max-h-40 overflow-auto rounded border border-white/10"><div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 p-2 font-mono text-[10px]">{bridgeFrames.slice(0, 64).map((parameter) => <div key={parameter.technical_name} className="contents"><span className="truncate text-zinc-400">{parameter.technical_name}</span><span className="text-violet-200">{String(parameter.current_value)}</span></div>)}{bridgeFrames.length === 0 ? <span className="col-span-2 py-2 text-center text-muted-foreground">Нет пересекающихся параметров в загруженных результатах.</span> : null}</div></div>
-          </section>
+            </div>
+          </details>
           </section>
 
           <section data-am-stage-layer="L3" data-am-stage-zone="modality-banks" className="am-stage-banks-column grid min-w-0 gap-3 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
             <ParameterBank dataScope="am-stage" title="CLAP Parameters" icon="clap" bankId="clap" accent="cyan" parameters={visibleClap} viewMode={clapBankViewMode} titleOrder={titleOrder} onViewModeChange={setClapBankViewMode} useDomainLayerColors onChange={(name, value) => updateValue("clap", name, value)} onRemove={(name) => removeValue("clap", name)} />
             <ParameterBank dataScope="am-stage" title="SigLIP2 Spectrogram Parameters" icon="morpho" bankId="siglip2" accent="fuchsia" parameters={visibleSiglip} viewMode={siglipBankViewMode} titleOrder={titleOrder} onViewModeChange={setSiglipBankViewMode} useDomainLayerColors onChange={(name, value) => updateValue("siglip", name, value)} onRemove={(name) => removeValue("siglip", name)} />
           </section>
-          <div className="am-stage-text-bank-column" data-am-stage-layer="L3"><ParameterBank dataScope="am-stage" title={`TEXT · Semantic V3 · ${textStageParameters.length}/${v3Parameters.length}`} icon="search" bankId="text" accent="cyan" parameters={textStageParameters} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={updateV3ParameterValue} onRemove={removeV3Parameter} /></div>
+          <section className="am-stage-text-bank-column grid min-w-0 gap-2 xl:grid-cols-2" data-am-stage-layer="L3">
+            <ParameterBank dataScope="am-stage" title={`Qwen3 · Text parameters · ${textBanks.qwen3.length}`} icon="search" bankId="qwen3" accent="cyan" parameters={textBanks.qwen3} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={(name, value) => updateTextBank("qwen3", name, value)} onRemove={(name) => removeTextBankParameter("qwen3", name)} />
+            <ParameterBank dataScope="am-stage" title={`EmbeddingGemma 2 · Text parameters · ${textBanks.embeddinggemma2.length}`} icon="search" bankId="gemma" accent="fuchsia" parameters={textBanks.embeddinggemma2} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={(name, value) => updateTextBank("embeddinggemma2", name, value)} onRemove={(name) => removeTextBankParameter("embeddinggemma2", name)} />
+          </section>
         </div>
             </ScrollArea>
           </ResizablePanel>
@@ -1516,7 +1518,7 @@ function ParameterBank({
 }: {
   title: string;
   icon: "clap" | "morpho" | "search";
-  bankId: "clap" | "siglip2" | "text";
+  bankId: "clap" | "siglip2" | "text" | "qwen3" | "gemma";
   accent: "cyan" | "fuchsia";
   parameters: ActiveParameter[];
   onChange: (name: string, value: number | string) => void;
@@ -1528,9 +1530,9 @@ function ParameterBank({
   dataScope?: "am-stage";
 }) {
   return (
-    <details open data-am-stage-disclosure={dataScope ? `bank-${bankId}` : undefined} className={`min-w-0 rounded-lg border bg-black/30 p-3 ${accent === "cyan" ? "border-cyan-400/25" : "border-fuchsia-400/25"}`}>
-      <summary className="mb-2 flex cursor-pointer list-none flex-wrap items-center justify-between gap-2">
-        <h2 className={`flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] ${accent === "cyan" ? "text-cyan-300" : "text-fuchsia-300"}`}>
+    <details open data-am-stage-disclosure={dataScope ? `bank-${bankId}` : undefined} className={`min-w-0 rounded-lg border bg-black/30 ${dataScope ? "p-2" : "p-3"} ${accent === "cyan" ? "border-cyan-400/25" : "border-fuchsia-400/25"}`}>
+      <summary className={`flex cursor-pointer list-none flex-wrap items-center justify-between ${dataScope ? "mb-1.5 gap-1.5" : "mb-2 gap-2"}`}>
+        <h2 className={`flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] ${accent === "cyan" ? "text-cyan-300" : "text-fuchsia-300"}`}>
           <AMIcon name={icon} size="sm" bright />
           {title}
           <ChevronDown className="am-stage-disclosure-chevron size-3.5" />

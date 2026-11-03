@@ -23,7 +23,7 @@ interface GemmaAudioSearchResponse {
   results?: ActiveParameter[];
 }
 
-export function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogramFrame }: { selectedLayers?: string[]; spectrogramFrame?: { dataUrl: string; offset: number } }) {
+export function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogramFrame, onResults }: { selectedLayers?: string[]; spectrogramFrame?: { dataUrl: string; offset: number }; onResults?: (results: ActiveParameter[]) => void }) {
   const t = useUiText();
   const [file, setFile] = useState<File | null>(null);
   const [topK, setTopK] = useState(30);
@@ -67,6 +67,7 @@ export function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogra
       if (modality === "image") {
         const payload = await response.json() as GemmaAudioSearchResponse;
         setResults(payload); setTotalChunks(1); setProgress("");
+        onResults?.(payload.results ?? []);
       } else {
         if (!response.body) throw new Error(t("Audio search returned no progress stream."));
         const reader = response.body.getReader();
@@ -87,6 +88,7 @@ export function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogra
             setTotalChunks(event.chunks ?? 0);
             setResults(event);
             setProgress("");
+            onResults?.(event.results ?? []);
           }
         };
         while (true) {

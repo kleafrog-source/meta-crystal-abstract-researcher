@@ -26,7 +26,7 @@ export interface AmStageSessionData {
   };
   timeline: { segments: AudioSegmentResultPoint[]; window_source_segments?: Stage7RhythmSource[] };
   banks: {
-    text_parameters: ActiveParameter[]; clap_parameters: ActiveParameter[]; siglip_parameters: ActiveParameter[];
+    text_parameters: ActiveParameter[]; text_parameters_qwen3?: ActiveParameter[]; text_parameters_gemma?: ActiveParameter[]; clap_parameters: ActiveParameter[]; siglip_parameters: ActiveParameter[];
     text_view: "compact" | "standard" | "expanded"; clap_view: "compact" | "standard" | "expanded"; siglip_view: "compact" | "standard" | "expanded";
     show_clap: boolean; show_siglip: boolean; interpolate_clap: boolean; interpolate_siglip: boolean;
   };
@@ -36,7 +36,7 @@ export interface AmStageSessionData {
   param_to_text: ParamTextWorkbenchSessionState | null;
   v3: {
     query: string; query_b: string; top_k: number; sources: { library: boolean; frozen: boolean; atoms: boolean; generated: boolean };
-    scopes: { sound: boolean; structure: boolean; metadata: boolean; provenance: boolean; administrative: boolean }; search_mode: string; transition_ratio: number; search_results: ActiveParameter[];
+    scopes: { sound: boolean; structure: boolean; metadata: boolean; provenance: boolean; administrative: boolean }; search_mode: string; transition_ratio: number; text_index?: "qwen3" | "embeddinggemma2"; search_results: ActiveParameter[];
     secondary_results: ActiveParameter[]; active_parameters: ActiveParameter[]; macro: string;
   };
 }

@@ -37,12 +37,24 @@ interface Props {
 
 export function AudioWaveformEditor(props: Props) {
   const [mounted, setMounted] = useState<WaveSurferRef | null>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [showSpectrum, setShowSpectrum] = useState(false);
   const instanceId = props.instanceId ?? "clap";
   const waveformId = `${instanceId}-waveform`;
   const spectrogramId = `${instanceId}-spectrogram`;
   const timelineId = `${instanceId}-timeline`;
   const spectrumVisible = props.spectrogram?.visible ?? showSpectrum;
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const nextWidth = Math.floor(entry.contentRect.width);
+      setContainerWidth((current) => current === nextWidth ? current : nextWidth);
+    });
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
   const fftSamples =
     props.spectrogram?.detail === "low"
       ? 512
@@ -68,7 +80,7 @@ export function AudioWaveformEditor(props: Props) {
         plugin: MinimapPlugin,
         key: "minimap",
         options: {
-          height: 48,
+          height: 30,
           waveColor: "#3f3f46",
           progressColor: "#22d3ee",
           cursorColor: "#f8fafc",
@@ -86,7 +98,7 @@ export function AudioWaveformEditor(props: Props) {
         options: {
           container: `#${spectrogramId}`,
           labels: true,
-          height: 150,
+          height: 110,
           fftSamples,
           scale: props.spectrogram?.scale ?? "mel",
           colorMap: props.spectrogram?.colorMap ?? "roseus",
@@ -115,7 +127,8 @@ export function AudioWaveformEditor(props: Props) {
 
   return (
     <div
-      className="rounded border border-cyan-400/25 bg-black/35 p-3"
+      ref={containerRef}
+      className="am-stage-audio-editor mx-auto min-w-0 max-w-full overflow-hidden rounded border border-cyan-400/25 bg-black/35 p-2"
       onDragOver={(event) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = "copy";
@@ -131,7 +144,8 @@ export function AudioWaveformEditor(props: Props) {
         plugins={plugins as never}
         onMount={setMounted}
         url={props.url}
-        height={128}
+        width={containerWidth || undefined}
+        height={88}
         waveColor="#64748b"
         progressColor="#22d3ee"
         cursorColor="#f8fafc"
@@ -141,10 +155,10 @@ export function AudioWaveformEditor(props: Props) {
         barGap={1}
         minPxPerSec={4}
       >
-        <div className="overflow-hidden rounded">
+        <div className="min-w-0 max-w-full overflow-hidden rounded">
           <WaveForm id={waveformId} />
         </div>
-        <div id={timelineId} className="min-h-5 overflow-hidden text-zinc-400" aria-label="Audio time axis" />
+        <div id={timelineId} className="h-4 max-w-full overflow-hidden text-zinc-400" aria-label="Audio time axis" />
         <WaveformController
           {...props}
           wavesurfer={mounted}
@@ -161,7 +175,7 @@ export function AudioWaveformEditor(props: Props) {
         spectrumVisible ? (
           <div
             id={spectrogramId}
-            className="mt-3 overflow-hidden rounded bg-black"
+            className="mt-2 max-w-full overflow-hidden rounded bg-black"
           />
         ) : null
       ) : (
@@ -174,11 +188,11 @@ export function AudioWaveformEditor(props: Props) {
           </summary>
           <div
             id={spectrogramId}
-            className="mt-2 overflow-hidden rounded bg-black"
+            className="mt-1 max-w-full overflow-hidden rounded bg-black"
           />
         </details>
       )}
-      <p className="mt-2 text-[11px] text-zinc-500">
+      <p className="mt-1 text-[10px] text-zinc-500">
         Перетащите аудиофайл сюда. Голубую область можно перемещать и
         растягивать; протяните по свободной волне, чтобы выбрать новый фрагмент.
       </p>
@@ -332,7 +346,7 @@ function WaveformController({
     }
   };
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-2">
+    <div className="mt-2 flex flex-wrap items-center gap-1.5">
       <output aria-live="off" className="mr-auto rounded border border-cyan-400/20 bg-black/40 px-2 py-1 font-mono text-[11px] tabular-nums text-cyan-100">{formatAudioTime(currentTime)} / {formatAudioTime(totalDuration)}</output>
       <Button
         type="button"
@@ -392,7 +406,8 @@ function WaveformController({
         aria-label="Zoom"
         type="range"
         min={1}
-        max={100}
+        max={48}
+        className="w-24 accent-cyan-400"
         value={zoom}
         onChange={(e) => {
           const value = Number(e.target.value);
