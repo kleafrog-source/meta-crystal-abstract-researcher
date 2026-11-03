@@ -2,7 +2,8 @@ export type Lfm3Runtime = "llama.cpp" | "ollama";
 export type Lfm3PromptMode = "describe" | "asr";
 
 export function parseLfm3Runtime(value: unknown): Lfm3Runtime {
-  if (value === undefined || value === null || value === "" || value === "llama.cpp") return "llama.cpp";
+  if (value === undefined || value === null || value === "") return "ollama";
+  if (value === "llama.cpp") return value;
   if (value === "ollama") return value;
   throw new Error("Unsupported LFM3 runtime. Choose llama.cpp or Ollama.");
 }

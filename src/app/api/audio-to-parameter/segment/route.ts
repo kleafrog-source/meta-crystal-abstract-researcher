@@ -5,7 +5,7 @@ import path from "node:path";
 import { NextResponse } from "next/server";
 
 import { callSidecar, listTasks } from "@/lib/engine/runner";
-import { runMorphoAudioSearch, stopMorpho } from "@/lib/morpho/jobs";
+import { MorphoIndexNotReadyError, runMorphoAudioSearch, stopMorpho } from "@/lib/morpho/jobs";
 import { prepareGpuForExternalModel } from "@/lib/ollama-memory";
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
@@ -123,8 +123,8 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : String(error) },
-      { status: 500 },
+      { error: error instanceof Error ? error.message : String(error), ...(error instanceof MorphoIndexNotReadyError ? { status: "stale", stale_reasons: error.staleReasons } : {}) },
+      { status: error instanceof MorphoIndexNotReadyError ? 409 : 500 },
     );
   } finally {
     if (slotOwner) releaseEmbeddingModelSlot(slotOwner);

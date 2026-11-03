@@ -43,7 +43,7 @@ export function SegmentSideMetadataPanel({
   const t = useUiText();
   const [busy, setBusy] = useState<BusyAction | null>(null);
   const [error, setError] = useState("");
-  const [lfmRuntime, setLfmRuntime] = useState<Lfm3Runtime>("llama.cpp");
+  const [lfmRuntime, setLfmRuntime] = useState<Lfm3Runtime>("ollama");
   const [lfmMode, setLfmMode] = useState<Lfm3PromptMode>("describe");
   const [lfmResult, setLfmResult] = useState<NonNullable<SegmentSideMeta["lfm3_description"]> | null>(null);
   const acceptedLfm3Description = segment?.sideMeta?.lfm3_description;
@@ -124,7 +124,7 @@ export function SegmentSideMetadataPanel({
       <Badge variant="outline" className="border-fuchsia-400/25 text-fuchsia-200">{t("Manual run · unloads after use")}</Badge>
     </div>
     <div className="flex flex-wrap gap-1.5">
-      {SPECIALISTS.map(({ id, label }) => <Button key={id} size="sm" variant="outline" data-am-stage-action={`side-meta-${id}`} disabled={!file || !segment || busy !== null || (id === "helm" && (segment.duration < 0.25 || segment.duration > 10)) || (id === "gender" && segment.sideMeta?.helm?.gates.has_vocals.value !== true)} title={id === "helm" && segment && segment.duration > 10 ? t("Helm audio windows are limited to 10 seconds.") : id === "gender" ? t("Run Helm first; voice presentation is available only when vocals are detected.") : undefined} onClick={() => void run(id)}>{busy === id ? t("Running…") : t(label)}</Button>)}
+      {SPECIALISTS.map(({ id, label }) => <Button key={id} size="sm" variant="outline" data-am-stage-action={`side-meta-${id}`} disabled={id === "helm" || !file || !segment || busy !== null || (id === "gender" && segment.sideMeta?.helm?.gates.has_vocals.value !== true)} title={id === "helm" ? t("Temporarily unavailable · disabled by operator.") : id === "gender" ? t("Run Helm first; voice presentation is available only when vocals are detected.") : undefined} onClick={() => void run(id)}>{busy === id ? t("Running…") : t(label)}</Button>)}
       <Button size="sm" variant="outline" data-am-stage-action="extract-acoustic-features" disabled={!file || !segment || busy !== null || (segment.duration < 0.25 || segment.duration > 30)} title={segment && segment.duration > 30 ? t("Acoustic feature windows are limited to 30 seconds.") : undefined} onClick={() => void runAcousticExtraction()}>{busy === "acoustic" ? t("Extracting…") : t("Extract acoustic features")}</Button>
     </div>
     <div data-am-stage-zone="lfm3-audio-description" className="space-y-2 rounded border border-cyan-400/20 bg-black/25 p-2">
@@ -134,7 +134,7 @@ export function SegmentSideMetadataPanel({
         <label className="text-[9px] text-zinc-400">{t("Task")}<select aria-label={t("Task")} value={lfmMode} disabled={busy !== null} onChange={(event) => setLfmMode(event.target.value as Lfm3PromptMode)} className="mt-1 h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-xs text-zinc-200"><option value="describe">{t("Sound description · EN")}</option><option value="asr">{t("Speech recognition · EN")}</option></select></label>
         <Button size="sm" variant="outline" data-am-stage-action="describe-segment-lfm3" disabled={!file || busy !== null || (segment ? segment.duration < 0.25 || segment.duration > 30 : window.duration < 0.25 || window.duration > 30)} onClick={() => void runLfm3()}>{busy === "lfm3" ? <Loader2 className="size-3.5 animate-spin" /> : <WandSparkles className="size-3.5" />}{busy === "lfm3" ? t("Listening…") : t("Describe segment / clip (LFM3)")}</Button>
       </div>
-      <p className="text-[9px] text-zinc-500">{t("Explicit run only · max 30 seconds · one model at a time. llama.cpp GGUF is preferred; Ollama is a verified fallback on this machine.")}</p>
+      <p className="text-[9px] text-zinc-500">{t("Explicit run only · max 30 seconds · one model at a time. Ollama · verified local is the default; llama.cpp GGUF is an alternate runtime.")}</p>
       {lfmResult ? <div className="space-y-2 rounded border border-cyan-400/15 bg-black/35 p-2">
         <textarea aria-label={t("LFM3 result") } readOnly value={lfmResult.text} className="min-h-20 w-full resize-y rounded border border-white/10 bg-black/35 p-2 text-xs leading-relaxed text-zinc-200" />
         <div className="flex flex-wrap items-center gap-1 text-[9px] text-zinc-500"><span>{lfmResult.model}</span><span>·</span><span>{lfmResult.runtime}</span>{lfmResult.quantization ? <><span>·</span><span>{lfmResult.quantization}</span></> : null}<span>·</span><span>{lfmResult.offset_seconds.toFixed(1)}–{(lfmResult.offset_seconds + lfmResult.duration_seconds).toFixed(1)}s</span></div>

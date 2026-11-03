@@ -2,7 +2,7 @@ import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { NextResponse } from "next/server";
-import { runMorphoSearch, stopMorpho } from "@/lib/morpho/jobs";
+import { MorphoIndexNotReadyError, runMorphoSearch, stopMorpho } from "@/lib/morpho/jobs";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { isVocalMatrixParameter } from "@/lib/vocal-allocation/parser";
 export const runtime = "nodejs";
@@ -62,8 +62,8 @@ export async function POST(request: Request) {
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : String(error) },
-      { status: 500 },
+      { error: error instanceof Error ? error.message : String(error), ...(error instanceof MorphoIndexNotReadyError ? { status: "stale", stale_reasons: error.staleReasons } : {}) },
+      { status: error instanceof MorphoIndexNotReadyError ? 409 : 500 },
     );
   } finally {
     if (temporary)

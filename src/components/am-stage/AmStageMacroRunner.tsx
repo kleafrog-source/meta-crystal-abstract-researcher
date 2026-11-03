@@ -28,7 +28,7 @@ export function AmStageMacroRunner({
   profile, onProfileChange, requireGemmaResolution, onRequireGemmaResolutionChange,
   includeStage2, onIncludeStage2Change,
   customSteps, onCustomStepsChange, completeness, isRunning, currentStep,
-  segmentCount, topK, onRun, onCancel, error,
+  segmentCount, topK, onRun, onCancel, error, siglipStatus,
 }: {
   profile: AmStageMacroId;
   onProfileChange: (profile: AmStageMacroId) => void;
@@ -46,6 +46,7 @@ export function AmStageMacroRunner({
   onRun: () => void;
   onCancel: () => void;
   error: string;
+  siglipStatus: { status?: string; ready?: boolean; stale_reasons?: string[] } | null;
 }) {
   const t = useUiText();
   const estimatedLoad = segmentCount * topK * 2;
@@ -61,6 +62,7 @@ export function AmStageMacroRunner({
   return <details data-am-stage-disclosure="macros" className="rounded-lg border border-cyan-400/20 bg-black/25 p-2">
     <summary className="flex cursor-pointer list-none items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-cyan-200 [&::-webkit-details-marker]:hidden"><ListChecks className="size-3.5" />{t("Macros")}<span className="ml-auto text-[10px] text-muted-foreground">{completeness.percent}% · {completeness.complete}/{completeness.total}</span><ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary>
     <div className="mt-2 space-y-2">
+      {siglipStatus && !siglipStatus.ready ? <p role="status" className="text-[10px] text-amber-200">{t("SigLIP index")}: {t(siglipStatus.status ?? "unavailable")} · {siglipStatus.stale_reasons?.join("; ")}. {t("Rebuild it from Service Bay before running this macro.")}</p> : null}
       <div className="flex flex-wrap items-center gap-1.5">
         <label className="sr-only" htmlFor="am-stage-macro-profile">{t("Macro profile")}</label>
         <select id="am-stage-macro-profile" aria-label={t("Macro profile")} value={profile} disabled={isRunning} onChange={(event) => onProfileChange(event.target.value as AmStageMacroId)} className="h-7 min-w-0 flex-1 rounded border border-white/15 bg-black/50 px-2 text-[10px] text-foreground">

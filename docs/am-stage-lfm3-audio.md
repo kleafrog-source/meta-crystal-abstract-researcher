@@ -6,7 +6,10 @@ of CLAP/SigLIP retrieval and does not create parameter embeddings.
 
 ## Runtime and Windows setup
 
-The preferred runtime is **llama.cpp** with a prebuilt Windows binary and the
+The default runtime is **Ollama · verified local** on the stock local service at
+`http://127.0.0.1:11434`. This machine's audio path was verified with stock
+Ollama `0.40.13`, `lfm3-audio:latest` (Q4_K_M), and `tasks/new/part3.wav`.
+The optional alternate runtime is **llama.cpp** with a prebuilt Windows binary and the
 official GGUF repository [LiquidAI/LFM3-Audio-2B-GGUF](https://huggingface.co/LiquidAI/LFM3-Audio-2B-GGUF).
 Install a current Windows release from the [llama.cpp releases](https://github.com/ggml-org/llama.cpp/releases)
 that includes multimodal/audio support, or use the model card's Windows
@@ -27,13 +30,13 @@ the `--audio`, `-sys`, and `-p "<__media__>"` CLI invocation. See the official
 [LFM3 GGUF instructions](https://huggingface.co/LiquidAI/LFM3-Audio-2B-GGUF#use-with-llamacpp)
 and [llama.cpp multimodal guide](https://github.com/ggml-org/llama.cpp/blob/master/docs/multimodal.md).
 
-The optional **Ollama** choice is supported only after checking for an installed
+The **Ollama** runtime is supported only after checking for an installed
 model advertising the `audio` capability. This Windows machine was verified
 with stock Ollama `0.40.13`, `lfm3-audio:latest` (Q4_K_M), and
 `tasks/new/part3.wav`. Its working chat path passes the prepared WAV through
 the Ollama `images` field; the native chat request's `audio` field is not a
-portable/documented input contract. The app keeps this as an explicit fallback,
-defaults the UI to llama.cpp, and defaults its Ollama URL to
+portable/documented input contract. The app defaults the UI to Ollama and keeps
+llama.cpp selectable; its Ollama URL defaults to
 `http://127.0.0.1:11434`. Optional overrides:
 
 - `AM_STAGE_LFM3_OLLAMA_BASE_URL` (loopback HTTP only)

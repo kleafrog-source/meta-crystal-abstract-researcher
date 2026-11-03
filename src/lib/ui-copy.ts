@@ -1709,7 +1709,7 @@ export const UI_COPY: Record<string, BilingualCopy> = {
     "Speech recognition · EN": ["Speech recognition · EN", "Распознавание речи · EN"],
     "Describe segment / clip (LFM3)": ["Describe segment / clip (LFM3)", "Описать сегмент / фрагмент (LFM3)"],
     "Listening…": ["Listening…", "Слушаю…"],
-    "Explicit run only · max 30 seconds · one model at a time. llama.cpp GGUF is preferred; Ollama is a verified fallback on this machine.": ["Explicit run only · max 30 seconds · one model at a time. llama.cpp GGUF is preferred; Ollama is a verified fallback on this machine.", "Только ручной запуск · до 30 секунд · одна модель за раз. Предпочтителен llama.cpp GGUF; Ollama проверен на этом компьютере как запасной вариант."],
+    "Explicit run only · max 30 seconds · one model at a time. Ollama · verified local is the default; llama.cpp GGUF is an alternate runtime.": ["Explicit run only · max 30 seconds · one model at a time. Ollama · verified local is the default; llama.cpp GGUF is an alternate runtime.", "Только ручной запуск · до 30 секунд · одна модель за раз. По умолчанию используется локально проверенный Ollama; llama.cpp GGUF — альтернативный режим."],
     "LFM3 result": ["LFM3 result", "Результат LFM3"],
     "Keep on segment": ["Keep on segment", "Сохранить в сегмент"],
     "Create segments to store this description in a session snapshot.": ["Create segments to store this description in a session snapshot.", "Создайте сегменты, чтобы сохранить это описание в снимке сессии."],
@@ -1927,5 +1927,13 @@ export const UI_COPY: Record<string, BilingualCopy> = {
     "Gemma audio search returned no parameters.": ["Gemma audio search returned no parameters.", "Аудиопоиск Gemma не вернул параметров."],
     "CLAP analysis did not complete.": ["CLAP analysis did not complete.", "Анализ CLAP не завершился."],
     "SigLIP2 analysis did not complete.": ["SigLIP2 analysis did not complete.", "Анализ SigLIP2 не завершился."],
-    "Server Stage-2 did not complete.": ["Server Stage-2 did not complete.", "Серверный Stage-2 не завершился."]
+    "Server Stage-2 did not complete.": ["Server Stage-2 did not complete.", "Серверный Stage-2 не завершился."],
+    "SigLIP index": ["SigLIP index", "Индекс SigLIP"],
+    "unavailable": ["unavailable", "недоступен"],
+    "Rebuild it from Service Bay before running this macro.": ["Rebuild it from Service Bay before running this macro.", "Пересоберите его в Service Bay перед запуском макроса."],
+    "Load audio and wait for its duration before running this macro.": ["Load audio and wait for its duration before running this macro.", "Загрузите аудио и дождитесь определения длительности перед запуском макроса."],
+    "Auto-split did not produce analysis nodes.": ["Auto-split did not produce analysis nodes.", "Авто-разбивка не создала узлы анализа."],
+    "Temporarily unavailable · disabled by operator.": ["Temporarily unavailable · disabled by operator.", "Временно недоступно · отключено оператором."],
+    "stale": ["stale", "устарел"],
+    "not_built": ["not_built", "не собран"]
 };

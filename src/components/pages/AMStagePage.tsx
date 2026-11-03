@@ -99,6 +99,8 @@ interface MorphoStatus {
   ready: boolean;
   status: string;
   stale_reasons?: string[];
+  manifest?: { source_snapshot_sha256?: string } | null;
+  source_snapshot_sha256?: string;
   index_job?: {
     running?: boolean;
     progress?: { current?: number; total?: number };
@@ -248,6 +250,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [windowModeBusy, setWindowModeBusy] = useState(false);
   const [nodeInterval, setNodeInterval] = useState(20);
   const [segments, setSegments] = useState<SegmentPoint[]>([]);
+  const segmentsRef = useRef<SegmentPoint[]>([]);
+  useEffect(() => { segmentsRef.current = segments; }, [segments]);
   const [clapTopK, setClapTopK] = useState(20);
   const [siglipTopK, setSiglipTopK] = useState(20);
   const [busy, setBusy] = useState<Engine | null>(null);
@@ -408,25 +412,26 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const regenerateWindowMode = useCallback(async (
     mode: AudioWindowMode,
     overrides?: { duration?: number; interval?: number; start?: number; end?: number },
-  ) => {
+  ): Promise<SegmentPoint[] | null> => {
     const duration = overrides?.duration ?? audioDuration;
     const interval = overrides?.interval ?? segmentInterval;
     const start = overrides?.start ?? analysisStart;
     const end = overrides?.end ?? (analysisEnd || duration);
     const uniformPoints = buildAudioAnalysisPoints(duration, interval, start, end);
-    if (!uniformPoints.length) { setError(t("Укажите корректный временной диапазон: конец должен быть позже начала минимум на 0,1 секунды.")); return; }
+    if (!uniformPoints.length) { setError(t("Укажите корректный временной диапазон: конец должен быть позже начала минимум на 0,1 секунды.")); return null; }
     setError("");
 
     if (mode === "uniform") {
       setWindowMode(mode);
-      setSegments(resetSegmentsForWindowMode(uniformPoints));
+      segmentsRef.current = resetSegmentsForWindowMode(uniformPoints);
+      setSegments(segmentsRef.current);
       setGateNeedsResplit(false);
       setCurrentTime(uniformPoints[0].time);
       setStoppedEngine(null);
       setNotice(`${t("Uniform windows prepared")}: ${uniformPoints.length}.`);
-      return;
+      return segmentsRef.current;
     }
-    if (windowModeBusy || busy) return;
+    if (windowModeBusy || busy) return null;
     setWindowModeBusy(true);
     try {
       let sources = windowSourceSegments;
@@ -442,13 +447,16 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       const points = buildAlignedAudioAnalysisPoints(duration, interval, start, end, events);
       if (!points.length) throw new Error(t(mode === "beat" ? "No beat events found in this time range." : "No onset events found in this time range."));
       setWindowMode(mode);
-      setSegments(resetSegmentsForWindowMode(points));
+      segmentsRef.current = resetSegmentsForWindowMode(points);
+      setSegments(segmentsRef.current);
       setGateNeedsResplit(false);
       setCurrentTime(points[0].time);
       setStoppedEngine(null);
       setNotice(`${t(mode === "beat" ? "Beat-aligned windows ready" : "Transient-aligned windows ready")}: ${points.length}. ${t("Previous CLAP/SigLIP results were cleared for the new node list.")}`);
+      return segmentsRef.current;
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause));
+      return null;
     } finally {
       setWindowModeBusy(false);
     }
@@ -515,8 +523,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   }, [updateAnalysisGate]);
 
   const analyze = useCallback(
-    async (engine: Engine, resume = false) => {
-      if (!file || !segments.length || busy || windowModeBusy) return false;
+    async (engine: Engine, resume = false, initialSegments?: SegmentPoint[]) => {
+      const currentSegments = initialSegments ?? segmentsRef.current;
+      if (!file || !currentSegments.length || busy || windowModeBusy) return false;
       if (gateNeedsResplit) { setError(t("The time gate changed. Run Auto-split before analyzing these nodes.")); return false; }
       const controller = new AbortController();
       abortRef.current = controller;
@@ -525,13 +534,14 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       setError("");
       setNotice("");
       const statusField = engine === "clap" ? "clapStatus" : "siglipStatus";
-      let working = prepareSegmentRun(segments, engine, resume);
+      let working = prepareSegmentRun(currentSegments, engine, resume);
       let completed = true;
       try {
         for (const index of getIncompleteSegmentIndexes(working, engine)) {
           if (controller.signal.aborted) throw new DOMException("Analysis stopped", "AbortError");
           working[index][statusField] = "processing";
-          setSegments([...working]);
+          segmentsRef.current = [...working];
+          setSegments(segmentsRef.current);
           const form = new FormData();
           form.append("audio", file, file.name);
           form.append("engine", engine);
@@ -569,6 +579,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             };
           }
           working = nextWorking;
+          segmentsRef.current = nextWorking;
           setSegments(nextWorking);
           const completed = nextWorking.filter((segment) => segment[statusField] === "complete").length;
           setNotice(`${engine === "clap" ? "CLAP" : "SigLIP2"}: обработано ${completed} / ${working.length}.`);
@@ -579,7 +590,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
           (segment) => segment[statusField] === "processing",
         );
         if (active) active[statusField] = "error";
-        setSegments([...working]);
+        segmentsRef.current = [...working];
+        setSegments(segmentsRef.current);
         if (controller.signal.aborted) {
           setStoppedEngine(engine);
           setNotice("Пакетный анализ остановлен. Готовые точки сохранены; продолжить можно со следующей незавершённой.");
@@ -806,6 +818,18 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             ? customMacroSteps
             : ["text.gemma.awtd", ...(requireGemmaResolution ? ["text.gemma.resolved" as const] : []), "audio.clap.resolved", "spec.siglip.resolved", ...(macroIncludeStage2 ? ["stage2.server" as const] : [])];
     if (!planIds.length) return;
+    const needsAudioNodes = planIds.some((id) => id === "audio.clap.resolved" || id === "spec.siglip.resolved" || id === "audio.gemma.awtd");
+    if (planIds.includes("spec.siglip.resolved") && !morphoStatus?.ready) {
+      setMacroError(`${t("SigLIP index")}: ${t(morphoStatus?.status ?? "unavailable")} · ${(morphoStatus?.stale_reasons ?? []).join("; ")}. ${t("Rebuild it from Service Bay before running this macro.")}`);
+      return;
+    }
+    let analysisNodes = segmentsRef.current.length ? segmentsRef.current : segments;
+    if (needsAudioNodes && !analysisNodes.length) {
+      if (!file || !audioDuration) { setMacroError(t("Load audio and wait for its duration before running this macro.")); return; }
+      const generatedNodes = await regenerateWindowMode(windowMode);
+      if (!generatedNodes?.length) { setMacroError(t("Auto-split did not produce analysis nodes.")); return; }
+      analysisNodes = generatedNodes;
+    }
     const controller = new AbortController();
     macroAbortRef.current = controller;
     setMacroRunning(true); setMacroError(""); setMacroCurrentStep("");
@@ -835,8 +859,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
         if (signal.aborted) throw new DOMException("Macro cancelled", "AbortError");
         setGemmaTextResolved(resolved); setMacroSourceBank("text.gemma.resolved");
       },
-      "audio.clap.resolved": async () => { if (!(await analyze("clap", true))) throw new Error(error || t("CLAP analysis did not complete.")); setMacroSourceBank("audio.clap.resolved"); },
-      "spec.siglip.resolved": async () => { if (!(await analyze("siglip", true))) throw new Error(error || t("SigLIP2 analysis did not complete.")); setMacroSourceBank("spec.siglip.resolved"); },
+      "audio.clap.resolved": async () => { if (!(await analyze("clap", true, analysisNodes))) throw new Error(error || t("CLAP analysis did not complete.")); analysisNodes = segmentsRef.current; setMacroSourceBank("audio.clap.resolved"); },
+      "spec.siglip.resolved": async () => { if (!(await analyze("siglip", true, analysisNodes))) throw new Error(error || t("SigLIP2 analysis did not complete.")); analysisNodes = segmentsRef.current; setMacroSourceBank("spec.siglip.resolved"); },
       "audio.gemma.awtd": async (signal) => {
         const audioInput = gemmaAudioFile ?? file;
         if (!audioInput) throw new Error(t("Choose an audio file for Gemma audio search."));
@@ -861,7 +885,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       if (macroAbortRef.current === controller) macroAbortRef.current = null;
       setMacroRunning(false); setMacroCurrentStep("");
     }
-  }, [analyze, audioReferenceName, busy, customMacroSteps, error, file, gemmaAudioAwtd, gemmaAudioFile, macroIncludeStage2, macroProfile, macroRunning, requireGemmaResolution, resolveGemmaBank, runServerStage2, selectedLayers, serverStage2Error, t, textBanks.embeddinggemma2, v3Query, windowModeBusy]);
+  }, [analyze, audioDuration, audioReferenceName, busy, customMacroSteps, error, file, gemmaAudioAwtd, gemmaAudioFile, macroIncludeStage2, macroProfile, macroRunning, morphoStatus, regenerateWindowMode, requireGemmaResolution, resolveGemmaBank, runServerStage2, segments, selectedLayers, serverStage2Error, t, textBanks.embeddinggemma2, v3Query, windowMode, windowModeBusy]);
 
   const cancelMacro = useCallback(() => {
     macroAbortRef.current?.abort();
@@ -1501,7 +1525,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             </section>
             <aside id="am-stage-project" data-am-stage-layer="L3" data-am-stage-zone="macro-exports" className="am-stage-project-column flex min-w-0 flex-col gap-2 rounded-lg border border-cyan-400/20 bg-black/30 p-3">
               <h2 className="am-stage-module-heading"><span>04</span>{t("Project")}</h2>
-              <AmStageMacroRunner profile={macroProfile} onProfileChange={setMacroProfile} requireGemmaResolution={requireGemmaResolution} onRequireGemmaResolutionChange={setRequireGemmaResolution} includeStage2={macroIncludeStage2} onIncludeStage2Change={setMacroIncludeStage2} customSteps={customMacroSteps} onCustomStepsChange={setCustomMacroSteps} completeness={completeness} isRunning={macroRunning} currentStep={macroCurrentStep} segmentCount={segments.length} topK={Math.max(clapTopK, siglipTopK, v3Session.topK)} onRun={() => void runMacro()} onCancel={cancelMacro} error={macroError} />
+              <AmStageMacroRunner profile={macroProfile} onProfileChange={setMacroProfile} requireGemmaResolution={requireGemmaResolution} onRequireGemmaResolutionChange={setRequireGemmaResolution} includeStage2={macroIncludeStage2} onIncludeStage2Change={setMacroIncludeStage2} customSteps={customMacroSteps} onCustomStepsChange={setCustomMacroSteps} completeness={completeness} isRunning={macroRunning} currentStep={macroCurrentStep} segmentCount={segments.length} topK={Math.max(clapTopK, siglipTopK, v3Session.topK)} onRun={() => void runMacro()} onCancel={cancelMacro} error={macroError} siglipStatus={morphoStatus} />
               <label className="flex items-center gap-1.5 text-[9px] text-muted-foreground">{t("Macro / export source")}
                 <select aria-label={t("Macro / export source")} value={macroSourceBank} onChange={(event) => setMacroSourceBank(event.target.value)} className="h-7 min-w-0 flex-1 rounded border border-white/15 bg-black/50 px-2 text-foreground">
                   <option value="audio.core">{t("Audio core · CLAP + SigLIP2")}</option>

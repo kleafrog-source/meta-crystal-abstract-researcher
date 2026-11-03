@@ -8,8 +8,8 @@ describe("LFM3 audio request helpers", () => {
     expect(buildLfm3Prompt("asr")).toBe("Perform ASR in English.");
   });
 
-  it("defaults to llama.cpp and accepts the verified Ollama fallback", () => {
-    expect(parseLfm3Runtime(undefined)).toBe("llama.cpp");
+  it("defaults to verified local Ollama and accepts llama.cpp as an alternate", () => {
+    expect(parseLfm3Runtime(undefined)).toBe("ollama");
     expect(parseLfm3Runtime("ollama")).toBe("ollama");
     expect(() => parseLfm3Runtime("remote")).toThrow("Unsupported LFM3 runtime");
   });

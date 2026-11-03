@@ -187,16 +187,35 @@ export async function getMorphoStatus() {
     status: stale.length ? "stale" : manifest ? "ready" : "not_built",
     stale_reasons: stale,
     manifest,
+    source_snapshot_sha256: snapshot.content_sha256,
     model_path: MODEL_PATH,
     index_job: getMorphoJob("index"),
     search_job: getMorphoJob("search"),
   };
 }
+
+export class MorphoIndexNotReadyError extends Error {
+  readonly status = 409;
+  readonly staleReasons: string[];
+  constructor(status: Awaited<ReturnType<typeof getMorphoStatus>>) {
+    const reasons = status.stale_reasons?.length ? status.stale_reasons : [status.status];
+    super(`SigLIP index is ${status.status}: ${reasons.join("; ")}. Rebuild it from Service Bay.`);
+    this.name = "MorphoIndexNotReadyError";
+    this.staleReasons = reasons;
+  }
+}
+
+async function requireReadyMorphoIndex() {
+  const status = await getMorphoStatus();
+  if (!status.ready) throw new MorphoIndexNotReadyError(status);
+}
+
 export async function runMorphoSearch(
   imagePath: string,
   topK: number,
   valueMode: "expressive" | "conservative" | "default",
 ): Promise<Record<string, unknown>> {
+  await requireReadyMorphoIndex();
   const slotOwner = "siglip-search";
   if (!acquireEmbeddingModelSlot(slotOwner)) throw new Error(`Model slot busy: ${getEmbeddingModelSlot()?.owner ?? "unknown"}`);
   if (shared.__morphoJobs!.search.running)
@@ -278,6 +297,7 @@ export async function runMorphoAudioSearch(
   detail: "low" | "medium" | "high",
   layout: "mel" | "composite" | "rgb_delta",
 ): Promise<Record<string, unknown>> {
+  await requireReadyMorphoIndex();
   const slotOwner = "siglip-search";
   if (!acquireEmbeddingModelSlot(slotOwner)) throw new Error(`Model slot busy: ${getEmbeddingModelSlot()?.owner ?? "unknown"}`);
   if (shared.__morphoJobs!.search.running)
