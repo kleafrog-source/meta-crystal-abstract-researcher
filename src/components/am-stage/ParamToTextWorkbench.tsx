@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Info } from "lucide-react";
 import { V3InfoTip, V3Tooltip } from "@/components/rag-v3/V3Tooltip";
-import { useUiText } from "@/lib/ui-i18n";
+import { useModelAliases, useUiText } from "@/lib/ui-i18n";
 import type { AudioSegmentResultPoint } from "@/lib/audio-segment-result";
-import { buildParamToTextSnapshot, reviewedParamText, type ParamTextRankingMode, type ParamToTextSnapshot } from "@/lib/param-to-text";
+import { buildParamToTextSnapshot, reviewedParamText, type ParamTextModality, type ParamTextRankingMode, type ParamToTextSnapshot } from "@/lib/param-to-text";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import type { ParamTextWorkbenchSessionState } from "@/lib/am-stage-session";
+import type { GemmaAudioParameter } from "@/components/am-stage/GemmaMultimodalParameterSearch";
 
 interface ParamToTextWorkbenchProps {
   audioName: string | null;
@@ -20,6 +21,8 @@ interface ParamToTextWorkbenchProps {
   topK: number;
   defaultClap: boolean;
   defaultSiglip: boolean;
+  gemmaAudioAwtd: GemmaAudioParameter[];
+  gemmaAudioResolved: ActiveParameter[];
   matchesLayer: (parameter: ActiveParameter) => boolean;
   initialState?: ParamTextWorkbenchSessionState | null;
   onStateChange?: (state: ParamTextWorkbenchSessionState) => void;
@@ -45,11 +48,22 @@ function triggerDownload(name: string, contents: string, type: string) {
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function ParamToTextWorkbench({ audioName, audioDuration, currentTime, segments, selectedLayers, brief, topK, defaultClap, defaultSiglip, matchesLayer, initialState, onStateChange, onSearchReverse }: ParamToTextWorkbenchProps) {
+export function ParamToTextWorkbench({ audioName, audioDuration, currentTime, segments, selectedLayers, brief, topK, defaultClap, defaultSiglip, gemmaAudioAwtd, gemmaAudioResolved, matchesLayer, initialState, onStateChange, onSearchReverse }: ParamToTextWorkbenchProps) {
   const t = useUiText();
+  const modelAliases = useModelAliases();
   const [limit, setLimit] = useState(initialState?.limit ?? 12);
   const [useClap, setUseClap] = useState(initialState?.useClap ?? defaultClap);
   const [useSiglip, setUseSiglip] = useState(initialState?.useSiglip ?? defaultSiglip);
+  const [useGemmaAudioAwtd, setUseGemmaAudioAwtd] = useState(initialState?.useGemmaAudioAwtd ?? gemmaAudioAwtd.length > 0);
+  const [useGemmaAudioResolved, setUseGemmaAudioResolved] = useState(initialState?.useGemmaAudioResolved ?? gemmaAudioResolved.length > 0);
+  const priorGemmaAwtdCount = useRef(gemmaAudioAwtd.length);
+  const priorGemmaResolvedCount = useRef(gemmaAudioResolved.length);
+  useEffect(() => {
+    if (!priorGemmaAwtdCount.current && gemmaAudioAwtd.length) setUseGemmaAudioAwtd(true);
+    if (!priorGemmaResolvedCount.current && gemmaAudioResolved.length) setUseGemmaAudioResolved(true);
+    priorGemmaAwtdCount.current = gemmaAudioAwtd.length;
+    priorGemmaResolvedCount.current = gemmaAudioResolved.length;
+  }, [gemmaAudioAwtd.length, gemmaAudioResolved.length]);
   const [excludedInput, setExcludedInput] = useState(initialState?.excludedInput ?? "");
   const [snapshot, setSnapshot] = useState<ParamToTextSnapshot | null>(initialState?.snapshot ?? null);
   const [reverseQuery, setReverseQuery] = useState<ParamTextWorkbenchSessionState["reverseQuery"]>(initialState?.reverseQuery ?? null);
@@ -58,7 +72,14 @@ export function ParamToTextWorkbench({ audioName, audioDuration, currentTime, se
   const [copyNotice, setCopyNotice] = useState("");
 
   const exclusions = useMemo(() => excludedInput.split(",").map((item) => item.trim()).filter(Boolean), [excludedInput]);
-  const modalities = useMemo(() => [ ...(useClap ? ["clap" as const] : []), ...(useSiglip ? ["siglip" as const] : []) ], [useClap, useSiglip]);
+  const modalities = useMemo<ParamTextModality[]>(() => [ ...(useClap ? ["clap" as const] : []), ...(useSiglip ? ["siglip" as const] : []), ...(useGemmaAudioAwtd ? ["gemma_audio_awtd" as const] : []), ...(useGemmaAudioResolved ? ["gemma_audio_resolved" as const] : []) ], [useClap, useSiglip, useGemmaAudioAwtd, useGemmaAudioResolved]);
+  const pointFor = (segment: AudioSegmentResultPoint) => {
+    const inWindow = (parameter: ActiveParameter) => {
+      const window = (parameter as ActiveParameter & { source_window?: { offset_seconds: number; duration_seconds: number } }).source_window;
+      return !window || (window.offset_seconds < segment.offset + segment.duration && window.offset_seconds + window.duration_seconds > segment.offset);
+    };
+    return { time: segment.time, offset: segment.offset, duration: segment.duration, clap: segment.clap, siglip: segment.siglip, gemmaAudioAwtd: gemmaAudioAwtd.filter(inWindow), gemmaAudioResolved: gemmaAudioResolved.filter(inWindow) };
+  };
   const buildOptions = { audioName: audioName ?? "audio", audioDurationSeconds: audioDuration, limit, modalities, excludedText: exclusions, domainLayers: selectedLayers, matchesLayer };
   const activeIndex = useMemo(() => {
     const inWindow = segments.findIndex((segment) => currentTime >= segment.offset && currentTime < segment.offset + segment.duration);
@@ -68,22 +89,22 @@ export function ParamToTextWorkbench({ audioName, audioDuration, currentTime, se
   const segmentSnapshot = useMemo(() => {
     const segment = segments[activeIndex];
     if (!segment) return null;
-    return buildParamToTextSnapshot([{ time: segment.time, offset: segment.offset, duration: segment.duration, clap: segment.clap, siglip: segment.siglip }], { ...buildOptions, analysisRangeStartSeconds: segment.offset, analysisRangeDurationSeconds: segment.duration, limit: Math.min(limit, 12) });
+    return buildParamToTextSnapshot([pointFor(segment)], { ...buildOptions, analysisRangeStartSeconds: segment.offset, analysisRangeDurationSeconds: segment.duration, limit: Math.min(limit, 12) });
   // Filters are primitive UI state; keeping the point list in the key avoids recomputing unrelated renders.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIndex, audioName, audioDuration, excludedInput, limit, modalities, segments, selectedLayers, matchesLayer]);
+  }, [activeIndex, audioName, audioDuration, excludedInput, limit, modalities, segments, selectedLayers, matchesLayer, gemmaAudioAwtd, gemmaAudioResolved]);
   const segmentTextFeatures = useMemo(() => segments.map((segment, index) => {
-    const point = { time: segment.time, offset: segment.offset, duration: segment.duration, clap: modalities.includes("clap") ? segment.clap : [], siglip: modalities.includes("siglip") ? segment.siglip : [] };
+    const point = pointFor(segment);
     const result = buildParamToTextSnapshot([point], { ...buildOptions, analysisRangeStartSeconds: segment.offset, analysisRangeDurationSeconds: segment.duration, limit: Math.min(limit, 12) });
     return { segment_index: index, time_seconds: segment.time, window_start_seconds: segment.offset, window_end_seconds: segment.offset + segment.duration, text: result.tags_only.slice(0, 6).join(", ") || result.parameters.flatMap((entry) => entry.keywords).slice(0, 6).join(", ") || "Нет текстовых признаков.", tags: result.tags_only, parameters: result.parameters, clap_status: segment.clapStatus, siglip_status: segment.siglipStatus };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }), [audioName, audioDuration, excludedInput, limit, modalities, segments, selectedLayers, matchesLayer]);
+  }), [audioName, audioDuration, excludedInput, limit, modalities, segments, selectedLayers, matchesLayer, gemmaAudioAwtd, gemmaAudioResolved]);
   const priorSegmentSnapshot = useMemo(() => {
     const segment = segments[activeIndex - 1];
     if (!segment) return null;
-    return buildParamToTextSnapshot([{ time: segment.time, offset: segment.offset, duration: segment.duration, clap: segment.clap, siglip: segment.siglip }], { ...buildOptions, analysisRangeStartSeconds: segment.offset, analysisRangeDurationSeconds: segment.duration, limit: Math.min(limit, 12) });
+    return buildParamToTextSnapshot([pointFor(segment)], { ...buildOptions, analysisRangeStartSeconds: segment.offset, analysisRangeDurationSeconds: segment.duration, limit: Math.min(limit, 12) });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIndex, audioName, audioDuration, excludedInput, limit, modalities, segments, selectedLayers, matchesLayer]);
+  }, [activeIndex, audioName, audioDuration, excludedInput, limit, modalities, segments, selectedLayers, matchesLayer, gemmaAudioAwtd, gemmaAudioResolved]);
   const segmentText = segmentSnapshot
     ? (segmentSnapshot.tags_only.slice(0, 6).join(", ") || segmentSnapshot.parameters.flatMap((item) => item.keywords).slice(0, 6).join(", ") || "Нет текстовых признаков в найденных параметрах.")
     : "Выберите аудио и дождитесь результатов сегментного анализа.";
@@ -94,12 +115,12 @@ export function ParamToTextWorkbench({ audioName, audioDuration, currentTime, se
   const reviewed = snapshot ? reviewedParamText(snapshot) : null;
 
   useEffect(() => {
-    onStateChange?.({ snapshot, reverseQuery, limit, useClap, useSiglip, excludedInput, segment_text_features: segmentTextFeatures });
-  }, [excludedInput, limit, onStateChange, reverseQuery, segmentTextFeatures, snapshot, useClap, useSiglip]);
+    onStateChange?.({ snapshot, reverseQuery, limit, useClap, useSiglip, useGemmaAudioAwtd, useGemmaAudioResolved, excludedInput, segment_text_features: segmentTextFeatures });
+  }, [excludedInput, limit, onStateChange, reverseQuery, segmentTextFeatures, snapshot, useClap, useSiglip, useGemmaAudioAwtd, useGemmaAudioResolved]);
 
   const buildTrackSnapshot = () => {
     if (!audioName || !segments.length || modalities.length === 0) return;
-    const created = buildParamToTextSnapshot(segments.map((segment) => ({ time: segment.time, offset: segment.offset, duration: segment.duration, clap: segment.clap, siglip: segment.siglip })), buildOptions);
+    const created = buildParamToTextSnapshot(segments.map(pointFor), buildOptions);
     setSnapshot(created);
     setError("");
     setCopyNotice("");
@@ -159,17 +180,17 @@ export function ParamToTextWorkbench({ audioName, audioDuration, currentTime, se
     catch { setCopyNotice("Браузер не предоставил доступ к буферу обмена."); }
   };
 
-  const downloadSnapshot = () => { if (reviewed) triggerDownload(`${(audioName ?? "audio").replace(/\.[^.]+$/, "")}-param-to-text.json`, JSON.stringify(reviewed, null, 2), "application/json"); };
+  const downloadSnapshot = () => { if (reviewed) triggerDownload(`${(audioName ?? "audio").replace(/\.[^.]+$/, "")}-param-to-text.json`, JSON.stringify({ ...reviewed, model_labels: { clap: modelAliases.modelSlots.clap.shortName, siglip: modelAliases.modelSlots.siglip2.shortName, gemma_audio_awtd: modelAliases.modelSlots.multimodalEmbedding.shortName, gemma_audio_resolved: modelAliases.modelSlots.multimodalEmbedding.shortName } }, null, 2), "application/json"); };
 
   const exportSegments = (format: "json" | "md") => {
     if (!audioName || !segments.length) return;
     const rows = segmentTextFeatures.map((row) => ({ ...row, duration_seconds: row.window_end_seconds - row.window_start_seconds }));
-    const payload = { schema: "param_to_text_segment_timeline_v1", audio: { name: audioName, duration_seconds: audioDuration }, generated_at: new Date().toISOString(), filters: { modalities, domain_layers: selectedLayers, excluded_text: exclusions }, segments: rows };
+    const payload = { schema: "param_to_text_segment_timeline_v1", audio: { name: audioName, duration_seconds: audioDuration }, generated_at: new Date().toISOString(), model_labels: { clap: modelAliases.modelSlots.clap.shortName, siglip: modelAliases.modelSlots.siglip2.shortName, gemma_audio_awtd: modelAliases.modelSlots.multimodalEmbedding.shortName, gemma_audio_resolved: modelAliases.modelSlots.multimodalEmbedding.shortName }, filters: { modalities, domain_layers: selectedLayers, excluded_text: exclusions }, segments: rows };
     if (format === "json") {
       triggerDownload(`${audioName.replace(/\.[^.]+$/, "")}-segment-text.json`, JSON.stringify(payload, null, 2), "application/json");
       return;
     }
-    const markdown = [`# Текстовые признаки по сегментам`, ``, `Аудио: ${audioName} · ${timecode(audioDuration)}`, ``, `| Время | CLAP | SigLIP2 | Текстовые признаки |`, `|---|---|---|---|`, ...rows.map((row) => `| ${timecode(row.window_start_seconds)}–${timecode(row.window_end_seconds)} | ${row.clap_status} | ${row.siglip_status} | ${markdownEscape(row.text)} |`), ``, `## Параметрические свидетельства`, ...rows.flatMap((row) => [``, `### ${timecode(row.window_start_seconds)}–${timecode(row.window_end_seconds)}`, ...row.parameters.slice(0, 8).map((entry) => `- **${entry.technical_name}** — ${entry.intensity ?? "значение не задано"}; доля ${Math.round(entry.prevalence * 100)}%; сходство ${entry.mean_similarity.toFixed(2)}.`)])].join("\n");
+    const markdown = [`# ${t("Text traits by segment")}`, ``, `${t("Audio")}: ${audioName} · ${timecode(audioDuration)}`, ``, `| ${t("Time")} | ${modelAliases.modelSlots.clap.shortName} | ${modelAliases.modelSlots.siglip2.shortName} | ${t("Text traits")} |`, `|---|---|---|---|`, ...rows.map((row) => `| ${timecode(row.window_start_seconds)}–${timecode(row.window_end_seconds)} | ${row.clap_status} | ${row.siglip_status} | ${markdownEscape(row.text)} |`), ``, `## ${t("Parameter evidence")}`, ...rows.flatMap((row) => [``, `### ${timecode(row.window_start_seconds)}–${timecode(row.window_end_seconds)}`, ...row.parameters.slice(0, 8).map((entry) => `- **${entry.technical_name}** — ${entry.intensity ?? t("value not set")}; ${t("prevalence")} ${Math.round(entry.prevalence * 100)}%; ${t("similarity")} ${entry.mean_similarity.toFixed(2)}.`)])].join("\n");
     triggerDownload(`${audioName.replace(/\.[^.]+$/, "")}-segment-text.md`, markdown, "text/markdown;charset=utf-8");
   };
 
@@ -180,6 +201,8 @@ export function ParamToTextWorkbench({ audioName, audioDuration, currentTime, se
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
         <label className="flex items-center gap-2 text-[10px]"><input type="checkbox" checked={useClap} onChange={(event) => setUseClap(event.target.checked)} />CLAP</label>
         <label className="flex items-center gap-2 text-[10px]"><input type="checkbox" checked={useSiglip} onChange={(event) => setUseSiglip(event.target.checked)} />SigLIP2</label>
+        <label className="flex items-center gap-2 text-[10px]"><input type="checkbox" checked={useGemmaAudioAwtd} onChange={(event) => setUseGemmaAudioAwtd(event.target.checked)} />{t("Gemma audio AWTD")}</label>
+        <label className="flex items-center gap-2 text-[10px]"><input type="checkbox" checked={useGemmaAudioResolved} onChange={(event) => setUseGemmaAudioResolved(event.target.checked)} />{t("Gemma audio resolved")}</label>
         <label className="flex items-center gap-2 text-[10px]">Параметров <input type="number" min={1} max={100} value={limit} onChange={(event) => setLimit(Math.max(1, Math.min(100, Number(event.target.value) || 1)))} className="w-16 rounded border border-white/15 bg-black/40 px-1.5 py-1" /></label>
         <label className="flex items-center gap-2 text-[10px]">Исключить фразы/теги <input value={excludedInput} onChange={(event) => setExcludedInput(event.target.value)} placeholder="через запятую" className="min-w-0 flex-1 rounded border border-white/15 bg-black/40 px-1.5 py-1" /></label>
       </div>
@@ -201,7 +224,7 @@ export function ParamToTextWorkbench({ audioName, audioDuration, currentTime, se
 
     <section className="space-y-2 rounded-md border border-cyan-400/20 bg-cyan-950/5 p-2" data-am-stage-zone="param-to-text-segments" aria-label="Text traits by audio segment">
       <div className="flex flex-wrap items-center justify-between gap-2"><div className="flex items-center gap-1"><h3 className="text-xs font-semibold text-cyan-200">Текстовые признаки по сегментам</h3><V3InfoTip content={t("Текст меняется вслед за текущей позицией воспроизведения и временным окном анализа.")} /></div><div className="flex gap-1"><Button size="sm" variant="outline" disabled={!segments.length || modalities.length === 0} onClick={() => exportSegments("json")}>Экспорт JSON</Button><Button size="sm" variant="outline" disabled={!segments.length || modalities.length === 0} onClick={() => exportSegments("md")}>Экспорт Markdown</Button></div></div>
-      {segments[activeIndex] && segmentSnapshot ? <><div className="flex flex-wrap gap-3 font-mono text-[10px] text-zinc-400"><span>Сегмент {activeIndex + 1}/{segments.length}</span><span>{timecode(segments[activeIndex].offset)}–{timecode(segments[activeIndex].offset + segments[activeIndex].duration)}</span><span>CLAP: {segments[activeIndex].clapStatus}</span><span>SigLIP2: {segments[activeIndex].siglipStatus}</span></div><p className="rounded bg-black/40 p-2 text-xs text-cyan-100" aria-live="polite">{segmentText}</p><div className="grid gap-2 text-[10px] md:grid-cols-2"><p className="text-emerald-300">Появились: {appearedTags.join(", ") || "—"}</p><p className="text-amber-300">Исчезли: {disappearedTags.join(", ") || "—"}</p></div><p className="text-[10px] text-muted-foreground">{segmentSnapshot.parameters.slice(0, 8).map((entry) => `${entry.technical_name}: ${entry.intensity ?? "—"} (${entry.mean_similarity.toFixed(2)})`).join(" · ") || "В этом сегменте нет результатов для выбранных источников и слоёв."}</p></> : <p className="text-xs text-muted-foreground">Загрузите аудио и выполните хотя бы один сегментный анализ.</p>}
+      {segments[activeIndex] && segmentSnapshot ? <><div className="flex flex-wrap gap-3 font-mono text-[10px] text-zinc-400"><span>Сегмент {activeIndex + 1}/{segments.length}</span><span>{timecode(segments[activeIndex].offset)}–{timecode(segments[activeIndex].offset + segments[activeIndex].duration)}</span><span>CLAP: {segments[activeIndex].clapStatus}</span><span>SigLIP2: {segments[activeIndex].siglipStatus}</span><span>Gemma AWTD: {gemmaAudioAwtd.length}</span><span>Gemma values: {gemmaAudioResolved.length}</span></div><p className="rounded bg-black/40 p-2 text-xs text-cyan-100" aria-live="polite">{segmentText}</p><div className="grid gap-2 text-[10px] md:grid-cols-2"><p className="text-emerald-300">Появились: {appearedTags.join(", ") || "—"}</p><p className="text-amber-300">Исчезли: {disappearedTags.join(", ") || "—"}</p></div><p className="text-[10px] text-muted-foreground">{segmentSnapshot.parameters.slice(0, 8).map((entry) => `${entry.technical_name}: ${entry.intensity ?? "—"} (${entry.mean_similarity.toFixed(2)})`).join(" · ") || "В этом сегменте нет результатов для выбранных источников и слоёв."}</p></> : <p className="text-xs text-muted-foreground">Загрузите аудио и выполните хотя бы один сегментный анализ.</p>}
     </section>
   </details>;
 }

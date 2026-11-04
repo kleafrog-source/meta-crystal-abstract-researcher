@@ -1,3 +1,5 @@
+import type { ActiveParameter } from "@/lib/rag-v3/types";
+
 export const AM_STAGE_MACRO_IDS = ["full_core", "text_gemma", "audio_core", "gemma_audio_then_resolve", "custom"] as const;
 export type AmStageMacroId = (typeof AM_STAGE_MACRO_IDS)[number];
 
@@ -66,13 +68,15 @@ export function calculateAmStageCompleteness(profile: AmStageMacroId, input: AmS
 }
 
 export async function runAmStageMacroQueue(
-  steps: Array<{ id: AmStageMacroStep; run: (signal: AbortSignal) => Promise<void> }>,
+  steps: Array<{ id: AmStageMacroStep; run: (signal: AbortSignal) => Promise<ActiveParameter[] | void> }>,
   signal: AbortSignal,
   onStep?: (step: AmStageMacroStep, index: number, total: number) => void,
+  onStepComplete?: (step: AmStageMacroStep, parameters: ActiveParameter[]) => void,
 ): Promise<void> {
   for (const [index, step] of steps.entries()) {
     if (signal.aborted) throw new DOMException("Macro cancelled", "AbortError");
     onStep?.(step.id, index + 1, steps.length);
-    await step.run(signal);
+    const parameters = await step.run(signal);
+    if (parameters?.length) onStepComplete?.(step.id, parameters);
   }
 }

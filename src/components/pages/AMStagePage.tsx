@@ -19,12 +19,14 @@ import {
 import { AudioWaveformEditor } from "@/components/audio/AudioWaveformEditor";
 import { SemanticSearch } from "@/components/rag-v3/SemanticSearch";
 import { V3InfoTip } from "@/components/rag-v3/V3Tooltip";
-import { useUiText } from "@/lib/ui-i18n";
+import { useModelAliases, useUiText } from "@/lib/ui-i18n";
+import { modelRoleGlyph } from "@/lib/capability-registry";
 import { useCapabilityEnabled } from "@/hooks/use-capability-registry";
 import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton";
 import { ParamToTextWorkbench } from "@/components/am-stage/ParamToTextWorkbench";
 import { GemmaMultimodalParameterSearch, type GemmaAudioParameter, type GemmaMultimodalParameterSearchHandle } from "@/components/am-stage/GemmaMultimodalParameterSearch";
 import { AmStageMacroRunner } from "@/components/am-stage/AmStageMacroRunner";
+import type { AmStageAutomationOutput } from "@/components/am-stage/AmStageMacroRunner";
 import { SegmentSideMetadataPanel } from "@/components/am-stage/SegmentSideMetadataPanel";
 import { saveVocalMatrixFormants } from "@/lib/acoustic-feature-bridge";
 import type { AmStageSessionData, AmStageSessionSummary, ParamTextWorkbenchSessionState } from "@/lib/am-stage-session";
@@ -111,7 +113,7 @@ interface MorphoStatus {
 interface GraphSeries {
   key: string;
   label: string;
-  source: Engine;
+  source: Engine | "gemmaAudioAwtd" | "gemmaValues";
   values: Array<{ time: number; value: number; min: number; max: number }>;
   movement: number;
 }
@@ -178,6 +180,7 @@ function statusClass(status: AnalysisStatus): string {
 
 export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const t = useUiText();
+  const modelAliases = useModelAliases();
   const gemmaResolvedEnabled = useCapabilityEnabled("text.gemma.resolved");
   const stageRootRef = useRef<HTMLDivElement>(null);
   const v3Parameters = useRagV3Store((state) => state.activeParameters);
@@ -213,6 +216,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [macroRunning, setMacroRunning] = useState(false);
   const [macroCurrentStep, setMacroCurrentStep] = useState("");
   const [macroError, setMacroError] = useState("");
+  const [macroOutputs, setMacroOutputs] = useState<AmStageAutomationOutput[]>([]);
   const macroAbortRef = useRef<AbortController | null>(null);
   const updateTextBank = useCallback((index: "qwen3" | "embeddinggemma2", name: string, value: number | string) => {
     setTextBanks((banks) => ({ ...banks, [index]: banks[index].map((parameter) => parameter.technical_name === name ? { ...parameter, current_value: value, suggested_value: value } : parameter) }));
@@ -242,7 +246,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const lastPlaybackUiUpdate = useRef(0);
   const handlePlaybackTime = useCallback((time: number) => {
     const now = performance.now();
-    if (now - lastPlaybackUiUpdate.current < 120) return;
+    if (now - lastPlaybackUiUpdate.current < 400) return;
     lastPlaybackUiUpdate.current = now;
     setCurrentTime(time);
   }, []);
@@ -645,6 +649,21 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     () => smoothTimelineSegments(segments, nodeInterval),
     [nodeInterval, segments],
   );
+  const gemmaTimelineSegments = useMemo(() => {
+    const result = nodeSegments.map((segment) => ({ ...segment, gemmaAudioAwtd: [] as ActiveParameter[], gemmaValues: [] as ActiveParameter[] }));
+    const place = (parameters: ActiveParameter[], key: "gemmaAudioAwtd" | "gemmaValues") => {
+      for (const parameter of parameters) {
+        const window = (parameter as ActiveParameter & { source_window?: { offset_seconds: number; duration_seconds: number } }).source_window;
+        const time = window ? window.offset_seconds + window.duration_seconds / 2 : 0;
+        let target = 0;
+        for (let index = 0; index < result.length; index += 1) if (result[index].time <= time) target = index;
+        result[target]?.[key].push(parameter);
+      }
+    };
+    place(gemmaAudioAwtd, "gemmaAudioAwtd");
+    place(gemmaAudioResolved, "gemmaValues");
+    return result;
+  }, [gemmaAudioAwtd, gemmaAudioResolved, nodeSegments]);
   const clapCompleted = segments.filter((segment) => segment.clapStatus === "complete").length;
   const siglipCompleted = segments.filter((segment) => segment.siglipStatus === "complete").length;
   const activeSegmentIndex = useMemo(() => {
@@ -653,6 +672,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     for (let current = 0; current < segments.length; current += 1) if (segments[current].time <= currentTime) index = current;
     return index;
   }, [currentTime, segments]);
+  const activeSideMetaWindow = useMemo(() => activeSegmentIndex >= 0
+    ? { offset: segments[activeSegmentIndex].offset, duration: segments[activeSegmentIndex].duration }
+    : { offset: regionOffset, duration: regionDuration }, [activeSegmentIndex, regionDuration, regionOffset, segments]);
   const canContinueClap = stoppedEngine === "clap" && clapCompleted > 0 && clapCompleted < segments.length;
   const canContinueSiglip = stoppedEngine === "siglip" && siglipCompleted > 0 && siglipCompleted < segments.length;
   const activeSiglipSegment = useMemo(() => {
@@ -755,8 +777,22 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setV3Query(text);
     stageRootRef.current?.querySelector<HTMLElement>('[data-am-stage-zone="reverse-query"]')?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [setV3Query]);
+  const handleSegmentSideMetaResult = useCallback((patch: Partial<import("@/lib/segment-side-meta").SegmentSideMeta>) => {
+    if (activeSegmentIndex < 0) return;
+    if (patch.acoustic_features) {
+      const features = patch.acoustic_features;
+      const formants = features.formants;
+      saveVocalMatrixFormants(formants ? {
+        schema: "am_stage_formants_v1", f1_hz: formants.f1_hz, f2_hz: formants.f2_hz,
+        confidence: formants.confidence, segment_index: activeSegmentIndex,
+        offset_seconds: segments[activeSegmentIndex]?.offset ?? 0,
+        duration_seconds: features.duration_seconds, extracted_at: features.ran_at,
+      } : null);
+    }
+    setSegments((current) => applySegmentSideMeta(current, activeSegmentIndex, patch));
+  }, [activeSegmentIndex, segments]);
   const runServerStage2 = useCallback(async (signal?: AbortSignal) => {
-    if (!stage1SeedParameters.length || serverStage2Busy) return false;
+    if (!stage1SeedParameters.length || serverStage2Busy) return null;
     setServerStage2Busy(true);
     setServerStage2Error("");
     try {
@@ -778,10 +814,10 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       const payload = await response.json() as { stage2_hits?: ActiveParameter[]; stage2_meta?: ServerStage2Run["meta"]; error?: string };
       if (!response.ok || !Array.isArray(payload.stage2_hits) || !payload.stage2_meta) throw new Error(payload.error || `Stage-2 retrieval failed (HTTP ${response.status}).`);
       setServerStage2Run({ fingerprint: stage2Fingerprint, results: payload.stage2_hits, meta: payload.stage2_meta });
-      return true;
+      return payload.stage2_hits;
     } catch (cause) {
       if (!signal?.aborted) setServerStage2Error(cause instanceof Error ? cause.message : String(cause));
-      return false;
+      return null;
     } finally {
       setServerStage2Busy(false);
     }
@@ -845,10 +881,10 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     }
     const controller = new AbortController();
     macroAbortRef.current = controller;
-    setMacroRunning(true); setMacroError(""); setMacroCurrentStep("");
+    setMacroRunning(true); setMacroError(""); setMacroCurrentStep(""); setMacroOutputs([]);
     let textGemmaCurrent = textBanks.embeddinggemma2;
     let audioGemmaCurrent = gemmaAudioAwtd;
-    const actions: Record<AmStageMacroStep, (signal: AbortSignal) => Promise<void>> = {
+    const actions: Record<AmStageMacroStep, (signal: AbortSignal) => Promise<ActiveParameter[] | void>> = {
       "text.qwen.resolved": async (signal) => {
         const query = v3Query.trim();
         if (!query) throw new Error(t("Enter a Brief before running text retrieval."));
@@ -856,7 +892,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
         const found = await useRagV3Store.getState().proposeParameters(query, "primary", { selectedDomainLayers: selectedLayers, textIndex: "qwen3", signal });
         if (signal.aborted) throw new DOMException("Macro cancelled", "AbortError");
         if (!found?.length) throw new Error(useRagV3Store.getState().searchError || t("Qwen3 returned no parameters."));
-        setTextBanks((banks) => ({ ...banks, qwen3: found })); setMacroSourceBank("text.qwen.resolved");
+        setTextBanks((banks) => ({ ...banks, qwen3: found })); setMacroSourceBank("text.qwen.resolved"); return found;
       },
       "text.gemma.awtd": async (signal) => {
         const query = v3Query.trim();
@@ -865,33 +901,33 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
         const found = await useRagV3Store.getState().proposeParameters(query, "primary", { selectedDomainLayers: selectedLayers, textIndex: "embeddinggemma2", signal });
         if (signal.aborted) throw new DOMException("Macro cancelled", "AbortError");
         if (!found?.length) throw new Error(useRagV3Store.getState().searchError || t("EmbeddingGemma 2 returned no parameters."));
-        textGemmaCurrent = found; setTextBanks((banks) => ({ ...banks, embeddinggemma2: found })); setMacroSourceBank("text.gemma.awtd");
+        textGemmaCurrent = found; setTextBanks((banks) => ({ ...banks, embeddinggemma2: found })); setMacroSourceBank("text.gemma.awtd"); return found;
       },
       "text.gemma.resolved": async (signal) => {
         const resolved = await resolveGemmaBank("text", textGemmaCurrent, v3Query, signal);
         if (signal.aborted) throw new DOMException("Macro cancelled", "AbortError");
-        setGemmaTextResolved(resolved); setMacroSourceBank("text.gemma.resolved");
+        setGemmaTextResolved(resolved); setMacroSourceBank("text.gemma.resolved"); return resolved;
       },
-      "audio.clap.resolved": async () => { if (!(await analyze("clap", true, analysisNodes))) throw new Error(error || t("CLAP analysis did not complete.")); analysisNodes = segmentsRef.current; setMacroSourceBank("audio.clap.resolved"); },
-      "spec.siglip.resolved": async () => { if (!(await analyze("siglip", true, analysisNodes))) throw new Error(error || t("SigLIP2 analysis did not complete.")); analysisNodes = segmentsRef.current; setMacroSourceBank("spec.siglip.resolved"); },
+      "audio.clap.resolved": async () => { if (!(await analyze("clap", true, analysisNodes))) throw new Error(error || t("CLAP analysis did not complete.")); analysisNodes = segmentsRef.current; setMacroSourceBank("audio.clap.resolved"); return [...new Map(segmentsRef.current.flatMap((segment) => segment.clap).map((parameter) => [parameter.technical_name, parameter])).values()]; },
+      "spec.siglip.resolved": async () => { if (!(await analyze("siglip", true, analysisNodes))) throw new Error(error || t("SigLIP2 analysis did not complete.")); analysisNodes = segmentsRef.current; setMacroSourceBank("spec.siglip.resolved"); return [...new Map(segmentsRef.current.flatMap((segment) => segment.siglip).map((parameter) => [parameter.technical_name, parameter])).values()]; },
       "audio.gemma.awtd": async (signal) => {
         const audioInput = file;
         if (!audioInput) throw new Error(t("Choose an audio file for Gemma audio search."));
         const found = await gemmaSearchRef.current?.searchAudio(audioInput);
         if (signal.aborted) throw new DOMException("Macro cancelled", "AbortError");
         if (!found?.length) throw new Error(t("Gemma audio search returned no parameters."));
-        audioGemmaCurrent = found; setGemmaAudioAwtd(found); setMacroSourceBank("audio.gemma.awtd");
+        audioGemmaCurrent = found; setGemmaAudioAwtd(found); setMacroSourceBank("audio.gemma.awtd"); return found;
       },
       "audio.gemma.resolved": async (signal) => {
         const resolved = await resolveGemmaBank("audio", audioGemmaCurrent, v3Query, signal);
         if (signal.aborted) throw new DOMException("Macro cancelled", "AbortError");
-        setGemmaAudioResolved(resolved); setMacroSourceBank("audio.gemma.resolved");
+        setGemmaAudioResolved(resolved); setMacroSourceBank("audio.gemma.resolved"); return resolved;
       },
-      "stage2.client": async () => { setShowGlobalConsensus(true); },
-      "stage2.server": async (signal) => { if (!(await runServerStage2(signal))) throw new Error(serverStage2Error || t("Server Stage-2 did not complete.")); },
+      "stage2.client": async () => { setShowGlobalConsensus(true); return textStageParameters; },
+      "stage2.server": async (signal) => { const results = await runServerStage2(signal); if (!results) throw new Error(serverStage2Error || t("Server Stage-2 did not complete.")); return results; },
     };
     try {
-      await runAmStageMacroQueue(planIds.map((id) => ({ id, run: actions[id] })), controller.signal, (id, index, total) => setMacroCurrentStep(`${index}/${total} · ${id}`));
+      await runAmStageMacroQueue(planIds.map((id) => ({ id, run: actions[id] })), controller.signal, (id, index, total) => setMacroCurrentStep(`${index}/${total} · ${id}`), (step, parameters) => setMacroOutputs((outputs) => [...outputs, { step, parameters, generatedAt: new Date().toISOString() }]));
     } catch (cause) {
       if (!controller.signal.aborted) setMacroError(cause instanceof Error ? cause.message : String(cause));
     } finally {
@@ -1204,7 +1240,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                 </section>
                 <details data-am-stage-layer="L0" data-am-stage-zone="node-seek" className="am-stage-node-seek-column min-w-0 rounded-lg border border-white/10 bg-black/30 p-2" aria-label="Parameter timeline node seek">
                   <summary className="flex cursor-pointer list-none items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-zinc-400 [&::-webkit-details-marker]:hidden"><AMIcon name="audioToParameter" size="sm" bright />Node seek · Parameter Timeline · {formatTime(currentTime)}<ChevronDown className="am-stage-disclosure-chevron ml-auto size-3.5" /></summary>
-                  <div className="mt-1 flex w-full min-w-0 flex-nowrap gap-1 overflow-x-auto pb-1">{segments.map((segment, index) => <button key={`${segment.time}-${index}`} type="button" onClick={() => seekToSegment(segment)} aria-current={Math.abs(currentTime - segment.time) < 0.05 ? "time" : undefined} className={`min-w-28 shrink-0 rounded border px-2 py-1.5 text-left text-[10px] ${Math.abs(currentTime - segment.time) < 0.05 ? "border-white bg-white/10 text-white" : "border-white/10 bg-black/40 text-zinc-400"}`}><div className="font-mono">{formatTime(segment.time)}</div><div className="mt-1 flex gap-1"><span className={`rounded border px-1 ${statusClass(segment.clapStatus)}`}>C {segment.clap.length}</span><span className={`rounded border px-1 ${statusClass(segment.siglipStatus)}`}>S {segment.siglip.length}</span></div></button>)}</div>
+                  <div className="mt-1 flex w-full min-w-0 flex-nowrap gap-1 overflow-x-auto pb-1">{segments.map((segment, index) => { const atWindow = (parameter: ActiveParameter) => { const window = (parameter as ActiveParameter & { source_window?: { offset_seconds: number; duration_seconds: number } }).source_window; return window ? window.offset_seconds < segment.offset + segment.duration && window.offset_seconds + window.duration_seconds > segment.offset : index === 0; }; const awtdCount = gemmaAudioAwtd.filter(atWindow).length; const valueCount = gemmaAudioResolved.filter(atWindow).length; return <button key={`${segment.time}-${index}`} type="button" onClick={() => seekToSegment(segment)} aria-current={Math.abs(currentTime - segment.time) < 0.05 ? "time" : undefined} className={`min-w-28 shrink-0 rounded border px-2 py-1.5 text-left text-[10px] ${Math.abs(currentTime - segment.time) < 0.05 ? "border-white bg-white/10 text-white" : "border-white/10 bg-black/40 text-zinc-400"}`}><div className="font-mono">{formatTime(segment.time)}</div><div className="mt-1 flex gap-1"><span className={`rounded border px-1 ${statusClass(segment.clapStatus)}`}>{modelRoleGlyph(modelAliases, "clap")} {segment.clap.length}</span><span className={`rounded border px-1 ${statusClass(segment.siglipStatus)}`}>{modelRoleGlyph(modelAliases, "siglip2")} {segment.siglip.length}</span>{awtdCount ? <span className="rounded border border-fuchsia-400/30 px-1 text-fuchsia-200">{modelRoleGlyph(modelAliases, "multimodalEmbedding", "A")} {awtdCount}</span> : null}{valueCount ? <span className="rounded border border-cyan-400/30 px-1 text-cyan-200">{modelRoleGlyph(modelAliases, "multimodalEmbedding", "V")} {valueCount}</span> : null}</div></button>; })}</div>
                 </details>
               </div>
             </ScrollArea>
@@ -1538,7 +1574,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             </section>
             <aside id="am-stage-project" data-am-stage-layer="L3" data-am-stage-zone="macro-exports" className="am-stage-project-column flex min-w-0 flex-col gap-2 rounded-lg border border-cyan-400/20 bg-black/30 p-3">
               <h2 className="am-stage-module-heading"><span>04</span>{t("Project")}</h2>
-              <AmStageMacroRunner profile={macroProfile} onProfileChange={setMacroProfile} requireGemmaResolution={requireGemmaResolution} onRequireGemmaResolutionChange={setRequireGemmaResolution} includeStage2={macroIncludeStage2} onIncludeStage2Change={setMacroIncludeStage2} customSteps={customMacroSteps} onCustomStepsChange={setCustomMacroSteps} completeness={completeness} isRunning={macroRunning} currentStep={macroCurrentStep} segmentCount={segments.length} topK={Math.max(clapTopK, siglipTopK, v3Session.topK)} onRun={() => void runMacro()} onCancel={cancelMacro} error={macroError} siglipStatus={morphoStatus} />
+              <AmStageMacroRunner profile={macroProfile} onProfileChange={setMacroProfile} requireGemmaResolution={requireGemmaResolution} onRequireGemmaResolutionChange={setRequireGemmaResolution} includeStage2={macroIncludeStage2} onIncludeStage2Change={setMacroIncludeStage2} customSteps={customMacroSteps} onCustomStepsChange={setCustomMacroSteps} completeness={completeness} isRunning={macroRunning} currentStep={macroCurrentStep} segmentCount={segments.length} topK={Math.max(clapTopK, siglipTopK, v3Session.topK)} onRun={() => void runMacro()} onCancel={cancelMacro} error={macroError} siglipStatus={morphoStatus} outputs={macroOutputs} onClearOutputs={() => setMacroOutputs([])} />
               <label className="flex items-center gap-1.5 text-[9px] text-muted-foreground">{t("Macro / export source")}
                 <select aria-label={t("Macro / export source")} value={macroSourceBank} onChange={(event) => setMacroSourceBank(event.target.value)} className="h-7 min-w-0 flex-1 rounded border border-white/15 bg-black/50 px-2 text-foreground">
                   <option value="audio.core">{t("Audio core · CLAP + SigLIP2")}</option>
@@ -1559,7 +1595,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                 <JournalDraftButton modality="audio" engine="clap" actionLabel="Сохранить CLAP в Journal" parameters={clapFrame} model={{ id: "laion/clap-htsat-fused" }} settings={{ interval_seconds: segmentInterval, timeline_points: segments.length }} asset={file} label={`Segmented CLAP · ${file?.name ?? "track"}`} />
                 <JournalDraftButton modality="audio" engine="siglip2" actionLabel="Сохранить SigLIP2 в Journal" parameters={siglipFrame} model={{ id: "google/siglip2-base-patch16-224" }} settings={{ interval_seconds: segmentInterval, timeline_points: segments.length, spectrogram_detail: spectrogramDetail }} asset={file} label={`Segmented SigLIP2 · ${file?.name ?? "track"}`} />
               </div>
-              <ParamToTextWorkbench key={workbenchSessionKey} audioName={file?.name ?? audioReferenceName} audioDuration={audioDuration} currentTime={currentTime} segments={segments} selectedLayers={selectedLayers} brief={v3Query} topK={v3Session.topK} defaultClap={showClap} defaultSiglip={showSiglip} matchesLayer={matchesSelectedLayer} initialState={paramTextSessionState} onStateChange={onParamTextStateChange} onSearchReverse={searchReverseBrief} />
+              <ParamToTextWorkbench key={workbenchSessionKey} audioName={file?.name ?? audioReferenceName} audioDuration={audioDuration} currentTime={currentTime} segments={segments} selectedLayers={selectedLayers} brief={v3Query} topK={v3Session.topK} defaultClap={showClap} defaultSiglip={showSiglip} gemmaAudioAwtd={gemmaAudioAwtd} gemmaAudioResolved={gemmaAudioResolved} matchesLayer={matchesSelectedLayer} initialState={paramTextSessionState} onStateChange={onParamTextStateChange} onSearchReverse={searchReverseBrief} />
             </aside>
           </section>
 
@@ -1568,28 +1604,11 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             file={file}
             segment={activeSegmentIndex >= 0 ? segments[activeSegmentIndex] : null}
             segmentIndex={Math.max(0, activeSegmentIndex)}
-            window={activeSegmentIndex >= 0 ? { offset: segments[activeSegmentIndex].offset, duration: segments[activeSegmentIndex].duration } : { offset: regionOffset, duration: regionDuration }}
+            window={activeSideMetaWindow}
             journalParameters={lfmJournalParameters}
             onCopyToBrief={setV3Query}
             onSeedReverseQuery={seedLfm3ReverseQuery}
-            onResult={(patch) => {
-              if (activeSegmentIndex < 0) return;
-              if (patch.acoustic_features) {
-                const features = patch.acoustic_features;
-                const formants = features.formants;
-                saveVocalMatrixFormants(formants ? {
-                  schema: "am_stage_formants_v1",
-                  f1_hz: formants.f1_hz,
-                  f2_hz: formants.f2_hz,
-                  confidence: formants.confidence,
-                  segment_index: activeSegmentIndex,
-                  offset_seconds: segments[activeSegmentIndex]?.offset ?? 0,
-                  duration_seconds: features.duration_seconds,
-                  extracted_at: features.ran_at,
-                } : null);
-              }
-              setSegments((current) => applySegmentSideMeta(current, activeSegmentIndex, patch));
-            }}
+            onResult={handleSegmentSideMetaResult}
           />
           </div>
 
@@ -1638,7 +1657,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
               <span>Parameter Timeline · {formatTime(currentTime)}<V3InfoTip content={t("Нажмите точку для перемотки")} /></span><ChevronDown className="am-stage-disclosure-chevron size-3.5" />
             </summary>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-1"><h3 className="font-mono text-[10px] uppercase tracking-wider text-zinc-400">Parameter timeline</h3><V3InfoTip content={t("До {limit} наиболее изменяющихся серий на слой; C = CLAP, S = SigLIP2, T = TEXT brief. GLOBAL_CONSENSUS исключён. Пустая шкала появится после анализа.").replace("{limit}", String(LAYER_TIMELINE_SERIES_LIMIT))} /></div>
+              <div className="flex items-center gap-1"><h3 className="font-mono text-[10px] uppercase tracking-wider text-zinc-400">Parameter timeline</h3><V3InfoTip content={t("Up to {limit} highest-movement series per layer; {clap} = CLAP, {siglip} = SigLIP2, {awtd} = Gemma audio AWTD, {values} = Gemma values, T = text brief. GLOBAL_CONSENSUS is excluded.").replace("{limit}", String(LAYER_TIMELINE_SERIES_LIMIT)).replace("{clap}", modelRoleGlyph(modelAliases, "clap")).replace("{siglip}", modelRoleGlyph(modelAliases, "siglip2")).replace("{awtd}", modelRoleGlyph(modelAliases, "multimodalEmbedding", "A")).replace("{values}", modelRoleGlyph(modelAliases, "multimodalEmbedding", "V"))} /></div>
               <div className="flex gap-1 text-xs" role="group" aria-label="Timeline view">
                 {([ ["modality", "By modality"], ["layer", "By layer"] ] as const).map(([view, label]) => (
                   <button key={view} data-am-stage-action={`timeline-view-${view}`} type="button" onClick={() => setTimelineView(view)} aria-pressed={timelineView === view} className={`rounded border px-2 py-1 ${timelineView === view ? "border-violet-400 bg-violet-950/40 text-violet-200" : "border-white/15 text-zinc-400 hover:text-white"}`}>{label}</button>
@@ -1646,7 +1665,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
               </div>
             </div>
             <ParameterTimelineGraph
-              segments={nodeSegments}
+              segments={gemmaTimelineSegments}
               textParameters={v3Parameters}
               selectedLayers={selectedLayers}
               currentTime={currentTime}
@@ -1681,7 +1700,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
           </section>
           <details data-am-stage-disclosure="gemma-resolved-banks" className="min-w-0 rounded-lg border border-violet-400/20 bg-black/25 p-2">
             <summary className="flex cursor-pointer list-none items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-violet-200 [&::-webkit-details-marker]:hidden">Gemma value-pass banks · text {gemmaTextResolved.length} · audio AWTD {gemmaAudioAwtd.length} / resolved {gemmaAudioResolved.length}<ChevronDown className="am-stage-disclosure-chevron ml-auto size-3.5" /></summary>
-            <div className="mt-2 grid min-w-0 gap-2 xl:grid-cols-2">
+            <div className="mt-2 grid min-w-0 gap-2">
               <div className="min-w-0 space-y-1"><Button size="sm" variant="outline" className="h-7 w-full" disabled={gemmaResolvedEnabled !== true || !textBanks.embeddinggemma2.length || macroRunning} title={gemmaResolvedEnabled === false ? t("Disabled in Settings") : undefined} onClick={() => void promoteGemmaText()}>{t("Resolve Gemma text values")}</Button><ParameterBank dataScope="am-stage" title={`text.gemma.resolved · ${gemmaTextResolved.length}`} icon="search" bankId="gemma-text-resolved" accent="cyan" parameters={gemmaTextResolved} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={(name, value) => setGemmaTextResolved((parameters) => parameters.map((item) => item.technical_name === name ? { ...item, current_value: value, suggested_value: value } : item))} onRemove={(name) => setGemmaTextResolved((parameters) => parameters.filter((item) => item.technical_name !== name))} /></div>
               <div className="min-w-0 space-y-1"><Button size="sm" variant="outline" className="h-7 w-full" disabled={gemmaResolvedEnabled !== true || !gemmaAudioAwtd.length || macroRunning} title={gemmaResolvedEnabled === false ? t("Disabled in Settings") : undefined} onClick={() => void promoteGemmaAudio()}>{t("Resolve Gemma audio values")}</Button><ParameterBank dataScope="am-stage" title={`audio.gemma.awtd · ${gemmaAudioAwtd.length}`} icon="search" bankId="gemma-audio-awtd" accent="fuchsia" parameters={gemmaAudioAwtd} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={(name, value) => setGemmaAudioAwtd((parameters) => parameters.map((item) => item.technical_name === name ? { ...item, current_value: value, suggested_value: value } : item))} onRemove={(name) => setGemmaAudioAwtd((parameters) => parameters.filter((item) => item.technical_name !== name))} />
                 <ParameterBank dataScope="am-stage" title={`audio.gemma.resolved · ${gemmaAudioResolved.length}`} icon="search" bankId="gemma-audio-resolved" accent="cyan" parameters={gemmaAudioResolved} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={(name, value) => setGemmaAudioResolved((parameters) => parameters.map((item) => item.technical_name === name ? { ...item, current_value: value, suggested_value: value } : item))} onRemove={(name) => setGemmaAudioResolved((parameters) => parameters.filter((item) => item.technical_name !== name))} />
@@ -1786,7 +1805,7 @@ function ParameterTimelineGraph({
   showSiglip,
   view,
 }: {
-  segments: Array<{ time: number; clap: ActiveParameter[]; siglip: ActiveParameter[] }>;
+  segments: Array<{ time: number; clap: ActiveParameter[]; siglip: ActiveParameter[]; gemmaAudioAwtd?: ActiveParameter[]; gemmaValues?: ActiveParameter[] }>;
   textParameters: ActiveParameter[];
   selectedLayers: string[];
   currentTime: number;
@@ -1796,23 +1815,31 @@ function ParameterTimelineGraph({
   view: "modality" | "layer";
 }) {
   const t = useUiText();
+  const aliases = useModelAliases();
+  const sourceMarks = {
+    clap: modelRoleGlyph(aliases, "clap"),
+    siglip: modelRoleGlyph(aliases, "siglip2"),
+    gemmaAudioAwtd: modelRoleGlyph(aliases, "multimodalEmbedding", "A"),
+    gemmaValues: modelRoleGlyph(aliases, "multimodalEmbedding", "V"),
+  };
   const lanes = useMemo(() => buildLayerTimelineLanes(segments, textParameters, duration, showClap, showSiglip).filter((lane) => lane.id === UNCLASSIFIED_TIMELINE_LAYER.id || selectedLayers.includes(lane.id)), [duration, segments, selectedLayers, showClap, showSiglip, textParameters]);
   const series = useMemo(() => {
     const candidates: GraphSeries[] = [];
-    for (const source of ["clap", "siglip"] as const) {
+    for (const source of ["clap", "siglip", "gemmaAudioAwtd", "gemmaValues"] as const) {
       if (
         (source === "clap" && !showClap) ||
-        (source === "siglip" && !showSiglip)
+        (source === "siglip" && !showSiglip) ||
+        ((source === "gemmaAudioAwtd" || source === "gemmaValues") && !segments.some((segment) => segment[source]?.length))
       )
         continue;
       const names = new Set<string>();
       for (const segment of segments)
-        for (const parameter of segment[source])
+        for (const parameter of segment[source] ?? [])
           if (typeof parameter.current_value === "number")
             names.add(parameter.technical_name);
       for (const name of names) {
         const values = segments.flatMap((segment) => {
-          const parameter = segment[source].find(
+          const parameter = segment[source]?.find(
             (item) => item.technical_name === name,
           );
           if (!parameter || typeof parameter.current_value !== "number")
@@ -1870,7 +1897,7 @@ function ParameterTimelineGraph({
             })}
             <line x1={(currentTime / duration) * 1000} x2={(currentTime / duration) * 1000} y1="0" y2="72" stroke="white" strokeWidth="1.5" />
           </svg>
-          <div className="flex max-h-8 flex-wrap gap-x-2 overflow-auto text-[8px] text-zinc-500">{lane.series.map((item) => <span key={item.key}><b className="text-zinc-300">{item.source === "clap" ? "C" : item.source === "siglip" ? "S" : "T"}</b> · {item.label}</span>)}</div>
+          <div className="flex max-h-8 flex-wrap gap-x-2 overflow-auto text-[8px] text-zinc-500">{lane.series.map((item) => <span key={item.key}><b className="text-zinc-300">{sourceMarks[item.source] ?? "T"}</b> · {item.label}</span>)}</div>
         </section>
       ))}
     </div>
@@ -1935,7 +1962,7 @@ function ParameterTimelineGraph({
               className="inline-block size-2 rounded-full"
               style={{ backgroundColor: COLORS[index % COLORS.length] }}
             />
-            {item.source === "clap" ? "C" : "S"} · {item.label}
+            {sourceMarks[item.source as keyof typeof sourceMarks] ?? "T"} · {item.label}
           </span>
         ))}
       </div>

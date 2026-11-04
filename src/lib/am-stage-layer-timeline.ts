@@ -8,7 +8,7 @@ export const UNCLASSIFIED_TIMELINE_LAYER = {
   color: "#94a3b8",
 } as const;
 
-export type LayerTimelineSource = "clap" | "siglip" | "text";
+export type LayerTimelineSource = "clap" | "siglip" | "text" | "gemmaAudioAwtd" | "gemmaValues";
 export interface LayerTimelineSeries {
   key: string;
   label: string;
@@ -44,11 +44,13 @@ function movementOf(values: LayerTimelineSeries["values"]): number {
 
 /** Projects already-computed CLAP/SigLIP frames and the active TEXT brief into acoustic layers. */
 export function buildLayerTimelineLanes(
-  segments: Array<{ time: number; clap: ActiveParameter[]; siglip: ActiveParameter[] }>,
+  segments: Array<{ time: number; clap: ActiveParameter[]; siglip: ActiveParameter[]; gemmaAudioAwtd?: ActiveParameter[]; gemmaValues?: ActiveParameter[] }>,
   textParameters: ActiveParameter[],
   duration: number,
   showClap: boolean,
   showSiglip: boolean,
+  gemmaAudioAwtd: ActiveParameter[] = [],
+  gemmaValues: ActiveParameter[] = [],
 ): LayerTimelineLane[] {
   const buckets = new Map<string, { layerId: string; source: LayerTimelineSource; name: string; values: LayerTimelineSeries["values"] }>();
   const add = (parameter: ActiveParameter, source: LayerTimelineSource, time: number) => {
@@ -69,6 +71,19 @@ export function buildLayerTimelineLanes(
   if (showClap || showSiglip) for (const segment of segments) {
     if (showClap) for (const parameter of segment.clap) add(parameter, "clap", segment.time);
     if (showSiglip) for (const parameter of segment.siglip) add(parameter, "siglip", segment.time);
+  }
+  for (const segment of segments) {
+    for (const parameter of segment.gemmaAudioAwtd ?? []) add(parameter, "gemmaAudioAwtd", segment.time);
+    for (const parameter of segment.gemmaValues ?? []) add(parameter, "gemmaValues", segment.time);
+  }
+  for (const parameter of gemmaAudioAwtd) {
+    const window = (parameter as ActiveParameter & { source_window?: { offset_seconds: number; duration_seconds: number } }).source_window;
+    const time = window ? window.offset_seconds + window.duration_seconds / 2 : 0;
+    add(parameter, "gemmaAudioAwtd", time);
+  }
+  for (const parameter of gemmaValues) {
+    const window = (parameter as ActiveParameter & { source_window?: { offset_seconds: number; duration_seconds: number } }).source_window;
+    add(parameter, "gemmaValues", window ? window.offset_seconds + window.duration_seconds / 2 : 0);
   }
   if (duration > 0) for (const parameter of textParameters) {
     add(parameter, "text", 0);

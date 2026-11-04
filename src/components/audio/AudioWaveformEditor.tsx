@@ -258,10 +258,6 @@ function WaveformController({
     return wavesurfer.on("timeupdate", (time) => { setCurrentTime(time); onTime(time); });
   }, [onTime, wavesurfer]);
   useEffect(() => {
-    if (!wavesurfer) return;
-    return wavesurfer.on("timeupdate", setCurrentTime);
-  }, [wavesurfer]);
-  useEffect(() => {
     if (
       !wavesurfer ||
       seekRequest === undefined ||

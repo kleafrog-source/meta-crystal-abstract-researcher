@@ -44,7 +44,7 @@ import { apiPost, apiPut, useFetch } from "@/hooks/use-fetch";
 import { AppearanceEditor } from "@/components/settings/AppearanceEditor";
 import { ParameterTitlePreference } from "@/components/settings/ParameterTitlePreference";
 import { InterfaceLanguagePreference } from "@/components/settings/InterfaceLanguagePreference";
-import { DEFAULT_CAPABILITY_REGISTRY, MODEL_SLOT_IDS, type CapabilityRegistry, type ModelSlotId } from "@/lib/capability-registry";
+import { DEFAULT_CAPABILITY_REGISTRY, MODEL_SLOT_IDS, normalizeCapabilityRegistry, type CapabilityRegistry, type ModelSlotId } from "@/lib/capability-registry";
 import { useUiText } from "@/lib/ui-i18n";
 
 interface SettingsData {
@@ -117,7 +117,7 @@ const CAPABILITY_HELP: Record<string, string> = {
   "audio.gemma.awtd": "Gemma audio retrieval for parameter roles.",
   "audio.gemma.resolved": "Gemma audio retrieval with a separate value pass.",
   "spec.siglip.resolved": "SigLIP spectrogram retrieval.",
-  "spec.gemma.*": "Reserved Gemma spectrogram bank; currently not implemented.",
+  "spec.gemma.*": "Search the current spectrogram frame with Gemma against the existing text parameter index. Explicit action only; no idle model load.",
   "side-meta.helm": "Optional audio gates; unavailable by default.",
   "side-meta.voice": "Voice presentation classification.",
   "side-meta.indic": "Indic language identification.",
@@ -226,7 +226,11 @@ export function Settings() {
   const save = async () => {
     if (!llm) return;
     try {
-      await apiPut("/api/settings", llm);
+      const normalizedRegistry = normalizeCapabilityRegistry(llm.capabilityRegistry);
+      const updated = { ...llm, capabilityRegistry: normalizedRegistry };
+      await apiPut("/api/settings", updated);
+      window.dispatchEvent(new CustomEvent("am-model-aliases:changed", { detail: { registry: normalizedRegistry } }));
+      setLlm(updated);
       toast({ title: "Настройки сохранены" });
       refresh();
     } catch (error) {
@@ -366,11 +370,12 @@ export function Settings() {
             <div className="grid gap-2 md:grid-cols-2">
               {MODEL_SLOT_IDS.map((id) => {
                 const slot = capabilityRegistry.modelSlots[id];
-                return <div key={id} className="grid grid-cols-[minmax(0,1fr)_8rem_8rem_auto] items-center gap-2 rounded border border-border p-2">
-                  <Input aria-label={`${id} model`} title="Model ID or local model path" value={slot.modelId} onChange={(event) => updateCapabilityRegistry({ ...capabilityRegistry, modelSlots: { ...capabilityRegistry.modelSlots, [id]: { ...slot, modelId: event.target.value } } })} />
+                return <div key={id} className="grid min-w-0 grid-cols-1 items-center gap-2 rounded border border-border p-2 sm:grid-cols-[minmax(0,1fr)_7rem_4.5rem_8rem_auto]">
+                  <Input aria-label={`${id} model`} title={t("Model ID or local model path")} placeholder={t("Model ID")} value={slot.modelId} onChange={(event) => updateCapabilityRegistry({ ...capabilityRegistry, modelSlots: { ...capabilityRegistry.modelSlots, [id]: { ...slot, modelId: event.target.value } } })} />
+                  <Input aria-label={`${id} short name`} title={t("Visible lowercase model alias")} placeholder={t("Short name")} maxLength={32} pattern="[a-z0-9_-]+" value={slot.shortName} onChange={(event) => updateCapabilityRegistry({ ...capabilityRegistry, modelSlots: { ...capabilityRegistry.modelSlots, [id]: { ...slot, shortName: event.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, "") } } })} />
+                  <Input aria-label={`${id} glyph`} title={t("1–3 character UI mark; blank auto-generates on Save")} placeholder={t("Glyph")} maxLength={3} value={slot.glyph} onChange={(event) => updateCapabilityRegistry({ ...capabilityRegistry, modelSlots: { ...capabilityRegistry.modelSlots, [id]: { ...slot, glyph: event.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 3) } } })} />
                   <select aria-label={`${id} provider`} title="Provider" className="h-9 rounded border border-input bg-background px-2 text-sm" value={slot.provider} onChange={(event) => updateCapabilityRegistry({ ...capabilityRegistry, modelSlots: { ...capabilityRegistry.modelSlots, [id]: { ...slot, provider: event.target.value as typeof slot.provider } } })}><option value="ollama">Ollama</option><option value="local">Local</option><option value="none">None</option></select>
-                  <span className="truncate text-xs text-muted-foreground" title={t(MODEL_SLOT_HELP[id])}>{id}</span>
-                  <input aria-label={`Enable ${id}`} title={`Enable ${id}`} type="checkbox" checked={slot.enabled} onChange={(event) => updateCapabilityRegistry({ ...capabilityRegistry, modelSlots: { ...capabilityRegistry.modelSlots, [id]: { ...slot, enabled: event.target.checked } } })} />
+                  <div className="flex items-center gap-2"><span className="truncate text-xs text-muted-foreground" title={t(MODEL_SLOT_HELP[id])}>{id}</span><input aria-label={`Enable ${id}`} title={`Enable ${id}`} type="checkbox" checked={slot.enabled} onChange={(event) => updateCapabilityRegistry({ ...capabilityRegistry, modelSlots: { ...capabilityRegistry.modelSlots, [id]: { ...slot, enabled: event.target.checked } } })} /></div>
                 </div>;
               })}
             </div>

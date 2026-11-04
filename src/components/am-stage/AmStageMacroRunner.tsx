@@ -5,6 +5,13 @@ import { AM_STAGE_MACRO_IDS, AM_STAGE_MACRO_STEPS, type AmStageCompleteness, typ
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ListChecks, Play, Square } from "lucide-react";
 import { useCapabilityEnabled } from "@/hooks/use-capability-registry";
+import type { ActiveParameter } from "@/lib/rag-v3/types";
+
+export interface AmStageAutomationOutput {
+  step: AmStageMacroStep;
+  generatedAt: string;
+  parameters: ActiveParameter[];
+}
 
 const PROFILE_LABELS: Record<AmStageMacroId, string> = {
   full_core: "Full core",
@@ -30,6 +37,7 @@ export function AmStageMacroRunner({
   includeStage2, onIncludeStage2Change,
   customSteps, onCustomStepsChange, completeness, isRunning, currentStep,
   segmentCount, topK, onRun, onCancel, error, siglipStatus,
+  outputs, onClearOutputs,
 }: {
   profile: AmStageMacroId;
   onProfileChange: (profile: AmStageMacroId) => void;
@@ -48,6 +56,8 @@ export function AmStageMacroRunner({
   onCancel: () => void;
   error: string;
   siglipStatus: { status?: string; ready?: boolean; stale_reasons?: string[] } | null;
+  outputs: AmStageAutomationOutput[];
+  onClearOutputs: () => void;
 }) {
   const t = useUiText();
   const qwenEnabled = useCapabilityEnabled("text.qwen.resolved");
@@ -76,6 +86,14 @@ export function AmStageMacroRunner({
     [next[index], next[target]] = [next[target], next[index]];
     onCustomStepsChange(next);
   };
+  const exportOutput = (output: AmStageAutomationOutput, format: "txt" | "json") => {
+    const body = format === "txt"
+      ? [`# ${t(STEP_LABELS[output.step])} · ${output.generatedAt}`, ...output.parameters.map((parameter) => `${parameter.technical_name}: ${String(parameter.current_value ?? parameter.suggested_value ?? "")}`)].join("\n")
+      : JSON.stringify({ schema: "am_stage_automation_step_v1", step_id: output.step, step_label: t(STEP_LABELS[output.step]), generated_at: output.generatedAt, parameters: output.parameters }, null, 2);
+    const url = URL.createObjectURL(new Blob([body], { type: format === "json" ? "application/json" : "text/plain;charset=utf-8" }));
+    const anchor = document.createElement("a"); anchor.href = url; anchor.download = `am-stage-${output.step}-${format}.${format}`; anchor.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
 
   return <details data-am-stage-disclosure="macros" className="rounded-lg border border-cyan-400/20 bg-black/25 p-2">
     <summary className="flex cursor-pointer list-none items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-cyan-200 [&::-webkit-details-marker]:hidden"><ListChecks className="size-3.5" />{t("Automation")}<span className="ml-auto text-[10px] text-muted-foreground">{completeness.percent}% · {completeness.complete}/{completeness.total}</span><ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary>
@@ -100,6 +118,7 @@ export function AmStageMacroRunner({
       {isRunning ? <p role="status" aria-live="polite" className="text-[10px] text-cyan-200">{currentStep}</p> : null}
       {estimatedLoad > 5_000 ? <p className="text-[9px] text-amber-200">{t("Large run estimate")}: {segmentCount} × {topK} × 2 ≈ {estimatedLoad.toLocaleString()} candidate slots. {t("Consider fewer segments or lower Top-K before export.")}</p> : null}
       {error ? <p role="alert" className="break-words text-[10px] text-red-300">{error}</p> : null}
+      {outputs.length ? <section className="space-y-1 rounded border border-cyan-400/20 p-1.5" aria-label={t("Automation step exports")}><div className="flex items-center justify-between gap-2 text-[10px]"><span className="font-medium text-cyan-200">{t("Step outputs")} · {outputs.length}</span><Button size="sm" variant="ghost" className="h-6 px-1.5" onClick={onClearOutputs}>{t("Clear")}</Button></div><div className="max-h-40 space-y-1 overflow-y-auto">{outputs.map((output, index) => <div key={`${output.step}-${index}`} className="flex items-center gap-1 rounded bg-black/30 px-1.5 py-1 text-[9px]"><span className="min-w-0 flex-1 truncate">{t(STEP_LABELS[output.step])} · {output.parameters.length}</span><Button size="sm" variant="outline" className="h-6 px-1.5" onClick={() => exportOutput(output, "txt")}>TXT</Button><Button size="sm" variant="outline" className="h-6 px-1.5" onClick={() => exportOutput(output, "json")}>JSON</Button></div>)}</div></section> : null}
     </div>
   </details>;
 }

@@ -6,7 +6,11 @@ export interface ParameterTimelinePoint {
   duration?: number;
   clap: ActiveParameter[];
   siglip: ActiveParameter[];
+  gemmaAudioAwtd?: ActiveParameter[];
+  gemmaAudioResolved?: ActiveParameter[];
 }
+
+export type ParamTextModality = "clap" | "siglip" | "gemma_audio_awtd" | "gemma_audio_resolved";
 
 export type ParamTextFragmentKind = "tag" | "keyword" | "description";
 export type ParamTextRankingMode = "frequency" | "centroid" | "brief";
@@ -14,7 +18,7 @@ export type ParamTextRankingMode = "frequency" | "centroid" | "brief";
 export interface ParamToTextEvidence {
   time_seconds: number;
   support_seconds: number;
-  modality: "clap" | "siglip" | "both";
+  modality: ParamTextModality | "both";
   similarity: number;
   value: number | string;
 }
@@ -68,7 +72,7 @@ export interface ParamToTextSnapshot {
   analysis_range_seconds: { start: number; duration: number };
   options: {
     parameter_limit: number;
-    modalities: Array<"clap" | "siglip">;
+    modalities: ParamTextModality[];
     excluded_text: string[];
     domain_layers: string[];
   };
@@ -159,7 +163,7 @@ export function buildParamToTextSnapshot(
     audioDurationSeconds: number;
     limit?: number;
     generatedAt?: string;
-    modalities?: Array<"clap" | "siglip">;
+    modalities?: ParamTextModality[];
     excludedText?: string[];
     domainLayers?: string[];
     matchesLayer?: (parameter: ActiveParameter) => boolean;
@@ -175,14 +179,16 @@ export function buildParamToTextSnapshot(
   const weights = buildSupportWeights(points, rangeDuration, rangeStart);
   let totalCovered = 0;
   let pointsWithData = 0;
-  const byName = new Map<string, Array<{ parameter: ActiveParameter; weight: number; time: number; modality: "clap" | "siglip" | "both" }>>();
+  const byName = new Map<string, Array<{ parameter: ActiveParameter; weight: number; time: number; modality: ParamTextModality | "both" }>>();
   points.forEach((point, index) => {
-    const selectedClap = modalities.includes("clap") ? point.clap.filter((parameter) => !options.matchesLayer || options.matchesLayer(parameter)) : [];
-    const selectedSiglip = modalities.includes("siglip") ? point.siglip.filter((parameter) => !options.matchesLayer || options.matchesLayer(parameter)) : [];
-    const clapNames = new Set(selectedClap.map((parameter) => parameter.technical_name));
-    const siglipNames = new Set(selectedSiglip.map((parameter) => parameter.technical_name));
+    const sources: Array<[ParamTextModality, ActiveParameter[]]> = [
+      ["clap", point.clap], ["siglip", point.siglip],
+      ["gemma_audio_awtd", point.gemmaAudioAwtd ?? []], ["gemma_audio_resolved", point.gemmaAudioResolved ?? []],
+    ];
+    const selectedSources = sources.map(([source, parameters]) => [source, modalities.includes(source) ? parameters.filter((parameter) => !options.matchesLayer || options.matchesLayer(parameter)) : []] as const);
+    const namesBySource = new Map(selectedSources.map(([source, parameters]) => [source, new Set(parameters.map((parameter) => parameter.technical_name))]));
     const atPoint = new Map<string, ActiveParameter>();
-    for (const parameter of [...selectedClap, ...selectedSiglip]) {
+    for (const [, parameters] of selectedSources) for (const parameter of parameters) {
       if (!parameter.technical_name) continue;
       const prior = atPoint.get(parameter.technical_name);
       if (!prior || parameter.similarity > prior.similarity) atPoint.set(parameter.technical_name, parameter);
@@ -193,7 +199,8 @@ export function buildParamToTextSnapshot(
     }
     for (const [name, parameter] of atPoint) {
       if (weights[index] <= 0) continue;
-      const modality = clapNames.has(name) && siglipNames.has(name) ? "both" : clapNames.has(name) ? "clap" : "siglip";
+      const matchingSources = [...namesBySource].filter(([, names]) => names.has(name)).map(([source]) => source);
+      const modality = matchingSources.length > 1 ? "both" : matchingSources[0] ?? "clap";
       byName.set(name, [...(byName.get(name) ?? []), { parameter, weight: weights[index], time: point.time, modality }]);
     }
   });

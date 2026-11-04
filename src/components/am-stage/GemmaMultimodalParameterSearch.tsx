@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useUiText } from "@/lib/ui-i18n";
 import { useCapabilityEnabled } from "@/hooks/use-capability-registry";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
+import { GEMMA_AUDIO_SAFE_CHUNK_SECONDS } from "@/lib/gemma-audio-contract";
 
 interface GemmaAudioSearchResponse {
   error?: string;
@@ -34,7 +35,7 @@ export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParamete
   const audioCapabilityEnabled = useCapabilityEnabled("audio.gemma.awtd");
   const imageCapabilityEnabled = useCapabilityEnabled("spec.gemma.*");
   const [topK, setTopK] = useState(30);
-  const [chunkSeconds, setChunkSeconds] = useState(30);
+  const [chunkSeconds, setChunkSeconds] = useState(GEMMA_AUDIO_SAFE_CHUNK_SECONDS);
   const [overlapSeconds, setOverlapSeconds] = useState(0);
   const [busy, setBusy] = useState(false);
   const [totalChunks, setTotalChunks] = useState(0);
@@ -119,7 +120,10 @@ export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParamete
       }
     } catch (cause) {
       if (controller.signal.aborted) setProgress(t("Search cancelled."));
-      else setError(cause instanceof Error ? cause.message : String(cause));
+      else {
+        const message = cause instanceof Error ? cause.message : String(cause);
+        setError(message.includes("tokenize") ? `${message} · ${t("Try a shorter audio chunk (20s or less).")}` : message);
+      }
       return null;
     } finally {
       controllerRef.current = null;
@@ -136,13 +140,13 @@ export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParamete
         <span className="min-w-0">{t("Experimental · EmbeddingGemma audio / spectrogram → parameters")}</span>
         <Badge variant="outline" className="shrink-0 border-violet-400/30 text-violet-200">{t("Manual only · no idle load")}</Badge>
       </summary>
-      <p className="mt-2 text-[11px] text-muted-foreground">{t("Audio is normalized via the CLAP audio pipeline to mono 48 kHz PCM WAV. Sequential windows are at most 30 seconds and search the existing Gemma text index; this does not replace CLAP or SigLIP2.")}</p>
-      <p className="mt-1 text-[10px] text-muted-foreground">{t("This mode retrieves parameter identities; suggested values remain at catalogue defaults.")}</p>
+      <p className="mt-2 text-[11px] text-muted-foreground">{t("Audio is normalized via the CLAP audio pipeline to mono 48 kHz PCM WAV. Sequential windows are at most 20 seconds and search the existing Gemma text index; this does not replace CLAP or SigLIP2.")}</p>
+      <p className="mt-1 text-[10px] text-muted-foreground">{t("Search fills the audio AWTD bank. Use Resolve Gemma audio values in the value-pass section below for a separate value pass.")}</p>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <div className="flex min-w-0 flex-1 items-center gap-2 rounded border border-border bg-background/60 px-3 py-2 text-xs text-muted-foreground" title={audioFile?.name ?? t("Load audio in Work axis first.")}>
           <Upload className="size-4 shrink-0" /><span className="truncate">{audioFile?.name ?? t("Load audio in Work axis first.")}</span>
         </div>
-        <label className="flex items-center gap-1.5 text-xs text-muted-foreground">{t("Chunk s")}<input className="h-9 w-16 rounded border border-border bg-background px-2 text-foreground" aria-label={t("Chunk seconds")} type="number" min={1} max={30} value={chunkSeconds} onChange={(event) => setChunkSeconds(Math.max(1, Math.min(30, Number(event.target.value) || 1)))} /></label>
+        <label className="flex items-center gap-1.5 text-xs text-muted-foreground">{t("Chunk s")}<input className="h-9 w-16 rounded border border-border bg-background px-2 text-foreground" aria-label={t("Chunk seconds")} type="number" min={1} max={GEMMA_AUDIO_SAFE_CHUNK_SECONDS} value={chunkSeconds} onChange={(event) => setChunkSeconds(Math.max(1, Math.min(GEMMA_AUDIO_SAFE_CHUNK_SECONDS, Number(event.target.value) || 1)))} /></label>
         <label className="flex items-center gap-1.5 text-xs text-muted-foreground">{t("Overlap s")}<input className="h-9 w-14 rounded border border-border bg-background px-2 text-foreground" aria-label={t("Overlap seconds")} type="number" min={0} max={2} step={0.5} value={overlapSeconds} onChange={(event) => setOverlapSeconds(Math.max(0, Math.min(2, Number(event.target.value) || 0)))} /></label>
         <label className="flex items-center gap-1.5 text-xs text-muted-foreground">{t("Top-K")}<input className="h-9 w-16 rounded border border-border bg-background px-2 text-foreground" aria-label={t("Top-K")} type="number" min={1} max={100} value={topK} onChange={(event) => setTopK(Math.max(1, Math.min(100, Number(event.target.value) || 1)))} /></label>
         <Button data-am-stage-action="gemma-audio-search" onClick={() => void search("audio")} disabled={!audioFile || busy || audioCapabilityEnabled !== true} title={audioCapabilityEnabled === false ? t("Disabled in Settings") : undefined}>{busy ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}{busy ? t("Embedding media…") : t("Search audio")}</Button>

@@ -9,6 +9,7 @@ export type Stage7RhythmSource = Pick<AudioSegmentResultPoint, "offset" | "durat
   };
 };
 export const MIN_AUDIO_WINDOW_GAP_SECONDS = 0.5;
+export const MAX_ALIGNED_AUDIO_NODES = 36;
 
 export function stage7FeaturesCoverRange(segments: readonly Stage7RhythmSource[], start: number, end: number): boolean {
   if (end - start < 0.1) return false;
@@ -60,7 +61,11 @@ export function buildAlignedAudioAnalysisPoints(
   const rangeDuration = end - start;
   if (rangeDuration < 0.1) return [];
   const windowDuration = Math.min(Math.max(0.5, Math.min(30, interval || 2)), rangeDuration);
-  const alignedEvents = mergeWindowEvents(events).filter((time) => time >= start && time <= end);
+  const mergedEvents = mergeWindowEvents(events).filter((time) => time >= start && time <= end);
+  // Preserve the full time span while limiting dense beat/onset tracks to 36 evenly spaced events.
+  const alignedEvents = mergedEvents.length > MAX_ALIGNED_AUDIO_NODES
+    ? Array.from({ length: MAX_ALIGNED_AUDIO_NODES }, (_, index) => mergedEvents[Math.round(index * (mergedEvents.length - 1) / (MAX_ALIGNED_AUDIO_NODES - 1))])
+    : mergedEvents;
   return alignedEvents.map((time) => ({
     time,
     offset: Math.max(start, Math.min(end - windowDuration, time - windowDuration / 2)),

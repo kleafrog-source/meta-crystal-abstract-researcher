@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Copy, Loader2, WandSparkles } from "lucide-react";
@@ -22,7 +22,7 @@ const SPECIALISTS: Array<{ id: Specialist; label: string }> = [
   { id: "language", label: "Detect Indic language" },
 ];
 
-export function SegmentSideMetadataPanel({
+export const SegmentSideMetadataPanel = memo(function SegmentSideMetadataPanel({
   file,
   segment,
   segmentIndex,
@@ -165,7 +165,7 @@ export function SegmentSideMetadataPanel({
       {segment.sideMeta.acoustic_features ? <AcousticFeatureSummary features={segment.sideMeta.acoustic_features} t={t} /> : null}
     </div> : null}
   </section>;
-}
+});
 
 function AcousticFeatureSummary({ features, t }: { features: SegmentAcousticFeatures; t: (value: string) => string }) {
   const formants = features.formants;

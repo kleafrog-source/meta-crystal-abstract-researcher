@@ -1,15 +1,7 @@
 "use client";
 
-import { ArchiveX, MoreVertical, X } from "lucide-react";
-
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -43,9 +35,7 @@ export function ParameterControl(props: {
   const storeUpdateParameterValue = useRagV3Store(
     (state) => state.updateParameterValue,
   );
-  const storeRemoveParameter = useRagV3Store((state) => state.removeParameter);
   const updateParameterValue = props.onChange ?? storeUpdateParameterValue;
-  const removeParameter = props.onRemove ?? storeRemoveParameter;
   const numericValue =
     typeof props.param.current_value === "number"
       ? props.param.current_value
@@ -72,28 +62,6 @@ export function ParameterControl(props: {
   const layerColor = props.useDomainLayerColors
     ? ACOUSTIC_DOMAIN_LAYERS.find((layer) => layer.id === resolvedLayer)?.color ?? "#94a3b8"
     : domainStyle.accentColor;
-  const excludeFromDatabase = async () => {
-    const reason = window.prompt(
-      "Причина исключения параметра из производных индексов:",
-      "not sound-relevant",
-    );
-    if (reason === null) return;
-    const response = await fetch("/api/combinatorial-genesis/registry", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        technical_names: [props.param.technical_name],
-        reason,
-        scope: props.param.retrieval_scope,
-      }),
-    });
-    if (!response.ok) {
-      const payload = (await response.json()) as { error?: string };
-      window.alert(payload.error ?? `HTTP ${response.status}`);
-      return;
-    }
-    removeParameter(props.param.technical_name);
-  };
   if (props.displayMode === "compact") {
     const min = props.param.min_value ?? 0;
     const max = props.param.max_value ?? 100;
@@ -112,7 +80,7 @@ export function ParameterControl(props: {
       <span className="line-clamp-3 min-h-7 break-words text-[13px] leading-4 font-semibold text-[#d2dde5]" title={props.param.technical_name}>{primaryName}</span>
       {showSecondaryName ? <span className="line-clamp-2 break-words text-[10px] leading-3 text-muted-foreground">{secondaryName}</span> : null}
       <div className="console-compact-control">{compactControl}</div><output style={props.useDomainLayerColors ? { color: layerColor } : undefined} className="block truncate text-center font-mono text-[10px]">{textValue}</output>
-      <div className="console-compact-actions" onClick={(event) => event.stopPropagation()}><V3InfoTip content={<div className="space-y-1 text-[11px]"><b>{props.param.technical_name}</b><div>{resolveRussianDescription(props.param)}</div><div>{props.param.category} · {props.param.source}</div></div>} /><DropdownMenu><V3Tooltip content="Действия параметра"><DropdownMenuTrigger asChild><button type="button" className="console-card-action" aria-label={`Действия: ${props.param.technical_name}`}><MoreVertical className="size-3.5" /></button></DropdownMenuTrigger></V3Tooltip><DropdownMenuContent align="end"><DropdownMenuItem onClick={() => removeParameter(props.param.technical_name)}><X className="size-3" />Убрать из панели</DropdownMenuItem><DropdownMenuItem className="text-red-300" onClick={() => void excludeFromDatabase()}><ArchiveX className="size-3" />Исключить из базы</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
+      <div className="console-compact-actions" onClick={(event) => event.stopPropagation()}><V3InfoTip content={<div className="space-y-1 text-[11px]"><b>{props.param.technical_name}</b><div>{resolveRussianDescription(props.param)}</div><div>{props.param.category} · {props.param.source}</div></div>} /></div>
     </div>;
   }
   return (
@@ -165,34 +133,6 @@ export function ParameterControl(props: {
                 excluded
               </Badge>
             ) : null}
-            <DropdownMenu>
-              <V3Tooltip content="Открывает действия для этого параметра.">
-                <DropdownMenuTrigger asChild>
-                  <button
-                    type="button"
-                    className="-mr-1 inline-flex size-6 shrink-0 items-center justify-center rounded text-zinc-400 opacity-100 hover:text-white focus-visible:outline-2 focus-visible:outline-ring"
-                    aria-label="Parameter actions"
-                  >
-                    <MoreVertical className="size-3" />
-                  </button>
-                </DropdownMenuTrigger>
-              </V3Tooltip>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={() => removeParameter(props.param.technical_name)}
-                >
-                  <X className="size-3" />
-                  Убрать из панели
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="text-red-300"
-                  onClick={() => void excludeFromDatabase()}
-                >
-                  <ArchiveX className="size-3" />
-                  Исключить из базы
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </div>
 

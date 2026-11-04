@@ -5,6 +5,7 @@ import {
   type LLMSettings,
 } from "@/lib/llm/factory";
 import { db } from "@/lib/db";
+import { normalizeCapabilityRegistry } from "@/lib/capability-registry";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -25,7 +26,11 @@ export async function PUT(req: Request) {
   try {
     const body = (await req.json()) as Partial<LLMSettings>;
     const current = await loadLLMSettings();
-    const updated: LLMSettings = { ...current, ...body };
+    const updated: LLMSettings = {
+      ...current,
+      ...body,
+      capabilityRegistry: normalizeCapabilityRegistry(body.capabilityRegistry ?? current.capabilityRegistry),
+    };
     await saveLLMSettings(updated);
     return NextResponse.json({ ok: true, llm: updated });
   } catch (e) {

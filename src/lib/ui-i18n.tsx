@@ -2,15 +2,17 @@
 
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { UI_COPY } from "./ui-copy";
+import { DEFAULT_CAPABILITY_REGISTRY, setActiveModelAliases, substituteModelNames, type CapabilityRegistry } from "./capability-registry";
 
 export type UiLanguage = "en" | "ru" | "de";
 
-// Exact UI copy only. Values, parameter data, logs, and export payloads are excluded.
-const LocaleContext = createContext<UiLanguage>("ru");
+// UI text is translated and model-labeled; inputs, code/logs, parameter cards, and export payloads are excluded.
+const LocaleContext = createContext<{ language: UiLanguage; aliases: CapabilityRegistry }>({ language: "ru", aliases: DEFAULT_CAPABILITY_REGISTRY });
 const usePrePaintEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 export function UiLocaleProvider({ children, initialLanguage }: { children: React.ReactNode; initialLanguage: UiLanguage }) {
   const [language, setLanguage] = useState<UiLanguage>(initialLanguage);
+  const [aliases, setAliases] = useState<CapabilityRegistry>(DEFAULT_CAPABILITY_REGISTRY);
   const originals = useRef(new WeakMap<Text, string>());
   const translatedNodes = useRef(new WeakMap<Text, string>());
   const attrOriginals = useRef(new WeakMap<Element, Map<string, string>>());
@@ -18,6 +20,18 @@ export function UiLocaleProvider({ children, initialLanguage }: { children: Reac
   usePrePaintEffect(() => {
     setLanguage(initialLanguage);
   }, [initialLanguage]);
+  useEffect(() => {
+    let active = true;
+    void fetch("/api/settings", { cache: "no-store" }).then((response) => response.json()).then((payload) => {
+      if (active) setAliases(setActiveModelAliases(payload.llm?.capabilityRegistry));
+    }).catch(() => undefined);
+    const onAliases = (event: Event) => {
+      const registry = setActiveModelAliases((event as CustomEvent<{ registry?: unknown }>).detail?.registry);
+      setAliases(registry);
+    };
+    window.addEventListener("am-model-aliases:changed", onAliases);
+    return () => { active = false; window.removeEventListener("am-model-aliases:changed", onAliases); };
+  }, []);
   useEffect(() => {
     const fromEvent = (event: Event) => {
       const value = (event as CustomEvent<{ language?: UiLanguage }>).detail?.language;
@@ -41,7 +55,7 @@ export function UiLocaleProvider({ children, initialLanguage }: { children: Reac
     }
     document.documentElement.lang = language;
     document.documentElement.dataset.uiLanguage = language;
-    const ignored = "script,style,code,pre,textarea,[contenteditable='true'],[data-no-ui-translation],[data-parameter-data],[data-export-payload]";
+    const ignored = "script,style,code,pre,textarea,[contenteditable='true'],[data-no-ui-translation],[data-parameter-data],[data-parameter-id],[data-export-payload]";
     const translateText = (node: Text) => {
       if (node.parentElement?.closest(ignored)) return;
       const current = node.nodeValue ?? "";
@@ -52,12 +66,14 @@ export function UiLocaleProvider({ children, initialLanguage }: { children: Reac
         originals.current.set(node, source);
       }
       const trimmed = source.trim();
-      const entry = UI_COPY[trimmed];
+      const aliased = substituteModelNames(trimmed, aliases);
+      const entry = UI_COPY[trimmed] ?? UI_COPY[aliased];
       const translated = entry?.[language === "en" || language === "de" ? 0 : 1];
-      if (translated != null) {
+      const displayText = translated ?? aliased;
+      if (displayText !== trimmed) {
         const leading = source.slice(0, source.length - source.trimStart().length);
         const trailing = source.slice(source.trimEnd().length);
-        const value = `${leading}${translated}${trailing}`;
+        const value = `${leading}${displayText}${trailing}`;
         translatedNodes.current.set(node, value);
         if (current !== value) node.nodeValue = value;
       }
@@ -73,15 +89,17 @@ export function UiLocaleProvider({ children, initialLanguage }: { children: Reac
         const value = attrs.get(name) ?? current;
         if (value == null) continue;
         const normalized = value.trim();
-        const entry = UI_COPY[normalized];
+        const aliased = substituteModelNames(normalized, aliases);
+        const entry = UI_COPY[normalized] ?? UI_COPY[aliased];
         const translated = entry?.[language === "en" || language === "de" ? 0 : 1]
           ?? (language !== "ru" && normalized.startsWith("Удалить ") ? `Delete ${normalized.slice("Удалить ".length)}` : undefined)
           ?? (language !== "ru" && normalized.startsWith("Выбрать ") ? `Select ${normalized.slice("Выбрать ".length)}` : undefined)
           ?? (language === "ru" && normalized.startsWith("Delete ") ? `Удалить ${normalized.slice("Delete ".length)}` : undefined)
           ?? (language === "ru" && normalized.startsWith("Select ") ? `Выбрать ${normalized.slice("Select ".length)}` : undefined);
-        if (translated != null) {
-          priorTranslations.set(name, translated);
-          if (current !== translated) element.setAttribute(name, translated);
+        const displayText = translated ?? aliased;
+        if (displayText !== normalized) {
+          priorTranslations.set(name, displayText);
+          if (current !== displayText) element.setAttribute(name, displayText);
         }
       }
       attrOriginals.current.set(element, attrs);
@@ -105,20 +123,24 @@ export function UiLocaleProvider({ children, initialLanguage }: { children: Reac
     });
     observer.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["title", "placeholder", "aria-label"] });
     return () => observer.disconnect();
-  }, [language]);
+  }, [aliases, language]);
 
-  return <LocaleContext.Provider value={language}>{children}</LocaleContext.Provider>;
+  return <LocaleContext.Provider value={{ language, aliases }}>{children}</LocaleContext.Provider>;
 }
 
 export function useUiText() {
-  const language = useContext(LocaleContext);
+  const { language, aliases } = useContext(LocaleContext);
   return (source: string) => {
     const entry = UI_COPY[source];
-    if (!entry) return source;
-    return language === "ru" ? entry[1] : entry[0];
+    const translated = entry ? language === "ru" ? entry[1] : entry[0] : source;
+    return substituteModelNames(translated, aliases);
   };
 }
 
 export function useUiLanguage() {
-  return useContext(LocaleContext);
+  return useContext(LocaleContext).language;
+}
+
+export function useModelAliases() {
+  return useContext(LocaleContext).aliases;
 }

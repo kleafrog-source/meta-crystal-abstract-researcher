@@ -14,13 +14,14 @@ import { searchV3 } from "@/lib/rag-v3/search";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { loadLLMSettings } from "@/lib/llm/factory";
 import { capabilityIsEnabled } from "@/lib/capability-registry";
+import { GEMMA_AUDIO_SAFE_CHUNK_SECONDS } from "@/lib/gemma-audio-contract";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 7200;
 
 const MAX_AUDIO_BYTES = 150 * 1024 * 1024;
-const MAX_AUDIO_SECONDS = 30;
+const MAX_AUDIO_SECONDS = GEMMA_AUDIO_SAFE_CHUNK_SECONDS;
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const SLOT_OWNER = "gemma-audio-search";
 

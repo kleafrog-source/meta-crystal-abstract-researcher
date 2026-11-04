@@ -13,6 +13,8 @@ export interface ParamTextWorkbenchSessionState {
   limit: number;
   useClap: boolean;
   useSiglip: boolean;
+  useGemmaAudioAwtd?: boolean;
+  useGemmaAudioResolved?: boolean;
   excludedInput: string;
   segment_text_features: Array<{ segment_index: number; time_seconds: number; window_start_seconds: number; window_end_seconds: number; text: string; tags: string[]; parameters: ParamToTextEntry[]; clap_status: string; siglip_status: string }>;
 }
