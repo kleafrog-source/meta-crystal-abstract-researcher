@@ -267,7 +267,7 @@ export async function getArtifactStatuses(): Promise<{ artifacts: ArtifactStatus
   }).length;
   const paths = artifactPaths(versionId);
   const labels: Record<ArtifactKind, string> = {
-    composite: "Qwen3 composite", embeddinggemma2_text: "EmbeddingGemma 2 (text index)", atoms: "Runtime atoms", anchors: "Live axes / anchors",
+    composite: "Qwen3 text index", embeddinggemma2_text: "EmbeddingGemma 2 text index", atoms: "Runtime atoms", anchors: "Live axes / anchors",
     range: "Range value anchors", select: "Select options", relations: "Relation anchors", clap: "CLAP audio index",
     gemma2_atoms: "Gemma 2 runtime atoms", gemma2_anchors: "Gemma 2 live axes / anchors", gemma2_range: "Gemma 2 Range value anchors",
     gemma2_select: "Gemma 2 Select options", gemma2_relations: "Gemma 2 relation anchors",

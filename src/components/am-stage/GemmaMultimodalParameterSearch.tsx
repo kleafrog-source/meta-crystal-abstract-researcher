@@ -20,18 +20,19 @@ interface GemmaAudioSearchResponse {
   total_candidates?: number;
   current?: number;
   total?: number;
+  failed?: boolean;
   chunks?: number;
+  failed_chunks?: Array<{ index: number; offset_seconds: number; duration_seconds: number; error: string }>;
   results?: GemmaAudioParameter[];
 }
 
 export type GemmaAudioParameter = ActiveParameter & { source_window?: { offset_seconds: number; duration_seconds: number } };
 export interface GemmaMultimodalParameterSearchHandle { searchAudio: (audioFile?: File) => Promise<GemmaAudioParameter[] | null>; cancel: () => void }
 
-export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParameterSearchHandle, { selectedLayers?: string[]; spectrogramFrame?: { dataUrl: string; offset: number }; onResults?: (results: GemmaAudioParameter[], modality: "audio" | "image") => void; onFileChange?: (file: File | null) => void }>(function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogramFrame, onResults, onFileChange }, ref) {
+export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParameterSearchHandle, { audioFile?: File | null; selectedLayers?: string[]; spectrogramFrame?: { dataUrl: string; offset: number }; onResults?: (results: GemmaAudioParameter[], modality: "audio" | "image") => void }>(function GemmaMultimodalParameterSearch({ audioFile = null, selectedLayers = [], spectrogramFrame, onResults }, ref) {
   const t = useUiText();
   const audioCapabilityEnabled = useCapabilityEnabled("audio.gemma.awtd");
   const imageCapabilityEnabled = useCapabilityEnabled("spec.gemma.*");
-  const [file, setFile] = useState<File | null>(null);
   const [topK, setTopK] = useState(30);
   const [chunkSeconds, setChunkSeconds] = useState(30);
   const [overlapSeconds, setOverlapSeconds] = useState(0);
@@ -43,7 +44,7 @@ export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParamete
   const controllerRef = useRef<AbortController | null>(null);
 
   const search = async (modality: "audio" | "image", audioOverride?: File): Promise<GemmaAudioParameter[] | null> => {
-    const audioInput = audioOverride ?? file;
+    const audioInput = audioOverride ?? audioFile;
     if (modality === "audio" && !audioInput) return null;
     if (modality === "image" && !spectrogramFrame) return null;
     const controller = new AbortController();
@@ -53,7 +54,7 @@ export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParamete
     try {
       const form = new FormData();
       form.set("modality", modality);
-      if (modality === "audio" && file) {
+      if (modality === "audio" && audioInput) {
         form.set("audio", audioInput!, audioInput!.name);
         form.set("chunk_seconds", String(chunkSeconds));
         form.set("overlap_seconds", String(overlapSeconds));
@@ -89,7 +90,8 @@ export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParamete
           if (event.type === "error") throw new Error(event.error || t("Gemma audio search failed."));
           if (event.type === "progress") {
             setTotalChunks(event.total ?? 0);
-            setProgress(t("Chunk {current}/{total}").replace("{current}", String(event.current ?? 0)).replace("{total}", String(event.total ?? 0)));
+            const progressMessage = event.failed ? t("Chunk {current}/{total} failed; continuing.") : t("Chunk {current}/{total}");
+            setProgress(progressMessage.replace("{current}", String(event.current ?? 0)).replace("{total}", String(event.total ?? 0)));
             if (event.results) setResults(event);
           }
           if (event.type === "complete") {
@@ -99,6 +101,10 @@ export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParamete
             setProgress("");
             onResults?.(event.results ?? [], modality);
             finalResults = event.results ?? [];
+            if (event.failed_chunks?.length) {
+              const failed = event.failed_chunks.length;
+              setError(t("{failed} of {total} audio chunks failed; results include successful chunks.").replace("{failed}", String(failed)).replace("{total}", String(event.total ?? event.chunks ?? 0)));
+            }
           }
         };
         while (true) {
@@ -122,7 +128,7 @@ export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParamete
     return finalResults;
   };
 
-  useImperativeHandle(ref, () => ({ searchAudio: (audioFile) => search("audio", audioFile), cancel: () => controllerRef.current?.abort() }), [file, chunkSeconds, overlapSeconds, selectedLayers, topK]);
+  useImperativeHandle(ref, () => ({ searchAudio: (input) => search("audio", input), cancel: () => controllerRef.current?.abort() }), [audioFile, chunkSeconds, overlapSeconds, selectedLayers, topK]);
 
   return (
     <details data-am-stage-zone="gemma-audio-query" className="rounded-lg border border-violet-400/25 bg-black/30 p-3">
@@ -133,14 +139,13 @@ export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParamete
       <p className="mt-2 text-[11px] text-muted-foreground">{t("Audio is normalized via the CLAP audio pipeline to mono 48 kHz PCM WAV. Sequential windows are at most 30 seconds and search the existing Gemma text index; this does not replace CLAP or SigLIP2.")}</p>
       <p className="mt-1 text-[10px] text-muted-foreground">{t("This mode retrieves parameter identities; suggested values remain at catalogue defaults.")}</p>
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded border border-border bg-background/60 px-3 py-2 text-xs text-muted-foreground">
-          <Upload className="size-4 shrink-0" /><span className="truncate">{file?.name ?? t("Choose audio file")}</span>
-          <input className="sr-only" type="file" accept="audio/*,.wav,.mp3,.m4a,.flac,.ogg,.webm" onChange={(event) => { const nextFile = event.target.files?.[0] ?? null; setFile(nextFile); onFileChange?.(nextFile); setError(null); setResults(null); }} />
-        </label>
+        <div className="flex min-w-0 flex-1 items-center gap-2 rounded border border-border bg-background/60 px-3 py-2 text-xs text-muted-foreground" title={audioFile?.name ?? t("Load audio in Work axis first.")}>
+          <Upload className="size-4 shrink-0" /><span className="truncate">{audioFile?.name ?? t("Load audio in Work axis first.")}</span>
+        </div>
         <label className="flex items-center gap-1.5 text-xs text-muted-foreground">{t("Chunk s")}<input className="h-9 w-16 rounded border border-border bg-background px-2 text-foreground" aria-label={t("Chunk seconds")} type="number" min={1} max={30} value={chunkSeconds} onChange={(event) => setChunkSeconds(Math.max(1, Math.min(30, Number(event.target.value) || 1)))} /></label>
         <label className="flex items-center gap-1.5 text-xs text-muted-foreground">{t("Overlap s")}<input className="h-9 w-14 rounded border border-border bg-background px-2 text-foreground" aria-label={t("Overlap seconds")} type="number" min={0} max={2} step={0.5} value={overlapSeconds} onChange={(event) => setOverlapSeconds(Math.max(0, Math.min(2, Number(event.target.value) || 0)))} /></label>
         <label className="flex items-center gap-1.5 text-xs text-muted-foreground">{t("Top-K")}<input className="h-9 w-16 rounded border border-border bg-background px-2 text-foreground" aria-label={t("Top-K")} type="number" min={1} max={100} value={topK} onChange={(event) => setTopK(Math.max(1, Math.min(100, Number(event.target.value) || 1)))} /></label>
-        <Button data-am-stage-action="gemma-audio-search" onClick={() => void search("audio")} disabled={!file || busy || audioCapabilityEnabled !== true} title={audioCapabilityEnabled === false ? t("Disabled in Settings") : undefined}>{busy ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}{busy ? t("Embedding media…") : t("Search audio")}</Button>
+        <Button data-am-stage-action="gemma-audio-search" onClick={() => void search("audio")} disabled={!audioFile || busy || audioCapabilityEnabled !== true} title={audioCapabilityEnabled === false ? t("Disabled in Settings") : undefined}>{busy ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}{busy ? t("Embedding media…") : t("Search audio")}</Button>
         {busy ? <Button variant="destructive" size="sm" onClick={() => controllerRef.current?.abort()}><Square className="size-3.5" />{t("Cancel")}</Button> : null}
         {spectrogramFrame ? <Button data-am-stage-action="gemma-spectrogram-search" variant="outline" onClick={() => void search("image")} disabled={busy || imageCapabilityEnabled !== true} title={imageCapabilityEnabled === false ? t("Disabled in Settings") : undefined}><Search className="size-4" />{t("Search current SigLIP frame")} · {spectrogramFrame.offset.toFixed(1)}s</Button> : null}
       </div>
@@ -150,7 +155,7 @@ export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParamete
         {results.type === "progress" ? <p className="text-[10px] text-muted-foreground">{progress}</p> : <p className="text-[10px] text-muted-foreground">{results.modality === "image"
           ? t("SigLIP spectrogram at {offset}s · {count} candidates · {dimensions}D").replace("{offset}", Number(results.offset_seconds ?? 0).toFixed(1)).replace("{count}", String(results.total_candidates ?? 0)).replace("{dimensions}", String(results.dimensions ?? 0))
           : t("Audio query matched {count} candidates · {duration}s · {dimensions}D").replace("{count}", String(results.total_candidates ?? 0)).replace("{duration}", Number(results.duration_seconds ?? 0).toFixed(1)).replace("{dimensions}", String(results.dimensions ?? 0))}</p>}
-        {results.type === "complete" ? <p className="text-[10px] text-muted-foreground">{t("Merged {chunks} chunks by best similarity per parameter.").replace("{chunks}", String(totalChunks || 1))}</p> : null}
+        {results.type === "complete" ? <p className="text-[10px] text-muted-foreground">{t("Merged {chunks} chunks by best similarity per parameter.").replace("{chunks}", String(totalChunks || 1))}{results.failed_chunks?.length ? ` · ${t("{count} chunks failed").replace("{count}", String(results.failed_chunks.length))}` : ""}</p> : null}
         <ol className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">{(results.results ?? []).map((item) => <li key={item.technical_name} className="min-w-0 rounded border border-white/10 bg-black/25 p-2 text-[10px]"><div className="truncate font-mono text-violet-200">{item.technical_name}</div><div className="mt-1 line-clamp-2 text-foreground">{item.name_ru || item.description_en || item.category}</div><div className="mt-1 flex justify-between gap-2 text-muted-foreground"><span>{t("Similarity")} {item.similarity.toFixed(3)}</span><span className="truncate">{String(item.suggested_value)}</span></div></li>)}</ol>
       </div> : null}
     </details>

@@ -78,7 +78,7 @@ export function AmStageMacroRunner({
   };
 
   return <details data-am-stage-disclosure="macros" className="rounded-lg border border-cyan-400/20 bg-black/25 p-2">
-    <summary className="flex cursor-pointer list-none items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-cyan-200 [&::-webkit-details-marker]:hidden"><ListChecks className="size-3.5" />{t("Macros")}<span className="ml-auto text-[10px] text-muted-foreground">{completeness.percent}% · {completeness.complete}/{completeness.total}</span><ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary>
+    <summary className="flex cursor-pointer list-none items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-cyan-200 [&::-webkit-details-marker]:hidden"><ListChecks className="size-3.5" />{t("Automation")}<span className="ml-auto text-[10px] text-muted-foreground">{completeness.percent}% · {completeness.complete}/{completeness.total}</span><ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary>
     <div className="mt-2 space-y-2">
       {siglipStatus && !siglipStatus.ready ? <p role="status" className="text-[10px] text-amber-200">{t("SigLIP index")}: {t(siglipStatus.status ?? "unavailable")} · {siglipStatus.stale_reasons?.join("; ")}. {t("Rebuild it from Service Bay before running this macro.")}</p> : null}
       <div className="flex flex-wrap items-center gap-1.5">
@@ -86,7 +86,7 @@ export function AmStageMacroRunner({
         <select id="am-stage-macro-profile" aria-label={t("Macro profile")} value={profile} disabled={isRunning} onChange={(event) => onProfileChange(event.target.value as AmStageMacroId)} className="h-7 min-w-0 flex-1 rounded border border-white/15 bg-black/50 px-2 text-[10px] text-foreground">
           {AM_STAGE_MACRO_IDS.map((id) => <option key={id} value={id}>{t(PROFILE_LABELS[id])}</option>)}
         </select>
-        <Button size="sm" className="h-7 px-2" disabled={isRunning || disabledBySettings || (profile === "custom" && !customSteps.length)} title={disabledBySettings ? t("Disabled in Settings") : undefined} onClick={onRun}>{isRunning ? <><Square className="size-3" />{t("Running")}</> : <><Play className="size-3" />{t("Run macro")}</>}</Button>
+        <Button size="sm" className="h-7 px-2" disabled={isRunning || disabledBySettings || (profile === "custom" && !customSteps.length)} title={disabledBySettings ? t("Disabled in Settings") : undefined} onClick={onRun}>{isRunning ? <><Square className="size-3" />{t("Running")}</> : <><Play className="size-3" />{t("Run automation")}</>}</Button>
         {isRunning ? <Button size="sm" variant="destructive" className="h-7 px-2" onClick={onCancel}><Square className="size-3" />{t("Cancel queue")}</Button> : null}
       </div>
       <label className="flex items-center gap-1.5 text-[10px] text-muted-foreground"><input type="checkbox" checked={requireGemmaResolution} disabled={isRunning} onChange={(event) => onRequireGemmaResolutionChange(event.target.checked)} />{t("Include Gemma value resolution")}</label>

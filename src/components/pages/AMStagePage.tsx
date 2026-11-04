@@ -205,7 +205,6 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [gemmaAudioAwtd, setGemmaAudioAwtd] = useState<GemmaAudioParameter[]>([]);
   const [gemmaAudioResolved, setGemmaAudioResolved] = useState<ActiveParameter[]>([]);
   const gemmaSearchRef = useRef<GemmaMultimodalParameterSearchHandle>(null);
-  const [gemmaAudioFile, setGemmaAudioFile] = useState<File | null>(null);
   const [macroProfile, setMacroProfile] = useState<AmStageMacroId>("full_core");
   const [requireGemmaResolution, setRequireGemmaResolution] = useState(false);
   const [macroIncludeStage2, setMacroIncludeStage2] = useState(false);
@@ -240,6 +239,13 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioDuration, setAudioDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const lastPlaybackUiUpdate = useRef(0);
+  const handlePlaybackTime = useCallback((time: number) => {
+    const now = performance.now();
+    if (now - lastPlaybackUiUpdate.current < 120) return;
+    lastPlaybackUiUpdate.current = now;
+    setCurrentTime(time);
+  }, []);
   const [seekRequest, setSeekRequest] = useState({ time: 0, token: 0 });
   const [regionOffset, setRegionOffset] = useState(0);
   const [regionDuration, setRegionDuration] = useState(10);
@@ -869,7 +875,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       "audio.clap.resolved": async () => { if (!(await analyze("clap", true, analysisNodes))) throw new Error(error || t("CLAP analysis did not complete.")); analysisNodes = segmentsRef.current; setMacroSourceBank("audio.clap.resolved"); },
       "spec.siglip.resolved": async () => { if (!(await analyze("siglip", true, analysisNodes))) throw new Error(error || t("SigLIP2 analysis did not complete.")); analysisNodes = segmentsRef.current; setMacroSourceBank("spec.siglip.resolved"); },
       "audio.gemma.awtd": async (signal) => {
-        const audioInput = gemmaAudioFile ?? file;
+        const audioInput = file;
         if (!audioInput) throw new Error(t("Choose an audio file for Gemma audio search."));
         const found = await gemmaSearchRef.current?.searchAudio(audioInput);
         if (signal.aborted) throw new DOMException("Macro cancelled", "AbortError");
@@ -892,7 +898,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       if (macroAbortRef.current === controller) macroAbortRef.current = null;
       setMacroRunning(false); setMacroCurrentStep("");
     }
-  }, [analyze, audioDuration, audioReferenceName, busy, customMacroSteps, error, file, gemmaAudioAwtd, gemmaAudioFile, macroIncludeStage2, macroProfile, macroRunning, morphoStatus, regenerateWindowMode, requireGemmaResolution, resolveGemmaBank, runServerStage2, segments, selectedLayers, serverStage2Error, t, textBanks.embeddinggemma2, v3Query, windowMode, windowModeBusy]);
+  }, [analyze, audioDuration, audioReferenceName, busy, customMacroSteps, error, file, gemmaAudioAwtd, macroIncludeStage2, macroProfile, macroRunning, morphoStatus, regenerateWindowMode, requireGemmaResolution, resolveGemmaBank, runServerStage2, segments, selectedLayers, serverStage2Error, t, textBanks.embeddinggemma2, v3Query, windowMode, windowModeBusy]);
 
   const cancelMacro = useCallback(() => {
     macroAbortRef.current?.abort();
@@ -1095,7 +1101,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setIsAxisPinned(false);
     setRegionOffset(0); setRegionDuration(10); setAnalysisStart(0); setAnalysisEnd(0); setGateNeedsResplit(false); setSegmentInterval(2); setNodeInterval(20); setWindowMode("uniform"); setWindowSourceSegments([]); setSegments([]); setClapTopK(20); setSiglipTopK(20);
     setTextBankViewMode("standard"); setClapBankViewMode("standard"); setSiglipBankViewMode("standard"); setShowClap(true); setShowSiglip(true); setInterpolateClap(true); setInterpolateSiglip(true); setShowSpectrogram(true);
-    setTextBanks({ qwen3: [], embeddinggemma2: [] }); setGemmaTextResolved([]); setGemmaAudioAwtd([]); setGemmaAudioResolved([]); setMacroProfile("full_core"); setRequireGemmaResolution(false); setMacroIncludeStage2(false); setCustomMacroSteps([]); setMacroSourceBank("audio.core"); setGemmaAudioFile(null);
+    setTextBanks({ qwen3: [], embeddinggemma2: [] }); setGemmaTextResolved([]); setGemmaAudioAwtd([]); setGemmaAudioResolved([]); setMacroProfile("full_core"); setRequireGemmaResolution(false); setMacroIncludeStage2(false); setCustomMacroSteps([]); setMacroSourceBank("audio.core");
     setSpectrogramScale("mel"); setSpectrogramDetail("medium"); setSpectrogramColor("roseus"); setSpectrogramRenderer("windowed"); setSiglipSpectrogramLayout("rgb_delta"); setBlendMode(false); setClapWeight(.5); setTrustThreshold(DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold); setTrustFloor(DEFAULT_MODALITY_TRUST_CONFIG.floorWeight); setVocalMatrixMode(false);
     setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id)); setShowGlobalConsensus(false); setConsensusTopK(64); setConsensusCentroidPercent(35); setTimelineView("modality"); setBlendPair("text-clap"); setBlendPercent(50); setBlendCurve("linear");
     setParamTextSessionState(null); setWorkbenchSessionKey((key) => key + 1); setActiveSession(null); setSessionDirty(false); fingerprintRef.current = ""; setSessionResetConfirmOpen(false); setPendingSessionAction(null); setSessionModalOpen(false);
@@ -1191,14 +1197,14 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                         <input className="hidden" type="file" accept="audio/*" onChange={(event) => { const selected = event.target.files?.[0]; if (selected) selectFile(selected); }} />
                       </label>
                     ) : (
-                      <AudioWaveformEditor instanceId="audio-segments" url={audioUrl} offset={regionOffset} duration={regionDuration} totalDuration={audioDuration} onDuration={handleWaveDuration} onRegion={handleRegion} onFile={selectFile} onTime={setCurrentTime} seekRequest={seekRequest} loopRegion={false} minimap spectrogram={{ visible: showSpectrogram, scale: spectrogramScale, detail: spectrogramDetail, colorMap: spectrogramColor, renderer: spectrogramRenderer }} />
+                      <AudioWaveformEditor instanceId="audio-segments" url={audioUrl} offset={regionOffset} duration={regionDuration} totalDuration={audioDuration} onDuration={handleWaveDuration} onRegion={handleRegion} onFile={selectFile} onTime={handlePlaybackTime} seekRequest={seekRequest} loopRegion={false} minimap spectrogram={{ visible: showSpectrogram, scale: spectrogramScale, detail: spectrogramDetail, colorMap: spectrogramColor, renderer: spectrogramRenderer }} />
                     )}
                     {file ? <div className="mt-2 truncate text-xs text-zinc-500">{file.name}</div> : null}
                   </div>
                 </section>
                 <details data-am-stage-layer="L0" data-am-stage-zone="node-seek" className="am-stage-node-seek-column min-w-0 rounded-lg border border-white/10 bg-black/30 p-2" aria-label="Parameter timeline node seek">
                   <summary className="flex cursor-pointer list-none items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-zinc-400 [&::-webkit-details-marker]:hidden"><AMIcon name="audioToParameter" size="sm" bright />Node seek · Parameter Timeline · {formatTime(currentTime)}<ChevronDown className="am-stage-disclosure-chevron ml-auto size-3.5" /></summary>
-                  <div className="mt-1 flex gap-1 overflow-x-auto pb-1">{segments.map((segment, index) => <button key={`${segment.time}-${index}`} type="button" onClick={() => seekToSegment(segment)} aria-current={Math.abs(currentTime - segment.time) < 0.05 ? "time" : undefined} className={`min-w-28 rounded border px-2 py-1.5 text-left text-[10px] ${Math.abs(currentTime - segment.time) < 0.05 ? "border-white bg-white/10 text-white" : "border-white/10 bg-black/40 text-zinc-400"}`}><div className="font-mono">{formatTime(segment.time)}</div><div className="mt-1 flex gap-1"><span className={`rounded border px-1 ${statusClass(segment.clapStatus)}`}>C {segment.clap.length}</span><span className={`rounded border px-1 ${statusClass(segment.siglipStatus)}`}>S {segment.siglip.length}</span></div></button>)}</div>
+                  <div className="mt-1 flex w-full min-w-0 flex-nowrap gap-1 overflow-x-auto pb-1">{segments.map((segment, index) => <button key={`${segment.time}-${index}`} type="button" onClick={() => seekToSegment(segment)} aria-current={Math.abs(currentTime - segment.time) < 0.05 ? "time" : undefined} className={`min-w-28 shrink-0 rounded border px-2 py-1.5 text-left text-[10px] ${Math.abs(currentTime - segment.time) < 0.05 ? "border-white bg-white/10 text-white" : "border-white/10 bg-black/40 text-zinc-400"}`}><div className="font-mono">{formatTime(segment.time)}</div><div className="mt-1 flex gap-1"><span className={`rounded border px-1 ${statusClass(segment.clapStatus)}`}>C {segment.clap.length}</span><span className={`rounded border px-1 ${statusClass(segment.siglipStatus)}`}>S {segment.siglip.length}</span></div></button>)}</div>
                 </details>
               </div>
             </ScrollArea>
@@ -1211,7 +1217,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             <section id="am-stage-extract" data-am-stage-layer="L1" className="am-stage-extract-column min-w-0 space-y-3">
               <h2 className="am-stage-module-heading"><span>02</span>{t("Extract")}</h2>
               <SemanticSearch primaryLabel="Brief" secondaryLabel="Transition" collapsible dataScope="am-stage" selectedDomainLayers={selectedLayers} onSearchResults={handleTextSearchResults} onTextIndexChange={selectTextBank} />
-              <GemmaMultimodalParameterSearch ref={gemmaSearchRef} selectedLayers={selectedLayers} onFileChange={setGemmaAudioFile} onResults={(parameters, modality) => { if (modality === "audio") setGemmaAudioAwtd(parameters); }} spectrogramFrame={activeSiglipSegment?.siglipPreview ? { dataUrl: activeSiglipSegment.siglipPreview.dataUrl, offset: activeSiglipSegment.offset } : undefined} />
+              <GemmaMultimodalParameterSearch ref={gemmaSearchRef} audioFile={file} selectedLayers={selectedLayers} onResults={(parameters, modality) => { if (modality === "audio") setGemmaAudioAwtd(parameters); }} spectrogramFrame={activeSiglipSegment?.siglipPreview ? { dataUrl: activeSiglipSegment.siglipPreview.dataUrl, offset: activeSiglipSegment.offset } : undefined} />
           <details data-am-stage-disclosure="analysis-controls" className="rounded-lg border border-white/10 bg-black/30 p-3">
             <summary className="flex list-none cursor-pointer items-center gap-2 font-mono text-xs uppercase tracking-wider text-zinc-300 [&::-webkit-details-marker]:hidden"><AMIcon name="settings" size="sm" bright />Analysis controls · sampling, time gate, CLAP / SigLIP2, Continue<ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary>
             <div className="mt-3">            <div className="min-w-0 space-y-3">
@@ -1559,7 +1565,6 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
 
           <div className="am-stage-specialists-column" data-am-stage-layer="L1">
           <SegmentSideMetadataPanel
-            key={activeSegmentIndex}
             file={file}
             segment={activeSegmentIndex >= 0 ? segments[activeSegmentIndex] : null}
             segmentIndex={Math.max(0, activeSegmentIndex)}

@@ -35,7 +35,7 @@ async function readGemmaTextManifest(modelId: string): Promise<{ status: string;
 
 class MediaInputError extends Error {}
 
-function inspectPcmWav(buffer: Buffer): { durationSeconds: number } {
+function inspectPcmWav(buffer: Buffer): { durationSeconds: number; sampleRate: number; channels: number; format: string } {
   if (buffer.length < 44 || buffer.toString("ascii", 0, 4) !== "RIFF" || buffer.toString("ascii", 8, 12) !== "WAVE") throw new MediaInputError("Audio conversion did not produce a valid WAV file.");
   let format: number | null = null, channels: number | null = null, sampleRate: number | null = null, bytesPerSecond: number | null = null, dataSize: number | null = null;
   for (let offset = 12; offset + 8 <= buffer.length;) {
@@ -48,7 +48,7 @@ function inspectPcmWav(buffer: Buffer): { durationSeconds: number } {
   if (format !== 1 || channels !== 1 || sampleRate !== 48_000 || !bytesPerSecond || !dataSize) throw new MediaInputError("Gemma chunks must be mono 48 kHz PCM WAV.");
   const durationSeconds = dataSize / bytesPerSecond;
   if (durationSeconds < 0.25 || durationSeconds > MAX_AUDIO_SECONDS + 0.001) throw new MediaInputError(`Each audio chunk must be between 0.25 and ${MAX_AUDIO_SECONDS} seconds.`);
-  return { durationSeconds };
+  return { durationSeconds, sampleRate, channels, format: "PCM WAV" };
 }
 
 function inspectPng(buffer: Buffer): void {
@@ -165,32 +165,60 @@ async function streamAudioSearch(request: Request, form: FormData) {
           const best = new Map<string, ActiveParameter & { source_window: { offset_seconds: number; duration_seconds: number } }>();
           let dimensions = artifact.dimensions ?? 0;
           let totalCandidates = 0;
+          let successfulChunks = 0;
+          const failedChunks: Array<{ index: number; offset_seconds: number; duration_seconds: number; error: string }> = [];
           try {
             for (let index = 0; index < windows.length; index += 1) {
               if (request.signal.aborted) throw new DOMException("Audio search cancelled", "AbortError");
               const window = windows[index];
               emit({ type: "progress", current: index + 1, total: windows.length, offset_seconds: window.offset });
               const wavPath = path.join(tempDir!, `chunk-${String(index + 1).padStart(5, "0")}.wav`);
-              await callSidecar("audio_save_fragment", { args: [sourcePath], inputFile: { output_path: wavPath, offset: window.offset, duration: window.duration, sample_rate: 48_000, mono: true }, timeoutMs: 15 * 60_000, taskType: "gemma-audio-convert", title: jobTitle });
-              if (request.signal.aborted) throw new DOMException("Audio search cancelled", "AbortError");
-              const chunkBuffer = await fs.readFile(wavPath);
-              const chunkInfo = inspectPcmWav(chunkBuffer);
-              const embedResponse = await fetch(`${baseUrl}/api/embed`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model, input: { audio: chunkBuffer.toString("base64") }, keep_alive: "5m" }), signal: AbortSignal.any([request.signal, AbortSignal.timeout(120_000)]) });
-              if (!embedResponse.ok) throw new Error(`Ollama audio embedding failed (HTTP ${embedResponse.status}): ${(await embedResponse.text()).slice(0, 1_000)}`);
-              const embedded = await embedResponse.json() as EmbedResponse;
-              const vector = embedded.embeddings?.[0];
-              if (!Array.isArray(vector) || vector.length !== artifact.dimensions) throw new Error(`Gemma audio vector dimensions differ from the text index (${vector?.length ?? 0} vs ${artifact.dimensions ?? 0}).`);
-              dimensions = vector.length;
-              const search = await searchV3({ query: "Audio input", topK, currentValues: {}, instructionContext: [], sources: { library: true, atoms: false, generated: true }, selectedDomainLayers, textIndex: "embeddinggemma2", queryEmbedding: vector, modelSlotOwner: SLOT_OWNER });
-              totalCandidates = Math.max(totalCandidates, search.total_candidates);
-              for (const parameter of search.results as ActiveParameter[]) {
-                const previous = best.get(parameter.technical_name);
-                if (!previous || parameter.similarity > previous.similarity) best.set(parameter.technical_name, { ...parameter, source_window: { offset_seconds: window.offset, duration_seconds: chunkInfo.durationSeconds } });
+              let chunkInfo: ReturnType<typeof inspectPcmWav> | null = null;
+              let chunkByteLength = 0;
+              try {
+                await callSidecar("audio_save_fragment", { args: [sourcePath], inputFile: { output_path: wavPath, offset: window.offset, duration: window.duration, sample_rate: 48_000, mono: true }, timeoutMs: 15 * 60_000, taskType: "gemma-audio-convert", title: jobTitle });
+                if (request.signal.aborted) throw new DOMException("Audio search cancelled", "AbortError");
+                const chunkBuffer = await fs.readFile(wavPath);
+                chunkByteLength = chunkBuffer.byteLength;
+                chunkInfo = inspectPcmWav(chunkBuffer);
+                const embedResponse = await fetch(`${baseUrl}/api/embed`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model, input: { audio: chunkBuffer.toString("base64") }, keep_alive: "5m" }), signal: AbortSignal.any([request.signal, AbortSignal.timeout(120_000)]) });
+                if (!embedResponse.ok) throw new Error(`Ollama audio embedding failed (HTTP ${embedResponse.status}): ${(await embedResponse.text()).slice(0, 1_000)}`);
+                const embedded = await embedResponse.json() as EmbedResponse;
+                const vector = embedded.embeddings?.[0];
+                if (!Array.isArray(vector) || vector.length !== artifact.dimensions) throw new Error(`Gemma audio vector dimensions differ from the text index (${vector?.length ?? 0} vs ${artifact.dimensions ?? 0}).`);
+                dimensions = vector.length;
+                const search = await searchV3({ query: "Audio input", topK, currentValues: {}, instructionContext: [], sources: { library: true, atoms: false, generated: true }, selectedDomainLayers, textIndex: "embeddinggemma2", queryEmbedding: vector, modelSlotOwner: SLOT_OWNER });
+                totalCandidates = Math.max(totalCandidates, search.total_candidates);
+                for (const parameter of search.results as ActiveParameter[]) {
+                  const previous = best.get(parameter.technical_name);
+                  if (!previous || parameter.similarity > previous.similarity) best.set(parameter.technical_name, { ...parameter, source_window: { offset_seconds: window.offset, duration_seconds: chunkInfo.durationSeconds } });
+                }
+                successfulChunks += 1;
+                const merged = [...best.values()].sort((a, b) => b.similarity - a.similarity).slice(0, topK);
+                emit({ type: "progress", current: index + 1, total: windows.length, offset_seconds: window.offset, duration_seconds: chunkInfo.durationSeconds, results: merged, total_candidates: totalCandidates, dimensions });
+              } catch (error) {
+                if (request.signal.aborted) throw error;
+                const message = error instanceof Error ? error.message : String(error);
+                const failure = { index: index + 1, offset_seconds: window.offset, duration_seconds: chunkInfo?.durationSeconds ?? window.duration, error: message };
+                failedChunks.push(failure);
+                console.error("[gemma-audio-search] audio chunk failed", {
+                  chunk: index + 1,
+                  offset_seconds: window.offset,
+                  duration_seconds: failure.duration_seconds,
+                  sample_rate: chunkInfo?.sampleRate ?? 48_000,
+                  channels: chunkInfo?.channels ?? 1,
+                  format: chunkInfo?.format ?? "expected mono 48 kHz PCM WAV; output not validated",
+                  bytes: chunkByteLength,
+                  source_name: inputFile.name,
+                  source_path: sourcePath,
+                  path: wavPath,
+                  error: message,
+                });
+                emit({ type: "progress", current: index + 1, total: windows.length, offset_seconds: window.offset, duration_seconds: failure.duration_seconds, failed: true, error: message, failed_chunks: failedChunks.length });
               }
-              const merged = [...best.values()].sort((a, b) => b.similarity - a.similarity).slice(0, topK);
-              emit({ type: "progress", current: index + 1, total: windows.length, offset_seconds: window.offset, duration_seconds: chunkInfo.durationSeconds, results: merged, total_candidates: totalCandidates, dimensions });
             }
-            emit({ type: "complete", modality: "audio", model, dimensions, duration_seconds: durationSeconds, chunks: windows.length, total_candidates: totalCandidates, results: [...best.values()].sort((a, b) => b.similarity - a.similarity).slice(0, topK) });
+            if (successfulChunks === 0) throw new Error(`All ${windows.length} audio chunks failed. First error: ${failedChunks[0]?.error ?? "no chunk produced a vector"}`);
+            emit({ type: "complete", modality: "audio", model, dimensions, duration_seconds: durationSeconds, chunks: successfulChunks, total: windows.length, failed_chunks: failedChunks, total_candidates: totalCandidates, results: [...best.values()].sort((a, b) => b.similarity - a.similarity).slice(0, topK) });
           } catch (error) {
             if (!request.signal.aborted) emit({ type: "error", error: error instanceof Error ? error.message : String(error) });
           } finally {

@@ -157,7 +157,7 @@ export function ManagedRebuildPanel() {
             <thead className="bg-white/5 text-zinc-400"><tr><th className="p-2">{t("Artifact")}</th><th className="p-2">{t("Encoder")}</th><th className="p-2">{t("Status")}</th><th className="p-2">{t("Rows / expected")}</th><th className="p-2">{t("Built")}</th><th className="p-2">{t("Fingerprints")}</th><th className="p-2">{t("Action")}</th></tr></thead>
             <tbody>{audit.artifacts.map((artifact) => (
               <tr key={artifact.kind} className="border-t border-white/5 align-top">
-                <td className="p-2"><div className="font-medium">{artifact.label}</div><div className="mt-0.5 max-w-64 text-[9px] text-zinc-500">{artifact.description}</div></td>
+                <td className="p-2"><div className="font-medium">{t(artifact.label)}</div><div className="mt-0.5 max-w-64 text-[9px] text-zinc-500">{artifact.description}</div></td>
                 <td className="p-2">{artifact.model ?? "—"}<div className="text-zinc-500">{artifact.dimensions ?? "—"}D · {artifact.kind === "clap" || artifact.kind === "siglip" ? t("local / CPU") : t("Ollama")}</div></td>
                 <td className="p-2"><Badge variant={artifact.status === "ready" || artifact.status === "built" ? "secondary" : "outline"}>{artifact.status}</Badge>{artifact.reason ? <div className="mt-1 max-w-56 text-[9px] text-amber-300">{artifact.reason}</div> : null}</td>
                 <td className="p-2 font-mono">{artifact.row_count} / {artifact.expected_count}</td>
@@ -184,7 +184,7 @@ export function ManagedRebuildPanel() {
 }
 
 const buttonLabels: Record<ArtifactKind, string> = {
-  composite: "Rebuild Qwen3 composite", embeddinggemma2_text: "Build EmbeddingGemma 2 text index", atoms: "Rebuild runtime atoms", anchors: "Rebuild live axes / anchors",
+  composite: "Build Qwen3 text index", embeddinggemma2_text: "Build EmbeddingGemma 2 text index", atoms: "Rebuild runtime atoms", anchors: "Rebuild live axes / anchors",
   range: "Rebuild Range anchors", select: "Rebuild Select options", relations: "Rebuild relation anchors", clap: "Rebuild CLAP index",
   gemma2_atoms: "Rebuild Gemma 2 runtime atoms", gemma2_anchors: "Rebuild Gemma 2 live axes / anchors", gemma2_range: "Rebuild Gemma 2 Range anchors",
   gemma2_select: "Rebuild Gemma 2 Select anchors", gemma2_relations: "Rebuild Gemma 2 relation anchors",

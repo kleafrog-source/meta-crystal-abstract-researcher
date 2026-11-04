@@ -155,7 +155,7 @@ export function AudioWaveformEditor(props: Props) {
         barGap={1}
         minPxPerSec={4}
       >
-        <div className="min-w-0 max-w-full overflow-hidden rounded">
+        <div className="min-h-[88px] min-w-0 max-w-full overflow-hidden rounded">
           <WaveForm id={waveformId} />
         </div>
         <div id={timelineId} className="h-4 max-w-full overflow-hidden text-zinc-400" aria-label="Audio time axis" />
@@ -175,7 +175,7 @@ export function AudioWaveformEditor(props: Props) {
         spectrumVisible ? (
           <div
             id={spectrogramId}
-            className="mt-2 max-w-full overflow-hidden rounded bg-black"
+            className="mt-2 min-h-[110px] max-w-full overflow-hidden rounded bg-black"
           />
         ) : null
       ) : (
