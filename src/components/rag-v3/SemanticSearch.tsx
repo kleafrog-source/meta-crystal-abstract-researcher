@@ -17,11 +17,11 @@ import { TransitionFlowReport } from "./TransitionFlowReport";
 import { V3InfoTip, V3Tooltip } from "./V3Tooltip";
 import { AMIcon } from "@/components/ui/am-icon";
 import { useUiText } from "@/lib/ui-i18n";
+import { useCapabilityEnabled } from "@/hooks/use-capability-registry";
 
 const TRANSITION_PRESETS = [0, 25, 50, 75, 100] as const;
 const SOURCE_HINTS = {
-  library: "Параметры основной библиотеки V3.",
-  frozen: "Параметры исходного корпуса Flowmusic.",
+  library: "Параметры опубликованного каталога.",
   atoms: "Комбинаторные атомы, доступные для структурного поиска.",
   generated: "Опубликованные параметры из Combinatorial Synthesis.",
 } as const;
@@ -35,10 +35,11 @@ const SCOPE_HINTS = {
 
 export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Query B", collapsible = false, dataScope, selectedDomainLayers, onSearchResults, onTextIndexChange }: { primaryLabel?: string; secondaryLabel?: string; collapsible?: boolean; dataScope?: "am-stage"; selectedDomainLayers?: string[]; onSearchResults?: (textIndex: "qwen3" | "embeddinggemma2", parameters: import("@/lib/rag-v3/types").ActiveParameter[]) => void; onTextIndexChange?: (textIndex: "qwen3" | "embeddinggemma2") => void } = {}) {
   const t = useUiText();
+  const textIndex = useRagV3Store((state) => state.textIndex);
+  const capabilityEnabled = useCapabilityEnabled(textIndex === "embeddinggemma2" ? "text.gemma.awtd" : "text.qwen.resolved");
   const query = useRagV3Store((state) => state.query);
   const queryB = useRagV3Store((state) => state.queryB);
   const topK = useRagV3Store((state) => state.topK);
-  const textIndex = useRagV3Store((state) => state.textIndex);
   const setTextIndex = useRagV3Store((state) => state.setTextIndex);
   const sources = useRagV3Store((state) => state.sources);
   const scopes = useRagV3Store((state) => state.scopes);
@@ -148,7 +149,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
         {!collapsible ? <div className="space-y-1">
           <div className="flex items-center gap-2">
             <AMIcon name="search" size="sm" bright />
-            <h2 className="font-mono text-sm font-semibold uppercase tracking-[0.12em] text-white">Semantic Search V3</h2>
+            <h2 className="font-mono text-sm font-semibold uppercase tracking-[0.12em] text-white">{t("Semantic Search")}</h2>
             <V3InfoTip content="Выполняет независимый semantic retrieval и выбор значений для каждого отправленного запроса." />
             <V3InfoTip content="Single target or dual-state interpolation. Search runs only on explicit submit." />
           </div>
@@ -158,8 +159,8 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
           <Badge variant="secondary">active: {activeCount}</Badge>
           <Badge variant="outline">Top-K: {topK}</Badge>
           <Badge variant="outline">instructions: {instructionCount}</Badge>
-          <V3Tooltip content="Очищает запросы, результаты и ручные изменения текущей рабочей области V3.">
-            <Button type="button" variant="outline" size="sm" className="semantic-control" onClick={resetWorkspace}><RotateCcw className="size-4" />Сбросить V3</Button>
+          <V3Tooltip content={t("Resets the current workspace queries, results, and manual changes.")}>
+            <Button type="button" variant="outline" size="sm" className="semantic-control" onClick={resetWorkspace}><RotateCcw className="size-4" />{t("Reset search")}</Button>
           </V3Tooltip>
         </div>
       </div>
@@ -184,13 +185,12 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
           </Button>
         </V3Tooltip>
         <InstructionSettingsDialog />
-        <V3Tooltip content={t("Включает целевой разбор языков, TECH4, FX4, вокальных слоёв и I/S/E/A. Обычный V3 остаётся доступен после отключения.")}>
+        <V3Tooltip content={t("Vocal Matrix targets language, TECH4, FX4, vocal layers, and I/S/E/A. Standard semantic search remains available when it is off.")}>
           <Button type="button" size="sm" variant={vocalMatrixMode ? "default" : "outline"} aria-pressed={vocalMatrixMode} className="semantic-control" onClick={toggleVocalMatrixMode}>Vocal Matrix</Button>
         </V3Tooltip>
         <div className="flex flex-wrap items-center gap-1">
           {([
             ["library", "Library"],
-            ["frozen", "Flowmusic corpus"],
             ["atoms", "Atoms"],
             ["generated", "Published combinations"],
           ] as const).map(([source, label]) => (
@@ -245,6 +245,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
           inputRef={(element) => { queryInputs.current.a = element; }}
           onClear={() => setQuery("")}
           onSubmit={() => void submitSearch(query, "primary")}
+          capabilityEnabled={capabilityEnabled === true}
           actions={
             <MetaCrystalPickerDialog
               targetLabel={primaryLabel}
@@ -269,6 +270,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
             inputRef={(element) => { queryInputs.current.b = element; }}
             onClear={() => setQueryB("")}
             onSubmit={() => void submitSearch(queryB, "secondary")}
+            capabilityEnabled={capabilityEnabled === true}
             actions={
               <MetaCrystalPickerDialog
                 targetLabel={secondaryLabel}
@@ -336,7 +338,7 @@ export function SemanticSearch({ primaryLabel = "Query A", secondaryLabel = "Que
 
     </section>
   );
-  return collapsible ? <details open data-am-stage-disclosure={dataScope ? "semantic-search" : undefined} className={`min-w-0 rounded-lg border border-border bg-black/65 ${dataScope ? "p-2" : "p-3"}`}><summary className="flex list-none cursor-pointer items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-zinc-200 [&::-webkit-details-marker]:hidden"><AMIcon name="search" size="sm" bright />{primaryLabel === "Brief" ? t("Semantic Search · Brief") : `Semantic Search V3 · ${primaryLabel}`}<V3Tooltip content={t("Single target or dual-state interpolation. Search runs only on explicit submit.")}><span className="inline-flex size-5 items-center justify-center rounded text-muted-foreground"><Info className="size-3.5" /></span></V3Tooltip><ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary><div className="mt-1.5">{panel}</div></details> : panel;
+  return collapsible ? <details open data-am-stage-disclosure={dataScope ? "semantic-search" : undefined} className={`min-w-0 rounded-lg border border-border bg-black/65 ${dataScope ? "p-2" : "p-3"}`}><summary className="flex list-none cursor-pointer items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-zinc-200 [&::-webkit-details-marker]:hidden"><AMIcon name="search" size="sm" bright />{primaryLabel === "Brief" ? t("Semantic Search · Brief") : `${t("Semantic Search")} · ${primaryLabel}`}<V3Tooltip content={t("Single target or dual-state interpolation. Search runs only on explicit submit.")}><span className="inline-flex size-5 items-center justify-center rounded text-muted-foreground"><Info className="size-3.5" /></span></V3Tooltip><ChevronDown className="am-stage-disclosure-chevron size-3.5" /></summary><div className="mt-1.5">{panel}</div></details> : panel;
 }
 
 function QueryPanel(props: {
@@ -349,6 +351,7 @@ function QueryPanel(props: {
   onChange: (value: string) => void;
   onClear: () => void;
   onSubmit: () => void;
+  capabilityEnabled: boolean;
   onPaste: (event: ClipboardEvent<HTMLTextAreaElement>) => void;
   onUndo: () => void;
   onRedo: () => void;
@@ -358,7 +361,7 @@ function QueryPanel(props: {
   actions?: ReactNode;
 }) {
   const t = useUiText();
-  const { title, value, placeholder, resultCount, isSearching, onChange, onClear, onSubmit, onPaste, onUndo, onRedo, canUndo, canRedo, inputRef, actions, dataScope } = props;
+  const { title, value, placeholder, resultCount, isSearching, onChange, onClear, onSubmit, capabilityEnabled, onPaste, onUndo, onRedo, canUndo, canRedo, inputRef, actions, dataScope } = props;
   return (
     <div data-am-stage-zone={dataScope ? `query-${title === "Brief" ? "a" : "b"}` : undefined} className={`rounded border border-white/20 bg-black/40 ${dataScope ? "space-y-1 p-1.5" : "space-y-2 p-2.5"}`}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -373,7 +376,7 @@ function QueryPanel(props: {
         <Button type="button" variant="outline" size="sm" title="Undo paste (Ctrl/⌘+Z)" aria-label="Undo paste" disabled={!canUndo} onClick={onUndo}><Undo2 className="size-4" /></Button>
         <Button type="button" variant="outline" size="sm" title="Redo paste (Ctrl/⌘+Shift+Z, Ctrl+Y)" aria-label="Redo paste" disabled={!canRedo} onClick={onRedo}><Redo2 className="size-4" /></Button>
         <V3Tooltip content={t("Запускает semantic retrieval и anchoring только для содержимого этого поля.")}>
-          <Button type="button" data-am-stage-action={dataScope ? `search-${title === "Brief" ? "a" : "b"}` : undefined} size="sm" className="console-search-button h-8 rounded border border-fuchsia-400/50 bg-fuchsia-700/80 font-mono text-[10px] uppercase tracking-wide" onClick={onSubmit} disabled={!value.trim() || isSearching}>
+          <Button type="button" data-am-stage-action={dataScope ? `search-${title === "Brief" ? "a" : "b"}` : undefined} size="sm" className="console-search-button h-8 rounded border border-fuchsia-400/50 bg-fuchsia-700/80 font-mono text-[10px] uppercase tracking-wide" onClick={onSubmit} disabled={!value.trim() || isSearching || !capabilityEnabled} title={!capabilityEnabled ? t("Disabled in Settings") : undefined}>
             <AMIcon name="search" size="sm" bright />{isSearching ? "Searching..." : "Search"}
           </Button>
         </V3Tooltip>

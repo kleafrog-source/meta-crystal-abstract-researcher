@@ -20,6 +20,7 @@ import { AudioWaveformEditor } from "@/components/audio/AudioWaveformEditor";
 import { SemanticSearch } from "@/components/rag-v3/SemanticSearch";
 import { V3InfoTip } from "@/components/rag-v3/V3Tooltip";
 import { useUiText } from "@/lib/ui-i18n";
+import { useCapabilityEnabled } from "@/hooks/use-capability-registry";
 import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton";
 import { ParamToTextWorkbench } from "@/components/am-stage/ParamToTextWorkbench";
 import { GemmaMultimodalParameterSearch, type GemmaAudioParameter, type GemmaMultimodalParameterSearchHandle } from "@/components/am-stage/GemmaMultimodalParameterSearch";
@@ -177,6 +178,7 @@ function statusClass(status: AnalysisStatus): string {
 
 export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const t = useUiText();
+  const gemmaResolvedEnabled = useCapabilityEnabled("text.gemma.resolved");
   const stageRootRef = useRef<HTMLDivElement>(null);
   const v3Parameters = useRagV3Store((state) => state.activeParameters);
   const v3Query = useRagV3Store((state) => state.query);
@@ -329,10 +331,15 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   }, [active, refreshMorphoStatus]);
   useEffect(() => {
     if (!active || !morphoStatus?.index_job?.running) return;
+    let wasRunning = true;
+    let disposed = false;
     const timer = window.setInterval(() => {
-      if (document.visibilityState === "visible") void refreshMorphoStatus();
+      if (document.visibilityState === "visible") void fetch("/api/morpho/status?view=job", { cache: "no-store" }).then((response) => response.json()).then((payload: { job?: { running?: boolean } }) => {
+        if (disposed) return;
+        if (wasRunning && !payload.job?.running) { wasRunning = false; void refreshMorphoStatus(); }
+      }).catch(() => undefined);
     }, 2_000);
-    return () => window.clearInterval(timer);
+    return () => { disposed = true; window.clearInterval(timer); };
   }, [active, morphoStatus?.index_job?.running, refreshMorphoStatus]);
 
   const filteredV3Parameters = useMemo(() => v3Parameters.filter((parameter) => {
@@ -1145,7 +1152,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
               <Badge variant="outline" className="h-7 px-2 border-cyan-400/40 text-cyan-300">CLAP {clapCompleted}/{segments.length} · K{clapTopK}</Badge>
               <Badge variant="outline" className="h-7 px-2 border-fuchsia-400/40 text-fuchsia-300">SigLIP2 {siglipCompleted}/{segments.length} · K{siglipTopK}</Badge>
               <Tooltip><TooltipTrigger asChild><Badge variant="outline" className="h-7 px-2 border-violet-400/40 text-violet-200">{completeness.percent}%</Badge></TooltipTrigger><TooltipContent>{t("Session completeness")}: {completeness.complete}/{completeness.total} · {t(macroProfile)}</TooltipContent></Tooltip>
-              <Link href="/am-core#service-bay" title="Open Service Bay status and rebuild controls" className="inline-flex">
+              <Link href="/service-bay#siglip" title="Open Service Bay status and rebuild controls" className="inline-flex">
                 <Badge variant="outline" className={`h-7 px-2 whitespace-nowrap ${morphoStatus?.ready ? "border-emerald-400/40 text-emerald-300" : "border-amber-400/40 text-amber-300"}`}>SigLIP index: {morphoStatus?.status ?? "checking"}</Badge>
               </Link>
             </div>
@@ -1495,7 +1502,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                       ? `Перестройка index: ${morphoStatus.index_job.progress?.current ?? 0} / ${morphoStatus.index_job.progress?.total ?? 0}`
                       : `SigLIP2 index не готов: ${(morphoStatus?.stale_reasons ?? [morphoStatus?.status ?? "unknown"]).join("; ")}`}
                   </div>
-                  <Link className="mt-2 flex w-full items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent" href="/am-core#service-bay">
+                  <Link className="mt-2 flex w-full items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent" href="/service-bay#siglip">
                     Открыть Service Bay
                   </Link>
                 </div>
@@ -1670,8 +1677,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
           <details data-am-stage-disclosure="gemma-resolved-banks" className="min-w-0 rounded-lg border border-violet-400/20 bg-black/25 p-2">
             <summary className="flex cursor-pointer list-none items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-violet-200 [&::-webkit-details-marker]:hidden">Gemma value-pass banks · text {gemmaTextResolved.length} · audio AWTD {gemmaAudioAwtd.length} / resolved {gemmaAudioResolved.length}<ChevronDown className="am-stage-disclosure-chevron ml-auto size-3.5" /></summary>
             <div className="mt-2 grid min-w-0 gap-2 xl:grid-cols-2">
-              <div className="min-w-0 space-y-1"><Button size="sm" variant="outline" className="h-7 w-full" disabled={!textBanks.embeddinggemma2.length || macroRunning} onClick={() => void promoteGemmaText()}>{t("Resolve Gemma text values")}</Button><ParameterBank dataScope="am-stage" title={`text.gemma.resolved · ${gemmaTextResolved.length}`} icon="search" bankId="gemma-text-resolved" accent="cyan" parameters={gemmaTextResolved} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={(name, value) => setGemmaTextResolved((parameters) => parameters.map((item) => item.technical_name === name ? { ...item, current_value: value, suggested_value: value } : item))} onRemove={(name) => setGemmaTextResolved((parameters) => parameters.filter((item) => item.technical_name !== name))} /></div>
-              <div className="min-w-0 space-y-1"><Button size="sm" variant="outline" className="h-7 w-full" disabled={!gemmaAudioAwtd.length || macroRunning} onClick={() => void promoteGemmaAudio()}>{t("Resolve Gemma audio values")}</Button><ParameterBank dataScope="am-stage" title={`audio.gemma.awtd · ${gemmaAudioAwtd.length}`} icon="search" bankId="gemma-audio-awtd" accent="fuchsia" parameters={gemmaAudioAwtd} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={(name, value) => setGemmaAudioAwtd((parameters) => parameters.map((item) => item.technical_name === name ? { ...item, current_value: value, suggested_value: value } : item))} onRemove={(name) => setGemmaAudioAwtd((parameters) => parameters.filter((item) => item.technical_name !== name))} />
+              <div className="min-w-0 space-y-1"><Button size="sm" variant="outline" className="h-7 w-full" disabled={gemmaResolvedEnabled !== true || !textBanks.embeddinggemma2.length || macroRunning} title={gemmaResolvedEnabled === false ? t("Disabled in Settings") : undefined} onClick={() => void promoteGemmaText()}>{t("Resolve Gemma text values")}</Button><ParameterBank dataScope="am-stage" title={`text.gemma.resolved · ${gemmaTextResolved.length}`} icon="search" bankId="gemma-text-resolved" accent="cyan" parameters={gemmaTextResolved} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={(name, value) => setGemmaTextResolved((parameters) => parameters.map((item) => item.technical_name === name ? { ...item, current_value: value, suggested_value: value } : item))} onRemove={(name) => setGemmaTextResolved((parameters) => parameters.filter((item) => item.technical_name !== name))} /></div>
+              <div className="min-w-0 space-y-1"><Button size="sm" variant="outline" className="h-7 w-full" disabled={gemmaResolvedEnabled !== true || !gemmaAudioAwtd.length || macroRunning} title={gemmaResolvedEnabled === false ? t("Disabled in Settings") : undefined} onClick={() => void promoteGemmaAudio()}>{t("Resolve Gemma audio values")}</Button><ParameterBank dataScope="am-stage" title={`audio.gemma.awtd · ${gemmaAudioAwtd.length}`} icon="search" bankId="gemma-audio-awtd" accent="fuchsia" parameters={gemmaAudioAwtd} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={(name, value) => setGemmaAudioAwtd((parameters) => parameters.map((item) => item.technical_name === name ? { ...item, current_value: value, suggested_value: value } : item))} onRemove={(name) => setGemmaAudioAwtd((parameters) => parameters.filter((item) => item.technical_name !== name))} />
                 <ParameterBank dataScope="am-stage" title={`audio.gemma.resolved · ${gemmaAudioResolved.length}`} icon="search" bankId="gemma-audio-resolved" accent="cyan" parameters={gemmaAudioResolved} viewMode={textBankViewMode} titleOrder={titleOrder} onViewModeChange={setTextBankViewMode} useDomainLayerColors onChange={(name, value) => setGemmaAudioResolved((parameters) => parameters.map((item) => item.technical_name === name ? { ...item, current_value: value, suggested_value: value } : item))} onRemove={(name) => setGemmaAudioResolved((parameters) => parameters.filter((item) => item.technical_name !== name))} />
               </div>
             </div>

@@ -480,12 +480,12 @@ export function CombinatorialGenesisPage() {
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="outline"><ShieldCheck className="mr-1 size-3" />V3 protected</Badge>
+              <Badge variant="outline" title="Publishing into the catalogue requires a separate explicit action."><ShieldCheck className="mr-1 size-3" />Catalogue publish controlled</Badge>
               <Badge variant="outline"><Database className="mr-1 size-3" />library: {collectionStats?.library_parameter_count ?? "—"}</Badge>
               <Badge variant="outline">published: {collectionStats?.library_published_package_count ?? 0}</Badge>
-              <Badge variant="outline">frozen runtime + qwen3-embedding</Badge>
+              <Badge variant="outline">Genesis atoms · Qwen3</Badge>
               {collectionStats?.runtime_index_ready ? (
-                <Badge variant="outline">atom index: {collectionStats.runtime_index_atom_count}</Badge>
+                <Badge variant="outline" title={t("Genesis runtime atoms are a separate structural source, not the full published catalogue.")}>runtime atoms: {collectionStats.runtime_index_atom_count}</Badge>
               ) : null}
             </div>
           </div>
@@ -501,7 +501,7 @@ export function CombinatorialGenesisPage() {
               <div className="flex items-center gap-2">
                 <FileCheck2 className="size-4 text-emerald-300" />
                 <h2 className="font-mono text-sm font-semibold uppercase tracking-wide text-white">Dataset Lab · response inspector</h2>
-                <V3InfoTip content={t("Используйте один и тот же запрос во всех аккаунтах. Полный датасет прикреплять не нужно: при необходимости используйте raw-ссылки из V3 technical-name catalog. Вставьте полный JSON-ответ Flowmusic; проверка ничего не сохраняет.")} />
+                <V3InfoTip content={t("Используйте один и тот же запрос во всех аккаунтах. Полный датасет прикреплять не нужно: при необходимости используйте raw-ссылки из опубликованного каталога technical_name. Вставьте полный JSON-ответ Flowmusic; проверка ничего не сохраняет.")} />
                 <Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={() => void showCollectionPrompt()}>{t("Открыть prompt")}</Button>
               </div>
             </div>
@@ -523,7 +523,7 @@ export function CombinatorialGenesisPage() {
           <div className="rounded border border-emerald-400/20 bg-black/30 p-3">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="font-mono text-xs text-emerald-100">flowmusic-inbox → frozen dataset → embedding model index</div>
+                <div className="font-mono text-xs text-emerald-100">Flowmusic inbox → Genesis snapshot → embedding index</div>
                 <div className="mt-1 text-xs text-zinc-500">
                   Добавьте .txt/.md в data/combinatorial-genesis/flowmusic-inbox и запустите все этапы одной кнопкой.
                 </div>
@@ -648,7 +648,7 @@ export function CombinatorialGenesisPage() {
                 <Badge variant="secondary">related: {collectionStats?.auto_decision_counts?.related ?? "—"}</Badge>
                 <Badge variant="secondary">groups: {collectionStats?.semantic_group_count ?? "—"}</Badge>
                 <Badge variant="secondary">draft: {collectionStats?.semantic_draft_record_count ?? "—"}</Badge>
-                <Badge variant="secondary">version: {collectionStats?.frozen_version_id ?? "not frozen"}</Badge>
+                <Badge variant="secondary" title={t("Historical dataset snapshot used for Genesis runtime atoms; it is not the published parameter catalogue.")}>Genesis atom snapshot: {collectionStats?.frozen_version_id ?? "not captured"}</Badge>
                 <Badge variant="secondary">manual overrides: {semanticReview.decided}</Badge>
                 <Badge variant="secondary">auto-merge: off</Badge>
               </div>
@@ -735,7 +735,7 @@ export function CombinatorialGenesisPage() {
           </div>
 
           <aside className="space-y-3 rounded-lg border border-white/15 bg-white/[0.03] p-4">
-            <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase tracking-wide text-white">Safety boundary<V3InfoTip content={<div className="space-y-1"><p>{t("1. Стартовые 2733 параметра скопированы в автономную библиотеку CG.")}</p><p>{t("2. Генерация, проверка дублей и значения работают на автономных данных Combinatorial Genesis.")}</p><p>{t("3. Frozen atom index и qwen3-embedding:0.6b ранжируют атомы и готовые кандидаты.")}</p><p>{t("4. Рабочий датасет и retrieval index V3 изменяются только отдельной операцией публикации.")}</p><p>{t("5. Публикация добавляет только auto-resolved кандидаты в собственную базу CG с резервной копией.")}</p></div>} /></h2>
+            <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase tracking-wide text-white">Safety boundary<V3InfoTip content={<div className="space-y-1"><p>{t("1. Стартовые 2733 параметра скопированы в автономную библиотеку CG.")}</p><p>{t("2. Генерация, проверка дублей и значения работают на автономных данных Combinatorial Genesis.")}</p><p>{t("3. Genesis atom index and Qwen3 rank atoms and candidate combinations.")}</p><p>{t("4. Published catalogue retrieval changes only after catalogue commit and explicit index rebuild.")}</p><p>{t("5. Публикация добавляет только auto-resolved кандидаты в собственную базу CG с резервной копией.")}</p></div>} /></h2>
           </aside>
         </section>
 
@@ -756,7 +756,7 @@ export function CombinatorialGenesisPage() {
                 <PackageCheck className="size-4" />
                 {savingPackage ? "Saving dry-run..." : "Save experimental package"}
               </Button>
-              <span className="text-xs text-zinc-500">Сохраняет неизменяемый draft; рабочая база V3 не изменяется.</span>
+              <span className="text-xs text-zinc-500">Сохраняет неизменяемый draft; опубликованный каталог не изменяется.</span>
             </div>
             {packageError ? <div className="rounded border border-red-500/30 bg-red-950/20 p-3 text-sm text-red-300">{packageError}</div> : null}
             {candidatePackage ? (
@@ -788,7 +788,7 @@ export function CombinatorialGenesisPage() {
               </div>
             ) : null}
             <div className="rounded-lg border border-emerald-400/20 bg-emerald-950/10 p-3">
-              <h3 className="mb-2 font-mono text-xs uppercase tracking-wide text-emerald-200">BGE-ranked frozen atoms</h3>
+              <h3 className="mb-2 font-mono text-xs uppercase tracking-wide text-emerald-200">BGE-ranked Genesis atoms</h3>
               <div className="flex flex-wrap gap-1.5">
                 {preview.ranked_atoms.slice(0, 30).map((atom) => (
                   <span key={atom.atom} className="rounded border border-emerald-400/20 bg-black/40 px-2 py-1 font-mono text-[11px] text-emerald-100">

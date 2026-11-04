@@ -44,6 +44,8 @@ import { apiPost, apiPut, useFetch } from "@/hooks/use-fetch";
 import { AppearanceEditor } from "@/components/settings/AppearanceEditor";
 import { ParameterTitlePreference } from "@/components/settings/ParameterTitlePreference";
 import { InterfaceLanguagePreference } from "@/components/settings/InterfaceLanguagePreference";
+import { DEFAULT_CAPABILITY_REGISTRY, MODEL_SLOT_IDS, type CapabilityRegistry, type ModelSlotId } from "@/lib/capability-registry";
+import { useUiText } from "@/lib/ui-i18n";
 
 interface SettingsData {
   ok: boolean;
@@ -57,6 +59,7 @@ interface SettingsData {
     temperature: number;
     topP: number;
     maxTokens: number;
+    capabilityRegistry: CapabilityRegistry;
   };
 }
 
@@ -93,7 +96,37 @@ interface IndexTaskEvent {
   };
 }
 
+const MODEL_SLOT_HELP: Record<ModelSlotId, string> = {
+  textEmbedding: "Qwen-style text retrieval, composite index, and Qwen anchors.",
+  multimodalEmbedding: "Gemma text, audio, and image queries and Gemma index banks.",
+  textLlm: "Strict JSON and catalogue enrichment.",
+  audioLlm: "LFM3 audio description and transcription tasks.",
+  clap: "Audio-to-parameter similarity model and local device.",
+  siglip2: "Spectrogram or image-to-parameter model and local CPU path.",
+  helm: "Audio gate classification; disabled until the runtime is available.",
+  voice: "Voice presentation and has-vocals analysis.",
+  indic: "Indic language identification.",
+  classicDsp: "Classic DSP and MIR feature extraction, such as librosa.",
+};
+
+const CAPABILITY_HELP: Record<string, string> = {
+  "text.qwen.resolved": "Qwen text retrieval with resolved values.",
+  "text.gemma.awtd": "Gemma text retrieval for Axis, Weight, Threshold, and Depth roles.",
+  "text.gemma.resolved": "Gemma text retrieval with a separate value pass.",
+  "audio.clap.resolved": "CLAP audio retrieval and values.",
+  "audio.gemma.awtd": "Gemma audio retrieval for parameter roles.",
+  "audio.gemma.resolved": "Gemma audio retrieval with a separate value pass.",
+  "spec.siglip.resolved": "SigLIP spectrogram retrieval.",
+  "spec.gemma.*": "Reserved Gemma spectrogram bank; currently not implemented.",
+  "side-meta.helm": "Optional audio gates; unavailable by default.",
+  "side-meta.voice": "Voice presentation classification.",
+  "side-meta.indic": "Indic language identification.",
+  "side-meta.librosa": "On-demand acoustic and MIR features.",
+  "side-meta.lfm3": "LFM3 audio-to-text.",
+};
+
 export function Settings() {
+  const t = useUiText();
   const { data, refresh } = useFetch<SettingsData>("/api/settings");
   const [llm, setLlm] = useState<SettingsData["llm"] | null>(null);
   const [models, setModels] = useState<ModelsData | null>(null);
@@ -292,6 +325,8 @@ export function Settings() {
   );
   const textModel = llm?.provider === "freellmapi" ? llm.freeLLMApiModel : llm?.chatModel;
   const setTextModel = (chatModel: string) => setLlm((current) => current ? current.provider === "freellmapi" ? { ...current, freeLLMApiModel: chatModel } : { ...current, chatModel } : current);
+  const capabilityRegistry = llm?.capabilityRegistry ?? DEFAULT_CAPABILITY_REGISTRY;
+  const updateCapabilityRegistry = (registry: CapabilityRegistry) => setLlm((current) => current ? { ...current, capabilityRegistry: registry } : current);
 
   if (!llm) {
     return (
@@ -322,6 +357,35 @@ export function Settings() {
         <InterfaceLanguagePreference />
         <ParameterTitlePreference />
         <AppearanceEditor />
+        <Card>
+          <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-sm"><Cpu className="h-4 w-4 text-cyan-400" />{t("Model & capability registry")}</CardTitle>
+              <CardDescription>{t("Choose model IDs and providers, then enable the product banks and optional analysis features. Changes take effect after Save.")}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            <div className="grid gap-2 md:grid-cols-2">
+              {MODEL_SLOT_IDS.map((id) => {
+                const slot = capabilityRegistry.modelSlots[id];
+                return <div key={id} className="grid grid-cols-[minmax(0,1fr)_8rem_8rem_auto] items-center gap-2 rounded border border-border p-2">
+                  <Input aria-label={`${id} model`} title="Model ID or local model path" value={slot.modelId} onChange={(event) => updateCapabilityRegistry({ ...capabilityRegistry, modelSlots: { ...capabilityRegistry.modelSlots, [id]: { ...slot, modelId: event.target.value } } })} />
+                  <select aria-label={`${id} provider`} title="Provider" className="h-9 rounded border border-input bg-background px-2 text-sm" value={slot.provider} onChange={(event) => updateCapabilityRegistry({ ...capabilityRegistry, modelSlots: { ...capabilityRegistry.modelSlots, [id]: { ...slot, provider: event.target.value as typeof slot.provider } } })}><option value="ollama">Ollama</option><option value="local">Local</option><option value="none">None</option></select>
+                  <span className="truncate text-xs text-muted-foreground" title={t(MODEL_SLOT_HELP[id])}>{id}</span>
+                  <input aria-label={`Enable ${id}`} title={`Enable ${id}`} type="checkbox" checked={slot.enabled} onChange={(event) => updateCapabilityRegistry({ ...capabilityRegistry, modelSlots: { ...capabilityRegistry.modelSlots, [id]: { ...slot, enabled: event.target.checked } } })} />
+                </div>;
+              })}
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-sm font-medium">{t("Banks and capabilities")}</h3>
+              <div className="divide-y divide-border rounded border border-border">
+                {Object.entries(capabilityRegistry.capabilities).map(([id, setting]) => <div key={id} className="grid grid-cols-[auto_minmax(0,1fr)_minmax(9rem,14rem)] items-center gap-3 p-2 text-sm">
+                  <input aria-label={`Enable ${id}`} title={`Enable ${id}`} type="checkbox" checked={setting.enabled} onChange={(event) => updateCapabilityRegistry({ ...capabilityRegistry, capabilities: { ...capabilityRegistry.capabilities, [id]: { ...setting, enabled: event.target.checked } } })} />
+                  <code className="truncate" title={t(CAPABILITY_HELP[id] ?? id)}>{id}</code>
+                  <select aria-label={`${id} model slot`} title="Bound model slot" className="h-8 rounded border border-input bg-background px-2 text-xs" value={setting.modelSlot} onChange={(event) => updateCapabilityRegistry({ ...capabilityRegistry, capabilities: { ...capabilityRegistry.capabilities, [id]: { ...setting, modelSlot: event.target.value as ModelSlotId } } })}>{MODEL_SLOT_IDS.map((slotId) => <option key={slotId} value={slotId}>{slotId}</option>)}</select>
+                </div>)}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm">

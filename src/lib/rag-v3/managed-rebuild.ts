@@ -6,7 +6,7 @@ import { loadEmbeddingRuntimeSettings, embeddingProcessEnv } from "@/lib/embeddi
 import { excludedRegistrySha, readExcludedRegistry } from "@/lib/combinatorial-genesis/registry";
 import { getV3SnapshotIdentity } from "@/lib/rag-v3/snapshot";
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
-import { TEXT_INDEX_MODELS, getEncoderArtifactDirectory, getTextIndexDirectory } from "@/lib/rag-v3/composite-index";
+import { getConfiguredTextIndexModel, getEncoderArtifactDirectory, getTextIndexDirectory } from "@/lib/rag-v3/composite-index";
 import { ensureOllamaModelAvailable, prepareGpuForEmbeddingModel } from "@/lib/ollama-memory";
 
 export type RebuildKind = "composite" | "embeddinggemma2_text" | "atoms" | "anchors" | "range" | "select" | "relations" | "clap" | "gemma2_atoms" | "gemma2_anchors" | "gemma2_range" | "gemma2_select" | "gemma2_relations" | "all_qwen" | "catalogue";
@@ -60,6 +60,8 @@ function append(job: ManagedJob, chunk: string) {
 
 async function command(kind: Exclude<ArtifactKind, "siglip">): Promise<{ args: string[]; env: NodeJS.ProcessEnv }> {
   const settings = await loadEmbeddingRuntimeSettings();
+  const [qwenModel, gemmaModel] = await Promise.all([getConfiguredTextIndexModel("qwen3"), getConfiguredTextIndexModel("embeddinggemma2")]);
+  const modelFor = (index: "qwen3" | "embeddinggemma2") => index === "qwen3" ? qwenModel : gemmaModel;
   const env = embeddingProcessEnv(settings);
   const anchoring = path.join(V3_ROOT, "anchoring");
   const valueArgs = (index: "qwen3" | "embeddinggemma2", target: "range" | "select") => [
@@ -67,25 +69,25 @@ async function command(kind: Exclude<ArtifactKind, "siglip">): Promise<{ args: s
     "--dataset", path.join(V3_ROOT, "dataset.json"),
     "--output", index === "qwen3" ? path.join(V3_ROOT, "value-anchors") : getEncoderArtifactDirectory(index, "range-anchors"),
     "--composite-dir", getTextIndexDirectory(index),
-    "--endpoint", settings.baseUrl, "--model", TEXT_INDEX_MODELS[index], "--target", target, "--live-snapshot",
+    "--endpoint", settings.baseUrl, "--model", modelFor(index), "--target", target, "--live-snapshot",
     ...(index === "embeddinggemma2" ? ["--direct"] : []),
   ];
   const atomArgs = (index: "qwen3" | "embeddinggemma2") => [
     "-u", "python_engine/build-combinatorial-runtime-index.py", "--endpoint", settings.baseUrl,
-    "--model", TEXT_INDEX_MODELS[index], ...(index === "embeddinggemma2" ? ["--output-dir", getEncoderArtifactDirectory(index, "runtime-atoms")] : []),
+    "--model", modelFor(index), ...(index === "embeddinggemma2" ? ["--output-dir", getEncoderArtifactDirectory(index, "runtime-atoms")] : []),
   ];
   const relationArgs = (index: "qwen3" | "embeddinggemma2") => [
     "-u", "python_engine/anchoring_v3/build_relation_anchors.py",
     "--dataset", path.join(V3_ROOT, "dataset.json"),
     "--output", index === "qwen3" ? path.join(V3_ROOT, "relations") : getEncoderArtifactDirectory(index, "relations"),
-    "--endpoint", settings.baseUrl, "--model", TEXT_INDEX_MODELS[index],
+    "--endpoint", settings.baseUrl, "--model", modelFor(index),
     "--live-snapshot",
   ];
   const liveAnchorArgs = (index: "qwen3" | "embeddinggemma2") => {
     const base = path.join(V3_ROOT, "anchoring");
     const indexDir = getTextIndexDirectory(index);
     return ["-u", "python_engine/anchoring_v3/build_anchors.py",
-      "--endpoint", settings.baseUrl, "--model", TEXT_INDEX_MODELS[index],
+      "--endpoint", settings.baseUrl, "--model", modelFor(index),
       "--dataset", path.join(V3_ROOT, "dataset.json"),
       "--axes", path.join(base, "axes.json"), "--polarity", path.join(base, "polarity_matrix.json"),
       "--strong", path.join(base, "calibration", "strong_set.json"), "--neutral", path.join(base, "calibration", "neutral_set.json"),
@@ -94,8 +96,8 @@ async function command(kind: Exclude<ArtifactKind, "siglip">): Promise<{ args: s
       "--live-snapshot"];
   };
   const specs: Record<Exclude<ArtifactKind, "siglip">, string[]> = {
-    composite: ["-u", "python_engine/build-genesis-v3-composite-index.py", "--endpoint", settings.baseUrl, "--model", settings.model],
-    embeddinggemma2_text: ["-u", "python_engine/build-genesis-v3-composite-index.py", "--endpoint", settings.baseUrl, "--model", TEXT_INDEX_MODELS.embeddinggemma2, "--batch-size", "16", "--output-dir", getTextIndexDirectory("embeddinggemma2"), "--retrieval-text-only"],
+    composite: ["-u", "python_engine/build-genesis-v3-composite-index.py", "--endpoint", settings.baseUrl, "--model", qwenModel],
+    embeddinggemma2_text: ["-u", "python_engine/build-genesis-v3-composite-index.py", "--endpoint", settings.baseUrl, "--model", gemmaModel, "--batch-size", "16", "--output-dir", getTextIndexDirectory("embeddinggemma2"), "--retrieval-text-only"],
     atoms: atomArgs("qwen3"),
     anchors: liveAnchorArgs("qwen3"),
     range: valueArgs("qwen3", "range"),
@@ -114,8 +116,9 @@ async function command(kind: Exclude<ArtifactKind, "siglip">): Promise<{ args: s
 async function runStage(kind: Exclude<ArtifactKind, "siglip">, job: ManagedJob): Promise<number> {
   job.stage = kind;
   if (kind === "embeddinggemma2_text" || kind.startsWith("gemma2_")) {
-    await ensureOllamaModelAvailable(TEXT_INDEX_MODELS.embeddinggemma2);
-    await prepareGpuForEmbeddingModel(TEXT_INDEX_MODELS.embeddinggemma2, 5_000, "embeddinggemma2-index-build");
+    const model = await getConfiguredTextIndexModel("embeddinggemma2");
+    await ensureOllamaModelAvailable(model);
+    await prepareGpuForEmbeddingModel(model, 5_000, "embeddinggemma2-index-build");
   }
   const spec = await command(kind);
   if (kind === "gemma2_anchors") await fs.mkdir(path.dirname(spec.args[spec.args.indexOf("--out") + 1]!), { recursive: true });
@@ -192,9 +195,36 @@ async function readJsonValue(filePath: string): Promise<unknown> {
   try { return JSON.parse(await fs.readFile(filePath, "utf8")) as unknown; } catch { return null; }
 }
 
+function artifactPaths(versionId: string): Record<ArtifactKind, string> {
+  return {
+    composite: path.join(V3_ROOT, "composite-index", "manifest.json"),
+    embeddinggemma2_text: path.join(getTextIndexDirectory("embeddinggemma2"), "manifest.json"),
+    atoms: path.join(DATA_ROOT, "indexes", versionId, "manifest.json"),
+    anchors: path.join(V3_ROOT, "anchoring", "anchors_build.json"),
+    range: path.join(V3_ROOT, "value-anchors", "manifest.json"),
+    select: path.join(V3_ROOT, "value-anchors", "select-options.json"),
+    relations: path.join(V3_ROOT, "relations", "manifest.json"),
+    clap: path.join(DATA_ROOT, "audio-clap-index", "index.json"),
+    gemma2_atoms: path.join(getEncoderArtifactDirectory("embeddinggemma2", "runtime-atoms"), "manifest.json"),
+    gemma2_anchors: path.join(getEncoderArtifactDirectory("embeddinggemma2", "anchors"), "anchors_build.json"),
+    gemma2_range: path.join(getEncoderArtifactDirectory("embeddinggemma2", "range-anchors"), "manifest.json"),
+    gemma2_select: path.join(getEncoderArtifactDirectory("embeddinggemma2", "range-anchors"), "select-options.json"),
+    gemma2_relations: path.join(getEncoderArtifactDirectory("embeddinggemma2", "relations"), "manifest.json"),
+    siglip: path.join(DATA_ROOT, "morpho-siglip", "manifest.json"),
+  };
+}
+
+/** Cheap existence check for mode runtime; authoritative freshness audit is explicit in Service Bay. */
+export async function isArtifactManifestAvailable(kind: ArtifactKind, expectedModel?: string): Promise<boolean> {
+  const latest = await readJson(path.join(DATA_ROOT, "datasets", "latest.json"));
+  const paths = artifactPaths(String(latest?.version_id ?? ""));
+  const manifest = await readJson(paths[kind]);
+  return Boolean(manifest && (!expectedModel || String(manifest.model ?? manifest.model_id ?? "") === expectedModel));
+}
+
 export interface BankStatus { mode_id: string; input: string; encoder: string; value_policy: string; status: "ready" | "partial" | "stale_data" | "stale_vectors" | "missing"; dependencies: string[] }
 
-export async function getArtifactStatuses(): Promise<{ artifacts: ArtifactStatus[]; banks: BankStatus[]; active_model: string; registry_sha256: string; active_parameters: number }> {
+export async function getArtifactStatuses(): Promise<{ artifacts: ArtifactStatus[]; banks: BankStatus[]; active_model: string; active_endpoint: string; registry_sha256: string; active_parameters: number }> {
   const [settings, registry, latest, snapshot, tombstones] = await Promise.all([
     loadEmbeddingRuntimeSettings(),
     readExcludedRegistry(),
@@ -203,20 +233,16 @@ export async function getArtifactStatuses(): Promise<{ artifacts: ArtifactStatus
     readJsonValue(path.join(DATA_ROOT, "library", "catalogue-deleted.json")),
   ]);
   const registrySha = excludedRegistrySha(registry);
+  const [qwenModel, gemmaModel] = await Promise.all([getConfiguredTextIndexModel("qwen3"), getConfiguredTextIndexModel("embeddinggemma2")]);
   const versionId = String(latest?.version_id ?? "");
   const activeCount = snapshot.parameter_count;
-  const [libraryRows, frozenRows, frozenAtoms] = await Promise.all([
+  const [libraryRows, frozenAtoms] = await Promise.all([
     readJsonValue(path.join(DATA_ROOT, "library", "parameters.json")),
-    readJsonValue(path.join(DATA_ROOT, "datasets", versionId, "parameters.json")),
     readJsonValue(path.join(DATA_ROOT, "datasets", versionId, "atoms.json")),
   ]);
   const deletedNames = new Set(Array.isArray(tombstones) ? tombstones.filter((name): name is string => typeof name === "string") : tombstones && typeof tombstones === "object" && Array.isArray((tombstones as { technical_names?: unknown }).technical_names) ? (tombstones as { technical_names: unknown[] }).technical_names.filter((name): name is string => typeof name === "string") : []);
   const excludedNames = new Set(registry.entries.map((entry) => entry.technical_name));
   const parameterByName = new Map<string, Record<string, unknown>>();
-  for (const row of Array.isArray(frozenRows) ? frozenRows as Array<Record<string, unknown>> : []) {
-    const name = String(row.technical_name ?? "").trim();
-    if (name) parameterByName.set(name, row);
-  }
   for (const row of Array.isArray(libraryRows) ? libraryRows as Array<Record<string, unknown>> : []) {
     const name = String(row.technical_name ?? "").trim();
     if (name) parameterByName.set(name, row);
@@ -239,22 +265,7 @@ export async function getArtifactStatuses(): Promise<{ artifacts: ArtifactStatus
     const sources = Array.isArray(row.source_parameters) ? row.source_parameters.filter((name): name is string => typeof name === "string" && !excludedNames.has(name) && !deletedNames.has(name)) : [];
     return !Array.isArray(row.source_parameters) || sources.length > 0;
   }).length;
-  const paths: Record<ArtifactKind, string> = {
-    composite: path.join(V3_ROOT, "composite-index", "manifest.json"),
-    embeddinggemma2_text: path.join(getTextIndexDirectory("embeddinggemma2"), "manifest.json"),
-    atoms: path.join(DATA_ROOT, "indexes", versionId, "manifest.json"),
-    anchors: path.join(V3_ROOT, "anchoring", "anchors_build.json"),
-    range: path.join(V3_ROOT, "value-anchors", "manifest.json"),
-    select: path.join(V3_ROOT, "value-anchors", "select-options.json"),
-    relations: path.join(V3_ROOT, "relations", "manifest.json"),
-    clap: path.join(DATA_ROOT, "audio-clap-index", "index.json"),
-    gemma2_atoms: path.join(getEncoderArtifactDirectory("embeddinggemma2", "runtime-atoms"), "manifest.json"),
-    gemma2_anchors: path.join(getEncoderArtifactDirectory("embeddinggemma2", "anchors"), "anchors_build.json"),
-    gemma2_range: path.join(getEncoderArtifactDirectory("embeddinggemma2", "range-anchors"), "manifest.json"),
-    gemma2_select: path.join(getEncoderArtifactDirectory("embeddinggemma2", "range-anchors"), "select-options.json"),
-    gemma2_relations: path.join(getEncoderArtifactDirectory("embeddinggemma2", "relations"), "manifest.json"),
-    siglip: path.join(DATA_ROOT, "morpho-siglip", "manifest.json"),
-  };
+  const paths = artifactPaths(versionId);
   const labels: Record<ArtifactKind, string> = {
     composite: "Qwen3 composite", embeddinggemma2_text: "EmbeddingGemma 2 (text index)", atoms: "Runtime atoms", anchors: "Live axes / anchors",
     range: "Range value anchors", select: "Select options", relations: "Relation anchors", clap: "CLAP audio index",
@@ -264,9 +275,9 @@ export async function getArtifactStatuses(): Promise<{ artifacts: ArtifactStatus
   };
   const descriptions: Record<ArtifactKind, string> = {
     composite: "Main text retrieval parameter vectors.", embeddinggemma2_text: "Gemma-space text retrieval vectors; audio/spec queries use this bank.",
-    atoms: "Frozen Genesis runtime atom corpus embedded with Qwen3.", anchors: "Live axis anchors and per-parameter a_home mapping in Qwen3 space.",
+    atoms: "Genesis runtime atoms embedded with Qwen3; a separate structural source.", anchors: "Live axis anchors and per-parameter a_home mapping in Qwen3 space.",
     range: "Qwen3-space Range value anchors.", select: "Qwen3-space Select option anchors.", relations: "Qwen3 relation vectors and parameter bindings.", clap: "CLAP audio-to-parameter candidates.",
-    gemma2_atoms: "Same frozen Genesis atom corpus embedded independently with Gemma.", gemma2_anchors: "Gemma-space live axis anchors and parameter mapping.",
+    gemma2_atoms: "Genesis runtime atoms embedded independently with Gemma; a separate structural source.", gemma2_anchors: "Gemma-space live axis anchors and parameter mapping.",
     gemma2_range: "Gemma-space Range value anchors.", gemma2_select: "Gemma-space Select option anchors.", gemma2_relations: "Gemma-space relation vectors and current parameter bindings.",
     siglip: "SigLIP2 spectrogram/image candidates; modality-specific index.",
   };
@@ -282,7 +293,7 @@ export async function getArtifactStatuses(): Promise<{ artifacts: ArtifactStatus
     const count = Number(manifest.parameter_count ?? manifest.count ?? manifest.atom_count ?? 0);
     const builtRegistrySha = String(manifest.excluded_sha256 ?? "");
     const isGemma = kind === "embeddinggemma2_text" || kind.startsWith("gemma2_");
-    const expectedModel = kind === "clap" || kind === "siglip" ? model : isGemma ? TEXT_INDEX_MODELS.embeddinggemma2 : TEXT_INDEX_MODELS.qwen3;
+    const expectedModel = kind === "clap" || kind === "siglip" ? model : isGemma ? gemmaModel : qwenModel;
     const modelMismatch = kind !== "clap" && kind !== "siglip" && model !== expectedModel;
     const expectedDimensions = kind === "siglip" ? 768 : isGemma ? 768 : 1024;
     const dimensionMismatch = kind !== "clap" && dimensions !== null && dimensions !== expectedDimensions;
@@ -335,5 +346,5 @@ export async function getArtifactStatuses(): Promise<{ artifacts: ArtifactStatus
     const dependencyState = unready.map((item) => `${item?.kind}: ${item?.status}`);
     return { ...bank, status, dependencies: dependencyState.length ? [...bank.dependencies, ...dependencyState] : bank.dependencies };
   });
-  return { artifacts, banks, active_model: settings.model, registry_sha256: registrySha, active_parameters: activeCount };
+  return { artifacts, banks, active_model: qwenModel, active_endpoint: settings.baseUrl, registry_sha256: registrySha, active_parameters: activeCount };
 }

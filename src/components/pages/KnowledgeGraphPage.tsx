@@ -7,6 +7,7 @@ import { V3InfoTip, V3Tooltip } from "@/components/rag-v3/V3Tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useUiText } from "@/lib/ui-i18n";
 
 interface Node {
   id: string;
@@ -44,6 +45,7 @@ interface Status {
 }
 
 export function KnowledgeGraphPage() {
+  const t = useUiText();
   const [status, setStatus] = useState<Status | null>(null);
   const [query, setQuery] = useState("");
   const [depth, setDepth] = useState("1");
@@ -141,7 +143,7 @@ export function KnowledgeGraphPage() {
                 <h1 className="font-mono text-lg font-semibold">
                   Parameter Knowledge Graph
                 </h1>
-                <V3InfoTip content="Read-only граф связей параметров V3. Он не меняет базу, значения или индексы." />
+                <V3InfoTip content={t("Read-only граф связей параметров каталога. Он не меняет базу, значения или индексы.")} />
                 <V3InfoTip content="Фактические связи таксономии и атомов плюс взаимные семантические соседи из текущего composite index." />
               </div>
             </div>
@@ -168,7 +170,7 @@ export function KnowledgeGraphPage() {
               ) : null}
             </div>
             <div className="flex gap-2">
-              <V3Tooltip content="Перестроить граф из актуального снимка V3 и composite index.">
+              <V3Tooltip content={t("Перестроить граф из актуального каталога и composite index.")}>
                 <Button
                   size="sm"
                   onClick={() => void run("POST")}

@@ -1,6 +1,3 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
-
 import { readGenesisLibrary, type GenesisLibraryParameter } from "@/lib/combinatorial-genesis/library";
 import { readExcludedRegistry } from "@/lib/combinatorial-genesis/registry";
 import { rankRuntimeAtoms } from "@/lib/combinatorial-genesis/runtime-index";
@@ -10,8 +7,8 @@ import { embedTextWithModel, embedTextsWithModel } from "@/lib/ollama-client";
 import { classifyDomainLayer } from "@/lib/am-parameters-catalogue/domain-layer-config";
 import { ACOUSTIC_DOMAIN_LAYERS, GLOBAL_CONSENSUS_LAYER } from "@/lib/domain-layers";
 
-import { rankCompositeNamesMulti, TEXT_INDEX_MODELS, type TextIndexId } from "./composite-index";
-import { getArtifactStatuses } from "./managed-rebuild";
+import { getConfiguredTextIndexModel, rankCompositeNamesMulti, type TextIndexId } from "./composite-index";
+import { isArtifactManifestAvailable } from "./managed-rebuild";
 import { buildRelationAlignment, ensureConceptCoverage } from "./alignment";
 import { RAG_V3_CONFIG } from "./config";
 import { runV3AnchoringBridge, type V3AnchorValue } from "./python-bridge";
@@ -22,6 +19,7 @@ import { selectDomainFirstMmr } from "./domain-mmr";
 
 export interface RagV3Sources {
   library?: boolean;
+  /** Legacy caller field, ignored: the catalogue is the only parameter authority. */
   frozen?: boolean;
   atoms?: boolean;
   generated?: boolean;
@@ -31,7 +29,6 @@ export type RagV3Scopes = Record<RetrievalScope, boolean>;
 
 const DEFAULT_SCOPES: RagV3Scopes = { sound: true, structure: true, metadata: false, provenance: false, administrative: false };
 
-const DATA_ROOT = path.join(process.cwd(), "data", "combinatorial-genesis");
 const STOPWORDS = new Set(["и", "в", "на", "с", "по", "для", "the", "a", "an", "of", "to", "in", "and", "with"]);
 
 function classifyRetrievalScope(parameter: GenesisLibraryParameter): RetrievalScope {
@@ -50,7 +47,7 @@ function tokenize(text: string): string[] {
   return (text.toLowerCase().match(/[\p{L}\p{N}_]+/gu) ?? []).filter((token) => token.length > 1 && !STOPWORDS.has(token));
 }
 
-function normalizeParameter(parameter: GenesisLibraryParameter, source: "library" | "frozen"): EnrichedParameter & { _v3_source: string } {
+function normalizeParameter(parameter: GenesisLibraryParameter): EnrichedParameter & { _source: string } {
   const name = String(parameter.technical_name ?? "");
   const tokens = name.split("_");
   const ui = String(parameter.ui_element ?? "String") as UiElement;
@@ -87,20 +84,13 @@ function normalizeParameter(parameter: GenesisLibraryParameter, source: "library
       ? Object.fromEntries(Object.entries(parameter.option_aliases).filter((entry): entry is [string, string[]] => Array.isArray(entry[1]) && entry[1].every((item) => typeof item === "string")))
       : null,
     retrieval_scope: classifyRetrievalScope(parameter),
-    _v3_source: source,
+    _source: "catalogue",
   };
 }
 
 function parameterDomainLayer(parameter: EnrichedParameter): string | null {
   if (parameter.domain_layer === GLOBAL_CONSENSUS_LAYER.id) return null;
   return parameter.domain_layer ?? classifyDomainLayer(parameter.technical_name, parameter.category);
-}
-
-async function readFrozen(): Promise<GenesisLibraryParameter[]> {
-  const latest = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "datasets", "latest.json"), "utf8")) as { version_id: string };
-  return JSON.parse(
-    await fs.readFile(path.join(DATA_ROOT, "datasets", latest.version_id, "parameters.json"), "utf8"),
-  ) as GenesisLibraryParameter[];
 }
 
 function retrievalText(parameter: EnrichedParameter): string {
@@ -134,7 +124,7 @@ function lexicalScore(query: string, parameter: EnrichedParameter): number {
   return score;
 }
 
-function toActive(parameter: EnrichedParameter & { _v3_source: string }, similarity: number, currentValues: Record<string, number | string>, anchored?: V3AnchorValue): ActiveParameter {
+function toActive(parameter: EnrichedParameter & { _source: string }, similarity: number, currentValues: Record<string, number | string>, anchored?: V3AnchorValue): ActiveParameter {
   const fallback = currentValues[parameter.technical_name] ?? (Array.isArray(parameter.default) ? parameter.default.join(", ") : parameter.default);
   const value = anchored?.value ?? fallback;
   return {
@@ -144,7 +134,7 @@ function toActive(parameter: EnrichedParameter & { _v3_source: string }, similar
     current_value: value,
     before: anchored?.before ?? fallback,
     source: anchored?.source ?? "default",
-    detail: `V3 source ${parameter._v3_source} · ${anchored?.detail ?? "autonomous default anchoring"}`,
+    detail: `Catalogue source · ${anchored?.detail ?? "autonomous default anchoring"}`,
     similarity,
   };
 }
@@ -168,22 +158,26 @@ export async function searchV3(params: {
   const query = params.query.trim();
   const hasExternalEmbedding = Array.isArray(params.queryEmbedding) && params.queryEmbedding.length > 0;
   if (!query && !hasExternalEmbedding) return { query: "", effective_query: "", results: [], total_candidates: 0, total_scoped: 0, retrieval_cache_size: 0 };
-  const enabled = { library: true, frozen: true, atoms: true, generated: true, ...params.sources };
+  const enabled = { library: true, atoms: true, generated: true, ...params.sources, frozen: false };
   const scopes = { ...DEFAULT_SCOPES, ...params.scopes };
-  const [library, frozen, excludedRegistry] = await Promise.all([
+  const manifestChecks = new Map<string, Promise<boolean>>();
+  const isReady = (kind: string) => {
+    let check = manifestChecks.get(kind);
+    if (!check) { check = isArtifactManifestAvailable(kind as import("./managed-rebuild").ArtifactKind); manifestChecks.set(kind, check); }
+    return check;
+  };
+  const [library, excludedRegistry] = await Promise.all([
     enabled.library || enabled.generated ? readGenesisLibrary() : Promise.resolve([]),
-    enabled.frozen ? readFrozen() : Promise.resolve([]),
     readExcludedRegistry(),
   ]);
   const excludedNames = new Set(excludedRegistry.entries.map((entry) => entry.technical_name));
-  const records = new Map<string, EnrichedParameter & { _v3_source: string }>();
+  const records = new Map<string, EnrichedParameter & { _source: string }>();
   if (enabled.library || enabled.generated) {
     for (const item of library) {
       const generated = item.domain === "experimental_combinatorial_genesis";
-      if ((generated && enabled.generated) || (!generated && enabled.library)) records.set(item.technical_name, normalizeParameter(item, "library"));
+      if ((generated && enabled.generated) || (!generated && enabled.library)) records.set(item.technical_name, normalizeParameter(item));
     }
   }
-  for (const item of frozen) if (!records.has(item.technical_name)) records.set(item.technical_name, normalizeParameter(item, "frozen"));
   for (const [name, parameter] of records) if (!scopes[parameter.retrieval_scope]) records.delete(name);
   if (params.candidateNames) {
     const allowedNames = new Set(params.candidateNames);
@@ -194,15 +188,12 @@ export async function searchV3(params: {
     ? params.externalQueryText?.trim() || "Audio input"
     : buildEffectiveQuery(query, params.instructionContext);
   const textIndex = params.textIndex === "embeddinggemma2" ? "embeddinggemma2" : "qwen3";
-  const selectedModel = TEXT_INDEX_MODELS[textIndex];
-  const artifactAudit = await getArtifactStatuses();
-  const isReady = (kind: string) => {
-    const item = artifactAudit.artifacts.find((artifact) => artifact.kind === kind);
-    return item?.status === "ready" || item?.status === "built";
-  };
+  const selectedModel = await getConfiguredTextIndexModel(textIndex);
+  const textArtifactKind = textIndex === "qwen3" ? "composite" : "embeddinggemma2_text";
+  if (!(await isArtifactManifestAvailable(textArtifactKind, selectedModel))) throw new Error(`Selected ${textIndex} index is missing or was built with a different model. Refresh status in Service Bay.`);
   const selectedQueryVector = params.queryEmbedding ?? await embedTextWithModel(baseQuery, selectedModel, params.modelSlotOwner);
   const atomKind = textIndex === "qwen3" ? "atoms" : "gemma2_atoms";
-  const atomRanking = enabled.atoms && isReady(atomKind) ? await rankRuntimeAtoms(selectedQueryVector, 20, textIndex).catch(() => null) : null;
+  const atomRanking = enabled.atoms && await isReady(atomKind) ? await rankRuntimeAtoms(selectedQueryVector, 20, textIndex).catch(() => null) : null;
   const atomExpansion = atomRanking?.atoms.filter((atom) => atom.role !== "unit").slice(0, 12).map((atom) => atom.atom).join(" ") ?? "";
   const effectiveQuery = baseQuery;
   const concepts = hasExternalEmbedding
@@ -223,7 +214,7 @@ export async function searchV3(params: {
     ...(atomExpansionVector ? [{ vector: atomExpansionVector, weight: 0.65 }] : []),
   ];
   const relationKind = textIndex === "qwen3" ? "relations" : "gemma2_relations";
-  const activeRelations = isReady(relationKind) ? await matchRelations(baseQuery, conceptVectors.map((concept) => concept.vector), textIndex) : [];
+  const activeRelations = await isReady(relationKind) ? await matchRelations(baseQuery, conceptVectors.map((concept) => concept.vector), textIndex).catch(() => []) : [];
   const relationAlignment = buildRelationAlignment(activeRelations, new Set(records.keys()));
   const queryVector = selectedQueryVector;
   const topK = Math.max(1, Math.min(700, Math.round(params.topK)));
@@ -251,7 +242,7 @@ export async function searchV3(params: {
   };
   const hasOptionCommand = /\b(?:mode|option|режим|вариант)\b/u.test(baseQuery.toLowerCase());
   const selectKind = textIndex === "qwen3" ? "select" : "gemma2_select";
-  const selectMatches = hasOptionCommand && isReady(selectKind)
+  const selectMatches = hasOptionCommand && await isReady(selectKind)
     ? (await rankSelectOptionNames(queryVector, new Set(records.keys()), Math.max(32, topK * 2), textIndex))
       .filter((match) => optionMatchesQuery(match.option))
     : [];
@@ -371,7 +362,7 @@ export async function searchV3(params: {
   const anchorBudget = params.anchorAllCandidates ? ranked.length : Math.max(1, Math.ceil(ranked.length * RAG_V3_CONFIG.anchorChangeFraction));
   const anchorKind = textIndex === "qwen3" ? "anchors" : "gemma2_anchors";
   const rangeKind = textIndex === "qwen3" ? "range" : "gemma2_range";
-  const anchorReady = isReady(anchorKind);
+  const anchorReady = await isReady(anchorKind);
   const anchored = anchorReady ? await runV3AnchoringBridge({
     query: effectiveQuery,
     concepts: conceptVectors.map((concept) => concept.text),
@@ -385,8 +376,8 @@ export async function searchV3(params: {
     })),
     current_values: params.currentValues,
     text_index: textIndex,
-    value_anchors_ready: isReady(rangeKind),
-    select_anchors_ready: isReady(selectKind),
+      value_anchors_ready: await isReady(rangeKind),
+      select_anchors_ready: await isReady(selectKind),
   }) : {};
   const results = ranked.map(({ name, similarity, layer }) => ({
     ...toActive(candidateMap.get(name)!.parameter, similarity, params.currentValues, anchored[name]),

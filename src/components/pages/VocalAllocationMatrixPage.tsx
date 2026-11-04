@@ -55,7 +55,7 @@ export function VocalAllocationMatrixPage() {
 
   return <div className="flex h-full flex-col bg-black text-zinc-100">
     <header className="border-b border-fuchsia-500/25 px-4 py-3">
-      <h1 className="flex items-center gap-2 font-mono text-lg font-semibold text-fuchsia-200"><AMIcon name="vocal" size="md" bright />Vocal Allocation Matrix · V3<V3InfoTip content={t("Изолированный scoped-поиск языков, TECH4, FX4, слоёв и I/S/E/A поверх актуальной базы V3.")} /></h1>
+      <h1 className="flex items-center gap-2 font-mono text-lg font-semibold text-fuchsia-200"><AMIcon name="vocal" size="md" bright />Vocal Allocation Matrix<V3InfoTip content={t("Изолированный scoped-поиск языков, TECH4, FX4, слоёв и I/S/E/A по опубликованному каталогу.")} /></h1>
     </header>
     <main className="flex-1 overflow-auto p-4"><div className="mx-auto max-w-[1600px] space-y-4">
       {acousticFormants ? <section className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-cyan-400/25 bg-zinc-950 p-3" data-am-vocal-acoustic-features>
@@ -74,7 +74,7 @@ export function VocalAllocationMatrixPage() {
       </section>
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
         <section className="rounded-lg border border-white/15 bg-zinc-950 p-3">
-          <div className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-wider">{t("Параметры матрицы")}<V3InfoTip content={t("Явные коды назначаются детерминированно; остальные параметры и значения поступают из V3 retrieval и anchors. Все значения можно изменить вручную.")} /></div>
+        <div className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-wider">{t("Параметры матрицы")}<V3InfoTip content={t("Явные коды назначаются детерминированно; остальные параметры поступают из поиска по каталогу и его anchors. Все значения можно изменить вручную.")} /></div>
           <div className="max-h-[68vh] space-y-2 overflow-auto">
             {results.length === 0 && <p className="p-6 text-center text-sm text-zinc-600">Выполните поиск.</p>}
             {results.map((p) => <div key={p.technical_name} className="grid gap-2 rounded border border-white/10 bg-black/40 p-2 md:grid-cols-[minmax(220px,1fr)_minmax(180px,320px)]">

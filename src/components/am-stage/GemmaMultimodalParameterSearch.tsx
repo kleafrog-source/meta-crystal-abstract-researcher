@@ -6,6 +6,7 @@ import { Loader2, Search, Square, Upload } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useUiText } from "@/lib/ui-i18n";
+import { useCapabilityEnabled } from "@/hooks/use-capability-registry";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 
 interface GemmaAudioSearchResponse {
@@ -28,6 +29,8 @@ export interface GemmaMultimodalParameterSearchHandle { searchAudio: (audioFile?
 
 export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParameterSearchHandle, { selectedLayers?: string[]; spectrogramFrame?: { dataUrl: string; offset: number }; onResults?: (results: GemmaAudioParameter[], modality: "audio" | "image") => void; onFileChange?: (file: File | null) => void }>(function GemmaMultimodalParameterSearch({ selectedLayers = [], spectrogramFrame, onResults, onFileChange }, ref) {
   const t = useUiText();
+  const audioCapabilityEnabled = useCapabilityEnabled("audio.gemma.awtd");
+  const imageCapabilityEnabled = useCapabilityEnabled("spec.gemma.*");
   const [file, setFile] = useState<File | null>(null);
   const [topK, setTopK] = useState(30);
   const [chunkSeconds, setChunkSeconds] = useState(30);
@@ -137,9 +140,9 @@ export const GemmaMultimodalParameterSearch = forwardRef<GemmaMultimodalParamete
         <label className="flex items-center gap-1.5 text-xs text-muted-foreground">{t("Chunk s")}<input className="h-9 w-16 rounded border border-border bg-background px-2 text-foreground" aria-label={t("Chunk seconds")} type="number" min={1} max={30} value={chunkSeconds} onChange={(event) => setChunkSeconds(Math.max(1, Math.min(30, Number(event.target.value) || 1)))} /></label>
         <label className="flex items-center gap-1.5 text-xs text-muted-foreground">{t("Overlap s")}<input className="h-9 w-14 rounded border border-border bg-background px-2 text-foreground" aria-label={t("Overlap seconds")} type="number" min={0} max={2} step={0.5} value={overlapSeconds} onChange={(event) => setOverlapSeconds(Math.max(0, Math.min(2, Number(event.target.value) || 0)))} /></label>
         <label className="flex items-center gap-1.5 text-xs text-muted-foreground">{t("Top-K")}<input className="h-9 w-16 rounded border border-border bg-background px-2 text-foreground" aria-label={t("Top-K")} type="number" min={1} max={100} value={topK} onChange={(event) => setTopK(Math.max(1, Math.min(100, Number(event.target.value) || 1)))} /></label>
-        <Button data-am-stage-action="gemma-audio-search" onClick={() => void search("audio")} disabled={!file || busy}>{busy ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}{busy ? t("Embedding media…") : t("Search audio")}</Button>
+        <Button data-am-stage-action="gemma-audio-search" onClick={() => void search("audio")} disabled={!file || busy || audioCapabilityEnabled !== true} title={audioCapabilityEnabled === false ? t("Disabled in Settings") : undefined}>{busy ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}{busy ? t("Embedding media…") : t("Search audio")}</Button>
         {busy ? <Button variant="destructive" size="sm" onClick={() => controllerRef.current?.abort()}><Square className="size-3.5" />{t("Cancel")}</Button> : null}
-        {spectrogramFrame ? <Button data-am-stage-action="gemma-spectrogram-search" variant="outline" onClick={() => void search("image")} disabled={busy}><Search className="size-4" />{t("Search current SigLIP frame")} · {spectrogramFrame.offset.toFixed(1)}s</Button> : null}
+        {spectrogramFrame ? <Button data-am-stage-action="gemma-spectrogram-search" variant="outline" onClick={() => void search("image")} disabled={busy || imageCapabilityEnabled !== true} title={imageCapabilityEnabled === false ? t("Disabled in Settings") : undefined}><Search className="size-4" />{t("Search current SigLIP frame")} · {spectrogramFrame.offset.toFixed(1)}s</Button> : null}
       </div>
       {progress ? <p role="status" aria-live="polite" className="mt-2 text-xs text-cyan-200">{progress}</p> : null}
       {error ? <p role="alert" className="mt-2 rounded border border-red-400/30 bg-red-950/20 p-2 text-xs text-red-200">{error}</p> : null}

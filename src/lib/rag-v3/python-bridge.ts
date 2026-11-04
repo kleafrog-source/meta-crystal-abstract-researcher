@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import type { TextIndexId } from "./composite-index";
-import { TEXT_INDEX_MODELS } from "./composite-index";
+import { getConfiguredTextIndexModel } from "./composite-index";
 import { loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
 
 export interface V3AnchorValue {
@@ -21,11 +21,11 @@ export function runV3AnchoringBridge(payload: {
   value_anchors_ready?: boolean;
   select_anchors_ready?: boolean;
 }): Promise<Record<string, V3AnchorValue>> {
-  return loadEmbeddingRuntimeSettings().then((settings) => new Promise((resolve, reject) => {
-    const textIndex = payload.text_index ?? "qwen3";
+  const textIndex = payload.text_index ?? "qwen3";
+  return Promise.all([loadEmbeddingRuntimeSettings(), getConfiguredTextIndexModel(textIndex)]).then(([settings, model]) => new Promise((resolve, reject) => {
     const child = spawn(process.env.PYTHON_EXECUTABLE || "python", ["python_engine/anchoring_v3/bridge.py"], {
       cwd: process.cwd(),
-      env: { ...process.env, PYTHONUTF8: "1", PYTHONIOENCODING: "utf-8", RAG_V3_TEXT_INDEX: textIndex, OLLAMA_BASE_URL: settings.baseUrl, OLLAMA_EMBED_MODEL: TEXT_INDEX_MODELS[textIndex] },
+      env: { ...process.env, PYTHONUTF8: "1", PYTHONIOENCODING: "utf-8", RAG_V3_TEXT_INDEX: textIndex, OLLAMA_BASE_URL: settings.baseUrl, OLLAMA_EMBED_MODEL: model },
       stdio: ["pipe", "pipe", "pipe"],
       windowsHide: true,
     });

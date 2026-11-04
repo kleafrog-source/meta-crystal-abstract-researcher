@@ -43,28 +43,19 @@ export async function getV3SnapshotIdentity(): Promise<V3SnapshotIdentity> {
     "parameters.json",
   );
   const libraryBuffer = await fs.readFile(libraryPath);
-  const frozenBuffer = await fs.readFile(path.join(
-    GENESIS_DATA_ROOT,
-    "datasets",
-    latest.version_id,
-    "parameters.json",
-  ));
-  const records = new Map<string, Record<string, unknown>>();
-  for (const item of library)
-    records.set(String(item.technical_name), { ...item, source: "library" });
   const excluded = new Set(registry.entries.map((item) => item.technical_name));
   const tombstonePayload = JSON.parse(tombstonesRaw) as unknown;
   const tombstones = new Set(Array.isArray(tombstonePayload) ? tombstonePayload.filter((name): name is string => typeof name === "string") : tombstonePayload && typeof tombstonePayload === "object" && Array.isArray((tombstonePayload as { technical_names?: unknown }).technical_names) ? (tombstonePayload as { technical_names: unknown[] }).technical_names.filter((name): name is string => typeof name === "string") : []);
-  const parameters = [...records.entries()]
-    .filter(([name]) => !excluded.has(name) && !tombstones.has(name))
-    .sort(lexical)
-    .map(([, item]) => item);
+  const parameters = library
+    .filter((item) => !excluded.has(String(item.technical_name)) && !tombstones.has(String(item.technical_name)))
+    .sort((left, right) => String(left.technical_name).localeCompare(String(right.technical_name)))
+    .map((item) => ({ ...item, source: "library" }));
   return {
     dataset_version: latest.version_id,
     parameter_count: parameters.length,
     excluded_count: registry.entries.length,
     excluded_sha256: excludedRegistrySha(registry),
-    // Keep byte-for-byte parity with python_engine/v3_snapshot.py.
-    content_sha256: createHash("sha256").update(Buffer.concat([frozenBuffer, Buffer.from([0]), libraryBuffer, Buffer.from([0]), Buffer.from(tombstonesRaw)])).digest("hex"),
+    // Historical dataset_version remains metadata; only the published catalogue and tombstones define membership.
+    content_sha256: createHash("sha256").update(Buffer.concat([libraryBuffer, Buffer.from([0]), Buffer.from(tombstonesRaw)])).digest("hex"),
   };
 }

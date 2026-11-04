@@ -10,6 +10,7 @@ import { OllamaProvider } from "./ollama";
 import { FreeLLMAPIProvider } from "./freellmapi";
 import { MockProvider } from "./mock";
 import type { LLMProvider, LLMProviderId } from "./types";
+import { DEFAULT_CAPABILITY_REGISTRY, normalizeCapabilityRegistry, type CapabilityRegistry } from "@/lib/capability-registry";
 
 export interface LLMSettings {
   provider: LLMProviderId;
@@ -29,6 +30,7 @@ export interface LLMSettings {
   topP: number;
   /** Max tokens for chat completion */
   maxTokens: number;
+  capabilityRegistry: CapabilityRegistry;
 }
 
 export const DEFAULT_LLM_SETTINGS: LLMSettings = {
@@ -41,6 +43,7 @@ export const DEFAULT_LLM_SETTINGS: LLMSettings = {
   temperature: 0.7,
   topP: 0.9,
   maxTokens: 1024,
+  capabilityRegistry: DEFAULT_CAPABILITY_REGISTRY,
 };
 
 const SETTING_KEY = "llm_settings_v1";
@@ -53,6 +56,7 @@ export async function loadLLMSettings(): Promise<LLMSettings> {
     return {
       ...DEFAULT_LLM_SETTINGS,
       ...stored,
+      capabilityRegistry: normalizeCapabilityRegistry(stored.capabilityRegistry),
       // Keep older stored Ollama selections intact; never trust malformed enum values.
       provider: stored.provider === "freellmapi" || stored.provider === "mock" ? stored.provider : "ollama",
     };

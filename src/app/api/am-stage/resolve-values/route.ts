@@ -2,10 +2,12 @@ import { NextResponse } from "next/server";
 
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 import { prepareGpuForV3Embedding } from "@/lib/ollama-memory";
-import { TEXT_INDEX_MODELS } from "@/lib/rag-v3/composite-index";
+import { getConfiguredTextIndexModel } from "@/lib/rag-v3/composite-index";
 import { searchV3 } from "@/lib/rag-v3/search";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 import { resolveGemmaIdentityValue } from "@/lib/am-stage-value-resolution";
+import { loadLLMSettings } from "@/lib/llm/factory";
+import { capabilityIsEnabled } from "@/lib/capability-registry";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -23,6 +25,8 @@ function isParameter(value: unknown): value is ActiveParameter {
 }
 
 export async function POST(request: Request) {
+  const settings = await loadLLMSettings();
+  if (!capabilityIsEnabled(settings.capabilityRegistry, "text.gemma.resolved") || !capabilityIsEnabled(settings.capabilityRegistry, "text.qwen.resolved")) return NextResponse.json({ error: "Gemma value resolution or its Qwen anchor bank is disabled in Settings." }, { status: 409 });
   let body: { query?: unknown; parameters?: unknown; clap_values?: unknown };
   try { body = await request.json() as typeof body; }
   catch { return NextResponse.json({ error: "Expected a JSON value-resolution request." }, { status: 400 }); }
@@ -38,7 +42,7 @@ export async function POST(request: Request) {
     let anchored = new Map<string, ActiveParameter>();
     let anchorError: string | null = null;
     try {
-      await prepareGpuForV3Embedding(5_000, TEXT_INDEX_MODELS.qwen3, slotOwner);
+      await prepareGpuForV3Embedding(5_000, await getConfiguredTextIndexModel("qwen3"), slotOwner);
       const result = await searchV3({
         query: query || `Resolve values for these existing Gemma-selected controls: ${unique.map((item) => item.technical_name).join(", ")}`,
         topK: unique.length,

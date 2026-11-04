@@ -4,6 +4,7 @@ import { useUiText } from "@/lib/ui-i18n";
 import { AM_STAGE_MACRO_IDS, AM_STAGE_MACRO_STEPS, type AmStageCompleteness, type AmStageMacroId, type AmStageMacroStep } from "@/lib/am-stage-macros";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ListChecks, Play, Square } from "lucide-react";
+import { useCapabilityEnabled } from "@/hooks/use-capability-registry";
 
 const PROFILE_LABELS: Record<AmStageMacroId, string> = {
   full_core: "Full core",
@@ -49,6 +50,23 @@ export function AmStageMacroRunner({
   siglipStatus: { status?: string; ready?: boolean; stale_reasons?: string[] } | null;
 }) {
   const t = useUiText();
+  const qwenEnabled = useCapabilityEnabled("text.qwen.resolved");
+  const gemmaTextEnabled = useCapabilityEnabled("text.gemma.awtd");
+  const gemmaTextResolvedEnabled = useCapabilityEnabled("text.gemma.resolved");
+  const clapEnabled = useCapabilityEnabled("audio.clap.resolved");
+  const siglipEnabled = useCapabilityEnabled("spec.siglip.resolved");
+  const gemmaAudioEnabled = useCapabilityEnabled("audio.gemma.awtd");
+  const gemmaAudioResolvedEnabled = useCapabilityEnabled("audio.gemma.resolved");
+  const requiredCapabilities = profile === "full_core"
+    ? [qwenEnabled, ...(requireGemmaResolution ? [gemmaTextEnabled, gemmaTextResolvedEnabled] : [])]
+    : profile === "text_gemma"
+      ? [gemmaTextEnabled, ...(requireGemmaResolution ? [gemmaTextResolvedEnabled] : [])]
+      : profile === "audio_core"
+        ? [clapEnabled, siglipEnabled]
+        : profile === "gemma_audio_then_resolve"
+          ? [gemmaAudioEnabled, ...(requireGemmaResolution ? [gemmaAudioResolvedEnabled] : [])]
+          : customSteps.map((step) => step === "text.qwen.resolved" ? qwenEnabled : step === "text.gemma.awtd" ? gemmaTextEnabled : step === "text.gemma.resolved" ? gemmaTextResolvedEnabled : step === "audio.clap.resolved" ? clapEnabled : step === "spec.siglip.resolved" ? siglipEnabled : step === "audio.gemma.awtd" ? gemmaAudioEnabled : step === "audio.gemma.resolved" ? gemmaAudioResolvedEnabled : true);
+  const disabledBySettings = requiredCapabilities.some((enabled) => enabled === false);
   const estimatedLoad = segmentCount * topK * 2;
   const addCustomStep = (step: AmStageMacroStep) => onCustomStepsChange([...customSteps, step]);
   const moveCustomStep = (index: number, direction: -1 | 1) => {
@@ -68,7 +86,7 @@ export function AmStageMacroRunner({
         <select id="am-stage-macro-profile" aria-label={t("Macro profile")} value={profile} disabled={isRunning} onChange={(event) => onProfileChange(event.target.value as AmStageMacroId)} className="h-7 min-w-0 flex-1 rounded border border-white/15 bg-black/50 px-2 text-[10px] text-foreground">
           {AM_STAGE_MACRO_IDS.map((id) => <option key={id} value={id}>{t(PROFILE_LABELS[id])}</option>)}
         </select>
-        <Button size="sm" className="h-7 px-2" disabled={isRunning || (profile === "custom" && !customSteps.length)} onClick={onRun}>{isRunning ? <><Square className="size-3" />{t("Running")}</> : <><Play className="size-3" />{t("Run macro")}</>}</Button>
+        <Button size="sm" className="h-7 px-2" disabled={isRunning || disabledBySettings || (profile === "custom" && !customSteps.length)} title={disabledBySettings ? t("Disabled in Settings") : undefined} onClick={onRun}>{isRunning ? <><Square className="size-3" />{t("Running")}</> : <><Play className="size-3" />{t("Run macro")}</>}</Button>
         {isRunning ? <Button size="sm" variant="destructive" className="h-7 px-2" onClick={onCancel}><Square className="size-3" />{t("Cancel queue")}</Button> : null}
       </div>
       <label className="flex items-center gap-1.5 text-[10px] text-muted-foreground"><input type="checkbox" checked={requireGemmaResolution} disabled={isRunning} onChange={(event) => onRequireGemmaResolutionChange(event.target.checked)} />{t("Include Gemma value resolution")}</label>

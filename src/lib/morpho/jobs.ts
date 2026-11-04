@@ -87,7 +87,7 @@ export function getMorphoJob(kind: Kind) {
   const job = shared.__morphoJobs![kind];
   return { ...job, progress: { ...job.progress }, log_tail: [...job.log_tail] };
 }
-function start(kind: Kind, args: string[]) {
+function start(kind: Kind, args: string[], modelPath = MODEL_PATH) {
   const slotOwner = kind === "index" ? "siglip-index-build" : "siglip-search";
   if (!acquireEmbeddingModelSlot(slotOwner)) return { started: false, reason: `model_slot_busy:${getEmbeddingModelSlot()?.owner ?? "unknown"}` };
   if (shared.__morphoJobs![kind].running)
@@ -102,7 +102,7 @@ function start(kind: Kind, args: string[]) {
   shared.__morphoJobs![kind] = job;
   const child = spawn(
     PYTHON,
-    ["-u", SCRIPT, ...args, "--model-path", MODEL_PATH],
+    ["-u", SCRIPT, ...args, "--model-path", modelPath],
     {
       cwd: ROOT,
       windowsHide: true,
@@ -134,8 +134,8 @@ function start(kind: Kind, args: string[]) {
   });
   return { started: true, job: getMorphoJob(kind) };
 }
-export function startMorphoIndex() {
-  return start("index", ["build-index"]);
+export function startMorphoIndex(modelPath = MODEL_PATH) {
+  return start("index", ["build-index"], modelPath);
 }
 export async function stopMorpho(kind: Kind) {
   const child = shared.__morphoChildren![kind],
@@ -168,7 +168,7 @@ export async function getMorphoStatus() {
   const sourceFiles = [
     LATEST_DATASET,
     GENESIS_LIBRARY_PATH,
-    path.join(GENESIS_DATA_ROOT, "datasets", latest.version_id, "parameters.json"),
+    path.join(GENESIS_DATA_ROOT, "library", "catalogue-deleted.json"),
     GENESIS_EXCLUDED_PATH,
   ];
   const stats = await Promise.all(sourceFiles.map((file) => fs.stat(file)));

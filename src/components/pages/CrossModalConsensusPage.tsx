@@ -742,7 +742,7 @@ export function CrossModalConsensusPage() {
                   </option>
                 ))}
               </select>
-              <V3Tooltip content="Загружает объединение параметров A/B и актуальные V3-метаданные. Тяжёлые модели не запускаются.">
+              <V3Tooltip content={t("Загружает объединение параметров A/B и актуальные метаданные каталога. Тяжёлые модели не запускаются.")}>
                 <Button
                   size="sm"
                   className="w-full xl:w-auto"
@@ -1052,7 +1052,7 @@ export function CrossModalConsensusPage() {
                           ))}
                         </div>
                         <div className="flex flex-wrap gap-2">
-                          <V3Tooltip content="Создаёт обратное EN/RU-описание через chat-модель и независимо повторяет поиск V3 с тем же Top-K.">
+                          <V3Tooltip content={t("Создаёт обратное EN/RU-описание через chat-модель и независимо повторяет поиск по каталогу с тем же Top-K.")}>
                             <Button
                               size="sm"
                               variant="outline"

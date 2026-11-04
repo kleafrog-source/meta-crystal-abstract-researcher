@@ -63,13 +63,13 @@ export function V3CatalogPanel() {
     <section className="space-y-3 rounded-lg border border-violet-500/20 bg-gradient-to-br from-violet-500/10 to-violet-500/5 p-4 text-violet-300">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2"><BookOpen className="size-4" /><h2 className="font-mono text-sm font-semibold uppercase tracking-wide">V3 technical-name catalog</h2><V3InfoTip content={t("Перезаписывает отсортированные Markdown-части для GitHub. В списках находятся только technical_name, сгруппированные по category / sub_category.")} /></div>
+          <div className="flex items-center gap-2"><BookOpen className="size-4" /><h2 className="font-mono text-sm font-semibold uppercase tracking-wide">{t("Technical-name catalog")}</h2><V3InfoTip content={t("Перезаписывает отсортированные Markdown-части для GitHub. В списках находятся только technical_name, сгруппированные по category / sub_category.")} /></div>
         </div>
         <div className="text-right text-xs text-violet-200/70">{manifest?.generated_at ? new Date(manifest.generated_at).toLocaleString() : t("ещё не создан")}<br />{manifest?.parameter_count ?? 0} {t("имён")} · {manifest?.part_count ?? 0} {t("частей")}</div>
       </div>
       <div className="flex flex-wrap items-end gap-2">
         <label className="grid gap-1 text-xs"><span>{t("Имен в одной части")}</span><Input className="w-32" type="number" min={100} max={1000} value={partSize} onChange={(event) => setPartSize(event.target.value)} /></label>
-        <Tooltip><TooltipTrigger asChild><Button type="button" onClick={() => void generate()} disabled={busy}><RefreshCw className={`size-4 ${busy ? "animate-spin" : ""}`} />{busy ? t("Обновление...") : t("Обновить каталог")}</Button></TooltipTrigger><TooltipContent>{t("Собирает текущие параметры V3 из frozen dataset и автономной библиотеки, затем атомарно перезаписывает Markdown-части.")}</TooltipContent></Tooltip>
+        <Tooltip><TooltipTrigger asChild><Button type="button" onClick={() => void generate()} disabled={busy}><RefreshCw className={`size-4 ${busy ? "animate-spin" : ""}`} />{busy ? t("Обновление...") : t("Обновить каталог")}</Button></TooltipTrigger><TooltipContent>{t("Собирает technical_name опубликованного каталога и автономной библиотеки, затем атомарно перезаписывает Markdown-части.")}</TooltipContent></Tooltip>
         <Tooltip><TooltipTrigger asChild><Button type="button" variant="outline" onClick={() => void copyLinks()} disabled={!manifest?.files.length}><Copy className="size-4" />{t("Копировать raw-ссылки")}</Button></TooltipTrigger><TooltipContent>{t("Копирует прямые GitHub raw-ссылки на все части, по одной ссылке на строку.")}</TooltipContent></Tooltip>
       </div>
       {message ? <div className="text-xs text-violet-100">{message}</div> : null}

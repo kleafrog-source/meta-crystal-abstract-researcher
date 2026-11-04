@@ -9,6 +9,17 @@ export const TEXT_INDEX_MODELS: Record<TextIndexId, string> = {
   embeddinggemma2: "embeddinggemma-2:740m",
 };
 
+export async function getConfiguredTextIndexModel(index: TextIndexId): Promise<string> {
+  try {
+    const { loadLLMSettings } = await import("@/lib/llm/factory");
+    const settings = await loadLLMSettings();
+    const slot = settings.capabilityRegistry.modelSlots[index === "qwen3" ? "textEmbedding" : "multimodalEmbedding"];
+    return slot?.modelId.trim() || TEXT_INDEX_MODELS[index];
+  } catch {
+    return TEXT_INDEX_MODELS[index];
+  }
+}
+
 export function getTextIndexDirectory(index: TextIndexId): string {
   return path.join(INDEX_ROOT, index === "qwen3" ? "composite-index" : "embeddinggemma2-text-index");
 }

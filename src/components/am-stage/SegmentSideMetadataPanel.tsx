@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Copy, Loader2, WandSparkles } from "lucide-react";
 import type { SegmentAcousticFeatures } from "@/lib/segment-side-meta";
 import { useUiText } from "@/lib/ui-i18n";
+import { useCapabilityEnabled } from "@/hooks/use-capability-registry";
 import type { AudioSegmentResultPoint } from "@/lib/audio-segment-result";
 import type { SegmentSideMeta } from "@/lib/segment-side-meta";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
@@ -41,6 +42,11 @@ export function SegmentSideMetadataPanel({
   onSeedReverseQuery: (text: string) => void;
 }) {
   const t = useUiText();
+  const helmEnabled = useCapabilityEnabled("side-meta.helm");
+  const voiceEnabled = useCapabilityEnabled("side-meta.voice");
+  const indicEnabled = useCapabilityEnabled("side-meta.indic");
+  const dspEnabled = useCapabilityEnabled("side-meta.librosa");
+  const lfm3Enabled = useCapabilityEnabled("side-meta.lfm3");
   const [busy, setBusy] = useState<BusyAction | null>(null);
   const [error, setError] = useState("");
   const [lfmRuntime, setLfmRuntime] = useState<Lfm3Runtime>("ollama");
@@ -124,15 +130,15 @@ export function SegmentSideMetadataPanel({
       <Badge variant="outline" className="border-fuchsia-400/25 text-fuchsia-200">{t("Manual run · unloads after use")}</Badge>
     </div>
     <div className="flex flex-wrap gap-1.5">
-      {SPECIALISTS.map(({ id, label }) => <Button key={id} size="sm" variant="outline" data-am-stage-action={`side-meta-${id}`} disabled={id === "helm" || !file || !segment || busy !== null || (id === "gender" && segment.sideMeta?.helm?.gates.has_vocals.value !== true)} title={id === "helm" ? t("Temporarily unavailable · disabled by operator.") : id === "gender" ? t("Run Helm first; voice presentation is available only when vocals are detected.") : undefined} onClick={() => void run(id)}>{busy === id ? t("Running…") : t(label)}</Button>)}
-      <Button size="sm" variant="outline" data-am-stage-action="extract-acoustic-features" disabled={!file || !segment || busy !== null || (segment.duration < 0.25 || segment.duration > 30)} title={segment && segment.duration > 30 ? t("Acoustic feature windows are limited to 30 seconds.") : undefined} onClick={() => void runAcousticExtraction()}>{busy === "acoustic" ? t("Extracting…") : t("Extract acoustic features")}</Button>
+      {SPECIALISTS.map(({ id, label }) => { const enabled = id === "helm" ? helmEnabled : id === "gender" ? voiceEnabled : indicEnabled; return <Button key={id} size="sm" variant="outline" data-am-stage-action={`side-meta-${id}`} disabled={enabled !== true || !file || !segment || busy !== null || (id === "gender" && segment.sideMeta?.helm?.gates.has_vocals.value !== true)} title={enabled === false ? t("Disabled in Settings") : id === "helm" ? t("Temporarily unavailable · disabled by operator.") : id === "gender" ? t("Run Helm first; voice presentation is available only when vocals are detected.") : undefined} onClick={() => void run(id)}>{busy === id ? t("Running…") : t(label)}</Button>; })}
+      <Button size="sm" variant="outline" data-am-stage-action="extract-acoustic-features" disabled={dspEnabled !== true || !file || !segment || busy !== null || (segment.duration < 0.25 || segment.duration > 30)} title={dspEnabled === false ? t("Disabled in Settings") : segment && segment.duration > 30 ? t("Acoustic feature windows are limited to 30 seconds.") : undefined} onClick={() => void runAcousticExtraction()}>{busy === "acoustic" ? t("Extracting…") : t("Extract acoustic features")}</Button>
     </div>
     <div data-am-stage-zone="lfm3-audio-description" className="space-y-2 rounded border border-cyan-400/20 bg-black/25 p-2">
       <div className="flex flex-wrap items-center justify-between gap-2"><h3 className="font-mono text-[10px] font-semibold uppercase tracking-wider text-cyan-200">LFM3 · Audio to text</h3><Badge variant="outline">{segment ? `${t("Segment")} ${segmentIndex + 1}` : t("Current audio range")}</Badge></div>
       <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
         <label className="text-[9px] text-zinc-400">{t("Runtime")}<select aria-label={t("Runtime")} value={lfmRuntime} disabled={busy !== null} onChange={(event) => setLfmRuntime(event.target.value as Lfm3Runtime)} className="mt-1 h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-xs text-zinc-200"><option value="llama.cpp">{t("llama.cpp · GGUF")}</option><option value="ollama">{t("Ollama · verified local")}</option></select></label>
         <label className="text-[9px] text-zinc-400">{t("Task")}<select aria-label={t("Task")} value={lfmMode} disabled={busy !== null} onChange={(event) => setLfmMode(event.target.value as Lfm3PromptMode)} className="mt-1 h-8 w-full rounded border border-white/15 bg-black/50 px-2 text-xs text-zinc-200"><option value="describe">{t("Sound description · EN")}</option><option value="asr">{t("Speech recognition · EN")}</option></select></label>
-        <Button size="sm" variant="outline" data-am-stage-action="describe-segment-lfm3" disabled={!file || busy !== null || (segment ? segment.duration < 0.25 || segment.duration > 30 : window.duration < 0.25 || window.duration > 30)} onClick={() => void runLfm3()}>{busy === "lfm3" ? <Loader2 className="size-3.5 animate-spin" /> : <WandSparkles className="size-3.5" />}{busy === "lfm3" ? t("Listening…") : t("Describe segment / clip (LFM3)")}</Button>
+        <Button size="sm" variant="outline" data-am-stage-action="describe-segment-lfm3" disabled={lfm3Enabled !== true || !file || busy !== null || (segment ? segment.duration < 0.25 || segment.duration > 30 : window.duration < 0.25 || window.duration > 30)} title={lfm3Enabled === false ? t("Disabled in Settings") : undefined} onClick={() => void runLfm3()}>{busy === "lfm3" ? <Loader2 className="size-3.5 animate-spin" /> : <WandSparkles className="size-3.5" />}{busy === "lfm3" ? t("Listening…") : t("Describe segment / clip (LFM3)")}</Button>
       </div>
       <p className="text-[9px] text-zinc-500">{t("Explicit run only · max 30 seconds · one model at a time. Ollama · verified local is the default; llama.cpp GGUF is an alternate runtime.")}</p>
       {lfmResult ? <div className="space-y-2 rounded border border-cyan-400/15 bg-black/35 p-2">

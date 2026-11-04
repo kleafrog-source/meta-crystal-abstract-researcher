@@ -12,6 +12,7 @@ function pathnameToPage(pathname: string): PageId {
   if (pathname === "/rag-parameters-v3" || pathname === "/am-core") {
     return "ragparametersv3";
   }
+  if (pathname === "/service-bay") return "servicebay";
 
   if (pathname === "/combinatorial-genesis") {
     return "combinatorialgenesis";
@@ -99,6 +100,11 @@ function AppShellContent() {
 
     if (page === "ragparametersv3") {
       router.push("/am-core");
+      return;
+    }
+
+    if (page === "servicebay") {
+      router.push("/service-bay");
       return;
     }
 

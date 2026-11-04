@@ -160,7 +160,7 @@ export function CombinatorialSynthesisPage() {
           top_k: count,
           current_values: {},
           instruction_context: [],
-          sources: { library: true, frozen: true, atoms: true, generated: true },
+          sources: { library: true, frozen: false, atoms: true, generated: true },
         }),
       });
       const payload = await response.json() as { results?: V3SourceResult[]; error?: string };
@@ -169,7 +169,7 @@ export function CombinatorialSynthesisPage() {
         const value = item.suggested_value ?? item.current_value ?? item.default ?? 0.5;
         return `${item.technical_name}: ${String(value).replace(/\s+/g, " ").trim()}`;
       });
-      if (!lines.length) throw new Error("V3 не вернул источники для заданной цели.");
+      if (!lines.length) throw new Error("По заданной цели не найдены источники в опубликованном каталоге.");
       setMacro(lines.join("\n"));
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : String(caught));
@@ -483,18 +483,18 @@ export function CombinatorialSynthesisPage() {
         <header className="rounded-lg border border-fuchsia-400/30 bg-fuchsia-950/10 p-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <div className="flex items-center gap-2"><AMIcon name="synthesis" size="md" bright /><h1 className="font-mono text-lg font-semibold">Combinatorial Parameter Synthesis</h1><V3InfoTip content="Создание новых technical_name из frozen atoms, qwen3-embedding-ранжирование без LLM, ручной отбор и контролируемая публикация в автономную библиотеку Genesis." /></div>
+              <div className="flex items-center gap-2"><AMIcon name="synthesis" size="md" bright /><h1 className="font-mono text-lg font-semibold">Combinatorial Parameter Synthesis</h1><V3InfoTip content="Создание новых technical_name из Genesis atoms, ранжирование через Qwen3 без LLM, ручной отбор и контролируемая публикация в автономную библиотеку Genesis." /></div>
             </div>
-            <div className="flex flex-wrap gap-2"><Badge variant="outline">Embeddings model: {model}</Badge><Badge variant="outline">description normalization: {textProvider} · {chatModel}</Badge><Badge variant="outline">index: {indexModel}</Badge><Badge variant="outline">V3 protected</Badge></div>
+            <div className="flex flex-wrap gap-2"><Badge variant="outline">Embeddings model: {model}</Badge><Badge variant="outline">description normalization: {textProvider} · {chatModel}</Badge><Badge variant="outline">index: {indexModel}</Badge><Badge variant="outline">Catalogue publish controlled</Badge></div>
           </div>
         </header>
 
         {model !== "—" && indexModel !== "—" && model !== indexModel ? <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-400/30 bg-amber-950/20 p-4 text-sm text-amber-100"><div><div className="font-semibold">Индекс построен другой embedding-моделью</div><div className="mt-1 text-xs text-amber-200/70">Активная модель: {model}; индекс: {indexModel}. Сначала перестройте inbox/index, иначе сравнение векторов запрещено.</div></div><Button variant="outline" asChild><a href="/combinatorial-genesis">Открыть управление индексом</a></Button></div> : null}
 
         <section className="space-y-3 rounded-lg border border-cyan-400/20 bg-cyan-950/10 p-4">
-          <div><h2 className="flex items-center gap-1 font-mono text-sm font-semibold uppercase tracking-wide">{t("1 · Источники и семантическая цель")}<V3InfoTip content={t("Вставьте минимум три существующих technical_name из V3 macro output. Они задают структурные источники; запрос задаёт смысловое направление embeddings модели")} /></h2></div>
+          <div><h2 className="flex items-center gap-1 font-mono text-sm font-semibold uppercase tracking-wide">{t("1 · Источники и семантическая цель")}<V3InfoTip content={t("Вставьте минимум три существующих technical_name из macro output. Они задают структурные источники; запрос задаёт смысловое направление embeddings модели")} /></h2></div>
           <div className="grid gap-1.5">
-            <FieldLabel label="Структурные источники" hint="Минимум три technical_name из датасета V3, по одному на строку. Значения после двоеточия можно редактировать вручную." />
+            <FieldLabel label="Структурные источники" hint="Минимум три technical_name из каталога параметров, по одному на строку. Значения после двоеточия можно редактировать вручную." />
             <Textarea value={macro} onChange={(event) => setMacro(event.target.value)} rows={7} className="font-mono text-xs" placeholder={"spectral_flux_density_ratio: 0.4\ngranular_texture_variance: 0.6\nspatial_reflection_diffusion: 0.5"} />
           </div>
           <div className="grid gap-1.5">
@@ -507,12 +507,12 @@ export function CombinatorialSynthesisPage() {
           </div>
           <div className="flex flex-wrap items-end gap-2 rounded border border-white/10 bg-black/20 p-2.5">
             <div className="grid gap-1">
-              <FieldLabel label="Количество источников" hint="Сколько наиболее близких параметров V3 подставить в поле структурных источников. Допустимо от 1 до 700." />
+              <FieldLabel label="Количество источников" hint="Сколько наиболее близких параметров каталога подставить в поле структурных источников. Допустимо от 1 до 700." />
               <Input className="w-28" type="number" min={1} max={700} value={sourceCount} onChange={(event) => setSourceCount(event.target.value)} onBlur={() => setSourceCount(String(Math.max(1, Math.min(700, Math.trunc(Number(sourceCount) || 3)))))} />
             </div>
             <div className="flex items-center gap-1">
               <Button type="button" variant="outline" onClick={() => void selectSources()} disabled={sourceBusy || !query.trim()}><Search className="size-4" />{sourceBusy ? "Подбор..." : "Подбор источников"}</Button>
-              <FieldHint hint="Ищет по семантической цели наиболее близкие structural sources во всём активном датасете V3 и заменяет ими содержимое поля источников." />
+              <FieldHint hint="Ищет по смысловой цели наиболее близкие параметры каталога и подставляет их в поле структурных источников." />
             </div>
           </div>
           <div className="flex flex-wrap items-end gap-3">
@@ -579,10 +579,10 @@ export function CombinatorialSynthesisPage() {
         </section> : null}
 
         {candidatePackage ? <section className="space-y-3 rounded-lg border border-emerald-400/20 bg-emerald-950/10 p-4">
-          <div><h2 className="font-mono text-sm font-semibold uppercase tracking-wide">3 · Проверка и пополнение базы</h2><p className="mt-1 text-xs text-zinc-400">Сначала выполните dry-run. Публикация пишет только в автономную CG library; перенос в рабочую базу V3 выполняется отдельным этапом.</p></div>
+          <div><h2 className="font-mono text-sm font-semibold uppercase tracking-wide">3 · Проверка и пополнение базы</h2><p className="mt-1 text-xs text-zinc-400">Сначала выполните dry-run. Публикация пишет только в автономную CG library; публикация в основной каталог выполняется отдельным подтверждённым этапом.</p></div>
           <div className="rounded border border-emerald-400/20 bg-black/30 p-3 text-xs"><div className="font-mono text-emerald-200">{candidatePackage.package_id}</div><div className="mt-1 text-zinc-400">publishable {candidatePackage.summary.publishable_count}/{candidatePackage.summary.candidate_count} · needs review {candidatePackage.summary.needs_review_count}</div></div>
           <div className="flex flex-wrap gap-2"><Button variant="outline" onClick={() => void publish(true)} disabled={busy !== null}><ShieldCheck className="size-4" />{busy === "check" ? "Проверка..." : "Проверить публикацию"}</Button><Button onClick={() => void publish(false)} disabled={busy !== null || !publishResult?.ready_for_library_publish}><Database className="size-4" />{busy === "publish" ? "Публикация..." : "Добавить в базу CG"}</Button></div>
-          {publishResult ? <div className={`rounded border p-3 text-xs ${publishResult.ready_for_library_publish ? "border-cyan-400/30 bg-cyan-950/20 text-cyan-100" : "border-amber-400/30 bg-amber-950/20 text-amber-100"}`}><div className="font-mono">{publishResult.published ? "published" : publishResult.already_published ? "already published" : publishResult.dry_run ? "dry-run" : "blocked"}</div><div className="mt-1">library {publishResult.library_before_count} → {publishResult.simulated_after_count} · additions {publishResult.proposed_addition_count}</div><div>collisions {publishResult.collisions.length} · schema errors {publishResult.schema_errors.length}</div>{publishResult.published ? <div className="mt-2 text-zinc-300">Параметры сохранены. Перестройте V3 composite index и live anchors, чтобы они появились в поиске и Anchored control bank.</div> : null}</div> : null}
+          {publishResult ? <div className={`rounded border p-3 text-xs ${publishResult.ready_for_library_publish ? "border-cyan-400/30 bg-cyan-950/20 text-cyan-100" : "border-amber-400/30 bg-amber-950/20 text-amber-100"}`}><div className="font-mono">{publishResult.published ? "published" : publishResult.already_published ? "already published" : publishResult.dry_run ? "dry-run" : "blocked"}</div><div className="mt-1">library {publishResult.library_before_count} → {publishResult.simulated_after_count} · additions {publishResult.proposed_addition_count}</div><div>collisions {publishResult.collisions.length} · schema errors {publishResult.schema_errors.length}</div>{publishResult.published ? <div className="mt-2 text-zinc-300">Параметры сохранены. Откройте Service Bay и перестройте индекс каталога и live anchors, чтобы они появились в поиске и Anchored control bank.</div> : null}</div> : null}
         </section> : null}
       </div>
     </div>

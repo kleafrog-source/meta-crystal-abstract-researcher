@@ -43,6 +43,7 @@ export type PageId =
   | "torusatlas"
   | "map"
   | "ragparametersv3"
+  | "servicebay"
   | "combinatorialgenesis"
   | "amparameterscatalogue"
   | "combinatorialsynthesis"
@@ -76,13 +77,19 @@ const PRIMARY_NAV_ITEMS: NavItem[] = [
     id: "amstage",
     label: "AM Tri-Modal Stage",
     icon: <AMIcon name="amStage" size="sm" className="sidebar-icon sidebar-icon-c6" />,
-    description: "Semantic V3 + segmented CLAP/SigLIP2 analysis in one staged workspace",
+    description: "Semantic search with segmented CLAP/SigLIP2 analysis in one staged workspace",
   },
   {
     id: "ragparametersv3",
     label: "AM-Core Engine",
     icon: <AMIcon name="engine" size="sm" className="sidebar-icon sidebar-icon-c2" />,
-    description: "Unified semantic search over the autonomous library, Flowmusic corpus and Combinatorial Atoms",
+    description: "Unified search over the published catalogue, runtime atoms and published combinations",
+  },
+  {
+    id: "servicebay",
+    label: "Service Bay",
+    icon: <AMIcon name="engine" size="sm" className="sidebar-icon sidebar-icon-c3" />,
+    description: "Index status, providers, logs and manual rebuilds",
   },
   {
     id: "audiotoparameter",
@@ -94,13 +101,13 @@ const PRIMARY_NAV_ITEMS: NavItem[] = [
     id: "audioclaprag",
     label: "Audio CLAP RAG",
     icon: <AMIcon name="clap" size="sm" className="sidebar-icon sidebar-icon-c4" />,
-    description: "Cross-modal search of V3 parameters from an audio reference with LAION-CLAP",
+    description: "Cross-modal search of published parameters from an audio reference with LAION-CLAP",
   },
   {
     id: "morphoacousticrag",
     label: "Morpho-Acoustic RAG",
     icon: <AMIcon name="morpho" size="sm" className="sidebar-icon sidebar-icon-c5" />,
-    description: "CPU-поиск параметров V3 по изображению через локальный SigLIP2",
+    description: "CPU-поиск опубликованных параметров по изображению через локальный SigLIP2",
   },
   {
     id: "vocalallocationmatrix",
@@ -112,7 +119,7 @@ const PRIMARY_NAV_ITEMS: NavItem[] = [
     id: "combinatorialgenesis",
     label: "Combinatorial Genesis",
     icon: <AMIcon name="genesis" size="sm" className="sidebar-icon sidebar-icon-c7" />,
-    description: "Изолированная лаборатория новых комбинаций без прямой записи в рабочий датасет V3",
+    description: "Изолированная лаборатория новых комбинаций без прямой записи в опубликованный каталог",
   },
   {
     id: "combinatorialsynthesis",

@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 
-import { getArtifactStatuses } from "@/lib/rag-v3/managed-rebuild";
-import { getCompositeIndexInfo, getCompositeParameterNames, getCompositeVectorsByNames, TEXT_INDEX_MODELS, type TextIndexId } from "@/lib/rag-v3/composite-index";
+import { isArtifactManifestAvailable } from "@/lib/rag-v3/managed-rebuild";
+import { getCompositeIndexInfo, getCompositeParameterNames, getCompositeVectorsByNames, getConfiguredTextIndexModel, type TextIndexId } from "@/lib/rag-v3/composite-index";
 import { searchV3, type RagV3Sources, type RagV3Scopes } from "@/lib/rag-v3/search";
 import type { ActiveParameter, RetrievalScope } from "@/lib/rag-v3/types";
 import { buildStage2Centroid, keepOnlyNewStage2Hits } from "@/lib/server-stage2-consensus";
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 import { prepareGpuForV3Embedding } from "@/lib/ollama-memory";
+import { loadLLMSettings } from "@/lib/llm/factory";
+import { capabilityIsEnabled } from "@/lib/capability-registry";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -38,19 +40,19 @@ export async function POST(request: Request) {
   const stage1Hits = validStage1Hits(body.stage1_hits);
   if (stage1Hits.length === 0) return NextResponse.json({ error: "Run a Stage-1 text search before Stage-2 retrieval." }, { status: 400 });
   const textIndex: TextIndexId = body.text_index === "embeddinggemma2" ? "embeddinggemma2" : "qwen3";
+  const settings = await loadLLMSettings();
+  const capability = textIndex === "embeddinggemma2" ? "text.gemma.resolved" : "text.qwen.resolved";
+  if (!capabilityIsEnabled(settings.capabilityRegistry, capability)) return NextResponse.json({ error: `${capability} is disabled in Settings.` }, { status: 409 });
+  const model = await getConfiguredTextIndexModel(textIndex);
   const topK = Number.isFinite(body.top_k) ? Math.max(1, Math.min(30, Math.round(body.top_k!))) : 10;
   const slotOwner = "am-stage-server-stage2";
   if (!acquireEmbeddingModelSlot(slotOwner)) return NextResponse.json({ error: `Model slot is busy: ${getEmbeddingModelSlot()?.owner ?? "another operation"}` }, { status: 409 });
 
   try {
     if (textIndex === "embeddinggemma2") {
-      const artifact = (await getArtifactStatuses()).artifacts.find((item) => item.kind === "embeddinggemma2_text");
-      if (!artifact || !["built", "ready"].includes(artifact.status)) {
-        const detail = artifact?.status === "stale" || artifact?.status === "stale_data" || artifact?.status === "stale_vectors" || artifact?.status === "partial" ? ` Rebuild it: ${artifact.reason ?? "source catalogue changed"}.` : " Build it from Service Bay first.";
-        return NextResponse.json({ error: `EmbeddingGemma 2 text index is unavailable.${detail}` }, { status: 409 });
-      }
+      if (!(await isArtifactManifestAvailable("embeddinggemma2_text"))) return NextResponse.json({ error: "EmbeddingGemma 2 text index is unavailable. Build it from Service Bay first." }, { status: 409 });
     }
-    await prepareGpuForV3Embedding(5_000, TEXT_INDEX_MODELS[textIndex], slotOwner);
+    await prepareGpuForV3Embedding(5_000, model, slotOwner);
 
     const seedNames = [...new Set(stage1Hits.map((hit) => hit.technical_name))];
     const storedVectors = await getCompositeVectorsByNames(seedNames, textIndex);
@@ -97,7 +99,7 @@ export async function POST(request: Request) {
       stage2_hits: stage2Hits,
       stage2_meta: {
         text_index: textIndex,
-        model: TEXT_INDEX_MODELS[textIndex],
+        model,
         dimensions: manifest.dimensions,
         query_method: "weighted_centroid_of_stage1_text_vectors",
         seed_names: centroid.seedNames,

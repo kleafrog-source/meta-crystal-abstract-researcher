@@ -166,7 +166,7 @@ export function inspectCollectionResponse(
 
   if (referenceOverlapCount > 0) {
     warnings.push(
-      `${referenceOverlapCount} technical_name value(s) also exist in the current V3 reference library; inbox import may preserve them as frequency/provenance evidence, while direct autonomous publication will reject collisions.`,
+      `${referenceOverlapCount} technical_name value(s) also exist in the published reference catalogue; inbox import may preserve them as frequency/provenance evidence, while direct autonomous publication will reject collisions.`,
     );
   }
 

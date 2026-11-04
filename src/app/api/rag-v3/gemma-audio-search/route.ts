@@ -9,10 +9,11 @@ import { callSidecar, listTasks } from "@/lib/engine/runner";
 import { loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 import { prepareGpuForEmbeddingModel, ensureOllamaModelAvailable } from "@/lib/ollama-memory";
-import { TEXT_INDEX_MODELS } from "@/lib/rag-v3/composite-index";
-import { getArtifactStatuses } from "@/lib/rag-v3/managed-rebuild";
+import { getConfiguredTextIndexModel, getTextIndexDirectory } from "@/lib/rag-v3/composite-index";
 import { searchV3 } from "@/lib/rag-v3/search";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
+import { loadLLMSettings } from "@/lib/llm/factory";
+import { capabilityIsEnabled } from "@/lib/capability-registry";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -22,6 +23,15 @@ const MAX_AUDIO_BYTES = 150 * 1024 * 1024;
 const MAX_AUDIO_SECONDS = 30;
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const SLOT_OWNER = "gemma-audio-search";
+
+async function readGemmaTextManifest(modelId: string): Promise<{ status: string; dimensions: number; reason?: string } | null> {
+  try {
+    const raw = await fs.readFile(path.join(getTextIndexDirectory("embeddinggemma2"), "manifest.json"), "utf8");
+    const manifest = JSON.parse(raw) as { model?: string; dimensions?: number };
+    if (manifest.model !== modelId || manifest.dimensions !== 768) return { status: "stale_vectors", dimensions: Number(manifest.dimensions) || 0, reason: "Model or vector dimensions differ from the configured Gemma text bank." };
+    return { status: "ready", dimensions: manifest.dimensions };
+  } catch { return null; }
+}
 
 class MediaInputError extends Error {}
 
@@ -83,12 +93,15 @@ export async function POST(request: Request) {
   try { form = await request.formData(); } catch { return NextResponse.json({ error: "Invalid multipart request." }, { status: 400 }); }
   const modality = form.get("modality");
   if (modality !== "audio" && modality !== "image" && modality !== "unload") return NextResponse.json({ error: "Choose audio or a spectrogram image query." }, { status: 400 });
+  const settings = await loadLLMSettings();
+  const capability = modality === "image" ? "spec.gemma.*" : "audio.gemma.awtd";
+  if (modality !== "unload" && !capabilityIsEnabled(settings.capabilityRegistry, capability)) return NextResponse.json({ error: `${capability} is disabled in Settings.` }, { status: 409 });
 
   const conflict = await acquireSlotOrConflict();
   if (conflict) return conflict;
   if (modality === "audio") return streamAudioSearch(request, form);
   try {
-    const model = TEXT_INDEX_MODELS.embeddinggemma2;
+    const model = await getConfiguredTextIndexModel("embeddinggemma2");
     const { baseUrl } = await loadEmbeddingRuntimeSettings();
     if (modality === "unload") {
       const unload = await fetch(`${baseUrl}/api/generate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model, prompt: "", stream: false, keep_alive: 0 }), signal: AbortSignal.timeout(15_000) });
@@ -99,15 +112,15 @@ export async function POST(request: Request) {
     if (!(inputFile instanceof File) || inputFile.size === 0) return NextResponse.json({ error: "Choose a spectrogram PNG." }, { status: 400 });
     if (inputFile.size > MAX_IMAGE_BYTES) return NextResponse.json({ error: "Spectrogram image exceeds the 10 MiB limit." }, { status: 413 });
     const mediaBuffer = Buffer.from(await inputFile.arrayBuffer()); inspectPng(mediaBuffer);
-    const artifact = (await getArtifactStatuses()).artifacts.find((item) => item.kind === "embeddinggemma2_text");
-    if (!artifact || !["built", "ready"].includes(artifact.status)) return NextResponse.json({ error: `EmbeddingGemma 2 text index is unavailable${artifact?.reason ? `: ${artifact.reason}` : ". Build it from Service Bay first."}` }, { status: 409 });
+    const artifact = await readGemmaTextManifest(model);
+    if (!artifact || artifact.status !== "ready") return NextResponse.json({ error: `EmbeddingGemma 2 text index is unavailable${artifact?.reason ? `: ${artifact.reason}` : ". Build it from Service Bay first."}` }, { status: 409 });
     await ensureOllamaModelAvailable(model); await prepareGpuForEmbeddingModel(model, 5_000, SLOT_OWNER);
     const response = await fetch(`${baseUrl}/api/embed`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model, input: { image: mediaBuffer.toString("base64") }, keep_alive: 0 }), signal: AbortSignal.any([request.signal, AbortSignal.timeout(120_000)]) });
     if (!response.ok) throw new Error(`Ollama spectrogram embedding failed (HTTP ${response.status}): ${(await response.text()).slice(0, 1_000)}`);
     const payload = await response.json() as EmbedResponse, vector = payload.embeddings?.[0];
     if (!Array.isArray(vector) || vector.length !== artifact.dimensions) throw new Error(`Gemma image vector dimensions differ from the text index (${vector?.length ?? 0} vs ${artifact.dimensions ?? 0}).`);
     const offset = Math.max(0, Number(form.get("offset")) || 0);
-    const search = await searchV3({ query: "Spectrogram image input", topK: Number(form.get("top_k")) || 30, currentValues: {}, instructionContext: [], sources: { library: true, frozen: false, atoms: false, generated: true }, selectedDomainLayers: getSelectedLayers(form), textIndex: "embeddinggemma2", queryEmbedding: vector, modelSlotOwner: SLOT_OWNER });
+    const search = await searchV3({ query: "Spectrogram image input", topK: Number(form.get("top_k")) || 30, currentValues: {}, instructionContext: [], sources: { library: true, atoms: false, generated: true }, selectedDomainLayers: getSelectedLayers(form), textIndex: "embeddinggemma2", queryEmbedding: vector, modelSlotOwner: SLOT_OWNER });
     return NextResponse.json({ modality, model, dimensions: vector.length, duration_seconds: null, offset_seconds: offset, results: search.results as ActiveParameter[], total_candidates: search.total_candidates, total_scoped: search.total_scoped, domain_retrieval: search.domain_retrieval });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -132,9 +145,9 @@ async function streamAudioSearch(request: Request, form: FormData) {
     const { result: info } = await callSidecar<{ duration_seconds?: number }>("audio_info", { args: [sourcePath], timeoutMs: 15 * 60_000, taskType: "gemma-audio-convert", title: jobTitle });
     const durationSeconds = Number((info as { duration_seconds?: unknown } | null)?.duration_seconds);
     if (!Number.isFinite(durationSeconds) || durationSeconds < 0.25) throw new MediaInputError("Audio must be at least 0.25 seconds and decodable by the CLAP audio pipeline.");
-    const artifact = (await getArtifactStatuses()).artifacts.find((item) => item.kind === "embeddinggemma2_text");
-    if (!artifact || !["built", "ready"].includes(artifact.status)) throw new Error(`EmbeddingGemma 2 text index is unavailable${artifact?.reason ? `: ${artifact.reason}` : ". Build it from Service Bay first."}`);
-    const model = TEXT_INDEX_MODELS.embeddinggemma2;
+    const model = await getConfiguredTextIndexModel("embeddinggemma2");
+    const artifact = await readGemmaTextManifest(model);
+    if (!artifact || artifact.status !== "ready") throw new Error(`EmbeddingGemma 2 text index is unavailable${artifact?.reason ? `: ${artifact.reason}` : ". Build it from Service Bay first."}`);
     await ensureOllamaModelAvailable(model);
     const { baseUrl } = await loadEmbeddingRuntimeSettings();
     await prepareGpuForEmbeddingModel(model, 5_000, SLOT_OWNER);
@@ -168,7 +181,7 @@ async function streamAudioSearch(request: Request, form: FormData) {
               const vector = embedded.embeddings?.[0];
               if (!Array.isArray(vector) || vector.length !== artifact.dimensions) throw new Error(`Gemma audio vector dimensions differ from the text index (${vector?.length ?? 0} vs ${artifact.dimensions ?? 0}).`);
               dimensions = vector.length;
-              const search = await searchV3({ query: "Audio input", topK, currentValues: {}, instructionContext: [], sources: { library: true, frozen: false, atoms: false, generated: true }, selectedDomainLayers, textIndex: "embeddinggemma2", queryEmbedding: vector, modelSlotOwner: SLOT_OWNER });
+              const search = await searchV3({ query: "Audio input", topK, currentValues: {}, instructionContext: [], sources: { library: true, atoms: false, generated: true }, selectedDomainLayers, textIndex: "embeddinggemma2", queryEmbedding: vector, modelSlotOwner: SLOT_OWNER });
               totalCandidates = Math.max(totalCandidates, search.total_candidates);
               for (const parameter of search.results as ActiveParameter[]) {
                 const previous = best.get(parameter.technical_name);
@@ -196,7 +209,7 @@ async function streamAudioSearch(request: Request, form: FormData) {
   } catch (error) {
     if (warmedModel) {
       const { baseUrl } = await loadEmbeddingRuntimeSettings().catch(() => ({ baseUrl: "" }));
-      if (baseUrl) await fetch(`${baseUrl}/api/generate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: TEXT_INDEX_MODELS.embeddinggemma2, prompt: "", stream: false, keep_alive: 0 }), signal: AbortSignal.timeout(15_000) }).catch(() => undefined);
+      if (baseUrl) await fetch(`${baseUrl}/api/generate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: await getConfiguredTextIndexModel("embeddinggemma2"), prompt: "", stream: false, keep_alive: 0 }), signal: AbortSignal.timeout(15_000) }).catch(() => undefined);
     }
     const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json({ error: message }, { status: error instanceof MediaInputError ? 400 : 500 });

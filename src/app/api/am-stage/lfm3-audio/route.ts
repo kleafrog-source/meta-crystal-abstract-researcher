@@ -10,6 +10,8 @@ import { NextResponse } from "next/server";
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 import { prepareGpuForExternalModel } from "@/lib/ollama-memory";
 import { buildLfm3Prompt, cleanLfm3Output, normalizeLfm3Window, parseLfm3Runtime, type Lfm3PromptMode, type Lfm3Runtime } from "@/lib/lfm3-audio";
+import { loadLLMSettings } from "@/lib/llm/factory";
+import { capabilityIsEnabled } from "@/lib/capability-registry";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -131,6 +133,8 @@ async function runLlamaCpp(audioPath: string, prompt: string): Promise<string> {
 }
 
 export async function POST(request: Request) {
+  const settings = await loadLLMSettings();
+  if (!capabilityIsEnabled(settings.capabilityRegistry, "side-meta.lfm3")) return NextResponse.json({ error: "side-meta.lfm3 is disabled in Settings." }, { status: 409 });
   let form: FormData;
   try { form = await request.formData(); }
   catch { return NextResponse.json({ error: "Expected multipart audio input." }, { status: 400 }); }

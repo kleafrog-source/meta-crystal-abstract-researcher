@@ -4,9 +4,11 @@ import { searchV3, type RagV3Sources } from "@/lib/rag-v3/search";
 import type { ProposeParametersRequest } from "@/lib/rag-v3/types";
 import { prepareGpuForV3Embedding } from "@/lib/ollama-memory";
 import type { TextIndexId } from "@/lib/rag-v3/composite-index";
-import { TEXT_INDEX_MODELS } from "@/lib/rag-v3/composite-index";
-import { getArtifactStatuses } from "@/lib/rag-v3/managed-rebuild";
+import { getConfiguredTextIndexModel } from "@/lib/rag-v3/composite-index";
+import { isArtifactManifestAvailable } from "@/lib/rag-v3/managed-rebuild";
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
+import { loadLLMSettings } from "@/lib/llm/factory";
+import { capabilityIsEnabled } from "@/lib/capability-registry";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -22,14 +24,17 @@ export async function POST(request: Request) {
       text_index?: TextIndexId;
     };
     const textIndex: TextIndexId = body.text_index === "embeddinggemma2" ? "embeddinggemma2" : "qwen3";
-    if (textIndex === "embeddinggemma2") {
-      const gemmaIndex = (await getArtifactStatuses()).artifacts.find((artifact) => artifact.kind === "embeddinggemma2_text");
-      if (!gemmaIndex || !["built", "ready"].includes(gemmaIndex.status)) {
-        const detail = gemmaIndex?.status === "stale" || gemmaIndex?.status === "stale_data" || gemmaIndex?.status === "stale_vectors" || gemmaIndex?.status === "partial" ? ` Rebuild it: ${gemmaIndex.reason ?? "source catalogue changed"}.` : " Build it from Service Bay first.";
-        return NextResponse.json({ error: `EmbeddingGemma 2 text index is unavailable.${detail}` }, { status: 409 });
-      }
+    const settings = await loadLLMSettings();
+    const capability = textIndex === "embeddinggemma2" ? "text.gemma.awtd" : "text.qwen.resolved";
+    if (!capabilityIsEnabled(settings.capabilityRegistry, capability)) {
+      return NextResponse.json({ error: `${capability} is disabled in Settings.` }, { status: 409 });
     }
-    await prepareGpuForV3Embedding(5_000, TEXT_INDEX_MODELS[textIndex], slotOwner);
+    if (textIndex === "embeddinggemma2") {
+      const model = await getConfiguredTextIndexModel(textIndex);
+      if (!(await isArtifactManifestAvailable("embeddinggemma2_text", model))) return NextResponse.json({ error: "EmbeddingGemma 2 text index is unavailable or configured to a different model. Check status and rebuild in Service Bay." }, { status: 409 });
+    }
+    const model = await getConfiguredTextIndexModel(textIndex);
+    await prepareGpuForV3Embedding(5_000, model, slotOwner);
     return NextResponse.json(
       await searchV3({
         query: typeof body.query === "string" ? body.query : "",

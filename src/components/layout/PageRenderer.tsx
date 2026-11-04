@@ -13,6 +13,7 @@ import { AMStagePage } from "@/components/pages/AMStagePage";
 import { MorphoAcousticRagPage } from "@/components/pages/MorphoAcousticRagPage";
 import { VocalAllocationMatrixPage } from "@/components/pages/VocalAllocationMatrixPage";
 import { Settings } from "@/components/pages/Settings";
+import { ServiceBayPage } from "@/components/pages/ServiceBayPage";
 import LexiconStatusPage from "@/app/lexicon-status/page";
 import type { PageId } from "@/components/layout/Sidebar";
 import { useEffect, useState } from "react";
@@ -118,6 +119,8 @@ export function PageRenderer(props: {
       return <VocalAllocationMatrixPage />;
     case "settings":
       return <Settings />;
+    case "servicebay":
+      return <ServiceBayPage />;
     case "lexiconstatus":
       return <LexiconStatusPage />;
     default:

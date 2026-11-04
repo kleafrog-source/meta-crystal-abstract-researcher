@@ -39,7 +39,7 @@ export function VirtualizedParamList(props: {
               {isSearching ? t("Scoping and anchoring parameters...") : t("No active parameters yet")}
             </p>
             {!isSearching ? (
-              <V3InfoTip content={t("Run a semantic query above and the unified V3 parameters will appear here.")} />
+              <V3InfoTip content={t("Run a semantic query above to show parameters from the published catalogue.")} />
             ) : null}
           </div>
         </div>

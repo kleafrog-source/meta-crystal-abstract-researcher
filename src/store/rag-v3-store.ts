@@ -254,7 +254,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
   queryB: "",
   topK: 50,
   textIndex: "qwen3",
-  sources: { library: true, frozen: true, atoms: true, generated: true },
+  sources: { library: true, frozen: false, atoms: true, generated: true },
   scopes: { sound: true, structure: true, metadata: false, provenance: false, administrative: false },
   vocalMatrixMode: false,
   searchMode: "single",

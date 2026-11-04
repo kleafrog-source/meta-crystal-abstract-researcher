@@ -69,10 +69,15 @@ export function MorphoAcousticRagPage({ active = true }: { active?: boolean } = 
   }, [active, refresh]);
   useEffect(() => {
     if (!active || (!status?.index_job.running && !status?.search_job.running)) return;
+    let wasRunning = true;
+    let disposed = false;
     const timer = window.setInterval(() => {
-      if (document.visibilityState === "visible") void refresh().catch(() => undefined);
+      if (document.visibilityState === "visible") void fetch("/api/morpho/status?view=job", { cache: "no-store" }).then((response) => response.json()).then((payload: { job?: { running?: boolean } }) => {
+        if (disposed) return;
+        if (wasRunning && !payload.job?.running) { wasRunning = false; void refresh().catch(() => undefined); }
+      }).catch(() => undefined);
     }, 1200);
-    return () => window.clearInterval(timer);
+    return () => { disposed = true; window.clearInterval(timer); };
   }, [active, refresh, status?.index_job.running, status?.search_job.running]);
   useEffect(
     () => () => {
@@ -141,7 +146,7 @@ export function MorphoAcousticRagPage({ active = true }: { active?: boolean } = 
             <h1 className="flex items-center gap-2 font-mono text-lg font-semibold">
               <AMIcon name="morpho" size="md" bright />
               Morpho-Acoustic RAG · SigLIP2
-              <V3InfoTip content={t("Изображение → релевантные параметры V3 → значения из SigLIP2 anchors, axes и relations.")} />
+              <V3InfoTip content={t("Изображение → релевантные параметры каталога → значения из SigLIP2 anchors, axes и relations.")} />
             </h1>
           </div>
           <div className="flex gap-2">
@@ -162,7 +167,7 @@ export function MorphoAcousticRagPage({ active = true }: { active?: boolean } = 
               <div>
                 <div className="flex items-center gap-2 text-sm font-semibold">
                   SigLIP2 text index
-                  <V3InfoTip content="Индексирует только sound/structure параметры V3 в общем text/image пространстве SigLIP2. GPU и Ollama не используются." />
+                  <V3InfoTip content={t("Индексирует только параметры Sound/Structure из опубликованного каталога в общем text/image пространстве SigLIP2. GPU и Ollama не используются.")} />
                 </div>
                 {status?.stale_reasons?.length ? (
                   <div className="mt-1 text-xs text-amber-300">
@@ -170,7 +175,7 @@ export function MorphoAcousticRagPage({ active = true }: { active?: boolean } = 
                   </div>
                 ) : null}
               </div>
-              <Link className="text-xs underline underline-offset-4" href="/am-core#service-bay">{t("Перейти в Service Bay для управления индексом")}</Link>
+              <Link className="text-xs underline underline-offset-4" href="/service-bay#siglip">{t("Перейти в Service Bay для управления индексом")}</Link>
             </div>
             {status?.manifest ? (
               <div className="mt-2 text-xs text-zinc-500">

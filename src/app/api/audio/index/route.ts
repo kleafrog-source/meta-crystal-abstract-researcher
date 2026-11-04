@@ -1,14 +1,20 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
 import { listTasks, runSidecar } from "@/lib/engine/runner";
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
+import { loadLLMSettings } from "@/lib/llm/factory";
+import { capabilityIsEnabled } from "@/lib/capability-registry";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 7200;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  if (request.nextUrl.searchParams.get("view") === "job") {
+    const task = listTasks().filter((item) => item.taskType === "audio-clap" && item.title === "Build CLAP text index").at(-1);
+    return NextResponse.json({ job: task ? { status: task.status, startedAt: task.startedAt, taskId: task.taskId } : null });
+  }
   try {
     // Poll the compact manifest; index.json contains every 512-float embedding.
     const indexDir = path.join(process.cwd(), "data", "combinatorial-genesis", "audio-clap-index");
@@ -44,12 +50,14 @@ export async function GET() {
 }
 
 export async function POST() {
+  const settings = await loadLLMSettings();
+  if (!capabilityIsEnabled(settings.capabilityRegistry, "audio.clap.resolved")) return NextResponse.json({ started: false, reason: "audio.clap.resolved is disabled in Settings." }, { status: 409 });
   const slotOwner = "clap-index-build";
   if (!acquireEmbeddingModelSlot(slotOwner)) return NextResponse.json({ started: false, reason: `model slot busy: ${getEmbeddingModelSlot()?.owner ?? "unknown"}` }, { status: 409 });
   try {
     const running = listTasks().find((item) => item.taskType === "audio-clap" && item.title === "Build CLAP text index" && item.status === "running");
     if (running) { releaseEmbeddingModelSlot(slotOwner); return NextResponse.json({ started: false, reason: "already_running", taskId: running.taskId }, { status: 409 }); }
-    const task = runSidecar({ command: "audio_index", timeoutMs: 2 * 60 * 60_000, taskType: "audio-clap", title: "Build CLAP text index" });
+    const task = runSidecar({ command: "audio_index", extraEnv: { CLAP_MODEL: settings.capabilityRegistry.modelSlots.clap.modelId }, timeoutMs: 2 * 60 * 60_000, taskType: "audio-clap", title: "Build CLAP text index" });
     void task.done.catch(() => {}).finally(() => releaseEmbeddingModelSlot(slotOwner));
     return NextResponse.json({ started: true, taskId: task.taskId }, { status: 202 });
   } catch (error) {

@@ -72,7 +72,7 @@ export function AMCoreDashboard({ onNavigate }: { onNavigate: (page: PageId) => 
               <span className="text-sm font-medium">Abstract-Mindfreak</span>
               <h1 className="text-xl font-semibold tracking-tight text-glow-emerald">AM-Core Dashboard</h1>
               <V3InfoTip content="Каноническая база параметров, активные процессы и быстрый вход в основные режимы." />
-              <Badge variant="outline">canonical V3</Badge>
+              <Badge variant="outline">published catalogue</Badge>
             </div>
           </div>
           <Button variant="outline" size="sm" onClick={refresh} disabled={loading}>
@@ -84,7 +84,7 @@ export function AMCoreDashboard({ onNavigate }: { onNavigate: (page: PageId) => 
 
       <div className="flex-1 space-y-5 overflow-y-auto p-6">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <Metric label="Параметры AM-Core" value={v3.data?.total_parameters} detail={v3.data?.dataset_version ?? "версия не определена"} icon={<Database className="h-4 w-4" />} />
+          <Metric label={t("Записей в текстовом индексе")} value={v3.data?.total_parameters} detail={t("Последний опубликованный индекс") } icon={<Database className="h-4 w-4" />} />
           <Metric label="Автономная библиотека" value={v3.data?.library_count ?? collections.data?.library_parameter_count} detail="Combinatorial Genesis" icon={<FlaskConical className="h-4 w-4" />} />
           <Metric label="Combinatorial Atoms" value={v3.data?.atom_count} detail={t("структурные источники")} icon={<CircleDot className="h-4 w-4" />} />
           <Metric label="Опубликованные пакеты" value={collections.data?.library_published_package_count} detail="ручное подтверждение" icon={<Sparkles className="h-4 w-4" />} />

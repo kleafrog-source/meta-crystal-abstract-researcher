@@ -33,11 +33,9 @@ def _sha(payload: Any) -> str:
 
 
 def load_v3_snapshot(data_root: Path = DEFAULT_DATA_ROOT) -> dict[str, Any]:
-    """Return the active library-over-frozen snapshot in deterministic order."""
+    """Return published catalogue membership; legacy dataset files are metadata only."""
     latest = _read(data_root / "datasets" / "latest.json")
-    frozen_path = data_root / "datasets" / str(latest["version_id"]) / "parameters.json"
     library_path = data_root / "library" / "parameters.json"
-    frozen = _read(frozen_path)
     library = _read(library_path)
     tombstone_path = data_root / "library" / "catalogue-deleted.json"
     tombstone_raw = tombstone_path.read_bytes() if tombstone_path.exists() else b"[]"
@@ -49,10 +47,6 @@ def load_v3_snapshot(data_root: Path = DEFAULT_DATA_ROOT) -> dict[str, Any]:
     excluded_set = set(excluded)
 
     records: dict[str, dict[str, Any]] = {}
-    for item in frozen:
-        name = str(item.get("technical_name", "")).strip()
-        if name:
-            records[name] = {**item, "source": "frozen"}
     for item in library:
         name = str(item.get("technical_name", "")).strip()
         if name:
@@ -64,10 +58,10 @@ def load_v3_snapshot(data_root: Path = DEFAULT_DATA_ROOT) -> dict[str, Any]:
         "schema_version": 1,
         "dataset_version": str(latest["version_id"]),
         "parameter_count": len(parameters),
-        "library_count": sum(item["source"] == "library" for item in parameters),
-        "frozen_count": sum(item["source"] == "frozen" for item in parameters),
+        "library_count": len(parameters),
+        "frozen_count": 0,
         "excluded_count": len(excluded),
         "excluded_sha256": excluded_sha,
-        "content_sha256": hashlib.sha256(frozen_path.read_bytes() + b"\0" + library_path.read_bytes() + b"\0" + tombstone_raw).hexdigest(),
+        "content_sha256": hashlib.sha256(library_path.read_bytes() + b"\0" + tombstone_raw).hexdigest(),
         "parameters": parameters,
     }

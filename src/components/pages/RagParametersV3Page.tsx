@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Layers, Sliders, Zap } from "@/components/icons";
 import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton";
-import { AnchoringDashboard } from "@/components/rag-v3/AnchoringDashboard";
 import { MacroGenerator } from "@/components/rag-v3/MacroGenerator";
 import { SemanticSearch } from "@/components/rag-v3/SemanticSearch";
 import { VirtualizedParamList } from "@/components/rag-v3/VirtualizedParamList";
@@ -12,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { useRagV3Store } from "@/store/rag-v3-store";
 import { AMIcon } from "@/components/ui/am-icon";
 import { AMCoreLogo } from "@/components/ui/am-core-logo";
-import { ServiceBayIndexControls } from "@/components/rag-v3/ServiceBayIndexControls";
+import Link from "next/link";
 import { useUiText } from "@/lib/ui-i18n";
 
 export function RagParametersV3Page() {
@@ -25,7 +24,6 @@ export function RagParametersV3Page() {
   const [displayMode, setDisplayMode] = useState<"detail" | "standard" | "compact">("detail");
   const [selectedParameterName, setSelectedParameterName] = useState<string | null>(null);
   const [selectionSource, setSelectionSource] = useState<"card" | "macro">("card");
-  const [serviceBayOpen, setServiceBayOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -54,7 +52,6 @@ export function RagParametersV3Page() {
   const model = configuredModel ?? statusModel;
 
   useEffect(() => { if (selectionSource !== "macro" || !selectedParameterName) return; document.querySelector(`[data-parameter-id="${CSS.escape(selectedParameterName)}"]`)?.scrollIntoView({ block: "nearest" }); }, [selectedParameterName, selectionSource]);
-  useEffect(() => { if (window.location.hash === "#service-bay") { document.getElementById("service-bay")?.setAttribute("open", ""); setServiceBayOpen(true); } }, []);
 
   return (
     <div className="flowmusic-console flex h-full flex-col">
@@ -76,8 +73,8 @@ export function RagParametersV3Page() {
             <V3Tooltip content="Поиск ограничивается выбранными источниками и retrieval scope.">
               <Badge variant="outline" className="console-status-badge"><Layers className="mr-1 size-3" />scoped retrieval</Badge>
             </V3Tooltip>
-            <V3Tooltip content="V3 объединяет библиотеку, корпус Flowmusic, атомы и опубликованные комбинации.">
-              <Badge variant="outline" className="console-status-badge"><Zap className="mr-1 size-3" />library + corpus + atoms</Badge>
+            <V3Tooltip content="Поиск объединяет опубликованный каталог, runtime-атомы и опубликованные комбинации.">
+              <Badge variant="outline" className="console-status-badge"><Zap className="mr-1 size-3" />catalogue + atoms</Badge>
             </V3Tooltip>
             <V3Tooltip content="Найденные параметры доступны для ручной настройки перед генерацией macro.">
               <Badge variant="outline" className="console-status-badge"><Sliders className="mr-1 size-3" />live controls</Badge>
@@ -89,16 +86,7 @@ export function RagParametersV3Page() {
       <div className="min-h-0 flex-1 overflow-auto p-3">
         <div className="console-engine-layout">
           <div className="console-engine-left flex min-w-0 flex-col gap-3">
-          <details id="service-bay" onToggle={(event) => setServiceBayOpen(event.currentTarget.open)} className="console-service-drawer rounded border border-white/20 bg-black/50">
-            <V3Tooltip content="Открывает служебную панель состояния и управляемой перестройки индексов V3.">
-              <summary className="cursor-pointer px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-zinc-500">
-                Service bay: anchoring status, index and live anchors
-              </summary>
-            </V3Tooltip>
-            <div className="border-t border-white/15 p-2">
-              {serviceBayOpen ? <><ServiceBayIndexControls /><AnchoringDashboard /></> : null}
-            </div>
-          </details>
+          <Link href="/service-bay" className="inline-flex w-fit items-center gap-2 rounded border border-border px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground" title={t("Open index status and manual rebuilds in Service Bay")}>{t("Open Service Bay")}</Link>
           <SemanticSearch />
 
           <section className="console-bank flex min-h-0 flex-col">
@@ -111,7 +99,7 @@ export function RagParametersV3Page() {
                 <div className="flex items-center gap-1" role="group" aria-label="Card display mode">{([ ["detail", "Подробно"], ["standard", "Обычный"], ["compact", "Компактно"] ] as const).map(([mode, title]) => <button key={mode} type="button" aria-pressed={displayMode === mode} title={t(title)} onClick={() => chooseDisplayMode(mode)} className="console-mode-button">{t(title)}</button>)}</div>
               </div>
               <VirtualizedParamList className="min-h-0 flex-1" displayMode={displayMode} selectedParameterName={selectedParameterName} onSelectParameter={(name) => { setSelectedParameterName(name); setSelectionSource("card"); }} />
-              <div className="border-t border-white/10 p-2"><JournalDraftButton modality="text" engine="semantic-v3" parameters={activeParameters} model={{ id: model ?? "unknown" }} settings={{ top_k: topK }} query={query} label={`Semantic V3 · ${query.slice(0, 96) || "query"}`} /></div>
+              <div className="border-t border-white/10 p-2"><JournalDraftButton modality="text" engine="semantic-v3" parameters={activeParameters} model={{ id: model ?? "unknown" }} settings={{ top_k: topK }} query={query} label={`Semantic Search · ${query.slice(0, 96) || "query"}`} /></div>
           </section>
           </div>
             <aside id="sidePanel" className="min-h-0">

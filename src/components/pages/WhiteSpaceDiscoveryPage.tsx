@@ -155,7 +155,7 @@ export function WhiteSpaceDiscoveryPage() {
                   White Space Discovery
                 </h1>
                 <V3InfoTip content="Ищет проверяемые пробелы покрытия. Режим ничего не публикует и не запускает LLM автоматически." />
-                <V3InfoTip content={t("Таксономические, атомные и локально-разреженные области текущей V3. UMAP не используется как доказательство лакуны.")} />
+                <V3InfoTip content={t("Таксономические, атомные и локально-разреженные области опубликованного каталога. UMAP не используется как доказательство лакуны.")} />
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -356,7 +356,7 @@ export function WhiteSpaceDiscoveryPage() {
                         )}
                         Открыть в{" "}
                         {item.target_mode === "meta-crystal-v3-lab"
-                          ? "V3 Lab"
+                          ? "Genesis Lab"
                           : "Synthesis"}
                       </Button>
                     </V3Tooltip>

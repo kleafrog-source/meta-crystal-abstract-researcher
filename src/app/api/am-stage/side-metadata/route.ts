@@ -10,6 +10,8 @@ import { NextResponse } from "next/server";
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 import { prepareGpuForExternalModel } from "@/lib/ollama-memory";
 import { getSainaHelmBaseUrl } from "@/lib/saina-helm-runtime";
+import { loadLLMSettings } from "@/lib/llm/factory";
+import { capabilityIsEnabled } from "@/lib/capability-registry";
 import { classifyIndicLanguage, INDIC_LANGUAGE_TAGS, type HelmGateValue, type SegmentSideMeta } from "@/lib/segment-side-meta";
 
 export const dynamic = "force-dynamic";
@@ -137,6 +139,9 @@ export async function POST(request: Request) {
   const form = await request.formData();
   const kind = form.get("specialist");
   if (kind !== "helm" && kind !== "gender" && kind !== "language") return NextResponse.json({ error: "Choose Helm, gender, or vakgyata-tiny." }, { status: 400 });
+  const settings = await loadLLMSettings();
+  const capability = kind === "helm" ? "side-meta.helm" : kind === "gender" ? "side-meta.voice" : "side-meta.indic";
+  if (!capabilityIsEnabled(settings.capabilityRegistry, capability)) return NextResponse.json({ error: `${capability} is disabled in Settings.` }, { status: 409 });
   const audio = form.get("audio");
   if (!(audio instanceof File) || audio.size === 0) return NextResponse.json({ error: "Choose an audio file." }, { status: 400 });
   if (audio.size > MAX_AUDIO_BYTES) return NextResponse.json({ error: "Audio exceeds the 150 MiB limit." }, { status: 413 });

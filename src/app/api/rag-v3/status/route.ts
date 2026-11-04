@@ -3,7 +3,6 @@ import path from "node:path";
 
 import { NextResponse } from "next/server";
 
-import { readGenesisLibrary } from "@/lib/combinatorial-genesis/library";
 import { getOllamaBaseUrl, getOllamaModel, getOllamaTimeouts, probeOllama } from "@/lib/ollama-client";
 import type { StatusResponse } from "@/lib/rag-v3/types";
 import { getCompositeIndexInfo } from "@/lib/rag-v3/composite-index";
@@ -14,20 +13,17 @@ export const dynamic = "force-dynamic";
 const DATA_ROOT = path.join(process.cwd(), "data", "combinatorial-genesis");
 export async function GET() {
   try {
-    const library = await readGenesisLibrary();
     const latest = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "datasets", "latest.json"), "utf8")) as { version_id: string };
-    const frozen = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "datasets", latest.version_id, "parameters.json"), "utf8")) as Array<{ technical_name: string }>;
     const atomIndexManifest = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "indexes", latest.version_id, "manifest.json"), "utf8")) as { atom_count: number; created_at: string; model: string };
     const compositeIndex = await getCompositeIndexInfo();
     const anchors = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "v3", "anchoring", "anchors_build.json"), "utf8")) as { stub?: boolean; generated_at?: string };
     const indexJob = getV3IndexJob();
     const anchorsJob = getV3AnchorsJob();
-    const union = new Set([...library.map((item) => item.technical_name), ...frozen.map((item) => item.technical_name)]);
     const ollama = await probeOllama();
     const timeouts = getOllamaTimeouts();
     const payload: StatusResponse = {
       artifacts_ready: true,
-      total_parameters: union.size,
+      total_parameters: compositeIndex.parameter_count,
       anchors_stub: Boolean(anchors.stub),
       axes_enabled: !anchors.stub,
       ollama_reachable: ollama.reachable,
@@ -50,15 +46,15 @@ export async function GET() {
         exit_code: anchorsJob.exitCode, last_error: anchorsJob.lastError, log_tail: anchorsJob.logTail, progress: anchorsJob.progress,
       },
       required_files: [
-        { name: "autonomous_library", exists: true },
-        { name: "frozen_corpus", exists: true },
+        { name: "catalogue_index", exists: compositeIndex.parameter_count > 0 },
+        { name: "genesis_atom_corpus", exists: atomIndexManifest.atom_count > 0 },
         { name: "combinatorial_atoms", exists: atomIndexManifest.atom_count > 0 },
-        { name: "composite_parameter_index", exists: compositeIndex.parameter_count === union.size },
+        { name: "composite_parameter_index", exists: compositeIndex.parameter_count > 0 },
         { name: "v3_live_anchors", exists: !anchors.stub },
       ],
       last_error: ollama.error,
     };
-    return NextResponse.json({ ...payload, library_count: library.length, frozen_count: frozen.length, atom_count: atomIndexManifest.atom_count, dataset_version: latest.version_id, composite_index_sha256: compositeIndex.cache_sha256, vector_origins: compositeIndex.vector_origins });
+    return NextResponse.json({ ...payload, library_count: compositeIndex.parameter_count, atom_count: atomIndexManifest.atom_count, dataset_version: latest.version_id, composite_index_sha256: compositeIndex.cache_sha256, vector_origins: compositeIndex.vector_origins });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }

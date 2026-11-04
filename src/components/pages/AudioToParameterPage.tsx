@@ -201,10 +201,15 @@ export function AudioToParameterPage({ active = true }: { active?: boolean } = {
   }, [active, refreshMorphoStatus]);
   useEffect(() => {
     if (!active || !morphoStatus?.index_job?.running) return;
+    let wasRunning = true;
+    let disposed = false;
     const timer = window.setInterval(() => {
-      if (document.visibilityState === "visible") void refreshMorphoStatus();
+      if (document.visibilityState === "visible") void fetch("/api/morpho/status?view=job", { cache: "no-store" }).then((response) => response.json()).then((payload: { job?: { running?: boolean } }) => {
+        if (disposed) return;
+        if (wasRunning && !payload.job?.running) { wasRunning = false; void refreshMorphoStatus(); }
+      }).catch(() => undefined);
     }, 2_000);
-    return () => window.clearInterval(timer);
+    return () => { disposed = true; window.clearInterval(timer); };
   }, [active, morphoStatus?.index_job?.running, refreshMorphoStatus]);
 
   const selectFile = useCallback((nextFile: File) => {
@@ -860,7 +865,7 @@ export function AudioToParameterPage({ active = true }: { active?: boolean } = {
                       ? `${t("Перестройка индекса:")} ${morphoStatus.index_job.progress?.current ?? 0} / ${morphoStatus.index_job.progress?.total ?? 0}`
                       : `${t("Индекс SigLIP2 не готов:")} ${(morphoStatus?.stale_reasons ?? [morphoStatus?.status ?? "unknown"]).join("; ")}`}
                   </div>
-                  <Link className="mt-2 flex w-full items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent" href="/am-core#service-bay">
+                  <Link className="mt-2 flex w-full items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent" href="/service-bay#siglip">
                     {t("Открыть Service Bay")}
                   </Link>
                 </div>
