@@ -1,4 +1,4 @@
-# <img src="../assets/readme-icons/audio-clap-rag.svg" alt="" width="28" height="28" align="absmiddle" /> Audio CLAP RAG
+# <img src="../assets/readme-icons/audio-clap-rag.svg" alt="" width="96" height="96" align="absmiddle" /> Audio CLAP RAG
 
 Retrieve parameter candidates from an audio query at [`/audio-clap-rag`](http://localhost:3000/audio-clap-rag).
 

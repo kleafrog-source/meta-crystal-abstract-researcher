@@ -1,4 +1,4 @@
-# <img src="../assets/readme-icons/parameter-catalogue.svg" alt="" width="28" height="28" align="absmiddle" /> Каталог параметров
+# <img src="../assets/readme-icons/parameter-catalogue.svg" alt="" width="96" height="96" align="absmiddle" /> Каталог параметров
 
 Управление опубликованной библиотекой параметров: [`/am-parameters-catalogue`](http://localhost:3000/am-parameters-catalogue).
 

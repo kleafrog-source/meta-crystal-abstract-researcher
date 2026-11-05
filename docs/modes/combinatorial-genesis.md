@@ -1,4 +1,4 @@
-# <img src="../assets/readme-icons/combinatorial-genesis.svg" alt="" width="28" height="28" align="absmiddle" /> Combinatorial Genesis
+# <img src="../assets/readme-icons/combinatorial-genesis.svg" alt="" width="96" height="96" align="absmiddle" /> Combinatorial Genesis
 
 Review and process candidate material for combinatorial workflows at [`/combinatorial-genesis`](http://localhost:3000/combinatorial-genesis).
 

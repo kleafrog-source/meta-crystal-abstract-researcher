@@ -1,4 +1,4 @@
-# <img src="../assets/readme-icons/am-stage.svg" alt="" width="28" height="28" align="absmiddle" /> AM Tri-Modal Stage
+# <img src="../assets/readme-icons/am-stage.svg" alt="" width="96" height="96" align="absmiddle" /> AM Tri-Modal Stage
 
 Рабочая среда сессии для поиска параметров по тексту, аудио и спектрограммам.
 

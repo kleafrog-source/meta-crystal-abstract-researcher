@@ -1,4 +1,4 @@
-# <img src="../assets/readme-icons/dashboard.svg" alt="" width="28" height="28" align="absmiddle" /> AM-Core Dashboard
+# <img src="../assets/readme-icons/dashboard.svg" alt="" width="96" height="96" align="absmiddle" /> AM-Core Dashboard
 
 The entry page for AM-Core.
 

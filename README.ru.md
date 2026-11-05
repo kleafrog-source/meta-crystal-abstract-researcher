@@ -1,4 +1,4 @@
-# <img src="docs/assets/readme-icons/am-core.svg" alt="" width="52" height="52" align="absmiddle" /> Abstract-Mindfreak · AM-Core
+# <img src="docs/assets/readme-icons/am-core.svg" width="128" height="128" alt="AM-Core" /> Abstract-Mindfreak · AM-Core
 
 AM-Core — локальная рабочая среда для поиска опубликованных аудиопараметров, проверки их значений и переноса результатов поиска в сценарии работы с сессией и макросами. Режимы используют отдельные пути поиска и индексы для текста, аудио и спектрограмм; результаты можно просматривать и корректировать в интерфейсе.
 
@@ -8,28 +8,28 @@ AM-Core — локальная рабочая среда для поиска о�
 
 | Режим | Назначение |
 |---|---|
-| <img src="docs/assets/readme-icons/dashboard.svg" alt="" width="24" height="24" /> [AM-Core Dashboard](docs/modes/am-core-dashboard.ru.md) | Стартовая страница и переходы к основным режимам. |
-| <img src="docs/assets/readme-icons/am-stage.svg" alt="" width="24" height="24" /> [AM Tri-Modal Stage](docs/modes/am-stage.ru.md) | Работа с аудиосессией, текстовым поиском, сегментным анализом, банками параметров, временной шкалой и экспортом. |
-| <img src="docs/assets/readme-icons/am-core-engine.svg" alt="" width="24" height="24" /> [AM-Core Engine](docs/modes/am-core-engine.ru.md) | Поиск параметров по тексту или переходу, настройка результатов и подготовка макроса. |
-| <img src="docs/assets/readme-icons/service-bay.svg" alt="" width="24" height="24" /> [Service Bay](docs/modes/service-bay.ru.md) | Проверка покрытия индексов и ручное обслуживание. |
-| <img src="docs/assets/readme-icons/audio-to-parameter.svg" alt="" width="24" height="24" /> [Audio-to-Parameter](docs/modes/audio-to-parameter.ru.md) | Создание временных узлов и просмотр результатов анализа аудио. |
-| <img src="docs/assets/readme-icons/audio-clap-rag.svg" alt="" width="24" height="24" /> [Audio CLAP RAG](docs/modes/audio-clap-rag.ru.md) | Поиск кандидатов параметров по аудиозапросу с CLAP. |
-| <img src="docs/assets/readme-icons/morpho-acoustic-rag.svg" alt="" width="24" height="24" /> [Morpho-Acoustic RAG](docs/modes/morpho-acoustic-rag.ru.md) | Поиск кандидатов по изображению или спектрограмме через SigLIP2. |
-| <img src="docs/assets/readme-icons/am-vocal-morphology-matrix.svg" alt="" width="24" height="24" /> [AM-Vocal Morphology Matrix](docs/modes/am-vocal-morphology-matrix.ru.md) | Поиск и проверка вокальных параметров по структурированному описанию. |
-| <img src="docs/assets/readme-icons/combinatorial-genesis.svg" alt="" width="24" height="24" /> [Combinatorial Genesis](docs/modes/combinatorial-genesis.ru.md) | Проверка и обработка кандидатных материалов и runtime atoms. |
-| <img src="docs/assets/readme-icons/combinatorial-synthesis.svg" alt="" width="24" height="24" /> [Combinatorial Synthesis](docs/modes/combinatorial-synthesis.ru.md) | Создание, проверка и публикация комбинаций параметров из выбранных источников и смысловой цели. |
-| <img src="docs/assets/readme-icons/parameter-catalogue.svg" alt="" width="24" height="24" /> [Каталог параметров](docs/modes/parameter-catalogue.ru.md) | Просмотр, обслуживание, импорт и экспорт опубликованной библиотеки параметров. |
-| <img src="docs/assets/readme-icons/settings.svg" alt="" width="24" height="24" /> [Настройки](docs/modes/settings.ru.md) | Настройка языка, оформления, слотов моделей и доступности функций/банков. |
-| <img src="docs/assets/readme-icons/white-space-discovery.svg" alt="" width="24" height="24" /> [White Space Discovery](docs/modes/research-modes.ru.md#white-space-discovery) | Анализ разреженных областей опубликованного каталога. |
-| <img src="docs/assets/readme-icons/knowledge-graph.svg" alt="" width="24" height="24" /> [Knowledge Graph](docs/modes/research-modes.ru.md#knowledge-graph) | Построение и просмотр связей параметров. |
-| <img src="docs/assets/readme-icons/cross-modal-consensus.svg" alt="" width="24" height="24" /> [Cross-Modal Consensus](docs/modes/research-modes.ru.md#cross-modal-consensus) | Просмотр мультимодальных journal-записей и операции consensus/transition. |
+| <img src="docs/assets/readme-icons/dashboard.svg" alt="" width="64" height="64" /> [AM-Core Dashboard](docs/modes/am-core-dashboard.ru.md) | Стартовая страница и переходы к основным режимам. |
+| <img src="docs/assets/readme-icons/am-stage.svg" alt="" width="64" height="64" /> [AM Tri-Modal Stage](docs/modes/am-stage.ru.md) | Работа с аудиосессией, текстовым поиском, сегментным анализом, банками параметров, временной шкалой и экспортом. |
+| <img src="docs/assets/readme-icons/am-core-engine.svg" alt="" width="64" height="64" /> [AM-Core Engine](docs/modes/am-core-engine.ru.md) | Поиск параметров по тексту или переходу, настройка результатов и подготовка макроса. |
+| <img src="docs/assets/readme-icons/service-bay.svg" alt="" width="64" height="64" /> [Service Bay](docs/modes/service-bay.ru.md) | Проверка покрытия индексов и ручное обслуживание. |
+| <img src="docs/assets/readme-icons/audio-to-parameter.svg" alt="" width="64" height="64" /> [Audio-to-Parameter](docs/modes/audio-to-parameter.ru.md) | Создание временных узлов и просмотр результатов анализа аудио. |
+| <img src="docs/assets/readme-icons/audio-clap-rag.svg" alt="" width="64" height="64" /> [Audio CLAP RAG](docs/modes/audio-clap-rag.ru.md) | Поиск кандидатов параметров по аудиозапросу с CLAP. |
+| <img src="docs/assets/readme-icons/morpho-acoustic-rag.svg" alt="" width="64" height="64" /> [Morpho-Acoustic RAG](docs/modes/morpho-acoustic-rag.ru.md) | Поиск кандидатов по изображению или спектрограмме через SigLIP2. |
+| <img src="docs/assets/readme-icons/am-vocal-morphology-matrix.svg" alt="" width="64" height="64" /> [AM-Vocal Morphology Matrix](docs/modes/am-vocal-morphology-matrix.ru.md) | Поиск и проверка вокальных параметров по структурированному описанию. |
+| <img src="docs/assets/readme-icons/combinatorial-genesis.svg" alt="" width="64" height="64" /> [Combinatorial Genesis](docs/modes/combinatorial-genesis.ru.md) | Проверка и обработка кандидатных материалов и runtime atoms. |
+| <img src="docs/assets/readme-icons/combinatorial-synthesis.svg" alt="" width="64" height="64" /> [Combinatorial Synthesis](docs/modes/combinatorial-synthesis.ru.md) | Создание, проверка и публикация комбинаций параметров из выбранных источников и смысловой цели. |
+| <img src="docs/assets/readme-icons/parameter-catalogue.svg" alt="" width="64" height="64" /> [Каталог параметров](docs/modes/parameter-catalogue.ru.md) | Просмотр, обслуживание, импорт и экспорт опубликованной библиотеки параметров. |
+| <img src="docs/assets/readme-icons/settings.svg" alt="" width="64" height="64" /> [Настройки](docs/modes/settings.ru.md) | Настройка языка, оформления, слотов моделей и доступности функций/банков. |
+| <img src="docs/assets/readme-icons/white-space-discovery.svg" alt="" width="64" height="64" /> [White Space Discovery](docs/modes/research-modes.ru.md#white-space-discovery) | Анализ разреженных областей опубликованного каталога. |
+| <img src="docs/assets/readme-icons/knowledge-graph.svg" alt="" width="64" height="64" /> [Knowledge Graph](docs/modes/research-modes.ru.md#knowledge-graph) | Построение и просмотр связей параметров. |
+| <img src="docs/assets/readme-icons/cross-modal-consensus.svg" alt="" width="64" height="64" /> [Cross-Modal Consensus](docs/modes/research-modes.ru.md#cross-modal-consensus) | Просмотр мультимодальных journal-записей и операции consensus/transition. |
 
 В сайдбаре инструменты прежнего контура собраны в группе **Архив / Legacy & Research**; отдельные SVG-иконки каждого пункта показаны в [карточке legacy-режимов](docs/modes/legacy-research.ru.md).
 
 | Legacy-режим | |
 |---|---|
-| <img src="docs/assets/readme-icons/am-crystal-library.svg" alt="" width="22" height="22" /> Библиотека AM-Crystal · <img src="docs/assets/readme-icons/semantic-plane.svg" alt="" width="22" height="22" /> Semantic Plane · <img src="docs/assets/readme-icons/ire.svg" alt="" width="22" height="22" /> IRE | <img src="docs/assets/readme-icons/metis-lab.svg" alt="" width="22" height="22" /> Metis Lab · <img src="docs/assets/readme-icons/metis-research.svg" alt="" width="22" height="22" /> Metis Research |
-| <img src="docs/assets/readme-icons/gw-collapser.svg" alt="" width="22" height="22" /> GW-Collapser · <img src="docs/assets/readme-icons/gw-crystal-pool.svg" alt="" width="22" height="22" /> GW Crystal Pool · <img src="docs/assets/readme-icons/torus-atlas.svg" alt="" width="22" height="22" /> Torus Atlas | <img src="docs/assets/readme-icons/crystal-umap.svg" alt="" width="22" height="22" /> Map · Crystal UMAP · <img src="docs/assets/readme-icons/meta-crystal-lab.svg" alt="" width="22" height="22" /> Meta-Crystal V3 Lab |
+| <img src="docs/assets/readme-icons/am-crystal-library.svg" alt="" width="64" height="64" /> Библиотека AM-Crystal · <img src="docs/assets/readme-icons/semantic-plane.svg" alt="" width="64" height="64" /> Semantic Plane · <img src="docs/assets/readme-icons/ire.svg" alt="" width="64" height="64" /> IRE | <img src="docs/assets/readme-icons/metis-lab.svg" alt="" width="64" height="64" /> Metis Lab · <img src="docs/assets/readme-icons/metis-research.svg" alt="" width="64" height="64" /> Metis Research |
+| <img src="docs/assets/readme-icons/gw-collapser.svg" alt="" width="64" height="64" /> GW-Collapser · <img src="docs/assets/readme-icons/gw-crystal-pool.svg" alt="" width="64" height="64" /> GW Crystal Pool · <img src="docs/assets/readme-icons/torus-atlas.svg" alt="" width="64" height="64" /> Torus Atlas | <img src="docs/assets/readme-icons/crystal-umap.svg" alt="" width="64" height="64" /> Map · Crystal UMAP · <img src="docs/assets/readme-icons/meta-crystal-lab.svg" alt="" width="64" height="64" /> Meta-Crystal V3 Lab |
 
 ## Банки AM-Stage
 

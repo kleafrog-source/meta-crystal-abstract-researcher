@@ -1,4 +1,4 @@
-# <img src="../assets/readme-icons/am-vocal-morphology-matrix.svg" alt="" width="28" height="28" align="absmiddle" /> AM-Vocal Morphology Matrix
+# <img src="../assets/readme-icons/am-vocal-morphology-matrix.svg" alt="" width="96" height="96" align="absmiddle" /> AM-Vocal Morphology Matrix
 
 Структурированный поиск вокальных параметров по каталогу: [`/am-vocal-morphology-matrix`](http://localhost:3000/am-vocal-morphology-matrix).
 

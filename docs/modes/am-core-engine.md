@@ -1,4 +1,4 @@
-# <img src="../assets/readme-icons/am-core-engine.svg" alt="" width="28" height="28" align="absmiddle" /> AM-Core Engine
+# <img src="../assets/readme-icons/am-core-engine.svg" alt="" width="96" height="96" align="absmiddle" /> AM-Core Engine
 
 Focused text retrieval and parameter review at [`/am-core`](http://localhost:3000/am-core).
 

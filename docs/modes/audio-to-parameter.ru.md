@@ -1,4 +1,4 @@
-# <img src="../assets/readme-icons/audio-to-parameter.svg" alt="" width="28" height="28" align="absmiddle" /> Audio-to-Parameter
+# <img src="../assets/readme-icons/audio-to-parameter.svg" alt="" width="96" height="96" align="absmiddle" /> Audio-to-Parameter
 
 Временной анализ аудиофайла по адресу [`/audio-to-parameter-rag-segments`](http://localhost:3000/audio-to-parameter-rag-segments).
 

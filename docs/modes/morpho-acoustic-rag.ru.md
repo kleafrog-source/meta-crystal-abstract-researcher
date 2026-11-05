@@ -1,4 +1,4 @@
-# <img src="../assets/readme-icons/morpho-acoustic-rag.svg" alt="" width="28" height="28" align="absmiddle" /> Morpho-Acoustic RAG
+# <img src="../assets/readme-icons/morpho-acoustic-rag.svg" alt="" width="96" height="96" align="absmiddle" /> Morpho-Acoustic RAG
 
 Поиск кандидатов параметров по изображению, в том числе по изображению спектрограммы: [`/morpho-acoustic-rag`](http://localhost:3000/morpho-acoustic-rag).
 

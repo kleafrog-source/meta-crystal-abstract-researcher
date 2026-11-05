@@ -1,4 +1,4 @@
-# <img src="../assets/readme-icons/parameter-catalogue.svg" alt="" width="28" height="28" align="absmiddle" /> Parameter Catalogue
+# <img src="../assets/readme-icons/parameter-catalogue.svg" alt="" width="96" height="96" align="absmiddle" /> Parameter Catalogue
 
 Maintain the published parameter library at [`/am-parameters-catalogue`](http://localhost:3000/am-parameters-catalogue).
 
