@@ -30,7 +30,7 @@ import type { AmStageAutomationOutput } from "@/components/am-stage/AmStageMacro
 import { SegmentSideMetadataPanel } from "@/components/am-stage/SegmentSideMetadataPanel";
 import { saveVocalMatrixFormants } from "@/lib/acoustic-feature-bridge";
 import type { AmStageSessionData, AmStageSessionSummary, ParamTextWorkbenchSessionState } from "@/lib/am-stage-session";
-import { calculateAmStageCompleteness, runAmStageMacroQueue, type AmStageMacroId, type AmStageMacroStep } from "@/lib/am-stage-macros";
+import { runAmStageMacroQueue, type AmStageMacroId, type AmStageMacroStep } from "@/lib/am-stage-macros";
 import { MacroGenerator } from "@/components/rag-v3/MacroGenerator";
 import { VirtualizedParamList } from "@/components/rag-v3/VirtualizedParamList";
 import { Badge } from "@/components/ui/badge";
@@ -723,22 +723,6 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     "audio.core": macroParameters,
   }), [gemmaAudioAwtd, gemmaAudioResolved, gemmaTextResolved, macroParameters, segments, textBanks]);
   const selectedMacroParameters = macroBankOptions[macroSourceBank as keyof typeof macroBankOptions] ?? macroParameters;
-  const completeness = useMemo(() => calculateAmStageCompleteness(macroProfile, {
-    audioPresent: Boolean(file || audioReferenceName),
-    textPresent: Boolean(v3Query.trim()),
-    qwenTextCount: textBanks.qwen3.length,
-    gemmaTextAwtdCount: textBanks.embeddinggemma2.length,
-    gemmaTextResolvedCount: gemmaTextResolved.length,
-    clapComplete: segments.length > 0 && segments.every((segment) => segment.clapStatus === "complete"),
-    siglipComplete: segments.length > 0 && segments.every((segment) => segment.siglipStatus === "complete"),
-    gemmaAudioAwtdCount: gemmaAudioAwtd.length,
-    gemmaAudioResolvedCount: gemmaAudioResolved.length,
-    clientStage2Complete: showGlobalConsensus && textStageParameters.length + visibleClap.length + visibleSiglip.length > 0,
-    serverStage2Complete: serverStage2Results.length > 0,
-    requireGemmaResolution,
-    includeStage2: macroIncludeStage2,
-    customSteps: customMacroSteps,
-  }), [audioReferenceName, customMacroSteps, file, gemmaAudioAwtd.length, gemmaAudioResolved.length, gemmaTextResolved.length, macroIncludeStage2, macroProfile, requireGemmaResolution, segments, serverStage2Results.length, showGlobalConsensus, textBanks.qwen3.length, textBanks.embeddinggemma2.length, textStageParameters.length, v3Query, visibleClap.length, visibleSiglip.length]);
   const lfmJournalParameters = useMemo(() => mergeFrames(macroParameters, v3Parameters), [macroParameters, v3Parameters]);
   const bridgeFrames = useMemo(() => {
     const pairs: Record<string, [ActiveParameter[], ActiveParameter[]]> = {
@@ -855,9 +839,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     catch (cause) { setMacroError(cause instanceof Error ? cause.message : String(cause)); }
   }, [gemmaAudioAwtd, resolveGemmaBank, v3Query]);
 
-  const runMacro = useCallback(async () => {
+  const runMacro = useCallback(async (selectedSteps?: AmStageMacroStep[], _presetId?: string) => {
     if (macroRunning || busy || windowModeBusy) return;
-    const planIds: AmStageMacroStep[] = macroProfile === "text_gemma"
+    const planIds: AmStageMacroStep[] = selectedSteps ?? (macroProfile === "text_gemma"
       ? ["text.gemma.awtd", ...(requireGemmaResolution ? ["text.gemma.resolved" as const] : [])]
       : macroProfile === "audio_core"
         ? ["audio.clap.resolved", "spec.siglip.resolved"]
@@ -865,7 +849,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
           ? ["audio.gemma.awtd", "audio.gemma.resolved"]
           : macroProfile === "custom"
             ? customMacroSteps
-            : ["text.gemma.awtd", ...(requireGemmaResolution ? ["text.gemma.resolved" as const] : []), "audio.clap.resolved", "spec.siglip.resolved", ...(macroIncludeStage2 ? ["stage2.server" as const] : [])];
+            : ["text.gemma.awtd", ...(requireGemmaResolution ? ["text.gemma.resolved" as const] : []), "audio.clap.resolved", "spec.siglip.resolved", ...(macroIncludeStage2 ? ["stage2.server" as const] : [])]);
     if (!planIds.length) return;
     const needsAudioNodes = planIds.some((id) => id === "audio.clap.resolved" || id === "spec.siglip.resolved" || id === "audio.gemma.awtd");
     if (planIds.includes("spec.siglip.resolved") && !morphoStatus?.ready) {
@@ -906,10 +890,11 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       "text.gemma.resolved": async (signal) => {
         const resolved = await resolveGemmaBank("text", textGemmaCurrent, v3Query, signal);
         if (signal.aborted) throw new DOMException("Macro cancelled", "AbortError");
+        if (!resolved.length) throw new Error(t("Gemma text value resolution returned no parameters."));
         setGemmaTextResolved(resolved); setMacroSourceBank("text.gemma.resolved"); return resolved;
       },
-      "audio.clap.resolved": async () => { if (!(await analyze("clap", true, analysisNodes))) throw new Error(error || t("CLAP analysis did not complete.")); analysisNodes = segmentsRef.current; setMacroSourceBank("audio.clap.resolved"); return [...new Map(segmentsRef.current.flatMap((segment) => segment.clap).map((parameter) => [parameter.technical_name, parameter])).values()]; },
-      "spec.siglip.resolved": async () => { if (!(await analyze("siglip", true, analysisNodes))) throw new Error(error || t("SigLIP2 analysis did not complete.")); analysisNodes = segmentsRef.current; setMacroSourceBank("spec.siglip.resolved"); return [...new Map(segmentsRef.current.flatMap((segment) => segment.siglip).map((parameter) => [parameter.technical_name, parameter])).values()]; },
+      "audio.clap.resolved": async () => { if (!(await analyze("clap", true, analysisNodes))) throw new Error(error || t("CLAP analysis did not complete.")); analysisNodes = segmentsRef.current; const found = [...new Map(segmentsRef.current.flatMap((segment) => segment.clap).map((parameter) => [parameter.technical_name, parameter])).values()]; if (!found.length) throw new Error(t("CLAP completed without any parameters.")); setMacroSourceBank("audio.clap.resolved"); return found; },
+      "spec.siglip.resolved": async () => { if (!(await analyze("siglip", true, analysisNodes))) throw new Error(error || t("SigLIP2 analysis did not complete.")); analysisNodes = segmentsRef.current; const found = [...new Map(segmentsRef.current.flatMap((segment) => segment.siglip).map((parameter) => [parameter.technical_name, parameter])).values()]; if (!found.length) throw new Error(t("SigLIP2 completed without any parameters.")); setMacroSourceBank("spec.siglip.resolved"); return found; },
       "audio.gemma.awtd": async (signal) => {
         const audioInput = file;
         if (!audioInput) throw new Error(t("Choose an audio file for Gemma audio search."));
@@ -921,10 +906,11 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       "audio.gemma.resolved": async (signal) => {
         const resolved = await resolveGemmaBank("audio", audioGemmaCurrent, v3Query, signal);
         if (signal.aborted) throw new DOMException("Macro cancelled", "AbortError");
+        if (!resolved.length) throw new Error(t("Gemma audio value resolution returned no parameters."));
         setGemmaAudioResolved(resolved); setMacroSourceBank("audio.gemma.resolved"); return resolved;
       },
-      "stage2.client": async () => { setShowGlobalConsensus(true); return textStageParameters; },
-      "stage2.server": async (signal) => { const results = await runServerStage2(signal); if (!results) throw new Error(serverStage2Error || t("Server Stage-2 did not complete.")); return results; },
+      "stage2.client": async () => { const source = mergeFrames(textStageParameters, visibleClap, visibleSiglip); if (!source.length) throw new Error(t("Client Stage-2 has no source parameters yet.")); setShowGlobalConsensus(true); return source; },
+      "stage2.server": async (signal) => { const results = await runServerStage2(signal); if (!results?.length) throw new Error(serverStage2Error || t("Server Stage-2 returned no parameters.")); return results; },
     };
     try {
       await runAmStageMacroQueue(planIds.map((id) => ({ id, run: actions[id] })), controller.signal, (id, index, total) => setMacroCurrentStep(`${index}/${total} · ${id}`), (step, parameters) => setMacroOutputs((outputs) => [...outputs, { step, parameters, generatedAt: new Date().toISOString() }]));
@@ -935,6 +921,19 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       setMacroRunning(false); setMacroCurrentStep("");
     }
   }, [analyze, audioDuration, audioReferenceName, busy, customMacroSteps, error, file, gemmaAudioAwtd, macroIncludeStage2, macroProfile, macroRunning, morphoStatus, regenerateWindowMode, requireGemmaResolution, resolveGemmaBank, runServerStage2, segments, selectedLayers, serverStage2Error, t, textBanks.embeddinggemma2, v3Query, windowMode, windowModeBusy]);
+
+  const prepareAutomationPreset = useCallback(async (presetId: string) => {
+    if (presetId !== "bounded-beat-segments") return;
+    if (!file || !audioDuration) { setMacroError(t("Load audio before preparing beat-aligned nodes.")); return; }
+    let interval = Math.max(segmentInterval, audioDuration / 14);
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const prepared = await regenerateWindowMode("beat", { interval });
+      if (!prepared?.length) { setMacroError(t("Beat-aligned preparation failed; check Stage 7 events.")); return; }
+      if (prepared.length <= 15) { setSegmentInterval(interval); setMacroError(""); return; }
+      interval *= prepared.length / 14;
+    }
+    setMacroError(t("Beat windows still exceed the 15-node limit; increase the raw interval and prepare again."));
+  }, [audioDuration, file, regenerateWindowMode, segmentInterval, t]);
 
   const cancelMacro = useCallback(() => {
     macroAbortRef.current?.abort();
@@ -1193,7 +1192,6 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
               <Badge variant="outline" className="h-7 px-2">{t("points")}: {segments.length}</Badge>
               <Badge variant="outline" className="h-7 px-2 border-cyan-400/40 text-cyan-300">CLAP {clapCompleted}/{segments.length} · K{clapTopK}</Badge>
               <Badge variant="outline" className="h-7 px-2 border-fuchsia-400/40 text-fuchsia-300">SigLIP2 {siglipCompleted}/{segments.length} · K{siglipTopK}</Badge>
-              <Tooltip><TooltipTrigger asChild><Badge variant="outline" className="h-7 px-2 border-violet-400/40 text-violet-200">{completeness.percent}%</Badge></TooltipTrigger><TooltipContent>{t("Session completeness")}: {completeness.complete}/{completeness.total} · {t(macroProfile)}</TooltipContent></Tooltip>
               <Link href="/service-bay#siglip" title="Open Service Bay status and rebuild controls" className="inline-flex">
                 <Badge variant="outline" className={`h-7 px-2 whitespace-nowrap ${morphoStatus?.ready ? "border-emerald-400/40 text-emerald-300" : "border-amber-400/40 text-amber-300"}`}>SigLIP index: {morphoStatus?.status ?? "checking"}</Badge>
               </Link>
@@ -1574,7 +1572,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             </section>
             <aside id="am-stage-project" data-am-stage-layer="L3" data-am-stage-zone="macro-exports" className="am-stage-project-column flex min-w-0 flex-col gap-2 rounded-lg border border-cyan-400/20 bg-black/30 p-3">
               <h2 className="am-stage-module-heading"><span>04</span>{t("Project")}</h2>
-              <AmStageMacroRunner profile={macroProfile} onProfileChange={setMacroProfile} requireGemmaResolution={requireGemmaResolution} onRequireGemmaResolutionChange={setRequireGemmaResolution} includeStage2={macroIncludeStage2} onIncludeStage2Change={setMacroIncludeStage2} customSteps={customMacroSteps} onCustomStepsChange={setCustomMacroSteps} completeness={completeness} isRunning={macroRunning} currentStep={macroCurrentStep} segmentCount={segments.length} topK={Math.max(clapTopK, siglipTopK, v3Session.topK)} onRun={() => void runMacro()} onCancel={cancelMacro} error={macroError} siglipStatus={morphoStatus} outputs={macroOutputs} onClearOutputs={() => setMacroOutputs([])} />
+              <AmStageMacroRunner isRunning={macroRunning} currentStep={macroCurrentStep} segmentCount={segments.length} topK={Math.max(clapTopK, siglipTopK, v3Session.topK)} onRun={(steps, id) => void runMacro(steps, id)} onCancel={cancelMacro} error={macroError} siglipStatus={morphoStatus} outputs={macroOutputs} onClearOutputs={() => setMacroOutputs([])} audioPresent={Boolean(file)} briefPresent={Boolean(v3Query.trim())} nodesReady={segments.length > 0} onLayerMaskChange={setSelectedLayers} onPreparePreset={prepareAutomationPreset} />
               <label className="flex items-center gap-1.5 text-[9px] text-muted-foreground">{t("Macro / export source")}
                 <select aria-label={t("Macro / export source")} value={macroSourceBank} onChange={(event) => setMacroSourceBank(event.target.value)} className="h-7 min-w-0 flex-1 rounded border border-white/15 bg-black/50 px-2 text-foreground">
                   <option value="audio.core">{t("Audio core · CLAP + SigLIP2")}</option>

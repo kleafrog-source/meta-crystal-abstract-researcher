@@ -128,7 +128,7 @@ export function AudioWaveformEditor(props: Props) {
   return (
     <div
       ref={containerRef}
-      className="am-stage-audio-editor mx-auto min-w-0 max-w-full overflow-hidden rounded border border-cyan-400/25 bg-black/35 p-2"
+      className="am-stage-audio-editor min-w-0 max-w-full overflow-hidden rounded border border-cyan-400/25 bg-black/35 p-2"
       onDragOver={(event) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = "copy";
