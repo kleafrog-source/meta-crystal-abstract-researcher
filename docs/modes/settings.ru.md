@@ -1,4 +1,4 @@
-# Настройки
+# <img src="../assets/readme-icons/settings.svg" alt="" width="28" height="28" align="absmiddle" /> Настройки
 
 Общие предпочтения и функции моделей на странице [`/?page=settings`](http://localhost:3000/?page=settings).
 

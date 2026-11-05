@@ -1,4 +1,4 @@
-# Combinatorial Genesis
+# <img src="../assets/readme-icons/combinatorial-genesis.svg" alt="" width="28" height="28" align="absmiddle" /> Combinatorial Genesis
 
 Проверка и обработка кандидатных данных для комбинаторных процессов: [`/combinatorial-genesis`](http://localhost:3000/combinatorial-genesis).
 

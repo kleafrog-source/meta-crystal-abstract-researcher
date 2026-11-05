@@ -1,4 +1,4 @@
-# Service Bay
+# <img src="../assets/readme-icons/service-bay.svg" alt="" width="28" height="28" align="absmiddle" /> Service Bay
 
 Index status and manual maintenance at [`/service-bay`](http://localhost:3000/service-bay).
 

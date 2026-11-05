@@ -1,4 +1,4 @@
-# AM Tri-Modal Stage
+# <img src="../assets/readme-icons/am-stage.svg" alt="" width="28" height="28" align="absmiddle" /> AM Tri-Modal Stage
 
 The session workbench for text, audio and spectrogram-oriented parameter retrieval.
 

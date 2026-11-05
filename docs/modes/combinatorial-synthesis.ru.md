@@ -1,4 +1,4 @@
-# Combinatorial Synthesis
+# <img src="../assets/readme-icons/combinatorial-synthesis.svg" alt="" width="28" height="28" align="absmiddle" /> Combinatorial Synthesis
 
 Создание и проверка новых комбинаций параметров: [`/combinatorial-synthesis`](http://localhost:3000/combinatorial-synthesis).
 

@@ -2,15 +2,15 @@
 
 Три дополнительных режима анализа находятся в основном сайдбаре.
 
-## White Space Discovery
+## <img src="../assets/readme-icons/white-space-discovery.svg" alt="" width="24" height="24" align="absmiddle" /> White Space Discovery
 - Формирование и просмотр отчёта о разреженных областях на основе существующих артефактов каталога.
 - Анализ не публикует записи параметров.
 
-## Knowledge Graph
+## <img src="../assets/readme-icons/knowledge-graph.svg" alt="" width="24" height="24" align="absmiddle" /> Knowledge Graph
 - Построение графа по таксономии/атомам каталога и семантическим соседям.
 - Просмотр связей параметров и сводки графа.
 
-## Cross-Modal Consensus
+## <img src="../assets/readme-icons/cross-modal-consensus.svg" alt="" width="24" height="24" align="absmiddle" /> Cross-Modal Consensus
 - Просмотр записей аудио-/изображенческого поиска в журнале и проверок reverse query.
 - Построение/использование общего bridge и запуск consensus или transition для выбранных записей.
 

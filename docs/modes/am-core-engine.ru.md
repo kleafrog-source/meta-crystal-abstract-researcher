@@ -1,4 +1,4 @@
-# AM-Core Engine
+# <img src="../assets/readme-icons/am-core-engine.svg" alt="" width="28" height="28" align="absmiddle" /> AM-Core Engine
 
 Режим текстового поиска и проверки параметров по адресу [`/am-core`](http://localhost:3000/am-core).
 

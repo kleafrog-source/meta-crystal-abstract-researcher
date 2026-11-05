@@ -1,4 +1,4 @@
-# Morpho-Acoustic RAG
+# <img src="../assets/readme-icons/morpho-acoustic-rag.svg" alt="" width="28" height="28" align="absmiddle" /> Morpho-Acoustic RAG
 
 Search for parameter candidates from image input, including spectrogram images, at [`/morpho-acoustic-rag`](http://localhost:3000/morpho-acoustic-rag).
 

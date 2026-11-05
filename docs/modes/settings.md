@@ -1,4 +1,4 @@
-# Settings
+# <img src="../assets/readme-icons/settings.svg" alt="" width="28" height="28" align="absmiddle" /> Settings
 
 Configure application-wide preferences and model capabilities at [`/?page=settings`](http://localhost:3000/?page=settings).
 
