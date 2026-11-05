@@ -1,0 +1,142 @@
+{
+  "SYNTHESIZED_MMSS_SYSTEM": {
+    "meta": {
+      "artifact_id": "am-tri-modal-stage",
+      "version": "2026-11-05",
+      "language": "en",
+      "foundation": "codebase_inspection+operator_product_intent",
+      "provenance": [
+        "src/components/pages/AMStagePage.tsx",
+        "src/components/layout/AppShell.tsx",
+        "src/components/layout/PageRenderer.tsx",
+        "src/lib/am-stage-macros.ts",
+        "src/lib/capability-registry.ts",
+        "src/lib/domain-layers.ts",
+        "ParameterBank helper in src/components/pages/AMStagePage.tsx",
+        "src/components/pages/ServiceBayPage.tsx"
+      ],
+      "validation": "Zone anchors, bank identifiers, enabled capability defaults and nine layer identifiers were checked against the listed source files.",
+      "uncertainties": [
+        "Model availability and results depend on saved Settings, installed assets and current index state.",
+        "This artifact does not specify a universal audio chunk duration; limits depend on the configured runtime and request path."
+      ]
+    },
+    "identity": {
+      "name": "AM Tri-Modal Stage",
+      "route": "/am-stage",
+      "purpose": "Coordinate session audio, text/audio/spectrogram retrieval, parameter banks, timeline review and project output.",
+      "is_index_builder": false,
+      "index_maintenance_route": "/service-bay"
+    },
+    "zones": [
+      {
+        "id": "work_axis",
+        "anchor": "#am-stage-media",
+        "layer": "L0",
+        "responsibilities": [
+          "Attach a session audio file and inspect its waveform and spectrogram.",
+          "Navigate the playhead, time range and analysis nodes; pin the Work Axis panel.",
+          "Save, open or start a session snapshot."
+        ]
+      },
+      {
+        "id": "extract",
+        "anchor": "#am-stage-extract",
+        "layer": "L1",
+        "responsibilities": [
+          "Submit Semantic Search Brief using the selected Qwen or EmbeddingGemma 2 text index; configure retrieval instructions.",
+          "Run CLAP audio and SigLIP2 spectrogram analysis over analysis nodes.",
+          "Run enabled audio/text specialist paths, including Gemma audio identity/value passes and available LFM3, librosa, Indic or voice features.",
+          "Automation queues selected analysis steps and reports step outcomes."
+        ],
+        "conditional_capabilities": {
+          "spec.gemma.*": "Disabled by default in capability registry.",
+          "side-meta.helm": "Disabled by default in capability registry."
+        }
+      },
+      {
+        "id": "reconcile",
+        "anchor": "#am-stage-reconcile",
+        "layer": "L2",
+        "responsibilities": [
+          "Select a mask from the nine acoustic domain layers.",
+          "Client Stage-2 smooths retrieved results already present in the session; it does not run another search.",
+          "Server Stage-2 runs a separate second vector retrieval using selected text-index seeds.",
+          "Cross-Modal Interpolation Bridge previews interpolation between available states.",
+          "Review parameter timelines by modality or layer."
+        ],
+        "domain_layers": [
+          "VOCAL_MORPHOLOGY_LAYER",
+          "SYNTHESIS_PHYSICS_LAYER",
+          "SPECTRAL_DSP_LAYER",
+          "SPATIAL_BINAURAL_LAYER",
+          "DYNAMICS_ENVELOPE_LAYER",
+          "TEMPORAL_RHYTHM_LAYER",
+          "GENERATIVE_CHAOS_LAYER",
+          "COMPOSITIONAL_VECTOR_LAYER",
+          "MODULATION_PERFORMANCE_LAYER"
+        ]
+      },
+      {
+        "id": "project",
+        "anchor": "#am-stage-project",
+        "layer": "L3",
+        "responsibilities": [
+          "Review modality result banks and separate Qwen/EmbeddingGemma 2 text banks.",
+          "Run value-pass actions where enabled and inputs are available.",
+          "Use Clean Macro, automation outputs, priority timeline and text-feature exports.",
+          "Save the session state as a project snapshot."
+        ]
+      }
+    ],
+    "banks": {
+      "text": {
+        "qwen": "text.qwen.resolved",
+        "gemma_identity": "text.gemma.awtd",
+        "gemma_values": "text.gemma.resolved",
+        "separation_rule": "Qwen and EmbeddingGemma 2 results are held in different parameter banks."
+      },
+      "audio": {
+        "clap": "audio.clap.resolved",
+        "gemma_identity": "audio.gemma.awtd",
+        "gemma_values": "audio.gemma.resolved"
+      },
+      "spectrogram_image": {
+        "siglip2": "spec.siglip.resolved",
+        "gemma": "spec.gemma.*",
+        "gemma_default_enabled": false
+      },
+      "value_semantics": {
+        "awtd": {
+          "expansion": "Axis / Weight / Threshold / Depth",
+          "role": "Identity/role result bank; catalogue defaults remain available before a value pass.",
+          "provenance": "Operator product terminology; code verifies separate bank ids, not a per-field interpretation of each acronym term."
+        },
+        "resolved": "A separate value-pass result bank; output may use retrieval/anchor values or catalogue fallback."
+      }
+    },
+    "automation": {
+      "ui_label": "Automation",
+      "sequence_behavior": "Selected steps run in order. Successful results are recorded per step; failure and cancellation are surfaced by the run path.",
+      "available_step_ids": [
+        "text.qwen.resolved",
+        "text.gemma.awtd",
+        "text.gemma.resolved",
+        "audio.clap.resolved",
+        "spec.siglip.resolved",
+        "audio.gemma.awtd",
+        "audio.gemma.resolved",
+        "stage2.client",
+        "stage2.server"
+      ],
+      "saved_user_preset_library": null
+    },
+    "invariants": [
+      "Stage consumes indexes; it does not expose index rebuild controls.",
+      "Index rebuilds are explicit Service Bay operations.",
+      "Qwen and EmbeddingGemma 2 text banks are not merged.",
+      "Client Stage-2 smoothing and server Stage-2 retrieval are different operations.",
+      "Opening Stage does not by itself request an embedding or index build."
+    ]
+  }
+}

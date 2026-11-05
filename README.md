@@ -1,31 +1,38 @@
 # Abstract-Mindfreak · AM-Core
 
-Локальная исследовательская среда для семантического поиска, синтеза и мультимодального сопоставления параметров звука. Интерфейс построен на Next.js 16 и React 19; вычислительные пайплайны работают через Python sidecar, Ollama и локальные CLAP/SigLIP2-модели.
+AM-Core is a local workbench for finding published audio-production parameters, reviewing their values, and carrying retrieval results into session and macro workflows. Audio, text, and spectrogram-oriented modes use separate retrieval paths and indexes; results can be reviewed and adjusted in the UI.
 
-## Основные режимы
+The published parameter library in **Parameter Catalogue** is the product’s parameter authority. **Service Bay** reports and rebuilds indexes derived from that library. **AM-Stage** is the session workbench that consumes those indexes. A generated corpus or index is not the catalogue itself.
 
-| Режим | Назначение |
+## Modes
+
+| Mode | What it does |
 |---|---|
-| **AM-Core Engine** | Независимый Single query, Transition A/B, retrieval по канонической базе V3, live anchors/axes и готовый Clean Macro. |
-| **Combinatorial Genesis** | Импорт и проверка новых батчей, карантин ошибок, построение composite index, anchors и служебных артефактов. |
-| **Combinatorial Synthesis** | Без-LLM рекомбинация атомов, embedding-ранжирование, ручной/LLM-review и публикация кандидатов. |
-| **Audio CLAP RAG** | Поиск параметров V3 по выбранному аудиофрагменту через LAION-CLAP. |
-| **Audio-to-Parameter** | Автоматическая нарезка трека на временные узлы, последовательный поиск, сглаживание и воспроизводимая временная линия параметров. |
-| **Morpho-Acoustic RAG** | Поиск параметров по изображению или спектрограмме через SigLIP2. |
-| **AM-Vocal Morphology Matrix** | Целевой подбор языков, TECH4/FX4, слоёв и пространственного распределения вокала. |
+| [AM-Core Dashboard](docs/modes/am-core-dashboard.md) | Entry point and navigation to the main work areas. |
+| [AM Tri-Modal Stage](docs/modes/am-stage.md) | Work with a session audio file, text search, segmented analysis, parameter banks, timeline and exports. |
+| [AM-Core Engine](docs/modes/am-core-engine.md) | Search parameters by text or transition, adjust retrieved controls and prepare macro output. |
+| [Service Bay](docs/modes/service-bay.md) | Inspect index coverage and run manual index maintenance. |
+| [Audio-to-Parameter](docs/modes/audio-to-parameter.md) | Create time-based nodes and inspect audio-derived parameter results. |
+| [Audio CLAP RAG](docs/modes/audio-clap-rag.md) | Retrieve parameter candidates from an audio query with CLAP. |
+| [Morpho-Acoustic RAG](docs/modes/morpho-acoustic-rag.md) | Retrieve parameter candidates from an image or spectrogram with SigLIP2. |
+| [AM-Vocal Morphology Matrix](docs/modes/am-vocal-morphology-matrix.md) | Search and review vocal-related parameters from a structured description. |
+| [Combinatorial Genesis](docs/modes/combinatorial-genesis.md) | Inspect and process candidate material and runtime atoms. |
+| [Combinatorial Synthesis](docs/modes/combinatorial-synthesis.md) | Propose, review and publish parameter combinations from selected sources and a semantic goal. |
+| [Parameter Catalogue](docs/modes/parameter-catalogue.md) | Browse, maintain, import and export the published parameter library. |
+| [Settings](docs/modes/settings.md) | Configure language, appearance, model slots and feature/bank availability. |
+| [Research modes](docs/modes/research-modes.md) | White Space Discovery, Knowledge Graph and Cross-Modal Consensus. |
 
-Cross-Modal Consensus, Meta-Crystal V3 Lab, White Space Discovery, Knowledge Graph и прежний crystal/Metis/Torus-контур доступны в сворачиваемом разделе **Архив / Legacy & Research** и загружаются только при открытии.
+The sidebar also groups legacy tools under **Archive / Legacy & Research**; these include the AM-Crystal library, Semantic Plane, IRE, Metis, GW-Collapser, Torus Atlas, Crystal UMAP and Meta-Crystal Lab. See the [legacy mode card](docs/modes/legacy-research.md).
 
-Подробности:
+## AM-Stage banks
 
-- [Руководство по режимам (RU)](docs/application-modes-guide-ru.md)
-- [Application modes guide (EN)](docs/application-modes-guide.md)
-- [Audio-to-Parameter: временная линия и поиск](docs/audio-to-parameter.md)
-- [FreeLLMAPI, оформление и редизайн AM-Core](docs/llm-and-appearance.md)
+Text retrieval keeps separate Qwen and EmbeddingGemma 2 banks so results from different encoders are not merged into one bank. The visible bank IDs are `text.qwen.resolved` and `text.gemma.awtd`; Gemma text value-pass results use `text.gemma.resolved`. Audio banks include `audio.clap.resolved`, `audio.gemma.awtd` and `audio.gemma.resolved`. SigLIP2 spectrogram results use `spec.siglip.resolved`. The `spec.gemma.*` capability is disabled by default.
 
-## Быстрый запуск
+In Stage terminology, **AWTD** expands to *Axis / Weight / Threshold / Depth* and denotes the parameter identity/role pass that retains catalogue defaults. **Resolved** denotes a later value pass; actual values may come from a retrieval/anchor result or a catalogue fallback. These names describe distinct banks and should not be treated as interchangeable.
 
-Требования: Node.js, `pnpm`, Python, Ollama. Большие модели и построенные индексы хранятся локально и не входят в Git.
+## Quick start
+
+Requirements: Node.js compatible with the repository’s Next.js version, pnpm, Python, and a running Ollama service for enabled Ollama-backed features. Model weights, local CLAP/SigLIP2 assets and generated indexes are not bundled.
 
 ```powershell
 pnpm install
@@ -35,65 +42,23 @@ pnpm run db:push
 pnpm run dev
 ```
 
-Откройте `http://localhost:3000`. Настройки моделей доступны в разделе **Настройки**. Текущий рекомендуемый лёгкий embedding-профиль — `qwen3-embedding:0.6b`; фактическая модель всегда берётся из сохранённых настроек и должна совпадать с моделью конкретного индекса.
+Open [http://localhost:3000](http://localhost:3000). Select model IDs and enable the required capabilities in **Settings**. The default embedding slots are Qwen `qwen3-embedding:0.6b` and EmbeddingGemma 2 `embeddinggemma-2:740m`; settings can override them. Install the selected Ollama models separately and ensure the configured local CLAP/SigLIP2 assets are available before using those modes. Python jobs are started by the application as needed; there is no separate Python sidecar service to launch.
 
-Для локальных весов Hugging Face можно использовать отдельный диск:
-
-```powershell
-$env:HF_HOME = "D:\hfmodels"
-$env:HF_HUB_CACHE = "D:\hfmodels\hub"
-```
-
-## Архитектура
+## Architecture
 
 ```text
-React UI (src/components/pages)
-        │
-Next.js API routes (src/app/api)
-        │
-TypeScript jobs / process management (src/lib)
-        │
-Python sidecar and pipelines (python_engine)
-        │
-V3 datasets and generated local indexes (data/combinatorial-genesis)
+Next.js / React UI → Next.js API routes and TypeScript jobs → Python sidecar / local model runtimes → catalogue-derived indexes and analysis artifacts
 ```
 
-- `src/app/api` — маршруты поиска, импорта, индексации и управления задачами.
-- `src/components/pages` — независимые интерфейсы режимов.
-- `src/lib` — retrieval, управление Ollama/GPU, фоновые задания и общие типы.
-- `python_engine` — CLAP, SigLIP2, anchoring, combinatorial и служебные пайплайны.
-- `data/combinatorial-genesis` — локальная база V3, inbox и перестраиваемые индексы.
+The application uses Ollama for configured embedding and language-model slots and local runtimes for CLAP, SigLIP2 and acoustic feature processing. Indexes are built from catalogue data in **Service Bay**; sessions and work modes consume the indexes relevant to their configured model and modality.
 
-## Данные и индексы
+## Models and licenses
 
-Исходные батчи добавляются через **Combinatorial Genesis → Обработать inbox**. Невалидные элементы попадают в карантин с причинами. После изменения V3 необходимо перестроить те индексы, которые использует нужный режим:
+Configured model families include Qwen embeddings, EmbeddingGemma 2, LAION-CLAP, SigLIP2, optional LFM3 audio, and Ollama language models. Exact IDs, providers and enablement are configurable in Settings. Respect the license and usage terms of each upstream model and dataset.
 
-1. composite retrieval / V3 live anchors;
-2. CLAP text index для Audio CLAP RAG;
-3. SigLIP2 text/value caches для Morpho-Acoustic RAG;
-4. дополнительные relation/value anchors, если они включены в выбранном профиле.
+## Documentation
 
-Сгенерированные векторы, временные аудиофайлы, локальные БД, логи, модели и пользовательские датасеты исключены из Git. В репозитории остаются код, схемы, тесты и небольшие воспроизводимые метаданные.
-
-## Audio-to-Parameter
-
-Страница: `http://localhost:3000/audio-to-parameter-rag-segments`.
-
-Режим загружает трек в WaveSurfer, показывает waveform, minimap и спектрограмму, затем создаёт временные узлы с заданным шагом. Каждый узел обрабатывается последовательно, чтобы не перегружать GPU. Поиск объединяет морфологические визуальные признаки спектрограммы и доступные retrieval-сигналы, после чего значения сглаживаются между соседними узлами. Во время воспроизведения активный узел, параметры и цветовые акценты синхронизируются с текущей позицией.
-
-Поддерживаются остановка пакетной обработки, повторный запуск отдельных сегментов, разные представления спектрограммы, Vocal Allocation Matrix и экспорт Clean Macro/таймлайна. Точные правила приоритетов и сглаживания описаны в [отдельном документе](docs/audio-to-parameter.md).
-
-## Проверки
-
-```powershell
-pnpm exec tsc --noEmit
-pnpm exec eslint src
-pnpm exec vitest run
-python -m compileall -q python_engine
-```
-
-Тяжёлые retrieval-проверки запускайте последовательно: локальная конфигурация Ollama и мультимодальные модели могут совместно исчерпать VRAM. Перед CLAP/SigLIP2-поиском приложение освобождает загруженные Ollama-модели и выдерживает защитную паузу.
-
-## Репозиторий
-
-Проект использует `pnpm`; `node_modules` остаётся локальной виртуальной структурой со ссылками на общий store. Не добавляйте в Git содержимое `data`, `.next`, локальные модели, логи, временные спектрограммы и резервные копии.
+- [Mode cards](docs/modes/)
+- [MMSS mode catalog](docs/mmss-modes/abstract-mindfreak-modes-catalog.mmss.json)
+- [AM-Stage MMSS contract](docs/mmss-modes/am-tri-modal-stage.mmss.json)
+- [Service Bay index matrix](docs/service-bay-index-matrix.md)

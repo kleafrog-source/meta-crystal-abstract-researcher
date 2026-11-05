@@ -1,0 +1,129 @@
+{
+  "SYNTHESIZED_MMSS_SYSTEM": {
+    "meta": {
+      "artifact_id": "abstract-mindfreak-modes-catalog",
+      "version": "2026-11-05",
+      "language": "en",
+      "foundation": "codebase_inspection+operator_product_intent",
+      "provenance": [
+        "src/components/layout/Sidebar.tsx",
+        "src/components/layout/AppShell.tsx",
+        "src/components/layout/PageRenderer.tsx",
+        "src/lib/capability-registry.ts",
+        "src/lib/am-stage-macros.ts",
+        "src/lib/domain-layers.ts",
+        "src/components/pages and src/components/rag-v3",
+        "src/lib/am-parameters-catalogue/catalogue.ts",
+        "src/components/pages/ServiceBayPage.tsx"
+      ],
+      "validation": "Routes, page ids, capability identifiers, bank ids and layer ids were checked against the listed source files. Feature descriptions are bounded to visible UI and connected code paths.",
+      "uncertainties": [
+        "Installed model weights and local device paths vary by operator; Settings can override default model ids.",
+        "Index readiness and result quality are runtime data and are not asserted by this catalog."
+      ]
+    },
+    "product": {
+      "name": "Abstract-Mindfreak · AM-Core",
+      "purpose": "Local workbench for retrieval and review of published audio-production parameters across text, audio and image/spectrogram workflows.",
+      "boundaries": {
+        "parameter_authority": "The published parameter library managed by Parameter Catalogue; generated corpora and retrieval indexes are not the catalogue.",
+        "index_maintenance": "Service Bay provides status and explicit manual rebuild operations for supported indexes.",
+        "session_workbench": "AM Tri-Modal Stage coordinates session media, retrieval results, banks, timeline and project outputs."
+      },
+      "architecture": [
+        "Next.js / React UI",
+        "Next.js API routes and TypeScript jobs",
+        "Python sidecar and configured local model runtimes",
+        "Catalogue-derived indexes and analysis artifacts"
+      ]
+    },
+    "primary_modes": [
+      { "id": "dashboard", "label": "AM-Core Dashboard", "route": "/", "page_component": "AMCoreDashboard", "role": "Entry page, engine readiness and navigation." },
+      { "id": "amstage", "label": "AM Tri-Modal Stage", "route": "/am-stage", "page_component": "AMStagePage", "role": "Session workbench for text, audio and spectrogram-oriented retrieval, review and export.", "detail_artifact": "am-tri-modal-stage.mmss.json" },
+      { "id": "ragparametersv3", "label": "AM-Core Engine", "route": "/am-core", "page_component": "RagParametersV3Page", "role": "Text query/transition retrieval, parameter review and Clean Macro output." },
+      { "id": "servicebay", "label": "Service Bay", "route": "/service-bay", "page_component": "ServiceBayPage", "role": "Index status and explicit maintenance operations." },
+      { "id": "audiotoparameter", "label": "Audio-to-Parameter", "route": "/audio-to-parameter-rag-segments", "page_component": "AudioToParameterPage", "role": "Segmented audio analysis with node timing and parameter results." },
+      { "id": "audioclaprag", "label": "Audio CLAP RAG", "route": "/audio-clap-rag", "page_component": "AudioClapRagPage", "role": "Audio-query retrieval of catalogue candidates through CLAP." },
+      { "id": "morphoacousticrag", "label": "Morpho-Acoustic RAG", "route": "/morpho-acoustic-rag", "page_component": "MorphoAcousticRagPage", "role": "Image/spectrogram-query retrieval through SigLIP2." },
+      { "id": "vocalallocationmatrix", "label": "AM-Vocal Morphology Matrix", "route": "/am-vocal-morphology-matrix", "page_component": "VocalAllocationMatrixPage", "role": "Structured catalogue search and review for vocal-production parameters." },
+      { "id": "combinatorialgenesis", "label": "Combinatorial Genesis", "route": "/combinatorial-genesis", "page_component": "CombinatorialGenesisPage", "role": "Inspect and process candidate material, collections and runtime-atom workflows." },
+      { "id": "combinatorialsynthesis", "label": "Combinatorial Synthesis", "route": "/combinatorial-synthesis", "page_component": "CombinatorialSynthesisPage", "role": "Propose, review and optionally publish parameter combinations." },
+      { "id": "amparameterscatalogue", "label": "Parameter Catalogue", "route": "/am-parameters-catalogue", "page_component": "AMParametersCataloguePage", "role": "Maintain the published parameter library through browse, queue, commit, import and export." },
+      { "id": "settings", "label": "Settings", "route": "/?page=settings", "page_component": "Settings", "role": "Configure interface preferences, model slots and capability/bank enablement." },
+      { "id": "whitespacediscovery", "label": "White Space Discovery", "route": "/white-space-discovery", "page_component": "WhiteSpaceDiscoveryPage", "role": "Build and inspect a report of sparse/uncovered catalogue regions." },
+      { "id": "knowledgegraph", "label": "Knowledge Graph", "route": "/knowledge-graph", "page_component": "KnowledgeGraphPage", "role": "Build and inspect parameter relations and neighbors." },
+      { "id": "crossmodalconsensus", "label": "Cross-Modal Consensus", "route": "/cross-modal-consensus", "page_component": "CrossModalConsensusPage", "role": "Review journaled cross-modal records and run bridge, consensus and transition operations." }
+    ],
+    "legacy_sidebar_group": [
+      { "id": "crystals", "label": "AM-Crystal Library", "route": "/?page=crystals" },
+      { "id": "semanticplane", "label": "Semantic Plane", "route": "/?page=semanticplane" },
+      { "id": "mmss", "label": "IRE", "route": "/?page=mmss" },
+      { "id": "metis", "label": "Metis Lab", "route": "/?page=metis" },
+      { "id": "metisresearch", "label": "Metis Research", "route": "/?page=metisresearch" },
+      { "id": "gwcollapser", "label": "GW-Collapser", "route": "/?page=gwcollapser" },
+      { "id": "crystalpool", "label": "GW Crystal Pool", "route": "/?page=crystalpool" },
+      { "id": "torusatlas", "label": "Torus Atlas", "route": "/?page=torusatlas" },
+      { "id": "map", "label": "Map · Crystal UMAP", "route": "/?page=map" },
+      { "id": "metacrystalv3lab", "label": "Meta-Crystal V3 Lab", "route": "/meta-crystal-v3-lab" }
+    ],
+    "model_registry": {
+      "configurable": true,
+      "slots": [
+        { "id": "textEmbedding", "default_model_id": "qwen3-embedding:0.6b", "provider": "ollama" },
+        { "id": "multimodalEmbedding", "default_model_id": "embeddinggemma-2:740m", "provider": "ollama" },
+        { "id": "textLlm", "default_model_id": "qwen2.5-3b", "provider": "ollama" },
+        { "id": "audioLlm", "default_model_id": "lfm3-audio", "provider": "ollama" },
+        { "id": "clap", "default_model_id": "laion/clap-htsat-fused", "provider": "local" },
+        { "id": "siglip2", "default_model_id": "D:/hfmodels/siglip2-base-patch16-224", "provider": "local" },
+        { "id": "helm", "default_model_id": "run-saina/saina-helm-3-0.8b", "provider": "ollama", "enabled_by_default": false },
+        { "id": "voice", "provider": "local" },
+        { "id": "indic", "provider": "local" },
+        { "id": "classicDsp", "default_model_id": "librosa", "provider": "local" }
+      ],
+      "note": "Default ids and enablement are code defaults; saved Settings can override them and do not prove that a model is installed."
+    },
+    "stage_banks": [
+      "text.qwen.resolved",
+      "text.gemma.awtd",
+      "text.gemma.resolved",
+      "audio.clap.resolved",
+      "spec.siglip.resolved",
+      "audio.gemma.awtd",
+      "audio.gemma.resolved",
+      "stage2.client",
+      "stage2.server"
+    ],
+    "stage_bank_roles": {
+      "text.qwen.resolved": "Qwen text retrieval bank.",
+      "text.gemma.awtd": "EmbeddingGemma 2 text identity/role pass; catalogue defaults are retained.",
+      "text.gemma.resolved": "Separate EmbeddingGemma 2 text value-pass bank.",
+      "audio.clap.resolved": "CLAP audio-query result bank.",
+      "spec.siglip.resolved": "SigLIP2 spectrogram/image-query result bank.",
+      "audio.gemma.awtd": "EmbeddingGemma 2 audio identity/role pass.",
+      "audio.gemma.resolved": "Separate EmbeddingGemma 2 audio value-pass bank.",
+      "stage2.client": "Smoothing of already retrieved frames; no second retrieval.",
+      "stage2.server": "Separate server-side second vector retrieval pass."
+    },
+    "cross_cutting": {
+      "catalogue_is_parameter_authority": true,
+      "index_rebuilds_are_explicit_service_bay_operations": true,
+      "stage_domain_layers": [
+        "VOCAL_MORPHOLOGY_LAYER",
+        "SYNTHESIS_PHYSICS_LAYER",
+        "SPECTRAL_DSP_LAYER",
+        "SPATIAL_BINAURAL_LAYER",
+        "DYNAMICS_ENVELOPE_LAYER",
+        "TEMPORAL_RHYTHM_LAYER",
+        "GENERATIVE_CHAOS_LAYER",
+        "COMPOSITIONAL_VECTOR_LAYER",
+        "MODULATION_PERFORMANCE_LAYER"
+      ],
+      "runtime_invariants": [
+        "Text banks for Qwen and EmbeddingGemma 2 remain separate.",
+        "Stage-2 client smoothing uses existing results; server Stage-2 is a distinct retrieval pass.",
+        "Opening a work mode or checking index status does not itself request an embedding/index build.",
+        "The spec.gemma.* capability is disabled by default."
+      ]
+    }
+  }
+}
