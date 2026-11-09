@@ -44,6 +44,7 @@ import { apiPost, apiPut, useFetch } from "@/hooks/use-fetch";
 import { AppearanceEditor } from "@/components/settings/AppearanceEditor";
 import { ParameterTitlePreference } from "@/components/settings/ParameterTitlePreference";
 import { InterfaceLanguagePreference } from "@/components/settings/InterfaceLanguagePreference";
+import { UiRenderingPreferences } from "@/components/settings/UiRenderingPreferences";
 import { DEFAULT_CAPABILITY_REGISTRY, MODEL_SLOT_IDS, normalizeCapabilityRegistry, type CapabilityRegistry, type ModelSlotId } from "@/lib/capability-registry";
 import { useUiText } from "@/lib/ui-i18n";
 
@@ -360,6 +361,7 @@ export function Settings() {
       <div className="max-w-5xl flex-1 space-y-4 overflow-y-auto p-6">
         <InterfaceLanguagePreference />
         <ParameterTitlePreference />
+        <UiRenderingPreferences />
         <AppearanceEditor />
         <Card>
           <CardHeader>

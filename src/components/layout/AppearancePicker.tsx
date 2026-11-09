@@ -9,19 +9,25 @@ import { useUiText } from "@/lib/ui-i18n";
 export function AppearancePicker({ page }: { page: PageId }) {
   const t = useUiText();
   const [config, setConfig] = useState<AppearanceConfig>(DEFAULT_APPEARANCE);
+  const [disabled, setDisabled] = useState(false);
   const choice = config.activeByMode[page] ?? { palette: "emerald" as PaletteId, mode: "dark" as ThemeMode };
   useEffect(() => {
     let live = true;
-    const refresh = () => void fetch("/api/appearance", { cache: "no-store" }).then((response) => response.json()).then((data) => {
+    const refresh = () => void fetch("/api/appearance", { cache: "no-store" }).then((response) => response.json()).then(async (data) => {
       if (!live) return;
       const next = normalizeAppearance(data.appearance);
       setConfig(next);
       const selected = next.activeByMode[page] ?? { palette: "emerald" as PaletteId, mode: "dark" as ThemeMode };
+      const preferences = await fetch("/api/ui-preferences", { cache: "no-store" }).then((response) => response.json()).catch(() => ({}));
+      if (!live) return;
+      setDisabled(preferences.disableColorPresets === true);
       applyAppearance(next, selected.palette, selected.mode);
     }).catch(() => applyAppearance(DEFAULT_APPEARANCE, "emerald", "dark"));
     refresh();
     window.addEventListener("appearance:changed", refresh);
-    return () => { live = false; window.removeEventListener("appearance:changed", refresh); };
+    const onPreferences = (event: Event) => setDisabled((event as CustomEvent<{ disableColorPresets?: boolean }>).detail?.disableColorPresets === true);
+    window.addEventListener("ui-preferences:changed", onPreferences);
+    return () => { live = false; window.removeEventListener("appearance:changed", refresh); window.removeEventListener("ui-preferences:changed", onPreferences); };
     // The active workspace mode has its own stored appearance.
   }, [page]);
   const select = (next: Partial<typeof choice>) => {
@@ -30,6 +36,7 @@ export function AppearancePicker({ page }: { page: PageId }) {
     applyAppearance(updated, updated.activeByMode[page].palette, updated.activeByMode[page].mode);
     void fetch("/api/appearance", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ appearance: updated }) }).then(() => window.dispatchEvent(new Event("appearance:changed"))).catch(() => {});
   };
+  if (disabled) return null;
   return <div className="appearance-picker space-y-2 border-t border-border px-3 py-2" aria-label={t("Оформление")}>
     <div className="flex items-center justify-between" role="group" aria-label={t("Цветовой пресет")}>{PALETTES.map((palette) => <button key={palette.id} type="button" aria-label={t(`Пресет ${palette.label}`)} aria-pressed={choice.palette === palette.id} title={palette.label} onClick={() => select({ palette: palette.id })} className="appearance-swatch" style={{ "--swatch": `hsl(${config.palettes[palette.id][choice.mode].activeHue} 68% 58%)` } as React.CSSProperties} />)}</div>
     <div className="flex items-center justify-center gap-2" role="group" aria-label={t("Цветовая тема")}>{([ ["dark", Moon, "Тёмная"], ["light", Sun, "Светлая"], ["medium", Contrast, "Средняя"] ] as const).map(([mode, Icon, label]) => <button key={mode} type="button" aria-label={t(label)} aria-pressed={choice.mode === mode} title={t(label)} onClick={() => select({ mode })} className={`appearance-mode ${choice.mode === mode ? "selected" : ""}`}><Icon className="size-4" /></button>)}</div>

@@ -1,11 +1,12 @@
 "use client";
 
 import { Sidebar, type PageId } from "./Sidebar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronRight } from "@/components/icons";
 import { PageRenderer } from "./PageRenderer";
 import { UiLocaleProvider } from "@/lib/ui-i18n";
+import { AutomationStatusSummary } from "./AutomationStatusSummary";
 
 function pathnameToPage(pathname: string): PageId {
   if (pathname === "/am-parameters-catalogue") return "amparameterscatalogue";
@@ -34,6 +35,7 @@ function pathnameToPage(pathname: string): PageId {
   }
 
   if (pathname === "/am-stage") return "amstage";
+  if (pathname === "/automation") return "automation";
   if (pathname === "/lexicon-status") return "lexiconstatus";
 
   if (pathname === "/meta-crystal-v3-lab") {
@@ -57,16 +59,50 @@ function pathnameToPage(pathname: string): PageId {
   return "dashboard";
 }
 
-export function AppShell({ initialLanguage }: { initialLanguage: "en" | "ru" | "de" }) {
-  return <UiLocaleProvider initialLanguage={initialLanguage}><AppShellContent /></UiLocaleProvider>;
+type RenderingPreferences = { disableCustomSidebarIcons: boolean; disableColorPresets: boolean };
+type SavedRenderingPreferences = { customIcons: boolean; colorPresets: boolean };
+
+export function AppShell({ initialLanguage, initialRenderingPreferences, savedRenderingPreferences }: { initialLanguage: "en" | "ru" | "de"; initialRenderingPreferences: RenderingPreferences; savedRenderingPreferences: SavedRenderingPreferences }) {
+  return <UiLocaleProvider initialLanguage={initialLanguage}><AppShellContent initialRenderingPreferences={initialRenderingPreferences} savedRenderingPreferences={savedRenderingPreferences} /></UiLocaleProvider>;
 }
 
-function AppShellContent() {
+function AppShellContent({ initialRenderingPreferences, savedRenderingPreferences }: { initialRenderingPreferences: RenderingPreferences; savedRenderingPreferences: SavedRenderingPreferences }) {
   const pathname = usePathname();
   const router = useRouter();
   const [activePage, setActivePage] = useState<PageId>("dashboard");
   const [activeRuns, setActiveRuns] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    let effective = { ...initialRenderingPreferences };
+    try {
+      const cached = JSON.parse(localStorage.getItem("am_ui_rendering_preferences") ?? "null") as Partial<RenderingPreferences> | null;
+      if (!savedRenderingPreferences.customIcons && typeof cached?.disableCustomSidebarIcons === "boolean") effective.disableCustomSidebarIcons = cached.disableCustomSidebarIcons;
+      if (!savedRenderingPreferences.colorPresets && typeof cached?.disableColorPresets === "boolean") effective.disableColorPresets = cached.disableColorPresets;
+    } catch { /* use server values or safe defaults */ }
+    root.dataset.customIconsDisabled = String(effective.disableCustomSidebarIcons);
+    root.dataset.colorPresetsDisabled = String(effective.disableColorPresets);
+  }, [savedRenderingPreferences, initialRenderingPreferences]);
+
+  useEffect(() => {
+    let live = true;
+    void fetch("/api/ui-preferences", { cache: "no-store" }).then((response) => response.json()).then((value) => {
+      if (!live) return;
+      const preferences = { disableCustomSidebarIcons: value.disableCustomSidebarIcons === true, disableColorPresets: value.disableColorPresets === true };
+      try {
+        const cached = JSON.parse(localStorage.getItem("am_ui_rendering_preferences") ?? "null") as Partial<RenderingPreferences> | null;
+        if (value.hasSavedCustomSidebarIcons !== true && typeof cached?.disableCustomSidebarIcons === "boolean") preferences.disableCustomSidebarIcons = cached.disableCustomSidebarIcons;
+        if (value.hasSavedColorPresets !== true && typeof cached?.disableColorPresets === "boolean") preferences.disableColorPresets = cached.disableColorPresets;
+      } catch { /* use the current server defaults */ }
+      document.documentElement.dataset.customIconsDisabled = String(preferences.disableCustomSidebarIcons);
+      document.documentElement.dataset.colorPresetsDisabled = String(preferences.disableColorPresets);
+      try { localStorage.setItem("am_ui_rendering_preferences", JSON.stringify(preferences)); } catch { /* API storage remains authoritative */ }
+      window.dispatchEvent(new Event("appearance:changed"));
+      window.dispatchEvent(new CustomEvent("ui-preferences:changed", { detail: preferences }));
+    }).catch(() => undefined);
+    return () => { live = false; };
+  }, [savedRenderingPreferences]);
 
   useEffect(() => {
     if (pathname !== "/") return;
@@ -138,6 +174,11 @@ function AppShellContent() {
       return;
     }
 
+    if (page === "automation") {
+      router.push("/automation");
+      return;
+    }
+
     if (page === "metacrystalv3lab") {
       router.push("/meta-crystal-v3-lab");
       return;
@@ -175,6 +216,7 @@ function AppShellContent() {
         </button>
       )}
       <main className={`flex-1 min-w-0 flex flex-col app-shell-main ${sidebarOpen ? "" : "sidebar-collapsed"}`}>
+        <AutomationStatusSummary />
         <PageRenderer
           activePage={pathnameToPage(pathname) === "dashboard" ? activePage : pathnameToPage(pathname)}
           setActivePage={setActivePage}

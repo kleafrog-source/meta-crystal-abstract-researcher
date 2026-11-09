@@ -40,6 +40,15 @@ function clamp(value: number, min: number, max: number, fallback: number) { retu
 export function normalizeAppearance(value: unknown) { try { return safeConfig(value); } catch { return DEFAULT_APPEARANCE; } }
 export function applyAppearance(config: AppearanceConfig, palette: PaletteId, mode: ThemeMode) {
   const root = document.documentElement;
+  if (root.dataset.colorPresetsDisabled === "true") {
+    for (const name of ["--background", "--foreground", "--card", "--card-foreground", "--popover", "--popover-foreground", "--secondary", "--secondary-foreground", "--muted", "--muted-foreground", "--accent", "--accent-foreground", "--primary", "--primary-foreground", "--border", "--input", "--ring", "--sidebar", "--sidebar-foreground", "--sidebar-primary", "--sidebar-primary-foreground", "--sidebar-accent", "--sidebar-accent-foreground", "--sidebar-border", "--sidebar-ring", "--badge-fill-soft", "--badge-fill-solid"]) root.style.removeProperty(name);
+    root.classList.add("dark");
+    delete root.dataset.appearancePalette;
+    delete root.dataset.appearanceMode;
+    delete root.dataset.badgeStyle;
+    root.style.colorScheme = "dark";
+    return;
+  }
   const value = config.palettes[palette][mode];
   const bgL = value.backgroundIntensity;
   const light = mode === "light";
