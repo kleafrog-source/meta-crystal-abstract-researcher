@@ -4,8 +4,9 @@
   "private": true,
   "packageManager": "pnpm@12.8.1",
   "scripts": {
-    "dev": "next dev -p 3000",
-    "dev:log": "next dev -p 3000 2>&1 | tee dev.log",
+    "dev": "next dev --webpack -p 3000",
+    "dev:turbo": "next dev --turbopack -p 3000",
+    "dev:log": "next dev --webpack -p 3000 2>&1 | tee dev.log",
     "build": "next build && xcopy .next\\static .next\\standalone\\.next\\ /E /I /Y && xcopy public .next\\standalone\\ /E /I /Y",
     "start": "NODE_ENV=production bun .next/standalone/server.js",
     "lint": "eslint .",

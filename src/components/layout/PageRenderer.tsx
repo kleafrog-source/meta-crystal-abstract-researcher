@@ -3,18 +3,7 @@
 import dynamic from "next/dynamic";
 
 import { AMCoreDashboard } from "@/components/pages/AMCoreDashboard";
-import { RagParametersV3Page } from "@/components/pages/RagParametersV3Page";
-import { AMParametersCataloguePage } from "@/components/pages/AMParametersCataloguePage";
-import { CombinatorialGenesisPage } from "@/components/pages/CombinatorialGenesisPage";
-import { CombinatorialSynthesisPage } from "@/components/pages/CombinatorialSynthesisPage";
-import { AudioClapRagPage } from "@/components/pages/AudioClapRagPage";
-import { AudioToParameterPage } from "@/components/pages/AudioToParameterPage";
 import { AMStagePage } from "@/components/pages/AMStagePage";
-import { MorphoAcousticRagPage } from "@/components/pages/MorphoAcousticRagPage";
-import { VocalAllocationMatrixPage } from "@/components/pages/VocalAllocationMatrixPage";
-import { Settings } from "@/components/pages/Settings";
-import { ServiceBayPage } from "@/components/pages/ServiceBayPage";
-import LexiconStatusPage from "@/app/lexicon-status/page";
 import type { PageId } from "@/components/layout/Sidebar";
 import { useEffect, useState } from "react";
 
@@ -47,6 +36,17 @@ const MetaCrystalV3LabPage = dynamic(() => import("@/components/pages/MetaCrysta
 const WhiteSpaceDiscoveryPage = dynamic(() => import("@/components/pages/WhiteSpaceDiscoveryPage").then((module) => module.WhiteSpaceDiscoveryPage));
 const KnowledgeGraphPage = dynamic(() => import("@/components/pages/KnowledgeGraphPage").then((module) => module.KnowledgeGraphPage));
 const CrossModalConsensusPage = dynamic(() => import("@/components/pages/CrossModalConsensusPage").then((module) => module.CrossModalConsensusPage));
+const RagParametersV3Page = dynamic(() => import("@/components/pages/RagParametersV3Page").then((module) => module.RagParametersV3Page));
+const AMParametersCataloguePage = dynamic(() => import("@/components/pages/AMParametersCataloguePage").then((module) => module.AMParametersCataloguePage));
+const CombinatorialGenesisPage = dynamic(() => import("@/components/pages/CombinatorialGenesisPage").then((module) => module.CombinatorialGenesisPage));
+const CombinatorialSynthesisPage = dynamic(() => import("@/components/pages/CombinatorialSynthesisPage").then((module) => module.CombinatorialSynthesisPage));
+const AudioClapRagPage = dynamic(() => import("@/components/pages/AudioClapRagPage").then((module) => module.AudioClapRagPage));
+const AudioToParameterPage = dynamic(() => import("@/components/pages/AudioToParameterPage").then((module) => module.AudioToParameterPage));
+const MorphoAcousticRagPage = dynamic(() => import("@/components/pages/MorphoAcousticRagPage").then((module) => module.MorphoAcousticRagPage));
+const VocalAllocationMatrixPage = dynamic(() => import("@/components/pages/VocalAllocationMatrixPage").then((module) => module.VocalAllocationMatrixPage));
+const ServiceBayPage = dynamic(() => import("@/components/pages/ServiceBayPage").then((module) => module.ServiceBayPage));
+const LexiconStatusPage = dynamic(() => import("@/app/lexicon-status/page").then((module) => module.default));
+const Settings = dynamic(() => import("@/components/pages/Settings").then((module) => module.Settings));
 
 export function PageRenderer(props: {
   activePage: PageId;
