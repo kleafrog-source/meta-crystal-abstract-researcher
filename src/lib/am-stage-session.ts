@@ -32,6 +32,7 @@ export interface AmStageSessionData {
   timeline: { segments: AudioSegmentResultPoint[]; window_source_segments?: Stage7RhythmSource[] };
   banks: {
     text_parameters: ActiveParameter[]; text_parameters_qwen3?: ActiveParameter[]; text_parameters_gemma?: ActiveParameter[]; text_parameters_gemma_resolved?: ActiveParameter[];
+    qwen_import?: { manual_names: string[]; tombstones: string[]; provenance: Record<string, { runId: string; stageId: string; attemptId: string; artifactId: string; bankId: "qwen-text"; pass: "resolved" }>; applied_sources: string[]; operation_receipts: Record<string, string> };
     audio_parameters_gemma?: GemmaSessionParameter[]; audio_parameters_gemma_resolved?: ActiveParameter[];
     clap_parameters: ActiveParameter[]; siglip_parameters: ActiveParameter[];
     text_view: "compact" | "standard" | "expanded"; clap_view: "compact" | "standard" | "expanded"; siglip_view: "compact" | "standard" | "expanded";

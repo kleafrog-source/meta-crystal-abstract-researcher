@@ -13,6 +13,7 @@ export function VirtualizedParamList(props: {
   className?: string;
   onChange?: (technicalName: string, value: number | string) => void;
   onRemove?: (technicalName: string) => void;
+  allowRemove?: boolean;
   displayMode?: "detail" | "standard" | "compact";
   selectedParameterName?: string | null;
   onSelectParameter?: (technicalName: string) => void;
@@ -46,7 +47,7 @@ export function VirtualizedParamList(props: {
       ) : (
         <div className={`console-param-grid console-param-grid-${props.displayMode ?? "detail"}`}>
           {parameters.map((parameter, index) => (
-            <ParameterControl key={parameter.technical_name} param={parameter} index={index} displayMode={props.displayMode ?? "detail"} onChange={props.onChange} onRemove={props.onRemove} selected={props.selectedParameterName === parameter.technical_name} onSelect={props.onSelectParameter} useDomainLayerColors={props.useDomainLayerColors} dataScope={props.dataScope} titleOrder={props.titleOrder} />
+            <ParameterControl key={parameter.technical_name} param={parameter} index={index} displayMode={props.displayMode ?? "detail"} onChange={props.onChange} onRemove={props.onRemove} allowRemove={props.allowRemove} selected={props.selectedParameterName === parameter.technical_name} onSelect={props.onSelectParameter} useDomainLayerColors={props.useDomainLayerColors} dataScope={props.dataScope} titleOrder={props.titleOrder} />
           ))}
         </div>
       )}

@@ -26,6 +26,7 @@ export function ParameterControl(props: {
   displayMode?: "detail" | "standard" | "compact";
   onChange?: (technicalName: string, value: number | string) => void;
   onRemove?: (technicalName: string) => void;
+  allowRemove?: boolean;
   selected?: boolean;
   onSelect?: (technicalName: string) => void;
   useDomainLayerColors?: boolean;
@@ -125,6 +126,7 @@ export function ParameterControl(props: {
                 </div>
               }
             />
+            {props.allowRemove && props.onRemove ? <button type="button" aria-label={`Remove ${props.param.technical_name}`} onClick={(event) => { event.stopPropagation(); props.onRemove?.(props.param.technical_name); }} className="rounded px-1 text-xs text-muted-foreground hover:text-rose-300">×</button> : null}
             {props.param.excluded ? (
               <Badge
                 variant="outline"
