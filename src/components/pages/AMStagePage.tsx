@@ -29,6 +29,7 @@ import { GemmaMultimodalParameterSearch, type GemmaAudioParameter, type GemmaMul
 import { AmStageMacroRunner } from "@/components/am-stage/AmStageMacroRunner";
 import { AutomationStageHandoff } from "@/components/am-stage/AutomationStageHandoff";
 import { AutomationViewLoadingStatus } from "@/components/am-stage/AutomationViewLoadingStatus";
+import { AutomationBriefResult, type BriefApplyRequest, type BriefViewArtifact } from "@/components/am-stage/AutomationBriefResult";
 import { collectHistoricalSegmentResults, extractStageBankParameters, type HistoricalSegmentResult } from "@/lib/am-stage-automation/historical-segment-results";
 import { toInstructionContext } from "@/lib/rag-v3/instruction-support";
 
@@ -87,6 +88,7 @@ import { classifyDomainLayer } from "@/lib/am-parameters-catalogue/domain-layer-
 import { buildLayerTimelineLanes, LAYER_TIMELINE_SERIES_LIMIT, UNCLASSIFIED_TIMELINE_LAYER } from "@/lib/am-stage-layer-timeline";
 import { applyConsensusSmooth, averageParameterFrames, interpolateStageFrames, parameterMatchesLayers, type BlendCurve } from "@/lib/am-stage-blend";
 import { applyQwenArtifact, isCurrentQwenSelection, markQwenManual, qwenSessionMetadataForSnapshot, qwenSourceKey, removeQwenParameter, replaceQwenBank, restoreQwenMetadataFromSnapshot, restoreQwenSessionState, validateQwenArtifact, type QwenSessionState, type QwenSourceIdentity } from "@/lib/am-stage-automation/qwen-stage-apply";
+import { applyBriefArtifact, briefArtifactContractConsistent, briefImportStateForSnapshot, isCurrentBriefSelection, markBriefManualEdit, restoreBriefImportState, validateBriefArtifact, type BriefImportState, type BriefSelectionIdentity, type BriefSourceIdentity } from "@/lib/am-stage-automation/brief-stage-apply";
 import { computeModalityTrust, DEFAULT_MODALITY_TRUST_CONFIG } from "@/lib/modality-trust";
 import { getPlaybackTimeSnapshot, setPlaybackTime, subscribePlaybackTime } from "@/lib/am-stage-playback";
 
@@ -130,6 +132,7 @@ type AutomationViewResult = {
   schemaVersion: number;
   kind: string;
   bankId?: string;
+  modality?: string;
   pass?: string;
   validity?: string;
   artifactContractConsistent: boolean;
@@ -266,6 +269,14 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [qwenImportState, setQwenImportState] = useState<QwenSessionState>(() => restoreQwenSessionState(textBanks.qwen3));
   const qwenImportStateRef = useRef(qwenImportState);
   qwenImportStateRef.current = qwenImportState;
+  const [briefImportState, setBriefImportState] = useState<BriefImportState | null>(null);
+  const briefImportStateRef = useRef<BriefImportState | null>(briefImportState);
+  briefImportStateRef.current = briefImportState;
+  const suppressBriefManualEditRef = useRef(false);
+  const updateBriefImportState = useCallback((next: BriefImportState | null) => {
+    briefImportStateRef.current = next;
+    setBriefImportState(next);
+  }, []);
   const [gemmaTextResolved, setGemmaTextResolved] = useState<ActiveParameter[]>([]);
   const [gemmaAudioAwtd, setGemmaAudioAwtd] = useState<GemmaAudioParameter[]>([]);
   const [gemmaAudioResolved, setGemmaAudioResolved] = useState<ActiveParameter[]>([]);
@@ -280,6 +291,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [macroError, setMacroError] = useState("");
   const [macroOutputs, setMacroOutputs] = useState<AmStageAutomationOutput[]>([]);
   const [automationViewResult, setAutomationViewResult] = useState<AutomationViewResult | null>(null);
+  const automationViewResultRef = useRef<AutomationViewResult | null>(automationViewResult);
+  automationViewResultRef.current = automationViewResult;
   const [automationViewLoading, setAutomationViewLoading] = useState(false);
   const [historicalFragmentId, setHistoricalFragmentId] = useState("");
   const [automationApplyAudioOpen, setAutomationApplyAudioOpen] = useState(false);
@@ -295,6 +308,12 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     if (index === "qwen3") setQwenImportState((state) => removeQwenParameter(state, name));
     if (v3Session.textIndex === index) useRagV3Store.getState().removeParameter(name);
   }, [v3Session.textIndex]);
+  useEffect(() => useRagV3Store.subscribe((state, previous) => {
+    if (state.query === previous.query || suppressBriefManualEditRef.current) return;
+    const current = briefImportStateRef.current;
+    const next = markBriefManualEdit(current);
+    if (next !== current) updateBriefImportState(next);
+  }), [updateBriefImportState]);
   const handleTextSearchResults = useCallback((index: "qwen3" | "embeddinggemma2", parameters: ActiveParameter[]) => {
     setTextBanks((banks) => ({ ...banks, [index]: parameters }));
   }, []);
@@ -384,6 +403,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [paramTextSessionState, setParamTextSessionState] = useState<ParamTextWorkbenchSessionState | null>(null);
   const [workbenchSessionKey, setWorkbenchSessionKey] = useState(0);
   const [activeSession, setActiveSession] = useState<{ id: string; title: string } | null>(null);
+  const activeSessionRef = useRef(activeSession);
+  activeSessionRef.current = activeSession;
   const [sessionDirty, setSessionDirty] = useState(false);
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [sessionSaveChoiceOpen, setSessionSaveChoiceOpen] = useState(false);
@@ -448,7 +469,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
         setAutomationViewLoading(true);
         void fetch(`/api/am-stage/automation/runs/${encodeURIComponent(runId)}`, { signal: controller.signal, cache: "no-store" }).then(async (response) => {
           if (!response.ok) throw new Error("Run result could not be loaded.");
-          const result = await response.json() as { run?: { id: string; title: string; status: string; plan?: { scenarioRef?: { id: string; version: number }; externalInputs?: { assetId?: string; audioName?: string; audioDurationSeconds?: number; audioRange?: { startSeconds: number; endSeconds: number; durationSeconds: number }; brief?: string } }; stages?: Array<{ stageId: string; actionId: string; status: string; successfulAttemptId: string | null; artifacts?: Array<{ id: string; attemptId: string; kind: string; bankId?: string; pass?: string; validity?: string; payload?: { schemaVersion: number; kind: string; actionId: string; bankId?: string; pass?: string; validity?: string; data?: unknown } }> }> } };
+          const result = await response.json() as { run?: { id: string; title: string; status: string; plan?: { scenarioRef?: { id: string; version: number }; externalInputs?: { assetId?: string; audioName?: string; audioDurationSeconds?: number; audioRange?: { startSeconds: number; endSeconds: number; durationSeconds: number }; brief?: string } }; stages?: Array<{ stageId: string; actionId: string; status: string; successfulAttemptId: string | null; artifacts?: Array<{ id: string; attemptId: string; kind: string; bankId?: string; modality?: string; pass?: string; validity?: string; payload?: { schemaVersion: number; kind: string; actionId: string; bankId?: string; modality?: string; pass?: string; validity?: string; data?: unknown } }> }> } };
           const run = result.run;
           const stage = run?.stages?.find((item) => item.stageId === stageId);
           const artifact = stage?.artifacts?.find((item) => item.id === automationArtifactId && item.attemptId === automationAttemptId);
@@ -456,14 +477,17 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
           const expectedSelection = { runId, stageId, attemptId: automationAttemptId ?? "", artifactId: automationArtifactId ?? "" };
           const currentSelection = { runId: currentParams.get("automationRun") ?? "", stageId: currentParams.get("stage") ?? "", attemptId: currentParams.get("attempt") ?? "", artifactId: currentParams.get("artifact") ?? "" };
           const selectionCurrent = isCurrentQwenSelection(expectedSelection, currentSelection);
-          const accepted = current && Boolean(run && stage && artifact && selectionCurrent);
+          const accepted = current && Boolean(run && run.id === runId && stage && artifact && selectionCurrent);
           if (accepted && run && stage && artifact) {
             const external = run.plan?.externalInputs;
             const segmentStage = run.stages?.find((item) => item.actionId === "audio.segment");
             const segmentPayload = segmentStage?.artifacts?.[0]?.payload?.data as { windows?: Array<{ id?: string; startSeconds?: number; endSeconds?: number }> } | undefined;
             const segmentWindows = Array.isArray(segmentPayload?.windows) ? segmentPayload.windows.flatMap((window, index) => Number.isFinite(window.startSeconds) && Number.isFinite(window.endSeconds) ? [{ id: window.id ?? `segment-${index + 1}`, startSeconds: window.startSeconds!, endSeconds: window.endSeconds! }] : []) : [];
             const fragments = collectHistoricalSegmentResults(run.stages ?? []);
-            setAutomationViewResult({ runId, runTitle: run.title, scenarioId: run.plan?.scenarioRef?.id ?? "unknown", scenarioVersion: run.plan?.scenarioRef?.version ?? 0, stageId, attemptId: artifact.attemptId, successfulAttemptId: stage.successfulAttemptId ?? "", artifactId: artifact.id, schemaVersion: artifact.payload?.schemaVersion ?? 0, kind: artifact.payload?.kind ?? artifact.kind, bankId: artifact.payload?.bankId, pass: artifact.payload?.pass, validity: artifact.payload?.validity, artifactContractConsistent: artifact.payload?.kind === artifact.kind && artifact.payload?.actionId === stage.actionId && artifact.payload?.bankId === artifact.bankId && artifact.payload?.pass === artifact.pass && artifact.payload?.validity === artifact.validity, actionId: stage.actionId, status: stage.status, data: artifact.payload?.data, audio: external?.assetId ? { assetId: external.assetId, name: external.audioName, durationSeconds: external.audioDurationSeconds, range: external.audioRange } : undefined, segmentWindows, fragments, brief: external?.brief });
+            const artifactContractConsistent = stage.actionId === "brief.combine_segment_texts"
+              ? briefArtifactContractConsistent({ artifactKind: artifact.kind, payloadKind: artifact.payload?.kind ?? "", payloadActionId: artifact.payload?.actionId ?? "", stageActionId: stage.actionId, artifactBankId: artifact.bankId, payloadBankId: artifact.payload?.bankId, artifactModality: artifact.modality, payloadModality: artifact.payload?.modality, artifactPass: artifact.pass, payloadPass: artifact.payload?.pass, artifactValidity: artifact.validity, payloadValidity: artifact.payload?.validity })
+              : artifact.payload?.kind === artifact.kind && artifact.payload?.actionId === stage.actionId && artifact.payload?.bankId === artifact.bankId && artifact.payload?.modality === artifact.modality && artifact.payload?.pass === artifact.pass && artifact.payload?.validity === artifact.validity;
+            setAutomationViewResult({ runId: run.id, runTitle: run.title, scenarioId: run.plan?.scenarioRef?.id ?? "unknown", scenarioVersion: run.plan?.scenarioRef?.version ?? 0, stageId, attemptId: artifact.attemptId, successfulAttemptId: stage.successfulAttemptId ?? "", artifactId: artifact.id, schemaVersion: artifact.payload?.schemaVersion ?? 0, kind: artifact.payload?.kind ?? artifact.kind, bankId: artifact.payload?.bankId, modality: artifact.payload?.modality ?? artifact.modality, pass: artifact.payload?.pass, validity: artifact.payload?.validity, artifactContractConsistent, actionId: stage.actionId, status: stage.status, data: artifact.payload?.data, audio: external?.assetId ? { assetId: external.assetId, name: external.audioName, durationSeconds: external.audioDurationSeconds, range: external.audioRange } : undefined, segmentWindows, fragments, brief: external?.brief });
             setHistoricalFragmentId((current) => fragments.some((item) => item.id === current) ? current : fragments[0]?.id ?? "");
           }
           else {
@@ -971,9 +995,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     interpolation: { pair: blendPair, percent: blendPercent, curve: blendCurve, blend_enabled: blendMode, clap_weight: clapWeight, trust_threshold: trustThreshold, trust_floor: trustFloor },
     vocal_matrix_mode: vocalMatrixMode,
     param_to_text: paramTextSessionState,
-    v3: { query: v3Query, query_b: v3Session.queryB, top_k: v3Session.topK, sources: v3Session.sources, scopes: v3Session.scopes, search_mode: v3Session.searchMode, transition_ratio: v3Session.transitionRatio, text_index: v3Session.textIndex, search_results: v3Session.searchResults, secondary_results: v3Session.secondaryResults, active_parameters: v3Session.activeParameters, macro: v3Session.macro },
+    v3: { query: v3Query, query_b: v3Session.queryB, top_k: v3Session.topK, sources: v3Session.sources, scopes: v3Session.scopes, search_mode: v3Session.searchMode, transition_ratio: v3Session.transitionRatio, text_index: v3Session.textIndex, search_results: v3Session.searchResults, secondary_results: v3Session.secondaryResults, active_parameters: v3Session.activeParameters, macro: v3Session.macro, ...(briefImportState ? { brief_import: briefImportStateForSnapshot(briefImportState) } : {}) },
     workflow: { macro_profile: macroProfile, require_gemma_resolution: requireGemmaResolution, include_stage2: macroIncludeStage2, custom_steps: customMacroSteps, macro_source_bank: macroSourceBank },
-  }), [audioAssetId, audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, customMacroSteps, file, gemmaAudioAwtd, gemmaAudioResolved, gemmaTextResolved, interpolateClap, interpolateSiglip, macroIncludeStage2, macroProfile, macroSourceBank, nodeInterval, paramTextSessionState, qwenImportState, regionDuration, regionOffset, requireGemmaResolution, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, textBanks, timelineView, trustFloor, trustThreshold, v3Query, v3Session, vocalMatrixMode, windowMode, windowSourceSegments]);
+  }), [audioAssetId, audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, briefImportState, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, customMacroSteps, file, gemmaAudioAwtd, gemmaAudioResolved, gemmaTextResolved, interpolateClap, interpolateSiglip, macroIncludeStage2, macroProfile, macroSourceBank, nodeInterval, paramTextSessionState, qwenImportState, regionDuration, regionOffset, requireGemmaResolution, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, textBanks, timelineView, trustFloor, trustThreshold, v3Query, v3Session, vocalMatrixMode, windowMode, windowSourceSegments]);
   useEffect(() => {
     const fingerprint = JSON.stringify(capturedSessionData);
     setSessionDirty(Boolean(activeSession) && fingerprint !== fingerprintRef.current);
@@ -1332,6 +1356,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       const result = await response.json() as { snapshot?: { meta: { id: string; title: string }; data: AmStageSessionData }; error?: string };
       if (!response.ok || !result.snapshot) throw new Error(result.error || `HTTP ${response.status}`);
       const { meta, data } = result.snapshot;
+      const restoredBriefImport = restoreBriefImportState(data.v3.brief_import);
       if (audioUrl) URL.revokeObjectURL(audioUrl);
       setAudioUrl(null); setFile(null); setAudioAssetId(data.audio.asset_id ?? null); setAudioReferenceName(data.audio.name); setAudioDuration(data.audio.duration_seconds);
       if (data.audio.asset_id) {
@@ -1360,8 +1385,11 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       setSelectedLayers(data.layers.selected); setTimelineView(data.layers.timeline_view); setShowGlobalConsensus(data.layers.stage2_visible); setConsensusTopK(data.layers.stage2_top_k); setConsensusCentroidPercent(data.layers.stage2_centroid_percent);
       setBlendPair(data.interpolation.pair); setBlendPercent(data.interpolation.percent); setBlendCurve(data.interpolation.curve); setBlendMode(data.interpolation.blend_enabled); setClapWeight(data.interpolation.clap_weight); setTrustThreshold(data.interpolation.trust_threshold ?? DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold); setTrustFloor(data.interpolation.trust_floor ?? DEFAULT_MODALITY_TRUST_CONFIG.floorWeight); setVocalMatrixMode(data.vocal_matrix_mode);
       setParamTextSessionState(data.param_to_text); setWorkbenchSessionKey((key) => key + 1);
+      suppressBriefManualEditRef.current = true;
       useRagV3Store.setState({ query: data.v3.query, queryB: data.v3.query_b, topK: data.v3.top_k, sources: data.v3.sources, scopes: data.v3.scopes, searchMode: data.v3.search_mode as "single" | "transition", transitionRatio: data.v3.transition_ratio, textIndex: data.v3.text_index ?? "qwen3", searchResults: data.v3.search_results, secondaryResults: data.v3.secondary_results, activeParameters: data.v3.active_parameters, macro: data.v3.macro, isSearching: false, isGeneratingMacro: false, searchError: null, macroError: null });
-      const normalizedRestoredData = { ...data, banks: { ...data.banks, qwen_import: qwenSessionMetadataForSnapshot(restoredQwen) }, interpolation: { ...data.interpolation, trust_threshold: data.interpolation.trust_threshold ?? DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold, trust_floor: data.interpolation.trust_floor ?? DEFAULT_MODALITY_TRUST_CONFIG.floorWeight } };
+      suppressBriefManualEditRef.current = false;
+      updateBriefImportState(restoredBriefImport);
+      const normalizedRestoredData = { ...data, banks: { ...data.banks, qwen_import: qwenSessionMetadataForSnapshot(restoredQwen) }, v3: { ...data.v3, ...(restoredBriefImport ? { brief_import: briefImportStateForSnapshot(restoredBriefImport) } : { brief_import: undefined }) }, interpolation: { ...data.interpolation, trust_threshold: data.interpolation.trust_threshold ?? DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold, trust_floor: data.interpolation.trust_floor ?? DEFAULT_MODALITY_TRUST_CONFIG.floorWeight } };
       setActiveSession({ id: meta.id, title: meta.title }); setSessionTitleDraft(meta.title); fingerprintRef.current = JSON.stringify(normalizedRestoredData); setSessionDirty(false); setSessionModalOpen(false); setPendingSessionAction(null);
       window.localStorage.setItem(ACTIVE_AM_STAGE_SESSION_KEY, meta.id);
       setNotice(data.audio.missing_on_restore ? `Сессия открыта. Результаты и таймлайн восстановлены; для воспроизведения или продолжения анализа повторно выберите ${data.audio.name ?? "исходный аудиофайл"}.` : "Сессия AM-Stage восстановлена.");
@@ -1382,6 +1410,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
 
   const clearSessionState = () => {
     abortRef.current?.abort();
+    updateBriefImportState(null);
     if (audioUrl) URL.revokeObjectURL(audioUrl);
     setAudioUrl(null); setFile(null); setAudioAssetId(null); setAudioReferenceName(null); setAudioDuration(0); setPlaybackTime(0); lastPlaybackSegmentRef.current = -1; setCurrentTime(0); setSeekRequest({ time: 0, token: 0 });
     setIsAxisPinned(false);
@@ -1392,7 +1421,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id)); setShowGlobalConsensus(false); setConsensusTopK(64); setConsensusCentroidPercent(35); setTimelineView("modality"); setBlendPair("text-clap"); setBlendPercent(50); setBlendCurve("linear");
     window.localStorage.removeItem(ACTIVE_AM_STAGE_SESSION_KEY);
     setParamTextSessionState(null); setWorkbenchSessionKey((key) => key + 1); setActiveSession(null); setSessionDirty(false); fingerprintRef.current = ""; setSessionResetConfirmOpen(false); setPendingSessionAction(null); setSessionModalOpen(false);
+    suppressBriefManualEditRef.current = true;
     useRagV3Store.setState({ query: "", queryB: "", topK: 50, sources: { library: true, frozen: true, atoms: true, generated: true }, scopes: { sound: true, structure: true, metadata: false, provenance: false, administrative: false }, vocalMatrixMode: false, searchMode: "single", transitionRatio: 50, searchResults: [], secondaryResults: [], activeParameters: [], macro: "", isSearching: false, isGeneratingMacro: false, searchError: null, macroError: null });
+    suppressBriefManualEditRef.current = false;
     setNotice("Создана новая пустая сессия AM-Stage. Сохранённые снимки не удалены."); setError("");
   };
 
@@ -1435,9 +1466,14 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   };
 
   const activeHistoricalFragment = automationViewResult?.fragments?.find((fragment) => fragment.id === historicalFragmentId);
-  const historicalBriefText = automationViewResult?.actionId === "brief.combine_segment_texts" && automationViewResult.data && typeof automationViewResult.data === "object" && "text" in automationViewResult.data && typeof automationViewResult.data.text === "string"
-    ? automationViewResult.data.text
-    : null;
+  const briefSelection: BriefSelectionIdentity = {
+    runId: searchParams.get("automationRun") ?? "",
+    stageId: searchParams.get("stage") ?? "",
+    attemptId: searchParams.get("attempt") ?? "",
+    artifactId: searchParams.get("artifact") ?? "",
+  };
+  const briefViewArtifact = automationViewResult?.actionId === "brief.combine_segment_texts" ? automationViewResult as BriefViewArtifact : null;
+  const briefSelectionCurrent = Boolean(briefViewArtifact && isCurrentBriefSelection(briefSelection, briefViewArtifact));
   const historicalQwenParameters = automationViewResult?.actionId === "text.qwen.resolved" && Array.isArray(automationViewResult.data)
     ? automationViewResult.data as ActiveParameter[]
     : null;
@@ -1455,6 +1491,48 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setTextBanks((banks) => replaceQwenBank(banks, next));
     if (v3Session.textIndex === "qwen3") useRagV3Store.setState({ searchResults: next.parameters as ActiveParameter[], activeParameters: next.parameters as ActiveParameter[] });
     setNotice("Qwen parameters applied to Qwen3 ParameterBank. Save the session to persist the change.");
+  };
+  const applyViewedBriefArtifact = (request: BriefApplyRequest) => {
+    const viewed = automationViewResultRef.current;
+    const url = new URLSearchParams(window.location.search);
+    const currentSelection = { runId: url.get("automationRun") ?? "", stageId: url.get("stage") ?? "", attemptId: url.get("attempt") ?? "", artifactId: url.get("artifact") ?? "" };
+    const currentText = useRagV3Store.getState().query;
+    if (activeSessionRef.current?.id !== request.expectedSessionId || currentText !== request.expectedText || !isCurrentBriefSelection(request.selection, currentSelection)) {
+      setNotice("Brief target or artifact selection changed. Review the current proposal and try again.");
+      return;
+    }
+    if (!viewed || !viewed.artifactContractConsistent || viewed.actionId !== "brief.combine_segment_texts" || !isCurrentBriefSelection(request.selection, viewed)) {
+      setError("The selected Brief artifact is no longer available. Select and view it again.");
+      return;
+    }
+    const data = viewed.data && typeof viewed.data === "object" && !Array.isArray(viewed.data) ? viewed.data as { text?: unknown } : null;
+    const source: BriefSourceIdentity = { runId: viewed.runId, stageId: viewed.stageId, attemptId: viewed.attemptId, artifactId: viewed.artifactId, actionId: "brief.combine_segment_texts", schemaVersion: 1, modality: "text" };
+    const validation = validateBriefArtifact({
+      ...source,
+      runOwnerId: viewed.runId,
+      stageOwnerId: viewed.stageId,
+      successfulAttemptId: viewed.successfulAttemptId,
+      artifactOwner: { runId: viewed.runId, stageId: viewed.stageId, attemptId: viewed.attemptId, artifactId: viewed.artifactId },
+      kind: viewed.kind,
+      schemaVersion: viewed.schemaVersion,
+      actionId: viewed.actionId,
+      modality: viewed.modality,
+      validity: viewed.validity ?? "",
+      data: viewed.data,
+    });
+    if (!validation.ok || !data || typeof data.text !== "string") { setError(validation.ok ? "Selected Brief has no text." : validation.reason); return; }
+    try {
+      const result = applyBriefArtifact(briefImportStateRef.current, currentText, data.text, source, request.operationId, request.mode);
+      if (result.kind === "confirmation-required") { setNotice("Brief changed while the confirmation was open. Review the latest current and incoming text."); return; }
+      if (result.kind === "noop") { setNotice("This Brief artifact was already applied. Later manual edits were kept."); return; }
+      updateBriefImportState(result.metadata);
+      if (result.textChanged) {
+        suppressBriefManualEditRef.current = true;
+        useRagV3Store.getState().setQuery(result.text);
+        suppressBriefManualEditRef.current = false;
+      }
+      setNotice(result.textChanged ? "Brief applied to the working session. Save the session to persist it." : "Brief source recorded without changing the current text. Save the session to persist provenance.");
+    } catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); }
   };
 
   return (
@@ -1857,7 +1935,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
               </section>}
               {automationApplyAudioOpen && automationViewResult?.audio && <div className="fixed inset-0 z-[88] grid place-items-center bg-black/75 p-4" role="presentation"><section role="dialog" aria-modal="true" aria-labelledby="automation-apply-audio-title" className="w-full max-w-md space-y-3 rounded-lg border border-cyan-400/40 bg-zinc-950 p-4 shadow-xl"><h2 id="automation-apply-audio-title" className="font-mono text-sm font-semibold">{t("Apply historical audio context?")}</h2><p className="text-xs text-muted-foreground">{t("This replaces the current Work Axis audio, range and Brief, and clears audio-derived segments. The saved Run and its results remain unchanged.")}</p><div className="flex justify-end gap-2"><Button size="sm" variant="ghost" onClick={() => setAutomationApplyAudioOpen(false)} disabled={automationApplyAudioBusy}>{t("Cancel")}</Button><Button size="sm" onClick={() => void applyAutomationAudioContext()} disabled={automationApplyAudioBusy}>{automationApplyAudioBusy ? t("Applying…") : t("Apply to Work Axis")}</Button></div></section></div>}
               <h2 className="am-stage-module-heading"><span>04</span>{t("Project")}</h2>
-              {automationViewResult && <section className="rounded-md border border-cyan-400/30 bg-cyan-950/10 p-2" aria-label={t("Automation result view")}><div className="flex flex-wrap items-center justify-between gap-2 text-xs"><strong>{t("Automation result · view only")}</strong><Link href={`/automation?run=${encodeURIComponent(automationViewResult.runId)}`} className="underline">{t("Open Automation")}</Link></div><div className="mt-1 text-[10px] text-muted-foreground">{automationViewResult.runId.slice(0, 8)} · {automationViewResult.actionId} · {automationViewResult.status}</div>{historicalBriefText ? <div className="mt-2 rounded border border-border/70 p-2"><strong className="text-[10px]">{t("Generated Brief")}</strong><p className="mt-1 whitespace-pre-wrap text-xs">{historicalBriefText}</p></div> : null}{historicalQwenParameters ? <div className="mt-2"><HistoricalParameterBank title="Qwen3 parameter bank" parameters={historicalQwenParameters} /></div> : null}{automationViewResult.fragments?.length && activeHistoricalFragment ? <div className="mt-2 space-y-2 rounded border border-border/60 p-2" data-am-stage-historical-fragments>
+              {automationViewResult && <section className="rounded-md border border-cyan-400/30 bg-cyan-950/10 p-2" aria-label={t("Automation result view")}><div className="flex flex-wrap items-center justify-between gap-2 text-xs"><strong>{t("Automation result · view only")}</strong><Link href={`/automation?run=${encodeURIComponent(automationViewResult.runId)}`} className="underline">{t("Open Automation")}</Link></div><div className="mt-1 text-[10px] text-muted-foreground">{automationViewResult.runId.slice(0, 8)} · {automationViewResult.actionId} · {automationViewResult.status}</div>{automationViewResult.actionId === "brief.combine_segment_texts" ? <AutomationBriefResult artifact={briefViewArtifact} selection={briefSelection} selectionCurrent={briefSelectionCurrent} currentText={v3Query} targetSessionId={activeSession?.id ?? null} importState={briefImportState} onApply={applyViewedBriefArtifact} /> : null}{historicalQwenParameters ? <div className="mt-2"><HistoricalParameterBank title="Qwen3 parameter bank" parameters={historicalQwenParameters} /></div> : null}{automationViewResult.fragments?.length && activeHistoricalFragment ? <div className="mt-2 space-y-2 rounded border border-border/60 p-2" data-am-stage-historical-fragments>
                   <label className="flex items-center justify-between gap-2 text-[10px]"><span>{t("Historical fragment results")}</span><select className="h-7 max-w-[70%] rounded border border-border bg-background px-2" aria-label={t("Selected fragment")} value={activeHistoricalFragment.id} onChange={(event) => setHistoricalFragmentId(event.target.value)}>{automationViewResult.fragments.map((fragment) => <option key={fragment.id} value={fragment.id}>{fragment.id} · {fragment.startSeconds.toFixed(2)}–{fragment.endSeconds.toFixed(2)} s</option>)}</select></label>
                   <div className="grid gap-1 sm:grid-cols-3"><HistoricalParameterBank title="Gemma audio bank" parameters={activeHistoricalFragment.banks.gemmaAudio} /><HistoricalParameterBank title="CLAP bank" parameters={activeHistoricalFragment.banks.clap} /><HistoricalParameterBank title="SigLIP bank" parameters={activeHistoricalFragment.banks.siglip} /></div>
                   <details className="rounded border border-border/70 p-2"><summary className="cursor-pointer text-[10px]">{t("Reverse query")}</summary><div className="mt-1 space-y-1 text-[10px]"><p><strong>EN</strong> · {activeHistoricalFragment.reverseQuery?.en ?? t("No results for this fragment")}</p><p><strong>RU</strong> · {activeHistoricalFragment.reverseQuery?.ru ?? t("No results for this fragment")}</p></div></details>

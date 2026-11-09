@@ -23,6 +23,7 @@ vi.mock("node:fs/promises", () => ({
 import { POST } from "./route";
 import { GET as GET_ONE } from "./[id]/route";
 import { applyQwenArtifact, qwenSessionMetadataForSnapshot, replaceQwenBank, restoreQwenMetadataFromSnapshot, restoreQwenSessionState, type QwenSessionState } from "@/lib/am-stage-automation/qwen-stage-apply";
+import { restoreBriefImportState, type BriefImportState } from "@/lib/am-stage-automation/brief-stage-apply";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 
 const qwen: ActiveParameter[] = [{
@@ -34,12 +35,12 @@ const qwen: ActiveParameter[] = [{
 const neighboring = (technical_name: string): ActiveParameter => ({ ...qwen[0], technical_name });
 const source = { runId: "run-qwen", stageId: "text-qwen", attemptId: "attempt-qwen", artifactId: "artifact-qwen", bankId: "qwen-text" as const, pass: "resolved" as const };
 
-function sessionData(qwenImport?: ReturnType<typeof qwenSessionMetadataForSnapshot>, capturedBanks = { qwen3: qwen, gemma: [] as ActiveParameter[], clap: [] as ActiveParameter[], siglip: [] as ActiveParameter[] }) {
+function sessionData(qwenImport?: ReturnType<typeof qwenSessionMetadataForSnapshot>, capturedBanks = { qwen3: qwen, gemma: [] as ActiveParameter[], clap: [] as ActiveParameter[], siglip: [] as ActiveParameter[] }, briefImport?: BriefImportState, briefText = "") {
   return {
     schema: "am_stage_session_v1",
     audio: { name: null, duration_seconds: 0, path: null, missing_on_restore: false, warning: null },
     timeline: { segments: [] },
-    v3: { active_parameters: [], text_index: "qwen3" },
+    v3: { query: briefText, active_parameters: [], text_index: "qwen3", ...(briefImport ? { brief_import: briefImport } : {}) },
     banks: { text_parameters: [], text_parameters_qwen3: capturedBanks.qwen3, text_parameters_gemma: capturedBanks.gemma, clap_parameters: capturedBanks.clap, siglip_parameters: capturedBanks.siglip, ...(qwenImport ? { qwen_import: qwenImport } : {}) },
   };
 }
@@ -70,10 +71,35 @@ describe("Qwen metadata through штатный session API", () => {
     }));
     const saved = await response.json() as { snapshot: { meta: { id: string } } };
     const restoredResponse = await GET_ONE(new Request(`http://localhost/api/am-stage/sessions/${saved.snapshot.meta.id}`), { params: Promise.resolve({ id: saved.snapshot.meta.id }) });
-    const restored = await restoredResponse.json() as { snapshot: { data: { banks: { text_parameters_qwen3: ActiveParameter[]; qwen_import?: undefined } } } };
+    const restored = await restoredResponse.json() as { snapshot: { data: { banks: { text_parameters_qwen3: ActiveParameter[]; qwen_import?: undefined }; v3: { brief_import?: undefined } } } };
     expect(restoredResponse.status).toBe(200);
     expect(restored.snapshot.data.banks.text_parameters_qwen3).toEqual(qwen);
     expect(restored.snapshot.data.banks.qwen_import).toBeUndefined();
+    expect(restored.snapshot.data.v3.brief_import).toBeUndefined();
+    expect(restoreBriefImportState(restored.snapshot.data.v3.brief_import)).toBeNull();
+  });
+
+  it("saves and restores Brief text provenance and operation receipts through POST and GET", async () => {
+    const briefImport: BriefImportState = {
+      source: { runId: "run-brief", stageId: "brief-stage", attemptId: "brief-attempt", artifactId: "brief-artifact", actionId: "brief.combine_segment_texts", schemaVersion: 1, modality: "text" },
+      appliedText: "Generated Brief", manuallyEdited: true,
+      appliedSources: [JSON.stringify(["run-brief", "brief-stage", "brief-attempt", "brief-artifact"])],
+      operationReceipts: { "brief-op-1": JSON.stringify(["run-brief", "brief-stage", "brief-attempt", "brief-artifact"]) },
+    };
+    const neighboringBanks = { qwen3: [neighboring("qwen_kept")], gemma: [neighboring("gemma_kept")], clap: [neighboring("clap_kept")], siglip: [neighboring("siglip_kept")] };
+    const response = await POST(new Request("http://localhost/api/am-stage/sessions", {
+      method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ title: "brief fixture", data: sessionData(undefined, neighboringBanks, briefImport, "Generated Brief") }),
+    }));
+    expect(response.status).toBe(200);
+    const saved = await response.json() as { snapshot: { meta: { id: string } } };
+    const restoredResponse = await GET_ONE(new Request(`http://localhost/api/am-stage/sessions/${saved.snapshot.meta.id}`), { params: Promise.resolve({ id: saved.snapshot.meta.id }) });
+    const restored = await restoredResponse.json() as { snapshot: { data: { v3: { query: string; brief_import?: BriefImportState }; banks: { text_parameters_qwen3: ActiveParameter[]; text_parameters_gemma: ActiveParameter[]; clap_parameters: ActiveParameter[]; siglip_parameters: ActiveParameter[] } } } };
+    expect(restored.snapshot.data.v3.query).toBe("Generated Brief");
+    expect(restoreBriefImportState(restored.snapshot.data.v3.brief_import)).toEqual(briefImport);
+    expect(restored.snapshot.data.banks.text_parameters_qwen3).toEqual(neighboringBanks.qwen3);
+    expect(restored.snapshot.data.banks.text_parameters_gemma).toEqual(neighboringBanks.gemma);
+    expect(restored.snapshot.data.banks.clap_parameters).toEqual(neighboringBanks.clap);
+    expect(restored.snapshot.data.banks.siglip_parameters).toEqual(neighboringBanks.siglip);
   });
 
   it("applies Qwen through the production bank update and round-trips non-empty neighboring banks unchanged", async () => {
