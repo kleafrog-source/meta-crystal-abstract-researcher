@@ -149,7 +149,19 @@ export async function POST(request: Request) {
     window = normalizeLfm3Window(form.get("offset"), form.get("duration"));
   } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 400 }); }
   const mode: Lfm3PromptMode = form.get("mode") === "asr" ? "asr" : "describe";
-  const prompt = buildLfm3Prompt(mode);
+  const leftContext = form.get("context_left");
+  const rightContext = form.get("context_right");
+  let promptContext: { left: string; right: string } | undefined;
+  if (leftContext !== null || rightContext !== null) {
+    if (typeof leftContext !== "string" || typeof rightContext !== "string" || !leftContext.trim() || !rightContext.trim()) {
+      return NextResponse.json({ error: "Both left and right anchor descriptions are required when contextual gap mode is used." }, { status: 400 });
+    }
+    if (leftContext.length > 1_200 || rightContext.length > 1_200 || leftContext.length + rightContext.length > 1_600) {
+      return NextResponse.json({ error: "Contextual anchor text exceeds the 1,600-character limit." }, { status: 413 });
+    }
+    promptContext = { left: leftContext.trim(), right: rightContext.trim() };
+  }
+  const prompt = buildLfm3Prompt(mode, promptContext);
 
   if (!acquireEmbeddingModelSlot(SLOT_OWNER)) {
     return NextResponse.json({ error: `Model slot busy: ${getEmbeddingModelSlot()?.owner ?? "another operation"}. Wait for the current model task to finish.` }, { status: 409 });

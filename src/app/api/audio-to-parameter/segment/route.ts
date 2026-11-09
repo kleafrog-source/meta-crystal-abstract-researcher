@@ -93,6 +93,7 @@ export async function POST(request: Request) {
         searchTopK,
         detail,
         layout,
+        request.signal,
       )) as SearchResult;
       return NextResponse.json({
         engine,
@@ -113,6 +114,7 @@ export async function POST(request: Request) {
       timeoutMs: 10 * 60 * 1000,
       taskType: TASK_TYPE,
       title: "Audio-to-Parameter CLAP segment search",
+      signal: request.signal,
     });
     const result = rawResult as SearchResult;
     return NextResponse.json({

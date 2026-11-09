@@ -21,7 +21,7 @@ export interface ParamTextWorkbenchSessionState {
 
 export interface AmStageSessionData {
   schema: "am_stage_session_v1";
-  audio: { name: string | null; duration_seconds: number; path: null; missing_on_restore: boolean; warning: string | null };
+  audio: { name: string | null; duration_seconds: number; path: null; asset_id?: string | null; missing_on_restore: boolean; warning: string | null };
   analysis_settings: {
     region_offset: number; region_duration: number; analysis_start: number; analysis_end: number;
     segment_interval: number; node_interval: number; clap_top_k: number; siglip_top_k: number;

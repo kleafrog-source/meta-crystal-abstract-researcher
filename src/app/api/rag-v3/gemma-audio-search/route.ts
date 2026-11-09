@@ -153,7 +153,13 @@ async function streamAudioSearch(request: Request, form: FormData) {
     const { baseUrl } = await loadEmbeddingRuntimeSettings();
     await prepareGpuForEmbeddingModel(model, 5_000, SLOT_OWNER);
     warmedModel = true;
-    const windows = makeWindows(durationSeconds, Number(form.get("chunk_seconds")) || 30, Number(form.get("overlap_seconds")) || 0);
+    const requestedOffset = Math.max(0, Math.min(durationSeconds - 0.25, Number(form.get("range_start")) || 0));
+    const requestedDuration = Number(form.get("range_duration"));
+    const rangeDuration = Number.isFinite(requestedDuration) && requestedDuration >= 0.25
+      ? Math.min(requestedDuration, durationSeconds - requestedOffset)
+      : durationSeconds;
+    const windows = makeWindows(rangeDuration, Number(form.get("chunk_seconds")) || 30, Number(form.get("overlap_seconds")) || 0)
+      .map((window) => ({ ...window, offset: window.offset + requestedOffset }));
     const topK = Math.max(1, Math.min(100, Math.trunc(Number(form.get("top_k")) || 30)));
     const selectedDomainLayers = getSelectedLayers(form);
     const output = new ReadableStream<Uint8Array>({

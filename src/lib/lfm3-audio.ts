@@ -17,10 +17,12 @@ export function normalizeLfm3Window(offsetValue: unknown, durationValue: unknown
   return { offset, duration };
 }
 
-export function buildLfm3Prompt(mode: Lfm3PromptMode): string {
-  return mode === "asr"
+export function buildLfm3Prompt(mode: Lfm3PromptMode, context?: { left: string; right: string }): string {
+  const base = mode === "asr"
     ? "Perform ASR in English."
     : "Describe the audible sounds, instrumentation, vocals, rhythm, and spatial character in one concise English paragraph. Mention only properties directly supported by this audio, mark uncertainty, and do not infer parameter values. Keep the result under 800 characters.";
+  if (!context) return base;
+  return `${base}\n\nNeighboring descriptions are context only and are not evidence about the audio you received. Describe only this audio sample; do not copy either neighboring description as a result. Use them only to clarify possible change or continuity, and state uncertainty when this short sample does not establish a claim.\nLeft anchor (earlier node): ${context.left}\nRight anchor (later node): ${context.right}`;
 }
 
 export function cleanLfm3Output(value: string): string {

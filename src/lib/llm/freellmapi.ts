@@ -9,12 +9,15 @@ type ChatResponse = {
 export class FreeLLMAPIError extends Error {
   readonly status: number;
   readonly path: string;
+  readonly retryAfterMs?: number;
 
-  constructor(path: string, status: number) {
+  constructor(path: string, status: number, retryAfter?: string | null) {
     super(`FreeLLMAPI ${path} returned HTTP ${status}`);
     this.name = "FreeLLMAPIError";
     this.path = path;
     this.status = status;
+    this.retryAfterMs = retryAfter && /^\d+(?:\.\d+)?$/u.test(retryAfter) ? Number(retryAfter) * 1000
+      : retryAfter ? Math.max(0, Date.parse(retryAfter) - Date.now()) : undefined;
   }
 }
 function routeMetadata(route?: string) {
@@ -47,7 +50,7 @@ export class FreeLLMAPIProvider implements LLMProvider {
 
   async listModels(): Promise<LLMModelInfo[]> {
     const response = await fetch(`${this.baseUrl}/models`, { headers: this.headers(), signal: AbortSignal.timeout(10000) });
-    if (!response.ok) throw new FreeLLMAPIError("/models", response.status);
+    if (!response.ok) throw new FreeLLMAPIError("/models", response.status, response.headers.get("retry-after"));
     const data = await response.json() as { data?: Array<{ id: string; name?: string }> };
     return (data.data ?? []).map((model) => ({ id: model.id, name: model.name ?? model.id }));
   }
@@ -66,7 +69,7 @@ export class FreeLLMAPIProvider implements LLMProvider {
         ...(opts.format ? { response_format: { type: "json_object" } } : {}),
       }),
     });
-    if (!response.ok) throw new FreeLLMAPIError("chat completion", response.status);
+    if (!response.ok) throw new FreeLLMAPIError("chat completion", response.status, response.headers.get("retry-after"));
     const data = await response.json() as ChatResponse;
     const routed = response.headers.get("x-routed-via") ?? undefined;
     const text = data.choices?.[0]?.message?.content ?? "";
@@ -88,7 +91,7 @@ export class FreeLLMAPIProvider implements LLMProvider {
         messages: [...(opts.system ? [{ role: "system" as const, content: opts.system }] : []),
           ...(opts.ragContext ? [{ role: "system" as const, content: `Context from Meta Crystal knowledge base:\n\n${opts.ragContext}` }] : []), ...messages] }),
     });
-    if (!response.ok) throw new FreeLLMAPIError("chat completion", response.status);
+    if (!response.ok) throw new FreeLLMAPIError("chat completion", response.status, response.headers.get("retry-after"));
     if (!response.body) throw new Error("FreeLLMAPI stream body is empty");
     const routed = response.headers.get("x-routed-via") ?? undefined;
     const reader = response.body.getReader();

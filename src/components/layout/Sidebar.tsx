@@ -50,6 +50,7 @@ export type PageId =
   | "audioclaprag"
   | "audiotoparameter"
   | "amstage"
+  | "automation"
   | "metacrystalv3lab"
   | "whitespacediscovery"
   | "knowledgegraph"
@@ -78,6 +79,12 @@ const PRIMARY_NAV_ITEMS: NavItem[] = [
     label: "AM Tri-Modal Stage",
     icon: <AMIcon name="amStage" size="sm" className="sidebar-icon sidebar-icon-c6" />,
     description: "Semantic search with segmented CLAP/SigLIP2 analysis in one staged workspace",
+  },
+  {
+    id: "automation",
+    label: "Automation",
+    icon: <Workflow className="h-4 w-4" />,
+    description: "Build, run, inspect and continue durable AM-Stage automation chains",
   },
   {
     id: "ragparametersv3",

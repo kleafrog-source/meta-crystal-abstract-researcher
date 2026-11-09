@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getActiveProvider } from "@/lib/llm/factory";
-import { generateReverseQuery } from "@/lib/cross-modal/reverse-query";
+import { generateReverseQuery, ReverseQueryOutputError, ReverseQueryProviderError } from "@/lib/cross-modal/reverse-query";
 import type { ParamToTextSnapshot } from "@/lib/param-to-text";
 
 export const runtime = "nodejs";
@@ -31,10 +31,14 @@ export async function POST(request: Request) {
       source_modality: "audio",
       primary_original_request: typeof body.brief === "string" ? body.brief.slice(0, 1200) : null,
       ranked_acoustic_evidence: evidence,
-    }, request.signal);
+    }, request.signal, { allowPartial: true });
     return NextResponse.json({ ...result, generated_at: new Date().toISOString() });
   } catch (error) {
-    const status = request.signal.aborted ? 499 : 503;
-    return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status });
+    const outputError = error instanceof ReverseQueryOutputError ? error : null;
+    const providerError = error instanceof ReverseQueryProviderError ? error : null;
+    const status = request.signal.aborted ? 499 : outputError?.category === "format" ? 502 : outputError ? 422 : providerError?.upstreamStatus ?? 503;
+    const upstreamStatus = providerError?.upstreamStatus;
+    const diagnostics = outputError?.diagnostics ?? providerError?.diagnostics;
+    return NextResponse.json({ error: error instanceof Error ? error.message : String(error), ...(diagnostics ? { request_diagnostics: diagnostics } : {}), ...(outputError ? { error_category: outputError.category, raw_response: outputError.rawResponse } : {}), ...(upstreamStatus ? { upstreamStatus, retry_after_ms: providerError?.retryAfterMs } : {}) }, { status });
   }
 }

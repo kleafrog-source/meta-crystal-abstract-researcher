@@ -183,6 +183,243 @@ model ImportBatch {
   createdAt DateTime @default(now())
 }
 
+/// Durable user-authored or built-in AM-Stage automation definitions.
+model AutomationScenario {
+  id               String                    @id
+  origin           String
+  title            String
+  description      String?
+  currentVersionId String?
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime                  @updatedAt
+  archivedAt       DateTime?
+  versions         AutomationScenarioVersion[]
+  runs             AutomationRun[]
+
+  @@index([origin, archivedAt])
+  @@index([updatedAt])
+}
+
+/// Immutable definition version. Run plans pin a version rather than a mutable draft.
+model AutomationScenarioVersion {
+  id             String             @id
+  scenarioId     String
+  version        Int
+  definitionJson String
+  definitionHash String
+  sourceVersion  Int?
+  createdAt      DateTime           @default(now())
+  scenario       AutomationScenario @relation(fields: [scenarioId], references: [id], onDelete: Restrict)
+  plans          AutomationPlan[]
+
+  @@unique([scenarioId, version])
+  @@index([definitionHash])
+}
+
+/// Immutable execution plan, captured before a run starts.
+model AutomationPlan {
+  id                String                      @id
+  scenarioVersionId String?
+  schemaVersion     Int
+  documentJson      String
+  fingerprint       String
+  createdAt         DateTime                    @default(now())
+  scenarioVersion  AutomationScenarioVersion? @relation(fields: [scenarioVersionId], references: [id], onDelete: Restrict)
+  run               AutomationRun?
+
+  @@index([fingerprint])
+}
+
+/// One persisted run; only one run may hold the application executor lock.
+model AutomationRun {
+  id                       String                    @id
+  planId                   String                    @unique
+  scenarioId               String?
+  parentRunId              String?
+  title                    String
+  status                   String
+  revision                 Int                       @default(0)
+  createdAt                DateTime                  @default(now())
+  startedAt                DateTime?
+  finishedAt               DateTime?
+  updatedAt                DateTime                  @updatedAt
+  currentStageId           String?
+  stopRequestedAt          DateTime?
+  stopReason               String?
+  lastErrorSummary         String?
+  resultAssessmentJson     String?
+  resultAssessmentVersion  String?
+  ownerInstanceId          String?
+  plan                     AutomationPlan            @relation(fields: [planId], references: [id], onDelete: Restrict)
+  scenario                 AutomationScenario?       @relation(fields: [scenarioId], references: [id], onDelete: SetNull)
+  stages                   AutomationStageExecution[]
+  artifacts                AutomationArtifact[]
+  events                   AutomationRunEvent[]
+  parent                   AutomationRun?            @relation("AutomationRunParent", fields: [parentRunId], references: [id], onDelete: SetNull)
+  children                 AutomationRun[]           @relation("AutomationRunParent")
+
+  @@index([status, updatedAt])
+  @@index([scenarioId, createdAt])
+  @@index([parentRunId])
+}
+
+model AutomationStageExecution {
+  id                  String                 @id
+  runId               String
+  stageId             String
+  actionId            String
+  orderIndex          Int
+  documentJson        String
+  status              String
+  latestAttemptId     String?
+  successfulAttemptId String?
+  resolvedInputRefsJson String?
+  outputArtifactRefsJson String?
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+  run                 AutomationRun          @relation(fields: [runId], references: [id], onDelete: Cascade)
+  attempts            AutomationAttempt[]
+  artifacts           AutomationArtifact[]
+
+  @@unique([runId, stageId])
+  @@index([runId, orderIndex])
+}
+
+model AutomationAttempt {
+  id                   String                    @id
+  stageExecutionId     String
+  attemptNumber        Int
+  status               String
+  startedAt            DateTime                  @default(now())
+  finishedAt           DateTime?
+  effectiveConfigJson  String
+  inputFingerprint     String
+  outputArtifactRefsJson String?
+  partialArtifactRefsJson String?
+  errorJson            String?
+  cancelReason         String?
+  metricsJson          String?
+  stage                AutomationStageExecution  @relation(fields: [stageExecutionId], references: [id], onDelete: Cascade)
+  artifacts            AutomationArtifact[]
+
+  @@unique([stageExecutionId, attemptNumber])
+  @@index([status, startedAt])
+}
+
+/// Metadata stays in SQLite; payloads are stored as server-owned files.
+model AutomationArtifact {
+  id                String                    @id
+  schemaVersion     Int
+  kind              String
+  runId             String
+  stageExecutionId  String?
+  attemptId         String?
+  actionId          String
+  bankId            String?
+  modality          String?
+  pass              String?
+  modelBindingJson  String?
+  effectiveSettingsJson String
+  inputRefsJson     String
+  sourceAssetRefsJson String
+  audioRangeJson    String?
+  segmentRefsJson   String
+  createdAt         DateTime                  @default(now())
+  validity          String
+  warningsJson      String
+  payloadRef        String
+  checksum          String?
+  run               AutomationRun             @relation(fields: [runId], references: [id], onDelete: Cascade)
+  stage             AutomationStageExecution? @relation(fields: [stageExecutionId], references: [id], onDelete: SetNull)
+  attempt           AutomationAttempt?         @relation(fields: [attemptId], references: [id], onDelete: SetNull)
+  references        AutomationArtifactReference[]
+
+  @@index([runId, createdAt])
+  @@index([stageExecutionId])
+  @@index([attemptId])
+  @@index([kind])
+}
+
+model AutomationAsset {
+  id                 String                      @id
+  kind               String
+  contentHash        String                      @unique
+  storageRef         String
+  originalFilename   String?
+  mimeType           String?
+  sizeBytes          Int
+  durationSeconds    Float?
+  sampleRate         Int?
+  channels           Int?
+  createdAt          DateTime                    @default(now())
+  availabilityStatus String                      @default("available")
+  references         AutomationAssetReference[]
+
+  @@index([createdAt])
+  @@index([availabilityStatus])
+}
+
+model AutomationAssetReference {
+  id        String          @id
+  assetId   String
+  ownerType String
+  ownerId   String
+  createdAt DateTime        @default(now())
+  asset     AutomationAsset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@unique([assetId, ownerType, ownerId])
+  @@index([ownerType, ownerId])
+}
+
+model AutomationArtifactReference {
+  id         String             @id
+  artifactId String
+  ownerType  String
+  ownerId    String
+  createdAt  DateTime           @default(now())
+  artifact   AutomationArtifact @relation(fields: [artifactId], references: [id], onDelete: Restrict)
+
+  @@unique([artifactId, ownerType, ownerId])
+  @@index([ownerType, ownerId])
+}
+
+model AutomationCommand {
+  id            String   @id
+  commandId     String   @unique
+  kind          String
+  payloadHash   String
+  runId         String?
+  responseJson  String?
+  createdAt     DateTime @default(now())
+
+  @@index([runId, kind])
+  @@index([createdAt])
+}
+
+model AutomationRunEvent {
+  id          String        @id
+  runId       String
+  sequence    Int
+  type        String
+  stageId     String?
+  attemptId   String?
+  occurredAt  DateTime      @default(now())
+  payloadJson String
+  run         AutomationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, sequence])
+  @@index([runId, occurredAt])
+}
+
+model AutomationExecutorLock {
+  id              String   @id
+  activeRunId     String?
+  ownerInstanceId String?
+  fencingToken    Int      @default(0)
+  acquiredAt      DateTime?
+  updatedAt       DateTime @updatedAt
+}
+
 /// Persisted Metis nodes imported from the main crystal library or created inside Metis Lab.
 model MetisNode {
   id                  String   @id @default(cuid())

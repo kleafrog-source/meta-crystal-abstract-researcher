@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -26,6 +27,11 @@ import { JournalDraftButton } from "@/components/cross-modal/JournalDraftButton"
 import { ParamToTextWorkbench } from "@/components/am-stage/ParamToTextWorkbench";
 import { GemmaMultimodalParameterSearch, type GemmaAudioParameter, type GemmaMultimodalParameterSearchHandle } from "@/components/am-stage/GemmaMultimodalParameterSearch";
 import { AmStageMacroRunner } from "@/components/am-stage/AmStageMacroRunner";
+import { AutomationStageHandoff } from "@/components/am-stage/AutomationStageHandoff";
+import { collectHistoricalSegmentResults, extractStageBankParameters, type HistoricalSegmentResult } from "@/lib/am-stage-automation/historical-segment-results";
+import { toInstructionContext } from "@/lib/rag-v3/instruction-support";
+
+const ACTIVE_AM_STAGE_SESSION_KEY = "am-stage-active-session-v1";
 import type { AmStageAutomationOutput } from "@/components/am-stage/AmStageMacroRunner";
 import { SegmentSideMetadataPanel } from "@/components/am-stage/SegmentSideMetadataPanel";
 import { saveVocalMatrixFormants } from "@/lib/acoustic-feature-bridge";
@@ -46,7 +52,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AMIcon } from "@/components/ui/am-icon";
 import {
@@ -81,6 +86,7 @@ import { classifyDomainLayer } from "@/lib/am-parameters-catalogue/domain-layer-
 import { buildLayerTimelineLanes, LAYER_TIMELINE_SERIES_LIMIT, UNCLASSIFIED_TIMELINE_LAYER } from "@/lib/am-stage-layer-timeline";
 import { applyConsensusSmooth, averageParameterFrames, interpolateStageFrames, parameterMatchesLayers, type BlendCurve } from "@/lib/am-stage-blend";
 import { computeModalityTrust, DEFAULT_MODALITY_TRUST_CONFIG } from "@/lib/modality-trust";
+import { getPlaybackTimeSnapshot, setPlaybackTime, subscribePlaybackTime } from "@/lib/am-stage-playback";
 
 type Engine = AudioEngine;
 type AnalysisStatus = AudioAnalysisStatus;
@@ -108,6 +114,40 @@ interface MorphoStatus {
     running?: boolean;
     progress?: { current?: number; total?: number };
   };
+}
+
+type AutomationViewResult = {
+  runId: string;
+  runTitle: string;
+  scenarioId: string;
+  scenarioVersion: number;
+  stageId: string;
+  actionId: string;
+  status: string;
+  data: unknown;
+  audio?: { assetId: string; name?: string; durationSeconds?: number; range?: { startSeconds: number; endSeconds: number; durationSeconds: number } };
+  segmentWindows?: Array<{ id: string; startSeconds: number; endSeconds: number }>;
+  fragments?: HistoricalSegmentResult[];
+  brief?: string;
+};
+
+function HistoricalParameterBank({ title, parameters }: { title: string; parameters: ActiveParameter[] }) {
+  const t = useUiText();
+  return <details className="rounded border border-border/70 p-2">
+    <summary className="flex cursor-pointer items-center justify-between gap-2 text-[10px]"><span>{t(title)}</span><span>{parameters.length}</span></summary>
+    {parameters.length ? <div className="mt-2 max-h-52 space-y-1 overflow-auto" aria-label={`${title} ${t("parameter graph")}`}>
+      {parameters.slice(0, 40).map((parameter, index) => {
+        const score = Math.max(0, Math.min(1, Number(parameter.similarity ?? 0)));
+        const value = parameter.current_value ?? parameter.suggested_value;
+        return <div key={`${parameter.technical_name}-${index}`} className="grid grid-cols-[minmax(0,1fr)_3rem_auto] items-center gap-2 text-[9px]">
+          <span className="truncate font-mono" title={parameter.technical_name}>{parameter.technical_name}</span>
+          <span className="h-1.5 overflow-hidden rounded bg-muted" aria-label={`${t("Parameter relevance (similarity)")} ${Math.round(score * 100)}%`}><span className="block h-full bg-cyan-400" style={{ width: `${score * 100}%` }} /></span>
+          <span className="font-mono text-muted-foreground">{value === undefined || value === null ? "—" : String(value)}</span>
+        </div>;
+      })}
+      {parameters.length > 40 && <p className="text-[9px] text-muted-foreground">{t("Showing first 40 stored parameters")}</p>}
+    </div> : <p className="mt-1 text-[9px] text-muted-foreground">{t("No results for this fragment")}</p>}
+  </details>;
 }
 
 interface GraphSeries {
@@ -179,7 +219,13 @@ function statusClass(status: AnalysisStatus): string {
 }
 
 export function AMStagePage({ active = true }: { active?: boolean } = {}) {
+  const searchParams = useSearchParams();
+  const automationRunId = searchParams.get("automationRun");
+  const automationStageId = searchParams.get("stage");
+  const automationApply = searchParams.get("automationApply") === "1";
   const t = useUiText();
+  const tRef = useRef(t);
+  useEffect(() => { tRef.current = t; }, [t]);
   const modelAliases = useModelAliases();
   const gemmaResolvedEnabled = useCapabilityEnabled("text.gemma.resolved");
   const stageRootRef = useRef<HTMLDivElement>(null);
@@ -217,6 +263,10 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [macroCurrentStep, setMacroCurrentStep] = useState("");
   const [macroError, setMacroError] = useState("");
   const [macroOutputs, setMacroOutputs] = useState<AmStageAutomationOutput[]>([]);
+  const [automationViewResult, setAutomationViewResult] = useState<AutomationViewResult | null>(null);
+  const [historicalFragmentId, setHistoricalFragmentId] = useState("");
+  const [automationApplyAudioOpen, setAutomationApplyAudioOpen] = useState(false);
+  const [automationApplyAudioBusy, setAutomationApplyAudioBusy] = useState(false);
   const macroAbortRef = useRef<AbortController | null>(null);
   const updateTextBank = useCallback((index: "qwen3" | "embeddinggemma2", name: string, value: number | string) => {
     setTextBanks((banks) => ({ ...banks, [index]: banks[index].map((parameter) => parameter.technical_name === name ? { ...parameter, current_value: value, suggested_value: value } : parameter) }));
@@ -239,16 +289,34 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [trustThreshold, setTrustThreshold] = useState(DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold);
   const [trustFloor, setTrustFloor] = useState(DEFAULT_MODALITY_TRUST_CONFIG.floorWeight);
   const [file, setFile] = useState<File | null>(null);
+  const [audioAssetId, setAudioAssetId] = useState<string | null>(null);
   const [audioReferenceName, setAudioReferenceName] = useState<string | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioDuration, setAudioDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  const lastPlaybackUiUpdate = useRef(0);
+  const lastPlaybackSegmentRef = useRef(-1);
+  const lastPlaybackStoreUpdateRef = useRef(0);
+  const lastPlaybackUiUpdateRef = useRef(0);
   const handlePlaybackTime = useCallback((time: number) => {
     const now = performance.now();
-    if (now - lastPlaybackUiUpdate.current < 400) return;
-    lastPlaybackUiUpdate.current = now;
-    setCurrentTime(time);
+    if (now - lastPlaybackStoreUpdateRef.current >= 100) {
+      setPlaybackTime(time);
+      lastPlaybackStoreUpdateRef.current = now;
+    }
+    const points = segmentsRef.current;
+    let activeIndex = -1;
+    for (let index = 0; index < points.length; index += 1) {
+      if (points[index].time <= time) activeIndex = index;
+      else break;
+    }
+    if (activeIndex !== lastPlaybackSegmentRef.current || now - lastPlaybackUiUpdateRef.current >= 400) {
+      lastPlaybackSegmentRef.current = activeIndex;
+      setCurrentTime(time);
+      lastPlaybackUiUpdateRef.current = now;
+    }
+  }, []);
+  const handlePlaybackState = useCallback((playing: boolean) => {
+    if (!playing) setCurrentTime(getPlaybackTimeSnapshot());
   }, []);
   const [seekRequest, setSeekRequest] = useState({ time: 0, token: 0 });
   const [regionOffset, setRegionOffset] = useState(0);
@@ -308,6 +376,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [renamingSessionId, setRenamingSessionId] = useState<string | null>(null);
   const [pendingSessionAction, setPendingSessionAction] = useState<null | { type: "open"; id: string } | { type: "new" }>(null);
   const fingerprintRef = useRef("");
+  const importedAutomationKeysRef = useRef(new Set<string>());
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -316,6 +385,62 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       if (saved === "compact" || saved === "standard" || saved === "expanded") setter(saved);
     }
   }, []);
+  useEffect(() => {
+    const acceptImport = (value: unknown) => {
+      const imported = value as { runId?: string; stageId?: string; actionId?: string; parameters?: ActiveParameter[] } | null;
+      const allowed = new Set<AmStageMacroStep>(["text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved", "audio.clap.resolved", "spec.siglip.resolved", "audio.gemma.awtd", "audio.gemma.resolved", "stage2.server"]);
+      if (imported?.actionId && allowed.has(imported.actionId as AmStageMacroStep) && Array.isArray(imported.parameters)) {
+        const importKey = `${imported.runId ?? "unknown"}:${imported.stageId ?? imported.actionId}`;
+        if (importedAutomationKeysRef.current.has(importKey)) return;
+        importedAutomationKeysRef.current.add(importKey);
+        setMacroOutputs((current) => [...current, { step: imported.actionId as AmStageMacroStep, generatedAt: new Date().toISOString(), parameters: imported.parameters! }]);
+        setNotice(`Результат Automation ${imported.runId?.slice(0, 8) ?? ""} добавлен в банк AM-Stage.`);
+      }
+    };
+    const onImport = (event: Event) => acceptImport((event as CustomEvent).detail);
+    window.addEventListener("am-stage-automation-import", onImport);
+    if (automationRunId) {
+      if (!automationApply) setAutomationViewResult(null);
+      const runId = automationRunId;
+      const stageId = automationStageId ?? "";
+      let importedFromSession = false;
+      try {
+        const value = JSON.parse(sessionStorage.getItem("am-stage-automation-import") ?? "null") as { runId?: string; stageId?: string; parameters?: ActiveParameter[] } | null;
+        if (automationApply && value?.runId === runId && value.stageId === stageId && Array.isArray(value.parameters)) { acceptImport(value); importedFromSession = true; }
+        if (value?.runId === runId && value.stageId === stageId) sessionStorage.removeItem("am-stage-automation-import");
+      } catch { /* Fetch the durable run artifact below. */ }
+      if (automationApply && !importedFromSession && runId && stageId) {
+        void fetch(`/api/am-stage/automation/runs/${encodeURIComponent(runId)}`).then(async (response) => {
+          if (!response.ok) throw new Error("Run result could not be loaded.");
+          const result = await response.json() as { run?: { stages?: Array<{ stageId: string; actionId: string; artifacts?: Array<{ payload?: { data?: unknown } }> }> } };
+          const stage = result.run?.stages?.find((item) => item.stageId === stageId);
+          const data = stage?.artifacts?.[0]?.payload?.data;
+          const parameters = stage ? extractStageBankParameters(data) : [];
+          if (stage && parameters.length) acceptImport({ runId, stageId, actionId: stage.actionId, parameters });
+          else setError("Automation run has no parameter bank to import.");
+        }).catch((cause) => setError(cause instanceof Error ? cause.message : String(cause)));
+      } else if (!automationApply && runId && stageId) {
+        void fetch(`/api/am-stage/automation/runs/${encodeURIComponent(runId)}`).then(async (response) => {
+          if (!response.ok) throw new Error("Run result could not be loaded.");
+          const result = await response.json() as { run?: { id: string; title: string; status: string; plan?: { scenarioRef?: { id: string; version: number }; externalInputs?: { assetId?: string; audioName?: string; audioDurationSeconds?: number; audioRange?: { startSeconds: number; endSeconds: number; durationSeconds: number }; brief?: string } }; stages?: Array<{ stageId: string; actionId: string; status: string; artifacts?: Array<{ payload?: { data?: unknown } }> }> } };
+          const run = result.run;
+          const stage = run?.stages?.find((item) => item.stageId === stageId);
+          const artifact = stage?.artifacts?.[0];
+          if (run && stage && artifact) {
+            const external = run.plan?.externalInputs;
+            const segmentStage = run.stages?.find((item) => item.actionId === "audio.segment");
+            const segmentPayload = segmentStage?.artifacts?.[0]?.payload?.data as { windows?: Array<{ id?: string; startSeconds?: number; endSeconds?: number }> } | undefined;
+            const segmentWindows = Array.isArray(segmentPayload?.windows) ? segmentPayload.windows.flatMap((window, index) => Number.isFinite(window.startSeconds) && Number.isFinite(window.endSeconds) ? [{ id: window.id ?? `segment-${index + 1}`, startSeconds: window.startSeconds!, endSeconds: window.endSeconds! }] : []) : [];
+            const fragments = collectHistoricalSegmentResults(run.stages ?? []);
+            setAutomationViewResult({ runId, runTitle: run.title, scenarioId: run.plan?.scenarioRef?.id ?? "unknown", scenarioVersion: run.plan?.scenarioRef?.version ?? 0, stageId, actionId: stage.actionId, status: stage.status, data: artifact.payload?.data, audio: external?.assetId ? { assetId: external.assetId, name: external.audioName, durationSeconds: external.audioDurationSeconds, range: external.audioRange } : undefined, segmentWindows, fragments, brief: external?.brief });
+            setHistoricalFragmentId((current) => fragments.some((item) => item.id === current) ? current : fragments[0]?.id ?? "");
+          }
+          else setError("Selected Automation stage has no saved result to view.");
+        }).catch((cause) => setError(cause instanceof Error ? cause.message : String(cause)));
+      }
+    }
+    return () => window.removeEventListener("am-stage-automation-import", onImport);
+  }, [automationRunId, automationStageId, automationApply]);
   useEffect(() => {
     const load = () => void fetch("/api/ui-preferences", { cache: "no-store" }).then((response) => response.json()).then((data: { parameterTitleOrder?: string }) => {
       if (data.parameterTitleOrder === "en-ru" || data.parameterTitleOrder === "ru-en") setTitleOrder(data.parameterTitleOrder);
@@ -403,14 +528,27 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   };
 
   const selectFile = useCallback((nextFile: File) => {
+    const replacingAudio = Boolean(audioUrl || file || segmentsRef.current.length);
     setIsAxisPinned(true);
     setAudioUrl((previous) => {
       if (previous) URL.revokeObjectURL(previous);
       return URL.createObjectURL(nextFile);
     });
     setFile(nextFile);
+    setAudioAssetId(null);
+    void (async () => {
+      try {
+        const form = new FormData(); form.set("audio", nextFile); form.set("ownerType", "am-stage-work-axis"); form.set("ownerId", activeSession?.id ?? "draft");
+        const response = await fetch("/api/am-stage/automation/assets", { method: "POST", body: form });
+        const result = await response.json() as { asset?: { id: string }; error?: string };
+        if (!response.ok || !result.asset) throw new Error(result.error || `HTTP ${response.status}`);
+        setAudioAssetId(result.asset.id);
+      } catch (cause) { setError(`Не удалось сохранить исходное аудио для восстановления и Automation: ${cause instanceof Error ? cause.message : String(cause)}`); }
+    })();
     setAudioReferenceName(nextFile.name);
     setAudioDuration(0);
+    setPlaybackTime(0);
+    lastPlaybackSegmentRef.current = -1;
     setAnalysisStart(0);
     setAnalysisEnd(0);
     setGateNeedsResplit(false);
@@ -421,10 +559,61 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setWindowSourceSegments([]);
     setStoppedEngine(null);
     setError("");
+    setPlaybackTime(0);
     setNotice(
-      "Файл загружен. Нажмите «Авто-разбивка» после появления длительности.",
+      replacingAudio
+        ? tRef.current("Audio replaced. Audio-derived segment results were cleared; Brief, text banks, and Automation history were preserved.")
+        : "Файл загружен. Нажмите «Авто-разбивка» после появления длительности.",
     );
-  }, []);
+  }, [activeSession, audioUrl, file]);
+
+  const applyAutomationAudioContext = async () => {
+    const context = automationViewResult;
+    if (!context?.audio?.assetId) return;
+    setAutomationApplyAudioBusy(true);
+    try {
+      const response = await fetch(`/api/am-stage/automation/assets/${encodeURIComponent(context.audio.assetId)}`);
+      if (!response.ok) throw new Error("The historical run audio asset is unavailable.");
+      const audio = new File([await response.blob()], context.audio.name ?? "automation-run-audio", { type: response.headers.get("content-type") ?? "application/octet-stream" });
+      selectFile(audio);
+      const range = context.audio.range;
+      if (range) {
+        setAnalysisStart(range.startSeconds);
+        setAnalysisEnd(range.endSeconds);
+        setRegionOffset(range.startSeconds);
+        setRegionDuration(Math.max(0.1, range.durationSeconds));
+      }
+      if (context.brief !== undefined) setV3Query(context.brief);
+      setAutomationApplyAudioOpen(false);
+      setNotice(t("Historical audio context applied to Work Axis. The saved Run and its results were not changed."));
+    } catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); }
+    finally { setAutomationApplyAudioBusy(false); }
+  };
+
+  const removeWorkAxisAudio = useCallback(() => {
+    if (audioUrl) URL.revokeObjectURL(audioUrl);
+    setAudioUrl(null);
+    setFile(null);
+    setAudioAssetId(null);
+    setAudioReferenceName(null);
+    setAudioDuration(0);
+    setPlaybackTime(0);
+    lastPlaybackSegmentRef.current = -1;
+    lastPlaybackStoreUpdateRef.current = 0;
+    lastPlaybackUiUpdateRef.current = 0;
+    setCurrentTime(0);
+    setSeekRequest({ time: 0, token: 0 });
+    setAnalysisStart(0);
+    setAnalysisEnd(0);
+    setGateNeedsResplit(false);
+    setRegionOffset(0);
+    setRegionDuration(10);
+    setSegments([]);
+    setWindowSourceSegments([]);
+    setWindowMode("uniform");
+    setError("");
+    setNotice(tRef.current("Audio removed from Work Axis. Brief, text banks, and saved Automation history were preserved; audio-derived segment results were cleared."));
+  }, [audioUrl]);
 
   const regenerateWindowMode = useCallback(async (
     mode: AudioWindowMode,
@@ -443,6 +632,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       segmentsRef.current = resetSegmentsForWindowMode(uniformPoints);
       setSegments(segmentsRef.current);
       setGateNeedsResplit(false);
+      setPlaybackTime(uniformPoints[0].time);
+      lastPlaybackSegmentRef.current = 0;
       setCurrentTime(uniformPoints[0].time);
       setStoppedEngine(null);
       setNotice(`${t("Uniform windows prepared")}: ${uniformPoints.length}.`);
@@ -467,6 +658,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       segmentsRef.current = resetSegmentsForWindowMode(points);
       setSegments(segmentsRef.current);
       setGateNeedsResplit(false);
+      setPlaybackTime(points[0].time);
+      lastPlaybackSegmentRef.current = 0;
       setCurrentTime(points[0].time);
       setStoppedEngine(null);
       setNotice(`${t(mode === "beat" ? "Beat-aligned windows ready" : "Transient-aligned windows ready")}: ${points.length}. ${t("Previous CLAP/SigLIP results were cleared for the new node list.")}`);
@@ -736,7 +929,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   }, [blendCurve, blendPair, blendPercent, selectedLayers, textStageParameters, visibleClap, visibleSiglip]);
   const capturedSessionData = useMemo<AmStageSessionData>(() => ({
     schema: "am_stage_session_v1",
-    audio: { name: file?.name ?? audioReferenceName, duration_seconds: audioDuration, path: null, missing_on_restore: Boolean(audioReferenceName || file), warning: (audioReferenceName || file) ? "В снимке сохранены результаты и таймкоды, но браузерный аудиофайл не копируется. Выберите исходный файл повторно для воспроизведения и продолжения анализа." : null },
+    audio: { name: file?.name ?? audioReferenceName, duration_seconds: audioDuration, path: null, asset_id: audioAssetId, missing_on_restore: Boolean((audioReferenceName || file) && !audioAssetId), warning: (audioReferenceName || file) && !audioAssetId ? "Исходный файл ещё не сохранён в локальном хранилище приложения." : null },
     analysis_settings: { region_offset: regionOffset, region_duration: regionDuration, analysis_start: analysisStart, analysis_end: analysisEnd, segment_interval: segmentInterval, node_interval: nodeInterval, clap_top_k: clapTopK, siglip_top_k: siglipTopK, spectrogram_scale: spectrogramScale, spectrogram_detail: spectrogramDetail, spectrogram_color: spectrogramColor, spectrogram_renderer: spectrogramRenderer, siglip_spectrogram_layout: siglipSpectrogramLayout, show_spectrogram: showSpectrogram, window_mode: windowMode },
     timeline: { segments: segments.map(({ siglipPreview: _preview, ...segment }) => segment), window_source_segments: windowSourceSegments },
     banks: { text_parameters: v3Session.activeParameters, text_parameters_qwen3: textBanks.qwen3, text_parameters_gemma: textBanks.embeddinggemma2, text_parameters_gemma_resolved: gemmaTextResolved, audio_parameters_gemma: gemmaAudioAwtd, audio_parameters_gemma_resolved: gemmaAudioResolved, clap_parameters: [...new Map(segments.flatMap((segment) => segment.clap).map((parameter) => [parameter.technical_name, parameter])).values()], siglip_parameters: [...new Map(segments.flatMap((segment) => segment.siglip).map((parameter) => [parameter.technical_name, parameter])).values()], text_view: textBankViewMode, clap_view: clapBankViewMode, siglip_view: siglipBankViewMode, show_clap: showClap, show_siglip: showSiglip, interpolate_clap: interpolateClap, interpolate_siglip: interpolateSiglip },
@@ -746,7 +939,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     param_to_text: paramTextSessionState,
     v3: { query: v3Query, query_b: v3Session.queryB, top_k: v3Session.topK, sources: v3Session.sources, scopes: v3Session.scopes, search_mode: v3Session.searchMode, transition_ratio: v3Session.transitionRatio, text_index: v3Session.textIndex, search_results: v3Session.searchResults, secondary_results: v3Session.secondaryResults, active_parameters: v3Session.activeParameters, macro: v3Session.macro },
     workflow: { macro_profile: macroProfile, require_gemma_resolution: requireGemmaResolution, include_stage2: macroIncludeStage2, custom_steps: customMacroSteps, macro_source_bank: macroSourceBank },
-  }), [audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, customMacroSteps, file, gemmaAudioAwtd, gemmaAudioResolved, gemmaTextResolved, interpolateClap, interpolateSiglip, macroIncludeStage2, macroProfile, macroSourceBank, nodeInterval, paramTextSessionState, regionDuration, regionOffset, requireGemmaResolution, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, textBanks, timelineView, trustFloor, trustThreshold, v3Query, v3Session, vocalMatrixMode, windowMode, windowSourceSegments]);
+  }), [audioAssetId, audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, customMacroSteps, file, gemmaAudioAwtd, gemmaAudioResolved, gemmaTextResolved, interpolateClap, interpolateSiglip, macroIncludeStage2, macroProfile, macroSourceBank, nodeInterval, paramTextSessionState, regionDuration, regionOffset, requireGemmaResolution, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, textBanks, timelineView, trustFloor, trustThreshold, v3Query, v3Session, vocalMatrixMode, windowMode, windowSourceSegments]);
   useEffect(() => {
     const fingerprint = JSON.stringify(capturedSessionData);
     setSessionDirty(Boolean(activeSession) && fingerprint !== fingerprintRef.current);
@@ -942,6 +1135,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   }, [busy, stop]);
 
   const seekToSegment = (segment: SegmentPoint) => {
+    setPlaybackTime(segment.time);
+    lastPlaybackSegmentRef.current = segmentsRef.current.reduce((result, item, index) => item.time <= segment.time ? index : result, -1);
     setCurrentTime(segment.time);
     setSeekRequest((current) => ({
       time: segment.time,
@@ -957,7 +1152,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setSegments((current) => {
       let activeIndex = 0;
       for (let index = 0; index < current.length; index += 1)
-        if (current[index].time <= currentTime) activeIndex = index;
+        if (current[index].time <= getPlaybackTimeSnapshot()) activeIndex = index;
       return current.map((segment, index) => {
         if (index !== activeIndex) return segment;
         const field = engine === "clap" ? "clap" : "siglip";
@@ -977,7 +1172,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setSegments((current) => {
       let activeIndex = 0;
       for (let index = 0; index < current.length; index += 1)
-        if (current[index].time <= currentTime) activeIndex = index;
+        if (current[index].time <= getPlaybackTimeSnapshot()) activeIndex = index;
       return current.map((segment, index) => {
         if (index !== activeIndex) return segment;
         const field = engine === "clap" ? "clap" : "siglip";
@@ -1088,6 +1283,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       const result = await response.json() as { snapshot?: { meta: { id: string; title: string } }; error?: string };
       if (!response.ok || !result.snapshot) throw new Error(result.error || `HTTP ${response.status}`);
       const current = { id: result.snapshot.meta.id, title: result.snapshot.meta.title };
+      window.localStorage.setItem(ACTIVE_AM_STAGE_SESSION_KEY, current.id);
       setActiveSession(current); setSessionTitleDraft(current.title); fingerprintRef.current = JSON.stringify(capturedSessionData); setSessionDirty(false); setSessionSaveChoiceOpen(false); setSessionModalOpen(false);
       await refreshSessionRows().catch(() => undefined);
       return current.id;
@@ -1103,12 +1299,18 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       if (!response.ok || !result.snapshot) throw new Error(result.error || `HTTP ${response.status}`);
       const { meta, data } = result.snapshot;
       if (audioUrl) URL.revokeObjectURL(audioUrl);
-      setAudioUrl(null); setFile(null); setAudioReferenceName(data.audio.name); setAudioDuration(data.audio.duration_seconds);
+      setAudioUrl(null); setFile(null); setAudioAssetId(data.audio.asset_id ?? null); setAudioReferenceName(data.audio.name); setAudioDuration(data.audio.duration_seconds);
+      if (data.audio.asset_id) {
+        const assetResponse = await fetch(`/api/am-stage/automation/assets/${encodeURIComponent(data.audio.asset_id)}`);
+        if (!assetResponse.ok) throw new Error("Сохранённый аудиофайл недоступен. Выберите его повторно.");
+        const restored = new File([await assetResponse.blob()], data.audio.name ?? "restored-audio", { type: assetResponse.headers.get("content-type") ?? "application/octet-stream" });
+        setFile(restored); setAudioUrl(URL.createObjectURL(restored));
+      }
       setRegionOffset(data.analysis_settings.region_offset); setRegionDuration(data.analysis_settings.region_duration); setAnalysisStart(data.analysis_settings.analysis_start); setAnalysisEnd(data.analysis_settings.analysis_end); setGateNeedsResplit(false);
       setSegmentInterval(data.analysis_settings.segment_interval); setNodeInterval(data.analysis_settings.node_interval); setClapTopK(data.analysis_settings.clap_top_k); setSiglipTopK(data.analysis_settings.siglip_top_k);
       setWindowMode(data.analysis_settings.window_mode ?? "uniform"); setWindowSourceSegments(data.timeline.window_source_segments ?? []);
       setSpectrogramScale(data.analysis_settings.spectrogram_scale as SpectrogramScale); setSpectrogramDetail(data.analysis_settings.spectrogram_detail as SpectrogramDetail); setSpectrogramColor(data.analysis_settings.spectrogram_color as "gray" | "igray" | "roseus"); setSpectrogramRenderer(data.analysis_settings.spectrogram_renderer as SpectrogramRenderer); setSiglipSpectrogramLayout(data.analysis_settings.siglip_spectrogram_layout as SiglipSpectrogramLayout); setShowSpectrogram(data.analysis_settings.show_spectrogram);
-      setSegments(data.timeline.segments); setCurrentTime(0);
+      setSegments(data.timeline.segments); setPlaybackTime(0); lastPlaybackSegmentRef.current = -1; setCurrentTime(0);
       setTextBanks({ qwen3: data.banks.text_parameters_qwen3 ?? (data.v3.text_index === "qwen3" ? data.banks.text_parameters : []), embeddinggemma2: data.banks.text_parameters_gemma ?? (data.v3.text_index === "embeddinggemma2" ? data.banks.text_parameters : []) });
       setGemmaTextResolved(data.banks.text_parameters_gemma_resolved ?? []);
       setGemmaAudioAwtd(data.banks.audio_parameters_gemma ?? []);
@@ -1124,21 +1326,34 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       setParamTextSessionState(data.param_to_text); setWorkbenchSessionKey((key) => key + 1);
       useRagV3Store.setState({ query: data.v3.query, queryB: data.v3.query_b, topK: data.v3.top_k, sources: data.v3.sources, scopes: data.v3.scopes, searchMode: data.v3.search_mode as "single" | "transition", transitionRatio: data.v3.transition_ratio, textIndex: data.v3.text_index ?? "qwen3", searchResults: data.v3.search_results, secondaryResults: data.v3.secondary_results, activeParameters: data.v3.active_parameters, macro: data.v3.macro, isSearching: false, isGeneratingMacro: false, searchError: null, macroError: null });
       setActiveSession({ id: meta.id, title: meta.title }); setSessionTitleDraft(meta.title); fingerprintRef.current = JSON.stringify({ ...data, interpolation: { ...data.interpolation, trust_threshold: data.interpolation.trust_threshold ?? DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold, trust_floor: data.interpolation.trust_floor ?? DEFAULT_MODALITY_TRUST_CONFIG.floorWeight } }); setSessionDirty(false); setSessionModalOpen(false); setPendingSessionAction(null);
+      window.localStorage.setItem(ACTIVE_AM_STAGE_SESSION_KEY, meta.id);
       setNotice(data.audio.missing_on_restore ? `Сессия открыта. Результаты и таймлайн восстановлены; для воспроизведения или продолжения анализа повторно выберите ${data.audio.name ?? "исходный аудиофайл"}.` : "Сессия AM-Stage восстановлена.");
     } catch (cause) { setSessionError(cause instanceof Error ? cause.message : String(cause)); }
     finally { setSessionBusy(false); }
   };
 
+  const activeSessionRestoreAttempted = useRef(false);
+  useEffect(() => {
+    if (!active || activeSessionRestoreAttempted.current) return;
+    activeSessionRestoreAttempted.current = true;
+    if (automationApply) return;
+    const savedSessionId = window.localStorage.getItem(ACTIVE_AM_STAGE_SESSION_KEY);
+    if (!savedSessionId) return;
+    setSessionModalOpen(true);
+    void openSession(savedSessionId);
+  }, [active, automationApply]);
+
   const clearSessionState = () => {
     abortRef.current?.abort();
     if (audioUrl) URL.revokeObjectURL(audioUrl);
-    setAudioUrl(null); setFile(null); setAudioReferenceName(null); setAudioDuration(0); setCurrentTime(0); setSeekRequest({ time: 0, token: 0 });
+    setAudioUrl(null); setFile(null); setAudioAssetId(null); setAudioReferenceName(null); setAudioDuration(0); setPlaybackTime(0); lastPlaybackSegmentRef.current = -1; setCurrentTime(0); setSeekRequest({ time: 0, token: 0 });
     setIsAxisPinned(false);
     setRegionOffset(0); setRegionDuration(10); setAnalysisStart(0); setAnalysisEnd(0); setGateNeedsResplit(false); setSegmentInterval(2); setNodeInterval(20); setWindowMode("uniform"); setWindowSourceSegments([]); setSegments([]); setClapTopK(20); setSiglipTopK(20);
     setTextBankViewMode("standard"); setClapBankViewMode("standard"); setSiglipBankViewMode("standard"); setShowClap(true); setShowSiglip(true); setInterpolateClap(true); setInterpolateSiglip(true); setShowSpectrogram(true);
     setTextBanks({ qwen3: [], embeddinggemma2: [] }); setGemmaTextResolved([]); setGemmaAudioAwtd([]); setGemmaAudioResolved([]); setMacroProfile("full_core"); setRequireGemmaResolution(false); setMacroIncludeStage2(false); setCustomMacroSteps([]); setMacroSourceBank("audio.core");
     setSpectrogramScale("mel"); setSpectrogramDetail("medium"); setSpectrogramColor("roseus"); setSpectrogramRenderer("windowed"); setSiglipSpectrogramLayout("rgb_delta"); setBlendMode(false); setClapWeight(.5); setTrustThreshold(DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold); setTrustFloor(DEFAULT_MODALITY_TRUST_CONFIG.floorWeight); setVocalMatrixMode(false);
     setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id)); setShowGlobalConsensus(false); setConsensusTopK(64); setConsensusCentroidPercent(35); setTimelineView("modality"); setBlendPair("text-clap"); setBlendPercent(50); setBlendCurve("linear");
+    window.localStorage.removeItem(ACTIVE_AM_STAGE_SESSION_KEY);
     setParamTextSessionState(null); setWorkbenchSessionKey((key) => key + 1); setActiveSession(null); setSessionDirty(false); fingerprintRef.current = ""; setSessionResetConfirmOpen(false); setPendingSessionAction(null); setSessionModalOpen(false);
     useRagV3Store.setState({ query: "", queryB: "", topK: 50, sources: { library: true, frozen: true, atoms: true, generated: true }, scopes: { sound: true, structure: true, metadata: false, provenance: false, administrative: false }, vocalMatrixMode: false, searchMode: "single", transitionRatio: 50, searchResults: [], secondaryResults: [], activeParameters: [], macro: "", isSearching: false, isGeneratingMacro: false, searchError: null, macroError: null });
     setNotice("Создана новая пустая сессия AM-Stage. Сохранённые снимки не удалены."); setError("");
@@ -1182,6 +1397,17 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     if (!activeSession) setSessionSaveChoiceOpen(true); else void saveSession(false);
   };
 
+  const activeHistoricalFragment = automationViewResult?.fragments?.find((fragment) => fragment.id === historicalFragmentId);
+  const historicalBriefText = automationViewResult?.actionId === "brief.combine_segment_texts" && automationViewResult.data && typeof automationViewResult.data === "object" && "text" in automationViewResult.data && typeof automationViewResult.data.text === "string"
+    ? automationViewResult.data.text
+    : null;
+  const historicalQwenParameters = automationViewResult?.actionId === "text.qwen.resolved" && Array.isArray(automationViewResult.data)
+    ? automationViewResult.data as ActiveParameter[]
+    : null;
+  const historicalBankParameters = automationViewResult
+    ? extractStageBankParameters(automationViewResult.data, historicalFragmentId)
+    : [];
+
   return (
     <div ref={stageRootRef} data-am-stage className="flowmusic-console flex h-full min-w-0 flex-col text-zinc-100">
       <header className="border-b border-white/15 bg-black/70 px-4 py-3">
@@ -1202,6 +1428,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
               <Tooltip><TooltipTrigger asChild><Button size="sm" className="h-7 px-2" variant="outline" onClick={requestSaveSession} disabled={sessionBusy}>{sessionBusy ? t("Saving…") : `${t("Save")}${sessionDirty ? " · *" : ""}`}</Button></TooltipTrigger><TooltipContent>{t("Сохранить текущее состояние анализа и настроек в снимок проекта.")}</TooltipContent></Tooltip>
               <Tooltip><TooltipTrigger asChild><Button size="sm" className="h-7 px-2" variant="outline" onClick={() => void startSessionManager()} disabled={sessionBusy}>{t("Open")}</Button></TooltipTrigger><TooltipContent>{t("Открыть, переименовать или удалить ранее сохранённый снимок AM-Stage.")}</TooltipContent></Tooltip>
               <Tooltip><TooltipTrigger asChild><Button size="sm" className="h-7 px-2" variant="secondary" onClick={requestNewSession} disabled={Boolean(busy) || windowModeBusy}>{t("New")}</Button></TooltipTrigger><TooltipContent>{t("Сбросить рабочее состояние и начать новый анализ.")}</TooltipContent></Tooltip>
+              <Tooltip><TooltipTrigger asChild><Link href="/automation" aria-disabled={!audioAssetId} className={`inline-flex h-7 items-center rounded-md border border-input bg-background px-2 text-xs font-medium ${audioAssetId ? "hover:bg-accent" : "pointer-events-none opacity-50"}`} onClick={(event) => { if (!audioAssetId) { event.preventDefault(); return; } sessionStorage.setItem("am-automation-workbench-inputs", JSON.stringify({ assetId: audioAssetId, audioName: file?.name ?? audioReferenceName, durationSeconds: audioDuration, rangeStart: analysisStart, rangeEnd: analysisEnd || audioDuration, brief: v3Query, textIndex: v3Session.textIndex, topK: v3Session.topK, sources: v3Session.sources, scopes: v3Session.scopes, domainLayers: selectedLayers, vocalMatrixMode, searchMode: v3Session.searchMode, queryB: v3Session.queryB, transitionRatio: v3Session.transitionRatio, instructionContext: toInstructionContext(useRagV3Store.getState().instructionSlots) })); }}>{t("Open Automation")}</Link></TooltipTrigger><TooltipContent>{t("Open Automation with the Work Axis audio, range and current Brief.")}</TooltipContent></Tooltip>
             </div>
             <Tooltip><TooltipTrigger asChild><Button data-am-stage-action="toggle-work-axis-pin" size="sm" className="h-7 px-2" variant={isAxisPinned ? "secondary" : "outline"} aria-pressed={isAxisPinned} onClick={() => setIsAxisPinned((value) => !value)}>{isAxisPinned ? <Pin className="size-3.5" /> : <PinOff className="size-3.5" />}{isAxisPinned ? t("Pinned") : t("Pin")}</Button></TooltipTrigger><TooltipContent>{isAxisPinned ? t("Unpin work axis") : t("Pin work axis")}</TooltipContent></Tooltip>
             <Button data-am-stage-action="test-preset" size="sm" className="h-7 px-2" variant="outline" onClick={() => void applyTestPreset()} disabled={Boolean(busy) || windowModeBusy}>{t("Проверочный preset")}</Button>
@@ -1218,9 +1445,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       </header>
 
       <div className={`flex-1 min-h-0 p-3 ${isAxisPinned ? "overflow-hidden" : "overflow-auto"}`}>
-        <ResizablePanelGroup direction="vertical" data-pinned={isAxisPinned ? "true" : "false"} className={`am-stage-main-split min-h-0 ${isAxisPinned ? "h-[calc(100%-2.5rem)]" : "h-auto"}`}>
-          <ResizablePanel id="am-stage-work-axis-panel" defaultSize={38} minSize={16} maxSize={72} className={isAxisPinned ? "min-h-0" : "!flex-none !basis-auto !grow-0 overflow-visible"}>
-            <ScrollArea className={isAxisPinned ? "h-full" : "h-auto overflow-visible"}>
+        <div data-pinned={isAxisPinned ? "true" : "false"} className={`am-stage-main-split flex min-h-0 flex-col ${isAxisPinned ? "h-[calc(100%-2.5rem)]" : "h-auto"}`}>
+          <div id="am-stage-work-axis-panel" className={isAxisPinned ? "min-h-0 flex-[38] overflow-y-auto" : "flex-none overflow-visible"}>
+            <div className={isAxisPinned ? "min-h-0" : "h-auto overflow-visible"}>
               <div className="am-stage-axis-column min-w-0 space-y-3 pr-3">
                 <section id="am-stage-media" data-am-stage-layer="L0" data-am-stage-zone="media" className="am-stage-media-column min-w-0 rounded-lg border border-cyan-400/20 bg-black/30 p-2">
                   <div className="min-w-0">
@@ -1231,9 +1458,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                         <input className="hidden" type="file" accept="audio/*" onChange={(event) => { const selected = event.target.files?.[0]; if (selected) selectFile(selected); }} />
                       </label>
                     ) : (
-                      <AudioWaveformEditor instanceId="audio-segments" url={audioUrl} offset={regionOffset} duration={regionDuration} totalDuration={audioDuration} onDuration={handleWaveDuration} onRegion={handleRegion} onFile={selectFile} onTime={handlePlaybackTime} seekRequest={seekRequest} loopRegion={false} minimap spectrogram={{ visible: showSpectrogram, scale: spectrogramScale, detail: spectrogramDetail, colorMap: spectrogramColor, renderer: spectrogramRenderer }} />
+                      <AudioWaveformEditor instanceId="audio-segments" url={audioUrl} offset={regionOffset} duration={regionDuration} totalDuration={audioDuration} onDuration={handleWaveDuration} onRegion={handleRegion} onFile={selectFile} onTime={handlePlaybackTime} onPlayingChange={handlePlaybackState} seekRequest={seekRequest} loopRegion={false} minimap spectrogram={{ visible: showSpectrogram, scale: spectrogramScale, detail: spectrogramDetail, colorMap: spectrogramColor, renderer: spectrogramRenderer }} />
                     )}
-                    {file ? <div className="mt-2 truncate text-xs text-zinc-500">{file.name}</div> : null}
+                    {file ? <div className="mt-2 flex min-w-0 items-center gap-2"><div className="min-w-0 flex-1 truncate text-xs text-zinc-500">{file.name}</div><Button size="sm" variant="outline" className="h-7 shrink-0 px-2" onClick={removeWorkAxisAudio} disabled={Boolean(busy) || windowModeBusy}>{t("Remove audio")}</Button></div> : null}
                   </div>
                 </section>
                 <details data-am-stage-layer="L0" data-am-stage-zone="node-seek" className="am-stage-node-seek-column min-w-0 rounded-lg border border-white/10 bg-black/30 p-2" aria-label="Parameter timeline node seek">
@@ -1241,11 +1468,10 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                   <div className="mt-1 flex w-full min-w-0 flex-nowrap gap-1 overflow-x-auto pb-1">{segments.map((segment, index) => { const atWindow = (parameter: ActiveParameter) => { const window = (parameter as ActiveParameter & { source_window?: { offset_seconds: number; duration_seconds: number } }).source_window; return window ? window.offset_seconds < segment.offset + segment.duration && window.offset_seconds + window.duration_seconds > segment.offset : index === 0; }; const awtdCount = gemmaAudioAwtd.filter(atWindow).length; const valueCount = gemmaAudioResolved.filter(atWindow).length; return <button key={`${segment.time}-${index}`} type="button" onClick={() => seekToSegment(segment)} aria-current={Math.abs(currentTime - segment.time) < 0.05 ? "time" : undefined} className={`min-w-28 shrink-0 rounded border px-2 py-1.5 text-left text-[10px] ${Math.abs(currentTime - segment.time) < 0.05 ? "border-white bg-white/10 text-white" : "border-white/10 bg-black/40 text-zinc-400"}`}><div className="font-mono">{formatTime(segment.time)}</div><div className="mt-1 flex gap-1"><span className={`rounded border px-1 ${statusClass(segment.clapStatus)}`}>{modelRoleGlyph(modelAliases, "clap")} {segment.clap.length}</span><span className={`rounded border px-1 ${statusClass(segment.siglipStatus)}`}>{modelRoleGlyph(modelAliases, "siglip2")} {segment.siglip.length}</span>{awtdCount ? <span className="rounded border border-fuchsia-400/30 px-1 text-fuchsia-200">{modelRoleGlyph(modelAliases, "multimodalEmbedding", "A")} {awtdCount}</span> : null}{valueCount ? <span className="rounded border border-cyan-400/30 px-1 text-cyan-200">{modelRoleGlyph(modelAliases, "multimodalEmbedding", "V")} {valueCount}</span> : null}</div></button>; })}</div>
                 </details>
               </div>
-            </ScrollArea>
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel id="am-stage-analysis-panel" defaultSize={62} minSize={20} className={isAxisPinned ? "min-h-0" : "!flex-none !basis-auto !grow-0 overflow-visible"}>
-            <ScrollArea className={isAxisPinned ? "h-full" : "h-auto overflow-visible"}>
+            </div>
+          </div>
+          <div id="am-stage-analysis-panel" className={isAxisPinned ? "min-h-0 flex-[62] overflow-y-auto" : "flex-none overflow-visible"}>
+            <div className={isAxisPinned ? "min-h-0" : "h-auto overflow-visible"}>
         <div className="am-stage-workspace flex w-full min-w-0 flex-col gap-3">
           <section data-am-stage-zone="top-row" className="grid min-w-0 gap-3 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
             <section id="am-stage-extract" data-am-stage-layer="L1" className="am-stage-extract-column min-w-0 space-y-3">
@@ -1571,8 +1797,25 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
           </details>
             </section>
             <aside id="am-stage-project" data-am-stage-layer="L3" data-am-stage-zone="macro-exports" className="am-stage-project-column flex min-w-0 flex-col gap-2 rounded-lg border border-cyan-400/20 bg-black/30 p-3">
+              {automationViewResult?.audio && <section className="rounded-md border border-cyan-400/30 bg-cyan-950/10 p-2" aria-label={t("Historical audio context")}>
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs"><strong>{t("Historical audio context")}</strong><span>{automationViewResult.runTitle} · {automationViewResult.scenarioId} v{automationViewResult.scenarioVersion} · {automationViewResult.stageId}</span></div>
+                <div className="mt-1 text-[10px] text-muted-foreground">{automationViewResult.audio.name ?? automationViewResult.audio.assetId} · {automationViewResult.audio.durationSeconds?.toFixed(1) ?? "—"} s · {automationViewResult.audio.range ? `${automationViewResult.audio.range.startSeconds.toFixed(1)}–${automationViewResult.audio.range.endSeconds.toFixed(1)} s` : t("Full track")}</div>
+                <audio className="mt-1 h-8 w-full" controls preload="metadata" aria-label={t("Historical run audio preview")} src={`/api/am-stage/automation/assets/${encodeURIComponent(automationViewResult.audio.assetId)}`} />
+                {automationViewResult.brief ? <p className="mt-1 line-clamp-2 text-[10px] text-muted-foreground">{t("Run Brief")}: {automationViewResult.brief}</p> : null}
+                {automationViewResult.segmentWindows?.length ? <div className="mt-2" data-am-stage-historical-timeline aria-label={t("Historical segment timeline")}><div className="mb-1 flex justify-between text-[9px] text-muted-foreground"><span>{t("Historical segment timeline")}</span><span>{automationViewResult.segmentWindows.length}</span></div><div className="flex gap-1 overflow-x-auto pb-1">{automationViewResult.segmentWindows.map((window, index) => <button key={window.id} type="button" aria-pressed={window.id === historicalFragmentId} title={`${window.id} · ${window.startSeconds.toFixed(2)}–${window.endSeconds.toFixed(2)} s`} onClick={() => setHistoricalFragmentId(window.id)} className={`min-w-12 flex-1 rounded border px-1 py-1 text-[9px] ${window.id === historicalFragmentId ? "border-cyan-300 bg-cyan-400/20 text-cyan-100" : "border-border/70 bg-background/60 text-muted-foreground hover:border-cyan-400/60"}`}><span className="block">{index + 1}</span><span className="block font-mono">{window.startSeconds.toFixed(0)}–{window.endSeconds.toFixed(0)}s</span></button>)}</div></div> : null}
+                {automationViewResult.segmentWindows?.length ? <details className="mt-1 text-[10px]"><summary className="cursor-pointer">{t("Saved segment windows")}: {automationViewResult.segmentWindows.length}</summary><ol className="mt-1 max-h-24 space-y-0.5 overflow-auto">{automationViewResult.segmentWindows.map((window) => <li key={window.id} className="font-mono">{window.id} · {window.startSeconds.toFixed(2)}–{window.endSeconds.toFixed(2)} s</li>)}</ol></details> : null}
+                <Button size="sm" variant="outline" className="mt-2 h-7 text-xs" onClick={() => setAutomationApplyAudioOpen(true)}>{t("Apply audio context to Work Axis")}</Button>
+              </section>}
+              {automationApplyAudioOpen && automationViewResult?.audio && <div className="fixed inset-0 z-[88] grid place-items-center bg-black/75 p-4" role="presentation"><section role="dialog" aria-modal="true" aria-labelledby="automation-apply-audio-title" className="w-full max-w-md space-y-3 rounded-lg border border-cyan-400/40 bg-zinc-950 p-4 shadow-xl"><h2 id="automation-apply-audio-title" className="font-mono text-sm font-semibold">{t("Apply historical audio context?")}</h2><p className="text-xs text-muted-foreground">{t("This replaces the current Work Axis audio, range and Brief, and clears audio-derived segments. The saved Run and its results remain unchanged.")}</p><div className="flex justify-end gap-2"><Button size="sm" variant="ghost" onClick={() => setAutomationApplyAudioOpen(false)} disabled={automationApplyAudioBusy}>{t("Cancel")}</Button><Button size="sm" onClick={() => void applyAutomationAudioContext()} disabled={automationApplyAudioBusy}>{automationApplyAudioBusy ? t("Applying…") : t("Apply to Work Axis")}</Button></div></section></div>}
               <h2 className="am-stage-module-heading"><span>04</span>{t("Project")}</h2>
-              <AmStageMacroRunner isRunning={macroRunning} currentStep={macroCurrentStep} segmentCount={segments.length} topK={Math.max(clapTopK, siglipTopK, v3Session.topK)} onRun={(steps, id) => void runMacro(steps, id)} onCancel={cancelMacro} error={macroError} siglipStatus={morphoStatus} outputs={macroOutputs} onClearOutputs={() => setMacroOutputs([])} audioPresent={Boolean(file)} briefPresent={Boolean(v3Query.trim())} nodesReady={segments.length > 0} onLayerMaskChange={setSelectedLayers} onPreparePreset={prepareAutomationPreset} />
+              {automationViewResult && <section className="rounded-md border border-cyan-400/30 bg-cyan-950/10 p-2" aria-label={t("Automation result view")}><div className="flex flex-wrap items-center justify-between gap-2 text-xs"><strong>{t("Automation result · view only")}</strong><Link href={`/automation?run=${encodeURIComponent(automationViewResult.runId)}`} className="underline">{t("Open Automation")}</Link></div><div className="mt-1 text-[10px] text-muted-foreground">{automationViewResult.runId.slice(0, 8)} · {automationViewResult.actionId} · {automationViewResult.status}</div>{historicalBriefText ? <div className="mt-2 rounded border border-border/70 p-2"><strong className="text-[10px]">{t("Generated Brief")}</strong><p className="mt-1 whitespace-pre-wrap text-xs">{historicalBriefText}</p></div> : null}{historicalQwenParameters ? <div className="mt-2"><HistoricalParameterBank title="Qwen3 parameter bank" parameters={historicalQwenParameters} /></div> : null}{automationViewResult.fragments?.length && activeHistoricalFragment ? <div className="mt-2 space-y-2 rounded border border-border/60 p-2" data-am-stage-historical-fragments>
+                  <label className="flex items-center justify-between gap-2 text-[10px]"><span>{t("Historical fragment results")}</span><select className="h-7 max-w-[70%] rounded border border-border bg-background px-2" aria-label={t("Selected fragment")} value={activeHistoricalFragment.id} onChange={(event) => setHistoricalFragmentId(event.target.value)}>{automationViewResult.fragments.map((fragment) => <option key={fragment.id} value={fragment.id}>{fragment.id} · {fragment.startSeconds.toFixed(2)}–{fragment.endSeconds.toFixed(2)} s</option>)}</select></label>
+                  <div className="grid gap-1 sm:grid-cols-3"><HistoricalParameterBank title="Gemma audio bank" parameters={activeHistoricalFragment.banks.gemmaAudio} /><HistoricalParameterBank title="CLAP bank" parameters={activeHistoricalFragment.banks.clap} /><HistoricalParameterBank title="SigLIP bank" parameters={activeHistoricalFragment.banks.siglip} /></div>
+                  <details className="rounded border border-border/70 p-2"><summary className="cursor-pointer text-[10px]">{t("Reverse query")}</summary><div className="mt-1 space-y-1 text-[10px]"><p><strong>EN</strong> · {activeHistoricalFragment.reverseQuery?.en ?? t("No results for this fragment")}</p><p><strong>RU</strong> · {activeHistoricalFragment.reverseQuery?.ru ?? t("No results for this fragment")}</p></div></details>
+                  <details className="rounded border border-border/70 p-2"><summary className="cursor-pointer text-[10px]">{t("Interpretation")}</summary><div className="mt-1 space-y-1 text-[10px]"><p><strong>EN</strong> · {activeHistoricalFragment.interpretation?.en ?? t("No results for this fragment")}</p><p><strong>RU</strong> · {activeHistoricalFragment.interpretation?.ru ?? t("No results for this fragment")}</p></div></details>
+                </div> : null}<details className="mt-2 rounded border border-border/50 p-2"><summary className="cursor-pointer text-[10px]">{t("Raw result data")}</summary><pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap break-words text-[10px]">{JSON.stringify(automationViewResult.data, null, 2)}</pre></details><Button size="sm" variant="outline" className="mt-2 h-7 text-xs" disabled={!historicalBankParameters.length || !(["text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved", "audio.clap.resolved", "spec.siglip.resolved", "audio.gemma.awtd", "audio.gemma.resolved", "stage2.server"] as string[]).includes(automationViewResult.actionId)} onClick={() => { const actionId = automationViewResult.actionId as AmStageMacroStep; setMacroOutputs((current) => [...current, { step: actionId, generatedAt: new Date().toISOString(), parameters: historicalBankParameters }]); setNotice(t("Automation result applied to the Stage macro bank.")); }}>{t("Apply to workbench")}</Button></section>}
+              <AutomationStageHandoff currentAudioId={audioAssetId} rangeStart={analysisStart} rangeEnd={analysisEnd || audioDuration} brief={v3Query} textIndex={v3Session.textIndex} topK={v3Session.topK} sources={{ ...v3Session.sources }} scopes={v3Session.scopes} domainLayers={selectedLayers} vocalMatrixMode={vocalMatrixMode} searchMode={v3Session.searchMode} queryB={v3Session.queryB} transitionRatio={v3Session.transitionRatio} instructionContext={toInstructionContext(useRagV3Store.getState().instructionSlots)} />
+              <details className="rounded border border-border/60 p-2"><summary className="cursor-pointer text-xs">{t("Legacy Stage macro controls")}</summary><div className="mt-2"><AmStageMacroRunner isRunning={macroRunning} currentStep={macroCurrentStep} segmentCount={segments.length} topK={Math.max(clapTopK, siglipTopK, v3Session.topK)} onRun={(steps, id) => void runMacro(steps, id)} onCancel={cancelMacro} error={macroError} siglipStatus={morphoStatus} outputs={macroOutputs} onClearOutputs={() => setMacroOutputs([])} audioPresent={Boolean(file)} briefPresent={Boolean(v3Query.trim())} nodesReady={segments.length > 0} onLayerMaskChange={setSelectedLayers} onPreparePreset={prepareAutomationPreset} /></div></details>
               <label className="flex items-center gap-1.5 text-[9px] text-muted-foreground">{t("Macro / export source")}
                 <select aria-label={t("Macro / export source")} value={macroSourceBank} onChange={(event) => setMacroSourceBank(event.target.value)} className="h-7 min-w-0 flex-1 rounded border border-white/15 bg-black/50 px-2 text-foreground">
                   <option value="audio.core">{t("Audio core · CLAP + SigLIP2")}</option>
@@ -1652,7 +1895,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             </aside>
           <details open data-am-stage-zone="timeline-chart" className="min-w-0 rounded-lg border border-white/10 bg-black/30 p-2">
             <summary className="mb-1 flex cursor-pointer list-none items-center justify-between gap-2 text-xs text-zinc-400 [&::-webkit-details-marker]:hidden">
-              <span>Parameter Timeline · {formatTime(currentTime)}<V3InfoTip content={t("Нажмите точку для перемотки")} /></span><ChevronDown className="am-stage-disclosure-chevron size-3.5" />
+              <span>Parameter Timeline · <PlaybackTimeText /><V3InfoTip content={t("Нажмите точку для перемотки")} /></span><ChevronDown className="am-stage-disclosure-chevron size-3.5" />
             </summary>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-1"><h3 className="font-mono text-[10px] uppercase tracking-wider text-zinc-400">Parameter timeline</h3><V3InfoTip content={t("Up to {limit} highest-movement series per layer; {clap} = CLAP, {siglip} = SigLIP2, {awtd} = Gemma audio AWTD, {values} = Gemma values, T = text brief. GLOBAL_CONSENSUS is excluded.").replace("{limit}", String(LAYER_TIMELINE_SERIES_LIMIT)).replace("{clap}", modelRoleGlyph(modelAliases, "clap")).replace("{siglip}", modelRoleGlyph(modelAliases, "siglip2")).replace("{awtd}", modelRoleGlyph(modelAliases, "multimodalEmbedding", "A")).replace("{values}", modelRoleGlyph(modelAliases, "multimodalEmbedding", "V"))} /></div>
@@ -1666,7 +1909,6 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
               segments={gemmaTimelineSegments}
               textParameters={v3Parameters}
               selectedLayers={selectedLayers}
-              currentTime={currentTime}
               duration={audioDuration}
               showClap={showClap}
               showSiglip={showSiglip}
@@ -1706,9 +1948,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             </div>
           </details>
         </div>
-            </ScrollArea>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+            </div>
+          </div>
+        </div>
         {sessionModalOpen ? <div className="fixed inset-0 z-[90] grid place-items-center bg-black/75 p-4" role="presentation"><section role="dialog" aria-modal="true" aria-labelledby="am-stage-sessions-title" className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-violet-400/40 bg-zinc-950 p-4 shadow-xl"><div className="mb-3 flex items-center justify-between gap-2"><h2 id="am-stage-sessions-title" className="font-mono text-sm font-semibold">Сессии AM-Stage</h2><Button size="sm" variant="ghost" onClick={() => { setSessionModalOpen(false); setPendingSessionAction(null); }}>Закрыть</Button></div>
           {pendingSessionAction ? <div className="mb-3 rounded border border-amber-400/30 bg-amber-950/20 p-3"><p className="text-sm">Есть несохранённые изменения. Сохранить их перед {pendingSessionAction.type === "open" ? "открытием другой сессии" : "созданием новой сессии"}?</p><div className="mt-2 flex flex-wrap gap-2"><Button size="sm" onClick={() => void saveForPendingAction()} disabled={sessionBusy}>Сохранить и продолжить</Button><Button size="sm" variant="outline" onClick={() => pendingSessionAction.type === "open" ? void openSession(pendingSessionAction.id) : clearSessionState()}>Продолжить без сохранения</Button><Button size="sm" variant="ghost" onClick={() => setPendingSessionAction(null)}>Отмена</Button></div></div> : null}
           {sessionRows.length ? <ul className="space-y-2">{sessionRows.map((row) => <li key={row.id} className="rounded border border-white/10 p-2"><div className="flex flex-wrap items-center justify-between gap-2">{renamingSessionId === row.id ? <div className="flex min-w-0 flex-1 gap-1"><Input aria-label="Название сессии" value={sessionTitleDraft} onChange={(event) => setSessionTitleDraft(event.target.value)} /><Button size="sm" onClick={() => void renameSession(row.id)}>Сохранить имя</Button></div> : <div className="min-w-0"><p className="truncate text-sm font-medium">{row.title}{activeSession?.id === row.id ? <span className="ml-2 text-[10px] text-cyan-300">текущая{sessionDirty ? " · изменена" : ""}</span> : null}</p><p className="text-[10px] text-muted-foreground">{row.audio_name ?? "без аудио"} · {row.segment_count} точек · {row.parameter_count} параметров · обновлена {new Date(row.updated_at).toLocaleString()}</p></div>}<div className="flex flex-wrap gap-1">{renamingSessionId !== row.id ? <><Button size="sm" onClick={() => requestOpenSession(row.id)} disabled={sessionBusy}>Открыть</Button><Button size="sm" variant="outline" onClick={() => { setRenamingSessionId(row.id); setSessionTitleDraft(row.title); }}>Переименовать</Button><Button size="sm" variant="ghost" onClick={() => void deleteSession(row.id)}>Удалить</Button></> : <Button size="sm" variant="ghost" onClick={() => setRenamingSessionId(null)}>Отмена</Button>}</div></div></li>)}</ul> : <p className="rounded border border-white/10 p-4 text-sm text-muted-foreground">Сохранённых сессий пока нет.</p>}
@@ -1797,7 +2039,6 @@ function ParameterTimelineGraph({
   segments,
   textParameters,
   selectedLayers,
-  currentTime,
   duration,
   showClap,
   showSiglip,
@@ -1806,7 +2047,6 @@ function ParameterTimelineGraph({
   segments: Array<{ time: number; clap: ActiveParameter[]; siglip: ActiveParameter[]; gemmaAudioAwtd?: ActiveParameter[]; gemmaValues?: ActiveParameter[] }>;
   textParameters: ActiveParameter[];
   selectedLayers: string[];
-  currentTime: number;
   duration: number;
   showClap: boolean;
   showSiglip: boolean;
@@ -1814,6 +2054,7 @@ function ParameterTimelineGraph({
 }) {
   const t = useUiText();
   const aliases = useModelAliases();
+  const currentTime = useSyncExternalStore(subscribePlaybackTime, getPlaybackTimeSnapshot, getPlaybackTimeSnapshot);
   const sourceMarks = {
     clap: modelRoleGlyph(aliases, "clap"),
     siglip: modelRoleGlyph(aliases, "siglip2"),
@@ -1966,4 +2207,9 @@ function ParameterTimelineGraph({
       </div>
     </div>
   );
+}
+
+function PlaybackTimeText() {
+  const currentTime = useSyncExternalStore(subscribePlaybackTime, getPlaybackTimeSnapshot, getPlaybackTimeSnapshot);
+  return <>{formatTime(currentTime)}</>;
 }

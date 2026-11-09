@@ -45,6 +45,7 @@ const AudioToParameterPage = dynamic(() => import("@/components/pages/AudioToPar
 const MorphoAcousticRagPage = dynamic(() => import("@/components/pages/MorphoAcousticRagPage").then((module) => module.MorphoAcousticRagPage));
 const VocalAllocationMatrixPage = dynamic(() => import("@/components/pages/VocalAllocationMatrixPage").then((module) => module.VocalAllocationMatrixPage));
 const ServiceBayPage = dynamic(() => import("@/components/pages/ServiceBayPage").then((module) => module.ServiceBayPage));
+const AutomationPage = dynamic(() => import("@/components/pages/AutomationPage").then((module) => module.AutomationPage));
 const LexiconStatusPage = dynamic(() => import("@/app/lexicon-status/page").then((module) => module.default));
 const Settings = dynamic(() => import("@/components/pages/Settings").then((module) => module.Settings));
 
@@ -105,6 +106,8 @@ export function PageRenderer(props: {
       return <AudioToParameterPage active={page === props.activePage} />;
     case "amstage":
       return <AMStagePage active={page === props.activePage} />;
+    case "automation":
+      return <AutomationPage />;
     case "metacrystalv3lab":
       return <MetaCrystalV3LabPage />;
     case "whitespacediscovery":

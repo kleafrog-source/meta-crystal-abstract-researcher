@@ -27,7 +27,7 @@ export interface JournalReverseQuery {
   query_en: string;
   query_ru: string;
   key_concepts: string[];
-  uncertainties: string[];
+  uncertainties?: string[];
 }
 
 export interface CycleMetrics {

@@ -113,6 +113,8 @@ export interface SidecarCallOptions {
   taskType?: string;
   title?: string;
   extraEnv?: Record<string, string>;
+  /** Abort a cancellable sidecar command when its owning request is cancelled. */
+  signal?: AbortSignal;
 }
 
 export interface LocalTaskOptions {
@@ -459,6 +461,9 @@ export async function callSidecar<T = unknown>(
   opts: Omit<SidecarCallOptions, "command"> = {},
 ): Promise<{ result: unknown; events: SidecarEvent[] }> {
   const handle = runSidecar({ command, ...opts });
+  const abort = () => handle.cancel();
+  if (opts.signal?.aborted) abort();
+  else opts.signal?.addEventListener("abort", abort, { once: true });
   try {
     const result = await handle.done;
     return { result: result as T, events: handle.events };
@@ -470,6 +475,8 @@ export async function callSidecar<T = unknown>(
         lastErr ? ` — ${lastErr.msg}` : ""
       }`,
     );
+  } finally {
+    opts.signal?.removeEventListener("abort", abort);
   }
 }
 

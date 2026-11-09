@@ -61,8 +61,8 @@ export const AM_STAGE_AUTOMATION_PRESETS: AmStageAutomationPreset[] = [
   {
     id: "whole-track-gemma",
     title: { en: "Whole track → Gemma values", ru: "Весь трек → значения Gemma" },
-    start: "audio_only", goal: "whole_track_gemma",
-    steps: ["audio.gemma.awtd", "audio.gemma.resolved"], requires: ["audio", "gemma-index", "settings"],
+    start: "audio_and_brief", goal: "whole_track_gemma",
+    steps: ["audio.gemma.awtd", "audio.gemma.resolved"], requires: ["audio", "brief", "gemma-index", "settings"],
     description: { en: "Searches the session file in sequential WAV chunks capped at 20 seconds.", ru: "Ищет по файлу сессии последовательными WAV-фрагментами до 20 секунд." },
   },
   {

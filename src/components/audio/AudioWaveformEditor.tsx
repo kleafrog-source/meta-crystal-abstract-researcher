@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Mic, Pause, Play, Square, ZoomIn } from "lucide-react";
 import { WaveForm, WaveSurfer, useWavesurferContext } from "wavesurfer-react";
 import type WaveSurferRef from "wavesurfer.js";
@@ -35,26 +35,29 @@ interface Props {
   };
 }
 
-export function AudioWaveformEditor(props: Props) {
+function AudioWaveformEditorComponent(props: Props) {
   const [mounted, setMounted] = useState<WaveSurferRef | null>(null);
-  const [containerWidth, setContainerWidth] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const initialUrlRef = useRef(props.url);
+  const loadedUrlRef = useRef<string | null>(null);
   const [showSpectrum, setShowSpectrum] = useState(false);
   const instanceId = props.instanceId ?? "clap";
   const waveformId = `${instanceId}-waveform`;
   const spectrogramId = `${instanceId}-spectrogram`;
   const timelineId = `${instanceId}-timeline`;
   const spectrumVisible = props.spectrogram?.visible ?? showSpectrum;
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const observer = new ResizeObserver(([entry]) => {
-      const nextWidth = Math.floor(entry.contentRect.width);
-      setContainerWidth((current) => current === nextWidth ? current : nextWidth);
-    });
-    observer.observe(container);
-    return () => observer.disconnect();
+  const onMount = useCallback((instance: WaveSurferRef | null) => {
+    if (!instance) return;
+    loadedUrlRef.current = initialUrlRef.current;
+    setMounted(instance);
   }, []);
+  useEffect(() => {
+    if (!mounted || !props.url || loadedUrlRef.current === props.url) return;
+    loadedUrlRef.current = props.url;
+    void mounted.load(props.url).catch((cause: unknown) => {
+      loadedUrlRef.current = null;
+      console.error("WaveSurfer could not load the selected audio.", cause);
+    });
+  }, [mounted, props.url]);
   const fftSamples =
     props.spectrogram?.detail === "low"
       ? 512
@@ -94,7 +97,7 @@ export function AudioWaveformEditor(props: Props) {
           props.spectrogram?.renderer === "windowed"
             ? WindowedSpectrogramPlugin
             : SpectrogramPlugin,
-        key: "spectrogram",
+        key: `spectrogram:${props.spectrogram?.renderer ?? "standard"}:${props.spectrogram?.scale ?? "mel"}:${fftSamples}:${props.spectrogram?.colorMap ?? "roseus"}`,
         options: {
           container: `#${spectrogramId}`,
           labels: true,
@@ -127,7 +130,6 @@ export function AudioWaveformEditor(props: Props) {
 
   return (
     <div
-      ref={containerRef}
       className="am-stage-audio-editor min-w-0 max-w-full overflow-hidden rounded border border-cyan-400/25 bg-black/35 p-2"
       onDragOver={(event) => {
         event.preventDefault();
@@ -142,9 +144,8 @@ export function AudioWaveformEditor(props: Props) {
       <WaveSurfer
         container={`#${waveformId}`}
         plugins={plugins as never}
-        onMount={setMounted}
+        onMount={onMount}
         url={props.url}
-        width={containerWidth || undefined}
         height={88}
         waveColor="#64748b"
         progressColor="#22d3ee"
@@ -199,6 +200,20 @@ export function AudioWaveformEditor(props: Props) {
     </div>
   );
 }
+
+function sameSpectrogram(a: Props["spectrogram"], b: Props["spectrogram"]) {
+  return a?.visible === b?.visible && a?.scale === b?.scale && a?.detail === b?.detail && a?.colorMap === b?.colorMap && a?.renderer === b?.renderer;
+}
+
+function sameProps(a: Props, b: Props) {
+  return a.url === b.url && a.offset === b.offset && a.duration === b.duration && a.totalDuration === b.totalDuration &&
+    a.onDuration === b.onDuration && a.onRegion === b.onRegion && a.onFile === b.onFile && a.instanceId === b.instanceId &&
+    a.onTime === b.onTime && a.onPlayingChange === b.onPlayingChange && a.seekRequest?.time === b.seekRequest?.time &&
+    a.seekRequest?.token === b.seekRequest?.token && a.loopRegion === b.loopRegion && a.minimap === b.minimap &&
+    sameSpectrogram(a.spectrogram, b.spectrogram);
+}
+
+export const AudioWaveformEditor = memo(AudioWaveformEditorComponent, sameProps);
 
 function WaveformController({
   wavesurfer,

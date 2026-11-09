@@ -296,13 +296,20 @@ export async function runMorphoAudioSearch(
   topK: number,
   detail: "low" | "medium" | "high",
   layout: "mel" | "composite" | "rgb_delta",
+  signal?: AbortSignal,
 ): Promise<Record<string, unknown>> {
+  if (signal?.aborted) throw new DOMException("Morpho audio search stopped", "AbortError");
   await requireReadyMorphoIndex();
+  if (signal?.aborted) throw new DOMException("Morpho audio search stopped", "AbortError");
   const slotOwner = "siglip-search";
   if (!acquireEmbeddingModelSlot(slotOwner)) throw new Error(`Model slot busy: ${getEmbeddingModelSlot()?.owner ?? "unknown"}`);
   if (shared.__morphoJobs!.search.running)
     { releaseEmbeddingModelSlot(slotOwner); throw new Error("Another Morpho search is already active"); }
   try { await prepareGpuForExternalModel(7_000, slotOwner); } catch (error) { releaseEmbeddingModelSlot(slotOwner); throw error; }
+  if (signal?.aborted) {
+    releaseEmbeddingModelSlot(slotOwner);
+    throw new DOMException("Morpho audio search stopped", "AbortError");
+  }
   const job = idle();
   job.running = true;
   job.started_at = Date.now();
@@ -342,6 +349,10 @@ export async function runMorphoAudioSearch(
     );
     shared.__morphoChildren!.search = child;
     job.pid = child.pid ?? null;
+    const abortSearch = () => { void stopMorpho("search"); };
+    signal?.addEventListener("abort", abortSearch, { once: true });
+    if (signal?.aborted) abortSearch();
+    const removeAbortListener = () => signal?.removeEventListener("abort", abortSearch);
     child.stdout?.setEncoding("utf8");
     child.stderr?.setEncoding("utf8");
     child.stdout?.on("data", (value) => {
@@ -352,8 +363,9 @@ export async function runMorphoAudioSearch(
       stderr += String(value);
       append("search", String(value));
     });
-    child.on("error", (error) => { releaseEmbeddingModelSlot(slotOwner); reject(error); });
+    child.on("error", (error) => { removeAbortListener(); releaseEmbeddingModelSlot(slotOwner); reject(error); });
     child.on("close", (code) => {
+      removeAbortListener();
       job.running = false;
       job.exit_code = code;
       job.finished_at = Date.now();
