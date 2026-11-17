@@ -1,13 +1,15 @@
 import { readGenesisLibrary, type GenesisLibraryParameter } from "@/lib/combinatorial-genesis/library";
+import { randomUUID } from "node:crypto";
 import { readExcludedRegistry } from "@/lib/combinatorial-genesis/registry";
 import { rankRuntimeAtoms } from "@/lib/combinatorial-genesis/runtime-index";
 import { buildEffectiveQuery } from "@/lib/rag-v3/instruction-support";
 import type { ActiveParameter, EnrichedParameter, InstructionContextEntry, ProposeParametersResponse, RetrievalScope, UiElement } from "@/lib/rag-v3/types";
+import type { ParameterValue } from "@/lib/rag-v3/types";
 import { embedTextWithModel, embedTextsWithModel } from "@/lib/ollama-client";
 import { classifyDomainLayer } from "@/lib/am-parameters-catalogue/domain-layer-config";
 import { ACOUSTIC_DOMAIN_LAYERS, GLOBAL_CONSENSUS_LAYER } from "@/lib/domain-layers";
 
-import { getConfiguredTextIndexModel, rankCompositeNamesMulti, type TextIndexId } from "./composite-index";
+import { getConfiguredTextIndexModel, getValueSelectionBundle, rankCompositeNamesMulti, type TextIndexId } from "./composite-index";
 import { isArtifactManifestAvailable } from "./managed-rebuild";
 import { buildRelationAlignment, ensureConceptCoverage } from "./alignment";
 import { RAG_V3_CONFIG } from "./config";
@@ -16,6 +18,7 @@ import { decomposeQuery } from "./query-concepts";
 import { matchRelations } from "./relation-index";
 import { rankSelectOptionNames } from "./value-index";
 import { selectDomainFirstMmr } from "./domain-mmr";
+import { applyValueSelection } from "./value-selection";
 
 export interface RagV3Sources {
   library?: boolean;
@@ -63,9 +66,13 @@ function normalizeParameter(parameter: GenesisLibraryParameter): EnrichedParamet
     min_value: typeof parameter.min_value === "number" ? parameter.min_value : undefined,
     max_value: typeof parameter.max_value === "number" ? parameter.max_value : undefined,
     step: typeof parameter.step === "number" ? parameter.step : undefined,
-    default: Array.isArray(rawDefault) ? rawDefault.map(String).join(", ") : (rawDefault ?? ""),
+    default: rawDefault as ParameterValue | undefined,
     unit: typeof parameter.unit === "string" ? parameter.unit : undefined,
-    options: Array.isArray(parameter.options) ? parameter.options.map(String) : undefined,
+    options: Array.isArray(parameter.options) ? parameter.options as ParameterValue[] : undefined,
+    value_candidates: Array.isArray(parameter.value_candidates) ? parameter.value_candidates as ParameterValue[] : undefined,
+    published_values: Array.isArray(parameter.published_values) ? parameter.published_values as ParameterValue[] : undefined,
+    value_schema: parameter.value_schema && typeof parameter.value_schema === "object" ? parameter.value_schema as Record<string, ParameterValue> : undefined,
+    item_schema: parameter.item_schema && typeof parameter.item_schema === "object" ? parameter.item_schema as Record<string, ParameterValue> : undefined,
     lyria_prompt_tags: Array.isArray(parameter.lyria_prompt_tags) ? parameter.lyria_prompt_tags.map(String) : [],
     semantic_keywords: Array.isArray(parameter.semantic_keywords) ? parameter.semantic_keywords.map(String) : [],
     domain: typeof parameter.domain === "string" ? parameter.domain : null,
@@ -124,17 +131,32 @@ function lexicalScore(query: string, parameter: EnrichedParameter): number {
   return score;
 }
 
-function toActive(parameter: EnrichedParameter & { _source: string }, similarity: number, currentValues: Record<string, number | string>, anchored?: V3AnchorValue): ActiveParameter {
-  const fallback = currentValues[parameter.technical_name] ?? (Array.isArray(parameter.default) ? parameter.default.join(", ") : parameter.default);
-  const value = anchored?.value ?? fallback;
+function toActive(parameter: EnrichedParameter & { _source: string }, similarity: number, currentValues: Record<string, ParameterValue>, anchored?: V3AnchorValue): ActiveParameter {
+  const inputValue = currentValues[parameter.technical_name];
+  const { default: catalogueDefault, options: catalogueOptions, ...parameterFields } = parameter;
+  const selection = anchored ?? {
+    status: "artifacts_required" as const,
+    detail: "Value-selection artifact is missing or incompatible; no value was selected.",
+  };
   return {
-    ...parameter,
-    default: Array.isArray(parameter.default) ? parameter.default.join(", ") : parameter.default,
-    suggested_value: value,
-    current_value: value,
-    before: anchored?.before ?? fallback,
-    source: anchored?.source ?? "default",
-    detail: `Catalogue source · ${anchored?.detail ?? "autonomous default anchoring"}`,
+    ...parameterFields,
+    ...applyValueSelection({
+      ...parameterFields,
+      default: typeof catalogueDefault === "number" || typeof catalogueDefault === "string" ? catalogueDefault : undefined,
+      catalogue_default: catalogueDefault,
+      options: Array.isArray(catalogueOptions) ? catalogueOptions.filter((option): option is string => typeof option === "string") : undefined,
+      value_candidates: parameter.value_candidates ?? catalogueOptions,
+      suggested_value: undefined,
+      current_value: undefined,
+      source: "unselected",
+      detail: "Value selection has not run.",
+      similarity,
+      lyria_prompt_tags: parameter.lyria_prompt_tags,
+      semantic_keywords: parameter.semantic_keywords,
+      axes: parameter.axes,
+      retrieval_scope: parameter.retrieval_scope,
+    } as ActiveParameter, inputValue, selection),
+    selection_detail: selection.detail,
     similarity,
   };
 }
@@ -142,7 +164,7 @@ function toActive(parameter: EnrichedParameter & { _source: string }, similarity
 export async function searchV3(params: {
   query: string;
   topK: number;
-  currentValues: Record<string, number | string>;
+  currentValues: Record<string, ParameterValue>;
   instructionContext: InstructionContextEntry[];
   sources: RagV3Sources;
   scopes?: Partial<RagV3Scopes>;
@@ -153,7 +175,7 @@ export async function searchV3(params: {
   modelSlotOwner?: string;
   queryEmbedding?: number[];
   externalQueryText?: string;
-  anchorAllCandidates?: boolean;
+  diagnosticContext?: Partial<Record<"run_id" | "stage_id" | "attempt_id" | "window_id", string>>;
 }): Promise<ProposeParametersResponse> {
   const query = params.query.trim();
   const hasExternalEmbedding = Array.isArray(params.queryEmbedding) && params.queryEmbedding.length > 0;
@@ -189,6 +211,7 @@ export async function searchV3(params: {
     : buildEffectiveQuery(query, params.instructionContext);
   const textIndex = params.textIndex === "embeddinggemma2" ? "embeddinggemma2" : "qwen3";
   const selectedModel = await getConfiguredTextIndexModel(textIndex);
+  const selectionBundle = await getValueSelectionBundle(textIndex, selectedModel);
   const textArtifactKind = textIndex === "qwen3" ? "composite" : "embeddinggemma2_text";
   if (!(await isArtifactManifestAvailable(textArtifactKind, selectedModel))) throw new Error(`Selected ${textIndex} index is missing or was built with a different model. Refresh status in Service Bay.`);
   const selectedQueryVector = params.queryEmbedding ?? await embedTextWithModel(baseQuery, selectedModel, params.modelSlotOwner);
@@ -231,8 +254,8 @@ export async function searchV3(params: {
     .map((parameter) => ({ parameter, lexical: hasExternalEmbedding ? 0 : lexicalScore(effectiveQuery, parameter) }))
     .sort((left, right) => right.lexical - left.lexical || left.parameter.technical_name.localeCompare(right.parameter.technical_name))
     .slice(0, hasExternalEmbedding ? records.size : Math.min(records.size, Math.max(256, topK * 4)));
-  const optionMatchesQuery = (option: string | number | null) => {
-    if (option === null) return false;
+  const optionMatchesQuery = (option: ParameterValue) => {
+    if (option === null || typeof option === "object") return false;
     const normalizedOption = String(option).toLowerCase().replaceAll("_", " ").trim();
     if (!normalizedOption) return false;
     const normalizedQuery = effectiveQuery.toLowerCase();
@@ -359,11 +382,8 @@ export async function searchV3(params: {
     layer,
     rankedPool.filter((item) => parameterDomainLayer(candidateMap.get(item.name)!.parameter) === layer).length,
   ]));
-  const anchorBudget = params.anchorAllCandidates ? ranked.length : Math.max(1, Math.ceil(ranked.length * RAG_V3_CONFIG.anchorChangeFraction));
-  const anchorKind = textIndex === "qwen3" ? "anchors" : "gemma2_anchors";
-  const rangeKind = textIndex === "qwen3" ? "range" : "gemma2_range";
-  const anchorReady = await isReady(anchorKind);
-  const anchored = anchorReady ? await runV3AnchoringBridge({
+  const requestId = randomUUID();
+  const anchored = await runV3AnchoringBridge({
     query: effectiveQuery,
     concepts: conceptVectors.map((concept) => concept.text),
     query_embeddings: conceptVectors.map((concept) => concept.vector),
@@ -372,13 +392,19 @@ export async function searchV3(params: {
       ...(candidateMap.get(name)!.parameter as unknown as Record<string, unknown>),
       _retrieval_rank: index + 1,
       _retrieval_similarity: similarity,
-      _anchor_eligible: index < anchorBudget,
     })),
     current_values: params.currentValues,
-    text_index: textIndex,
-      value_anchors_ready: await isReady(rangeKind),
-      select_anchors_ready: await isReady(selectKind),
-  }) : {};
+    bundle: selectionBundle,
+    diagnostic_context: {
+      request_id: requestId,
+      text_index: textIndex,
+      model_id: selectedModel,
+      ...(params.diagnosticContext?.run_id ? { run_id: params.diagnosticContext.run_id } : {}),
+      ...(params.diagnosticContext?.stage_id ? { stage_id: params.diagnosticContext.stage_id } : {}),
+      ...(params.diagnosticContext?.attempt_id ? { attempt_id: params.diagnosticContext.attempt_id } : {}),
+      ...(params.diagnosticContext?.window_id ? { window_id: params.diagnosticContext.window_id } : {}),
+    },
+  });
   const results = ranked.map(({ name, similarity, layer }) => ({
     ...toActive(candidateMap.get(name)!.parameter, similarity, params.currentValues, anchored[name]),
     excluded: excludedNames.has(name),

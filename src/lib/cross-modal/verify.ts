@@ -1,6 +1,6 @@
 import { loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
 import { getActiveProvider } from "@/lib/llm/factory";
-import { readV3ParameterUnion } from "@/lib/meta-crystal-v3-lab";
+import { readV3LiveParameterSnapshot } from "@/lib/meta-crystal-v3-lab";
 import { searchV3 } from "@/lib/rag-v3/search";
 import { getV3SnapshotIdentity } from "@/lib/rag-v3/snapshot";
 import { generateReverseQuery } from "./reverse-query";
@@ -10,13 +10,14 @@ import { getJournalRecord, saveJournalVerification } from "./journal";
 import type { ConsensusParameter, JournalReverseQuery, JournalVerification } from "./types";
 
 function compactReplay(results: Awaited<ReturnType<typeof searchV3>>["results"]): ConsensusParameter[] {
-  const scores = results.map((item) => item.similarity).filter(Number.isFinite); const minimum = scores.length ? Math.min(...scores) : 0; const maximum = scores.length ? Math.max(...scores) : 0;
-  return results.map((item, index) => ({ technical_name: item.technical_name, rank: index + 1, retrieval_score: item.similarity, normalized_score: maximum > minimum ? Number(((item.similarity - minimum) / (maximum - minimum)).toFixed(8)) : 1 - index / Math.max(1, results.length), default_value: typeof item.default === "number" ? item.default : String(item.default), selected_value: item.current_value, ui_element: item.ui_element, min_value: item.min_value, max_value: item.max_value, value_source: item.source, retrieval_scope: item.retrieval_scope }));
+  const selectedResults = results.filter((item) => item.selected_value !== undefined && (typeof item.selected_value === "number" || typeof item.selected_value === "string"));
+  const scores = selectedResults.map((item) => item.similarity).filter(Number.isFinite); const minimum = scores.length ? Math.min(...scores) : 0; const maximum = scores.length ? Math.max(...scores) : 0;
+  return selectedResults.map((item, index) => ({ technical_name: item.technical_name, rank: index + 1, retrieval_score: item.similarity, normalized_score: maximum > minimum ? Number(((item.similarity - minimum) / (maximum - minimum)).toFixed(8)) : 1 - index / Math.max(1, selectedResults.length), default_value: typeof item.default === "number" ? item.default : String(item.default), selected_value: item.selected_value as string | number, ui_element: item.ui_element, min_value: item.min_value, max_value: item.max_value, value_source: item.source, retrieval_scope: item.retrieval_scope }));
 }
 
 export async function verifyJournalCycle(recordId: string, signal?: AbortSignal): Promise<JournalVerification> {
   const record = await getJournalRecord(recordId); if (!record) throw new Error("Journal record was not found");
-  const [{ provider, settings }, { records }, embedding, identity] = await Promise.all([getActiveProvider(), readV3ParameterUnion(), loadEmbeddingRuntimeSettings(), getV3SnapshotIdentity()]);
+  const [{ provider, settings }, { records }, embedding, identity] = await Promise.all([getActiveProvider(), readV3LiveParameterSnapshot(), loadEmbeddingRuntimeSettings(), getV3SnapshotIdentity()]);
   const context = record.snapshot.parameters.slice(0, 12).map((item) => {
     const metadata = records.get(item.technical_name);
     return { rank: item.rank, selected_value: item.selected_value, name_ru: metadata?.name_ru ?? "", acoustic_description_en: metadata?.description_en ?? "", acoustic_description_ru: metadata?.description_ru ?? "" };

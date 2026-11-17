@@ -39,6 +39,7 @@ import hashlib
 import json
 import math
 import os
+import shutil
 import struct
 import sys
 import time
@@ -202,6 +203,52 @@ class OllamaClient:
     @property
     def dim(self) -> int | None:
         return self._dim
+
+
+class CheckpointOllamaClient:
+    """Persist successful input vectors for a pinned candidate; never changes query semantics."""
+    def __init__(self, client: OllamaClient, checkpoint_dir: Path, identity_sha256: str):
+        self.client = client
+        self.checkpoint_dir = checkpoint_dir
+        self.checkpoint_path = checkpoint_dir / "embedding-cache.json"
+        self.identity_sha256 = identity_sha256
+        self.checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        self.vectors: dict[str, list[float]] = {}
+        if self.checkpoint_path.exists():
+            checkpoint = json.loads(self.checkpoint_path.read_text(encoding="utf-8"))
+            if (checkpoint.get("schema_version") != 1 or checkpoint.get("model") != client.model
+                    or checkpoint.get("endpoint") != client.endpoint
+                    or checkpoint.get("identity_sha256") != identity_sha256):
+                raise RuntimeError("Saved Gemma anchors checkpoint does not match the pinned inputs/model/endpoint.")
+            self.vectors = {str(key): [float(value) for value in vector] for key, vector in checkpoint.get("vectors", {}).items()}
+
+    @property
+    def dim(self) -> int | None:
+        return self.client.dim
+
+    def _key(self, text: str) -> str:
+        return hashlib.sha256((self.client.model + "\0" + self.client.endpoint + "\0" + text).encode("utf-8")).hexdigest()
+
+    def _save(self) -> None:
+        temporary = self.checkpoint_path.with_suffix(".tmp")
+        temporary.write_text(json.dumps({"schema_version": 1, "status": "in_progress", "model": self.client.model,
+            "endpoint": self.client.endpoint, "identity_sha256": self.identity_sha256, "vectors": self.vectors}, separators=(",", ":")), encoding="utf-8")
+        os.replace(temporary, self.checkpoint_path)
+
+    def embed_batch(self, texts: list[str]) -> list[list[float]]:
+        keys = [self._key(text) for text in texts]
+        missing_positions = [index for index, key in enumerate(keys) if key not in self.vectors]
+        if missing_positions:
+            fresh = self.client.embed_batch([texts[index] for index in missing_positions])
+            if len(fresh) != len(missing_positions):
+                raise RuntimeError("Gemma anchors checkpoint embed returned an unexpected batch count.")
+            for index, vector in zip(missing_positions, fresh):
+                self.vectors[keys[index]] = [float(value) for value in vector]
+            self._save()
+        return [list(self.vectors[key]) for key in keys]
+
+    def embed(self, text: str) -> list[float]:
+        return self.embed_batch([text])[0]
 
 
 # ---------------------------------------------------------------------------
@@ -708,6 +755,15 @@ def main(argv: list[str] | None = None) -> int:
                     help="Composite index embeddings.f32 aligned with --param-rows.")
     ap.add_argument("--live-snapshot", action="store_true",
                     help="Build per-parameter anchor mappings from the current V3 catalogue snapshot.")
+    ap.add_argument("--parameter-snapshot", type=Path,
+                    help="Use one immutable effective-catalogue JSON snapshot; do not reread live membership")
+    ap.add_argument("--source-revision", help="Revision recorded when --parameter-snapshot was captured")
+    ap.add_argument("--source-snapshot-sha256", help="Current catalogue content fingerprint captured with the snapshot")
+    ap.add_argument("--excluded-sha256", help="Exclusion registry hash captured with the snapshot")
+    ap.add_argument("--excluded-count", type=int, default=0, help="Exclusion count captured with the snapshot")
+    ap.add_argument("--prepare-only", action="store_true", help="Validate pinned model-free anchor inputs and write a planned-output manifest.")
+    ap.add_argument("--checkpoint-dir", type=Path, help="Candidate-local checkpoint cache for completed embedding inputs.")
+    ap.add_argument("--operation-identity-sha256", help="Pinned Gemma artifact identity used to validate resumed embedding work.")
     ap.add_argument("--stub", action="store_true",
                     help="Сгенерировать заглушку (без Ollama): lexical-only режим.")
     ap.add_argument("--timeout", type=float, default=60.0)
@@ -715,8 +771,11 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"[build_anchors] stub={args.stub} model={args.model} endpoint={args.endpoint}")
     registry_root = PROJECT_ROOT / "data" / "combinatorial-genesis"
-    dataset = load_v3_snapshot(registry_root)["parameters"] if args.live_snapshot else load_json(args.dataset)
-    dataset = filter_parameters(dataset, registry_root)
+    pinned = load_v3_snapshot(registry_root, snapshot_path=args.parameter_snapshot, source_revision=args.source_revision,
+        source_snapshot_sha256=args.source_snapshot_sha256, excluded_sha256=args.excluded_sha256,
+        excluded_count=args.excluded_count) if args.parameter_snapshot else load_v3_snapshot(registry_root) if args.live_snapshot else None
+    dataset = pinned["parameters"] if pinned else load_json(args.dataset)
+    dataset = dataset if pinned else filter_parameters(dataset, registry_root)
     axes_doc = load_json(args.axes)
     axes = axes_doc["axes"]
     polarity = load_json(args.polarity)
@@ -725,6 +784,27 @@ def main(argv: list[str] | None = None) -> int:
 
     dataset_sha = sha256_json(dataset)
     axes_sha = sha256_json(axes_doc)
+
+    if args.prepare_only:
+        inputs = {}
+        for label, input_path in (("axes", Path(args.axes)), ("polarity", Path(args.polarity)), ("strong_set", Path(args.strong)), ("neutral_set", Path(args.neutral))):
+            raw = input_path.read_bytes()
+            json.loads(raw.decode("utf-8"))
+            inputs[label] = {"path": str(input_path), "sha256": hashlib.sha256(raw).hexdigest()}
+        plan = {"schema_version": 1, "status": "prepared", "model": args.model,
+            "source_revision": pinned["source_revision"] if pinned else None,
+            "source_snapshot_sha256": pinned["content_sha256"] if pinned else None,
+            "source_parameter_count": len(dataset), "dataset_sha256": dataset_sha,
+            "axes_sha256": axes_sha, "axes_count": len(axes),
+            "strong_samples": len(strong.get("items", [])), "neutral_samples": len(neutral.get("items", [])),
+            "inputs": inputs, "planned_output": str(args.out)}
+        plan_path = Path(args.out).parent / "prepare-manifest.json"
+        plan_path.parent.mkdir(parents=True, exist_ok=True)
+        plan_path.write_text(json.dumps(plan, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        if load_json(plan_path) != plan:
+            raise RuntimeError("Prepared anchors manifest failed read-back verification.")
+        print(json.dumps({"status": "prepared", "model_called": False, "axes": len(axes), "source_snapshot_sha256": plan["source_snapshot_sha256"]}, ensure_ascii=False))
+        return 0
 
     if args.stub:
         payload = build_stub(axes, dataset, dataset_sha, axes_sha)
@@ -737,7 +817,21 @@ def main(argv: list[str] | None = None) -> int:
 
     # Реальный прогон с Ollama
     print(f"[build_anchors] probing Ollama at {args.endpoint} …")
-    client = OllamaClient(args.endpoint, args.model, timeout=args.timeout)
+    provider = OllamaClient(args.endpoint, args.model, timeout=args.timeout)
+    client: Any = provider
+    checkpoint_dir: Path | None = None
+    if args.checkpoint_dir:
+        checkpoint_dir = args.checkpoint_dir
+        checkpoint_identity = args.operation_identity_sha256 or hashlib.sha256(json.dumps({
+            "model": args.model, "endpoint": args.endpoint.rstrip("/"), "dataset_sha": dataset_sha, "axes_sha": axes_sha,
+            "source_revision": pinned["source_revision"] if pinned else None,
+            "source_snapshot_sha256": pinned["content_sha256"] if pinned else None,
+            "axes": hashlib.sha256(Path(args.axes).read_bytes()).hexdigest(),
+            "polarity": hashlib.sha256(Path(args.polarity).read_bytes()).hexdigest(),
+            "strong": hashlib.sha256(Path(args.strong).read_bytes()).hexdigest(),
+            "neutral": hashlib.sha256(Path(args.neutral).read_bytes()).hexdigest(),
+        }, sort_keys=True).encode("utf-8")).hexdigest()
+        client = CheckpointOllamaClient(provider, checkpoint_dir, checkpoint_identity)
     try:
         probe = client.embed("ping")
         print(f"  OK, dim={len(probe)}")
@@ -806,7 +900,7 @@ def main(argv: list[str] | None = None) -> int:
     sample_texts = [p["text"] for ax in axes[:5] for a in ax["anchors"]
                     for p in a["paraphrases"]]
     emit_progress("phase", 7, 7, "determinism")
-    det = check_determinism(client, sample_texts)
+    det = check_determinism(provider, sample_texts)
     print(f"  min cosine repeat: {det.get('min_cosine_repeat')} → deterministic={det.get('deterministic')}")
 
     # убираем internal cache перед записью
@@ -819,10 +913,11 @@ def main(argv: list[str] | None = None) -> int:
         "dim": client.dim,
         "dataset_sha": dataset_sha,
         "axes_sha": axes_sha,
-        "excluded_sha256": registry_sha256(registry_root),
-        "excluded_count": len(read_registry(registry_root)["entries"]),
+        "excluded_sha256": pinned["excluded_sha256"] if pinned else registry_sha256(registry_root),
+        "excluded_count": pinned["excluded_count"] if pinned else len(read_registry(registry_root)["entries"]),
         "source_parameter_count": len(dataset),
-        "source_snapshot_sha256": load_v3_snapshot(PROJECT_ROOT / "data" / "combinatorial-genesis")["content_sha256"],
+        "source_snapshot_sha256": pinned["content_sha256"] if pinned else load_v3_snapshot(PROJECT_ROOT / "data" / "combinatorial-genesis")["content_sha256"],
+        "source_revision": pinned["source_revision"] if pinned else None,
         "vector_fingerprint": hashlib.sha256(json.dumps(
             {"model": args.model, "dimensions": client.dim, "axes": axes_vectors, "a_home": a_home},
             ensure_ascii=False, sort_keys=True, separators=(",", ":"),
@@ -844,6 +939,8 @@ def main(argv: list[str] | None = None) -> int:
     }
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
+    if checkpoint_dir:
+        shutil.rmtree(checkpoint_dir, ignore_errors=True)
     print(f"[build_anchors] REAL anchors written → {args.out}")
     return 0
 

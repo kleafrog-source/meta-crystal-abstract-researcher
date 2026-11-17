@@ -5,7 +5,8 @@ import { NextResponse } from "next/server";
 
 import { getOllamaBaseUrl, getOllamaModel, getOllamaTimeouts, probeOllama } from "@/lib/ollama-client";
 import type { StatusResponse } from "@/lib/rag-v3/types";
-import { getCompositeIndexInfo } from "@/lib/rag-v3/composite-index";
+import { getCompositeIndexInfo, getEncoderArtifactDirectory } from "@/lib/rag-v3/composite-index";
+import { resolveRuntimeAtomIndexDirectory } from "@/lib/combinatorial-genesis/runtime-index-path";
 import { getV3AnchorsJob, getV3IndexJob } from "@/lib/rag-v3/build-jobs";
 
 export const dynamic = "force-dynamic";
@@ -13,10 +14,11 @@ export const dynamic = "force-dynamic";
 const DATA_ROOT = path.join(process.cwd(), "data", "combinatorial-genesis");
 export async function GET() {
   try {
-    const latest = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "datasets", "latest.json"), "utf8")) as { version_id: string };
-    const atomIndexManifest = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "indexes", latest.version_id, "manifest.json"), "utf8")) as { atom_count: number; created_at: string; model: string };
+    const latest = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "datasets", "latest.json"), "utf8")) as { version_id: string; runtime_atom_index_path?: unknown };
+    const atomIndexDir = resolveRuntimeAtomIndexDirectory(DATA_ROOT, latest.version_id, latest.runtime_atom_index_path);
+    const atomIndexManifest = JSON.parse(await fs.readFile(path.join(atomIndexDir, "manifest.json"), "utf8")) as { atom_count: number; created_at: string; model: string };
     const compositeIndex = await getCompositeIndexInfo();
-    const anchors = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "v3", "anchoring", "anchors_build.json"), "utf8")) as { stub?: boolean; generated_at?: string };
+    const anchors = JSON.parse(await fs.readFile(path.join(getEncoderArtifactDirectory("qwen3", "anchors"), "anchors_build.json"), "utf8")) as { stub?: boolean; generated_at?: string };
     const indexJob = getV3IndexJob();
     const anchorsJob = getV3AnchorsJob();
     const ollama = await probeOllama();

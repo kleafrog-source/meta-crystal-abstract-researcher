@@ -30,7 +30,7 @@ function resolveValue(parameter: EnrichedParameter, contributions: ConsensusCont
     return { value: ui === "Toggle" ? Number(ordered[0]?.[0] ?? parameter.default) : ordered[0]?.[0] ?? String(parameter.default), conflict: ordered.length > 1 };
   }
   const values = new Set(contributions.map((item) => JSON.stringify(item.selected_value)));
-  return { value: values.size === 1 && contributions.length > 0 ? contributions[0].selected_value : (Array.isArray(parameter.default) ? JSON.stringify(parameter.default) : parameter.default), conflict: values.size > 1 };
+  return { value: values.size === 1 && contributions.length > 0 ? contributions[0].selected_value : (Array.isArray(parameter.default) ? JSON.stringify(parameter.default) : parameter.default) as string | number, conflict: values.size > 1 };
 }
 
 export function buildConsensus(sources: ConsensusSourceInput[], metadata: Map<string, EnrichedParameter>, topK: number, graph: GraphSuggestion[] = [], graphPenalty = .35): ConsensusResolvedRow[] {
@@ -51,7 +51,7 @@ export function buildConsensus(sources: ConsensusSourceInput[], metadata: Map<st
   }
   for (const [name, score] of [...graphCandidates].sort(([a], [b]) => a.localeCompare(b))) {
     const parameter = metadata.get(name)!;
-    rows.set(name, { technical_name: name, consensus_score: round(score), direct_source_count: 0, graph_only: true, conflict: false, contributions: [], selected_value: Array.isArray(parameter.default) ? JSON.stringify(parameter.default) : parameter.default });
+    rows.set(name, { technical_name: name, consensus_score: round(score), direct_source_count: 0, graph_only: true, conflict: false, contributions: [], selected_value: (Array.isArray(parameter.default) ? JSON.stringify(parameter.default) : parameter.default) as string | number });
   }
   return [...rows.values()].sort((a, b) => b.consensus_score - a.consensus_score || a.technical_name.localeCompare(b.technical_name)).slice(0, Math.max(1, Math.min(100, topK)));
 }

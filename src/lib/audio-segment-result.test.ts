@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { applySegmentSideMeta, getIncompleteSegmentIndexes, prepareSegmentRun, type AudioSegmentResultPoint } from "./audio-segment-result";
+import { applySegmentSideMeta, applySuccessfulSegmentResult, applySuccessfulSegmentResultPreservingManualEdits, getIncompleteSegmentIndexes, prepareSegmentRun, type AudioSegmentResultPoint } from "./audio-segment-result";
 
 const segments: AudioSegmentResultPoint[] = [
   { time: 0, offset: 0, duration: 2, clap: [{ technical_name: "kept" } as never], siglip: [], clapStatus: "complete", siglipStatus: "pending" },
@@ -68,5 +68,58 @@ describe("audio segment resume state", () => {
     expect(fresh[0].clap).toEqual([]);
     expect(fresh[0].siglip).toEqual(withSiglip[0].siglip);
     expect(fresh[0].siglipStatus).toBe("complete");
+  });
+
+  it("applies a pending response to the latest segments and preserves edits made during the request", () => {
+    const workingBeforeRequest = prepareSegmentRun(segments, "clap", true);
+    const latestAfterUserEdit = workingBeforeRequest.map((segment, index) => index === 0
+      ? { ...segment, clap: [{ technical_name: "manual-edit", current_value: 7 } as never] }
+      : segment);
+
+    const afterResponse = applySuccessfulSegmentResult(
+      latestAfterUserEdit,
+      1,
+      "clap",
+      [{ technical_name: "provider-result" } as never],
+    );
+
+    expect(afterResponse[0].clap).toEqual([{ technical_name: "manual-edit", current_value: 7 }]);
+    expect(afterResponse[1].clap).toEqual([{ technical_name: "provider-result" }]);
+    expect(workingBeforeRequest[0].clap).toEqual(segments[0].clap);
+  });
+
+  it("keeps edits and removals made on the segment whose provider request is pending", () => {
+    const requestBase = prepareSegmentRun(segments, "clap", true).map((segment, index) => index === 1
+      ? { ...segment, clap: [
+        { technical_name: "manual-edit", current_value: 1, suggested_value: 1 } as never,
+        { technical_name: "removed-by-user", current_value: 3, suggested_value: 3 } as never,
+      ] }
+      : segment);
+    const requestBaseBank = structuredClone(requestBase[1].clap);
+    const latest = requestBase.map((segment, index) => index === 1
+      ? { ...segment, clap: [
+        { technical_name: "manual-edit", current_value: 7, suggested_value: 7 } as never,
+      ] }
+      : segment);
+    const provider = [
+      { technical_name: "manual-edit", current_value: 2, suggested_value: 2 } as never,
+      { technical_name: "removed-by-user", current_value: 3, suggested_value: 3 } as never,
+      { technical_name: "provider-only", current_value: 4, suggested_value: 4 } as never,
+    ];
+
+    const afterResponse = applySuccessfulSegmentResultPreservingManualEdits(
+      latest,
+      requestBase,
+      1,
+      "clap",
+      provider,
+    );
+
+    expect(afterResponse[1].clap).toEqual([
+      { technical_name: "manual-edit", current_value: 7, suggested_value: 7 },
+      { technical_name: "provider-only", current_value: 4, suggested_value: 4 },
+    ]);
+    expect(requestBase[1].clap).toEqual(requestBaseBank);
+    expect(afterResponse[1].clapStatus).toBe("complete");
   });
 });

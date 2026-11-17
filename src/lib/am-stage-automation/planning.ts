@@ -6,7 +6,8 @@ import { ACTION_CAPABILITY, ACTION_INDEXES, ACTION_SUPPORTED, AUTOMATION_SCENARI
 import { getConfiguredTextIndexModel } from "@/lib/rag-v3/composite-index";
 import { db } from "@/lib/db";
 import type { AutomationExternalInputs, AutomationPlanDocument, AutomationScenarioDefinition, AutomationStageDefinition } from "./contracts";
-import { AUTOMATION_POLICY, parseBriefTemplateVariables, resolveAutomationTopK, resolveBriefTemplate } from "./policies";
+import { AUTOMATION_POLICY, resolveAutomationTemplateSettings, resolveAutomationTopK, resolveBriefTemplate } from "./policies";
+import { validateUserScenarioDefinition } from "./scenario-editor";
 
 const stable = (value: unknown): string => {
   if (Array.isArray(value)) return `[${value.map(stable).join(",")}]`;
@@ -14,7 +15,7 @@ const stable = (value: unknown): string => {
   return `{${Object.entries(value as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => `${JSON.stringify(key)}:${stable(item)}`).join(",")}}`;
 };
 const sha = (value: unknown) => createHash("sha256").update(stable(value)).digest("hex");
-const needsAudio = (id: string) => id.startsWith("audio.") || id.startsWith("spec.") || id === "vocal_allocation.search";
+const needsAudio = (id: string) => id.startsWith("audio.") || id.startsWith("spec.");
 const needsBrief = (id: string) => ["text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved", "audio.gemma.resolved", "stage2.server", "vocal_allocation.search"].includes(id);
 const INDEX_READY = new Set(["ready", "built"]);
 
@@ -60,7 +61,7 @@ export async function buildAutomationPreview(input: {
     }
   }
 
-  const consumesSegmentPlan = (stage: AutomationStageDefinition) => ["audio.clap.resolved", "spec.siglip.resolved", "audio.extract_acoustics", "audio.analyze", "audio.describe_gaps.lfm3"].includes(stage.actionId)
+  const consumesSegmentPlan = (stage: AutomationStageDefinition) => ["audio.clap.resolved", "spec.siglip.resolved", "audio.extract_acoustics", "audio.analyze", "audio.describe_segments.lfm3", "audio.describe_gaps.lfm3"].includes(stage.actionId)
     || (["audio.gemma.awtd", "audio.gemma.resolved", "text_features.build"].includes(stage.actionId) && stage.settings.effective.perSegmentResults === true);
   const usesNodes = allStages.some(consumesSegmentPlan);
   const hasSegmentProducer = allStages.some((stage) => stage.actionId === "audio.segment");
@@ -97,6 +98,9 @@ export async function buildAutomationPreview(input: {
   }
 
   const blockers: PlanPreview["blockers"] = [];
+  if (base.preparationPolicies.searchMode === "single" && snapshot?.searchMode === "transition") {
+    blockers.push({ code: "SCENARIO_SEARCH_MODE_UNSUPPORTED", message: "This scenario requires single-query bank artifacts; switch the search mode to Single before previewing it." });
+  }
   const warnings: string[] = [];
   const briefAssemblyStage = allStages.find((stage) => stage.actionId === "brief.combine_segment_texts");
   if (briefAssemblyStage) {
@@ -154,16 +158,33 @@ export async function buildAutomationPreview(input: {
         blockers.push({ code: "BRIEF_REQUIRED", message: readinessReason, stageId: stage.stageId, action: stage.actionId });
       }
     }
-    if (stage.actionId === "brief.from_template" && !String(snapshot?.templateBrief ?? "").trim()) {
+    const stageTemplate = String(stage.settings.effective.templateBrief ?? "").trim();
+    const workspaceTemplate = String(snapshot?.templateBrief ?? "").trim();
+    const templateBrief = stage.settings.origin === "manual"
+      ? stageTemplate || workspaceTemplate
+      : workspaceTemplate || stageTemplate;
+    if (stage.actionId === "brief.from_template" && !templateBrief) {
       readiness = "blocked"; readinessReason = "Enter a template Brief before starting this route.";
       blockers.push({ code: "TEMPLATE_BRIEF_REQUIRED", message: readinessReason, stageId: stage.stageId, action: stage.actionId });
     }
-    if (stage.actionId === "brief.from_template" && String(snapshot?.templateBrief ?? "").trim()) {
+    if (stage.actionId === "brief.from_template" && templateBrief) {
       try {
-        const variables = parseBriefTemplateVariables(String(snapshot?.templateVariablesText ?? ""));
-        const unresolved = resolveBriefTemplate(String(snapshot?.templateBrief), variables).unresolved;
+        const templateSettings = resolveAutomationTemplateSettings({
+          origin: stage.settings.origin,
+          stageTemplate,
+          stageVariables: stage.settings.effective.templateVariables,
+          workspaceTemplate,
+          workspaceVariables: snapshot?.templateVariables,
+          workspaceVariablesText: snapshot?.templateVariablesText,
+        });
+        const unresolved = resolveBriefTemplate(templateBrief, templateSettings.variables).unresolved;
         if (unresolved.length) { readiness = "blocked"; readinessReason = "Template substitutions missing values: " + unresolved.join(", ") + "."; blockers.push({ code: "TEMPLATE_VARIABLES_REQUIRED", message: readinessReason, stageId: stage.stageId, action: stage.actionId }); }
       } catch (error) { readiness = "blocked"; readinessReason = error instanceof Error ? error.message : String(error); blockers.push({ code: "TEMPLATE_VARIABLES_INVALID", message: readinessReason, stageId: stage.stageId, action: stage.actionId }); }
+    }
+    if (stage.actionId === "brief.from_crystal" && (!inputs.crystalId || !selectedBrief)) {
+      readiness = "blocked";
+      readinessReason = "Select a saved crystal and confirm its Brief text before previewing this route.";
+      blockers.push({ code: "CRYSTAL_BRIEF_REQUIRED", message: readinessReason, stageId: stage.stageId, action: stage.actionId });
     }
     if (["text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved", "stage2.server"].includes(stage.actionId) && snapshot?.searchMode === "transition" && !String(snapshot.queryB ?? "").trim()) {
       readiness = "blocked"; readinessReason = "Transition mode requires both Query A and Query B.";
@@ -205,8 +226,19 @@ export async function buildAutomationPreview(input: {
     const row = route.find((item) => item.stageId === stageId);
     if (row && row.readiness !== "unavailable") { row.readiness = "blocked"; row.readinessReason = message; }
   };
+  const mergeValidation = validateUserScenarioDefinition({ ...base, stages: allStages });
+  for (const stage of allStages.filter((item) => ["data.merge", "data.intersection", "data.difference", "text.limit", "text.assemble", "data.split", "data.select"].includes(item.actionId))) {
+    for (const issue of mergeValidation.filter((message) => message.startsWith(`Stage ${stage.stageId} `))) {
+      const code = stage.actionId === "data.merge" ? "MERGE_INPUT_INVALID"
+        : ["data.intersection", "data.difference"].includes(stage.actionId) ? "DATA_OPERATION_INPUT_INVALID"
+          : stage.actionId === "data.split" ? "DATA_SPLIT_INPUT_INVALID"
+            : stage.actionId === "data.select" ? "DATA_SELECT_INPUT_INVALID" : "TEXT_OPERATION_INPUT_INVALID";
+      addStageBlocker(stage.stageId, code, issue);
+    }
+  }
   const stagePosition = new Map(allStages.map((stage, index) => [stage.stageId, index]));
   for (const [index, stage] of allStages.entries()) {
+    if (stage.actionId === "llm.advisor" && settings.provider !== "ollama") addStageBlocker(stage.stageId, "LLM_ADVISOR_LOCAL_OLLAMA_REQUIRED", "This advisor uses only the configured local Ollama provider; select Ollama in Settings. No cloud fallback is available.");
     if (stage.requiredForGoal && stage.failurePolicy === "continue") addStageBlocker(stage.stageId, "REQUIRED_STAGE_CANNOT_CONTINUE", "A required stage cannot use the continue-on-failure policy. Mark it optional or fail the run.");
     for (const binding of stage.inputBindings) {
       if (binding.from.startsWith("stage:")) {
@@ -217,14 +249,25 @@ export async function buildAutomationPreview(input: {
         else if (binding.port !== "order" && !allStages[sourceIndex].outputDefinitions.some((output) => output.port === (binding.port ?? "result"))) addStageBlocker(stage.stageId, "DEPENDENCY_PORT_MISSING", `Input '${binding.name}' refers to an output port the source stage does not produce.`);
         else if (binding.port !== "order") {
           const sourceAction = allStages[sourceIndex].actionId;
-          const compatible = binding.name === "segmentPlan" ? sourceAction === "audio.segment"
+          const compatible = ["a", "b"].includes(binding.name) && ["data.intersection", "data.difference"].includes(stage.actionId) ? ["text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved", "audio.clap.resolved", "spec.siglip.resolved", "audio.gemma.awtd", "audio.gemma.resolved", "stage2.client", "stage2.server"].includes(sourceAction)
+            : binding.name === "sources" && stage.actionId === "data.merge" ? allStages[sourceIndex].outputDefinitions.some((output) => output.port === (binding.port ?? "result") && ["parameter-bank", "record-set", "brief", "text"].includes(output.kind))
+            : binding.name === "steps" && stage.actionId === "llm.advisor" ? ["text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved", "audio.clap.resolved", "spec.siglip.resolved", "audio.gemma.awtd", "audio.gemma.resolved", "stage2.client", "stage2.server", "text_features.build", "text_features.describe_llm", "text_features.reverse_query", "brief.from_template", "brief.from_crystal", "audio.describe.lfm3", "audio.transcribe.lfm3", "brief.combine_segment_texts", "text.assemble", "data.merge", "data.intersection", "data.difference", "data.filter", "data.count", "data.select", "flow.join", "flowmusic.export", "result.bundle"].includes(sourceAction)
+            : binding.name === "question" && stage.actionId === "llm.advisor" ? ["brief.from_template", "brief.from_crystal", "text.limit", "text.assemble", "audio.describe.lfm3", "audio.transcribe.lfm3", "text_features.describe_llm", "text_features.reverse_query", "brief.combine_segment_texts"].includes(sourceAction)
+            : binding.name === "segmentPlan" ? sourceAction === "audio.segment"
             : binding.name === "anchors" && stage.actionId === "audio.describe_gaps.lfm3" ? sourceAction === "text_features.describe_llm"
-            : binding.name === "brief" ? ["brief.from_crystal", "brief.from_template", "audio.describe.lfm3", "audio.transcribe.lfm3", "text_features.reverse_query", "brief.combine_segment_texts"].includes(sourceAction)
+            : binding.name === "text" && stage.actionId === "text.limit" ? ["brief.from_crystal", "brief.from_template", "text.limit", "text.assemble", "llm.advisor"].includes(sourceAction)
+              : binding.name === "parts" && stage.actionId === "text.assemble" ? ["brief.from_crystal", "brief.from_template", "text.limit", "text.assemble"].includes(sourceAction)
+            : binding.name === "source" && stage.actionId === "result.bundle" ? allStages[sourceIndex].outputDefinitions.some((output) => output.port === (binding.port ?? "result") && output.kind === "parameter-bank")
+            : binding.name === "description" && stage.actionId === "result.bundle" ? allStages[sourceIndex].outputDefinitions.some((output) => output.port === (binding.port ?? "result") && ["description", "gap-descriptions", "transcription"].includes(output.kind))
+            : binding.name === "brief" ? ["brief.from_crystal", "brief.from_template", "audio.describe.lfm3", "audio.transcribe.lfm3", "text_features.reverse_query", "brief.combine_segment_texts", "text.assemble"].includes(sourceAction)
+              || sourceAction === "data.merge" && allStages[sourceIndex].outputDefinitions.some((output) => output.port === (binding.port ?? "result") && ["brief", "text"].includes(output.kind))
             : binding.name === "snapshot" ? sourceAction === "text_features.build"
               : binding.name.startsWith("source") && stage.actionId === "brief.combine_segment_texts" ? ["text_features.reverse_query", "text_features.describe_llm", "text_features.build", "audio.describe_gaps.lfm3"].includes(sourceAction)
               : binding.name === "identityBank" ? sourceAction === (stage.actionId === "text.gemma.resolved" ? "text.gemma.awtd" : "audio.gemma.awtd")
+                : binding.name === "clapBank" ? stage.actionId === "audio.gemma.resolved" && sourceAction === "audio.clap.resolved"
+                : binding.name === "qwenAnchors" ? ["text.gemma.resolved", "audio.gemma.resolved"].includes(stage.actionId) && sourceAction === "text.qwen.resolved"
                 : binding.name === "identityBankB" ? stage.actionId === "text.gemma.resolved" && sourceAction === "text.gemma.awtd"
-                : binding.name === "stage1" ? ["text.qwen.resolved", "text.gemma.resolved"].includes(sourceAction)
+                : binding.name === "stage1" ? ["text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved"].includes(sourceAction)
                   : binding.name.startsWith("source") && stage.actionId === "stage2.client" ? ["text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved", "audio.clap.resolved", "spec.siglip.resolved"].includes(sourceAction)
                     : binding.name.startsWith("parameterBank") && stage.actionId === "text_features.build" ? ["text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved", "audio.clap.resolved", "spec.siglip.resolved", "audio.gemma.awtd", "audio.gemma.resolved", "stage2.client", "stage2.server"].includes(sourceAction)
                       : true;
@@ -247,8 +290,25 @@ export async function buildAutomationPreview(input: {
     if (stage.actionId === "stage2.client" && !dataSources.some((source) => ["text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved", "audio.clap.resolved", "spec.siglip.resolved"].includes(source.actionId) && stage.inputBindings.some((binding) => binding.port !== "order" && binding.from === `stage:${source.stageId}` && binding.name.startsWith("source")))) {
       addStageBlocker(stage.stageId, "CLIENT_STAGE2_INPUT_REQUIRED", "Select at least one earlier text, CLAP, or SigLIP parameter bank for client Stage-2.");
     }
-    if (stage.actionId === "stage2.server" && !dataSources.some((source) => ["text.qwen.resolved", "text.gemma.resolved"].includes(source.actionId) && stage.inputBindings.some((binding) => binding.port !== "order" && binding.from === `stage:${source.stageId}` && binding.name === "stage1"))) {
-      addStageBlocker(stage.stageId, "SERVER_STAGE2_SEED_REQUIRED", "Select an earlier Qwen or resolved Gemma text bank as the Stage-1 seed.");
+    if (stage.actionId === "stage2.server" && !dataSources.some((source) => ["text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved"].includes(source.actionId) && stage.inputBindings.some((binding) => binding.port !== "order" && binding.from === `stage:${source.stageId}` && binding.name === "stage1"))) {
+      addStageBlocker(stage.stageId, "SERVER_STAGE2_SEED_REQUIRED", "Select an earlier Qwen or Gemma text parameter bank as a Stage-1 seed.");
+    }
+    if (stage.actionId === "flowmusic.export") {
+      const clapWeight = stage.settings.effective.clapWeight ?? stage.settings.requested.clapWeight;
+      if (clapWeight !== undefined && (typeof clapWeight !== "number" || !Number.isFinite(clapWeight) || clapWeight < 0 || clapWeight > 1)) {
+        addStageBlocker(stage.stageId, "FLOWMUSIC_CLAP_WEIGHT_INVALID", "CLAP weight must be a finite number between 0 and 1.");
+      }
+      for (const key of ["blend", "vocalMatrix"] as const) {
+        const value = stage.settings.effective[key] ?? stage.settings.requested[key];
+        if (value !== undefined && typeof value !== "boolean") addStageBlocker(stage.stageId, "FLOWMUSIC_BOOLEAN_SETTING_INVALID", `${key} must be true or false.`);
+      }
+      const bankBindings = stage.inputBindings.filter((binding) => binding.port !== "order" && binding.name === "banks");
+      const bankActions = bankBindings.map((binding) => allStages.find((source) => binding.from === `stage:${source.stageId}`)?.actionId);
+      const planBindings = stage.inputBindings.filter((binding) => binding.port !== "order" && binding.name === "segmentPlan");
+      const hasValidPlan = planBindings.length === 1 && allStages.some((source) => source.actionId === "audio.segment" && planBindings[0]?.from === `stage:${source.stageId}`);
+      if (!hasValidPlan || bankActions.length !== 2 || bankActions[0] !== "audio.clap.resolved" || bankActions[1] !== "spec.siglip.resolved") {
+        addStageBlocker(stage.stageId, "FLOWMUSIC_BINDINGS_INVALID", "Bind one audio.segment plan, then exactly two per-window banks in order: CLAP first and SigLIP second.");
+      }
     }
     if (stage.actionId === "text_features.build" && !(snapshot?.parameters?.length) && !dataSources.some((source) => ["text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved", "audio.clap.resolved", "spec.siglip.resolved", "audio.gemma.awtd", "audio.gemma.resolved", "stage2.client", "stage2.server"].includes(source.actionId) && stage.inputBindings.some((binding) => binding.port !== "order" && binding.from === `stage:${source.stageId}` && binding.name.startsWith("parameterBank")))) {
       addStageBlocker(stage.stageId, "TEXT_FEATURE_SOURCE_REQUIRED", "Select completed parameter-bank artifacts or select source artifacts from run history before building text features.");
@@ -265,7 +325,7 @@ export async function buildAutomationPreview(input: {
       addStageBlocker(stage.stageId, "GEMMA_TRANSITION_SECOND_IDENTITY_REQUIRED", "Gemma Transition Resolved requires the Query B AWTD artifact as a separate data input.");
     }
     if (needsBrief(stage.actionId) && !selectedBrief) {
-    const hasDerivedBrief = dataSources.some((source) => ["brief.from_crystal", "brief.from_template", "audio.describe.lfm3", "audio.transcribe.lfm3", "text_features.reverse_query", "brief.combine_segment_texts"].includes(source.actionId));
+    const hasDerivedBrief = dataSources.some((source) => ["brief.from_crystal", "brief.from_template", "audio.describe.lfm3", "audio.transcribe.lfm3", "text_features.reverse_query", "brief.combine_segment_texts", "text.assemble"].includes(source.actionId));
       if (!hasDerivedBrief) addStageBlocker(stage.stageId, "BRIEF_DATA_BINDING_REQUIRED", "This search has no explicit Brief input or earlier stage that produces a Brief.");
     }
   }

@@ -15,7 +15,7 @@ from typing import Any
 
 import numpy as np
 
-from parameter_registry import excluded_names, read_registry, registry_sha256
+from v3_snapshot import ensure_snapshot_revision_current, load_v3_snapshot
 from vector_cache import content_key, read_vector, sha256_file, write_vector
 from published_parameter_schema import clean_published_parameter, parameter_text
 
@@ -36,25 +36,12 @@ def _read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _load_v3_parameters() -> list[dict[str, Any]]:
-    latest = _read_json(DATA_ROOT / "datasets" / "latest.json")
-    frozen = _read_json(DATA_ROOT / "datasets" / latest["version_id"] / "parameters.json")
-    library_path = DATA_ROOT / "library" / "parameters.json"
-    library = _read_json(library_path) if library_path.exists() else []
-    records: dict[str, dict[str, Any]] = {}
-    for source, rows in (("library", library), ("frozen", frozen)):
-        for row in rows:
-            name = str(row.get("technical_name", "")).strip()
-            if name and name not in records:
-                records[name] = clean_published_parameter(row)
-    excluded = excluded_names(DATA_ROOT)
-    tombstones_path = DATA_ROOT / "library" / "catalogue-deleted.json"
-    if tombstones_path.exists():
-        payload = _read_json(tombstones_path)
-        deleted = set(payload if isinstance(payload, list) else payload.get("technical_names", []))
-    else:
-        deleted = set()
-    return [parameter for name, parameter in records.items() if name not in excluded and name not in deleted]
+def _load_v3_parameters(snapshot: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    try:
+        effective = snapshot or load_v3_snapshot(DATA_ROOT)
+    except FileNotFoundError as error:
+        raise RuntimeError("The live catalogue is unavailable; archived dataset rows are not used as a fallback.") from error
+    return [clean_published_parameter(row) for row in effective["parameters"]]
 
 
 def _canonical_hash(parameter: dict[str, Any]) -> str:
@@ -144,7 +131,7 @@ def _write_status(payload: dict[str, Any]) -> None:
     temporary = STATUS_PATH.with_name(STATUS_PATH.name + ".tmp")
     temporary.write_text(json.dumps({key: payload.get(key) for key in (
         "ready", "model", "device", "created_at", "parameter_count", "dimensions",
-        "excluded_count", "source_parameter_count", "source_fingerprint", "cache_version",
+        "excluded_count", "source_parameter_count", "source_fingerprint", "source_revision", "source_snapshot_sha256", "cache_version",
     )}, ensure_ascii=False), encoding="utf-8")
     _replace_index(temporary, STATUS_PATH)
 
@@ -159,7 +146,7 @@ def _write_search_cache(payload: dict[str, Any], fingerprint: str) -> None:
     matrix.tofile(vectors_tmp)
     _replace_index(rows_tmp, rows_path)
     _replace_index(vectors_tmp, vectors_path)
-    _write_status({"ready": True, "model": payload["model"], "device": payload["device"], "created_at": payload["created_at"], "parameter_count": len(rows), "dimensions": matrix.shape[1] if matrix.ndim == 2 else 0, "excluded_count": payload.get("excluded_count", 0), "source_parameter_count": payload.get("source_parameter_count", 0), "source_fingerprint": fingerprint, "cache_version": SEARCH_CACHE_VERSION})
+    _write_status({"ready": True, "model": payload["model"], "device": payload["device"], "created_at": payload["created_at"], "parameter_count": len(rows), "dimensions": matrix.shape[1] if matrix.ndim == 2 else 0, "excluded_count": payload.get("excluded_count", 0), "source_parameter_count": payload.get("source_parameter_count", 0), "source_fingerprint": fingerprint, "source_revision": payload.get("source_revision"), "source_snapshot_sha256": payload.get("source_snapshot_sha256"), "cache_version": SEARCH_CACHE_VERSION})
 
 
 def _search_cache_exists(fingerprint: str) -> bool:
@@ -191,8 +178,30 @@ def _search_cache(fingerprint: str):
         return None
 
 
-def build_index(progress=None) -> dict[str, Any]:
-    parameters = _load_v3_parameters()
+def build_index(
+    progress=None,
+    *,
+    snapshot_path: Path | None = None,
+    prepared_input_path: Path | None = None,
+    source_revision: str | None = None,
+    source_snapshot_sha256: str | None = None,
+    excluded_sha256: str | None = None,
+    excluded_count: int = 0,
+) -> dict[str, Any]:
+    snapshot = load_v3_snapshot(
+        DATA_ROOT, snapshot_path=snapshot_path, source_revision=source_revision,
+        source_snapshot_sha256=source_snapshot_sha256, excluded_sha256=excluded_sha256,
+        excluded_count=excluded_count,
+    ) if snapshot_path else load_v3_snapshot(DATA_ROOT)
+    if prepared_input_path:
+        prepared = _read_json(prepared_input_path)
+        if (prepared.get("source_revision") != snapshot["source_revision"]
+                or prepared.get("source_snapshot_sha256") != snapshot["content_sha256"]
+                or not isinstance(prepared.get("rows"), list)):
+            raise ValueError("Prepared CLAP input does not match the selected source snapshot.")
+        parameters = prepared["rows"]
+    else:
+        parameters = _load_v3_parameters(snapshot)
     fingerprint = _source_fingerprint(parameters)
     if INDEX_PATH.exists() and _search_cache_exists(fingerprint):
         status = _read_json(STATUS_PATH)
@@ -241,12 +250,15 @@ def build_index(progress=None) -> dict[str, Any]:
         "created_at": datetime.now(timezone.utc).isoformat(),
         "parameter_count": len(items),
         "dimensions": len(items[0]["vector"]) if items else 0,
-        "excluded_sha256": registry_sha256(DATA_ROOT),
-        "excluded_count": len(read_registry(DATA_ROOT)["entries"]),
+        "excluded_sha256": snapshot["excluded_sha256"],
+        "excluded_count": snapshot["excluded_count"],
         "source_parameter_count": len(parameters),
+        "source_revision": snapshot["source_revision"],
+        "source_snapshot_sha256": snapshot["content_sha256"],
         "items": items,
     }
     INDEX_DIR.mkdir(parents=True, exist_ok=True)
+    ensure_snapshot_revision_current(snapshot, load_v3_snapshot(DATA_ROOT))
     temp_path = INDEX_PATH.with_suffix(".tmp")
     temp_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
     _replace_index(temp_path, INDEX_PATH)
@@ -258,7 +270,14 @@ def index_status() -> dict[str, Any]:
     if not INDEX_PATH.exists():
         return {"ready": False, "model": MODEL_NAME, "parameter_count": 0}
     if STATUS_PATH.exists():
-        return _read_json(STATUS_PATH)
+        status = _read_json(STATUS_PATH)
+        try:
+            current = load_v3_snapshot(DATA_ROOT)
+            if status.get("source_revision") != current["source_revision"]:
+                return {**status, "ready": False, "status": "stale", "error": "effective catalogue revision changed"}
+        except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as error:
+            return {**status, "ready": False, "status": "unavailable", "error": str(error)}
+        return status
     payload = _read_json(INDEX_PATH)
     status = {"ready": True, "model": payload.get("model"), "device": payload.get("device"), "parameter_count": payload.get("parameter_count", 0), "dimensions": payload.get("dimensions", 0), "created_at": payload.get("created_at"), "excluded_count": payload.get("excluded_count", 0), "source_parameter_count": payload.get("source_parameter_count", 0)}
     _write_status(status)

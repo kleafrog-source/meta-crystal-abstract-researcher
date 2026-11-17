@@ -1,0 +1,1693 @@
+{
+  "artifact_id": "am-stage-workspace-coherence",
+  "version": "0.5.0-phi6",
+  "language": "ru",
+  "phase": "Φ1_map–Φ6_stabilize",
+  "module_graph": {
+    "surface_modules": [
+      {
+        "id": "audio_work_axis",
+        "function": "Загружает аудионоситель и задаёт исходную временную ось рабочей сессии.",
+        "layer": "L0",
+        "axis_relation": "on_axis",
+        "stack_rank": 0,
+        "binding": {
+          "value": "File bytes, file name, decoded duration",
+          "convention": "Browser File; duration and timestamps use seconds relative to original file",
+          "context": "session"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "operator_selected_audio_file"
+        ],
+        "outputs": [
+          "audio_file",
+          "audio_duration_seconds",
+          "audio_reference_name"
+        ],
+        "alias_ui": "Audio upload / media player"
+      },
+      {
+        "id": "window_navigation",
+        "function": "Создаёт и навигирует рабочие временные окна и связывает текущую позицию воспроизведения с сегментами.",
+        "layer": "L0",
+        "axis_relation": "on_axis",
+        "stack_rank": 0,
+        "binding": {
+          "value": "Analysis range, segment offsets/durations, node interval, currentTime",
+          "convention": "Seconds relative to original audio; uniform, beat-aligned, or onset-aligned windows",
+          "context": "session"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "audio_duration_seconds",
+          "waveform_region",
+          "window_mode",
+          "segment_interval",
+          "node_interval"
+        ],
+        "outputs": [
+          "analysis_range",
+          "segments",
+          "timeline_nodes",
+          "current_time",
+          "active_segment_index"
+        ],
+        "alias_ui": "Analysis controls · time gate · window placement · waveform · node seek"
+      },
+      {
+        "id": "semantic_v3_retrieval",
+        "function": "Извлекает параметры по Brief или Transition-запросу с активными source, scope и layer-фильтрами.",
+        "layer": "L1",
+        "axis_relation": "adjacent",
+        "stack_rank": 1,
+        "binding": {
+          "value": "Query text, retrieval settings, parameter IDs and similarity scores",
+          "convention": "Explicit semantic search; query settings belong to the V3 session and results are the retrieved parameter frame",
+          "context": "session"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "brief_query",
+          "transition_query",
+          "v3_sources",
+          "v3_scopes",
+          "selected_domain_layers"
+        ],
+        "outputs": [
+          "v3_parameter_frame",
+          "v3_search_results",
+          "v3_secondary_results"
+        ],
+        "alias_ui": "Semantic Search · Brief / Transition"
+      },
+      {
+        "id": "gemma_multimodal_search",
+        "function": "Ищет ближайшие параметры Gemma по аудиоклипу или изображению спектрограммы.",
+        "layer": "L1",
+        "axis_relation": "on_axis",
+        "stack_rank": 1,
+        "binding": {
+          "value": "Audio/frame payload, selected layers, retrieved parameter IDs and similarity scores",
+          "convention": "Explicit query to Gemma text-parameter space; returned catalogue values may remain defaults",
+          "context": "unit"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "audio_file",
+          "active_segment_window",
+          "active_siglip_spectrogram_frame",
+          "selected_domain_layers"
+        ],
+        "outputs": [
+          "gemma_parameter_results",
+          "gemma_search_status"
+        ],
+        "alias_ui": "Gemma multimodal parameter search"
+      },
+      {
+        "id": "clap_segment_extraction",
+        "function": "Извлекает CLAP-параметры отдельно для каждого сегментного аудиокна.",
+        "layer": "L1",
+        "axis_relation": "on_axis",
+        "stack_rank": 1,
+        "binding": {
+          "value": "Segment audio, parameter IDs, similarity scores, per-segment status",
+          "convention": "Explicit start or continue run; selected segment offset and duration are measured in original-file seconds",
+          "context": "unit"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "audio_file",
+          "segments",
+          "clap_top_k"
+        ],
+        "outputs": [
+          "segment_clap_results",
+          "clap_status"
+        ],
+        "alias_ui": "CLAP · с начала / Continue CLAP"
+      },
+      {
+        "id": "siglip_spectrogram_extraction",
+        "function": "Получает SigLIP2-параметры по спектрограмме сегмента и сохраняет статус и превью кадра.",
+        "layer": "L1",
+        "axis_relation": "on_axis",
+        "stack_rank": 1,
+        "binding": {
+          "value": "Segment spectrogram frame, parameter IDs, similarity scores, per-segment status",
+          "convention": "Explicit start or continue run; SigLIP index must be ready",
+          "context": "unit"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "audio_file",
+          "segments",
+          "siglip_top_k",
+          "siglip_index_status"
+        ],
+        "outputs": [
+          "segment_siglip_results",
+          "siglip_preview",
+          "siglip_status"
+        ],
+        "alias_ui": "SigLIP2 · с начала / Continue SigLIP2"
+      },
+      {
+        "id": "acoustic_feature_extraction",
+        "function": "Извлекает акустические и ритмические признаки для выбранного сегмента по явному запросу.",
+        "layer": "L1",
+        "axis_relation": "on_axis",
+        "stack_rank": 1,
+        "binding": {
+          "value": "Segment acoustic feature record including approximate tempo, beat and onset times",
+          "convention": "On-demand extraction; event times are relative to the segment and the input window is bounded",
+          "context": "unit"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "audio_file",
+          "active_segment_window",
+          "optional_helm_vocal_gate"
+        ],
+        "outputs": [
+          "segment_acoustic_features",
+          "tempo_bpm_approx",
+          "beat_times_seconds",
+          "onset_times_seconds"
+        ],
+        "alias_ui": "Extract acoustic features"
+      },
+      {
+        "id": "voice_gender_language_metadata",
+        "function": "Запускает on-demand voice-presentation и Indic-language side-metadata для выбранного сегмента.",
+        "layer": "L1",
+        "axis_relation": "on_axis",
+        "stack_rank": 1,
+        "binding": {
+          "value": "Segment gender/language labels and confidence fields",
+          "convention": "Explicit specialist call; output is attached to the originating segment",
+          "context": "unit"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "audio_file",
+          "active_segment_window",
+          "specialist_id"
+        ],
+        "outputs": [
+          "segment_gender_metadata",
+          "segment_language_metadata"
+        ],
+        "alias_ui": "Detect voice presentation / Detect Indic language"
+      },
+      {
+        "id": "helm_gate_metadata",
+        "function": "Предоставляет UI-вызов Helm gates для сегмента, зависящий от доступности совместимого runtime.",
+        "layer": "L1",
+        "axis_relation": "on_axis",
+        "stack_rank": 1,
+        "binding": {
+          "value": "Segment gate labels, probabilities, or explicit runtime error",
+          "convention": "On-demand only; supported audio window is bounded; stock Ollama tensor mismatch blocks the verified local runtime",
+          "context": "unit"
+        },
+        "honesty": "blocked",
+        "inputs": [
+          "audio_file",
+          "active_segment_window",
+          "helm_runtime"
+        ],
+        "outputs": [
+          "segment_helm_gates",
+          "helm_error_status"
+        ],
+        "alias_ui": "Run Helm gates"
+      },
+      {
+        "id": "lfm3_audio_description",
+        "function": "Получает текстовое описание или ASR для выбранного аудиофрагмента по явному запуску.",
+        "layer": "L1",
+        "axis_relation": "on_axis",
+        "stack_rank": 1,
+        "binding": {
+          "value": "Segment text, model/runtime/quantization, mode and original-file time range",
+          "convention": "Explicit bounded run; llama.cpp GGUF is preferred, verified local Ollama fallback is available",
+          "context": "unit"
+        },
+        "honesty": "partial",
+        "inputs": [
+          "audio_file",
+          "active_segment_window",
+          "lfm3_runtime",
+          "lfm3_prompt_mode"
+        ],
+        "outputs": [
+          "lfm3_description",
+          "lfm3_run_provenance"
+        ],
+        "alias_ui": "LFM3 · Audio to text"
+      },
+      {
+        "id": "test_fixture_preset",
+        "function": "Загружает демонстрационный fixture и создаёт равномерные тестовые сегменты без запуска моделей.",
+        "layer": "L0",
+        "axis_relation": "adjacent",
+        "stack_rank": 0,
+        "binding": {
+          "value": "Bundled SPEZ.mp3 fixture and generated 5-second windows",
+          "convention": "Demo fixture only; model calls are not started",
+          "context": "session"
+        },
+        "honesty": "demo",
+        "inputs": [
+          "test_fixture_SPEZ_mp3"
+        ],
+        "outputs": [
+          "audio_file",
+          "segments",
+          "test_preset_brief"
+        ],
+        "alias_ui": "Проверочный preset"
+      },
+      {
+        "id": "client_stage2_smoothing",
+        "function": "Сглаживает уже полученные текстовые, CLAP и SigLIP кадры на клиенте без повторного поиска.",
+        "layer": "L2",
+        "axis_relation": "on_axis",
+        "stack_rank": 2,
+        "binding": {
+          "value": "Existing modality frames, centroid/top-k/trust settings and resulting consensus frame",
+          "convention": "Client applyConsensusSmooth over existing frames only; no retrieval request",
+          "context": "session"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "v3_parameter_frame",
+          "segment_clap_results",
+          "segment_siglip_results",
+          "selected_domain_layers",
+          "modality_trust_config"
+        ],
+        "outputs": [
+          "client_stage2_consensus_frame"
+        ],
+        "alias_ui": "Client smooth · Stage-2"
+      },
+      {
+        "id": "server_stage2_retrieval",
+        "function": "Выполняет отдельный явный серверный Stage-2 retrieval по seed-параметрам и текущему запросу.",
+        "layer": "L2",
+        "axis_relation": "adjacent",
+        "stack_rank": 2,
+        "binding": {
+          "value": "Stage-1 seed IDs, query/session filters and server Stage-2 hit IDs/metadata",
+          "convention": "Explicit POST to stage2-retrieval; independent retrieval distinguished from client smoothing",
+          "context": "session"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "stage1_seed_parameters",
+          "brief_query",
+          "v3_sources",
+          "v3_scopes",
+          "selected_domain_layers",
+          "server_stage2_top_k"
+        ],
+        "outputs": [
+          "server_stage2_results",
+          "server_stage2_run_metadata"
+        ],
+        "alias_ui": "Server Stage-2 retrieval"
+      },
+      {
+        "id": "cross_modal_interpolation",
+        "function": "Интерполирует совпадающие параметры из выбранной пары или набора модальностей без нового model run.",
+        "layer": "L2",
+        "axis_relation": "on_axis",
+        "stack_rank": 2,
+        "binding": {
+          "value": "Source pair, blend percentage, curve, technical-name keyed parameter values",
+          "convention": "Client preview; numeric values interpolate and discrete values choose a nearest source; layer mask applies",
+          "context": "session"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "v3_parameter_frame",
+          "segment_clap_results",
+          "segment_siglip_results",
+          "blend_pair",
+          "blend_percent",
+          "blend_curve",
+          "selected_domain_layers"
+        ],
+        "outputs": [
+          "interpolated_parameter_frame"
+        ],
+        "alias_ui": "Cross-Modal Interpolation Bridge"
+      },
+      {
+        "id": "text_feature_ranking",
+        "function": "Строит текстовый снимок признаков из уже извлечённых сегментных параметров и опционально ранжирует его относительно Brief.",
+        "layer": "L2",
+        "axis_relation": "on_axis",
+        "stack_rank": 2,
+        "binding": {
+          "value": "Snapshot tags/parameters and rank response with scores",
+          "convention": "Local snapshot from existing segment results; ranking is an explicit API request",
+          "context": "session"
+        },
+        "honesty": "partial",
+        "inputs": [
+          "segment_clap_results",
+          "segment_siglip_results",
+          "selected_domain_layers",
+          "brief_query",
+          "text_feature_options"
+        ],
+        "outputs": [
+          "track_parameter_text_snapshot",
+          "ranked_text_features"
+        ],
+        "alias_ui": "Текстовые признаки трека · Ранжировать embeddings"
+      },
+      {
+        "id": "domain_layer_mask",
+        "function": "Задаёт слой-фильтр для извлечения, согласования и отображаемых временных дорожек.",
+        "layer": "L4",
+        "axis_relation": "adjacent",
+        "stack_rank": null,
+        "binding": {
+          "value": "Selected acoustic domain layer IDs",
+          "convention": "Empty or all-selected means no restriction; selection is stored in the AM-Stage session",
+          "context": "session"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "acoustic_domain_layers",
+          "operator_layer_selection"
+        ],
+        "outputs": [
+          "selected_domain_layers"
+        ],
+        "alias_ui": "Domain layer visibility filters / All 9 / Clear"
+      },
+      {
+        "id": "parameter_banks",
+        "function": "Показывает, позволяет редактировать и удалять параметры, полученные из текстовой, CLAP и SigLIP модальностей.",
+        "layer": "L3",
+        "axis_relation": "adjacent",
+        "stack_rank": 3,
+        "binding": {
+          "value": "Modality-specific parameter IDs and current values",
+          "convention": "Values are edited or removed in the current session; domain-layer mask filters visible results",
+          "context": "session"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "v3_parameter_frame",
+          "segment_clap_results",
+          "segment_siglip_results",
+          "selected_domain_layers"
+        ],
+        "outputs": [
+          "editable_text_bank",
+          "editable_clap_bank",
+          "editable_siglip_bank"
+        ],
+        "alias_ui": "TEXT · Semantic V3 / CLAP Parameters / SigLIP2 Spectrogram Parameters"
+      },
+      {
+        "id": "macro_output_projection",
+        "function": "Проецирует выбранный набор параметров в краткий текст, JSON или Markdown с копированием и экспортом.",
+        "layer": "L3",
+        "axis_relation": "adjacent",
+        "stack_rank": 3,
+        "binding": {
+          "value": "Selected parameter list and generated output text",
+          "convention": "Explicit generation; output formats are Short Text, Extended JSON, and Markdown",
+          "context": "session"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "v3_parameter_frame",
+          "segment_clap_results",
+          "segment_siglip_results",
+          "optional_server_stage2_results"
+        ],
+        "outputs": [
+          "macro_text",
+          "macro_json",
+          "macro_markdown",
+          "downloaded_or_copied_output"
+        ],
+        "alias_ui": "Macro output / Generate / Short Text / Extended JSON / Markdown"
+      },
+      {
+        "id": "segment_text_timeline_projection",
+        "function": "Проецирует текстовые признаки для активного сегмента и списка сегментов с экспортом JSON или Markdown.",
+        "layer": "L3",
+        "axis_relation": "on_axis",
+        "stack_rank": 3,
+        "binding": {
+          "value": "Segment index, relative time/window bounds, generated text and tags",
+          "convention": "Text follows currentTime-selected segment; export timestamps are relative to original file",
+          "context": "unit"
+        },
+        "honesty": "partial",
+        "inputs": [
+          "segments",
+          "segment_clap_results",
+          "segment_siglip_results",
+          "selected_domain_layers",
+          "text_feature_options",
+          "current_time"
+        ],
+        "outputs": [
+          "active_segment_text_features",
+          "segment_text_features",
+          "segment_text_json",
+          "segment_text_markdown"
+        ],
+        "alias_ui": "Текстовые признаки по сегментам"
+      },
+      {
+        "id": "reverse_query_projection",
+        "function": "Отправляет текст признаков в Brief как reverse-query seed для последующего явного semantic search.",
+        "layer": "L3",
+        "axis_relation": "adjacent",
+        "stack_rank": 3,
+        "binding": {
+          "value": "Reverse-query text and seeded Brief query",
+          "convention": "Seeding changes query state only; semantic retrieval remains an explicit separate action",
+          "context": "session"
+        },
+        "honesty": "partial",
+        "inputs": [
+          "ranked_text_features",
+          "segment_text_features",
+          "lfm3_description"
+        ],
+        "outputs": [
+          "brief_query"
+        ],
+        "alias_ui": "Seed Reverse Query / reverse-query zone"
+      },
+      {
+        "id": "priority_timeline_export",
+        "function": "Сериализует сегментные результаты и выбранные параметры в Priority Timeline JSON.",
+        "layer": "L3",
+        "axis_relation": "on_axis",
+        "stack_rank": 3,
+        "binding": {
+          "value": "Audio identity/duration, node windows, selected modality results and export options",
+          "convention": "Explicit download; node event times retain the audio timeline reference",
+          "context": "session"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "audio_reference_name",
+          "audio_duration_seconds",
+          "segments",
+          "timeline_nodes",
+          "selected_domain_layers",
+          "optional_server_stage2_results"
+        ],
+        "outputs": [
+          "priority_timeline_json_file",
+          "legacy_timeline_file"
+        ],
+        "alias_ui": "Экспорт Priority Timeline / Экспорт legacy timeline"
+      },
+      {
+        "id": "journal_draft_projection",
+        "function": "Отправляет выбранные параметры вместе с описанием или модальным evidence в черновик Cross-Modal Journal.",
+        "layer": "L3",
+        "axis_relation": "adjacent",
+        "stack_rank": 3,
+        "binding": {
+          "value": "Parameter IDs, modality, model/runtime metadata, query and optional audio asset",
+          "convention": "Explicit draft creation; source run details accompany the journal payload",
+          "context": "unit"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "selected_parameter_frame",
+          "lfm3_description_or_modality_evidence",
+          "source_run_metadata"
+        ],
+        "outputs": [
+          "cross_modal_journal_draft"
+        ],
+        "alias_ui": "Save to Journal"
+      },
+      {
+        "id": "status_observability",
+        "function": "Показывает доступность SigLIP index, состояние активных прогонов и число завершённых сегментов.",
+        "layer": "L4",
+        "axis_relation": "adjacent",
+        "stack_rank": null,
+        "binding": {
+          "value": "Index readiness/job status and per-engine processing/completion/error counters",
+          "convention": "Status is polled on activation or while an index job is running; run progress is held in session UI state",
+          "context": "session"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "morpho_index_status",
+          "clap_status",
+          "siglip_status",
+          "active_run_state"
+        ],
+        "outputs": [
+          "index_readiness_badge",
+          "run_progress",
+          "completed_segment_counts",
+          "error_notice"
+        ],
+        "alias_ui": "SigLIP index status / segment progress"
+      },
+      {
+        "id": "session_snapshot_io",
+        "function": "Сохраняет, перечисляет, открывает и восстанавливает полный снимок состояния AM-Stage.",
+        "layer": "L4",
+        "axis_relation": "remote",
+        "stack_rank": null,
+        "binding": {
+          "value": "Named session snapshot including query, results, timeline, layer selection, settings and side metadata",
+          "convention": "Explicit session API save/open; audio bytes are not restored and the source file may need reselection",
+          "context": "session"
+        },
+        "honesty": "shipped",
+        "inputs": [
+          "captured_am_stage_session_data",
+          "session_id"
+        ],
+        "outputs": [
+          "saved_session_snapshot",
+          "restored_am_stage_session_state"
+        ],
+        "alias_ui": "Сессии AM-Stage · Create / Open / Save"
+      }
+    ],
+    "module_edges": [
+      {
+        "from": "audio_work_axis",
+        "to": "window_navigation",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "test_fixture_preset",
+        "to": "audio_work_axis",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "test_fixture_preset",
+        "to": "window_navigation",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "window_navigation",
+        "to": "clap_segment_extraction",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "window_navigation",
+        "to": "siglip_spectrogram_extraction",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "window_navigation",
+        "to": "gemma_multimodal_search",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "window_navigation",
+        "to": "acoustic_feature_extraction",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "window_navigation",
+        "to": "voice_gender_language_metadata",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "window_navigation",
+        "to": "helm_gate_metadata",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "window_navigation",
+        "to": "lfm3_audio_description",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "audio_work_axis",
+        "to": "semantic_v3_retrieval",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "audio_work_axis",
+        "to": "gemma_multimodal_search",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "audio_work_axis",
+        "to": "clap_segment_extraction",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "audio_work_axis",
+        "to": "siglip_spectrogram_extraction",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "semantic_v3_retrieval",
+        "to": "client_stage2_smoothing",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "clap_segment_extraction",
+        "to": "client_stage2_smoothing",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "siglip_spectrogram_extraction",
+        "to": "client_stage2_smoothing",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "semantic_v3_retrieval",
+        "to": "server_stage2_retrieval",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "semantic_v3_retrieval",
+        "to": "cross_modal_interpolation",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "clap_segment_extraction",
+        "to": "cross_modal_interpolation",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "siglip_spectrogram_extraction",
+        "to": "cross_modal_interpolation",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "clap_segment_extraction",
+        "to": "text_feature_ranking",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "siglip_spectrogram_extraction",
+        "to": "text_feature_ranking",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "domain_layer_mask",
+        "to": "semantic_v3_retrieval",
+        "kind": "controls",
+        "proven": true
+      },
+      {
+        "from": "domain_layer_mask",
+        "to": "gemma_multimodal_search",
+        "kind": "controls",
+        "proven": true
+      },
+      {
+        "from": "domain_layer_mask",
+        "to": "client_stage2_smoothing",
+        "kind": "controls",
+        "proven": true
+      },
+      {
+        "from": "domain_layer_mask",
+        "to": "server_stage2_retrieval",
+        "kind": "controls",
+        "proven": true
+      },
+      {
+        "from": "domain_layer_mask",
+        "to": "cross_modal_interpolation",
+        "kind": "controls",
+        "proven": true
+      },
+      {
+        "from": "domain_layer_mask",
+        "to": "parameter_banks",
+        "kind": "controls",
+        "proven": true
+      },
+      {
+        "from": "domain_layer_mask",
+        "to": "segment_text_timeline_projection",
+        "kind": "controls",
+        "proven": true
+      },
+      {
+        "from": "client_stage2_smoothing",
+        "to": "parameter_banks",
+        "kind": "projects",
+        "proven": true
+      },
+      {
+        "from": "server_stage2_retrieval",
+        "to": "parameter_banks",
+        "kind": "projects",
+        "proven": true
+      },
+      {
+        "from": "cross_modal_interpolation",
+        "to": "parameter_banks",
+        "kind": "projects",
+        "proven": true
+      },
+      {
+        "from": "semantic_v3_retrieval",
+        "to": "parameter_banks",
+        "kind": "projects",
+        "proven": true
+      },
+      {
+        "from": "parameter_banks",
+        "to": "macro_output_projection",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "parameter_banks",
+        "to": "priority_timeline_export",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "parameter_banks",
+        "to": "journal_draft_projection",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "server_stage2_retrieval",
+        "to": "macro_output_projection",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "clap_segment_extraction",
+        "to": "segment_text_timeline_projection",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "siglip_spectrogram_extraction",
+        "to": "segment_text_timeline_projection",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "window_navigation",
+        "to": "segment_text_timeline_projection",
+        "kind": "controls",
+        "proven": true
+      },
+      {
+        "from": "text_feature_ranking",
+        "to": "reverse_query_projection",
+        "kind": "projects",
+        "proven": true
+      },
+      {
+        "from": "segment_text_timeline_projection",
+        "to": "reverse_query_projection",
+        "kind": "projects",
+        "proven": true
+      },
+      {
+        "from": "lfm3_audio_description",
+        "to": "reverse_query_projection",
+        "kind": "projects",
+        "proven": true
+      },
+      {
+        "from": "reverse_query_projection",
+        "to": "semantic_v3_retrieval",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "window_navigation",
+        "to": "priority_timeline_export",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "server_stage2_retrieval",
+        "to": "priority_timeline_export",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "lfm3_audio_description",
+        "to": "journal_draft_projection",
+        "kind": "feeds",
+        "proven": true
+      },
+      {
+        "from": "window_navigation",
+        "to": "session_snapshot_io",
+        "kind": "observes",
+        "proven": true
+      },
+      {
+        "from": "parameter_banks",
+        "to": "session_snapshot_io",
+        "kind": "observes",
+        "proven": true
+      },
+      {
+        "from": "domain_layer_mask",
+        "to": "session_snapshot_io",
+        "kind": "observes",
+        "proven": true
+      },
+      {
+        "from": "status_observability",
+        "to": "clap_segment_extraction",
+        "kind": "observes",
+        "proven": true
+      },
+      {
+        "from": "status_observability",
+        "to": "siglip_spectrogram_extraction",
+        "kind": "observes",
+        "proven": true
+      },
+      {
+        "from": "status_observability",
+        "to": "audio_work_axis",
+        "kind": "observes",
+        "proven": true
+      }
+    ]
+  },
+  "spatial_embedding": {
+    "target_viewport": {
+      "profile": "desktop_wide_2k",
+      "width_px": 2560,
+      "height_px": 1440,
+      "minimum_css_viewport_width_px": 1800
+    },
+    "layout": "Four-column desktop_wide_2k pipeline with a sticky stage rail; audio and node-seek share the work-axis column; layer controls and timeline align at their natural content height; the existing responsive layout remains below 1800 CSS px.",
+    "primary_workspace": [
+      "audio_work_axis",
+      "window_navigation",
+      "semantic_v3_retrieval",
+      "gemma_multimodal_search",
+      "clap_segment_extraction",
+      "siglip_spectrogram_extraction",
+      "domain_layer_mask",
+      "client_stage2_smoothing",
+      "server_stage2_retrieval",
+      "cross_modal_interpolation",
+      "parameter_banks",
+      "macro_output_projection",
+      "segment_text_timeline_projection",
+      "priority_timeline_export"
+    ],
+    "secondary": [
+      "voice_gender_language_metadata",
+      "helm_gate_metadata",
+      "lfm3_audio_description",
+      "status_observability",
+      "session_snapshot_io"
+    ],
+    "deferred": [
+      "full viewport proof with a loaded audio fixture and completed modality results"
+    ],
+    "column_mapping": [
+      {
+        "area": "axis",
+        "modules": [
+          "audio_work_axis",
+          "window_navigation"
+        ],
+        "ui_zones": [
+          "media",
+          "node-seek"
+        ]
+      },
+      {
+        "area": "extract",
+        "modules": [
+          "semantic_v3_retrieval",
+          "gemma_multimodal_search",
+          "clap_segment_extraction",
+          "siglip_spectrogram_extraction"
+        ],
+        "ui_zones": [
+          "top-row/semantic-search",
+          "gemma-audio-query",
+          "analysis-controls"
+        ]
+      },
+      {
+        "area": "reconcile",
+        "modules": [
+          "domain_layer_mask",
+          "client_stage2_smoothing",
+          "server_stage2_retrieval",
+          "cross_modal_interpolation"
+        ],
+        "ui_zones": [
+          "timeline",
+          "stage-2-postprocess",
+          "stage-2-server-retrieval",
+          "cross-modal-interpolation"
+        ]
+      },
+      {
+        "area": "project",
+        "modules": [
+          "parameter_banks",
+          "macro_output_projection",
+          "text_feature_ranking",
+          "segment_text_timeline_projection",
+          "reverse_query_projection",
+          "priority_timeline_export",
+          "journal_draft_projection"
+        ],
+        "ui_zones": [
+          "modality-banks",
+          "macro-exports",
+          "param-to-text",
+          "param-to-text-segments"
+        ]
+      }
+    ],
+    "rationale": "The first action is source and segment navigation in one column. Retrieval stays adjacent; layer filtering and timeline share Reconcile without an internally clipped filter list; macro, parameter and text projections remain grouped in Project. Specialist calls are secondary and explicit."
+  },
+  "embody_delta": {
+    "files": [
+      "src/components/pages/AMStagePage.tsx",
+      "src/app/globals.css",
+      "src/lib/ui-copy.ts"
+    ],
+    "changes": [
+      "Added an in-page rail with anchors for the four numbered pipeline steps.",
+      "Added stable L0-L3 layer attributes and headings to the corresponding workspace surfaces.",
+      "Grouped the parameter banks with the project/output column.",
+      "Added a wide-screen four-column grid at a minimum 1800 CSS-pixel viewport; below that threshold the existing responsive layout remains in effect.",
+      "Added English and Russian labels for the new rail and stage headings.",
+      "Grouped waveform/spectrogram and segment node-seek in one work-axis column so time navigation stays adjacent to its media source.",
+      "Removed the wide-screen inner scroll cap from Layer Matrix and stopped the empty timeline panel from stretching to the matrix height.",
+      "Kept the four-step pipeline rail sticky within the workspace scroll area.",
+      "Raised wide-screen minimum text sizing in Layer Matrix and Cross-Modal Interpolation controls.",
+      "Moved the Server Stage-2 explanation into its contextual help tip.",
+      "Muted the macro generate action when it is disabled, so a zero-parameter state no longer looks actionable."
+    ],
+    "not_changed": [
+      "retrieval APIs",
+      "analysis execution semantics",
+      "session schema",
+      "model loading policy"
+    ]
+  },
+  "viewport_evidence": {
+    "target": "desktop_wide_2k · Edge screenshot observed at 2560×1440",
+    "implemented_breakpoint": "min-width: 1800px CSS viewport",
+    "views_observed": [
+      "expanded sidebar · empty session",
+      "expanded sidebar · SPEZ.mp3 test fixture with 7 windows and no modality runs",
+      "collapsed sidebar · same fixture"
+    ],
+    "live_capture": "observed_after_repairs",
+    "observations": [
+      "Waveform and node-seek now form one adjacent work-axis group.",
+      "The layer matrix is readable without a nested scroll cap; client and server Stage-2 controls remain visible.",
+      "The empty timeline no longer stretches beside the full layer matrix.",
+      "Disabled generate buttons use a neutral disabled treatment.",
+      "All four pipeline stages remain in a left-to-right rail."
+    ],
+    "limitations": [
+      "Fixture exposed seven windows but no CLAP/SigLIP results; populated parameter-bank density and result timelines were not visually validated.",
+      "One semantic-search status showed dataset 0 while the global SigLIP index badge was ready; cause not established.",
+      "The screenshot review does not establish responsive behavior below the desktop_wide_2k target."
+    ],
+    "operator_state_after_review": "Restored original empty AM-Stage session and expanded sidebar; fixture was not saved."
+  },
+  "pipeline_ui_map": {
+    "display_order": [
+      "audio_work_axis",
+      "semantic_v3_retrieval + segment extractors",
+      "client_stage2_smoothing / explicit server_stage2_retrieval / cross_modal_interpolation",
+      "parameter_banks → text and macro projection → exports and journal"
+    ],
+    "stage_labels": [
+      "01 Work axis · L0",
+      "02 Extract · L1",
+      "03 Reconcile · L2",
+      "04 Project · L3"
+    ],
+    "provenance_rules": [
+      "Client Stage-2 consumes existing frames and does not issue another retrieval.",
+      "Server Stage-2 is an explicit second search and is independently labelled.",
+      "Macro and file exports remain downstream of the parameter/result banks.",
+      "Model-backed extraction remains explicit and on-demand."
+    ],
+    "navigation": "The stage rail anchors to the live media, extract, reconcile, and project sections; each section keeps its stable data-am-stage-zone identifier."
+  },
+  "validation": [
+    {
+      "id": "phase-json-structure",
+      "scope": "docs/am-stage-workspace-coherence-v1.json",
+      "method": "Python JSON parse plus graph enum/reference/binding and capability coverage checks",
+      "status": "passed",
+      "findings": "24 valid modules, 18/18 L1–L3 capabilities, valid edge references, complete bindings, non-coercive fill contract, Φ6 boundary."
+    },
+    {
+      "id": "typescript-compile",
+      "scope": "touched AM-Stage TypeScript files",
+      "method": "npx tsc --noEmit",
+      "status": "passed",
+      "findings": "npx tsc --noEmit exited 0."
+    },
+    {
+      "id": "diff-check",
+      "scope": "working tree",
+      "method": "git diff --check",
+      "status": "passed",
+      "findings": "git diff --check exited 0."
+    },
+    {
+      "id": "desktop-wide-runtime-view",
+      "scope": "AM-Stage rendered in Edge",
+      "method": "Visual capture at desktop_wide_2k with expanded and collapsed sidebar; empty state and seven-window SPEZ.mp3 fixture; no model actions",
+      "status": "passed_with_residuals"
+    }
+  ],
+  "defect_list": [
+    {
+      "id": "gap_fill_model",
+      "epistemic": "observed_gap",
+      "invariant": "I3_fill_state",
+      "finding": "Состояния источников и прогонов видимы разрозненными бейджами и счётчиками; общего fill_model с axes, aggregation и non_coercive контрактом в AM-Stage surface state не обнаружено.",
+      "evidence": [
+        "src/components/pages/AMStagePage.tsx: status state, per-engine completion counts, index readiness",
+        "src/components/am-stage/SegmentSideMetadataPanel.tsx: per-segment results",
+        "docs/am-stage-workspace-coherence-v1.json: fill_model (Φ5)"
+      ],
+      "phase_status": "resolved_in_Φ5_non_coercive_fill_model"
+    },
+    {
+      "id": "deferred_desktop_wide_visual_check",
+      "epistemic": "deferred_probe",
+      "invariant": "I5_primary_workspace_economy",
+      "finding": "Desktop-wide Edge view was captured before and after visual repairs, with both sidebar states and a loaded seven-window fixture; populated modality results remain unverified.",
+      "evidence": [
+        "docs/am-stage-workspace-coherence-v1.json: spatial_embedding and viewport_evidence",
+        "src/app/globals.css: @media(min-width:1800px)"
+      ],
+      "phase_status": "visual_gate_passed_with_populated_result_residual"
+    },
+    {
+      "id": "deferred_binding_e2e_audit",
+      "epistemic": "deferred_probe",
+      "invariant": "I4_binding_identity",
+      "finding": "Карта фиксирует наблюдаемые значения и конвенции UI↔state/backend по исходникам; единый сквозной runtime-аудит всех параметров и модальных маршрутов этой фазой не выполнялся.",
+      "evidence": [
+        "src/components/pages/AMStagePage.tsx",
+        "src/components/am-stage/GemmaMultimodalParameterSearch.tsx",
+        "src/components/am-stage/SegmentSideMetadataPanel.tsx"
+      ],
+      "phase_status": "closed_as_capability_matrix_plus_explicit_e2e_gaps"
+    },
+    {
+      "id": "blocked_helm_runtime",
+      "epistemic": "observed_gap",
+      "invariant": "I6_capability_honesty",
+      "finding": "UI и route для Helm присутствуют, но ранее подтверждённый stock Ollama runtime не загружает веса из-за несовпадения числа tensor; совместимый Saina runtime отложен. Функция честно помечена blocked.",
+      "evidence": [
+        "src/components/am-stage/SegmentSideMetadataPanel.tsx: Run Helm gates action",
+        "operator-verified Stage 6 note in conversation: expected 326 tensors, got 320"
+      ],
+      "phase_status": "retained_blocked_runtime"
+    },
+    {
+      "id": "partial_lfm3_runtime_path",
+      "epistemic": "observed_gap",
+      "invariant": "I6_capability_honesty",
+      "finding": "LFM3 description is explicitly invoked and has a verified Ollama fallback; preferred llama.cpp binary path was previously unavailable locally, поэтому capability отмечена partial.",
+      "evidence": [
+        "src/components/am-stage/SegmentSideMetadataPanel.tsx: explicit runtime selector and request",
+        "operator-verified Stage 10 note in conversation: llama.cpp binaries absent; Ollama fallback verified"
+      ],
+      "phase_status": "retained_partial_with_verified_fallback"
+    }
+  ],
+  "evidence_refs": [
+    "src/components/pages/AMStagePage.tsx",
+    "src/components/am-stage/GemmaMultimodalParameterSearch.tsx",
+    "src/components/am-stage/ParamToTextWorkbench.tsx",
+    "src/components/am-stage/SegmentSideMetadataPanel.tsx",
+    "src/lib/am-stage-blend.ts",
+    "src/lib/am-stage-session.ts",
+    "src/lib/priority-timeline.ts",
+    "src/lib/segment-side-meta.ts",
+    "src/app/api/rag-v3/stage2-retrieval/route.ts",
+    "src/app/api/am-stage/sessions/route.ts",
+    "tasks/new/am-stage-workspace-coherence.json"
+  ],
+  "phase_boundary": {
+    "completed": [
+      "Φ1_map",
+      "Φ2_topology",
+      "Φ3_embody",
+      "Φ4_pipeline_legibility",
+      "Φ5_honesty_fill",
+      "Φ6_stabilize"
+    ],
+    "implemented_pending_visual_validation": [],
+    "not_started": [],
+    "implementation_changes": true,
+    "residual_gate": "All remaining gaps are explicit in closeout.residuals; no claim of populated-result E2E or full EN copy coverage."
+  },
+  "capability_matrix": {
+    "coverage": "all L1–L3 surface modules in module_graph",
+    "entries": [
+      {
+        "module_id": "semantic_v3_retrieval",
+        "layer": "L1",
+        "status": "shipped",
+        "evidence": [
+          "src/components/pages/AMStagePage.tsx"
+        ],
+        "verification": "operator acceptance from prior Stage 4/5 work; current browser exposed search controls but no retrieval was run in this UX pass"
+      },
+      {
+        "module_id": "gemma_multimodal_search",
+        "layer": "L1",
+        "status": "shipped",
+        "evidence": [
+          "src/components/am-stage/GemmaMultimodalParameterSearch.tsx"
+        ],
+        "verification": "operator-verified audio and spectrogram-frame to Gemma text-parameter search in Stage 5"
+      },
+      {
+        "module_id": "clap_segment_extraction",
+        "layer": "L1",
+        "status": "shipped",
+        "evidence": [
+          "src/components/pages/AMStagePage.tsx"
+        ],
+        "verification": "Stage 7/8 accepted segment extraction path; no model run in this UX pass"
+      },
+      {
+        "module_id": "siglip_spectrogram_extraction",
+        "layer": "L1",
+        "status": "shipped",
+        "evidence": [
+          "src/components/pages/AMStagePage.tsx"
+        ],
+        "verification": "operator-accepted SigLIP2 spectrogram-frame path; index ready badge visible in Edge"
+      },
+      {
+        "module_id": "acoustic_feature_extraction",
+        "layer": "L1",
+        "status": "shipped",
+        "evidence": [
+          "src/components/am-stage/SegmentSideMetadataPanel.tsx"
+        ],
+        "verification": "Stage 7 accepted on-demand librosa features; no extraction run in this UX pass"
+      },
+      {
+        "module_id": "voice_gender_language_metadata",
+        "layer": "L1",
+        "status": "shipped",
+        "evidence": [
+          "src/components/am-stage/SegmentSideMetadataPanel.tsx"
+        ],
+        "verification": "Stage 6 accepted gender and Vakgyati path; buttons are manual and were not invoked"
+      },
+      {
+        "module_id": "helm_gate_metadata",
+        "layer": "L1",
+        "status": "blocked",
+        "evidence": [
+          "src/components/am-stage/SegmentSideMetadataPanel.tsx"
+        ],
+        "verification": "operator-verified stock Ollama tensor mismatch (expected 326, got 320); Saina runtime deferred"
+      },
+      {
+        "module_id": "lfm3_audio_description",
+        "layer": "L1",
+        "status": "partial",
+        "evidence": [
+          "src/components/am-stage/SegmentSideMetadataPanel.tsx"
+        ],
+        "verification": "explicit UI/runtime choices visible; source reports verified Ollama fallback; no request run in this pass"
+      },
+      {
+        "module_id": "client_stage2_smoothing",
+        "layer": "L2",
+        "status": "shipped",
+        "evidence": [
+          "src/components/pages/AMStagePage.tsx"
+        ],
+        "verification": "Stage 9 accepted client smoothing over existing frames only; checkbox and distinct label visible"
+      },
+      {
+        "module_id": "server_stage2_retrieval",
+        "layer": "L2",
+        "status": "shipped",
+        "evidence": [
+          "src/components/pages/AMStagePage.tsx"
+        ],
+        "verification": "Stage 9 accepted explicit second retrieval; UI and separate second-search badge visible"
+      },
+      {
+        "module_id": "cross_modal_interpolation",
+        "layer": "L2",
+        "status": "shipped",
+        "evidence": [
+          "src/lib/am-stage-blend.ts"
+        ],
+        "verification": "implementation and controls present; fixture had no overlapping results, so no output value was available to inspect"
+      },
+      {
+        "module_id": "text_feature_ranking",
+        "layer": "L2",
+        "status": "partial",
+        "evidence": [
+          "src/components/am-stage/ParamToTextWorkbench.tsx"
+        ],
+        "verification": "controls and source implementation present; ranking comparison needs populated parameter evidence and was not run"
+      },
+      {
+        "module_id": "parameter_banks",
+        "layer": "L3",
+        "status": "shipped",
+        "evidence": [
+          "src/components/pages/AMStagePage.tsx"
+        ],
+        "verification": "three source banks and view-mode controls visible in Edge; fixture returned zero active parameters"
+      },
+      {
+        "module_id": "macro_output_projection",
+        "layer": "L3",
+        "status": "shipped",
+        "evidence": [
+          "src/components/rag-v3/MacroGenerator.tsx"
+        ],
+        "verification": "format/generate/export surface visible; generate correctly disabled at zero parameters; populated output not E2E-probed"
+      },
+      {
+        "module_id": "segment_text_timeline_projection",
+        "layer": "L3",
+        "status": "partial",
+        "evidence": [
+          "src/components/am-stage/ParamToTextWorkbench.tsx"
+        ],
+        "verification": "fixture rendered per-segment time and pending-source state; no extracted parameters to validate changing text"
+      },
+      {
+        "module_id": "reverse_query_projection",
+        "layer": "L3",
+        "status": "partial",
+        "evidence": [
+          "src/components/am-stage/ParamToTextWorkbench.tsx"
+        ],
+        "verification": "implementation and stable reverse-query zone present; not invoked in this visual pass"
+      },
+      {
+        "module_id": "priority_timeline_export",
+        "layer": "L3",
+        "status": "shipped",
+        "evidence": [
+          "src/components/pages/AMStagePage.tsx"
+        ],
+        "verification": "Stage 8/9 timeline path accepted; export controls were correctly unavailable with no modality results"
+      },
+      {
+        "module_id": "journal_draft_projection",
+        "layer": "L3",
+        "status": "shipped",
+        "evidence": [
+          "src/components/pages/AMStagePage.tsx"
+        ],
+        "verification": "draft actions present for CLAP/SigLIP results; disabled when the fixture contains no results"
+      }
+    ],
+    "rule": "A visible control is not sufficient proof of an end-to-end capability. Shipped means implementation and prior accepted/operator evidence or current direct UI evidence exist; runtime probes not run in Φ6 are stated per entry. Helm remains blocked; LFM3 and unexercised data-dependent projections retain partial status."
+  },
+  "fill_model": {
+    "axes": [
+      {
+        "id": "carrier",
+        "value": "audio file and duration",
+        "states": [
+          "empty",
+          "loaded",
+          "missing_on_restore"
+        ],
+        "evidence": "audio.name, audio_duration_seconds, audio.missing_on_restore"
+      },
+      {
+        "id": "windowing",
+        "value": "analysis range, segment and node count, active segment",
+        "states": [
+          "no_windows",
+          "windows_defined",
+          "active_window"
+        ],
+        "evidence": "analysis_settings and timeline.segments"
+      },
+      {
+        "id": "extraction",
+        "value": "independent status per semantic/Gemma/CLAP/SigLIP/specialist source and per segment",
+        "states": [
+          "idle",
+          "running",
+          "partial",
+          "complete",
+          "error",
+          "blocked"
+        ],
+        "evidence": "per-source status and result counts; no modality is inferred from another"
+      },
+      {
+        "id": "reconcile",
+        "value": "selected layers, existing client consensus and explicit server Stage-2 run",
+        "states": [
+          "not_applied",
+          "configured",
+          "applied",
+          "error"
+        ],
+        "evidence": "layers.selected and separate client/server result state"
+      },
+      {
+        "id": "projection",
+        "value": "parameter frames, text draft, macro and export availability",
+        "states": [
+          "no_data",
+          "preview_available",
+          "generated",
+          "exported"
+        ],
+        "evidence": "derived from current result snapshots and enabled state"
+      }
+    ],
+    "aggregation": "Keep the state as an axis vector; do not compute a completion percentage or a single required-complete state.",
+    "non_coercive": true,
+    "side_effects": false,
+    "l1_launch_on_read": false,
+    "ui_projection": "Existing per-source counts, index readiness, segment statuses, parameter counts and disabled/export states expose local evidence. The model does not add an overall progress meter; none of these values starts extraction.",
+    "current_fixture_observation": {
+      "carrier": "loaded",
+      "windowing": "7 windows",
+      "extraction": "CLAP 0/7; SigLIP2 0/7; pending",
+      "reconcile": "configured; no Stage-2 run",
+      "projection": "no active parameters; output/export actions disabled"
+    }
+  },
+  "ux_review": {
+    "mode_used": "M1 laws-first-filter + deep multi-pass review; invariant corrections applied after the first law pass; a second Edge review followed repairs.",
+    "evidence": [
+      "Edge at desktop_wide_2k: expanded and collapsed sidebar screenshots",
+      "Accessible tree for AM-Stage before and after loading the bundled test fixture",
+      "Static source review of AMStagePage, ParamToTextWorkbench, MacroGenerator, session schema and layout CSS"
+    ],
+    "invariant_violations": [
+      {
+        "invariant": "P_CONTEXT_PRESERVE / P_UNIDIRECTIONAL_FLOW",
+        "observation": "Segment node-seek controls were placed below a row whose height was set by long extraction and reconciliation panels, visually separating navigation from its audio source.",
+        "status": "repaired",
+        "change": "Placed media and node-seek in the same axis column."
+      },
+      {
+        "invariant": "P_DENSITY_BAND / P_PROGRESSIVE_DETAIL",
+        "observation": "Layer Matrix was capped to an internal scroll region while its neighboring empty timeline stretched to the same height; server Stage-2 details became clipped and matrix text was very small.",
+        "status": "repaired",
+        "change": "Removed nested scroll cap, aligned timeline at natural height, set a readable desktop text floor and moved the long Stage-2 explanation to a contextual tooltip."
+      },
+      {
+        "invariant": "P_ATTENTION_BUDGET / feedback intensity mapping",
+        "observation": "Generate from 0 parameters used the primary green action style while disabled.",
+        "status": "repaired",
+        "change": "Disabled macro generation now uses a neutral disabled treatment."
+      },
+      {
+        "invariant": "P_DISTINCT_STATE_LANES / P_SAFE_OPEN",
+        "observation": "Model and analysis operations are grouped in collapsed/manual controls; fixture loading creates time windows but does not run modality models.",
+        "status": "consistent_in_review"
+      },
+      {
+        "invariant": "P_BOUNDARY_IDENTITY / P_SNAPSHOT_AUTONOMY",
+        "observation": "Session snapshot carries window/state provenance and parameter frames, but audio bytes and global locale/title-order preferences are not session data.",
+        "status": "documented_boundary"
+      }
+    ],
+    "laws_triggered": [
+      {
+        "name": "Chunking",
+        "finding": "The four-step rail groups the workflow into Work axis → Extract → Reconcile → Project.",
+        "result": "supported"
+      },
+      {
+        "name": "Cognitive Load",
+        "finding": "Many source/scope/layer and Stage-2 controls compete for attention; grouping and tooltips reduce explanatory duplication, but nine layer choices remain visible.",
+        "result": "partly_supported_residual_choice_load"
+      },
+      {
+        "name": "Choice Overload",
+        "finding": "Nine acoustic layer toggles plus source/scope choices form the densest decision region.",
+        "result": "residual; keep layers individually available for frequent filtering"
+      },
+      {
+        "name": "Fitts’s Law",
+        "finding": "Layer targets retain at least 36 CSS px height; pipeline links span a wide target.",
+        "result": "supported_at_desktop_target"
+      },
+      {
+        "name": "Flow",
+        "finding": "Media and segment navigation are now adjacent; later steps remain left-to-right.",
+        "result": "repaired"
+      },
+      {
+        "name": "Law of Common Region",
+        "finding": "Media/node controls, reconciliation controls/timeline, and output projections have distinct regions.",
+        "result": "supported"
+      },
+      {
+        "name": "Law of Proximity",
+        "finding": "The audio source and segment seek controls now share one compact column.",
+        "result": "repaired"
+      },
+      {
+        "name": "Law of Prägnanz",
+        "finding": "The rail makes four processing phases legible; empty timeline no longer inherits the matrix height.",
+        "result": "repaired"
+      },
+      {
+        "name": "Law of Similarity",
+        "finding": "Layer and modality controls keep consistent per-layer/per-source treatment.",
+        "result": "supported"
+      },
+      {
+        "name": "Law of Uniform Connectedness",
+        "finding": "Colored layer borders/icons and grouped panels connect controls to their data layer.",
+        "result": "supported"
+      },
+      {
+        "name": "Mental Model",
+        "finding": "Stage labels align with the actual extraction, reconciliation, and projection responsibilities; client and server Stage-2 remain separately named.",
+        "result": "supported"
+      },
+      {
+        "name": "Selective Attention",
+        "finding": "The primary pipeline rail and media/search actions lead; specialist runtimes remain below the primary row and manual-only.",
+        "result": "supported_with_secondary_scroll"
+      },
+      {
+        "name": "Von Restorff Effect",
+        "finding": "Modality/layer colors and active states help distinguish selected sources.",
+        "result": "supported; preserve contrast checks in future themes"
+      },
+      {
+        "name": "Working Memory",
+        "finding": "Time, source counts, and segment statuses are displayed next to their relevant controls.",
+        "result": "supported"
+      },
+      {
+        "name": "Zeigarnik Effect",
+        "finding": "Pending/empty statuses remain explicit in the per-segment output instead of implying completion.",
+        "result": "supported"
+      },
+      {
+        "name": "Aesthetic-Usability Effect",
+        "finding": "The dark high-contrast grouping is coherent; visual polish alone is not treated as proof of usability.",
+        "result": "considered; no usability study"
+      },
+      {
+        "name": "Jakob’s Law",
+        "finding": "Conventional labeled controls, disclosure details, and disabled actions remain recognizable.",
+        "result": "supported"
+      },
+      {
+        "name": "Tesler’s Law",
+        "finding": "Multimodal and specialist complexity is retained but separated into progressive/manual areas.",
+        "result": "supported"
+      }
+    ],
+    "laws_not_triggered_or_not_measurable": [
+      "Cognitive Bias (the observed disabled affordance was corrected, but no user error study was available)",
+      "Doherty Threshold (no response-time measurements)",
+      "Goal-Gradient Effect (pipeline is an order map, not a required completion funnel)",
+      "Miller’s Law (nine layer choices remain a stated residual)",
+      "Occam’s Razor (no competing architecture decision in this pass)",
+      "Paradox of the Active User (no novice-user study)",
+      "Pareto Principle (no usage data)",
+      "Parkinson’s Law (no task-time evidence)",
+      "Peak-End Rule (no session study)",
+      "Postel’s Law (file and payload edge cases not tested here)",
+      "Serial Position Effect (no recall evidence)"
+    ],
+    "actionable_proposals": [
+      {
+        "priority": "P1",
+        "source": "law + invariant",
+        "change": "Keep axis controls adjacent, prevent nested clipping, and preserve distinct client/server Stage-2 labels.",
+        "status": "implemented"
+      },
+      {
+        "priority": "P1",
+        "source": "law + invariant",
+        "change": "Show disabled export/generate actions as unavailable, not as active primary actions.",
+        "status": "implemented"
+      },
+      {
+        "priority": "P2",
+        "source": "law",
+        "change": "Continue moving explanatory paragraphs to contextual help where the title and action remain understandable without the paragraph.",
+        "status": "implemented_for_Server_Stage_2"
+      },
+      {
+        "priority": "P2",
+        "source": "invariant",
+        "change": "Keep capability/fill as independent evidence axes and never trigger extraction when observing them.",
+        "status": "documented_non_coercive_contract"
+      }
+    ],
+    "blocked_proposals": [],
+    "gaps": [
+      "A populated CLAP/SigLIP/text result view was unavailable in the fixture; graph density and parameter controls with real results remain unverified.",
+      "Nine individual layer choices still create choice load; regrouping them could make common filters slower, so it remains an explicit future decision.",
+      "Locale is correctly server-seeded by am_locale cookie in RootLayout, but Edge DOM/screenshot still contained Russian labels in ParamToTextWorkbench and waveform controls while surrounding chrome was English.",
+      "Semantic Search showed dataset 0/instructions 0 in the fixture while the SigLIP index badge showed ready; no search request was run, so cause remains unknown."
+    ],
+    "assumptions": [
+      "The operator-provided bundled test preset is safe as a local UI fixture; it creates seven windows and does not start models.",
+      "The target is desktop_wide_2k; small-screen behavior remains outside this phase’s visual acceptance."
+    ],
+    "goals_and_acceptance": [
+      "At 2560×1440, preserve left-to-right stage orientation and readable targets with either sidebar state.",
+      "No inner layer-filter scrolling hides controls; no disabled action appears available.",
+      "Reading workspace state never starts L1 extraction; incomplete axes remain acceptable."
+    ]
+  },
+  "locale_snapshot_schema": {
+    "locale_contract": {
+      "source": "src/app/layout.tsx reads am_locale on the server and sets html lang/data-ui-language before render; database preference is only compatibility fallback.",
+      "session_scope": "Locale and parameter-title order are global preferences, not session inputs, so they are intentionally absent from am_stage_session_v1.",
+      "observed_gap": "AM-Stage still has mixed-language strings in ParamToTextWorkbench and AudioWaveformEditor; cookie-selected initial locale is correct, but dictionary coverage is incomplete."
+    },
+    "snapshot_contract": {
+      "data_schema": "am_stage_session_v1",
+      "envelope_schema": "am_stage_session_snapshot_v1",
+      "state": "Session data is assembled from a captured state object; file writes use temporary file then rename; request size is capped at 64 MB.",
+      "audio_boundary": "Audio bytes are not copied into the snapshot; name/duration and missing_on_restore warning are persisted so the operator can reselect the source file."
+    },
+    "schema_validation": "POST checks only the top-level data.schema discriminator; GET casts parsed JSON to the TypeScript snapshot type without runtime structural validation. No schema migration was required for Φ6; deeper validation is residual.",
+    "locale_in_snapshot": "intentionally_omitted_global_preference"
+  },
+  "closeout": {
+    "phase": "Φ6_stabilize",
+    "status": "complete_with_explicit_residuals",
+    "traceability": [
+      {
+        "invariant": "I1_work_axis",
+        "problem": "P_history_layout / P_viewport_debt",
+        "phase": "Φ2→Φ3→Φ6",
+        "evidence": "Edge wide screenshot after repair: media and node seek now adjacent in the axis column."
+      },
+      {
+        "invariant": "I2_pipeline_stack",
+        "problem": "P_flat_pipeline",
+        "phase": "Φ4→Φ6",
+        "evidence": "Sticky rail displays Work axis → Extract → Reconcile → Project; client and server Stage-2 remain distinct."
+      },
+      {
+        "invariant": "I3_fill_state",
+        "problem": "P_no_fill_language",
+        "phase": "Φ5→Φ6",
+        "evidence": "fill_model defines five independent axes, vector aggregation, non_coercive=true and no L1 launch on read."
+      },
+      {
+        "invariant": "I4_binding_identity",
+        "problem": "P_weak_bindings",
+        "phase": "Φ1→Φ5→Φ6",
+        "evidence": "module_graph retains value/convention/context bindings; static and operator/browser evidence levels are separated in capability_matrix."
+      },
+      {
+        "invariant": "I5_primary_workspace_economy",
+        "problem": "P_viewport_debt",
+        "phase": "Φ2→Φ3→Φ6",
+        "evidence": "expanded/collapsed Edge screenshots show the four-column primary path at desktop_wide_2k; loaded fixture verifies media and seven windows."
+      },
+      {
+        "invariant": "I6_capability_honesty",
+        "problem": "P_weak_bindings",
+        "phase": "Φ5→Φ6",
+        "evidence": "capability_matrix covers all L1–L3 modules; Helm blocked, LFM3 and data-dependent projections partial where evidence is limited."
+      }
+    ],
+    "residuals": [
+      "AM-Stage locale coverage is incomplete; Russian hard-coded workbench/waveform strings remain in the EN view.",
+      "Session endpoint has only discriminator-level runtime validation; nested payloads are TypeScript-typed but not validated at runtime.",
+      "Actual non-empty parameter results and timeline graph were not produced in this visual pass.",
+      "Semantic Search dataset/instruction counts were zero in the fixture and need a focused runtime check if the operator expects them populated before search.",
+      "No usability study, response-time measurement, or narrow viewport pass was performed."
+    ],
+    "not_in_scope": [
+      "No model calls, index rebuilds, session schema redesign, or new extraction architecture.",
+      "No test fixture state is persisted to a saved AM-Stage session."
+    ]
+  }
+}

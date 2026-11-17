@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build incremental Qwen value anchors for V3 Range and Select controls."""
+"""Build typed value-candidate vectors for the Qwen/Gemma V3 bundles."""
 
 from __future__ import annotations
 
@@ -25,7 +25,9 @@ from parameter_registry import filter_parameters, read_registry, registry_sha256
 from v3_snapshot import load_v3_snapshot  # noqa: E402
 DEFAULT_DATASET = ROOT / "data" / "combinatorial-genesis" / "v3" / "dataset.json"
 DEFAULT_OUTPUT = ROOT / "data" / "combinatorial-genesis" / "v3" / "value-anchors"
-LEVELS = ((0.0, "minimum"), (0.25, "low"), (0.5, "default"), (0.75, "high"), (1.0, "maximum"))
+LEVELS = ((0.0, "minimum"), (0.25, "low"), (0.5, "midpoint"), (0.75, "high"), (1.0, "maximum"))
+VALUE_SELECTION_CONTRACT_VERSION = 2
+VALUE_CANDIDATE_TEXT_VERSION = 2
 LOW_MARKER = re.compile(r"\b(?:lower|low|minimum|minimal) values?\b|\bнизкие значения\b", re.I)
 HIGH_MARKER = re.compile(r"\b(?:higher|high|maximum|maximal) values?\b|\bвысокие значения\b", re.I)
 
@@ -39,6 +41,12 @@ def write_json(path: Path, value: Any) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
     os.replace(temporary, path)
+
+
+def exclusion_metadata(data_root: Path, pinned: dict[str, Any] | None) -> tuple[str, int]:
+    if pinned is not None:
+        return str(pinned["excluded_sha256"]), int(pinned["excluded_count"])
+    return registry_sha256(data_root), len(read_registry(data_root)["entries"])
 
 
 def sha256_text(text: str) -> str:
@@ -81,7 +89,7 @@ def range_anchor_text(parameter: dict, level: float, label: str) -> str:
     elif level == 0.25:
         state = f"low, reduced; sound result: {low_clause}"
     elif level == 0.5:
-        state = f"neutral default midpoint; balanced between {low_clause} and {high_clause}"
+        state = f"range midpoint; balanced between {low_clause} and {high_clause}"
     elif level == 0.75:
         state = f"high, increased; sound result: {high_clause}"
     else:
@@ -90,7 +98,16 @@ def range_anchor_text(parameter: dict, level: float, label: str) -> str:
         compact(parameter.get("category")), compact(parameter.get("sub_category")),
         compact(parameter.get("quantity_kind")), compact(parameter.get("unit")), context,
     ) if part)
-    return f"{base}; {state}" + (f"; context: {details}" if details else "")
+    configured_values = "; ".join(
+        f"{key}={parameter[key]}" for key in ("min_value", "max_value", "step")
+        if parameter.get(key) is not None
+    )
+    configured_values = "; ".join(part for part in (
+        configured_values,
+        f"unit={compact(parameter.get('unit'))}" if parameter.get("unit") is not None else "",
+        f"quantity_kind={compact(parameter.get('quantity_kind'))}" if parameter.get("quantity_kind") is not None else "",
+    ) if part)
+    return f"{base}; {state}" + (f"; context: {details}" if details else "") + (f"; configured range: {configured_values}" if configured_values else "")
 
 
 def select_option_text(parameter: dict, option: Any) -> str:
@@ -100,7 +117,45 @@ def select_option_text(parameter: dict, option: Any) -> str:
     details = "; ".join(part for part in (
         compact(parameter.get("category")), compact(parameter.get("sub_category")), context, description,
     ) if part)
-    return f"{natural_name(parameter)} set to {option_text}; {option_text} mode or option" + (f"; context: {details}" if details else "")
+    return f"{natural_name(parameter)} candidate value: {option_text}" + (f"; context: {details}" if details else "")
+
+
+def declared_candidates(parameter: dict) -> tuple[list[Any], str] | None:
+    ui = parameter.get("ui_element")
+    if ui == "Select":
+        values = parameter.get("options")
+        return (values, "catalogue_options") if isinstance(values, list) and values else None
+    if ui == "Toggle":
+        if (parameter.get("min_value"), parameter.get("max_value"), parameter.get("step")) == (0, 1, 1):
+            return [0, 1], "toggle_0_1_catalogue_contract"
+        return None
+    for field_name in ("value_candidates", "published_values", "options"):
+        values = parameter.get(field_name)
+        if isinstance(values, list) and values:
+            return values, field_name
+    schema = parameter.get("value_schema")
+    if isinstance(schema, dict):
+        enum = schema.get("enum")
+        if isinstance(enum, list) and enum:
+            return enum, "value_schema.enum"
+        if "const" in schema:
+            return [schema["const"]], "value_schema.const"
+    return None
+
+
+def value_domain_gaps(dataset: list[dict]) -> list[dict[str, Any]]:
+    gaps: list[dict[str, Any]] = []
+    for parameter in sorted(dataset, key=lambda item: str(item.get("technical_name") or "")):
+        ui = parameter.get("ui_element")
+        if ui not in ("Array", "String", "Text", "Toggle") or declared_candidates(parameter):
+            continue
+        gaps.append({
+            "technical_name": str(parameter.get("technical_name") or ""),
+            "ui_element": ui,
+            "reason": "No parameter-specific value domain or typed generation contract is declared in the catalogue.",
+            "available_schema_fields": [key for key in ("value_schema", "item_schema", "min_length", "max_length", "value_candidates", "published_values", "options") if parameter.get(key) is not None],
+        })
+    return gaps
 
 
 def build_rows(dataset: list[dict]) -> tuple[list[dict], list[dict]]:
@@ -116,12 +171,17 @@ def build_rows(dataset: list[dict]) -> tuple[list[dict], list[dict]]:
                     "level": level, "label": label, "text": text,
                     "text_sha256": sha256_text(text), "row_index": len(range_rows),
                 })
-        if parameter.get("ui_element") == "Select":
-            for option in parameter.get("options") or []:
-                text = select_option_text(parameter, option)
+        if parameter.get("ui_element") != "Range":
+            declared = declared_candidates(parameter)
+            for value in declared[0] if declared else []:
+                text = select_option_text(parameter, value)
+                encoded = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
                 select_rows.append({
-                    "anchor_key": f"{name}:{str(option)}", "technical_name": name,
-                    "option": option, "text": text,
+                    "anchor_key": f"{name}:{encoded}", "technical_name": name,
+                    "option": value, "value": value,
+                    "candidate_source": declared[1],
+                    "value_type": type(value).__name__,
+                    "text": text,
                     "text_sha256": sha256_text(text), "row_index": len(select_rows),
                 })
     return range_rows, select_rows
@@ -169,22 +229,48 @@ def existing_cache(manifest_path: Path, vectors_path: Path, model: str, dimensio
 
 
 def build_artifact(*, label: str, rows: list[dict], manifest_path: Path, vectors_path: Path,
-                   endpoint: str, model: str, dimensions: int, batch_size: int, timeout: int) -> dict:
-    specification_sha = sha256_text(json.dumps({"model": model, "rows": rows}, ensure_ascii=False, sort_keys=True))
+                   endpoint: str, model: str, dimensions: int, batch_size: int, timeout: int,
+                   operation_identity_sha256: str | None = None,
+                   value_selection_bundle_id: str | None = None) -> dict:
+    specification_sha = sha256_text(json.dumps({"model": model, "endpoint": endpoint.rstrip("/"), "operation_identity_sha256": operation_identity_sha256, "value_selection_bundle_id": value_selection_bundle_id, "selection_contract_version": VALUE_SELECTION_CONTRACT_VERSION, "rows": rows}, ensure_ascii=False, sort_keys=True))
     if manifest_path.exists() and vectors_path.exists():
         current = read_json(manifest_path)
         if current.get("cache_sha256") == specification_sha:
             print(f"[progress] stage={label} current={len(rows)} total={len(rows)} label=reused", flush=True)
             return current
+        if operation_identity_sha256 is not None and (
+                current.get("operation_identity_sha256") != operation_identity_sha256
+                or current.get("endpoint") != endpoint.rstrip("/")):
+            raise RuntimeError(f"Saved {label} vectors belong to another candidate operation or endpoint; refusing incompatible cache reuse.")
 
     old_lookup, old_vectors = existing_cache(manifest_path, vectors_path, model, dimensions)
     building_path = vectors_path.with_suffix(vectors_path.suffix + ".building")
     state_path = manifest_path.with_suffix(manifest_path.suffix + ".building")
     completed = 0
+    checkpoint_exists = state_path.exists() or building_path.exists()
+    checkpoint_matches = False
     if state_path.exists() and building_path.exists():
         state = read_json(state_path)
-        if state.get("cache_sha256") == specification_sha and state.get("dimensions") == dimensions:
+        if (state.get("cache_sha256") == specification_sha and state.get("dimensions") == dimensions
+                and state.get("endpoint") == endpoint.rstrip("/") and state.get("operation_identity_sha256") == operation_identity_sha256
+                and state.get("value_selection_bundle_id") == value_selection_bundle_id):
             completed = int(state.get("completed") or 0)
+            checkpoint_matches = True
+    if building_path.exists() and not state_path.exists():
+        try:
+            with building_path.open("rb") as handle:
+                header = handle.read(8)
+                count, stored_dimensions = struct.unpack("<II", header)
+                checkpoint_matches = count == len(rows) and stored_dimensions == dimensions and building_path.stat().st_size == 8 + len(rows) * dimensions * 4
+                while checkpoint_matches:
+                    chunk = handle.read(1024 * 1024)
+                    if not chunk:
+                        break
+                    checkpoint_matches = not any(chunk)
+        except (OSError, struct.error):
+            checkpoint_matches = False
+    if checkpoint_exists and not checkpoint_matches:
+        raise RuntimeError(f"Saved {label} candidate checkpoint does not match rows/model/endpoint/operation identity; refusing to overwrite it.")
     if completed == 0:
         vectors = open_binary(building_path, len(rows), dimensions, True)
     else:
@@ -210,7 +296,9 @@ def build_artifact(*, label: str, rows: list[dict], manifest_path: Path, vectors
                 embedded += len(missing_rows)
             vectors.flush()
             completed_now = start + len(chunk)
-            write_json(state_path, {"cache_sha256": specification_sha, "dimensions": dimensions, "completed": completed_now})
+            write_json(state_path, {"cache_sha256": specification_sha, "dimensions": dimensions, "completed": completed_now,
+                "endpoint": endpoint.rstrip("/"), "model": model, "operation_identity_sha256": operation_identity_sha256,
+                "value_selection_bundle_id": value_selection_bundle_id})
             print(f"[progress] stage={label} current={completed_now} total={len(rows)} label=embedding", flush=True)
     finally:
         if old_vectors is not None:
@@ -229,7 +317,11 @@ def build_artifact(*, label: str, rows: list[dict], manifest_path: Path, vectors
         parameters.setdefault(row["technical_name"], []).append(entry)
     manifest = {
         "schema_version": 1, "created_at": datetime.now(timezone.utc).isoformat(),
-        "cache_sha256": specification_sha, "model": model, "dimensions": dimensions,
+        "cache_sha256": specification_sha, "model": model, "endpoint": endpoint.rstrip("/"),
+        "operation_identity_sha256": operation_identity_sha256, "dimensions": dimensions,
+        "value_selection_bundle_id": value_selection_bundle_id,
+        "selection_contract_version": VALUE_SELECTION_CONTRACT_VERSION,
+        "candidate_text_version": VALUE_CANDIDATE_TEXT_VERSION,
         "count": len(rows), "parameter_count": len(parameters), "reused": reused,
         "embedded": embedded, "vectors_file": vectors_path.name,
         "parameters": parameters, "rows": rows,
@@ -254,7 +346,7 @@ def prototype_rows(range_rows: list[dict], select_rows: list[dict]) -> tuple[lis
     state_texts = {
         0.0: "fully minimum extremely low closed absent reduced soft dark dry slow narrow stable clean",
         0.25: "low reduced subtle gentle restrained soft dark slow narrow stable",
-        0.5: "neutral default medium balanced moderate unchanged centered",
+        0.5: "range midpoint; balanced mid-level state between lower and higher values",
         0.75: "high increased strong bright fast wide intense rough active",
         1.0: "fully maximum extremely high open saturated bright fast wide intense aggressive chaotic",
     }
@@ -373,13 +465,71 @@ def main() -> int:
     parser.add_argument("--timeout", type=int, default=1200)
     parser.add_argument("--target", choices=("all", "range", "select"), default="all")
     parser.add_argument("--direct", action="store_true", help="Embed every complete anchor text instead of factorized Qwen vectors")
-    parser.add_argument("--live-snapshot", action="store_true", help="Build against the current library-over-frozen V3 snapshot.")
+    parser.add_argument("--prepared-rows-dir", type=Path, help="Use Range/Select rows persisted by model-free Prepare.")
+    parser.add_argument("--operation-identity-sha256", help="Candidate operation identity used to reject incompatible vector checkpoints.")
+    parser.add_argument("--value-selection-bundle-id", help="Immutable candidate bundle identity shared with the retrieval index.")
+    parser.add_argument("--live-snapshot", action="store_true", help="Build against the current effective V3 catalogue snapshot.")
+    parser.add_argument("--parameter-snapshot", type=Path, help="Use one immutable effective-catalogue JSON snapshot; do not reread live membership")
+    parser.add_argument("--source-revision", help="Revision recorded when --parameter-snapshot was captured")
+    parser.add_argument("--source-snapshot-sha256", help="Current catalogue content fingerprint captured with the snapshot")
+    parser.add_argument("--excluded-sha256", help="Exclusion registry hash captured with the snapshot")
+    parser.add_argument("--excluded-count", type=int, default=0, help="Exclusion count captured with the snapshot")
+    parser.add_argument("--prepare-only", action="store_true", help="Write source rows and output plan without embeddings.")
     args = parser.parse_args()
     data_root = ROOT / "data" / "combinatorial-genesis"
-    dataset = load_v3_snapshot(data_root)["parameters"] if args.live_snapshot else read_json(args.dataset)
-    dataset = filter_parameters(dataset, data_root)
+    pinned = load_v3_snapshot(data_root, snapshot_path=args.parameter_snapshot, source_revision=args.source_revision,
+        source_snapshot_sha256=args.source_snapshot_sha256, excluded_sha256=args.excluded_sha256,
+        excluded_count=args.excluded_count) if args.parameter_snapshot else load_v3_snapshot(data_root) if args.live_snapshot else None
+    dataset = pinned["parameters"] if pinned else read_json(args.dataset)
+    dataset = dataset if pinned else filter_parameters(dataset, data_root)
     range_rows, select_rows = build_rows(dataset)
+    domain_gaps = value_domain_gaps(dataset)
+    if args.prepared_rows_dir:
+        for filename, expected in (("range-rows.json", range_rows), ("select-rows.json", select_rows)):
+            prepared = json.loads((args.prepared_rows_dir / filename).read_text(encoding="utf-8"))
+            if (prepared.get("source_revision") != (pinned["source_revision"] if pinned else None)
+                    or prepared.get("source_snapshot_sha256") != (pinned["content_sha256"] if pinned else None)
+                    or prepared.get("rows") != expected):
+                raise RuntimeError(f"Prepared {filename} do not match the pinned source rows.")
+        range_rows = json.loads((args.prepared_rows_dir / "range-rows.json").read_text(encoding="utf-8"))["rows"]
+        select_rows = json.loads((args.prepared_rows_dir / "select-rows.json").read_text(encoding="utf-8"))["rows"]
     args.output.mkdir(parents=True, exist_ok=True)
+    if args.prepare_only:
+        source_snapshot_sha256 = pinned["content_sha256"] if pinned else load_v3_snapshot(data_root)["content_sha256"]
+        plans = []
+        for filename, rows, outputs in (("range-rows.json", range_rows, ["manifest.json", "embeddings.f32"]),
+            ("select-rows.json", select_rows, ["select-options.json", "select-options.f32"])):
+            if args.target == "range" and filename.startswith("select-") or args.target == "select" and filename.startswith("range-"):
+                continue
+            target = args.output / filename
+            payload = {"schema_version": VALUE_SELECTION_CONTRACT_VERSION, "source_revision": pinned["source_revision"] if pinned else None,
+                "source_snapshot_sha256": source_snapshot_sha256, "rows": rows,
+                "value_domain_gaps": domain_gaps, "planned_outputs": outputs}
+            raw = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+            if target.exists() and target.read_bytes() != raw:
+                raise RuntimeError(f"Saved prepared value rows differ from the pinned snapshot: {filename}")
+            if not target.exists(): target.write_bytes(raw)
+            saved = target.read_bytes()
+            digest = hashlib.sha256(saved).hexdigest()
+            if len(saved) != len(raw) or digest != hashlib.sha256(raw).hexdigest():
+                raise RuntimeError(f"Prepared value rows failed read-back verification: {filename}")
+            plans.append({"path": filename, "bytes": len(saved), "sha256": digest})
+        manifest = {"schema_version": VALUE_SELECTION_CONTRACT_VERSION, "status": "prepared", "model": args.model,
+            "source_revision": pinned["source_revision"] if pinned else None,
+            "source_snapshot_sha256": source_snapshot_sha256, "source_parameter_count": len(dataset),
+            "target": args.target, "direct": args.direct, "inputs": plans,
+            "selection_contract_version": VALUE_SELECTION_CONTRACT_VERSION,
+            "candidate_text_version": VALUE_CANDIDATE_TEXT_VERSION,
+            "value_domain_gap_count": len(domain_gaps),
+            "value_domain_gaps": domain_gaps,
+            "planned_outputs": [output for item in plans for output in json.loads((args.output / item["path"]).read_text(encoding="utf-8"))["planned_outputs"]]}
+        manifest_path = args.output / "prepare-manifest.json"
+        manifest_raw = (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+        manifest_path.write_bytes(manifest_raw)
+        if json.loads(manifest_path.read_text(encoding="utf-8")) != manifest:
+            raise RuntimeError("Prepared value manifest failed read-back verification.")
+        print(json.dumps({"status": "prepared", "model_called": False, "range_rows": len(range_rows), "select_rows": len(select_rows), "source_snapshot_sha256": source_snapshot_sha256}, ensure_ascii=False))
+        return 0
     row_by_name, base_vectors, dimensions = load_composite(args.composite_dir)
     missing_names = sorted({str(row.get("technical_name") or "") for row in dataset} - set(row_by_name))
     if missing_names:
@@ -394,6 +544,8 @@ def main() -> int:
             manifest_path=args.output / "manifest.json", vectors_path=args.output / "embeddings.f32",
             endpoint=args.endpoint, model=args.model, dimensions=dimensions,
             batch_size=max(1, args.batch_size), timeout=args.timeout,
+            operation_identity_sha256=args.operation_identity_sha256,
+            value_selection_bundle_id=args.value_selection_bundle_id,
             )
         if args.target in ("all", "select"):
             select_manifest = build_artifact(
@@ -401,6 +553,8 @@ def main() -> int:
             manifest_path=args.output / "select-options.json", vectors_path=args.output / "select-options.f32",
             endpoint=args.endpoint, model=args.model, dimensions=dimensions,
             batch_size=max(1, args.batch_size), timeout=args.timeout,
+            operation_identity_sha256=args.operation_identity_sha256,
+            value_selection_bundle_id=args.value_selection_bundle_id,
             )
     else:
         range_prototypes, option_prototypes = prototype_rows(range_rows, select_rows)
@@ -410,6 +564,8 @@ def main() -> int:
                 manifest_path=args.output / "range-prototypes.json", vectors_path=args.output / "range-prototypes.f32",
                 endpoint=args.endpoint, model=args.model, dimensions=dimensions,
                 batch_size=max(1, args.batch_size), timeout=args.timeout,
+                operation_identity_sha256=args.operation_identity_sha256,
+                value_selection_bundle_id=args.value_selection_bundle_id,
             )
             range_prototype_vectors = np.memmap(
                 args.output / range_prototype_manifest["vectors_file"], dtype="<f4", mode="r", offset=8,
@@ -445,14 +601,20 @@ def main() -> int:
             )
             option_prototype_vectors._mmap.close()
     base_vectors._mmap.close()
-    excluded_sha = registry_sha256(data_root)
-    source_snapshot_sha256 = load_v3_snapshot(data_root)["content_sha256"]
+    excluded_sha, excluded_count = exclusion_metadata(data_root, pinned)
+    source_snapshot_sha256 = pinned["content_sha256"] if pinned else load_v3_snapshot(data_root)["content_sha256"]
     for manifest, manifest_path in ((range_manifest, args.output / "manifest.json"), (select_manifest, args.output / "select-options.json")):
         if manifest is not None:
             manifest["excluded_sha256"] = excluded_sha
-            manifest["excluded_count"] = len(read_registry(data_root)["entries"])
+            manifest["excluded_count"] = excluded_count
             manifest["source_parameter_count"] = len(dataset)
             manifest["source_snapshot_sha256"] = source_snapshot_sha256
+            manifest["source_revision"] = pinned["source_revision"] if pinned else None
+            manifest["selection_contract_version"] = VALUE_SELECTION_CONTRACT_VERSION
+            manifest["candidate_text_version"] = VALUE_CANDIDATE_TEXT_VERSION
+            manifest["embedding_preprocessing_version"] = "direct-text-v2" if args.direct else "factorized-query-and-candidate-v2"
+            manifest["value_domain_gap_count"] = len(domain_gaps)
+            manifest["value_domain_gaps"] = domain_gaps
             write_json(manifest_path, manifest)
     print(json.dumps({
         "model": args.model, "dimensions": dimensions,

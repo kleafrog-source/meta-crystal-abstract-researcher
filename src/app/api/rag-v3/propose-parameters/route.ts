@@ -22,6 +22,10 @@ export async function POST(request: Request) {
     const body = (await request.json()) as ProposeParametersRequest & {
       sources?: RagV3Sources;
       text_index?: TextIndexId;
+      run_id?: string;
+      stage_id?: string;
+      attempt_id?: string;
+      window_id?: string;
     };
     const textIndex: TextIndexId = body.text_index === "embeddinggemma2" ? "embeddinggemma2" : "qwen3";
     const settings = await loadLLMSettings();
@@ -49,12 +53,19 @@ export async function POST(request: Request) {
         domainLayerWeights: body.domain_layer_weights,
         textIndex,
         modelSlotOwner: slotOwner,
+        diagnosticContext: {
+          ...(typeof body.run_id === "string" ? { run_id: body.run_id } : {}),
+          ...(typeof body.stage_id === "string" ? { stage_id: body.stage_id } : {}),
+          ...(typeof body.attempt_id === "string" ? { attempt_id: body.attempt_id } : {}),
+          ...(typeof body.window_id === "string" ? { window_id: body.window_id } : {}),
+        },
       }),
     );
   } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : String(error) },
-      { status: 500 },
+      { error: message, code: /bundle|artifact|candidate/i.test(message) ? "VALUE_SELECTION_ARTIFACTS_REQUIRED" : "VALUE_SELECTION_FAILED" },
+      { status: /bundle|artifact|candidate/i.test(message) ? 409 : 500 },
     );
   } finally {
     releaseEmbeddingModelSlot(slotOwner);

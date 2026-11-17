@@ -2,13 +2,15 @@ import { createHash, randomUUID } from "node:crypto";
 import { db } from "@/lib/db";
 import { buildAutomationPreview } from "./planning";
 import { getAutomationScenario, listAutomationScenarios, seedBuiltInScenarios } from "./scenarios";
-import { addAssetReference, ensureAutomationDirectories, moveRunToTrash, purgeTrashedRun, readRunArtifact, removeAssetReference, restoreRunDirectory, writeRunArtifact } from "./storage";
+import { addAssetReference, ensureAutomationDirectories, moveRunToTrash, purgeTrashedRun, readRunArtifact, removeAssetReference, removeRunArtifact, restoreRunDirectory, writeRunArtifact } from "./storage";
 import { createArtifactId, executeAutomationAction } from "./adapters";
 import { createSequencedEvent } from "./sequenced-event";
 import { chooseBoundArtifact, filterStageOutputArtifacts } from "./artifact-binding";
-import type { AutomationAdapterContext, AutomationArtifactPayload, AutomationExternalInputs, AutomationPlanDocument, AutomationScenarioDefinition } from "./contracts";
+import { portsForAction, topologicalStageOrder } from "./typed-graph";
+import type { AutomationAdapterContext, AutomationArtifactPayload, AutomationExternalInputs, AutomationPlanDocument, AutomationScenarioDefinition, AutomationStageDefinition } from "./contracts";
 import { beginNodeRetryCycle, acceptSavedReverseQueryResponse } from "./reverse-query-checkpoint";
 import { REVERSE_QUERY_PROMPT_VERSION } from "@/lib/cross-modal/reverse-query";
+import { applyFlowJoinPolicies, type FlowBindingState, type FlowJoinPolicy } from "./control-flow";
 
 const runtime = globalThis as typeof globalThis & { __amStageAutomationInstanceId?: string };
 const INSTANCE = runtime.__amStageAutomationInstanceId ?? (runtime.__amStageAutomationInstanceId = `${process.pid}:${randomUUID()}`);
@@ -105,8 +107,7 @@ export async function startAutomation(input: { commandId: string; scenarioId: st
   return getAutomationRun(runId);
 }
 
-async function resolveBindings(runId: string, stageIndex: number, plan: AutomationPlanDocument) {
-  const stage = plan.stages[stageIndex];
+async function resolveBindings(runId: string, stage: AutomationStageDefinition, plan: AutomationPlanDocument) {
   const resolved: Record<string, unknown> = {};
   for (const binding of stage.inputBindings) {
     if (binding.port === "order") continue;
@@ -117,41 +118,93 @@ async function resolveBindings(runId: string, stageIndex: number, plan: Automati
     }
     const priorStageId = binding.from.slice("stage:".length);
     const prior = await db.automationStageExecution.findUnique({ where: { runId_stageId: { runId, stageId: priorStageId } } });
-    if (!prior?.successfulAttemptId) continue;
     const source = plan.stages.find((item) => item.stageId === priorStageId);
     const outputPort = binding.port ?? "result";
+    if (!prior?.successfulAttemptId) {
+      if (stage.actionId === "flow.join") {
+        const status = prior?.status === "failed" || prior?.status === "cancelled" || prior?.status === "interrupted" ? "failed" : prior?.status === "skipped" ? "skipped" : "missing";
+        const states = resolved.__joinStates as Array<Record<string, unknown>> | undefined;
+        resolved.__joinStates = [...(states ?? []), { key: `${priorStageId}#${outputPort}`, status }];
+      } else if (source?.actionId === "flow.if" || source?.actionId === "flow.router" || prior?.status === "skipped") resolved.__branchMissing = true;
+      continue;
+    }
     const outputDefinitions = source?.outputDefinitions ?? [];
+    const rows = await db.automationArtifact.findMany({ where: { stageExecutionId: prior.id, attemptId: prior.successfulAttemptId }, orderBy: [{ createdAt: "asc" }, { id: "asc" }] });
     const candidates = filterStageOutputArtifacts(
-      await db.automationArtifact.findMany({ where: { stageExecutionId: prior.id, attemptId: prior.successfulAttemptId }, orderBy: [{ createdAt: "asc" }, { id: "asc" }] }),
+      await Promise.all(rows.map(async (row) => ({ ...row, outputPort: (await readRunArtifact(row.payloadRef) as { outputPort?: string } | null)?.outputPort }))),
       outputDefinitions,
       outputPort,
     );
     const transition = plan.searchContext.searchMode === "transition";
     const artifact = source ? chooseBoundArtifact(candidates.map((item) => ({ id: item.id, pass: item.pass, createdAt: item.createdAt, value: item })), binding.name, source.actionId, transition)?.value : candidates[0];
+    let resolvedArtifact: Record<string, unknown> | undefined;
     if (artifact) {
       const payload = await readRunArtifact(artifact.payloadRef);
       if (!payload || typeof payload !== "object" || Array.isArray(payload) || (payload as { schemaVersion?: unknown }).schemaVersion !== 1 || !("data" in payload)) {
         throw new Error(`Input artifact ${artifact.id} failed Automation artifact schema validation.`);
       }
-      resolved[binding.name] = { ...(payload as Record<string, unknown>), artifactId: artifact.id };
+      resolvedArtifact = { ...(payload as Record<string, unknown>), artifactId: artifact.id };
+      if (portsForAction(stage.actionId)?.inputs.find((port) => port.id === binding.name)?.multiple) {
+        const existing = resolved[binding.name];
+        resolved[binding.name] = Array.isArray(existing) ? [...existing, resolvedArtifact] : existing ? [existing, resolvedArtifact] : [resolvedArtifact];
+      } else resolved[binding.name] = resolvedArtifact;
+    } else {
+      const sourceStatus = prior?.status;
+      const status = sourceStatus === "failed" || sourceStatus === "cancelled" || sourceStatus === "interrupted" ? "failed"
+        : sourceStatus === "skipped" ? "skipped"
+          : source?.actionId === "flow.if" || source?.actionId === "flow.router" ? "skipped"
+            : "missing";
+      const key = `${priorStageId}#${outputPort}`;
+      const state = { key, status, ...(status === "missing" ? { reason: "source artifact is missing" } : {}) };
+      const states = resolved.__joinStates as Array<Record<string, unknown>> | undefined;
+      resolved.__joinStates = [...(states ?? []), state];
+      if (source?.actionId === "flow.if" || source?.actionId === "flow.router" || prior?.status === "skipped") resolved.__branchMissing = true;
     }
+    if (artifact && resolvedArtifact && stage.actionId === "flow.join") {
+      const states = resolved.__joinStates as Array<Record<string, unknown>> | undefined;
+      resolved.__joinStates = [...(states ?? []), { key: `${priorStageId}#${outputPort}`, status: resolvedArtifact.validity === "partial" ? "partial" : "present", artifact: resolvedArtifact }];
+    }
+  }
+  if (stage.actionId === "flow.join") {
+    const bindings = stage.inputBindings.filter((binding) => binding.port !== "order");
+    const known = new Set(((resolved.__joinStates as Array<{ key: string }> | undefined) ?? []).map((item) => item.key));
+    const states = (resolved.__joinStates as Array<Record<string, unknown>> | undefined) ?? [];
+    for (const binding of bindings) {
+      const key = `${binding.from.slice(6)}#${binding.port ?? "result"}`;
+      if (!known.has(key)) states.push({ key, status: "missing", reason: "binding did not resolve" });
+    }
+    resolved.__joinStates = states;
   }
   return resolved;
 }
 
 async function executeRun(runId: string, plan: AutomationPlanDocument, inputs: AutomationExternalInputs, controller: AbortController) {
   try {
-    for (let index = 0; index < plan.stages.length; index++) {
+    for (const definition of topologicalStageOrder(plan.stages)) {
       if (controller.signal.aborted) break;
       const runState = await db.automationRun.findUnique({ where: { id: runId }, select: { stopRequestedAt: true } });
       if (runState?.stopRequestedAt) break;
-      const definition = plan.stages[index];
       const execution = await db.automationStageExecution.findUnique({ where: { runId_stageId: { runId, stageId: definition.stageId } } });
       if (!execution || execution.status === "succeeded") continue;
       const attemptNumber = await db.automationAttempt.count({ where: { stageExecutionId: execution.id } }) + 1;
       const attemptId = randomUUID();
       const executionStartedAt = Date.now();
-      const resolvedInputs = await resolveBindings(runId, index, plan);
+      const resolvedInputs = await resolveBindings(runId, definition, plan);
+      if (definition.actionId === "flow.join") {
+        const states = Array.isArray(resolvedInputs.__joinStates) ? resolvedInputs.__joinStates as FlowBindingState[] : [];
+        const policies = Array.isArray(definition.settings.effective.policies) ? definition.settings.effective.policies as FlowJoinPolicy[] : [];
+        const decision = applyFlowJoinPolicies(states, policies);
+        if (decision.noAcceptedInputs && decision.failures.length === 0) {
+          await db.automationStageExecution.update({ where: { id: execution.id }, data: { status: "skipped" } });
+          await appendEvent(runId, "stage.skipped", { actionId: definition.actionId, reason: "join_no_accepted_inputs", joinReport: decision.report }, definition.stageId);
+          continue;
+        }
+      }
+      if (definition.actionId !== "flow.join" && resolvedInputs.__branchMissing === true) {
+        await db.automationStageExecution.update({ where: { id: execution.id }, data: { status: "skipped" } });
+        await appendEvent(runId, "stage.skipped", { actionId: definition.actionId, reason: "The selected upstream control-flow port did not emit an artifact." }, definition.stageId);
+        continue;
+      }
       const priorCheckpointRows = await db.automationArtifact.findMany({ where: { stageExecutionId: execution.id, kind: "automation-node-checkpoint" }, orderBy: { createdAt: "asc" } });
       const checkpointPairs = (await Promise.all(priorCheckpointRows.map(async (row) => ({ row, payload: await readRunArtifact(row.payloadRef) as AutomationArtifactPayload | null }))));
       const priorNodeCheckpoints = checkpointPairs.map((pair) => pair.payload?.data).filter((item): item is Record<string, unknown> => Boolean(item && typeof item === "object" && !Array.isArray(item)));
@@ -184,20 +237,38 @@ async function executeRun(runId: string, plan: AutomationPlanDocument, inputs: A
           const refs = Array.isArray(partialRefs) ? partialRefs.filter((item): item is string => typeof item === "string") : [];
           if (!refs.includes(id)) await db.automationAttempt.update({ where: { id: attemptId }, data: { partialArtifactRefsJson: JSON.stringify([...refs, id]) } });
         }, onProgress: async (progress) => { await appendEvent(runId, "stage.progress", progress, definition.stageId, attemptId); } });
-        if (controller.signal.aborted) throw new DOMException("Stopped", "AbortError");
-        const refs: string[] = [];
-        for (const item of result.artifacts) {
-          const artifactId = createArtifactId();
-          const inputRefs = [...new Set(Object.values(resolvedInputs).flatMap((value) => value && typeof value === "object" && typeof (value as { artifactId?: unknown }).artifactId === "string" ? [(value as { artifactId: string }).artifactId] : []))];
-          const payload: AutomationArtifactPayload = { schemaVersion: 1, kind: item.kind, actionId: definition.actionId, ...(item.bankId ? { bankId: item.bankId } : {}), ...(item.modality ? { modality: item.modality } : {}), ...(item.pass ? { pass: item.pass } : {}), ...(item.modelBinding ? { modelBinding: item.modelBinding } : {}), effectiveSettings: item.effectiveSettings ?? definition.settings.effective, inputRefs, sourceAssetRefs: inputs.assetId ? [inputs.assetId] : [], ...(inputs.audioRange ? { audioRange: inputs.audioRange } : {}), segmentRefs: item.segmentRefs ?? [], validity: item.validity ?? "valid", warnings: item.warnings ?? result.warnings ?? [], data: item.data };
-          const file = await writeRunArtifact(runId, artifactId, payload);
-          await db.automationArtifact.create({ data: { id: artifactId, schemaVersion: 1, kind: payload.kind, runId, stageExecutionId: execution.id, attemptId, actionId: definition.actionId, bankId: payload.bankId ?? null, modality: payload.modality ?? null, pass: payload.pass ?? null, modelBindingJson: JSON.stringify(payload.modelBinding ?? {}), effectiveSettingsJson: JSON.stringify(payload.effectiveSettings), inputRefsJson: JSON.stringify(payload.inputRefs), sourceAssetRefsJson: JSON.stringify(payload.sourceAssetRefs), audioRangeJson: payload.audioRange ? JSON.stringify(payload.audioRange) : null, segmentRefsJson: JSON.stringify(payload.segmentRefs), validity: payload.validity, warningsJson: JSON.stringify(payload.warnings), payloadRef: file.storageRef, checksum: file.checksum } });
-          refs.push(artifactId);
+        const stopBeforeArtifactWrite = await db.automationRun.findUnique({ where: { id: runId }, select: { stopRequestedAt: true } });
+        if (controller.signal.aborted || stopBeforeArtifactWrite?.stopRequestedAt) throw new DOMException("Stopped", "AbortError");
+        const persistedArtifacts: Array<{ id: string; payload: AutomationArtifactPayload; storageRef: string; checksum: string }> = [];
+        let refs: string[] = [];
+        let accepted = false;
+        try {
+          for (const item of result.artifacts) {
+            const artifactId = createArtifactId();
+            const inputRefs = [...new Set(Object.values(resolvedInputs).flatMap((value) => Array.isArray(value) ? value : [value]).flatMap((value) => value && typeof value === "object" && typeof (value as { artifactId?: unknown }).artifactId === "string" ? [(value as { artifactId: string }).artifactId] : []))];
+            const payload: AutomationArtifactPayload = { schemaVersion: 1, kind: item.kind, actionId: definition.actionId, ...(item.outputPort ? { outputPort: item.outputPort } : {}), ...(item.bankId ? { bankId: item.bankId } : {}), ...(item.modality ? { modality: item.modality } : {}), ...(item.pass ? { pass: item.pass } : {}), ...(item.modelBinding ? { modelBinding: item.modelBinding } : {}), effectiveSettings: item.effectiveSettings ?? definition.settings.effective, inputRefs, sourceAssetRefs: inputs.assetId ? [inputs.assetId] : [], ...(inputs.audioRange ? { audioRange: inputs.audioRange } : {}), segmentRefs: item.segmentRefs ?? [], validity: item.validity ?? "valid", warnings: item.warnings ?? result.warnings ?? [], data: item.data };
+            const file = await writeRunArtifact(runId, artifactId, payload);
+            persistedArtifacts.push({ id: artifactId, payload, storageRef: file.storageRef, checksum: file.checksum });
+          }
+          refs = persistedArtifacts.map((artifact) => artifact.id);
+          accepted = await db.$transaction(async (tx) => {
+            const runFence = await tx.automationRun.updateMany({ where: { id: runId, status: "running", stopRequestedAt: null }, data: { currentStageId: definition.stageId } });
+            if (!runFence.count || controller.signal.aborted) return false;
+            for (const { id, payload, storageRef, checksum } of persistedArtifacts) {
+              await tx.automationArtifact.create({ data: { id, schemaVersion: 1, kind: payload.kind, runId, stageExecutionId: execution.id, attemptId, actionId: definition.actionId, bankId: payload.bankId ?? null, modality: payload.modality ?? null, pass: payload.pass ?? null, modelBindingJson: JSON.stringify(payload.modelBinding ?? {}), effectiveSettingsJson: JSON.stringify(payload.effectiveSettings), inputRefsJson: JSON.stringify(payload.inputRefs), sourceAssetRefsJson: JSON.stringify(payload.sourceAssetRefs), audioRangeJson: payload.audioRange ? JSON.stringify(payload.audioRange) : null, segmentRefsJson: JSON.stringify(payload.segmentRefs), validity: payload.validity, warningsJson: JSON.stringify(payload.warnings), payloadRef: storageRef, checksum } });
+            }
+            await tx.automationAttempt.update({ where: { id: attemptId }, data: { status: "succeeded", finishedAt: new Date(), outputArtifactRefsJson: JSON.stringify(refs), metricsJson: JSON.stringify({ ...(result.metrics ?? {}), metricClass: definition.settings.effective.metricClass ?? null, wallDurationMs: Date.now() - executionStartedAt, workUnits: ["audio.clap.resolved", "spec.siglip.resolved", "audio.extract_acoustics", "audio.analyze"].includes(definition.actionId) ? Math.max(1, Number(plan.previewEstimates.segmentCount ?? 1)) : definition.actionId === "audio.gemma.awtd" || definition.actionId === "audio.gemma.resolved" ? Math.max(1, Math.ceil((inputs.audioRange?.durationSeconds ?? 1) / 20)) : definition.actionId.startsWith("text.") && plan.searchContext.searchMode === "transition" ? 2 : 1, inputDurationSeconds: inputs.audioRange?.durationSeconds ?? null, effectiveTopK: plan.budgetPolicies.topK ?? null, segmentCount: inputs.audioRange ? plan.previewEstimates.segmentCount ?? null : null }) } });
+            await tx.automationStageExecution.update({ where: { id: execution.id }, data: { status: "succeeded", successfulAttemptId: attemptId, outputArtifactRefsJson: JSON.stringify(refs) } });
+            return true;
+          }, { maxWait: 15_000, timeout: 30_000 });
+        } catch (error) {
+          await Promise.all(persistedArtifacts.map((artifact) => removeRunArtifact(artifact.storageRef)));
+          throw error;
         }
-        await db.$transaction([
-          db.automationAttempt.update({ where: { id: attemptId }, data: { status: "succeeded", finishedAt: new Date(), outputArtifactRefsJson: JSON.stringify(refs), metricsJson: JSON.stringify({ ...(result.metrics ?? {}), metricClass: definition.settings.effective.metricClass ?? null, wallDurationMs: Date.now() - executionStartedAt, workUnits: ["audio.clap.resolved", "spec.siglip.resolved", "audio.extract_acoustics", "audio.analyze"].includes(definition.actionId) ? Math.max(1, Number(plan.previewEstimates.segmentCount ?? 1)) : definition.actionId === "audio.gemma.awtd" || definition.actionId === "audio.gemma.resolved" ? Math.max(1, Math.ceil((inputs.audioRange?.durationSeconds ?? 1) / 20)) : definition.actionId.startsWith("text.") && plan.searchContext.searchMode === "transition" ? 2 : 1, inputDurationSeconds: inputs.audioRange?.durationSeconds ?? null, effectiveTopK: plan.budgetPolicies.topK ?? null, segmentCount: inputs.audioRange ? plan.previewEstimates.segmentCount ?? null : null }) } }),
-          db.automationStageExecution.update({ where: { id: execution.id }, data: { status: "succeeded", successfulAttemptId: attemptId, outputArtifactRefsJson: JSON.stringify(refs) } }),
-        ]);
+        if (!accepted) {
+          await Promise.all(persistedArtifacts.map((artifact) => removeRunArtifact(artifact.storageRef)));
+          throw new DOMException("Stopped", "AbortError");
+        }
         await appendEvent(runId, "stage.succeeded", { artifactIds: refs, completionSource: result.completionSource ?? "computed" }, definition.stageId, attemptId);
       } catch (error) {
         const stopState = await db.automationRun.findUnique({ where: { id: runId }, select: { stopRequestedAt: true } });
@@ -319,7 +390,7 @@ async function prepareFailedNodeAction(runId: string, run: { stages: Array<{ id:
   const inputPayload = await readRunArtifact(inputArtifact.payloadRef) as AutomationArtifactPayload;
   const snapshot = (inputPayload.data as { segments?: Array<{ id: string; snapshot: unknown }> } | undefined)?.segments?.find((item) => item.id === action.nodeId)?.snapshot;
   if (!snapshot) throw new Error(`Saved node-specific input snapshot for ${action.nodeId} is missing.`);
-  const resolvedInputs = await resolveBindings(runId, plan.stages.indexOf(definition), plan);
+  const resolvedInputs = await resolveBindings(runId, definition, plan);
   const boundBrief = resolvedInputs.brief as { data?: unknown } | undefined;
   const briefData = boundBrief?.data as { text?: unknown; query_en?: unknown; reverse_query?: { query_en?: unknown } } | undefined;
   const derivedBrief = typeof briefData?.text === "string" ? briefData.text : typeof briefData?.query_en === "string" ? briefData.query_en : typeof briefData?.reverse_query?.query_en === "string" ? briefData.reverse_query.query_en : "";

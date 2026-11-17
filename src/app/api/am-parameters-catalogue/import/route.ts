@@ -19,6 +19,11 @@ export async function POST(request: NextRequest) {
         } else {
           const parsed = JSON.parse(entry.content) as unknown;
           if (Array.isArray(parsed)) candidates.push(...parsed);
+          else if (parsed && typeof parsed === "object" && Array.isArray((parsed as { batches?: unknown }).batches)) {
+            for (const batch of (parsed as { batches: unknown[] }).batches) {
+              if (batch && typeof batch === "object" && Array.isArray((batch as { parameters?: unknown }).parameters)) candidates.push(...(batch as { parameters: unknown[] }).parameters);
+            }
+          }
           else if (parsed && typeof parsed === "object" && Array.isArray((parsed as { parameters?: unknown }).parameters)) candidates.push(...(parsed as { parameters: unknown[] }).parameters);
           else if (parsed && typeof parsed === "object" && "technical_name" in parsed) candidates.push(parsed);
           else if (parsed && typeof parsed === "object") for (const value of Object.values(parsed)) { if (Array.isArray(value)) candidates.push(...value); }

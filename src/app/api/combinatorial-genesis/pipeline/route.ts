@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { NextResponse } from "next/server";
 
-import { getPipelineJob, restartPipelineJob, startPipelineJob, stopPipelineJob } from "@/lib/combinatorial-genesis/pipeline-job";
+import { getPipelineJob, stopPipelineJob } from "@/lib/combinatorial-genesis/pipeline-job";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 1800;
@@ -34,10 +34,11 @@ export async function GET() {
   return NextResponse.json({ job: getPipelineJob(), report: await readReport() });
 }
 
-export async function POST(request: Request) {
-  const body = await request.json().catch(() => ({})) as { restart?: boolean };
-  const result = body.restart ? await restartPipelineJob() : await startPipelineJob();
-  return NextResponse.json({ ...result, job: getPipelineJob() }, { status: result.started ? 202 : 409 });
+export async function POST() {
+  return NextResponse.json({
+    error: "The legacy inbox pipeline is disabled because it can activate a corpus outside the current-catalogue candidate workflow. Use Service Bay → Build current-catalog candidate.",
+    job: getPipelineJob(),
+  }, { status: 410 });
 }
 
 export async function DELETE() {

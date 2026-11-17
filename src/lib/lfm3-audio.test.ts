@@ -1,11 +1,18 @@
 import { describe, expect, it } from "vitest";
 
-import { buildLfm3Prompt, cleanLfm3Output, normalizeLfm3Window, parseLfm3Runtime } from "./lfm3-audio";
+import { buildLfm3OllamaMessages, buildLfm3Prompt, cleanLfm3Output, normalizeLfm3Window, parseLfm3Runtime } from "./lfm3-audio";
 
 describe("LFM3 audio request helpers", () => {
   it("uses fixed concise English prompts", () => {
     expect(buildLfm3Prompt("describe")).toContain("one concise English paragraph");
     expect(buildLfm3Prompt("asr")).toBe("Perform ASR in English.");
+  });
+
+  it("sends the LFM3 instruction as a system message and audio as the user input", () => {
+    expect(buildLfm3OllamaMessages(buildLfm3Prompt("asr"), "encoded-audio")).toEqual([
+      { role: "system", content: "Perform ASR in English." },
+      { role: "user", content: "", images: ["encoded-audio"] },
+    ]);
   });
 
   it("defaults to verified local Ollama and accepts llama.cpp as an alternate", () => {

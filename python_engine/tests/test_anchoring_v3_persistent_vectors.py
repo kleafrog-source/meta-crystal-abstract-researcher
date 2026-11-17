@@ -13,10 +13,19 @@ ANCHORING_DIR = PROJECT_ROOT / "python_engine" / "anchoring_v3"
 sys.path.insert(0, str(ANCHORING_DIR))
 
 from anchoring import Config, _best_query_embedding, _param_eid, _value_anchor_apply  # noqa: E402
-from bridge import load_composite_index  # noqa: E402
+from bridge import json_default, load_composite_index  # noqa: E402
 
 
 class PersistentVectorTests(unittest.TestCase):
+    def test_bridge_json_serializes_numpy_confidence_scalars(self) -> None:
+        payload = {"confidence": np.float32(0.42), "scores": np.asarray([0.1, 0.2], dtype=np.float32)}
+
+        encoded = json.dumps(payload, default=json_default)
+
+        decoded = json.loads(encoded)
+        self.assertAlmostEqual(decoded["confidence"], 0.42, places=6)
+        np.testing.assert_allclose(decoded["scores"], [0.1, 0.2])
+
     def test_bridge_memory_maps_binary_vectors(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -37,7 +46,7 @@ class PersistentVectorTests(unittest.TestCase):
                 handle.write(struct.pack("<II", 2, 3))
                 handle.write(np.asarray([[1, 2, 3], [4, 5, 6]], dtype="<f4").tobytes())
 
-            vectors, rows_by_name = load_composite_index(root)
+            vectors, rows_by_name = load_composite_index(root, json.loads((root / "manifest.json").read_text(encoding="utf-8")))
 
             self.assertIsInstance(vectors, np.memmap)
             self.assertEqual(rows_by_name, {"first": 0, "second": 1})

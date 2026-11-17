@@ -2,9 +2,12 @@ import type { GenesisLibraryParameter } from "@/lib/combinatorial-genesis/librar
 import { DOMAIN_SET, normalizedCategoryKey, type TaxonomyMap } from "./taxonomy";
 import { isPublishedParameterType } from "@/lib/combinatorial-genesis/parameter-schema";
 
-export interface CompletionGap { field: string; reason: string }
+export interface CompletionGap { field: string; reason: string; kind: "missing" | "invalid" }
 export interface CompletionAssessment {
+  /** Fields that need attention. Kept under its old name for API compatibility. */
   missing_fields: string[];
+  missing_only_fields: string[];
+  invalid_fields: string[];
   gaps: CompletionGap[];
   missing_count: number;
   required_count: number;
@@ -26,8 +29,12 @@ function finite(value: unknown): value is number { return typeof value === "numb
 function safeLexicalText(value: string): boolean { return !PATH_OR_PROVENANCE.test(value); }
 
 export function assessCompleteness(row: GenesisLibraryParameter, map: TaxonomyMap): CompletionAssessment {
-  const gaps = new Map<string, string>();
-  const mark = (field: string, reason: string) => gaps.set(field, reason);
+  const gaps = new Map<string, CompletionGap>();
+  const mark = (field: string, reason: string) => {
+    const value = (row as unknown as Record<string, unknown>)[field];
+    const absent = value === undefined || value === null || typeof value === "string" && !value.trim() || Array.isArray(value) && value.length === 0;
+    gaps.set(field, { field, reason, kind: absent ? "missing" : "invalid" });
+  };
   const category = text(row.category);
   const type = row.ui_element;
   let requiredCount = ALWAYS_REQUIRED.length;
@@ -69,8 +76,13 @@ export function assessCompleteness(row: GenesisLibraryParameter, map: TaxonomyMa
     if (!finite(row.default) || (finite(row.min_value) && row.default < row.min_value) || (finite(row.max_value) && row.default > row.max_value)) mark("default", "default должен быть числом внутри min_value…max_value.");
     const en = text(row.description_en).toLocaleLowerCase();
     const ru = text(row.description_ru).toLocaleLowerCase();
-    if (!/\b(lower|low)\b/.test(en) || !/\b(higher|high)\b/.test(en)) mark("description_en", "Для Range нужно объяснить направление низких и высоких значений.");
-    if (!/(низк|меньш)/.test(ru) || !/(высок|больш)/.test(ru)) mark("description_ru", "Для Range нужно объяснить направление низких и высоких значений.");
+    const timeLikeRange = /^(?:ms|s|sec|secs|second|seconds|millisecond|milliseconds)$/i.test(text(row.unit)) || /^(?:time|duration|delay_time)$/i.test(text(row.quantity_kind));
+    const englishLow = /\b(low|lower|negative|below)\b/.test(en) || timeLikeRange && /\b(short|shorter)\b/.test(en);
+    const englishHigh = /\b(high|higher|positive|above)\b/.test(en) || timeLikeRange && /\b(long|longer)\b/.test(en);
+    const russianLow = /(низк|нижн|меньш|отрицат|ниже)/.test(ru) || timeLikeRange && /(коротк|кратк)/.test(ru);
+    const russianHigh = /(высок|высш|верхн|больш|положит|выше)/.test(ru) || timeLikeRange && /(длинн|длитель)/.test(ru);
+    if (!englishLow || !englishHigh) mark("description_en", "Для Range нужно объяснить направление низких и высоких значений.");
+    if (!russianLow || !russianHigh) mark("description_ru", "Для Range нужно объяснить направление низких и высоких значений.");
 
   } else if (type === "Select") {
     requiredCount += 1;
@@ -87,24 +99,36 @@ export function assessCompleteness(row: GenesisLibraryParameter, map: TaxonomyMa
     if (!finite(row.step) || row.step !== 1) mark("step", "Toggle требует step = 1.");
     if (row.default !== 0 && row.default !== 1) mark("default", "Toggle default должен быть 0 или 1.");
     if (text(row.unit) !== "boolean") mark("unit", "Toggle unit должен быть boolean.");
-    if (!/\b(off|disabled)\b/i.test(text(row.description_en)) || !/\b(on|enabled)\b/i.test(text(row.description_en))) mark("description_en", "Toggle должен объяснять состояния off и on.");
-    if (!/(выключ|отключ)/i.test(text(row.description_ru)) || !/(включ|актив)/i.test(text(row.description_ru))) mark("description_ru", "Toggle должен объяснять выключенное и включённое состояния.");
+    const descriptionEn = text(row.description_en);
+    const hasEnglishStateLabels = /\b(off|disabled)\b/i.test(descriptionEn) && /\b(on|enabled)\b/i.test(descriptionEn);
+    const hasEnglishNumericStates = /(?:^|\D)0(?:\D|$)/.test(descriptionEn) && /(?:^|\D)1(?:\D|$)/.test(descriptionEn) &&
+      /\b(allow|allows|let|lets|follow|follows|manual|fixed)\b/i.test(descriptionEn) &&
+      /\b(pin|pins|hold|holds|lock|locks|automatic|automatically|prevent|prevents)\b/i.test(descriptionEn);
+    if (!hasEnglishStateLabels && !hasEnglishNumericStates) mark("description_en", "Toggle должен объяснять состояния off/on либо различимые состояния 0/1.");
+    const descriptionRu = text(row.description_ru);
+    const hasRussianStateLabels = /(?:выкл(?:юч\p{L}*)?|отключ\p{L}*)/iu.test(descriptionRu) && /(?:вкл(?:юч\p{L}*)?|актив\p{L}*)/iu.test(descriptionRu);
+    const hasRussianNumericStates = /(?:^|\D)0(?:\D|$)/.test(descriptionRu) && /(?:^|\D)1(?:\D|$)/.test(descriptionRu) &&
+      /(позвол|разреш|след|ручн)/iu.test(descriptionRu) && /(удерж|фикс|автомат|запрет)/iu.test(descriptionRu);
+    if (!hasRussianStateLabels && !hasRussianNumericStates) mark("description_ru", "Toggle должен объяснять выключенное/включённое состояния или различимые состояния 0/1.");
 
   } else if (type === "Text") {
-    if (typeof row.default !== "string" || !text(row.default)) mark("default", "Text требует строковый default.");
+    // Text controls may intentionally start empty; the published collection contract requires a string, not non-empty text.
+    if (typeof row.default !== "string") mark("default", "Text требует строковый default.");
     if (text(row.unit) !== "text") mark("unit", "Text unit должен быть text.");
   } else if (type === "String") {
-    if (typeof row.default !== "string" || !text(row.default)) mark("default", "String требует непустой строковый default.");
+    if (typeof row.default !== "string") mark("default", "String требует строковый default.");
   } else if (type === "Array") {
     if (!Array.isArray(row.default) || row.default.length === 0 || row.default.some((value) => !finite(value))) mark("default", "Array default должен быть непустым массивом конечных чисел.");
   } else if (!(finite(row.default) || typeof row.default === "string" && Boolean(text(row.default)) || Array.isArray(row.default) && row.default.every(finite))) {
     mark("default", "Значение default не соответствует допустимому JSON-типу.");
   }
 
-  const result = [...gaps].map(([field, reason]) => ({ field, reason }));
+  const result = [...gaps.values()];
   const missingCount = result.length;
   return {
     missing_fields: result.map(({ field }) => field),
+    missing_only_fields: result.filter(({ kind }) => kind === "missing").map(({ field }) => field),
+    invalid_fields: result.filter(({ kind }) => kind === "invalid").map(({ field }) => field),
     gaps: result,
     missing_count: missingCount,
     required_count: requiredCount,

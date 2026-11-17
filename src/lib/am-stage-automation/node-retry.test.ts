@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { NodeRequestError, providerFailure, withNodeRetries } from "./node-retry";
+import { assertProviderRequestMayStart, NodeOutcomeUnknownError, NodeRequestError, providerFailure, withNodeRetries } from "./node-retry";
 
 describe("withNodeRetries", () => {
   it("treats an individual provider attempt timeout as retryable network failure", () => {
@@ -24,6 +24,72 @@ describe("withNodeRetries", () => {
     const sleep = vi.fn(async (_ms: number, signal: AbortSignal) => { controller.abort(); if (signal.aborted) throw new DOMException("stop", "AbortError"); });
     await expect(withNodeRetries(operation, { signal: controller.signal, maxAttempts: 4, maxElapsedMs: 10_000, perAttemptTimeoutMs: 1000, sleep })).rejects.toMatchObject({ name: "AbortError" });
     expect(operation).toHaveBeenCalledTimes(1);
+  });
+  it("rejects a provider result that resolves after the run was stopped", async () => {
+    const controller = new AbortController();
+    const operation = vi.fn(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 15));
+      return "late";
+    });
+    setTimeout(() => controller.abort(), 1);
+    await expect(withNodeRetries(operation, { signal: controller.signal, maxAttempts: 3, maxElapsedMs: 10_000, perAttemptTimeoutMs: 1000, sleep: async () => {} })).rejects.toMatchObject({ name: "AbortError" });
+    expect(operation).toHaveBeenCalledTimes(1);
+  });
+  it("does not accept a response after a per-attempt timeout and retries within the budget", async () => {
+    let attempt = 0;
+    const operation = vi.fn(async () => {
+      attempt += 1;
+      if (attempt === 1) await new Promise((resolve) => setTimeout(resolve, 30));
+      return attempt === 1 ? "late" : "ok";
+    });
+    await expect(withNodeRetries(operation, { signal: new AbortController().signal, maxAttempts: 2, maxElapsedMs: 10_000, perAttemptTimeoutMs: 5, random: () => 0, sleep: async () => {} })).resolves.toBe("ok");
+    expect(operation).toHaveBeenCalledTimes(2);
+  });
+  it("classifies a late rejection after per-attempt timeout as retryable timeout", async () => {
+    let attempt = 0;
+    const operation = vi.fn(async () => {
+      attempt += 1;
+      if (attempt === 1) {
+        await new Promise((resolve) => setTimeout(resolve, 30));
+        throw new NodeRequestError("late invalid response", undefined, undefined, "invalid");
+      }
+      return "ok";
+    });
+    await expect(withNodeRetries(operation, { signal: new AbortController().signal, maxAttempts: 2, maxElapsedMs: 10_000, perAttemptTimeoutMs: 5, random: () => 0, sleep: async () => {} })).resolves.toBe("ok");
+    expect(operation).toHaveBeenCalledTimes(2);
+  });
+  it("does not resend a provider call when the first outcome is ambiguous", async () => {
+    const operation = vi.fn(async () => { throw new NodeRequestError("socket closed after request send", undefined, undefined, "network"); });
+    await expect(withNodeRetries(operation, {
+      signal: new AbortController().signal,
+      maxAttempts: 4,
+      maxElapsedMs: 10_000,
+      perAttemptTimeoutMs: 1000,
+      retryMode: "at_most_once",
+      sleep: async () => {},
+    })).rejects.toBeInstanceOf(NodeOutcomeUnknownError);
+    expect(operation).toHaveBeenCalledTimes(1);
+  });
+  it("does not replay a generation call after a complete but malformed response", async () => {
+    const operation = vi.fn(async () => { throw new NodeRequestError("provider returned empty response", undefined, undefined, "format"); });
+    await expect(withNodeRetries(operation, {
+      signal: new AbortController().signal,
+      maxAttempts: 4,
+      maxElapsedMs: 10_000,
+      perAttemptTimeoutMs: 1000,
+      retryMode: "at_most_once",
+      sleep: async () => {},
+    })).rejects.toBeInstanceOf(NodeOutcomeUnknownError);
+    expect(operation).toHaveBeenCalledTimes(1);
+  });
+  it.each(["request_started", "outcome_unknown", "retrying"])("blocks replay of persisted provider checkpoint state %s", (status) => {
+    expect(() => assertProviderRequestMayStart({ status })).toThrow(NodeOutcomeUnknownError);
+  });
+  it.each(["failed", "stopped"])("blocks replay of an attempted provider checkpoint marked %s, including legacy checkpoints", (status) => {
+    expect(() => assertProviderRequestMayStart({ status, attemptsUsed: 1 })).toThrow(NodeOutcomeUnknownError);
+  });
+  it("allows a stopped checkpoint when no provider attempt started", () => {
+    expect(() => assertProviderRequestMayStart({ status: "stopped", attemptsUsed: 0 })).not.toThrow();
   });
   it("honors Retry-After without exceeding the remaining time budget", async () => {
     const operation = vi.fn().mockRejectedValue(new NodeRequestError("rate limited", 429, 4000, "http"));

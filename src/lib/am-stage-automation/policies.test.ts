@@ -1,7 +1,37 @@
 import { describe, expect, it } from "vitest";
-import { parseBriefTemplateVariables, planUniformWindows, resolveAutomationTopK, resolveBriefTemplate, selectOrderedEvents } from "./policies";
+import { briefTemplateVariables, parseBriefTemplateVariables, planUniformWindows, resolveAutomationTemplateSettings, resolveAutomationTopK, resolveBriefTemplate, selectOrderedEvents } from "./policies";
 
 describe("Automation bounded planning policies", () => {
+  it("uses manually edited scenario template settings before workbench defaults", () => {
+    expect(resolveAutomationTemplateSettings({
+      origin: "manual",
+      stageTemplate: "Node {{mood}} {{space}}",
+      stageVariables: { mood: "stage-calm" },
+      workspaceTemplate: "Workbench {{mood}} {{space}}",
+      workspaceVariables: { mood: "workbench-mood", space: "wide" },
+      workspaceVariablesText: "space=close",
+    })).toEqual({ template: "Node {{mood}} {{space}}", variables: { mood: "stage-calm", space: "wide" } });
+  });
+
+  it("keeps workbench inputs as overrides for built-in scenario defaults", () => {
+    expect(resolveAutomationTemplateSettings({
+      origin: "scenario_default",
+      stageTemplate: "Built in {{mood}}",
+      stageVariables: { mood: "default" },
+      workspaceTemplate: "Workbench {{mood}}",
+      workspaceVariables: { mood: "custom" },
+    })).toEqual({ template: "Workbench {{mood}}", variables: { mood: "custom" } });
+  });
+
+  it("lets manual node variables win while textual workbench variables fill missing keys", () => {
+    expect(resolveAutomationTemplateSettings({
+      origin: "manual",
+      stageTemplate: "Node {{mood}} in {{space}}",
+      stageVariables: { mood: "calm" },
+      workspaceVariablesText: "mood=bright\nspace=wide",
+    })).toEqual({ template: "Node {{mood}} in {{space}}", variables: { mood: "calm", space: "wide" } });
+  });
+
   it("resolves only explicitly supplied template values", () => {
     expect(resolveBriefTemplate("Sound: {{tone}}", { tone: "warm" })).toEqual({ text: "Sound: warm", unresolved: [] });
     expect(resolveBriefTemplate("Sound: {{tone}}", {})).toEqual({ text: "Sound: {{tone}}", unresolved: ["tone"] });
@@ -9,6 +39,10 @@ describe("Automation bounded planning policies", () => {
   it("parses explicit template substitutions and rejects malformed rows", () => {
     expect(parseBriefTemplateVariables("tone=warm\nscene=cathedral")).toEqual({ tone: "warm", scene: "cathedral" });
     expect(() => parseBriefTemplateVariables("missing separator")).toThrow(/key=value/u);
+  });
+  it("prefers structured template variables and falls back to key=value text", () => {
+    expect(briefTemplateVariables({ variables: { mood: "warm" }, variablesText: "mood=cold" })).toEqual({ mood: "warm" });
+    expect(briefTemplateVariables({ variablesText: "mood=cold" })).toEqual({ mood: "cold" });
   });
   it("covers the entire range with exactly N ordered windows", () => {
     const plan = planUniformWindows(2, 14, { mode: "exact", requestedCount: 6, maximumCount: 6, intervalSeconds: 5 });

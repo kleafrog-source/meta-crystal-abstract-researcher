@@ -111,6 +111,10 @@ export async function readRunArtifact(storageRef: string): Promise<unknown> {
   return JSON.parse(content) as unknown;
 }
 
+export async function removeRunArtifact(storageRef: string) {
+  await fs.rm(storedPath(storageRef), { force: true });
+}
+
 export async function moveRunToTrash(runId: string) {
   if (!SAFE_ID.test(runId)) throw new Error("Invalid run id.");
   const source = path.join(ROOT, "runs", runId);

@@ -3,6 +3,8 @@ export interface NodeRetryOptions {
   maxAttempts: number;
   maxElapsedMs: number;
   perAttemptTimeoutMs: number;
+  /** Use only when repeating the operation could duplicate a provider-side effect or cost. */
+  retryMode?: "repeatable" | "at_most_once";
   initialAttempts?: number;
   initialElapsedMs?: number;
   random?: () => number;
@@ -15,6 +17,27 @@ export class NodeRequestError extends Error {
   constructor(message: string, readonly status?: number, readonly retryAfterMs?: number, readonly category: "http" | "network" | "format" | "invalid" = "invalid", readonly diagnostics?: Record<string, unknown>) {
     super(message);
     this.name = "NodeRequestError";
+  }
+}
+
+export class NodeOutcomeUnknownError extends NodeRequestError {
+  constructor(message = "Provider request outcome is unknown; automatic replay is blocked. Start a new Run to make another explicit request.") {
+    super(message, undefined, undefined, "network");
+    this.name = "NodeOutcomeUnknownError";
+  }
+}
+
+/** Prevent replay after a request may have reached a provider in an earlier process. */
+export function assertProviderRequestMayStart(checkpoint: unknown): void {
+  if (!checkpoint || typeof checkpoint !== "object" || Array.isArray(checkpoint)) return;
+  const saved = checkpoint as { status?: unknown; attemptsUsed?: unknown; requestDiagnostics?: { replayPolicy?: unknown } };
+  const status = saved.status;
+  // `retrying` is the persisted pre-request status used by earlier runtime versions.
+  if (status === "request_started" || status === "outcome_unknown" || status === "retrying") {
+    throw new NodeOutcomeUnknownError();
+  }
+  if ((status === "failed" || status === "stopped") && Number(saved.attemptsUsed) > 0) {
+    throw new NodeOutcomeUnknownError("A provider request already started for this node; automatic replay is blocked. Start a new Run to make another explicit request.");
   }
 }
 
@@ -39,6 +62,7 @@ export function retryableNodeError(error: unknown): boolean {
 }
 
 function abortError() { return new DOMException("Automation stopped", "AbortError"); }
+function attemptTimeoutError() { return new NodeRequestError("Node request timed out before its late response could be accepted.", undefined, undefined, "network"); }
 
 export function abortableDelay(milliseconds: number, signal: AbortSignal): Promise<void> {
   if (signal.aborted) return Promise.reject(abortError());
@@ -61,9 +85,21 @@ export async function withNodeRetries<T>(operation: (signal: AbortSignal) => Pro
     await options.onAttempt?.(attempt);
     const timeout = AbortSignal.timeout(options.perAttemptTimeoutMs);
     const signal = AbortSignal.any([options.signal, timeout]);
-    try { return await operation(signal); }
+    try {
+      const result = await operation(signal);
+      if (signal.aborted) {
+        if (options.signal.aborted) throw abortError();
+        throw attemptTimeoutError();
+      }
+      return result;
+    }
     catch (error) {
       if (options.signal.aborted) throw abortError();
+      if (signal.aborted) error = attemptTimeoutError();
+      if (options.retryMode === "at_most_once") {
+        const requestError = error as NodeRequestError;
+        throw new NodeOutcomeUnknownError(`${requestError.message} Automatic replay is blocked; start a new Run to make another explicit request.`);
+      }
       if (!retryableNodeError(error) || attempt >= maxAttempts) throw error;
       const elapsed = elapsedBefore + Date.now() - started;
       if (elapsed >= options.maxElapsedMs) throw error;

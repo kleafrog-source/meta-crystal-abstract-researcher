@@ -10,6 +10,7 @@ import json
 import math
 import os
 import random
+import re
 import struct
 import urllib.error
 import urllib.request
@@ -200,8 +201,13 @@ def normalize(vector: Iterable[float]) -> list[float]:
     return [value / norm for value in values]
 
 
-def cache_key(parameters: list[dict[str, Any]], model: str) -> str:
-    digest = hashlib.sha256(model.encode("utf-8"))
+def cache_key(parameters: list[dict[str, Any]], model: str, endpoint: str) -> str:
+    digest = hashlib.sha256(json.dumps({
+        "model": model,
+        "endpoint": endpoint.rstrip("/"),
+        "embedding_text_version": 1,
+        "normalization": "l2-float32-v1",
+    }, sort_keys=True, separators=(",", ":")).encode("utf-8"))
     for parameter in parameters:
         digest.update(str(parameter["technical_name"]).encode("utf-8"))
         digest.update(embedding_text(parameter).encode("utf-8"))
@@ -220,42 +226,150 @@ def write_embedding_cache(path: Path, vectors: list[list[float]]) -> int:
 
 
 def read_embedding_cache(path: Path) -> list[list[float]]:
-    with path.open("rb") as handle:
-        count, dimensions = struct.unpack("<II", handle.read(8))
-        row_size = dimensions * 4
-        vectors = []
-        for _ in range(count):
-            raw = handle.read(row_size)
-            if len(raw) != row_size:
-                raise ValueError("Embedding cache is truncated")
-            vectors.append(list(struct.unpack(f"<{dimensions}f", raw)))
-        return vectors
+    raw = path.read_bytes()
+    if len(raw) < 8:
+        raise ValueError("Embedding cache header is truncated")
+    count, dimensions = struct.unpack_from("<II", raw, 0)
+    if not dimensions or len(raw) != 8 + count * dimensions * 4:
+        raise ValueError("Embedding cache size does not match its count/dimension header")
+    return [
+        list(struct.unpack_from(f"<{dimensions}f", raw, 8 + index * dimensions * 4))
+        for index in range(count)
+    ]
 
 
 def load_or_create_embeddings(
-    parameters: list[dict[str, Any]], output_dir: Path, endpoint: str, model: str, batch_size: int
+    parameters: list[dict[str, Any]], output_dir: Path, endpoint: str, model: str, batch_size: int,
+    reuse_from: Path | None = None,
 ) -> tuple[list[list[float]], dict[str, Any]]:
+    output_dir.mkdir(parents=True, exist_ok=True)
     binary_path = output_dir / "semantic_embeddings.f32"
     metadata_path = output_dir / "semantic_embeddings_meta.json"
-    key = cache_key(parameters, model)
+    key = cache_key(parameters, model, endpoint)
+    texts = [embedding_text(parameter) for parameter in parameters]
     if binary_path.exists() and metadata_path.exists():
         metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
         if metadata.get("cache_key") == key:
-            vectors = read_embedding_cache(binary_path)
-            if len(vectors) == len(parameters):
+            try:
+                vectors = read_embedding_cache(binary_path)
+            except (OSError, ValueError, struct.error):
+                vectors = []
+            if len(vectors) == len(parameters) and metadata.get("status", "complete") == "complete":
+                binary_sha256 = hashlib.sha256(binary_path.read_bytes()).hexdigest()
+                if metadata.get("binary_sha256") not in (None, binary_sha256):
+                    raise ValueError("Saved semantic embeddings checksum does not match their metadata.")
+                metadata = {
+                    **metadata, "status": "complete", "completed_count": len(vectors),
+                    "binary_sha256": binary_sha256,
+                }
+                write_json(metadata_path, metadata)
                 print(f"Using cached embeddings: {len(vectors)}")
                 return vectors, metadata
 
+    if reuse_from is not None:
+        reuse_binary = reuse_from / "semantic_embeddings.f32"
+        reuse_metadata = reuse_from / "semantic_embeddings_meta.json"
+        try:
+            metadata = json.loads(reuse_metadata.read_text(encoding="utf-8"))
+            vectors = read_embedding_cache(reuse_binary)
+            if (metadata.get("cache_key") == key and metadata.get("model") == model
+                    and metadata.get("endpoint") == endpoint.rstrip("/")
+                    and metadata.get("record_count") == len(parameters) == len(vectors)
+                    and metadata.get("dimensions") == len(vectors[0])
+                    and metadata.get("status", "complete") == "complete"
+                    and metadata.get("binary_sha256") in (None, hashlib.sha256(reuse_binary.read_bytes()).hexdigest())):
+                output_dir.mkdir(parents=True, exist_ok=True)
+                binary_path.write_bytes(reuse_binary.read_bytes())
+                write_json(metadata_path, {**metadata, "binary_sha256": hashlib.sha256(binary_path.read_bytes()).hexdigest()})
+                print(f"Reused validated embeddings: {len(vectors)} from matching cache key {key}", flush=True)
+                return vectors, metadata
+            print("Embedding cache candidate rejected: cache key, model, endpoint, dimensions, or record count differs; recomputing.", flush=True)
+        except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError, struct.error):
+            print("Embedding cache candidate rejected: missing or malformed cache; recomputing.", flush=True)
+
+    completed = 0
+    dimensions = 0
     vectors: list[list[float]] = []
-    texts = [embedding_text(parameter) for parameter in parameters]
-    for start in range(0, len(texts), batch_size):
-        vectors.extend(normalize(vector) for vector in embed_batch(endpoint, model, texts[start : start + batch_size]))
-        print(f"Embedded {len(vectors)}/{len(texts)}", flush=True)
-    dimensions = write_embedding_cache(binary_path, vectors)
+    if binary_path.exists() and metadata_path.exists():
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        if metadata.get("cache_key") == key and metadata.get("model") == model and metadata.get("endpoint") == endpoint.rstrip("/"):
+            if metadata.get("status") == "vectorizing":
+                raw = binary_path.read_bytes()
+                if len(raw) < 8:
+                    raise ValueError("Partial semantic embedding file has a truncated header.")
+                stored_count, dimensions = struct.unpack_from("<II", raw, 0)
+                completed = int(metadata.get("completed_count", -1))
+                if (completed < 0 or completed > len(parameters) or not dimensions
+                        or stored_count not in (completed, len(parameters))
+                        or len(raw) < 8 + completed * dimensions * 4):
+                    raise ValueError("Partial semantic embeddings do not match their progress checkpoint.")
+                expected_size = 8 + completed * dimensions * 4
+                with binary_path.open("r+b") as handle:
+                    handle.truncate(expected_size)
+                    handle.seek(0)
+                    handle.write(struct.pack("<II", completed, dimensions))
+                    handle.flush()
+                    os.fsync(handle.fileno())
+                vectors = [list(struct.unpack_from(f"<{dimensions}f", raw, 8 + i * dimensions * 4)) for i in range(completed)]
+            elif binary_path.exists():
+                raise ValueError("Saved semantic embedding data is incompatible with this input; prepare a new candidate.")
+
+    if not binary_path.exists():
+        with binary_path.open("wb") as handle:
+            handle.write(struct.pack("<II", 0, 0))
+            handle.flush()
+            os.fsync(handle.fileno())
+    if completed == 0:
+        write_json(metadata_path, {
+            "generated_at": datetime.now(timezone.utc).isoformat(), "status": "vectorizing",
+            "model": model, "endpoint": endpoint.rstrip("/"), "cache_key": key,
+            "record_count": len(parameters), "completed_count": 0, "dimensions": 0,
+            "embedding_text_version": 1,
+        })
+
+    for start in range(completed, len(texts), batch_size):
+        raw_vectors = embed_batch(endpoint, model, texts[start : start + batch_size])
+        if len(raw_vectors) != min(batch_size, len(texts) - start):
+            raise RuntimeError("Embedding provider returned a different number of vectors than requested.")
+        chunk = [normalize(vector) for vector in raw_vectors]
+        chunk_dimensions = len(chunk[0]) if chunk else 0
+        if not chunk_dimensions or any(len(vector) != chunk_dimensions for vector in chunk):
+            raise RuntimeError("Embedding provider returned inconsistent vector dimensions.")
+        if dimensions and dimensions != chunk_dimensions:
+            raise RuntimeError("Embedding provider dimension changed while resuming semantic vectors.")
+        dimensions = chunk_dimensions
+        with binary_path.open("r+b") as handle:
+            if start == 0:
+                handle.seek(0)
+                handle.write(struct.pack("<II", 0, dimensions))
+                handle.truncate(8)
+            handle.seek(0, os.SEEK_END)
+            for vector in chunk:
+                handle.write(struct.pack(f"<{dimensions}f", *vector))
+            handle.flush()
+            os.fsync(handle.fileno())
+            completed = start + len(chunk)
+            handle.seek(0)
+            handle.write(struct.pack("<II", completed, dimensions))
+            handle.flush()
+            os.fsync(handle.fileno())
+        vectors.extend(chunk)
+        write_json(metadata_path, {
+            "generated_at": datetime.now(timezone.utc).isoformat(), "status": "vectorizing",
+            "model": model, "endpoint": endpoint.rstrip("/"), "cache_key": key,
+            "record_count": len(parameters), "completed_count": completed, "dimensions": dimensions,
+            "embedding_text_version": 1,
+        })
+        print(f"Embedded {completed}/{len(texts)}", flush=True)
+
+    if completed == 0 and not parameters:
+        dimensions = 0
+    binary_sha256 = hashlib.sha256(binary_path.read_bytes()).hexdigest()
     metadata = {
-        "generated_at": datetime.now(timezone.utc).isoformat(), "model": model,
-        "endpoint": endpoint, "cache_key": key, "record_count": len(vectors),
-        "dimensions": dimensions, "embedding_text_version": 1,
+        "generated_at": datetime.now(timezone.utc).isoformat(), "status": "complete", "model": model,
+        "endpoint": endpoint.rstrip("/"), "cache_key": key, "record_count": len(parameters),
+        "completed_count": len(parameters), "dimensions": dimensions, "embedding_text_version": 1,
+        "binary_sha256": binary_sha256,
     }
     write_json(metadata_path, metadata)
     return vectors, metadata
@@ -337,6 +451,12 @@ def normalized_unit(value: Any) -> tuple[str, ...]:
 
 
 def parameter_shape_compatible(left: dict[str, Any], right: dict[str, Any]) -> tuple[bool, str]:
+    left_kind, right_kind = left.get("quantity_kind"), right.get("quantity_kind")
+    valid_kind = lambda value: isinstance(value, str) and bool(re.fullmatch(r"[a-z][a-z0-9_]*", value))
+    if not valid_kind(left_kind) or not valid_kind(right_kind):
+        return False, "missing or invalid quantity_kind"
+    if left_kind != right_kind:
+        return False, "different quantity_kind"
     left_ui, right_ui = left.get("ui_element"), right.get("ui_element")
     if left_ui != right_ui:
         return False, "different ui_element"
@@ -557,6 +677,41 @@ def build_semantic_review(
     return scored, report
 
 
+PREPARED_INPUTS = (
+    "eligible_parameters.json", "source_parameters.json", "source_manifest.json",
+    "quality_report.json", "atom_corpus.json",
+)
+
+
+def write_prepare_manifest(output_dir: Path, source_sha256: str) -> dict[str, Any]:
+    outputs = []
+    for name in PREPARED_INPUTS:
+        path = output_dir / name
+        raw = path.read_bytes()
+        json.loads(raw)
+        outputs.append({"path": name, "bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()})
+    manifest = {"schema_version": 1, "status": "prepared", "source_sha256": source_sha256, "outputs": outputs}
+    write_json(output_dir / "prepare-manifest.json", manifest)
+    verify_prepare_manifest(output_dir)
+    return manifest
+
+
+def verify_prepare_manifest(output_dir: Path) -> dict[str, Any]:
+    manifest = json.loads((output_dir / "prepare-manifest.json").read_text(encoding="utf-8"))
+    if manifest.get("schema_version") != 1 or manifest.get("status") != "prepared":
+        raise ValueError("Prepared input manifest is missing or unsupported.")
+    entries = {str(item.get("path")): item for item in manifest.get("outputs", []) if isinstance(item, dict)}
+    if not set(PREPARED_INPUTS).issubset(entries):
+        raise ValueError("Prepared input manifest does not contain the complete model-free input set.")
+    for name, entry in entries.items():
+        path = output_dir / name
+        raw = path.read_bytes()
+        if len(raw) != entry.get("bytes") or hashlib.sha256(raw).hexdigest() != entry.get("sha256"):
+            raise ValueError(f"Prepared input failed read-back verification: {name}")
+        json.loads(raw)
+    return manifest
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
@@ -565,23 +720,55 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--skip-embeddings", action="store_true")
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--prepare-only", action="store_true", help="Write and verify model-free candidate inputs without calling an embedding model.")
+    modes.add_argument("--vectorize-only", action="store_true", help="Vectorize only the immutable inputs from a verified prepare manifest.")
+    parser.add_argument("--source-revision", default="", help="Effective catalogue revision associated with the input snapshot.")
+    parser.add_argument("--expected-input-sha256", default="", help="Optional raw-file SHA-256 guard for the input snapshot.")
+    parser.add_argument("--reuse-embeddings-from", type=Path, help="Optional prepared directory; embeddings are reused only after exact cache-key and binary-shape validation.")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    parameters = json.loads(args.input.read_text(encoding="utf-8"))
-    eligible, quality_report = build_quality_gate(parameters)
-    atoms = build_atom_corpus(eligible)
-    quality_report["atom_count"] = len(atoms)
-    write_json(args.output_dir / "eligible_parameters.json", eligible)
-    write_json(args.output_dir / "quality_report.json", quality_report)
-    write_json(args.output_dir / "atom_corpus.json", atoms)
-    print(f"Quality gate: {len(eligible)}/{len(parameters)} eligible; atoms: {len(atoms)}", flush=True)
-    if args.skip_embeddings:
+    if args.vectorize_only:
+        prepared = verify_prepare_manifest(args.output_dir)
+        if args.expected_input_sha256 and prepared.get("source_sha256") != args.expected_input_sha256:
+            raise ValueError("Prepared source does not match --expected-input-sha256.")
+        parameters = json.loads((args.output_dir / "source_parameters.json").read_text(encoding="utf-8"))
+        eligible = json.loads((args.output_dir / "eligible_parameters.json").read_text(encoding="utf-8"))
+        source_manifest = json.loads((args.output_dir / "source_manifest.json").read_text(encoding="utf-8"))
+        source_sha256 = str(prepared["source_sha256"])
+        if source_manifest.get("source_sha256") != source_sha256 or len(parameters) != source_manifest.get("source_record_count"):
+            raise ValueError("Prepared source manifest is inconsistent with the verified source inputs.")
+    else:
+        parameters = json.loads(args.input.read_text(encoding="utf-8"))
+        source_sha256 = hashlib.sha256(args.input.read_bytes()).hexdigest()
+        if args.expected_input_sha256 and args.expected_input_sha256 != source_sha256:
+            raise ValueError("Input snapshot hash does not match --expected-input-sha256.")
+        eligible, quality_report = build_quality_gate(parameters)
+        atoms = build_atom_corpus(eligible)
+        quality_report["atom_count"] = len(atoms)
+        args.output_dir.mkdir(parents=True, exist_ok=True)
+        write_json(args.output_dir / "eligible_parameters.json", eligible)
+        write_json(args.output_dir / "source_parameters.json", parameters)
+        write_json(args.output_dir / "source_manifest.json", {
+            "schema_version": 1,
+            "source_sha256": source_sha256,
+            "catalogue_revision": args.source_revision or None,
+            "source_record_count": len(parameters),
+            "eligible_record_count": len(eligible),
+            "excluded_record_count": len(parameters) - len(eligible),
+            "input_path": str(args.input.resolve()),
+        })
+        write_json(args.output_dir / "quality_report.json", quality_report)
+        write_json(args.output_dir / "atom_corpus.json", atoms)
+        write_prepare_manifest(args.output_dir, source_sha256)
+        print(f"Quality gate: {len(eligible)}/{len(parameters)} eligible; atoms: {len(atoms)}", flush=True)
+    if args.prepare_only or args.skip_embeddings:
         return 0
     vectors, metadata = load_or_create_embeddings(
-        eligible, args.output_dir, args.endpoint, args.model, max(1, args.batch_size)
+        eligible, args.output_dir, args.endpoint, args.model, max(1, args.batch_size), args.reuse_embeddings_from
     )
     queue, semantic_report = build_semantic_review(eligible, vectors, metadata)
     decisions_path = PROJECT_ROOT / "data" / "combinatorial-genesis" / "reviews" / "semantic_decisions.json"
@@ -600,6 +787,7 @@ def main() -> int:
     write_json(args.output_dir / "semantic_auto_triage_report.json", triage_report)
     write_json(args.output_dir / "semantic_groups.json", groups)
     write_json(args.output_dir / "unified_parameters_semantic_draft.json", semantic_draft)
+    write_json(args.output_dir / "semantic_representatives.json", semantic_draft)
     print(
         f"Semantic review pairs: {len(queue)}; auto decisions: "
         f"{triage_report['effective_decision_counts']}; groups: {len(groups)}; "

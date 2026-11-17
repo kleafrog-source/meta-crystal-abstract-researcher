@@ -4,8 +4,15 @@ import path from "node:path";
 
 import { NextResponse } from "next/server";
 
+import { withCatalogueLock } from "@/lib/am-parameters-catalogue/catalogue";
 import { readGenesisLibrary } from "@/lib/combinatorial-genesis/library";
-
+import {
+  classifyPublishName,
+  createDonorPolicy,
+  readDonorRestrictions,
+  resolveDonorReferences,
+} from "@/lib/combinatorial-genesis/donor-policy";
+import { activeRuntimeCorpusMatchesLive } from "@/lib/combinatorial-genesis/runtime-index";
 export const dynamic = "force-dynamic";
 
 const DATA_ROOT = path.join(process.cwd(), "data", "combinatorial-genesis");
@@ -49,6 +56,9 @@ function validateInference(value: unknown): string[] {
   if (typeof inference.ui_element !== "string") errors.push("missing ui_element");
   if (typeof inference.unit !== "string") errors.push("missing unit");
   if (inference.status !== "auto_resolved") return errors;
+  if (typeof inference.quantity_kind !== "string" || !/^[a-z][a-z0-9_]*$/.test(inference.quantity_kind)) {
+    errors.push("auto-resolved inference requires a snake_case quantity_kind carried from its donors");
+  }
   if (inference.ui_element === "Range") {
     const min = inference.min_value;
     const max = inference.max_value;
@@ -101,31 +111,53 @@ export async function POST(request: Request) {
   }
 
   try {
+    return await withCatalogueLock(async () => {
     const latest = JSON.parse(
       await fs.readFile(path.join(DATA_ROOT, "datasets", "latest.json"), "utf8"),
     ) as { version_id: string };
     if (body.dataset_version !== latest.version_id) {
       return NextResponse.json({ error: "Preview dataset version is not the latest frozen version." }, { status: 409 });
     }
-    const frozen = JSON.parse(
-      await fs.readFile(path.join(DATA_ROOT, "datasets", latest.version_id, "parameters.json"), "utf8"),
-    ) as Array<{ technical_name?: string }>;
-    const library = await readGenesisLibrary();
-    const knownNames = new Set([
-      ...library.map((parameter) => parameter.technical_name),
-      ...frozen.flatMap((parameter) => parameter.technical_name ? [parameter.technical_name] : []),
-    ]);
+    if (!(await activeRuntimeCorpusMatchesLive())) {
+      return NextResponse.json({ error: "The active corpus is historical or stale for the live catalogue; archived-corpus candidates cannot be packaged." }, { status: 409 });
+    }
+    const activeManifest = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "datasets", latest.version_id, "manifest.json"), "utf8")) as { source_revision?: string };
+    const [library, restrictions] = await Promise.all([readGenesisLibrary(), readDonorRestrictions()]);
+    const liveNames = new Set(library.map((parameter) => parameter.technical_name));
+    const donorPolicy = createDonorPolicy(library, [], {
+      ...restrictions,
+    });
     const seen = new Set<string>();
     const validated = candidates.map((candidate, index) => {
       const name = typeof candidate.technical_name === "string" ? candidate.technical_name : "";
       const errors: string[] = [];
       if (!TECHNICAL_NAME.test(name)) errors.push("invalid technical_name");
       if (seen.has(name)) errors.push("duplicate inside package");
-      if (knownNames.has(name)) errors.push("already exists in the autonomous library or frozen dataset");
+      const conflicts = classifyPublishName(name, {
+        liveNames,
+        tombstoneNames: restrictions.tombstoneNames,
+        excludedNames: restrictions.excludedNames,
+      });
+      if (conflicts.includes("live_duplicate")) errors.push("already exists in the live library");
+      if (conflicts.includes("tombstoned")) errors.push("tombstoned identity; restore it before publication");
+      if (conflicts.includes("excluded")) errors.push("excluded identity; restore it before publication");
       seen.add(name);
       errors.push(...validateInference(candidate.value_inference));
       errors.push(...validateMetadata(candidate.metadata));
       const inference = candidate.value_inference as Record<string, unknown> | undefined;
+      const donorNames = Array.isArray(inference?.donor_parameters)
+        ? inference.donor_parameters.filter((item): item is string => typeof item === "string")
+        : [];
+      if (inference?.status === "auto_resolved" && new Set(donorNames).size < 2) {
+        errors.push("auto-resolved candidate requires at least two donor identities");
+      }
+      const sourceNames = Array.isArray(candidate.parent_parameters)
+        ? candidate.parent_parameters.filter((item): item is string => typeof item === "string")
+        : [];
+      const sourceResolution = resolveDonorReferences([...sourceNames, ...donorNames], donorPolicy);
+      for (const diagnostic of sourceResolution.diagnostics) {
+        errors.push(`source ${diagnostic.technical_name} is ${diagnostic.reason}`);
+      }
       const publishable = errors.length === 0 && inference?.status === "auto_resolved";
       return { index, candidate, publishable, errors };
     });
@@ -148,6 +180,8 @@ export async function POST(request: Request) {
       publish_status: "autonomous_library_publishable",
       source: {
         dataset_version: latest.version_id,
+        catalogue_revision: activeManifest.source_revision,
+        live_catalogue_verified: true,
         embedding_model: body.embedding_model,
         query: body.query,
         macro: body.macro,
@@ -157,7 +191,9 @@ export async function POST(request: Request) {
         candidate_count: candidates.length,
         publishable_count: validated.filter((item) => item.publishable).length,
         needs_review_count: validated.filter((item) => !item.publishable).length,
-        stop_list_conflict_count: validated.filter((item) => item.errors.some((error) => error.includes("already exists"))).length,
+        stop_list_conflict_count: validated.filter((item) => item.errors.some((error) =>
+          error.includes("already exists") || error.includes("tombstoned") || error.includes("excluded"),
+        )).length,
         schema_error_count: validated.filter((item) => item.errors.length > 0).length,
       },
       candidates: validated,
@@ -181,6 +217,7 @@ export async function POST(request: Request) {
       "utf8",
     );
     return NextResponse.json({ created, package_path: packagePath, ...responseRecord });
+    });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : String(error) },

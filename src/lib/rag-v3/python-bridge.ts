@@ -1,12 +1,14 @@
 import { spawn } from "node:child_process";
-import type { TextIndexId } from "./composite-index";
-import { getConfiguredTextIndexModel } from "./composite-index";
-import { loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
+import type { ParameterValue, ValueSelectionStatus } from "./types";
+import type { TextIndexId, ValueSelectionBundle } from "./composite-index";
 
 export interface V3AnchorValue {
-  value: number | string;
-  before: number | string;
-  source: "numeric" | "value_anchor" | "lexical" | "relation" | "axis" | "retrieval" | "not_generated" | "default" | "neutral";
+  value?: ParameterValue;
+  input_value?: ParameterValue;
+  status: ValueSelectionStatus;
+  selection_evidence?: Record<string, ParameterValue>;
+  confidence?: number;
+  source?: "value_anchor" | "embedding_candidate" | "unselected";
   detail: string;
 }
 
@@ -16,16 +18,15 @@ export function runV3AnchoringBridge(payload: {
   query_embeddings?: number[][];
   relation_hints?: Record<string, { direction: number; confidence: number; relation: string }>;
   scoped_params: Array<Record<string, unknown>>;
-  current_values: Record<string, number | string>;
-  text_index?: TextIndexId;
-  value_anchors_ready?: boolean;
-  select_anchors_ready?: boolean;
+  current_values: Record<string, ParameterValue>;
+  bundle: ValueSelectionBundle;
+  diagnostic_context: Record<string, string>;
 }): Promise<Record<string, V3AnchorValue>> {
-  const textIndex = payload.text_index ?? "qwen3";
-  return Promise.all([loadEmbeddingRuntimeSettings(), getConfiguredTextIndexModel(textIndex)]).then(([settings, model]) => new Promise((resolve, reject) => {
+  const { bundle } = payload;
+  return new Promise((resolve, reject) => {
     const child = spawn(process.env.PYTHON_EXECUTABLE || "python", ["python_engine/anchoring_v3/bridge.py"], {
       cwd: process.cwd(),
-      env: { ...process.env, PYTHONUTF8: "1", PYTHONIOENCODING: "utf-8", RAG_V3_TEXT_INDEX: textIndex, OLLAMA_BASE_URL: settings.baseUrl, OLLAMA_EMBED_MODEL: model },
+      env: { ...process.env, PYTHONUTF8: "1", PYTHONIOENCODING: "utf-8" },
       stdio: ["pipe", "pipe", "pipe"],
       windowsHide: true,
     });
@@ -44,6 +45,18 @@ export function runV3AnchoringBridge(payload: {
         reject(new Error(`Invalid V3 anchoring response: ${error instanceof Error ? error.message : String(error)}`));
       }
     });
-    child.stdin.end(JSON.stringify(payload));
-  }));
+    child.stdin.end(JSON.stringify({
+      query: payload.query,
+      query_embeddings: payload.query_embeddings,
+      scoped_params: payload.scoped_params,
+      current_values: payload.current_values,
+      diagnostic_context: payload.diagnostic_context,
+      selection_identity: bundle.identity,
+      artifact_paths: {
+        bundle_root: bundle.bundleRoot,
+        text_index_directory: bundle.textIndexDirectory,
+        value_directory: bundle.valueDirectory,
+      },
+    }));
+  });
 }

@@ -10,6 +10,7 @@ import {
 } from "@/lib/rag-v3/instruction-support";
 import type {
   ActiveParameter,
+  ParameterValue,
   ProposeParametersResponse,
   RetrievalScope,
   StatusResponse,
@@ -75,7 +76,7 @@ interface RagV3State {
   ) => void;
   saveInstructionSlots: () => void;
   resetInstructionSlots: () => void;
-  updateParameterValue: (technicalName: string, value: number | string) => void;
+  updateParameterValue: (technicalName: string, value: ParameterValue) => void;
   removeParameter: (technicalName: string) => void;
   clearActiveParameters: () => void;
   resetWorkspace: () => void;
@@ -92,6 +93,7 @@ function mergeActiveParameters(
     if (!existing) {
       return parameter;
     }
+    if (parameter.value_status !== undefined) return parameter;
 
     return {
       ...parameter,
@@ -105,10 +107,11 @@ function normalizeRatio(value: number): number {
   return Math.min(100, Math.max(0, Math.round(value)));
 }
 
-function normalizeNumeric(value: number | string): number | null {
+function normalizeNumeric(value: ParameterValue | undefined): number | null {
   if (typeof value === "number") {
     return Number.isFinite(value) ? value : null;
   }
+  if (typeof value !== "string") return null;
   if (/^-?\d+(\.\d+)?$/.test(value.trim())) {
     const numeric = Number(value);
     return Number.isFinite(numeric) ? numeric : null;
@@ -130,14 +133,14 @@ function roundToStep(value: number, min: number, step?: number): number {
 }
 
 function blendValue(
-  a: number | string,
-  b: number | string,
+  a: ParameterValue,
+  b: ParameterValue,
   ratio: number,
   uiElement: UiElement,
   min?: number,
   max?: number,
   step?: number,
-): number | string {
+): ParameterValue {
   const aNum = normalizeNumeric(a);
   const bNum = normalizeNumeric(b);
   if (aNum === null || bNum === null) {
@@ -179,6 +182,31 @@ function buildTransitionResults(
 
     if (fromA && fromB) {
       const preferred = ratio < 0.5 ? fromA : fromB;
+      const selectedValue = (parameter: ActiveParameter): ParameterValue | undefined => {
+        if (parameter.value_status !== undefined) {
+          return parameter.value_status === "selected" || parameter.value_status === "selected_matches_default"
+            ? parameter.selected_value : undefined;
+        }
+        return parameter.suggested_value !== undefined ? parameter.suggested_value : parameter.current_value;
+      };
+      const aValue = selectedValue(fromA);
+      const bValue = selectedValue(fromB);
+      if (aValue === undefined || bValue === undefined) {
+        return {
+          parameter: {
+            ...preferred,
+            selected_value: undefined,
+            suggested_value: undefined,
+            current_value: undefined,
+            value_status: "selection_uncertain",
+            source: "unselected",
+            selection_detail: "Transition needs selected values from both queries; at least one side has no selected value.",
+            detail: "Transition needs selected values from both queries; at least one side has no selected value.",
+            similarity: score,
+          },
+          score,
+        };
+      }
       const min =
         typeof fromA.min_value === "number" ? fromA.min_value : fromB.min_value;
       const max =
@@ -186,8 +214,8 @@ function buildTransitionResults(
       const step =
         typeof fromA.step === "number" ? fromA.step : fromB.step;
       const blendedValue = blendValue(
-        fromA.suggested_value,
-        fromB.suggested_value,
+        aValue,
+        bValue,
         ratio,
         preferred.ui_element,
         min,
@@ -195,8 +223,8 @@ function buildTransitionResults(
         step,
       );
       const currentValue = blendValue(
-        fromA.current_value,
-        fromB.current_value,
+        aValue,
+        bValue,
         ratio,
         preferred.ui_element,
         min,
@@ -208,7 +236,9 @@ function buildTransitionResults(
         parameter: {
           ...preferred,
           suggested_value: blendedValue,
+          selected_value: blendedValue,
           current_value: currentValue,
+          value_status: "selected",
           before: fromA.current_value,
           similarity: score,
           semantic_keywords: uniq([
@@ -369,7 +399,7 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
         return {
           searchResults: nextPrimary,
           secondaryResults: nextSecondary,
-          // The backend has anchored this result from the dataset defaults.
+          // Each result carries an explicit selection status; missing values stay missing.
           activeParameters: nextActive,
           isSearching: false,
           searchError: null,
@@ -583,7 +613,16 @@ export const useRagV3Store = create<RagV3State>()(persist((set, get) => ({
     set((state) => ({
       activeParameters: state.activeParameters.map((parameter) =>
         parameter.technical_name === technicalName
-          ? { ...parameter, current_value: value }
+          ? {
+              ...parameter,
+              selected_value: value,
+              current_value: typeof value === "number" || typeof value === "string" ? value : undefined,
+              suggested_value: typeof value === "number" || typeof value === "string" ? value : undefined,
+              value_status: "selected",
+              selection_detail: "Manually edited in the parameter bank.",
+              source: "manual",
+              detail: "Manually edited in the parameter bank.",
+            }
           : parameter,
       ),
     }));

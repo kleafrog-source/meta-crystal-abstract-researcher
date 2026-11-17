@@ -127,15 +127,15 @@ function weightedValueSummary(rows: Array<{ parameter: ActiveParameter; weight: 
   const first = rows[0].parameter;
   const distribution = new Map<string, { value: number | string; weight: number }>();
   for (const row of rows) {
-    const key = valueKey(row.parameter.current_value);
-    const item = distribution.get(key) ?? { value: row.parameter.current_value, weight: 0 };
+    const key = valueKey(row.parameter.current_value as string | number);
+    const item = distribution.get(key) ?? { value: row.parameter.current_value as string | number, weight: 0 };
     item.weight += row.weight;
     distribution.set(key, item);
   }
   const valueDistribution = [...distribution.values()].sort((a, b) => b.weight - a.weight || String(a.value).localeCompare(String(b.value))).map((item) => ({ value: item.value, share: item.weight / Math.max(0.0001, rows.reduce((sum, row) => sum + row.weight, 0)) }));
   const numeric = rows.filter((row) => typeof row.parameter.current_value === "number" && Number.isFinite(row.parameter.current_value));
   if (first.ui_element === "Select" || first.ui_element === "Toggle" || !numeric.length) {
-    return { intensity: valueDistribution[0]?.value == null ? null : String(valueDistribution[0].value), normalized_position: null, value_min: valueDistribution.at(-1)?.value ?? null, value_max: valueDistribution[0]?.value ?? null, value_mean: null, value_last: rows.at(-1)?.parameter.current_value ?? null, default_value: first.default, unit: first.unit ?? null, lower_value_behavior: behaviorFromDescription(first, "lower"), higher_value_behavior: behaviorFromDescription(first, "higher"), value_distribution: valueDistribution };
+    return { intensity: valueDistribution[0]?.value == null ? null : String(valueDistribution[0].value), normalized_position: null, value_min: valueDistribution.at(-1)?.value ?? null, value_max: valueDistribution[0]?.value ?? null, value_mean: null, value_last: rows.at(-1)?.parameter.current_value ?? null, default_value: first.default ?? null, unit: first.unit ?? null, lower_value_behavior: behaviorFromDescription(first, "lower"), higher_value_behavior: behaviorFromDescription(first, "higher"), value_distribution: valueDistribution };
   }
   const min = first.min_value;
   const max = first.max_value;
@@ -153,7 +153,7 @@ function weightedValueSummary(rows: Array<{ parameter: ActiveParameter; weight: 
     else if (normalized > 2 / 3) intensity = "near maximum";
     else intensity = normalizedDefault !== null && normalized < normalizedDefault ? "below default" : normalizedDefault !== null && normalized > normalizedDefault ? "above default" : "mid range";
   }
-  return { intensity, normalized_position: normalized, value_min: Math.min(...values), value_max: Math.max(...values), value_mean: mean, value_last: numeric.at(-1)?.parameter.current_value ?? null, default_value: first.default, unit: first.unit ?? null, lower_value_behavior: behaviorFromDescription(first, "lower"), higher_value_behavior: behaviorFromDescription(first, "higher"), value_distribution: valueDistribution };
+  return { intensity, normalized_position: normalized, value_min: Math.min(...values), value_max: Math.max(...values), value_mean: mean, value_last: numeric.at(-1)?.parameter.current_value ?? null, default_value: first.default ?? null, unit: first.unit ?? null, lower_value_behavior: behaviorFromDescription(first, "lower"), higher_value_behavior: behaviorFromDescription(first, "higher"), value_distribution: valueDistribution };
 }
 
 export function buildParamToTextSnapshot(
@@ -228,7 +228,7 @@ export function buildParamToTextSnapshot(
       tags: cleanStrings(representative.lyria_prompt_tags).filter((text) => !excludedText.includes(text.toLocaleLowerCase())),
       keywords: cleanStrings(representative.semantic_keywords).filter((text) => !excludedText.includes(text.toLocaleLowerCase())),
       description_fragments: fragments.filter((text) => !excludedText.includes(text.toLocaleLowerCase())),
-      evidence: rows.slice().sort((a, b) => (b.weight * b.parameter.similarity) - (a.weight * a.parameter.similarity)).slice(0, 5).map((row) => ({ time_seconds: row.time, support_seconds: row.weight, modality: row.modality, similarity: row.parameter.similarity, value: row.parameter.current_value })),
+      evidence: rows.slice().sort((a, b) => (b.weight * b.parameter.similarity) - (a.weight * a.parameter.similarity)).slice(0, 5).map((row) => ({ time_seconds: row.time, support_seconds: row.weight, modality: row.modality, similarity: row.parameter.similarity, value: row.parameter.current_value as string | number })),
     } satisfies ParamToTextEntry;
   }).sort((a, b) => b.contribution_score - a.contribution_score || a.technical_name.localeCompare(b.technical_name)).slice(0, limit);
 

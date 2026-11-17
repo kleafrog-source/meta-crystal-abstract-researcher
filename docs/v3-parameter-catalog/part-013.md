@@ -1,261 +1,896 @@
 # V3 technical names · part 13
 
-Generated: 2026-10-16T06:05:21.023Z
+Generated: 2026-11-11T10:06:29.679Z
 
-## uncategorized / general
+## synthesis / subtractive_synthesis
 
-- vibe_cosmic_storm_vortex_modulation_rate
-- vibe_cosmic_storm_vortex_modulation_sync_depth
-- vibe_cyber_anatolia_wavefolder_distortion_ratio
-- vibe_cyberpunk_neon_slums_rain_bpf_center_freq
-- vibe_desert_mirage_cutoff_modulation_hz
-- vibe_dissolution_ambient_fog_lpf_closure
-- vibe_dreamlike_granular_density_morph_speed
-- vibe_dreamlike_granular_morph_period_bars
-- vibe_egyptian_microtonal_hijaz_interval_ratio
-- vibe_erotic_punishment_transient_contrast
-- vibe_erotic_sensual_tremolo_breath_frequency_hz
-- vibe_erotic_sensual_tremolo_breath_hz
-- vibe_escalating_danger_pitch_sweep_rate
-- vibe_event_horizon_shimmer_reverb_octave_shift
-- vibe_finnish_kantele_stutter_rhythm_ratio
-- vibe_fractal_geometry_canon_time_shift_ratio
-- vibe_fractal_self_similar_polyrhythm
-- vibe_freak_circus_chromatic_vibrato_depth_cents
-- vibe_greek_tartarus_squargle_bass_sidechain_ratio
-- vibe_hallucinatory_phantom_pitch_offset_cents
-- vibe_hellfire_cauldron_filter_boil_rate
-- vibe_hellfire_cauldron_filter_boil_rate_hz
-- vibe_hellfire_cauldron_lfo_boil_rate
-- vibe_intergalactic_haas_effect_stereo_delay_ms
-- vibe_mathematically_precise_algorithmic_sweep_duration
-- vibe_mirrored_labyrinth_odd_tap_delay_ratio
-- vibe_molecular_granular_particle_density
-- vibe_molecular_granular_particle_density_per_sec
-- vibe_monkey_zoo_portamento_glide_randomness
-- vibe_monkey_zoo_portamento_glide_randomness_ms
-- vibe_mycelium_network_organic_wood_click_ms
-- vibe_mycelium_network_wavetable_organic_morph_rate
-- vibe_necromancer_library_foley_dynamics_range
-- vibe_necromancers_library_foley_quill_scratch_db
-- vibe_organic_lfo_breathing_pulse_hz
-- vibe_otherworldly_reverse_reverb_pre_delay_ms
-- vibe_parallel_earth_steam_release_automation_rate
-- vibe_planetary_evolution_tempo_morph_bpm
-- vibe_primal_ice_early_reflection_gain_db
-- vibe_punishing_whip_transient_attack_ms
-- vibe_punishing_whip_transient_attack_ms_exception
-- vibe_radioactive_zone_geiger_hat_trigger_rate
-- vibe_robotic_evolution_wave_morph_period
-- vibe_robotic_evolution_wave_morph_period_bars
-- vibe_roboto_organic_wave_morph_transition_bars
-- vibe_shinto_kami_granular_koto_resonance_peak
-- vibe_siberian_shamanism_throat_singing_resonance_q
-- vibe_simulation_glitch_bitcrusher_downsample_bits
-- vibe_slavic_chthonic_fm_viscous_lead_cutoff
-- vibe_solarpunk_oasis_field_recording_sidechain_depth
-- vibe_space_station_metallic_lf_damping_hz
-- vibe_spring_reverb_twang_duration_ms
-- vibe_subterranean_magma_slow_decay_kick_ms
-- vibe_subterranean_magma_tectonic_bass_saturation
-- vibe_sumerian_cuneiform_microtonal_string_drone
-- vibe_surreal_garden_granular_pollen_density
-- vibe_swamp_viscous_lpf_master
-- vibe_swamp_viscous_lpf_master_hz
+- subtractive_filter_cutoff_env_amount_bipolar_ratio
+- subtractive_filter_cutoff_env_amount_velocity_curve
+- subtractive_filter_cutoff_env_amount_velocity_curve_exponent
+- subtractive_filter_cutoff_env_amount_velocity_curve_factor
+- subtractive_filter_cutoff_env_amount_velocity_curve_pivot
+- subtractive_filter_cutoff_env_amount_velocity_curve_shape
+- subtractive_filter_cutoff_env_amount_velocity_mode
+- subtractive_filter_cutoff_env_amount_velocity_pivot_ratio
+- subtractive_filter_cutoff_env_amount_velocity_pivot_value
+- subtractive_filter_cutoff_env_amount_velocity_scale
+- subtractive_filter_cutoff_env_amount_velocity_sensitivity
+- subtractive_filter_cutoff_env_amount_velocity_threshold
+- subtractive_filter_cutoff_key_tracking_offset_semitones
+- subtractive_filter_cutoff_lfo_depth_mode
+- subtractive_filter_cutoff_lfo_depth_octaves
+- subtractive_filter_cutoff_lfo_depth_velocity_scale
+- subtractive_filter_cutoff_lfo_phase_offset_degrees
+- subtractive_filter_cutoff_lfo_phase_offset_ratio
+- subtractive_filter_cutoff_lfo_phase_sync_mode
+- subtractive_filter_cutoff_lfo_waveform
+- subtractive_filter_cutoff_lfo_waveform_invert
+- subtractive_filter_cutoff_tracking_slope_ratio
+- subtractive_filter_cutoff_velocity_curve_shape
+- subtractive_filter_drive_gain_db
+- subtractive_filter_envelope_amount_db
+- subtractive_filter_envelope_decay_curve_shape
+- subtractive_filter_envelope_velocity_sensitivity
+- subtractive_filter_key_tracking_pivot_note
+- subtractive_filter_resonance_drive_saturation_ratio
+- subtractive_filter_resonance_key_tracking_ratio
+- subtractive_filter_resonance_lfo_depth_ratio
+- subtractive_filter_resonance_limit_db
+- subtractive_filter_resonance_limit_mode
+- subtractive_filter_resonance_q_factor
+- subtractive_filter_resonance_temperature_drift_percent
+- subtractive_filter_resonance_tracking_ratio
+- subtractive_filter_slope_db_oct
+- subtractive_synth_filter_key_tracking_ratio
+- subtractive_synth_sub_oscillator_level_db
+- synthesis_subtractive_filter_drive_amount
+## synthesis / tb303_square_wave
+
+- tb303_square_wave_duty_cycle_asymmetry
+## synthesis / transient_shaping
+
+- shattering_glass_transient_brittleness_index
+## synthesis / tuning_control
+
+- deval_shruti_interval_micro_tuning_deviation
+- shruti_ground_frequency_base_tuning_hz
+- shruti_microtone_offset_cents
+- sruti_microtonal_pitch_lattice_quantization_factor
+- tuning_system_base_frequency_hz
+## synthesis / tuning_offset
+
+- tuning_root_frequency_offset
+## synthesis / tuning_system
+
+- tuning_system_selection
+## synthesis / unison
+
+- unison_voice_detune_spread_cents
+## synthesis / vector_synthesis
+
+- vector_synthesis_interpolation_curve
+- vector_synthesis_joystick_x_position
+## synthesis / vocal_subharmonic
+
+- vocal_subharmonic_undertone_generator_mix
+## synthesis / vocoding
+
+- cross_synthesis_spectral_vocoder_bands_count
+## synthesis / wavefolding
+
+- sub_bass_harmonic_foldover_ratio
+## synthesis / waveform_blending
+
+- waveform_morphing_source_a_weight
+## synthesis / waveform_inversion
+
+- subtractive_oscillator_1_waveform_invert
+## synthesis / waveform_morph
+
+- oscillator_waveform_morph_speed
+## synthesis / waveform_shaping
+
+- oscillator_dc_offset_amount
+- oscillator_waveform_amplitude_asymmetry
+- oscillator_waveform_asymmetry_amount
+- oscillator_waveform_hard_clip_amount
+- oscillator_waveform_symmetry_morph
+## synthesis / waveform_transition
+
+- waveform_morphing_smoothness_kernel
+## synthesis / waveform
+
+- basic_oscillator_waveform_shape
+## synthesis / wavetable_interpolation
+
+- wavetable_interpolation_curve
+## synthesis / wavetable_morph
+
+- wavetable_morph_position
+## synthesis / wavetable_processing
+
+- wavetable_anti_aliasing_oversampling_factor
+- wavetable_morphing_hermite_interpolation_kernel_size
+- wavetable_morphing_interpolation_curve
+## synthesis / wavetable_subharmonic
+
+- wavetable_subharmonic_generator_gain_db
+## synthesis / wavetable_synthesis
+
+- spectral_morphing_wavetable_index_position
+- synthesis_wavetable_frame_crossfade_curve_mode
+- synthesis_wavetable_frame_interpolation_quality
+- synthesis_wavetable_morph_crossfade_curve
+- synthesis_wavetable_morph_interpolation_algorithm
+- synthesis_wavetable_morph_interpolation_window_size
+- synthesis_wavetable_scan_direction_mode
+- synthesis_wavetable_scan_phase_offset_degrees
+- synthesis_wavetable_scan_speed_lfo_depth
+- wavetable_frame_index_position
+- wavetable_harmonic_insertion_density
+- wavetable_position_frame_index
+- wavetable_position_index
+- wavetable_scan_position
+## synthesis / wavetable
+
+- oscillator_wavetable_position_modulation_depth
+- synthesis_wavetable_morph_position
+- wavetable_frame_interpolation_mode
+- wavetable_hard_sync_amount
+- wavetable_interpolation_smoothness
+- wavetable_phase_distortion_amount
+## tier_management / tier_selection
+
+- evolutionary_tier_select
+## tier_management / tier_weighting
+
+- tier_1_structural_genesis_weight
+- tier_2_textural_deepening_weight
+- tier_3_micro_precision_weight
+- tier_4_holographic_mastery_weight
+## time_and_phase / allpass_processing
+
+- allpass_phase_dispersion
+## time_and_phase / analog_delay_emulation
+
+- analog_bucket_brigade_clock_frequency_hz
+## time_and_phase / axiom_a3_phase_tolerance
+
+- omega_axiom_a3_recur_close_phase_variance_tolerance
+## time_and_phase / chorus_modulation
+
+- chorus_voice_count
+## time_and_phase / chorus
+
+- chorus_delay_time_base_ms
+- chorus_delay_time_spread_ms
+- chorus_feedback_amount
+- chorus_modulation_depth_ratio
+- chorus_modulation_rate_hz
+- chorus_stereo_phase_spread
+- chorus_voices_count
+## time_and_phase / comb_filter
+
+- comb_filter_feedback_polarity
+## time_and_phase / comb_filtering
+
+- comb_filter_feedback_resonance_ratio
+- comb_filter_recombination_delay_samples
+## time_and_phase / compression
+
+- rapid_condensation_time_factor
+## time_and_phase / convolution_reverb
+
+- convolution_reverb_predelay_offset_ms
+- time_and_phase_convolution_reverb_ir_truncation_time_ms
+- time_phase_convolution_reverb_dry_wet_mix_ratio
+- time_phase_convolution_reverb_early_reflection_delays_ms
+- time_phase_convolution_reverb_early_to_late_ratio
+- time_phase_convolution_reverb_ir_phase_inversion_toggle
+## time_and_phase / crossfade_modulation
+
+- rotation_index_smooth_crossfade_toggle
+## time_and_phase / crossfade
+
+- crossfade_curve_shape
+- loop_crossfade_duration_ms
+## time_and_phase / crossover_filters
+
+- sub_bass_crossover_slope_db_per_oct
+## time_and_phase / delay_contraction
+
 - vibe_time_loop_canon_delay_contraction
 - vibe_time_loop_canon_delay_contraction_rate
 - vibe_time_loop_canon_delay_contraction_rate_ms
-- vibe_velocity_race_arp_pitch_shift_octaves
-- vibe_voodoo_cybernetics_fm_glitch_pitch_mod_rate
-- vibe_voodoo_cybernetics_polyrhythm_djembe_offset_ms
-- vibrato_rate_hz
+## time_and_phase / delay_diffusion
+
+- delay_diffusion_amount
+## time_and_phase / delay_effects
+
+- ping_pong_delay_crossfeed_ratio
+- time_and_phase_delay_tape_saturation_drive_db
+- time_phase_delay_feedback_freeze_toggle
+- time_phase_delay_line_feedback_highpass_cutoff_hz
+- time_phase_delay_tape_wow_flutter_correlation
+- time_phase_ping_pong_delay_phase_inversion_toggle
+- time_phase_stereo_delay_feedback_polarity_toggle
+- time_phase_stereo_delay_left_right_offset_ms
+- time_phase_tape_delay_motor_speed_fluctuation_percent
+## time_and_phase / delay_filtering
+
+- delay_feedback_filter_frequency_hz
+- delay_high_cut_frequency_hz
+## time_and_phase / delay_modulation
+
+- delay_modulation_depth_ms
+- delay_modulation_rate_hz
+## time_and_phase / delay_networks
+
+- feedback_delay_network_damping_crossover_hz
+- feedback_delay_network_householder_matrix_mix_ratio
+- feedback_delay_network_loop_attenuation_db
+- feedback_delay_network_matrix_rotation_angle_degrees
+## time_and_phase / delay_saturation
+
+- delay_feedback_saturation_amount
+## time_and_phase / delay_sync
+
+- tempo_sync_delay_time_ratio
+## time_and_phase / delay
+
+- delay_feedback_amount
+- delay_ping_pong_stereo_amount
+- delay_stereo_cross_feed_damping_frequency_hz
+- delay_tap_feedback_crossmix_ratio
+- delay_time_sync_division
+## time_and_phase / diffuse_delay_networks
+
+- feedback_dispersion_allpass_stages
+## time_and_phase / eq_prediction
+
+- adaptive_eq_prediction_horizon
+## time_and_phase / feedback_delay
+
+- feedback_delay_loop_gain_stability
+## time_and_phase / filter_sweep
+
+- macro_breakdown_filter_sweep_duration_bars
+## time_and_phase / flanger
+
+- flanger_feedback_polarity
+- flanger_through_zero_amount
+## time_and_phase / focal_convergence
+
+- focus_convergence_sharpness
+## time_and_phase / granular_diffusion
+
+- granular_diffuse_cloud_phase_dispersion_width_ms
+- granular_diffuse_cloud_temporal_coherence_decay_ms
+## time_and_phase / granular_playback
+
+- time_phase_granular_playback_pitch_randomization_cents
+## time_and_phase / harmonic_phase
+
+- harmonic_phase_spread
+## time_and_phase / harmonic_rhythm
+
+- harmonicity_rhythm_tension_temporal
+## time_and_phase / interval
+
+- snapshot_auto_update_interval
+## time_and_phase / isochronic_phase_offset
+
+- theta_alpha_isochronic_inter_beat_phase_offset
+## time_and_phase / latency_compensation
+
+- event_trigger_latency_compensation
+## time_and_phase / layer_alignment
+
+- layer_time_alignment_auto_detect_enable
+- layer_time_alignment_offset_samples
+## time_and_phase / lfo_coupling
+
+- lfo_envelope_follower_coupling
+## time_and_phase / lfo_sync
+
+- lfo_sync_time_division
+- tempo_sync_lfo_phase_reset_mode
+## time_and_phase / lfo
+
+- lfo_amplitude_modulation_depth
+- lfo_bipolar_offset
+- lfo_burst_mode_duty_cycle
+- lfo_fade_in_time_ms
+- lfo_frequency_modulation_amount
+- lfo_modulation_smoothing_curve
+- lfo_output_quantization_bits
+- lfo_phase_distortion_amount
+- lfo_quadrature_phase_mode
+- lfo_quantization_grid_division
+- lfo_retrigger_phase_offset_degrees
+- lfo_shape_morph_position
+- lfo_slew_rate_limit_amount
+- lfo_smoothing_time_ms
+- lfo_step_interpolation_mode
+- lfo_unipolar_bipolar_mode
+- lfo_waveform_morph_rate_hz
+- lfo_waveform_phase_distortion
+- lfo_waveform_step_count
+- lfo_waveform_symmetry
+## time_and_phase / liquid_scratch_max_percent
+
+- liquid_scratch_paulstretch_time_stretch_max_percent
+## time_and_phase / liquid_scratch_ratio
+
+- liquid_scratch_paulstretch_ratio
+## time_and_phase / loop_control
+
+- performance_loop_seamless_fade_duration
+## time_and_phase / low_frequency_alignment
+
+- subharmonic_phase_alignment_degrees
+## time_and_phase / low_frequency_phase_alignment
+
+- subbass_phase_alignment_angle_degrees
+## time_and_phase / low_frequency_phase_management
+
+- subharmonic_phase_cancellation_prevention_mode
+## time_and_phase / low_frequency_phase
+
+- low_frequency_phase_rotation
+## time_and_phase / markov_tempo
+
+- markov_tempo_subdivision_lock
+## time_and_phase / metric_velocity_threshold
+
+- metric_velocity_v_threshold_ms
+## time_and_phase / micro_delay_offset
+
+- global_micro_delay_offset
+## time_and_phase / micro_delay_range
+
+- micro_delay_offset_range
+## time_and_phase / micro_timing_offset
+
+- micro_timing_offset_ticks
+## time_and_phase / microsecond_delay_processing
+
+- comb_filter_delay_time_microseconds
+## time_and_phase / modulated_delay
+
+- flanger_modulation_rate
+## time_and_phase / modulation_effects
+
+- time_and_phase_chorus_modulation_delay_offset_ms
+- time_and_phase_phaser_feedback_stage_count
+- time_phase_allpass_filter_modulation_depth_ms
+- time_phase_chorus_feedback_gain_db
+- time_phase_chorus_modulation_rate_lfo_sync_toggle
+- time_phase_chorus_stereo_width_spread_percent
+- time_phase_chorus_voice_count
+- time_phase_flanger_feedback_polarity_toggle
+- time_phase_phaser_allpass_filter_q_factor
+- time_phase_phaser_modulation_waveform_shape
+## time_and_phase / modulation
+
+- flanger_feedback_gain_ratio
+- phaser_notch_depth_ratio
+## time_and_phase / multitap_delay
+
+- delay_multi_tap_time_spacing_ms
+- delay_tap_count
+## time_and_phase / neural_transmission
+
+- axon_propagation_delay_ms
+## time_and_phase / notch_filter_resonance
+
+- notch_filter_resonance_ring_time_ms
+## time_and_phase / omega_axiom_phase
+
+- omega_axiom_a3_recur_close_phase_coherence_tolerance
+## time_and_phase / omega_operator_phase
+
+- omega_operator_commute_phase_hysteresis_window_ms
+## time_and_phase / omega_operator
+
+- omega_operator_commute_pole_inversion_latency_ms
+## time_and_phase / omega_phase
+
+- omega_phase_duration_weights
+## time_and_phase / oscillator_control
+
+- basic_oscillator_phase_reset_mode
+## time_and_phase / phase_alignment
+
+- allpass_filter_phase_delay_ms
+- allpass_phase_dispersion_amount
+- allpass_phase_rotation_center_frequency_hz
+- phase_alignment_auto_correction_strength
+- phase_alignment_resolution_degrees
+- phase_inversion_channel_selection
+- sub_bass_harmonic_phase_alignment_ms
+- sub_bass_harmonic_phase_shift_degrees
+- sub_bass_harmonic_polarity_inversion_degrees
+- sub_bass_harmonic_quadrature_phase_shift_degrees
+- sub_bass_phase_alignment_cross_correlation_peak
+- sub_bass_phase_alignment_cross_correlation_threshold
+- sub_bass_phase_alignment_dispersion_degrees
+- sub_bass_phase_alignment_offset_degrees
+- sub_bass_phase_alignment_offset_degrees_scale
+- sub_bass_phase_alignment_offset_ms
+- sub_bass_phase_alignment_offset_ms_scale
+- sub_bass_phase_alignment_offset_time_us
+- sub_bass_phase_alignment_offset_time_us_scale
+- sub_bass_phase_alignment_offset_time_us_scale_factor
+- sub_bass_phase_alignment_offset_time_us_scale_factor_offset
+- sub_bass_phase_alignment_offset_time_us_scale_factor_offset_scale
+- sub_bass_phase_alignment_offset_time_us_scale_factor_offset_scale_factor
+- sub_bass_phase_alignment_time_ms
+- sub_bass_phase_alignment_time_us
+- sub_bass_phase_alignment_time_us_scale
+- sub_bass_phase_crossover_delay_ms
+- sub_bass_phase_quadrature_mix_ratio
+- sub_bass_phase_rotation_angle_degrees
+- subharmonic_sub_octave_phase_offset_degrees
+## time_and_phase / phase_coherence
+
+- phase_coherence_factor
+- phase_coherence_reset_threshold
+- phase_coherence_smoothing_window_ms
+- terminal_focus_singularity_phase_coherence
+## time_and_phase / phase_control
+
+- macro_arc_phase_duration_ratio
+## time_and_phase / phase_correlation
+
+- phase_correlation_target
+## time_and_phase / phase_dispersion
+
+- allpass_dispersion_smear_duration_ms
+- phase_dispersion_allpass_frequency
+- spectral_phase_dispersion_amount
+## time_and_phase / phase_distortion
+
+- phase_distortion_breakpoint_position
+- phase_distortion_stages_count
+## time_and_phase / phase_duration
+
+- init_phase_duration_ms
+- relax_decay_time_constant
+- stabilize_phase_hold_time_ms
+## time_and_phase / phase_inversion
+
+- phase_inversion_channel_mode
+## time_and_phase / phase_lock_bandwidth
+
+- subharmonic_phase_tracking_lock_bandwidth_hz
+## time_and_phase / phase_lock_dynamics
+
+- subharmonic_phase_tracking_filter_cutoff_decay_ms
+- subharmonic_phase_tracking_hysteresis_decay_rate
+- subharmonic_phase_tracking_hysteresis_decay_time_constant_exponent
+- subharmonic_phase_tracking_hysteresis_decay_time_constant_ms
+- subharmonic_phase_tracking_hysteresis_decay_time_constant_ratio
+- subharmonic_phase_tracking_lock_decay_rate
+## time_and_phase / phase_lock_filtering
+
+- subharmonic_phase_tracking_filter_cutoff_hz
+- subharmonic_phase_tracking_filter_order
+- subharmonic_phase_tracking_filter_resonance_q
+## time_and_phase / phase_lock_gain_management
+
+- subharmonic_phase_tracking_gain_compensation_db
+## time_and_phase / phase_lock_kinetics
+
+- subharmonic_phase_tracking_hysteresis_decay_factor
+- subharmonic_phase_tracking_hysteresis_decay_ms
+- subharmonic_phase_tracking_hysteresis_decay_ratio
+- subharmonic_phase_tracking_hysteresis_decay_slope_db_per_ms
+- subharmonic_phase_tracking_hysteresis_decay_speed
+- subharmonic_phase_tracking_hysteresis_rate
+- subharmonic_phase_tracking_hysteresis_smoothing_decay_ms
+- subharmonic_phase_tracking_hysteresis_smoothing_decay_rate_hz
+- subharmonic_phase_tracking_hysteresis_smoothing_decay_ratio
+- subharmonic_phase_tracking_lock_decay_speed
+## time_and_phase / phase_lock_limits
+
+- subharmonic_oscillator_phase_alignment_tolerance_degrees
+- subharmonic_phase_tracking_error_threshold_degrees
+## time_and_phase / phase_lock_smoothing
+
+- subharmonic_phase_tracking_smoothing_ms
+## time_and_phase / phase_lock_stability
+
+- subharmonic_phase_tracking_error_damping_factor
+- subharmonic_phase_tracking_hysteresis_degrees
+- subharmonic_phase_tracking_hysteresis_smoothing_factor
+- subharmonic_phase_tracking_hysteresis_smoothing_ms
+## time_and_phase / phase_lock_timing
+
+- subharmonic_phase_tracking_lock_time_ms
+## time_and_phase / phase_lock_tracking_range
+
+- subharmonic_phase_tracking_lock_range_hz
+## time_and_phase / phase_lock_tuning
+
+- subharmonic_phase_tracking_lock_frequency_hz
+## time_and_phase / phase_locking
+
+- a3_terminal_anchor_phase_alignment_tolerance_deg
+## time_and_phase / phase_modulation
+
+- allpass_filter_cascade_stage_count
+- allpass_filter_dispersion_allpass_stage_delay_mode
+- allpass_filter_dispersion_allpass_stage_delay_samples
+- allpass_filter_dispersion_allpass_stage_feedback_ratio
+- allpass_filter_dispersion_allpass_stage_q_factor
+- allpass_filter_dispersion_cascade_delay_spread_ratio
+- allpass_filter_dispersion_decay_time_ms
+- allpass_filter_dispersion_q_factor
+- allpass_filter_dispersion_stage_delay_offset_samples
+- allpass_filter_dispersion_stage_group_delay_ms
+- allpass_filter_dispersion_stage_phase_shift_degrees
+- allpass_filter_dispersion_stage_phase_shift_mode
+- allpass_filter_dispersion_stage_phase_shift_mode_type
+- allpass_filter_dispersion_stage_phase_shift_offset_decay_rate_db_per_sec
+- allpass_filter_dispersion_stage_phase_shift_offset_decay_rate_scaling_factor
+- allpass_filter_dispersion_stage_phase_shift_offset_decay_scaling
+- allpass_filter_dispersion_stage_phase_shift_offset_decay_scaling_mode_type
+- allpass_filter_dispersion_stage_phase_shift_offset_decay_time_ms
+- allpass_filter_dispersion_stage_phase_shift_offset_degrees
+- allpass_filter_dispersion_stage_phase_shift_offset_mode
+- allpass_filter_dispersion_stage_phase_shift_offset_scaling
+- allpass_filter_dispersion_stage_phase_shift_ratio
+- allpass_filter_dispersion_stage_phase_shift_slope
+- allpass_filter_dispersion_stage_q_factor_scaling
+- allpass_filter_dispersion_stage_q_factor_taper_ratio
+- allpass_filter_group_delay_frequency_hz
+- allpass_filter_phase_delay_time_ms
+- allpass_phase_shifier_stage_count
+- distortion_subharmonic_subliminal_xenochronous_feedback
+- phase_offset_modulation_depth
+- subharmonic_phase_jitter_degrees
+- tonalness_breakdown_foldback_subconscious_feedback
+## time_and_phase / phase_notch_filtering
+
+- subharmonic_phase_cancellation_depth_db
+## time_and_phase / phase_processing
+
+- allpass_filter_delay_samples
+- phase_randomization_amount
+## time_and_phase / phase_synchronization
+
+- subharmonic_phase_tracking_error_tolerance_degrees
+## time_and_phase / phase_vocoder
+
+- phase_vocoder_stretch_factor
+## time_and_phase / phase_vocoding
+
+- phase_vocoder_transient_lock_threshold
+## time_and_phase / phaser
+
+- phaser_notch_frequency_spacing
+## time_and_phase / pitch_processing
+
+- time_domain_pitch_synchronous_overlap_add_frame_size_ms
+## time_and_phase / pitch_shift_probability
+
+- vfe_fx_psh1_probability
+## time_and_phase / pitch_shifting
+
+- pitch_shifter_semitone_interval
+## time_and_phase / pitch_shift
+
+- pitch_shift_grain_size_ms
+## time_and_phase / pitch_tracking_dynamics
+
+- subharmonic_fundamental_tracking_lock_decay_ms
+## time_and_phase / pitch_tracking_limits
+
+- subharmonic_fundamental_tracking_lock_threshold_db
+## time_and_phase / pitch_tracking_smoothing
+
+- subharmonic_fundamental_tracking_lock_smoothing_ms
+## time_and_phase / pitch_tracking_stability
+
+- subharmonic_fundamental_tracking_hysteresis_ms
+## time_and_phase / pitch_tracking_stabilization
+
+- subharmonic_tracking_hysteresis_window_ms
+## time_and_phase / pitch_tracking
+
+- sub_bass_fundamental_tracking_speed_ms
+- subharmonic_oscillator_tracking_speed_ms
+## time_and_phase / platform_sync
+
+- cross_platform_latency_compensation_ms
+## time_and_phase / portamento_modulation
+
+- pitch_shift_glide_time_milliseconds
+## time_and_phase / punch_control
+
+- performance_punch_in_out_smoothing
+## time_and_phase / quantum_phase_lock
+
+- quantum_semantical_gauge_invariant_phase_lock
+## time_and_phase / quantum_superposition
+
+- quantum_superposition_state_duration_ms
+## time_and_phase / qubit_coherence
+
+- qubit_coherence_time_microseconds
+## time_and_phase / raga_bheda_toggle
+
+- lfe_raga_bheda_toggle_transition_time_sec
+## time_and_phase / random_lfo
+
+- lfo_random_step_smoothing_time_ms
+## time_and_phase / ray_tracing
+
+- acoustic_ray_tracing_early_to_late_reflection_cross_time_ms
+## time_and_phase / resonance_transfer
+
+- acoustic_coupling_resonance_transfer_speed
+## time_and_phase / response_time_smoothing
+
+- human_response_time_smoothing_window
+## time_and_phase / reverberation_acoustics
+
+- allpass_reverberator_diffusion_coefficient
+- allpass_reverberator_feedback_gain_coefficient
+- convolution_reverb_impulse_response_stretch_ratio
+- convolution_reverb_pre_delay_time_ms
+- reverb_room_wall_viscoelastic_damping_index
+- room_impulse_response_early_reflection_decay_time_ms
+- room_impulse_response_late_reverb_modal_density_per_hz
+## time_and_phase / reverberation
+
+- algorithmic_reverb_decay_time_seconds
+- allpass_reverb_loop_delay_time_ms
+- allpass_reverb_recirculation_gain_db
+- reverb_diffuser_allpass_feedback_gain_ratio
+- reverb_diffusion_network_decay_asymmetry_ratio
+- reverb_early_reflection_decay_time_ms
+- reverb_early_reflections_damping_hz
+- reverb_early_to_late_reflection_energy_ratio
+- reverb_late_diffuser_allpass_stages_count
+- reverb_late_reflection_decay_asymmetry_ratio
+- reverb_late_reflection_decay_time_ms
+- reverb_late_reflection_density_ratio
+- reverb_late_reflection_echo_density_growth_ms
+- reverb_late_reflection_highpass_cutoff_hz
+- reverb_late_reflection_highpass_frequency_hz
+- reverb_late_reflection_highpass_order_count
+- reverb_late_reflection_highpass_q_decay_contour
+- reverb_late_reflection_highpass_q_decay_coupling_ratio
+- reverb_late_reflection_highpass_q_decay_mode
+- reverb_late_reflection_highpass_q_decay_scale
+- reverb_late_reflection_highpass_q_decay_scale_contour
+- reverb_late_reflection_highpass_q_decay_scale_exponent
+- reverb_late_reflection_highpass_q_decay_scale_exponent_factor
+- reverb_late_reflection_highpass_q_decay_scale_factor
+- reverb_late_reflection_highpass_q_decay_scale_mode
+- reverb_late_reflection_highpass_q_decay_smoothing_ms
+- reverb_late_reflection_highpass_q_factor
+- reverb_late_reflection_highpass_q_factor_mode
+- reverb_late_reflection_highpass_resonance_db
+- reverb_late_reflection_highpass_resonance_q
+- reverb_late_reflection_highpass_slope_db_oct
+- reverb_late_reflection_highpass_slope_mode
+- reverb_late_reflection_highpass_type
+- reverb_late_reflection_lowpass_cutoff_hz
+- reverb_late_reflection_lowpass_order_count
+- reverb_late_reflection_modal_density_index
+- reverb_late_reflection_spatial_diffusion_coefficient
+- reverb_modal_density_growth_rate
+- reverb_spectral_density_modal_spacing_hz
+## time_and_phase / sample_delay
+
+- sample_delay_shift_samples
+## time_and_phase / sample_offset
+
+- sample_accurate_offset_nanoseconds
+## time_and_phase / shepard_tone
+
+- shepard_tone_infinite_frequency_slope_hz_sec
+## time_and_phase / shift
+
+- temporal_shift_delta_t_ms
+## time_and_phase / simple_delay
+
+- simple_delay_time_ms
+## time_and_phase / sound_morphing
+
+- cross_synthesis_morphing_speed
+## time_and_phase / spectral_effects
+
+- spectral_delay_frequency_bins_count
+## time_and_phase / stereo_delay_crossfeed
+
+- ping_pong_cross_mix
+## time_and_phase / stereo_delay
+
+- delay_cross_feedback_ratio
+## time_and_phase / stereo_phase_processing
+
+- cross_channel_phase_cancellation_ratio
+## time_and_phase / stress_recovery
+
+- stress_recovery_music_tempo_deceleration
+## time_and_phase / stretch
+
+- time_stretch_auto_scale_per_r
+- time_stretch_max_percent
+## time_and_phase / stutter_effect
+
+- vibe_chrono_displacement_stutter_effect_duration_ms
+## time_and_phase / syllable_drum_jitter
+
+- lfe_syllable_to_drum_event_latency_jitter_ms
+## time_and_phase / syllable_drum_latency
+
+- lfe_syllable_to_drum_event_mapping_latency_ms
+## time_and_phase / sync_frequency
+
 - video_sync_clock_frequency_multiplier
+## time_and_phase / sync_jitter
+
+- sync_jitter_tolerance
+## time_and_phase / sync_offset
+
 - video_timecode_sync_offset
-- vinyl_crackle_pop_probability
-- vinyl_dust_click_pop_density_rate
-- vinyl_dust_density
-- vinyl_groove_inner_diameter_hf_loss_db
-- vinyl_scratch_crater_depth
-- vinyl_surface_scratch_impulse_width_ms
-- vinyl_surface_static_charge_discharge_rate
-- vinyl_turntable_warp_wow
-- virtual_cult_drift_per_cycle_percent
-- virtual_death_collapse_frequency_hz
-- virtual_room_dimensions_scale_factor
-- virtual_source_elevation_angle_degrees
-- viscous_fluid_scratch_friction_coefficient
-- viscous_foley_surface_friction_density
-- viscous_gel_cavitation_implosion_burst_decay_ms
-- viscous_gel_friction_cavitation_bubble_noise_density
-- viscous_gel_friction_stick_slip_oscillation_hz
-- viscous_slime_friction_acoustic_viscosity
-- viscous_sub_bass_acoustic_bulk_modulus_pascal
-- viscous_sub_bass_acoustic_fluid_mass_density_kg_m3
-- viscous_sub_bass_acoustic_fluid_yield_stress_pascal
-- viscous_sub_bass_acoustic_mass_inertia_ratio
-- viscous_sub_bass_acoustic_shear_stress_pascal
-- viscous_sub_bass_cavitation_noise_floor_db
-- viscous_sub_bass_hydrodynamic_drag_power_watts
-- viscous_sub_bass_hydrodynamic_reynolds_number
-- viscous_sub_bass_hydrodynamic_shear_modulus_pascal
-- viscous_sub_bass_hydrodynamic_shear_relaxation_modulus
-- viscous_sub_bass_hydrodynamic_shear_relaxation_time_ms
-- viscous_sub_bass_hydrodynamic_shear_strain_rate_sec
-- viscous_sub_bass_kinematic_viscosity_m2_sec
-- viscous_sub_bass_non_linear_damping_hysteresis
-- viscous_sub_bass_non_linear_saturation_exponent
-- viscous_sub_bass_non_linear_shear_thinning_exponent
-- viscous_sub_bass_non_linear_shear_thinning_knee_pa
-- viscous_sub_bass_non_linear_shear_viscosity_pascal_sec
-- viscous_sub_bass_non_linear_viscoelastic_relaxation_time_ms
-- viscous_sub_bass_shear_thinning_viscosity_floor_pa_s
-- viscous_sub_bass_transient_smear_ms
-- viscous_sub_damping_viscosity_coef
-- visual_color_palette_temperature_shift
-- visual_complexity_density_limit
-- visual_complexity_reduction_threshold
-- visual_complexity_style_preference
-- visual_cue_sensitivity_to_dynamics
-- visual_delay_trail_length_frames
-- visual_effect_blend_speed
-- visual_effect_frequency_domain_activation
-- visual_event_duration_adaptive_scale
-- visual_event_trigger_energy_threshold
-- visual_feedback_brightness_modulation_depth
-- visual_feedback_color_hue_shift_speed
-- visual_feedback_cycle_interval
-- visual_fx_beat_sync_phase
-- visual_fx_smoothing_between_beats
-- visual_mapping_amplitude_to_brightness
-- visual_mapping_frequency_to_hue
-- visual_mapping_pan_to_position_x
-- visual_mapping_spectral_centroid_to_scale
-- visual_noise_grain_intensity_by_hiss
-- visual_particle_spawn_rate_per_db
-- visual_realtime_parameter_sensitivity
 - visual_sync_offset_audio_to_video
+## time_and_phase / sync_smoothing
+
 - visual_sync_smoothing_time
-- vocal_allocation_alignment_weight
-- vocal_allocation_entropy_weight
-- vocal_allocation_impact_weight
-- vocal_allocation_matrix_layer_pan_binaural_decorrelation
-- vocal_allocation_matrix_layer_weight_normalizer
-- vocal_allocation_spatial_weight
-- vocal_aspiration_breath_noise_friction_ratio
-- vocal_cord_tension_pitch_bend_micro_cents
-- vocal_epiglottic_constriction_formant_shift_hz
-- vocal_f1_f2_vowel_space_convex_hull_area_scale
-- vocal_formant_bandpass_asymmetry_skewness
-- vocal_formant_bandwidth_q_factor_expansion
-- vocal_formant_cluster_singers_formant_gain_db
-- vocal_formant_f1_bandwidth_glottal_coupling_ratio
-- vocal_formant_f2_f3_phonetic_distance_scaling
-- vocal_formant_f2_transition_glide_ms
-- vocal_formant_gender_shift_semitones
-- vocal_formant_pitch_decoupling_ratio
+## time_and_phase / tape_delay
+
+- delay_tape_flutter_amount
+## time_and_phase / tape_effects
+
+- tape_stop_deceleration_time_seconds
+## time_and_phase / temporal_coherence
+
+- stream_segregation_temporal_coherence_bias
+## time_and_phase / temporal_drift
+
+- temporal_drift_seconds
+## time_and_phase / temporal_inversion
+
+- phonetic_reverse_decay_tail
+## time_and_phase / terminal_closure_phase
+
+- terminal_closure_phase_coherence_decay_rate
+## time_and_phase / terminal_closure_recurrence
+
+- terminal_closure_recurrence_phase_coherence_floor
+## time_and_phase / terminal_closure
+
+- terminal_closure_phase_lock_hysteresis_ms
+## time_and_phase / time_manipulation
+
+- time_stretch_factor
+## time_and_phase / time_modulation
+
+- time_stretch_min_percent
+## time_and_phase / time_stretching
+
+- paulstretch_time_expansion_ratio
+- phase_vocoder_time_stretch_ratio
+- time_stretched_transient_phase_lock_ratio
+- time_stretching_grain_overlap_ratio
+- time_stretching_transient_preservation_ratio
+- time_stretching_transient_sensitivity_threshold
+## time_and_phase / time_stretch
+
+- veena_sitar_extreme_stretch_ratio
+## time_and_phase / timing
+
+- micro_timing_jitter_ms
+## time_and_phase / transition_duration
+
+- evolutionary_transition_duration_bars
+## time_and_phase / transition_dynamics
+
+- phase_transition_smoothness_ratio
+## time_and_phase / tremolo
+
+- tremolo_sync_division
+## time_and_phase / trigger_sync
+
+- cross_modal_trigger_latency_compensation_ms
+## time_and_phase / tunnel_reflections
+
+- concrete_tunnel_transverse_reflection_phase_dispersion_deg
+- concrete_tunnel_transverse_reflection_phase_inversion_hz
+## time_and_phase / vinyl_effects
+
+- vinyl_turntable_warp_wow
+## time_and_phase / vocal_formant_tracking
+
 - vocal_formant_pitch_tracking_inertia_ms
-- vocal_formant_shift_randomization
-- vocal_glottal_constriction_stiffness_index
-- vocal_iso3_language_chu_church_slavonic_drone_resonance_q
-- vocal_layering_count
-- vocal_piriform_sinus_anti_resonance_bandwidth_hz
-- vocal_piriform_sinus_anti_resonance_freq_hz
-- vocal_sequence_entropy_drift
-- vocal_sibilance_transient_suppression_ratio
-- vocal_subglottal_coupling_antiresonance_q
-- vocal_subglottal_pressure_burst_level_db
-- vocal_subglottal_pressure_decay_time_ms
-- vocal_subglottal_resonance_f0_coupling_bandwidth_hz
-- vocal_subglottal_resonance_f1_notch_depth_db
-- vocal_subglottal_wall_compliance_factor
-- vocal_subharmonic_undertone_generator_mix
-- vocal_supraglottic_constriction_formant_damping
-- vocal_tract_elongation_factor
-- vocal_tract_elongation_throat_singing_depth
-- vocal_tract_epiglottic_cavity_anti_resonance_q
-- vocal_tract_epiglottis_constriction_ratio
-- vocal_tract_material_impedance
-- vocal_tract_nasal_coupling_aperture_area_ratio
-- vocal_vcho_choral_binaural_spread_fx4_cho1
-- vocal_vector_adaptive_alignment_a
-- vocal_vector_chaos_grid_remapping_curve
-- vocal_vector_entropy_mutation_e
-- vocal_vector_entropy_mutation_granulation_window_ms
-- vocal_vector_ghost_to_anchor_crossfade_speed_ms
-- vocal_vector_impact_weight_i
-- vocal_vector_spatial_width_s
-- vocal_ventricular_folds_subharmonic_drive
-- vocal_vowel_formant_f3_f4_coupling_ratio
-- vocal_vrit_ritual_chant_repetition_tihai_pattern_delta_t
-- vocal_vscr_scream_distortion_drive_fx4_drv1
-- vocal_vwsp_whisper_formant_air_turbulence_fx4_fmt1
-- vocalic_consonant_boundary_crossfade_ms
-- vocalic_formant_bandwidth_compression_ratio
-- vocoding_bins
-- vocoding_bins_count
-- voice_pitch_input_melody_follow_strength
-- vowel_formant_pitch_lock_stability_factor
-- vr_hmd_refresh_rate_sync_mode
-- wall_absorption_coefficient
-- wall_reflection_coefficient_average
-- wave_geometry_asymmetry_factor
-- wave_terrain_granular_cross_spread
-- wave_terrain_x_axis_modulation_speed
-- wavefolder_fold_count_saturation_limit
-- wavefolder_harmonic_multiplication_order
-- wavefolder_symmetry_asymmetry_drive
-- wavefolder_symmetry_bias_lfo_depth
-- wavefolder_symmetry_dc_offset_bias
-- wavefolding_stages_count
-- waveform_display_mode
-- waveform_morphing_smoothness_kernel
-- waveform_morphing_source_a_weight
-- waveform_zoom_window_ms
-- waveguide_air_loss_coefficient
-- waveguide_bridge_loss_decay
-- waveguide_dispersion_ratio
-- waveguide_string_tension
-- wavelet_basis_function_selection
-- wavelet_decomposition_bands_count
-- wavelet_decomposition_level_depth
-- wavelet_limiter_lookahead
-- wavelet_multiresolution_decomposition_stages_count
-- wavelet_multiresolution_subband_cross_masking_db
-- wavelet_packet_decomposition_subband_cross_masking_db
-- wavelet_packet_entropy_threshold
-- wavelet_packet_high_frequency_noise_gate_threshold_db
-- wavelet_spectral_centroid_drift_velocity_hz_sec
-- wavelet_transform_spectral_band_isolation_q
-- waveshaping_asymmetry_bias
-- waveshaping_nonlinearity_degree
-- wavetable_anti_aliasing_oversampling_factor
-- wavetable_harmonic_insertion_density
-- wavetable_index_sweep_lfo_modulation_depth
-- wavetable_morph_position
-- wavetable_morphing_hermite_interpolation_kernel_size
-- wavetable_morphing_interpolation_curve
-- wavetable_position_morph_modulation_index
-- wavetable_scan_position_modulation_rate
-- wavetable_spectral_foldover_attenuation_db
-- wavetable_subharmonic_generator_gain_db
-- wcag_audio_contrast_ratio_compliance_level
-- weather_generator_thunder_rumble_decay_time
-- weather_generator_wind_speed_kmh
-- webxr_session_immersion_level_requirement
-- wet_concrete_reflection_diffusion_coefficient
-- whisper_phonetic_noise_spectral_tilt
-- whisper_to_chant_transition_threshold
-- wind_gust_turbulence_variance
-- wind_instrument_pipe_reflection_gain
-- wind_jet_angle_degrees
-- wow_and_flutter_intensity
-- xenharmonic_periodicity_block_size
-- zero_flux_energy_conservation_tolerance
-- zero_flux_energy_redistribution_curve
-- zero_phase_fir_crossover_linear_purity_index
+## time_and_phase / vowel_extension
+
+- lfe_paulstretch_vowel_extension_ratio
+## transport_control / automation_control
+
+- automation_latch_time
+## transport_control / groove_shaping
+
+- quantize_grid_resolution
+- swing_ratio_percent
+## transport_control / latency
+
+- network_control_latency_compensation
+## transport_control / meter
+
+- time_signature_denominator
+- time_signature_numerator
+## transport_control / performance_settings
+
+- buffer_size_samples
+## transport_control / pitch_control
+
+- global_transpose_semitones
+## transport_control / recording_tools
+
+- metronome_volume_percent
+- pre_roll_bars
+## transport_control / render_settings
+
+- bit_depth_select
+- sample_rate_select
+## transport_control / snapshot_control
+
+- automation_snapshot_compare_mode
+## transport_control / sync_control
+
+- clock_sync_source_priority
+- external_clock_source_type
+## transport_control / tempo_variance
+
+- global_tempo_drift_tolerance
+## transport_control / tempo
+
+- tempo_bpm
+## transport_control / tonal_center
+
+- global_key_root_note
+## transport_control / tuning_reference
+
+- global_tuning_a4_hz
+## ui_interaction / brightness_control
+
+- visual_feedback_brightness_modulation_depth
+## ui_interaction / color_control
+
+- visual_feedback_color_hue_shift_speed
+## ui_interaction / cycle_control
+
+- visual_feedback_cycle_interval
+## ui_interaction / event_triggering
+
+- visual_event_trigger_energy_threshold
+## ui_interaction / visual_complexity
+
+- visual_complexity_density_limit
+## ui_interaction / visual_feedback
+
+- visual_cue_sensitivity_to_dynamics
+## ui_interaction / visual_timing
+
+- visual_event_duration_adaptive_scale
 ## vector_control / display_formatting
 
 - vector_4digit_display_format
+## vector_control / gravitational_current
+
+- eqgft_gravitational_current_spatial_vorticity_vector
+## vector_control / omega_operator_vector
+
+- omega_operator_vector_asymmetry_slope
+- omega_operator_vector_energy_exponent_curve
+- omega_operator_vector_tension_gradient_scale
 ## vector_control / perceptual_dimension
 
 - alignment_descriptor_emergence_moment
@@ -268,393 +903,12 @@ Generated: 2026-10-16T06:05:21.023Z
 - spatial_descriptor_ritual_chant
 - vector_dimension_i_override
 - vector_dimension_s_override
-## vector_control / vector_digits
+## vector_control / semantic_clustering
 
-- adaptive_alignment_groove_digit_a
-- entropy_chaos_digit_e
-- impact_aggression_digit_i
-- spatial_stereo_width_digit_s
-## Vocal Morphology / Acoustic Aerodynamics
+- semantic_similarity_threshold_cluster
+## vector_control / semantic_matching
 
-- vocal_subglottal_pressure_tremor_frequency_hz
-## Vocal Morphology / Articulatory Synthesis
+- semantic_similarity_threshold
+## vector_control / semantic_similarity
 
-- vocal_vocalic_space_expansion_ratio
-## Vocal Morphology / Aspiration and Noise
-
-- vocal_breathiness_noise_mix_ratio
-## Vocal Morphology / Aspiration Processing
-
-- vocal_singer_breath_detection_sensitivity_ratio
-## Vocal Morphology / Aspiration Synthesis
-
-- vocal_subglottal_aspiration_flow_l_per_min
-- vocal_subglottal_pressure_burst_pascal
-## Vocal Morphology / Dynamic EQ & De-essing
-
-- deesser_threshold_level_db
-- dynamic_deesser_attack_time_ms
-## Vocal Morphology / Formant Geometry
-
-- vocal_vowel_formant_bandwidth_hz
-- vocal_vowel_formant_frequency_f1_hz
-- vocal_vowel_formant_frequency_f2_hz
-- vocal_vowel_formant_frequency_f3_hz
-- vocal_vowel_formant_frequency_f4_hz
-- vocal_vowel_formant_frequency_f5_hz
-## Vocal Morphology / Formant Rescaling
-
-- formant_shift_interval_semitones
-## Vocal Morphology / Formant Synthesis
-
-- vocal_formant_bandwidth_expansion_hz
-## Vocal Morphology / Glottal Dynamics
-
-- vocal_fry_creakiness_intensity_ratio
-## Vocal Morphology / Glottal Excitation Mechanics
-
-- vocal_glottal_flow_derivative_asymmetry_ratio
-- vocal_glottal_flow_derivative_decay_rate
-- vocal_glottal_flow_derivative_decay_time_ms
-- vocal_glottal_flow_derivative_peak_value_l_per_s_sq
-## Vocal Morphology / Glottal Excitation
-
-- vocal_glottal_closure_speed_ratio
-## Vocal Morphology / Glottal Source
-
-- vocal_subglottal_voice_source_asymmetry_coefficient
-- vocal_subglottal_voice_source_dc_offset_ratio
-- vocal_subglottal_voice_source_excitation_gain_db
-- vocal_subglottal_voice_source_flutter_decay_rate_db_per_sec
-- vocal_subglottal_voice_source_flutter_decay_rate_scaling_factor
-- vocal_subglottal_voice_source_flutter_decay_time_ms
-- vocal_subglottal_voice_source_flutter_depth_cents
-- vocal_subglottal_voice_source_flutter_frequency_hz
-- vocal_subglottal_voice_source_flutter_phase_degrees
-- vocal_subglottal_voice_source_glottal_flow_derivative_peak_ms
-- vocal_subglottal_voice_source_noise_floor_db
-- vocal_subglottal_voice_source_open_quotient_decay_ms
-- vocal_subglottal_voice_source_open_quotient_ratio
-- vocal_subglottal_voice_source_skewness_quotient_ratio
-- vocal_subglottal_voice_source_speed_quotient_ratio
-- vocal_subglottal_voice_source_tilt_db_per_octave
-- vocal_subglottal_voice_source_tremor_decay_rate_scaling_factor
-- vocal_subglottal_voice_source_tremor_decay_rate_scaling_mode_type
-- vocal_subglottal_voice_source_tremor_decay_time_ms
-- vocal_subglottal_voice_source_tremor_depth_percentage
-- vocal_subglottal_voice_source_tremor_frequency_hz
-## Vocal Morphology / Laryngeal Dynamics
-
-- vocal_interarytenoid_compression_force_newtons
-## Vocal Morphology / Laryngeal Geometry
-
-- vocal_aryepiglottic_constriction_percentage
-## Vocal Morphology / Laryngeal Kinematics Dynamics
-
-- vocal_interarytenoid_adduction_stiffness_decay_ms
-## Vocal Morphology / Laryngeal Kinematics
-
-- vocal_interarytenoid_adduction_angle_degrees
-- vocal_interarytenoid_adduction_stiffness_factor
-- vocal_interarytenoid_adduction_velocity_m_per_s
-- vocal_interarytenoid_compression_damping_ratio
-## Vocal Morphology / Nasal Antiresonance
-
-- vocal_nasality_formant_attenuation_db
-## Vocal Morphology / Physical Modeling
-
-- vocal_glottal_airflow_decay_l_per_sec2
-- vocal_glottal_airflow_peak_l_per_sec
-- vocal_glottal_asymmetry_skew_factor_ratio
-- vocal_glottal_open_quotient_ratio
-- vocal_glottal_pulse_asymmetry_ratio
-- vocal_glottal_pulse_closure_acceleration_l_per_sec3
-- vocal_glottal_pulse_closure_asymmetry_ratio
-- vocal_glottal_pulse_closure_duration_ms
-- vocal_glottal_pulse_closure_jerk_l_per_sec4
-- vocal_glottal_pulse_closure_jerk_l_per_sec4_boost
-- vocal_glottal_pulse_closure_speed_ratio
-- vocal_glottal_pulse_decay_time_ms
-- vocal_glottal_pulse_onset_time_ms
-- vocal_glottal_pulse_opening_duration_ms
-- vocal_glottal_pulse_opening_jerk_l_per_sec4
-- vocal_glottal_pulse_opening_speed_ratio
-- vocal_glottal_pulse_skewness_ratio
-- vocal_glottal_pulse_termination_speed_ratio
-- vocal_nasal_port_area_cm2
-- vocal_subglottal_coupling_factor_ratio
-- vocal_subglottal_pressure_attack_time_ms
-- vocal_subglottal_pressure_jitter_decay_ms
-- vocal_subglottal_pressure_jitter_frequency_hz
-- vocal_subglottal_pressure_jitter_percent
-- vocal_subglottal_pressure_jitter_skewness_ratio
-- vocal_subglottal_pressure_jitter_smoothing_ms
-- vocal_subglottal_pressure_kpa
-- vocal_subglottal_pressure_modulation_depth_ratio
-- vocal_subglottal_pressure_shimmer_db
-- vocal_subglottal_pressure_shimmer_decay_ms
-- vocal_subglottal_pressure_shimmer_decay_q_factor
-- vocal_subglottal_pressure_shimmer_decay_rate_hz
-- vocal_subglottal_pressure_shimmer_decay_smoothing_ms
-- vocal_subglottal_pressure_shimmer_decay_smoothing_q_boost_db
-- vocal_subglottal_pressure_shimmer_decay_smoothing_q_factor
-- vocal_subglottal_pressure_shimmer_frequency_hz
-- vocal_subglottal_pressure_shimmer_ratio
-- vocal_subglottal_pressure_shimmer_smoothing_ms
-- vocal_subglottal_pressure_shimmer_smoothing_q_boost_db_value
-- vocal_subglottal_resonance_freq_hz
-- vocal_tract_length_cm
-- vocal_velopharyngeal_port_leakage_ratio
-## Vocal Morphology / Physical Vocal Modeling
-
-- vocal_subglottal_coupling_factor
-- vocal_subglottal_pressure_pascal
-## Vocal Morphology / Pitch Modulation
-
-- vocal_vibrato_delay_onset_time_ms
-- vocal_vibrato_depth_cents
-- vocal_vibrato_lfo_waveform_type
-- vocal_vibrato_rate_hertz
-- vocal_vibrato_rate_hz
-## Vocal Morphology / Pitch Processing
-
-- pitch_shift_formant_preservation_mode
-## Vocal Morphology / Resonance Shifting
-
-- formant_frequency_shift_semitones
-## Vocal Morphology / Resonant Filtering
-
-- vocal_formant_morph_ratio
-## Vocal Morphology / Reverberation & Acoustics
-
-- vocal_shimmer_reverb_octave_pitch_shift_semitones
-## Vocal Morphology / Supraglottal Pressure Dynamics
-
-- vocal_supraglottal_pressure_drop_pascal
-## Vocal Morphology / Tract Acoustics
-
-- vocal_nasal_cavity_resonance_db
-## Vocal Morphology / Tract Articulation
-
-- vocal_arytenoid_constriction_ratio
-- vocal_epiglottal_chink_aperture_area_mm2
-- vocal_epiglottic_funnel_cross_sectional_area_mm2
-- vocal_lip_radiation_filter_order
-- vocal_nasal_cavity_antiresonance_frequency_hz
-- vocal_nasal_cavity_coupling_ratio
-- vocal_nasal_cavity_volume_cm3
-- vocal_pharyngeal_constriction_width_mm
-- vocal_piriform_recess_volume_cm3
-- vocal_tracheobronchial_tree_length_cm
-- vocal_velum_lowering_aperture_area_mm2
-- vocal_ventricular_folds_constriction_ratio
-## Vocal Morphology / Ventricular Phonation
-
-- vocal_ventricular_fold_vibration_frequency_hz
-## Vocal Morphology / Vibrato Modulation
-
-- vocal_vibrato_extent_semitones
-## Vocal Morphology / Vocal Distortion
-
-- vocal_subharmonic_growl_amount
-- vocal_subharmonic_growl_drive_db
-## Vocal Morphology / Vocal Dynamics
-
-- vocal_jitter_pitch_instability_percentage
-- vocal_subharmonic_fry_mix_ratio
-## Vocal Morphology / Vocal Register Control
-
-- vocal_falsetto_register_mix_ratio
-## Vocal Morphology / Vocal Tract Acoustics
-
-- vocal_subglottal_formant_bandwidth_hz
-- vocal_subglottal_formant_coupling_phase_degrees
-- vocal_subglottal_formant_coupling_ratio
-- vocal_subglottal_formant_frequency_shift_hz
-- vocal_subglottal_formant_q_factor
-- vocal_vocalic_cavity_anti_resonance_frequency_hz
-## Vocal Morphology / Vocal Tract Bandwidth Dynamics
-
-- vocal_subglottal_formant_bandwidth_decay_ms
-## Vocal Morphology / Vocal Tract Bandwidth Scaling
-
-- vocal_subglottal_formant_bandwidth_scaling_factor
-## Vocal Morphology / Vocal Tract Dynamics
-
-- vocal_subglottal_formant_coupling_decay_factor
-- vocal_subglottal_formant_coupling_decay_ms
-- vocal_subglottal_formant_coupling_decay_rate
-- vocal_subglottal_formant_coupling_decay_ratio
-- vocal_subglottal_formant_coupling_decay_slope_db_per_ms
-- vocal_subglottal_formant_coupling_smoothing_decay_ms
-- vocal_subglottal_formant_coupling_smoothing_decay_rate_hz
-- vocal_subglottal_formant_coupling_smoothing_decay_ratio
-- vocal_subglottal_formant_coupling_smoothing_factor
-- vocal_subglottal_formant_coupling_smoothing_ms
-- vocal_subglottal_viscous_damping_decay_ms
-## Vocal Morphology / Vocal Tract Geometry
-
-- vocal_epiglottic_funnel_constriction_ratio
-- vocal_piriform_recess_resonance_frequency_hz
-## Vocal Morphology / Vocal Tract Modeling
-
-- vocal_chest_head_resonance_blend_ratio
-## Vocal Morphology / Vocal Tract Physical Modeling
-
-- vocal_subglottal_formant_coupling_decay_time_constant_exponent
-- vocal_subglottal_formant_coupling_decay_time_constant_ms
-- vocal_subglottal_formant_coupling_decay_time_constant_ratio
-- vocal_subglottal_formant_coupling_decay_time_ms
-- vocal_subglottal_resonance_frequency_hz
-- vocal_subglottal_viscous_damping_coefficient
-- vocal_subglottal_viscous_damping_frequency_exponent
-- vocal_subglottal_viscous_damping_stiffness_ratio
-- vocal_vocalic_tract_length_scaling_ratio
-## Vocal Morphology / Vocal Tract Scaling
-
-- vocal_subglottal_formant_frequency_scaling_factor
-## Vocal Morphology / Vocal Tremor Modeling
-
-- vocal_subglottal_pressure_fluctuation_hz
-## Vocal Morphology / Vocoding
-
-- vocoder_carrier_synthesis_wave_type
-## Vocal Morphology / Voice Quality
-
-- vocal_falsetto_register_blend_ratio
-- vocal_fry_register_blend_ratio
-## vocal_layering / formant_preservation
-
-- vocal_layer_formant_lock_enable
-## vocal_layering / layer_configuration
-
-- technique_assignment_per_layer_index
-## vocal_layering / level_balancing
-
-- vocal_layer_volume_balance_db
-## vocal_layering / spatial_panning
-
-- vocal_layer_pan_position_degrees
-## vocal_layering / stack_management
-
-- vocal_layer_count_active
-## vocal_layering / time_alignment
-
-- vocal_layer_delay_offset_ms
-## vocal_morphology / acoustic_resonance
-
-- nasal_cavity_coupling_ratio
-## vocal_morphology / aerodynamics
-
-- vocal_subglottal_airflow_rate_liters_per_sec
-- vocal_subglottal_pressure_pascal_decay_rate
-- vocal_subglottal_pressure_pascal_decay_time_ms
-- vocal_subglottal_pressure_pascal_envelope_attack_level
-- vocal_subglottal_pressure_pascal_envelope_attack_ms
-- vocal_subglottal_pressure_pascal_envelope_attack_shape
-- vocal_subglottal_pressure_pascal_envelope_decay_ms
-- vocal_subglottal_pressure_pascal_envelope_decay_shape
-- vocal_subglottal_pressure_pascal_envelope_hold_level
-- vocal_subglottal_pressure_pascal_envelope_hold_ms
-- vocal_subglottal_pressure_pascal_envelope_hold_shape
-- vocal_subglottal_pressure_pascal_envelope_release_level
-- vocal_subglottal_pressure_pascal_envelope_release_scale_factor
-- vocal_subglottal_pressure_pascal_envelope_release_shape
-- vocal_subglottal_pressure_pascal_envelope_release_shape_scale
-- vocal_subglottal_pressure_pascal_envelope_release_shape_type
-- vocal_subglottal_pressure_pascal_envelope_release_time_ms
-- vocal_subglottal_pressure_pascal_envelope_sustain_decay_time_ms
-- vocal_subglottal_pressure_pascal_envelope_sustain_level
-- vocal_subglottal_pressure_pascal_envelope_sustain_ratio
-- vocal_subglottal_pressure_pascal_envelope_sustain_shape
-- vocal_subglottal_pressure_pascal_gradient
-- vocal_subglottal_pressure_pascal_level
-- vocal_subglottal_pressure_pascal_offset
-- vocal_subglottal_pressure_pascal_ratio
-- vocal_subglottal_pressure_pascal_scale
-- vocal_subglottal_pressure_pulse_duty_cycle_percent
-- vocal_subglottal_pressure_pulse_skewness
-- vocal_subglottal_pressure_transient_boost_db
-## vocal_morphology / amplitude_modulation
-
-- vocal_tremolo_depth_ratio
-## vocal_morphology / articulatory_phonetics
-
-- phonetic_consonant_burst_aspiration_ms
-- tongue_body_dorsal_height_mm
-## vocal_morphology / biological_acoustics
-
-- myofibrillar_vocal_tension_factor
-## vocal_morphology / biomechanical_modeling
-
-- arytenoid_cartilage_tilt_angle
-- glottal_asymmetry_factor
-- mucosal_wave_velocity_m_s
-## vocal_morphology / breath_synthesis
-
-- vocal_morphology_breath_noise_bandwidth_hz
-## vocal_morphology / breathiness
-
-- vocal_breathiness_noise_ratio
-## vocal_morphology / breath
-
-- vocal_breath_noise_mix_amount
-## vocal_morphology / consonant_articulation
-
-- vocal_consonant_transient_level
-## vocal_morphology / consonants
-
-- vocal_consonant_transient_amount
-## vocal_morphology / deessing
-
-- vocal_deesser_threshold_db
-## vocal_morphology / dsp_processing
-
-- fx_chain_ambient_whisper
-- fx_chain_polyglot_fusion
-- fx_chain_primary_lead
-- fx_chain_secondary_harmony
-- fx_chain_sub_bass_guttural
-- fx_chain_transition_effect
-## vocal_morphology / expressive_affect
-
-- emotional_expressive_affect_state
-## vocal_morphology / formant_control
-
-- formant_bandwidth_ratio
-## vocal_morphology / formant_filtering
-
-- formant_filter_bandwidth_ratio
-## vocal_morphology / formant_noise
-
-- formant_noise_breathiness_ratio
-## vocal_morphology / formant_preservation
-
-- formant_preservation_amount
-## vocal_morphology / formant_resonance
-
-- vocal_formant_bandwidth
-## vocal_morphology / formant_shifting
-
-- vocal_morphology_formant_bandwidth_q_factor
-- vocal_morphology_nasal_cavity_resonance_frequency_hz
-- vocal_morphology_vocal_tract_length_modulation_depth_percent
-- vocal_morphology_vowel_formant_shift_semitones
-## vocal_morphology / formant_synthesis
-
-- formant_dispersion_coefficient
-- formant_filter_resonance_q_factor
-- vocal_nasalization_formant_bandwidth_hz
-- vocal_nasalization_formant_gain_db
-## vocal_morphology / formant_transition
-
-- formant_transition_speed_ms
-- vocal_formant_glide_rate
-## vocal_morphology / glottal_source_modeling
-
-- glottal_decapitation_ratio
-## vocal_morphology / glottal_source
-
-- glottal_flow_cutoff_slope_db
-- vocal_glottal_decapitation_time_ms
-- vocal_glottal_decapitation_time_ratio
+- semantic_vector_cosine_similarity_min

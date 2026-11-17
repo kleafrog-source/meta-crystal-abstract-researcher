@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 import { loadEmbeddingRuntimeSettings } from "@/lib/embedding-settings";
 import { getActiveProvider } from "@/lib/llm/factory";
-import { extractJsonObject, readV3ParameterUnion, validateLabParameters } from "@/lib/meta-crystal-v3-lab";
+import { extractJsonObject, readV3LiveParameterSnapshot, validateLabParameters } from "@/lib/meta-crystal-v3-lab";
 import { embedText } from "@/lib/ollama-client";
 import { buildRAGContext } from "@/lib/rag";
 import { rankCompositeNames } from "@/lib/rag-v3/composite-index";
@@ -100,8 +100,8 @@ export async function POST(request: Request) {
     const count = Math.max(1, Math.min(8, Math.trunc(Number(body.count) || 3)));
     if (!query) return NextResponse.json({ error: "Опишите, какие полезные параметры нужно найти в Мета-Кристаллах." }, { status: 400 });
 
-    const [{ datasetVersion, records }, protocol, embeddingSettings] = await Promise.all([
-      readV3ParameterUnion(),
+    const [{ datasetVersion, records, reservedNames }, protocol, embeddingSettings] = await Promise.all([
+      readV3LiveParameterSnapshot(),
       fs.readFile(PROMPT_PATH, "utf8"),
       loadEmbeddingRuntimeSettings(),
     ]);
@@ -174,7 +174,8 @@ export async function POST(request: Request) {
       }, { status: 422 });
     }
     const parents = rag.results.filter((item) => item.kind === "crystal").map((item) => item.name).slice(0, 8);
-    let candidates = validateLabParameters(parameters, new Set(records.keys()), parents);
+    const unavailableNames = new Set([...records.keys(), ...reservedNames]);
+    let candidates = validateLabParameters(parameters, unavailableNames, parents);
     const rawAttempts = [result.text];
     if (candidates.some((candidate) => candidate.errors.length > 0)) {
       const correction = candidates.map((candidate, index) => (
@@ -202,7 +203,7 @@ export async function POST(request: Request) {
       try {
         const retryParsed = extractJsonObject(retry.text);
         const retryParameters = structuredParameters(retryParsed);
-        if (retryParameters.length > 0) candidates = validateLabParameters(retryParameters, new Set(records.keys()), parents);
+        if (retryParameters.length > 0) candidates = validateLabParameters(retryParameters, unavailableNames, parents);
       } catch {
         // Preserve the first validated candidates and expose both raw attempts for debugging.
       }

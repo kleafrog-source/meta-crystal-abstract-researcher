@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { enrich, searchText, readQueue, readCatalogueParameters } from "@/lib/am-parameters-catalogue/catalogue";
+import { searchText, readQueue, readCatalogueParameters } from "@/lib/am-parameters-catalogue/catalogue";
 import { assessCompleteness } from "@/lib/am-parameters-catalogue/completeness";
 import { loadTaxonomyMap } from "@/lib/am-parameters-catalogue/taxonomy";
 
@@ -41,6 +41,6 @@ export async function GET(request: NextRequest) {
       return direction * (typeof left === "number" && typeof right === "number" ? left - right : String(left ?? "").localeCompare(String(right ?? ""))) || a.technical_name.localeCompare(b.technical_name);
     });
     const total = rows.length; const page = Math.max(1, Number(params.get("page") ?? 1)); const pageSize = Math.max(1, Math.min(200, Number(params.get("page_size") ?? 50)));
-    return NextResponse.json({ parameters: rows.slice((page - 1) * pageSize, page * pageSize).map((row) => { const assessment = assessCompleteness(row, taxonomy); return { ...enrich(row), _catalogue: { source: "published", missing_fields: assessment.missing_fields, completeness: assessment.completeness }, queued: queued.has(row.technical_name) }; }), total, page, page_size: pageSize, pages: Math.ceil(total / pageSize), library_count: published.length, published_library_count: published.length });
+    return NextResponse.json({ parameters: rows.slice((page - 1) * pageSize, page * pageSize).map((row) => { const assessment = assessCompleteness(row, taxonomy); return { ...row, _catalogue: { source: "published", missing_fields: assessment.missing_fields, missing_only_fields: assessment.missing_only_fields, invalid_fields: assessment.invalid_fields, gaps: assessment.gaps, completeness: assessment.completeness }, queued: queued.has(row.technical_name) }; }), total, page, page_size: pageSize, pages: Math.ceil(total / pageSize), library_count: published.length, published_library_count: published.length });
   } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 }); }
 }

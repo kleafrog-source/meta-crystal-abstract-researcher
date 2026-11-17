@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
+import { updateCatalogueFiles, withCatalogueFileLock } from "./catalogue-persistence";
 import { GENESIS_DATA_ROOT } from "./library";
 
 export interface ExcludedParameterEntry {
@@ -25,10 +26,10 @@ function emptyRegistry(): ExcludedParameterRegistry {
   return { version: 1, updated_at: new Date().toISOString(), entries: [] };
 }
 
-export async function readExcludedRegistry(): Promise<ExcludedParameterRegistry> {
-  await fs.mkdir(GENESIS_REGISTRY_DIR, { recursive: true });
+export async function readExcludedRegistry(dataRoot = GENESIS_DATA_ROOT): Promise<ExcludedParameterRegistry> {
+  const registryPath = path.join(dataRoot, "registry", "excluded.json");
   try {
-    const parsed = JSON.parse(await fs.readFile(GENESIS_EXCLUDED_PATH, "utf8")) as Partial<ExcludedParameterRegistry>;
+    const parsed = await withCatalogueFileLock(async () => JSON.parse(await fs.readFile(registryPath, "utf8")) as Partial<ExcludedParameterRegistry>, dataRoot);
     const unique = new Map<string, ExcludedParameterEntry>();
     for (const entry of parsed.entries ?? []) {
       if (entry?.technical_name) unique.set(entry.technical_name, entry);
@@ -39,10 +40,8 @@ export async function readExcludedRegistry(): Promise<ExcludedParameterRegistry>
       entries: [...unique.values()].sort((left, right) => left.technical_name.localeCompare(right.technical_name)),
     };
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-    const registry = emptyRegistry();
-    await writeExcludedRegistry(registry);
-    return registry;
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return emptyRegistry();
+    throw error;
   }
 }
 
@@ -52,15 +51,16 @@ export function excludedRegistrySha(registry: ExcludedParameterRegistry): string
     .digest("hex");
 }
 
-async function writeExcludedRegistry(registry: ExcludedParameterRegistry): Promise<void> {
-  await fs.mkdir(GENESIS_REGISTRY_DIR, { recursive: true });
-  const temporary = `${GENESIS_EXCLUDED_PATH}.${process.pid}.${Date.now()}.tmp`;
-  await fs.writeFile(temporary, `${JSON.stringify(registry, null, 2)}\n`, "utf8");
-  await fs.rename(temporary, GENESIS_EXCLUDED_PATH);
+async function writeExcludedRegistry(registry: ExcludedParameterRegistry, dataRoot = GENESIS_DATA_ROOT): Promise<void> {
+  await updateCatalogueFiles(async () => ({
+    writes: { "registry/excluded.json": `${JSON.stringify(registry, null, 2)}\n` },
+    result: undefined,
+  }), dataRoot);
 }
 
-export async function excludeParameters(entries: Array<Pick<ExcludedParameterEntry, "technical_name" | "reason" | "scope">>): Promise<ExcludedParameterRegistry> {
-  const registry = await readExcludedRegistry();
+export async function excludeParameters(entries: Array<Pick<ExcludedParameterEntry, "technical_name" | "reason" | "scope">>, dataRoot = GENESIS_DATA_ROOT): Promise<ExcludedParameterRegistry> {
+  return withCatalogueFileLock(async () => {
+  const registry = await readExcludedRegistry(dataRoot);
   const byName = new Map(registry.entries.map((entry) => [entry.technical_name, entry]));
   const now = new Date().toISOString();
   for (const entry of entries) {
@@ -79,18 +79,21 @@ export async function excludeParameters(entries: Array<Pick<ExcludedParameterEnt
     updated_at: now,
     entries: [...byName.values()].sort((left, right) => left.technical_name.localeCompare(right.technical_name)),
   };
-  await writeExcludedRegistry(next);
+  await writeExcludedRegistry(next, dataRoot);
   return next;
+  }, dataRoot);
 }
 
-export async function restoreParameters(technicalNames: string[]): Promise<ExcludedParameterRegistry> {
-  const registry = await readExcludedRegistry();
+export async function restoreParameters(technicalNames: string[], dataRoot = GENESIS_DATA_ROOT): Promise<ExcludedParameterRegistry> {
+  return withCatalogueFileLock(async () => {
+  const registry = await readExcludedRegistry(dataRoot);
   const restored = new Set(technicalNames);
   const next: ExcludedParameterRegistry = {
     version: 1,
     updated_at: new Date().toISOString(),
     entries: registry.entries.filter((entry) => !restored.has(entry.technical_name)),
   };
-  await writeExcludedRegistry(next);
+  await writeExcludedRegistry(next, dataRoot);
   return next;
+  }, dataRoot);
 }

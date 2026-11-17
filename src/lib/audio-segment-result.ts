@@ -37,6 +37,45 @@ export function applySuccessfulSegmentResult(
   );
 }
 
+/** Apply a provider result while retaining user edits made after this segment request began. */
+export function applySuccessfulSegmentResultPreservingManualEdits(
+  latestSegments: readonly AudioSegmentResultPoint[],
+  requestBaseSegments: readonly AudioSegmentResultPoint[],
+  index: number,
+  engine: AudioEngine,
+  parameters: ActiveParameter[],
+): AudioSegmentResultPoint[] {
+  if (!Number.isInteger(index) || index < 0 || index >= latestSegments.length || index >= requestBaseSegments.length)
+    throw new RangeError("Segment index is out of range");
+
+  const requestBase = requestBaseSegments[index][engine];
+  const latest = latestSegments[index][engine];
+  const latestByName = new Map(latest.map((parameter) => [parameter.technical_name, parameter]));
+  const baseByName = new Map(requestBase.map((parameter) => [parameter.technical_name, parameter]));
+  const manuallyRemoved = new Set(requestBase
+    .filter((parameter) => !latestByName.has(parameter.technical_name))
+    .map((parameter) => parameter.technical_name));
+  const manuallyChanged = latest.filter((parameter) => {
+    const before = baseByName.get(parameter.technical_name);
+    return !before
+      || parameter.current_value !== before.current_value
+      || parameter.suggested_value !== before.suggested_value;
+  });
+  const manualByName = new Map(manuallyChanged.map((parameter) => [parameter.technical_name, parameter]));
+  const providerByName = new Set(parameters.map((parameter) => parameter.technical_name));
+  const reconciled = parameters
+    .filter((parameter) => !manuallyRemoved.has(parameter.technical_name))
+    .map((parameter) => {
+      const manual = manualByName.get(parameter.technical_name);
+      return manual
+        ? { ...parameter, current_value: manual.current_value, suggested_value: manual.suggested_value }
+        : parameter;
+    });
+  reconciled.push(...manuallyChanged.filter((parameter) => !providerByName.has(parameter.technical_name)));
+
+  return applySuccessfulSegmentResult(latestSegments, index, engine, reconciled);
+}
+
 export function applySegmentSideMeta(
   segments: readonly AudioSegmentResultPoint[],
   index: number,

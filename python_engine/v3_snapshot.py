@@ -32,11 +32,57 @@ def _sha(payload: Any) -> str:
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
-def load_v3_snapshot(data_root: Path = DEFAULT_DATA_ROOT) -> dict[str, Any]:
-    """Return published catalogue membership; legacy dataset files are metadata only."""
-    latest = _read(data_root / "datasets" / "latest.json")
+def ensure_snapshot_revision_current(captured: dict[str, Any], current: dict[str, Any]) -> None:
+    if captured.get("source_revision") != current.get("source_revision"):
+        raise RuntimeError(
+            "Effective catalogue changed during build; output remains tied to the captured snapshot and was not activated."
+        )
+
+
+def load_v3_snapshot(
+    data_root: Path = DEFAULT_DATA_ROOT,
+    *,
+    snapshot_path: Path | None = None,
+    source_revision: str | None = None,
+    source_snapshot_sha256: str | None = None,
+    excluded_sha256: str | None = None,
+    excluded_count: int = 0,
+) -> dict[str, Any]:
+    """Return effective catalogue rows or an explicitly pinned immutable snapshot.
+
+    When ``snapshot_path`` is supplied it is authoritative: latest.json, the live
+    library and current registries are not consulted or merged into its rows.
+    """
+    if snapshot_path is not None:
+        try:
+            raw = snapshot_path.read_bytes()
+        except FileNotFoundError as error:
+            raise FileNotFoundError(f"Explicit candidate snapshot is unavailable: {snapshot_path}") from error
+        payload = json.loads(raw.decode("utf-8"))
+        if not isinstance(payload, list) or any(
+            not isinstance(item, dict) or not str(item.get("technical_name", "")).strip()
+            for item in payload
+        ):
+            raise ValueError(f"Invalid candidate snapshot: {snapshot_path}")
+        revision = source_revision or hashlib.sha256(raw).hexdigest()
+        return {
+            "schema_version": 1,
+            "dataset_version": revision,
+            "source_revision": revision,
+            "parameter_count": len(payload),
+            "library_count": len(payload),
+            "frozen_count": 0,
+            "excluded_count": excluded_count,
+            "excluded_sha256": excluded_sha256 or hashlib.sha256(b"[]").hexdigest(),
+            "content_sha256": source_snapshot_sha256 or hashlib.sha256(raw).hexdigest(),
+            "parameters": payload,
+        }
+
+    latest_path = data_root / "datasets" / "latest.json"
+    latest = _read(latest_path) if latest_path.is_file() else {}
     library_path = data_root / "library" / "parameters.json"
-    library = _read(library_path)
+    library_raw = library_path.read_bytes()
+    library = json.loads(library_raw.decode("utf-8"))
     tombstone_path = data_root / "library" / "catalogue-deleted.json"
     tombstone_raw = tombstone_path.read_bytes() if tombstone_path.exists() else b"[]"
     tombstone_payload = json.loads(tombstone_raw.decode("utf-8"))
@@ -45,6 +91,7 @@ def load_v3_snapshot(data_root: Path = DEFAULT_DATA_ROOT) -> dict[str, Any]:
     registry = _read(registry_path) if registry_path.exists() else {"entries": []}
     excluded = sorted({str(item.get("technical_name", "")) for item in registry.get("entries", []) if item.get("technical_name")})
     excluded_set = set(excluded)
+    excluded_sha = _sha(excluded)
 
     records: dict[str, dict[str, Any]] = {}
     for item in library:
@@ -53,15 +100,19 @@ def load_v3_snapshot(data_root: Path = DEFAULT_DATA_ROOT) -> dict[str, Any]:
             records[name] = {**item, "source": "library"}
 
     parameters = [records[name] for name in sorted(records) if name not in excluded_set and name not in deleted]
-    excluded_sha = _sha(excluded)
+    tombstone_sha = hashlib.sha256(tombstone_raw).hexdigest()
+    revision = hashlib.sha256(
+        f"{hashlib.sha256(library_raw).hexdigest()}\0{tombstone_sha}\0{excluded_sha}".encode("utf-8")
+    ).hexdigest()
     return {
         "schema_version": 1,
-        "dataset_version": str(latest["version_id"]),
+        "dataset_version": str(latest.get("version_id") or "live-catalogue"),
+        "source_revision": revision,
         "parameter_count": len(parameters),
         "library_count": len(parameters),
         "frozen_count": 0,
         "excluded_count": len(excluded),
         "excluded_sha256": excluded_sha,
-        "content_sha256": hashlib.sha256(library_path.read_bytes() + b"\0" + tombstone_raw).hexdigest(),
+        "content_sha256": hashlib.sha256(library_raw + b"\0" + tombstone_raw).hexdigest(),
         "parameters": parameters,
     }

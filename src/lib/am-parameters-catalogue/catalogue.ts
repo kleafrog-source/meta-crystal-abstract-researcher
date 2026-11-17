@@ -3,6 +3,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { GenesisLibraryParameter } from "@/lib/combinatorial-genesis/library";
 import { cleanPublishedParameter, DOMAIN_LAYERS } from "@/lib/combinatorial-genesis/parameter-schema";
+import { withCatalogueFileLock } from "@/lib/combinatorial-genesis/catalogue-persistence";
 import { assessCompleteness } from "./completeness";
 import { loadTaxonomyMap } from "./taxonomy";
 import { GENESIS_DATA_ROOT, GENESIS_LIBRARY_DIR, GENESIS_LIBRARY_PATH, readGenesisLibrary, sha256 } from "@/lib/combinatorial-genesis/library";
@@ -16,10 +17,7 @@ export const QUEUE_PATH = path.join(GENESIS_LIBRARY_DIR, "catalogue-queue.json")
 export const STATE_PATH = path.join(GENESIS_LIBRARY_DIR, "catalogue-state.json");
 export const TOMBSTONES_PATH = path.join(GENESIS_LIBRARY_DIR, "catalogue-deleted.json");
 export const HISTORY_DIR = path.join(GENESIS_LIBRARY_DIR, "history");
-const COMPLETE_FIELDS = ["technical_name", "name_ru", "description_en", "description_ru", "category", "sub_category", "ui_element", "default", "unit", "quantity_kind", "lyria_prompt_tags", "semantic_keywords", "domain"] as const;
-const CONDITIONAL_FIELDS: Record<string, string[]> = { Range: ["min_value", "max_value", "step"], Select: ["options"], Toggle: ["min_value", "max_value", "step"] };
 const SPARSE_CATEGORY_LIMIT = 3;
-const locks = new Map<string, Promise<void>>();
 
 export async function readCatalogueParameters(): Promise<GenesisLibraryParameter[]> {
   const library = await readGenesisLibrary();
@@ -87,14 +85,7 @@ async function atomicWrite(file: string, value: unknown): Promise<void> {
   }
 }
 
-export async function withCatalogueLock<T>(task: () => Promise<T>): Promise<T> {
-  const previous = locks.get("catalogue") ?? Promise.resolve();
-  let release!: () => void;
-  const next = new Promise<void>((resolve) => { release = resolve; });
-  locks.set("catalogue", previous.then(() => next));
-  await previous;
-  try { return await task(); } finally { release(); }
-}
+export const withCatalogueLock = withCatalogueFileLock;
 
 export async function readQueue(): Promise<QueueFile> {
   try { return JSON.parse(await fs.readFile(QUEUE_PATH, "utf8")) as QueueFile; }
@@ -119,25 +110,6 @@ export async function readCatalogueState(): Promise<CatalogueState> {
 }
 export async function writeCatalogueState(state: CatalogueState): Promise<void> { await atomicWrite(STATE_PATH, state); }
 
-export function missingFields(parameter: GenesisLibraryParameter): string[] {
-  // Catalogue completeness follows FLOWMUSIC_COLLECTION_PROMPT_V1, including type-specific constraints.
-  // The synchronous compatibility helper is retained for existing catalogue filters.
-  const baseMissing = COMPLETE_FIELDS.filter((field) => {
-    const value = parameter[field];
-    return Array.isArray(value) ? value.length === 0 : typeof value !== "string" || !value.trim();
-  });
-  const conditional = CONDITIONAL_FIELDS[parameter.ui_element] ?? [];
-  const conditionalMissing = conditional.filter((field) => {
-    const value = parameter[field];
-    return Array.isArray(value) ? value.length === 0 : typeof value !== "string" || !value.trim();
-  });
-  return [...baseMissing, ...conditionalMissing];
-}
-export function enrich(parameter: GenesisLibraryParameter) {
-  const missing_fields = missingFields(parameter);
-  const expectedFields = COMPLETE_FIELDS.length + (CONDITIONAL_FIELDS[parameter.ui_element]?.length ?? 0);
-  return { ...parameter, _catalogue: { source: "published", missing_fields, completeness: Math.round((1 - missing_fields.length / expectedFields) * 100) } };
-}
 export function searchText(parameter: GenesisLibraryParameter): string {
   return [parameter.technical_name, parameter.name_ru, parameter.description_en, parameter.description_ru, parameter.category, parameter.sub_category, parameter.domain, ...(parameter.semantic_keywords ?? []), ...(parameter.lyria_prompt_tags ?? [])].filter(Boolean).join(" ").toLocaleLowerCase();
 }
@@ -183,7 +155,7 @@ export async function makeGaps(parameters?: GenesisLibraryParameter[]) {
   const assess = (row: GenesisLibraryParameter) => assessCompleteness(row, completionMap);
   const completionEnrich = (row: GenesisLibraryParameter) => {
     const result = assess(row);
-    return { ...row, _catalogue: { source: "library", missing_fields: result.missing_fields, completeness: result.completeness } };
+    return { ...row, _catalogue: { source: "library", missing_fields: result.missing_fields, missing_only_fields: result.missing_only_fields, invalid_fields: result.invalid_fields, gaps: result.gaps, completeness: result.completeness } };
   };
   const categoryCounts = new Map<string, number>();
   for (const parameter of library) { const key = parameter.category?.trim(); if (key) categoryCounts.set(key, (categoryCounts.get(key) ?? 0) + 1); }
@@ -202,5 +174,27 @@ export async function makeGaps(parameters?: GenesisLibraryParameter[]) {
     for (const child of children) nodes.push({ category, sub_category: child, count: subCounts.get(`${category}|||${child}`) ?? 0 });
     return nodes.filter((node) => node.count < SPARSE_CATEGORY_LIMIT).map((node) => ({ ...node, sparse_limit: SPARSE_CATEGORY_LIMIT }));
   });
-  return { required_fields: [...COMPLETE_FIELDS], conditional_required_fields: CONDITIONAL_FIELDS, sparse_category_limit: SPARSE_CATEGORY_LIMIT, incomplete: library.filter((row) => assess(row).missing_count > 0).map(completionEnrich), uncategorized: library.filter((row) => !row.category?.trim() || !row.sub_category?.trim()).map(completionEnrich), sparse_categories: sparse };
+  const incomplete = library.filter((row) => assess(row).missing_count > 0);
+  const uncategorized = library.filter((row) => !row.category?.trim() || !row.sub_category?.trim());
+  return {
+    required_fields: ["technical_name", "name_ru", "description_en", "description_ru", "category", "ui_element", "default", "unit", "quantity_kind", "lyria_prompt_tags", "semantic_keywords", "domain"],
+    conditional_required_fields: { by_ui_element: { Range: ["min_value", "max_value", "step"], Select: ["options"], Toggle: ["min_value", "max_value", "step"] }, sub_category: "required when category is present" },
+    sparse_category_limit: SPARSE_CATEGORY_LIMIT,
+    counts: {
+      catalogue_records: library.length,
+      incomplete_records: incomplete.length,
+      incomplete_field_issues: incomplete.reduce((sum, row) => sum + assess(row).missing_count, 0),
+      uncategorized_records: uncategorized.length,
+      sparse_category_nodes: sparse.length,
+    },
+    count_semantics: {
+      incomplete_records: "Unique published records with one or more missing or invalid applicable fields.",
+      incomplete_field_issues: "Count of applicable missing/invalid field occurrences; one record may contribute multiple issues.",
+      uncategorized_records: "Unique records missing category or sub_category.",
+      sparse_category_nodes: "Taxonomy category/subcategory nodes with fewer than the configured record threshold.",
+    },
+    incomplete: incomplete.map(completionEnrich),
+    uncategorized: uncategorized.map(completionEnrich),
+    sparse_categories: sparse,
+  };
 }

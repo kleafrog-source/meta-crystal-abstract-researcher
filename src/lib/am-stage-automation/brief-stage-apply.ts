@@ -3,7 +3,7 @@ export type BriefSourceIdentity = {
   stageId: string;
   attemptId: string;
   artifactId: string;
-  actionId: "brief.combine_segment_texts";
+  actionId: "brief.combine_segment_texts" | "text.assemble";
   schemaVersion: 1;
   modality: "text";
 };
@@ -77,7 +77,7 @@ export function validateBriefArtifact(input: BriefArtifactValidationInput): { ok
   if (input.attemptId !== input.successfulAttemptId) return { ok: false, reason: "artifact is not from the successful attempt" };
   if (input.schemaVersion !== 1) return { ok: false, reason: "unsupported artifact schema" };
   if (input.kind !== "brief") return { ok: false, reason: "unsupported artifact kind" };
-  if (input.actionId !== "brief.combine_segment_texts") return { ok: false, reason: "unsupported Brief producer" };
+  if (!["brief.combine_segment_texts", "text.assemble"].includes(input.actionId)) return { ok: false, reason: "unsupported Brief producer" };
   if (input.modality !== "text") return { ok: false, reason: "unsupported Brief modality" };
   if (input.validity !== "valid") return { ok: false, reason: "artifact is not valid" };
   const data = asRecord(input.data);
@@ -111,7 +111,7 @@ export function applyBriefArtifact(
   if (textChanged && currentText.trim() && mode === "ordinary") return { kind: "confirmation-required" };
 
   const metadata: BriefImportState = {
-    source: { ...source, actionId: "brief.combine_segment_texts", schemaVersion: 1, modality: "text" },
+    source: { ...source, schemaVersion: 1, modality: "text" },
     appliedText: incomingText,
     manuallyEdited: false,
     appliedSources: alreadyApplied ? state!.appliedSources : [...(state?.appliedSources ?? []), sourceKey],
@@ -124,7 +124,7 @@ export function restoreBriefImportState(value: unknown): BriefImportState | null
   const metadata = asRecord(value);
   const source = asRecord(metadata?.source);
   if (!metadata || !source || typeof metadata.appliedText !== "string" || typeof metadata.manuallyEdited !== "boolean") return null;
-  if (typeof source.runId !== "string" || typeof source.stageId !== "string" || typeof source.attemptId !== "string" || typeof source.artifactId !== "string" || source.actionId !== "brief.combine_segment_texts" || source.schemaVersion !== 1 || source.modality !== "text") return null;
+  if (typeof source.runId !== "string" || typeof source.stageId !== "string" || typeof source.attemptId !== "string" || typeof source.artifactId !== "string" || !["brief.combine_segment_texts", "text.assemble"].includes(String(source.actionId)) || source.schemaVersion !== 1 || source.modality !== "text") return null;
   const appliedSources = Array.isArray(metadata.appliedSources) ? metadata.appliedSources.filter((item): item is string => typeof item === "string") : [];
   const receipts = asRecord(metadata.operationReceipts);
   return {

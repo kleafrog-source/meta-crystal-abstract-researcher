@@ -44,6 +44,14 @@ describe("Brief Automation artifact validation and Apply", () => {
     expect(validateBriefArtifact({ ...valid, artifactOwner: { ...valid.artifactOwner, artifactId: "other-artifact" } }).ok).toBe(false);
   });
 
+  it("accepts text.assemble Brief with the exact producer identity in metadata", () => {
+    const assembledInput = { ...valid, actionId: "text.assemble" };
+    expect(validateBriefArtifact(assembledInput).ok).toBe(true);
+    const assembledSource = { ...source, actionId: "text.assemble" as const };
+    const applied = applyBriefArtifact(null, "", "Assembled Brief", assembledSource, "op-j", "ordinary");
+    expect(applied).toMatchObject({ kind: "applied", metadata: { source: assembledSource } });
+  });
+
   it.each([
     ["actionId", "brief.from_crystal"],
     ["kind", "parameter-bank"],

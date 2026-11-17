@@ -25,6 +25,13 @@ export function buildLfm3Prompt(mode: Lfm3PromptMode, context?: { left: string; 
   return `${base}\n\nNeighboring descriptions are context only and are not evidence about the audio you received. Describe only this audio sample; do not copy either neighboring description as a result. Use them only to clarify possible change or continuity, and state uncertainty when this short sample does not establish a claim.\nLeft anchor (earlier node): ${context.left}\nRight anchor (later node): ${context.right}`;
 }
 
+export function buildLfm3OllamaMessages(prompt: string, audioBase64: string) {
+  return [
+    { role: "system" as const, content: prompt },
+    { role: "user" as const, content: "", images: [audioBase64] },
+  ];
+}
+
 export function cleanLfm3Output(value: string): string {
   return value
     .replace(/\u001b\[[0-?]*[ -/]*[@-~]/gu, "")

@@ -126,3 +126,13 @@ python_engine/src/
 /data/cross-modal-consensus/
 /redesign-task-data/
 /tasks/
+
+# Local diagnostic logs and generated audit reports (keep them on disk, out of Git)
+/reports/
+/docs/automation-am2-capability-matrix.md
+/docs/automation-am2-interim-checkpoint-*.md
+/docs/automation-am2-r-merge.md
+*.exit.txt
+/evidence-*.txt
+/0
+/1

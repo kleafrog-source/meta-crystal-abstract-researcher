@@ -56,9 +56,9 @@ export function buildTransitionFlowReport(input: {
         return null;
       }
 
-      const fromValue = fromA?.suggested_value ?? fromA?.current_value ?? current?.current_value ?? fromB?.suggested_value ?? "";
-      const toValue = fromB?.suggested_value ?? fromB?.current_value ?? current?.current_value ?? fromA?.suggested_value ?? "";
-      const currentValue = current?.current_value ?? current?.suggested_value ?? interpolateFallback(fromValue, toValue, ratio, reference.ui_element);
+      const fromValue = (fromA?.suggested_value ?? fromA?.current_value ?? current?.current_value ?? fromB?.suggested_value ?? "") as string | number;
+      const toValue = (fromB?.suggested_value ?? fromB?.current_value ?? current?.current_value ?? fromA?.suggested_value ?? "") as string | number;
+      const currentValue = (current?.current_value ?? current?.suggested_value ?? interpolateFallback(fromValue, toValue, ratio, reference.ui_element)) as string | number;
       const operator = resolveOperator(fromValue, toValue, currentValue, reference.ui_element, ratio, Boolean(fromA), Boolean(fromB));
       const delta = resolveNumericDelta(fromValue, toValue);
 

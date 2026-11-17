@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
 
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 import { prepareGpuForExternalModel } from "@/lib/ollama-memory";
-import { buildLfm3Prompt, cleanLfm3Output, normalizeLfm3Window, parseLfm3Runtime, type Lfm3PromptMode, type Lfm3Runtime } from "@/lib/lfm3-audio";
+import { buildLfm3OllamaMessages, buildLfm3Prompt, cleanLfm3Output, normalizeLfm3Window, parseLfm3Runtime, type Lfm3PromptMode, type Lfm3Runtime } from "@/lib/lfm3-audio";
 import { loadLLMSettings } from "@/lib/llm/factory";
 import { capabilityIsEnabled } from "@/lib/capability-registry";
 
@@ -89,7 +89,7 @@ async function runOllama(baseUrl: string, model: string, audioPath: string, prom
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       model,
-      messages: [{ role: "user", content: prompt, images: [audio.toString("base64")] }],
+      messages: buildLfm3OllamaMessages(prompt, audio.toString("base64")),
       stream: false,
       keep_alive: 0,
       options: { temperature: 0, num_predict: 192 },

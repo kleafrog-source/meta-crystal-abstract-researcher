@@ -162,8 +162,17 @@ def cmd_stt(audio_path):
 
 def cmd_audio_index():
     from audio_clap_rag import build_index
+    from pathlib import Path
     emit_log("info", "Building incremental LAION-CLAP text index")
-    result = build_index(lambda current, total, label: emit_progress(current * 100 / max(total, 1), f"{current}/{total} {label}"))
+    result = build_index(
+        lambda current, total, label: emit_progress(current * 100 / max(total, 1), f"{current}/{total} {label}"),
+        snapshot_path=Path(os.environ["CLAP_PARAMETER_SNAPSHOT"]) if os.environ.get("CLAP_PARAMETER_SNAPSHOT") else None,
+        prepared_input_path=Path(os.environ["CLAP_PREPARED_INPUT"]) if os.environ.get("CLAP_PREPARED_INPUT") else None,
+        source_revision=os.environ.get("CLAP_SOURCE_REVISION"),
+        source_snapshot_sha256=os.environ.get("CLAP_SOURCE_SNAPSHOT_SHA256"),
+        excluded_sha256=os.environ.get("CLAP_EXCLUDED_SHA256"),
+        excluded_count=int(os.environ.get("CLAP_EXCLUDED_COUNT", "0")),
+    )
     emit_done(result)
 
 

@@ -4,7 +4,7 @@ import path from "node:path";
 
 import { NextResponse } from "next/server";
 
-import { readGenesisLibrary } from "@/lib/combinatorial-genesis/library";
+import { readEffectiveLiveCatalogue } from "@/lib/combinatorial-genesis/donor-policy";
 import { getActiveProvider } from "@/lib/llm/factory";
 
 export const dynamic = "force-dynamic";
@@ -18,15 +18,17 @@ export async function POST(request: Request) {
     if (candidates.length < 1 || candidates.length > 50) {
       return NextResponse.json({ error: "Provide between 1 and 50 candidates." }, { status: 400 });
     }
-    const latest = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "datasets", "latest.json"), "utf8")) as { version_id: string };
-    const frozen = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "datasets", latest.version_id, "parameters.json"), "utf8")) as Array<Record<string, unknown>>;
-    const library = await readGenesisLibrary() as Array<Record<string, unknown>>;
-    const byName = new Map([...library, ...frozen].map((parameter) => [String(parameter.technical_name), parameter]));
+    const effective = await readEffectiveLiveCatalogue();
+    const byName = new Map(effective.parameters.map((parameter) => [String(parameter.technical_name), parameter]));
     const records = candidates.map((candidate) => {
-      const parentNames = Array.isArray(candidate.parent_parameters) ? candidate.parent_parameters.map(String) : [];
+      const parentNames = Array.isArray(candidate.parent_parameters) ? [...new Set(candidate.parent_parameters.map(String))] : [];
       return {
         candidate,
         donors: parentNames.flatMap((name) => byName.get(name) ? [byName.get(name)] : []),
+        source_reference_diagnostics: parentNames.flatMap((name) => byName.has(name) ? [] : [{
+          technical_name: name,
+          reason: effective.tombstoneNames.has(name) ? "tombstoned" : effective.excludedNames.has(name) ? "excluded" : "unresolved",
+        }]),
       };
     });
     const { provider, settings } = await getActiveProvider();
@@ -41,7 +43,9 @@ export async function POST(request: Request) {
       created_at: new Date().toISOString(),
       chat_provider: provider.id,
       chat_model: settings.chatModel,
-      dataset_version: latest.version_id,
+      dataset_version: "live-catalogue",
+      source_kind: "effective_live_catalogue",
+      source_record_count: effective.parameters.length,
       candidate_count: candidates.length,
       records,
     }, null, 2)}\n`, "utf8");

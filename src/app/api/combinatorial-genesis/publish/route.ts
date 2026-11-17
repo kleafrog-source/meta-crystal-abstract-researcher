@@ -3,7 +3,15 @@ import path from "node:path";
 
 import { NextResponse } from "next/server";
 import { cleanPublishedParameter } from "@/lib/combinatorial-genesis/parameter-schema";
-
+import {
+  classifyPublishName,
+  createDonorPolicy,
+  readDonorRestrictions,
+  resolveDonorReferences,
+} from "@/lib/combinatorial-genesis/donor-policy";
+import { withCatalogueLock } from "@/lib/am-parameters-catalogue/catalogue";
+import { replaceCatalogueFiles } from "@/lib/combinatorial-genesis/catalogue-persistence";
+import { activeRuntimeCorpusMatchesLive } from "@/lib/combinatorial-genesis/runtime-index";
 import {
   ensureGenesisLibrary,
   GENESIS_DATA_ROOT,
@@ -11,7 +19,6 @@ import {
   GENESIS_LIBRARY_MANIFEST_PATH,
   GENESIS_LIBRARY_PATH,
   readGenesisLibrary,
-  readGenesisLibraryManifest,
   sha256,
   type GenesisLibraryManifest,
 } from "@/lib/combinatorial-genesis/library";
@@ -29,6 +36,11 @@ interface PublishRequest {
 interface PackageRecord {
   package_id: string;
   content_sha256: string;
+  source?: {
+    dataset_version?: string;
+    catalogue_revision?: string;
+    live_catalogue_verified?: boolean;
+  };
   candidates: Array<{ candidate: Record<string, unknown>; publishable: boolean; errors: string[] }>;
 }
 
@@ -67,6 +79,9 @@ function validateExports(parameters: Array<Record<string, unknown>>): string[] {
     if (!parameter.technical_name || !parameter.name_ru || !parameter.description_en || !parameter.description_ru || !parameter.category || !parameter.sub_category || !parameter.ui_element || parameter.default === undefined || !parameter.unit) {
       errors.push(`${parameter.technical_name}: missing required field`);
     }
+    if (typeof parameter.quantity_kind !== "string" || !/^[a-z][a-z0-9_]*$/.test(parameter.quantity_kind)) {
+      errors.push(`${parameter.technical_name}: quantity_kind must be a donor-derived snake_case value`);
+    }
     if (!Array.isArray(parameter.lyria_prompt_tags) || parameter.lyria_prompt_tags.length !== 3 || !Array.isArray(parameter.semantic_keywords) || parameter.semantic_keywords.length !== 7) {
       errors.push(`${parameter.technical_name}: missing lexical arrays`);
     }
@@ -74,10 +89,8 @@ function validateExports(parameters: Array<Record<string, unknown>>): string[] {
   });
 }
 
-async function atomicWrite(filePath: string, value: string): Promise<void> {
-  const temporaryPath = `${filePath}.${process.pid}.tmp`;
-  await fs.writeFile(temporaryPath, value, "utf8");
-  await fs.rename(temporaryPath, filePath);
+function sameSet(left: ReadonlySet<string>, right: ReadonlySet<string>): boolean {
+  return left.size === right.size && [...left].every((value) => right.has(value));
 }
 
 export async function POST(request: Request) {
@@ -98,7 +111,6 @@ export async function POST(request: Request) {
   let lock: fs.FileHandle | null = null;
   const lockPath = path.join(GENESIS_LIBRARY_DIR, ".publish.lock");
   try {
-    await ensureGenesisLibrary();
     if (!body.dry_run) {
       try {
         lock = await fs.open(lockPath, "wx");
@@ -111,86 +123,162 @@ export async function POST(request: Request) {
       }
     }
 
-    const packagePath = path.join(GENESIS_DATA_ROOT, "drafts", `${packageId}.json`);
-    const packageRecord = JSON.parse(await fs.readFile(packagePath, "utf8")) as PackageRecord;
-    if (packageRecord.package_id !== packageId) throw new Error("Package identity mismatch.");
+    return await withCatalogueLock(async () => {
+      await ensureGenesisLibrary();
+      const packagePath = path.join(GENESIS_DATA_ROOT, "drafts", `${packageId}.json`);
+      const packageRecord = JSON.parse(await fs.readFile(packagePath, "utf8")) as PackageRecord;
+      if (packageRecord.package_id !== packageId) throw new Error("Package identity mismatch.");
 
-    const [libraryRaw, library, manifest] = await Promise.all([
-      fs.readFile(GENESIS_LIBRARY_PATH, "utf8"),
-      readGenesisLibrary(),
-      readGenesisLibraryManifest(),
-    ]);
-    const alreadyPublished = manifest.published_package_ids.includes(packageId);
-    const accepted = packageRecord.candidates.filter((item) => item.publishable && item.errors.length === 0);
-    const exports = accepted.map((item) => ({
-      parameter: exportedParameter({ ...item.candidate, package_id: packageId }),
-      provenance: {
-        package_id: packageId,
-        parent_parameters: item.candidate.parent_parameters,
-        query_similarity: item.candidate.query_similarity,
-        selection_score: item.candidate.selection_score,
-        value_inference: item.candidate.value_inference,
-      },
-    }));
-    const existingNames = new Set(library.map((parameter) => String(parameter.technical_name)));
-    const collisions = alreadyPublished ? [] : exports
-      .map((item) => String(item.parameter.technical_name))
-      .filter((name) => existingNames.has(name));
-    const exportNames = exports.map((item) => String(item.parameter.technical_name));
-    const duplicateExports = exportNames.filter((name, index) => exportNames.indexOf(name) !== index);
-    const schemaErrors = validateExports(exports.map((item) => item.parameter));
-    const additions = alreadyPublished ? [] : exports.map((item) => item.parameter);
-    const simulated = [...library, ...additions];
-    const ready = alreadyPublished || (
-      additions.length > 0 && collisions.length === 0 && duplicateExports.length === 0 && schemaErrors.length === 0
-    );
-    const report = {
-      schema_version: 2,
-      package_id: packageId,
-      generated_at: new Date().toISOString(),
-      dry_run: body.dry_run,
-      published: !body.dry_run && ready && !alreadyPublished,
-      already_published: alreadyPublished,
-      writes_to_library: !body.dry_run && ready && !alreadyPublished,
-      library_path: GENESIS_LIBRARY_PATH,
-      library_before_count: library.length,
-      proposed_addition_count: additions.length,
-      simulated_after_count: simulated.length,
-      library_before_sha256: sha256(libraryRaw),
-      simulated_after_sha256: sha256(JSON.stringify(simulated)),
-      package_content_sha256: packageRecord.content_sha256,
-      collisions,
-      duplicate_exports: Array.from(new Set(duplicateExports)),
-      schema_errors: schemaErrors,
-      ready_for_library_publish: ready,
-    };
-    const exportDir = path.join(GENESIS_DATA_ROOT, "exports", packageId);
-    await fs.mkdir(exportDir, { recursive: true });
-    await Promise.all([
-      fs.writeFile(path.join(exportDir, "parameters.json"), `${JSON.stringify(additions, null, 2)}\n`, "utf8"),
-      fs.writeFile(path.join(exportDir, "provenance.json"), `${JSON.stringify(exports.map((item) => item.provenance), null, 2)}\n`, "utf8"),
-      fs.writeFile(path.join(exportDir, "publish_report.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8"),
-    ]);
-
-    if (!body.dry_run && ready && !alreadyPublished) {
-      const historyDir = path.join(GENESIS_LIBRARY_DIR, "history");
-      await fs.mkdir(historyDir, { recursive: true });
-      const historyPrefix = `${Date.now()}-${packageId}`;
-      await Promise.all([
-        fs.copyFile(GENESIS_LIBRARY_PATH, path.join(historyDir, `${historyPrefix}-parameters.json`)),
-        fs.copyFile(GENESIS_LIBRARY_MANIFEST_PATH, path.join(historyDir, `${historyPrefix}-manifest.json`)),
+      const [libraryRaw, library, manifestRaw, latestRaw, restrictions] = await Promise.all([
+        fs.readFile(GENESIS_LIBRARY_PATH, "utf8"),
+        readGenesisLibrary(),
+        fs.readFile(GENESIS_LIBRARY_MANIFEST_PATH, "utf8"),
+        fs.readFile(path.join(GENESIS_DATA_ROOT, "datasets", "latest.json"), "utf8"),
+        readDonorRestrictions(),
       ]);
-      const updatedManifest: GenesisLibraryManifest = {
-        ...manifest,
-        updated_at: new Date().toISOString(),
-        parameter_count: simulated.length,
-        published_package_ids: [...manifest.published_package_ids, packageId],
+      const manifest = JSON.parse(manifestRaw) as GenesisLibraryManifest;
+      const latest = JSON.parse(latestRaw) as { version_id: string };
+      const activeManifest = JSON.parse(await fs.readFile(
+        path.join(GENESIS_DATA_ROOT, "datasets", latest.version_id, "manifest.json"), "utf8",
+      )) as { source_revision?: string };
+      if (
+        packageRecord.source?.dataset_version !== latest.version_id ||
+        packageRecord.source.live_catalogue_verified !== true ||
+        !activeManifest.source_revision ||
+        packageRecord.source.catalogue_revision !== activeManifest.source_revision
+      ) {
+        return NextResponse.json({ error: "This draft does not come from the currently active live-catalogue corpus; recheck it after a current candidate is explicitly activated." }, { status: 409 });
+      }
+      const activeCorpusCurrent = await activeRuntimeCorpusMatchesLive();
+      const alreadyPublished = manifest.published_package_ids.includes(packageId);
+      const accepted = packageRecord.candidates.filter((item) => item.publishable && item.errors.length === 0);
+      const exports = accepted.map((item) => ({
+        parameter: exportedParameter({ ...item.candidate, package_id: packageId }),
+        provenance: {
+          package_id: packageId,
+          parent_parameters: item.candidate.parent_parameters,
+          query_similarity: item.candidate.query_similarity,
+          selection_score: item.candidate.selection_score,
+          value_inference: item.candidate.value_inference,
+        },
+      }));
+      const liveNames = new Set(library.map((parameter) => String(parameter.technical_name)));
+      const donorPolicy = createDonorPolicy(library, [], {
+        ...restrictions,
+      });
+      const nameConflicts = alreadyPublished ? [] : exports.flatMap((item) => {
+        const technicalName = String(item.parameter.technical_name);
+        return classifyPublishName(technicalName, {
+          liveNames,
+          tombstoneNames: restrictions.tombstoneNames,
+          excludedNames: restrictions.excludedNames,
+        }).map((reason) => ({ technical_name: technicalName, reason }));
+      });
+      if (!alreadyPublished && !activeCorpusCurrent) {
+        nameConflicts.push({ technical_name: "__catalogue__", reason: "source_catalogue_stale" });
+      }
+      if (!alreadyPublished) {
+        for (const item of accepted) {
+          const inference = item.candidate.value_inference as Record<string, unknown> | undefined;
+          const donorNames = Array.isArray(inference?.donor_parameters)
+            ? Array.from(new Set(inference.donor_parameters.filter((name): name is string => typeof name === "string")))
+            : [];
+          const sourceNames = Array.isArray(item.candidate.parent_parameters)
+            ? Array.from(new Set(item.candidate.parent_parameters.filter((name): name is string => typeof name === "string")))
+            : [];
+          if (inference?.status === "auto_resolved" && donorNames.length < 2) {
+            nameConflicts.push({ technical_name: String(item.candidate.technical_name ?? ""), reason: "donor_list_invalid" });
+          }
+          const resolution = resolveDonorReferences([...sourceNames, ...donorNames], donorPolicy);
+          for (const diagnostic of resolution.diagnostics) {
+            const prefix = sourceNames.includes(diagnostic.technical_name) ? "source" : "donor";
+            nameConflicts.push({
+              technical_name: diagnostic.technical_name,
+              reason: `${prefix}_${diagnostic.reason}` as typeof nameConflicts[number]["reason"],
+            });
+          }
+        }
+      }
+      const collisions = nameConflicts.filter((item) => item.reason === "live_duplicate").map((item) => item.technical_name);
+      const exportNames = exports.map((item) => String(item.parameter.technical_name));
+      const duplicateExports = exportNames.filter((name, index) => exportNames.indexOf(name) !== index);
+      const schemaErrors = validateExports(exports.map((item) => item.parameter));
+      const additions = alreadyPublished ? [] : exports.map((item) => item.parameter);
+      const simulated = [...library, ...additions];
+      const ready = alreadyPublished || (
+        additions.length > 0 && nameConflicts.length === 0 && duplicateExports.length === 0 && schemaErrors.length === 0
+      );
+      const report = {
+        schema_version: 2,
+        package_id: packageId,
+        generated_at: new Date().toISOString(),
+        dry_run: body.dry_run,
+        published: !body.dry_run && ready && !alreadyPublished,
+        already_published: alreadyPublished,
+        writes_to_library: !body.dry_run && ready && !alreadyPublished,
+        library_path: GENESIS_LIBRARY_PATH,
+        library_before_count: library.length,
+        proposed_addition_count: additions.length,
+        simulated_after_count: simulated.length,
+        library_before_sha256: sha256(libraryRaw),
+        simulated_after_sha256: sha256(JSON.stringify(simulated)),
+        package_content_sha256: packageRecord.content_sha256,
+        collisions,
+        name_conflicts: nameConflicts,
+        duplicate_exports: Array.from(new Set(duplicateExports)),
+        schema_errors: schemaErrors,
+        ready_for_library_publish: ready,
       };
-      await atomicWrite(GENESIS_LIBRARY_PATH, `${JSON.stringify(simulated, null, 2)}\n`);
-      await atomicWrite(GENESIS_LIBRARY_MANIFEST_PATH, `${JSON.stringify(updatedManifest, null, 2)}\n`);
-    }
+      if (!body.dry_run && ready && !alreadyPublished) {
+        const [currentLibraryRaw, currentManifestRaw, currentLatestRaw, currentRestrictions] = await Promise.all([
+          fs.readFile(GENESIS_LIBRARY_PATH, "utf8"),
+          fs.readFile(GENESIS_LIBRARY_MANIFEST_PATH, "utf8"),
+          fs.readFile(path.join(GENESIS_DATA_ROOT, "datasets", "latest.json"), "utf8"),
+          readDonorRestrictions(),
+        ]);
+        const currentLatest = JSON.parse(currentLatestRaw) as { version_id: string };
+        if (
+          sha256(currentLibraryRaw) !== sha256(libraryRaw) ||
+          sha256(currentManifestRaw) !== sha256(manifestRaw) ||
+          currentLatest.version_id !== latest.version_id ||
+          !sameSet(currentRestrictions.tombstoneNames, restrictions.tombstoneNames) ||
+          !sameSet(currentRestrictions.excludedNames, restrictions.excludedNames)
+        ) {
+          return NextResponse.json({ error: "Catalogue or donor policy changed during publish validation. Recheck this draft." }, { status: 409 });
+        }
+      }
+      const exportDir = path.join(GENESIS_DATA_ROOT, "exports", packageId);
+      if (body.dry_run || ready) {
+        await fs.mkdir(exportDir, { recursive: true });
+        await Promise.all([
+          fs.writeFile(path.join(exportDir, "parameters.json"), `${JSON.stringify(additions, null, 2)}\n`, "utf8"),
+          fs.writeFile(path.join(exportDir, "provenance.json"), `${JSON.stringify(exports.map((item) => item.provenance), null, 2)}\n`, "utf8"),
+          fs.writeFile(path.join(exportDir, "publish_report.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8"),
+        ]);
+      }
 
-    return NextResponse.json({ ...report, export_dir: exportDir });
+      if (!body.dry_run && ready && !alreadyPublished) {
+        const historyDir = path.join(GENESIS_LIBRARY_DIR, "history");
+        await fs.mkdir(historyDir, { recursive: true });
+        const historyPrefix = `${Date.now()}-${packageId}`;
+        await Promise.all([
+          fs.copyFile(GENESIS_LIBRARY_PATH, path.join(historyDir, `${historyPrefix}-parameters.json`)),
+          fs.copyFile(GENESIS_LIBRARY_MANIFEST_PATH, path.join(historyDir, `${historyPrefix}-manifest.json`)),
+        ]);
+        const updatedManifest: GenesisLibraryManifest = {
+          ...manifest,
+          updated_at: new Date().toISOString(),
+          parameter_count: simulated.length,
+          published_package_ids: [...manifest.published_package_ids, packageId],
+        };
+        await replaceCatalogueFiles({
+          "library/parameters.json": `${JSON.stringify(simulated, null, 2)}\n`,
+          "library/manifest.json": `${JSON.stringify(updatedManifest, null, 2)}\n`,
+        });
+      }
+
+      return NextResponse.json({ ...report, export_dir: body.dry_run || ready ? exportDir : null });
+    });
   } catch (error) {
     const code = error && typeof error === "object" && "code" in error ? String(error.code) : "";
     return NextResponse.json(

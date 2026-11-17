@@ -1,506 +1,1102 @@
 # V3 technical names · part 10
 
-Generated: 2026-10-16T06:05:21.023Z
+Generated: 2026-11-11T10:06:29.679Z
 
-## uncategorized / general
+## spatial_audio / early_reflections
 
-- improvisation_harmonic_freedom
-- improvisation_memory_capacity_events
-- improvisation_memory_decay_rate
-- improvisation_seed_life_duration_bars
-- improvisation_seed_mutation_rate
-- improvisation_seed_randomness
-- improvisation_seed_renewal_mode
-- improvisation_seed_renewal_rate
-- improvisation_trigger_probability_density
-- industrial_corridor_granular_scattering_density
-- industrial_corridor_transverse_reflection_phase_flip_hz
-- industrial_duct_acoustic_resonance_sharpness_q
-- industrial_euphoria_brightness_exciter_db
-- industrial_euphoria_saturation_drive_db
-- industrial_hum_frequency_hz
-- industrial_shaft_corner_reflection_phase_shift_deg
-- industrial_shaft_flutter_echo_comb_q_factor
-- industrial_shaft_flutter_echo_density_hz
-- industrial_shaft_modal_density_per_hz
-- industrial_shaft_porous_boundary_absorption_coefficient
-- industrial_tunnel_air_viscosity_loss_db_per_m
-- industrial_tunnel_cross_wall_comb_filter_delay_ms
-- industrial_tunnel_longitudinal_mode_spacing_hz
-- inference_operator_logical_depth
-- infinite_loop_regeneration_safety
-- infrasonic_cavitation_bubble_collapse_peak_pressure_bar
-- infrasonic_cavitation_bubble_collapse_transient_spike_db
-- infrasonic_cavitation_bubble_density_per_m3
-- infrasonic_cavitation_bubble_implosion_hz
-- infrasonic_cavitation_shockwave_rise_time_ms
-- infrasonic_cavitation_void_fraction_volume
-- infrasonic_energy_flux_density_watts_per_m2
-- infrasonic_hydraulic_cavitational_impulse_energy_joules
-- infrasonic_hydraulic_cavitational_impulse_period_ms
-- infrasonic_hydraulic_pressure_dispersion_ms
-- infrasonic_hydraulic_pressure_pulse_decay_ms
-- infrasonic_hydraulic_resonance_q_factor
-- infrasonic_hydraulic_wave_propagation_velocity_ms
-- infrasonic_membrane_mechanical_hysteresis
-- infrasonic_phase_coherence_bandwidth_hz
-- infrasonic_shockwave_attenuation_db_per_m
-- infrasonic_shockwave_cavitation_collapse_energy_joules
-- infrasonic_shockwave_compression_ratio
-- infrasonic_shockwave_mach_reflection_angle_deg
-- infrasonic_shockwave_mach_stem_implosion_energy_density_j_m3
-- infrasonic_shockwave_mach_stem_implosion_frequency_hz
-- infrasonic_shockwave_mach_stem_implosion_pressure_bar
-- infrasonic_shockwave_mach_stem_overpressure_ratio
-- infrasonic_shockwave_mach_stem_reflection_phase_deg
-- infrasonic_shockwave_mach_stem_reflection_ratio
-- infrasonic_shockwave_mach_stem_wavefront_thickness_mm
-- infrasonic_shockwave_phase_inversion_delay_ms
-- infrasonic_shockwave_refraction_angle_deg
-- infrasonic_shockwave_refraction_index_ratio
-- infrasonic_shockwave_wavefront_curvature_radius_m
-- infrasonic_woofer_excursion_asymmetry_ratio
-- infrasound_pulse_frequency_hz
-- inharmonic_partials_spread_factor
-- inhibitory_interneuron_coupling_strength
-- instructional_entropy_ratio
-- intelligent_automation_adaptivity_level
-- intelligent_automation_constraint_strictness
-- intelligent_limiter_lookahead_window_ms
-- intelligent_multi_stage_compression_ratio_curvature
-- intelligent_multislope_knee_transition_radius
-- intent_recognition_confidence_threshold
-- interaural_intensity_difference
-- interaural_time_difference
-- interaural_time_difference_max_ms
-- interchannel_phase_skew
-- interchannel_time_difference_left_right
-- interoperable_asset_licensing_smart_contract_address
-- interoperable_asset_ownership_proof_hash
-- invariant_chsh_bell_inequality_metric
-- invariant_gs_semantic_gain_target
-- invariant_p1_mono_init_strictness
-- invariant_p2_flux_balance_tolerance
-- invariant_p3_closure_overlap_index
-- invariant_p4_density_continuity
-- invariant_qec_coherence_threshold
-- inversion_logic_recursive_depth
-- irony_sarcasm_detection_threshold
-- isochronic_carrier_frequency_hz
-- isochronic_pulse_edge_sharpness_factor
-- isochronic_pulse_rate_hz
-- isochronic_sub_pulse_duty_cycle
-- isochronic_theta_pulse_duty_cycle_jitter_ms
-- isomorph_biometric_theta_entrainment_bias
-- isomorph_biometric_theta_entrainment_frequency
-- isomorph_chronesthetic_dilation_entropy_variance
-- isomorph_chronesthetic_temporal_dilation_dt
-- isomorph_chronesthetic_time_perception_dilation
-- isomorph_emotional_valence_to_spectral_centroid_mapping
-- isomorph_kinesthetic_gyroscopic_panning_rate
-- isomorph_olfactory_spectral_association
-- isomorph_olfactory_spectral_association_index
-- isomorph_olfactory_spectral_association_weight
-- isomorph_olfactory_spectral_correlation_matrix
-- isomorph_proprioceptive_sub_bass_haptic_transfer
+- temple_ir_early_reflection_suppression_db
+- temple_ir_early_reflection_suppression_ratio
+## spatial_audio / early_reflection
+
+- vibe_primal_ice_early_reflection_gain_db
+## spatial_audio / echo_diffusion
+
+- ghost_echo_diffusion
+## spatial_audio / eigenvalue_damping
+
+- fdn_reverb_matrix_eigenvalue_damping_decay
+## spatial_audio / elevation
+
+- spatial_elevation_cue_amount
+- spatial_height_filter_frequency_hz
+## spatial_audio / emotional_context
+
+- scene_description_mood
+## spatial_audio / emotional_reverberation
+
+- melancholic_decay_reverb_diffusion_percentage
+- somber_abyssal_reverb_decay_time_s
+## spatial_audio / environmental_acoustics
+
+- ambient_room_scattering_coefficient_ratio
+## spatial_audio / environmental_context
+
+- scene_description_environment
+## spatial_audio / feedback_control
+
+- simple_stereo_delay_feedback_percent
+## spatial_audio / feedback_damping
+
+- asymmetric_delay_cross_mix_feedback_damping_hz
+## spatial_audio / feedback_delay
+
+- force_feedback_delay_compensation
+## spatial_audio / feedback_phase_inversion
+
+- asymmetric_delay_feedback_phase_inversion_toggle
+## spatial_audio / field_processing
+
+- geometric_current_stereo_field_pan_rate
+## spatial_audio / flanger_effect
+
+- flanger_delay_line_min_time_ms
+## spatial_audio / fm_synthesis
+
+- fm_carrier_modulator_phase_coherence_lock
+## spatial_audio / frequency_split
+
+- stereo_imager_frequency_split_point_hz
+## spatial_audio / gaze_controlled_spatial_positioning
+
+- eye_tracking_gaze_focus_audio_pan
+## spatial_audio / grain_position_scatter
+
+- granular_position_scatter_variance
+## spatial_audio / granular_cloud_dispersion
+
+- granular_cloud_particle_dispersion_radius
+## spatial_audio / granular_diffusion
+
+- granular_diffuse_cloud_spatial_anisotropy_index
+## spatial_audio / granular_spatial
+
+- granular_freeze_spray_percent
+## spatial_audio / granular_spatialization
+
+- granular_cloud_spatial_diffusion_radius_m
+- granular_cloud_spatial_dispersion_ratio
+## spatial_audio / granular_spread
+
+- granular_diffuse_cloud_spatial_spread_angle_deg
+## spatial_audio / gravity_coefficient
+
 - isomorph_proprioceptive_weight_gravity_coefficient
-- isomorph_proprioceptive_weight_gravity_pull
-- isomorph_synesthetic_color_hue_frequency_lock
-- isomorph_tactile_haptic_frequency_mapping
-- isomorph_tactile_haptic_sub_bass_transfer_ratio
-- isomorph_tactile_sub_bass_haptic_transfer_ratio
-- isomorph_thermal_acoustic_spectral_tilt_db
-- isomorph_thermal_acoustic_texture_tilt
-- isomorph_thermal_spectral_tilt_index
-- isomorph_vestibular_balance_disorientation_bias
+## spatial_audio / gravity_phase_inversion
+
 - isomorph_vestibular_gravity_pull_phase_inversion
-- isomorph_vestibular_phase_cancellation_depth
-- isomorph_visual_strobe_transient_sync
-- itd_interaural_time_difference_phase_drift_ms
-- jawari_sympathetic_buzz_harmonic_density
-- jhala_section_micro_rhythmic_acceleration_index
-- jhatti_section_tremolo_strumming_density
-- jor_tempo_escalation_gradient_multiplier
-- just_intonation_fifth_purity_lock
-- just_intonation_prime_limit_max
-- kick_drum_visual_impulse_radius_pixels
-- l_system_angle_turn_degrees
-- l_system_axiom_mutation_rate_per_cycle
-- l_system_axiom_string_initial
-- l_system_fractal_branching_depth
-- l_system_fractal_rhythm_time_division_denominator
-- l_system_production_rule_complexity_depth
-- l_system_rhythm_sequence_max_recursion_depth_cap
-- l_system_stochastic_rule_substitution_probability
-- l_system_symbol_replacement_map_complexity
-- l1_omni_contract_state_space_dimension
-- l2_adaptive_routing_cognitive_mode
-- l3_semantic_condensation_output_purity
-- l4_holographic_memory_working_slots
-- l5_meta_governance_ethics_threshold
-- l6_spontaneous_consciousness_index
-- l7_omega_adslx10_acceleration_factor
-- l8_omni_learning_2046_architecture_generation_rate
-- l9_temporal_transcendence_binding_depth
-- lagrangian_action_density_spatial_hessian_determinant
-- lagrangian_action_integral_scaling_constant
-- lagrangian_fermion_mass_m0_coupling_scale
-- lagrangian_field_kinetic_potential_ratio_balance
-- lagrangian_field_topological_charge_density_gradient
-- lagrangian_field_u1_gauge_phase_winding_number
-- lagrangian_kinetic_term_spatial_curvature_coupling
-- lagrangian_mass_coupling_m0_real_psi
-- lagrangian_metric_tensor_determinant_perturbation
-- lagrangian_topological_charge_spatialization
-- lagrangian_yang_mills_color_charge_coupling
-- latent_direction_modulation_depth
-- latent_interpolation_speed
-- latent_space_exploration_randomness
-- layer_a_volume_db
-- layer_b_volume_db
-- layer_stacking_count
-- layer_time_alignment_auto_detect_enable
-- layer_time_alignment_offset_samples
-- lexical_diversity_type_token_ratio_target
+## spatial_audio / gravity_pull
+
+- isomorph_proprioceptive_weight_gravity_pull
+## spatial_audio / grouping_control
+
+- perceptual_grouping_continuity_bias
+- perceptual_grouping_proximity_weight
+- perceptual_grouping_similarity_threshold
+## spatial_audio / gyro_panning
+
+- isomorph_kinesthetic_gyroscopic_panning_rate
+## spatial_audio / haas_effect
+
+- spatial_haas_effect_delay_ms
+- vibe_intergalactic_haas_effect_stereo_delay_ms
+## spatial_audio / hall_reverb_diffusion
+
+- liquid_scratch_hall_reverb_diffusion_coefficient
+## spatial_audio / haveli_temple_reverb
+
+- lfe_haveli_temple_reverb_wet_dry_ratio
+## spatial_audio / headphone_crossfeed
+
+- spatial_crossfeed_corner_frequency_hz
+## spatial_audio / headphone_processing
+
+- binaural_crossfeed_bleed_db
+- stochastic_tremor_feeling_bleed_resonance
+## spatial_audio / headphone_virtualization
+
+- spatial_binaural_crossfeed_attenuation_db
+- spatial_binaural_crossfeed_corner_frequency_hz
+- spatial_binaural_crossfeed_delay_ms
+- spatial_headphone_crossfeed_corner_frequency_hz
+- spatial_headphone_virtualization_room_size_meters
+## spatial_audio / high_frequency_crossover
+
+- high_frequency_stereo_crossover
+## spatial_audio / hrt_f_transaural
+
+- head_shadow_elevation_notch_profile
+- head_shadow_time_difference_profile
+## spatial_audio / hrtf_3d_positioning
+
+- head_related_transfer_elevation_deg
+## spatial_audio / hrtf_interpolation
+
+- hrtf_interpolation_smoothness_factor
+## spatial_audio / hrtf_modeling
+
+- spatial_binaural_ear_canal_attenuation_db
+- spatial_binaural_ear_canal_delay_ms
+- spatial_binaural_ear_canal_length_cm
+- spatial_binaural_ear_canal_q_factor
+- spatial_binaural_ear_canal_reflection_decay_ms
+- spatial_binaural_ear_canal_reflection_decay_q_boost
+- spatial_binaural_ear_canal_reflection_decay_q_factor
+- spatial_binaural_ear_canal_reflection_decay_smoothing_ms
+- spatial_binaural_ear_canal_reflection_delay_ms
+- spatial_binaural_ear_canal_reflection_gain_db
+- spatial_binaural_ear_canal_reflection_q_factor
+- spatial_binaural_ear_canal_reflection_q_factor_boost
+- spatial_binaural_ear_canal_reflection_q_factor_resonance
+- spatial_binaural_ear_canal_reflection_smoothing_ms
+- spatial_binaural_ear_canal_resonance_freq_hz
+- spatial_binaural_ear_canal_resonance_gain_db
+- spatial_binaural_head_radius_m
+- spatial_binaural_head_shadow_cutoff_hz
+- spatial_binaural_pinna_notch_freq_hz
+- spatial_binaural_pinna_reflection_decay_ms
+- spatial_binaural_pinna_reflection_decay_q_factor
+- spatial_binaural_pinna_reflection_decay_q_factor_boost
+- spatial_binaural_pinna_reflection_decay_rate_hz
+- spatial_binaural_pinna_reflection_decay_smoothing_ms
+- spatial_binaural_pinna_reflection_decay_smoothing_q_boost_db_value
+- spatial_binaural_pinna_reflection_decay_smoothing_q_factor
+- spatial_binaural_pinna_reflection_delay_ms
+- spatial_binaural_pinna_reflection_q_factor
+- spatial_binaural_shoulder_reflection_delay_ms
+- spatial_binaural_shoulder_reflection_gain_db
+- spatial_binaural_torso_reflection_cutoff_hz
+- spatial_binaural_torso_reflection_delay_ms
+- spatial_binaural_torso_reflection_gain_db
+- spatial_binaural_torso_reflection_q_factor
+## spatial_audio / hrtf_processing
+
+- binaural_head_radius_meters
+- binaural_head_shadow_attenuation_db
+- spatial_head_related_phase_notch_frequency_hz
+- spatial_head_related_transfer_function_azimuth_degrees
+- spatial_hrtf_distance_filtering_crossover_hz
+- spatial_hrtf_elevation_notch_frequency_hz
+## spatial_audio / hrtf_transaural
+
+- head_shadow_diffuseness_coefficient_profile
+- head_shadow_torso_acoustic_reflection_profile
+- spherical_torso_diffuseness_coefficient_profile
+- wavefield_boundary_crosstalk_cancellation_profile
+- wavefield_boundary_time_difference_azimuth_deg
+- wavefield_boundary_time_difference_freq_hz
+- wavefield_boundary_torso_acoustic_reflection_profile
+## spatial_audio / hrtfs_transaural
+
+- spatial_interaural_elevation_notch_azimuth_deg
+- spatial_interaural_elevation_notch_ms
+- spatial_interaural_time_difference_azimuth_deg
+- spatial_interaural_torso_acoustic_reflection_freq_hz
+- spherical_torso_torso_acoustic_reflection_freq_hz
+- wavefield_boundary_diffuseness_coefficient_freq_hz
+- wavefield_boundary_elevation_notch_azimuth_deg
+- wavefield_boundary_elevation_notch_freq_hz
+## spatial_audio / hrtf
+
+- spatial_head_related_transfer_function_amount
+## spatial_audio / imaging
+
+- basic_stereo_imager_width_percent
+## spatial_audio / immersion_level
+
+- webxr_session_immersion_level_requirement
+## spatial_audio / interchannel_offset
+
+- omega_phase_3_vector_convolve_interchannel_offset_ms
+## spatial_audio / interchannel_phase
+
+- autopan_interchannel_phase_inversion
+## spatial_audio / interchannel_timing
+
+- microdelay_interchannel_offset
+## spatial_audio / kinetic_sound_rotation
+
+- doppler_vortex_angular_velocity_rad_per_sec
+## spatial_audio / lfe_processing
+
 - lfe_ambient_layer_whisper_pan_modulation_rate
 - lfe_ambient_layer_whisper_pan_modulation_rate_hz
-- lfe_ambient_whisper_filter_cutoff_hz
-- lfe_ambient_whisper_pan_randomization_seed
-- lfe_core_threshold_ratio
-- lfe_drama_intensification_peak_ceiling
-- lfe_drama_peak_tihai_silence_delta_ms
-- lfe_emotional_density_drama_intensification_multiplier
-- lfe_fragmentation_coherence_balance_threshold
-- lfe_fragmentation_max_consecutive_syllables
-- lfe_haveli_temple_reverb_wet_dry_ratio
-- lfe_jawari_sympathetic_resonance_q_factor
-- lfe_meltdown_spectral_noise_floor_db
-- lfe_meta_emotional_density_ed
-- lfe_meta_morphological_fusion_score
-- lfe_meta_narrative_coherence_index
-- lfe_meta_weirdness_boost_w
-- lfe_micro_sruti_vibrato_lfo_rate_hz
-- lfe_mode_fusion_score_dominance_limit
-- lfe_mode_fusion_score_dominance_limit_count
-- lfe_mode_fusion_score_weight_decay
-- lfe_mridangam_timable_consonant_mapping_weight
-- lfe_narrative_coherence_fragmentation_penalty
-- lfe_narrative_coherence_recovery_rate
-- lfe_narrative_collapse_spectral_blur_sigma
-- lfe_narrative_meltdown_noise_floor_db
-- lfe_p_survive_coherence_minimum_threshold
-- lfe_p_survive_novelty_weight_coefficient
-- lfe_paulstretch_vowel_extension_ratio
-- lfe_phonetic_syllable_to_drum_mapping_weight
-- lfe_plosive_consonant_transient_suppression_ms
-- lfe_raga_bheda_toggle_transition_time_sec
-- lfe_rasa_bhaava_convergence_micro_vibrato_depth
-- lfe_rasa_bhaava_micro_sruti_vibrato_depth_cents
-- lfe_rhythmic_base_syllable_to_drum_mapping_weight
-- lfe_strength_optimization_fragmentation_penalty
-- lfe_strength_optimization_fragmentation_penalty_factor
-- lfe_syllable_to_drum_event_latency_jitter_ms
-- lfe_syllable_to_drum_event_mapping_latency_ms
-- lfe_traditional_anchor_fallback_frequency_hz
-- lfe_traditional_anchor_om_frequency_hz
-- lfe_traditional_anchor_phoneme_persistence
-- lfe_traditional_anchor_phoneme_persistence_weight
-- lfe_vowel_paulstretch_crossfade_duration_ms
-- lfe_weirdness_boost_novel_modes_cap
-- lfe_weirdness_novel_modes_decay_rate
-- lfo_frequency_modulation_depth
-- lfo_phase_offset
-- lfo_rate
-- lfo_waveform_type
-- light_beam_width_energy_dependent
-- light_brightness_amplitude_follow_depth
-- light_brightness_tracking_source
-- light_color_hue_modulation_speed
-- light_color_hue_spectral_centroid_follow
-- linear_phase_filter_latency_compensation_ms
-- linguistic_complexity_flesch_kincaid_target
-- linguistic_register_formality_scale
-- liouville_phase_space_volume_conservation
-- liouville_spectral_entropy_damping
-- lip_aperture_damping_multiplier
-- liquid_lfo_pitch_drift_depth
-- liquid_scratch_anti_grid_humanization_jitter_ms
-- liquid_scratch_anti_grid_humanization_random_seed_offset
-- liquid_scratch_chorus_flanger_base_delay_ms
-- liquid_scratch_chorus_flanger_feedback_percent
-- liquid_scratch_chorus_flanger_stereo_width_max_degrees
-- liquid_scratch_chorus_flanger_stereo_width_modulation_hz
-- liquid_scratch_granular_overlap_hann_window_alpha
-- liquid_scratch_granular_overlap_hanning_window
-- liquid_scratch_granular_random_pitch_deviation_cents
-- liquid_scratch_granular_window_function_type
-- liquid_scratch_hall_reverb_diffusion_coefficient
-- liquid_scratch_hall_reverb_early_reflection_db_cut
-- liquid_scratch_hall_reverb_early_reflection_suppression_db
-- liquid_scratch_hall_reverb_high_shelf_cutoff_hz
-- liquid_scratch_paulstretch_grain_size_ms
-- liquid_scratch_paulstretch_ratio
-- liquid_scratch_paulstretch_time_stretch_max_percent
-- liquid_scratch_pitch_lfo_phase_randomization
-- liquid_scratch_pitch_lfo_sine_deviation_cents
-- liquid_scratch_pitch_lfo_sine_wave_phase_offset_deg
-- liquid_scratch_pitch_lfo_waveform_shape
-- liquid_scratch_spectral_delay_feedback_decay_time
-- liquid_scratch_spectral_delay_feedback_pitch_shift_semitones
-- liquid_scratch_spectral_delay_ping_pong_pan_width
-- liquid_scratch_spectral_delay_pitch_feedback_semitones
-- liquid_scratch_speed_lfo_depth_percent
-- liquid_scratch_speed_lfo_triangle_rate_hz
-- liquid_scratch_speed_lfo_triangle_wave_asymmetry
-- liquid_scratch_speed_lfo_waveform_morph
-- liquid_scratch_sub_foundation_cajon_lowpass_slope_db_oct
-- liquid_scratch_sub_foundation_crossover_frequency_hz
-- liquid_scratch_sub_foundation_saturation_drive_db
-- liquid_scratch_texture_china_cymbal_granular_freeze_duration
-- liquid_scratch_texture_china_cymbal_granular_freeze_hold_sec
-- liquid_scratch_texture_china_cymbal_swell_time_sec
-- liquid_scratch_texture_element_stereo_spread_degrees
-- liquid_scratch_transient_envelope_attack_curve_type
-- liquid_scratch_transient_envelope_fade_in_exponential_curve
-- liquid_scratch_transient_envelope_fade_in_ms
-- liquid_scratch_transient_envelope_fade_out_ms
-- liquid_scratch_viscous_gel_density
-- listener_energy_adaptive_filter_cutoff_tracking
-- listener_energy_adaptive_gain_compression
-- live_automation_depth
-- live_macro_knob_assign_style
-- live_modulation_lfo_sync_to_performer
-- long_term_preference_learning_rate
-- loop_crossfade_duration_ms
-- lorenz_attractor_sigma_parameter
-- low_end_anchor_frequency_hz
-- low_frequency_rumble_screen_shake_mm
-- lowpass_filter_frequency_hz
-- lsystem_fractal_rhythm_branching_depth
-- lsystem_fractal_rhythm_stochastic_mutation_rate
-- lyrical_emotion_sentiment_strength
-- macro_arc_phase_duration_ratio
-- macro_arc_tension_accumulation_exponent
-- macro_arrangement_acid_303_layer_density_mask
-- macro_arrangement_drop_sub_bass_compression_recovery_time_ms
-- macro_arrangement_lead_synth_octave_transposition_map
-- macro_arrangement_percussion_density_mask_ratio
-- macro_arrangement_sub_bass_density_scale
-- macro_arrangement_sub_bass_energy_headroom_db
-- macro_arrangement_synthesizer_polyphony_cap
-- macro_arrangement_tempo_rubato_flexibility_ratio
-- macro_breakdown_filter_sweep_duration_bars
-- macro_breakdown_pad_texture_highpass_cutoff_hz
-- macro_breakdown_section_dynamic_range_uncompression
-- macro_breakdown_section_min_energy_floor_db
-- macro_breakdown_sub_bass_cutoff_sweep_speed_bars
-- macro_build_up_noise_riser_density_curve
-- macro_climax_drop_transient_sub_delay_offset
-- macro_climax_high_frequency_shimmer_density_scale
-- macro_climax_layer_density_crossfade_duration_bars
-- macro_climax_percussion_groove_swing_percentage
-- macro_climax_polymetric_phase_desynchronization_ms
-- macro_climax_spectral_centroid_peak_frequency_hz
-- macro_climax_sub_bass_sidechain_ducking_recovery_speed
-- macro_drop_transient_kick_sub_phase_align_ms
-- macro_drop_transient_sub_boost_db
-- macro_dynamic_range_compression_target
-- macro_energy_density_moving_average_window_sec
-- macro_energy_relaxation_decay_velocity
-- macro_energy_timeline_anchor_position
-- macro_energy_timeline_climax_buildup_sigmoid_steepness
-- macro_entropy_phase_shift_threshold
-- macro_section_density_exponential_scaling_factor
-- macro_section_energy_contrast_index
-- macro_structural_transition_smoothing_time_ms
-- macro_tension_buildup_pitch_bend_range_semitones
-- mandelbrot_set_zoom_level_iterations
-- maqam_scale_jins_selection
-- markov_chain_decay_weighted_history_depth
-- markov_chain_first_order_entropy_weight
-- markov_chain_higher_order_memory_pruning_threshold
-- markov_chain_randomness_factor
-- markov_chain_state_entropy_divergence_weight
-- markov_chain_state_entropy_injection_rate
-- markov_chain_state_entropy_relaxation_time_ms
-- markov_chain_state_memory_decay_rate
-- markov_chain_state_persistence_weight
-- markov_chain_state_transition_probability_normalizer
-- markov_chain_stochastic_reset_probability
-- markov_chain_transition_matrix_sparsity
-- markov_memory_order_depth_levels
-- markov_memory_weight_decay_curve_exponent
-- markov_sequence_loop_prevention_threshold
-- markov_state_memory_decay_rate
-- markov_tempo_subdivision_lock
-- markov_transition_matrix_preset
-- markov_transition_matrix_temperature_scaling
-- master_output_gain_db
-- material_density_kg_per_m3
-- material_porosity_factor
-- max_generation_token_limit
-- max_self_correction_iterations_before_halt
-- meend_glide_curvature
-- meend_glissando_microtonal_velocity_curvature
-- melancholy_injection_ratio
-- melodic_contour_to_line_thickness_map
-- membrane_damping_coefficient
-- membrane_striking_position_radius
-- membrane_tension_stiffness
-- memory_corruption_random_byte_flip_rate
-- meta_abstraction_level
-- meta_crystal_focus_word_semantic_anchor_weight
-- meta_crystal_parsing_domain_safety_weight
-- meta_reflection_irony_level
-- meta_reflection_self_referential_depth
-- metaphor_audio_mapping
-- metaphor_detection_abstraction_level
-- metaphor_intensity
-- metaverse_avatar_audio_reactivity_scale
-- metaverse_physics_engine_gravity_constant_scale
-- metric_d_formula_weights_w
-- metric_d_noise_sensitivity_kappa
-- metric_modulation_transition_smoothness
-- metric_stability_s_minimum
-- metric_velocity_v_threshold_ms
-- micro_accent_random_variation
-- micro_automation_resolution
-- micro_automation_smoothing_per_controller
-- micro_delay_modulation_speed
-- micro_delay_offset_range
-- micro_delay_probability_per_note
-- micro_dynamic_expansion_threshold
-- micro_echo_density
-- micro_echo_tempo_sync_factor
-- micro_envelope_attack_curve
-- micro_envelope_decay_curve
-- micro_glitch_time_warp_depth
-- micro_glitch_time_warp_probability
-- micro_harmony_generator_amplitude_scale
-- micro_harmony_generator_type
-- micro_interval_random_variation
-- micro_interval_size
-- micro_lfo_shape
-- micro_lfo_speed
-- micro_modulation_depth
-- micro_modulation_speed
-- micro_pulse_modulation_amplitude
-- micro_pulse_subdivision_shift
+## spatial_audio / mass_inertia_ratio
+
+- viscous_sub_bass_acoustic_mass_inertia_ratio
+## spatial_audio / matrix_density
+
+- fdn_reverb_matrix_density_order
+## spatial_audio / micro_reverb
+
 - micro_reverb_decay_time_scale
 - micro_reverb_pre_delay_fraction
-- micro_timing_deviation_curve_shape
-- micro_timing_deviation_depth
-- micro_timing_jitter_ms
-- micro_timing_offset_ticks
-- micro_wavefolding_fold_amount
-- micro_wavefolding_symmetry
-- micro_waveform_asymmetry
-- micro_waveform_complexity
-- microtonal_arpeggio_step_interval_cents
-- microtonal_chord_voicing_spread_cents
-- microtonal_division_steps_per_octave
-- microtonal_glissando_smoothness_steps
-- microtonal_pitch_drift
-- microtonal_sruti_interval_ratio_bhatkhande
-- midi_aftertouch_sensitivity_factor
-- midi_channel_assignment_number
-- midi_channel_pressure_sensitivity
-- midi_clock_sync_source
-- midi_control_change_cc_number
-- midi_control_to_parameter_density
-- midi_interface_device_type
-- midi_local_control_switch
-- midi_program_change_number
-- midi_sustain_pedal_mode
-- midi_velocity_curve_type
-- midside_mid_gain_attenuation
-- ml_model_adaptation_speed
-- ml_model_context_window_length
-- mmss_core_zeta_topological_charge_z3_conservation_epsilon
-- mmss_l1_omni_contract_tensor_rank
-- mmss_l2_adaptive_routing_lateral_question_q_weight
-- mmss_l3_semantic_condensation_output_purity_threshold
-- mmss_l4_holographic_memory_cross_session_persistence_slots
-- mmss_l5_meta_governance_j_objective_functional_weight
-- mmss_l6_spontaneous_consciousness_meta_observer_index
-- mmss_l7_omega_adslx10_cognitive_acceleration_multiplier
-- mmss_l8_omni_learning_2046_meta_g_trajectory_reconstruction
-- mmss_l9_temporal_transcendence_d_t_coefficient_binding
-- model_context_window_utilization_percent
-- model_quantization_precision_level
-- monaural_beat_pulse_modulation_rate_hz
-- mono_to_stereo_width_percent
-- monotonic_phase_path_skipping_penalty
-- monotonic_phase_path_transition_energy_barrier
-- morphing_comb_filter_array_resonance_spacing
-- morphing_filter_anti_resonance_notch_depth_db
-- morphing_filter_cutoff_frequency_range_min_hz
-- morphing_filter_dry_wet_mix_phase_alignment
-- morphing_filter_pole_interpolation_rate
-- morphing_filter_pole_zero_cancellation_depth
-- morphing_filter_pole_zero_migration_velocity_hz_sec
-- morphing_filter_pole_zero_phase_dispersion_ratio
-- morphing_filter_poles_resonance_q_factor
-- morphing_filter_resonance_q_modulation_rate
-- morphing_filter_resonance_q_slope_tracking
-- morphing_filter_type_transition_curve
-- morphing_filter_zero_q_factor_attenuation_db
-- morphing_parameter_interpolation_speed
-- motif_augmentation_duration_multiplier
-- motif_retrograde_probability
-- motif_transposition_interval
+## spatial_audio / mid_side_balance
+
+- stereo_matrix_mid_side_balance_db
+## spatial_audio / mid_side_eq
+
+- spatial_mid_side_eq_balance
+## spatial_audio / mid_side_processing
+
+- mid_side_balance_ratio
+- spatial_center_channel_extraction_gain_db
+- stereo_mid_side_balance
+- stereo_mid_side_balance_ratio
+## spatial_audio / modal_clustering
+
+- fdn_matrix_modal_density_clustering_coefficient
+## spatial_audio / modal_spacing
+
+- fdn_matrix_modal_density_spacing_factor
+## spatial_audio / mode_fusion_score
+
+- lfe_mode_fusion_score_weight_decay
+## spatial_audio / modulation_smoothing
+
+- pan_modulation_smoothing_time
+## spatial_audio / mono_lock
+
+- sub_mono_lock_cutoff
+## spatial_audio / morphing_sharpness
+
+- scene_morphing_curve_sharpness
+## spatial_audio / motion_control
+
 - motion_accelerometer_aggression_factor
-- mpe_per_note_pitch_bend_range
-- mpe_per_note_timbre_modulation_depth
-- multi_band_dynamic_coupling_ratio
-- multi_objective_weight_vector_normalization
-- multi_stage_compression_blend_ratio
-- multi_tap_delay_amplitude_decay_slope
-- multi_tap_delay_decay_envelope_exponent
-- multi_tap_delay_non_linear_saturation_drive
-- multi_tap_delay_pan_spread_angle
-- multi_tap_delay_time_distribution_curve
-- multiband_peak_limiter_crossover_phase_damping
-- multilingual_code_switching_sensitivity
-- multitap_delay_cross_channel_phase_inversion_balance
-- multitap_delay_cross_quadrature_phase_offset_deg
-- multitap_delay_feedback_high_frequency_damping_hz
-- multitap_delay_feedback_phase_cancellation_comb_depth
-- multitap_delay_feedback_saturation_knee_curve
-- multitap_delay_fibonacci_cross_feedback_gain_db
-- multitap_delay_fibonacci_feedback_phase_bleed_ratio
-- multitap_delay_fibonacci_spacing_ratio
-- multitap_delay_network_prime_spacing_spread
-- multitap_delay_polymetric_phase_rotation_speed_deg
-- multitap_delay_polyrhythmic_tempo_multiplier
-- multitap_delay_prime_number_feedback_decay_exponent
-- multitap_delay_prime_number_spacing_factor
-- multitap_delay_prime_number_tap_spacing_offset_ms
+## spatial_audio / motion_cues
+
+- doppler_pitch_shift_rate
+## spatial_audio / motion_prediction
+
+- adaptive_spatialization_motion_prediction_gain
+## spatial_audio / motion_processing
+
+- doppler_pitch_shift_intensity_ratio
+## spatial_audio / multi_tap_delay
+
+- vibe_mirrored_labyrinth_odd_tap_delay_ratio
+## spatial_audio / multiband_width
+
+- multiband_stereo_width_low_frequency
+## spatial_audio / n_dimensional_spatialization
+
+- hyperdimensional_tesseract_rotation_speed_rad_per_sec
+## spatial_audio / noise_correlation_width
+
+- texture_noise_spectral_correlation_stereo_width
+## spatial_audio / object_orientation
+
+- object_orientation_modulation
+## spatial_audio / object_size
+
+- object_size_scaling_per_distance
+## spatial_audio / occlusion_delay
+
+- obstacle_occlusion_delay_scale
+## spatial_audio / pan_distribution
+
+- supersaw_unison_voice_pan_distribution_spread
+## spatial_audio / pan_to_position_mapping
+
+- visual_mapping_pan_to_position_x
+## spatial_audio / pan
+
 - multitap_delay_spatial_pan_spread_width
-- multitap_delay_tap_amplitude_decay_exponent
-- multitap_diffuse_feedback_matrix_decay
-- mutation_rate_probability_per_gene
-- mute_solo_state_flag
-- named_entity_recognition_focus_weight
-- narrative_arc_complexity_depth
-- narrative_arc_progression
-- narrative_arc_shift_trigger
-- narrative_focus_element
-- narrative_intent_conflict_resolution_dynamics
-- narrative_intent_linear_episodic
-- narrative_structure_phase
-- negentropy_injection_flow_velocity
-- negentropy_recompilation_coefficient
-- network_control_latency_compensation
-- neural_transient_extraction_bypass_bleed_ratio
-- neuromodulator_dopamine_level_scale
-- neuromorphic_chip_temperature_drift_compensation
-- neuron_membrane_potential_leak_rate
-- nine_string_bridge_saddle_coupling_efficiency
-- nine_string_bridge_saddle_mechanical_vibration_loss_db
-- nine_string_fret_buzz_clatter_mix_db
-- nine_string_fretboard_bending_stiffness_modulus_string9
-- nine_string_fretboard_bending_vibration_damping
-- nine_string_fretboard_contact_mechanical_impedance
-- nine_string_fretboard_longitudinal_damping_loss_factor
-- nine_string_fretboard_longitudinal_elastic_modulus_gpa
+## spatial_audio / panning_control
+
+- circular_panning_rate_hz
+## spatial_audio / panning
+
+- sonic_labyrinth_dynamic_panning_rate_hz
+- spatial_azimuth_elevation_coupling_tilt
+- spatial_map_rotation_speed
+- stereo_pan_law_exponent
+## spatial_audio / partial_apply
+
+- scene_morphing_partial_apply
+## spatial_audio / phantom_source
+
+- illusion_phantom_source_distance
+## spatial_audio / phase_alignment
+
+- interchannel_phase_skew
+- morphing_filter_dry_wet_mix_phase_alignment
+- sub_bass_phase_alignment_dispersion_deg
+- sub_oscillator_phase_alignment_lock
+## spatial_audio / phase_correction
+
+- dynamic_phase_linearizer_depth
+## spatial_audio / phase_correlation
+
+- spatial_intersample_phase_correlation_index
+- stereo_correlation_coefficient_ratio
+- stereo_imager_phase_correlation_threshold
+## spatial_audio / phase_delay
+
+- sub_bass_subharmonic_dispersion_phase_delay_ms
+## spatial_audio / phase_dispersion
+
+- morphing_filter_pole_zero_phase_dispersion_ratio
+## spatial_audio / phase_inversion
+
+- phase_inversion_polarity_switch
+- phase_inversion_toggle
+- sub_harmonic_even_odd_phase_invert
+- vibe_alien_abduction_phase_inversion_weight
+## spatial_audio / phase_manipulation
+
+- phase_manipulation_allpass_filter_q
+- phase_manipulation_haas_effect_delay_offset
+- phase_manipulation_stereo_width_expansion
+## spatial_audio / phase_modulation
+
+- reverb_feedback_phase_rotation
+## spatial_audio / phase_rotation
+
+- asymmetric_feedback_cross_channel_phase_rotation_speed
+- phase_rotation_angle_degrees
+- phase_rotation_frequency_dependent_depth
+## spatial_audio / phase_singularity
+
+- topological_vortex_phase_singularity_radius
+## spatial_audio / phaser
+
+- phaser_stage_count_integer
+## spatial_audio / pitch_shifted_reverb
+
+- microtonal_shimmer_reverb_pitch_shift_cents
+## spatial_audio / plate_reverb
+
+- plate_reverb_decay_time_seconds
+## spatial_audio / position_tracking
+
+- projection_position_tracking_source
+## spatial_audio / positioning
+
+- spatial_elevation_azimuth_coupling
+- spatial_web_xyz_coordinate_precision
+## spatial_audio / posture_control
+
+- posture_lean_angle_stereo_width_control
+## spatial_audio / pre_delay_sync
+
+- basic_reverb_pre_delay_sync
+## spatial_audio / pre_delay
+
+- simple_reverb_pre_delay_ms
+## spatial_audio / projection_depth
+
+- projection_depth_modulation_sensitivity
+## spatial_audio / projection_geometry
+
+- projection_geometry_warp_factor
+## spatial_audio / proximity
+
+- spatial_proximity_effect_amount
+## spatial_audio / psychoacoustic_panning
+
+- binaural_crossfeed_level_ratio
+- binaural_decorrelation_bandwidth_hz
+- binaural_ild_level_difference_db
+- haas_effect_delay_time_ms
+- spatial_binaural_itd_smoothing_time_ms
+- spatial_binaural_listener_head_size_cm
+- spatial_itd_time_offset_us
+## spatial_audio / psychoacoustic_spaces
+
+- claustrophobic_room_reflections_density_index
+## spatial_audio / reflection_diffusion
+
+- wet_concrete_reflection_diffusion_coefficient
+## spatial_audio / reflections
+
+- early_reflection_pattern_type
+- early_reflection_specular_to_diffuse_energy_ratio
+## spatial_audio / reverb_absorption
+
+- spatial_reverb_absorption_frequency_tilt
+## spatial_audio / reverb_balance
+
+- spatial_reverb_direct_level_db
+## spatial_audio / reverb_character
+
+- vibe_spring_reverb_twang_duration_ms
+## spatial_audio / reverb_curvature
+
+- non_euclidean_reverb_space_curvature
+## spatial_audio / reverb_damping
+
+- reverb_damping_frequency_hz
+- reverb_damping_slope_db_per_octave
+## spatial_audio / reverb_decay_seconds
+
+- vibe_cave_reverb_decay_3d_seconds
+## spatial_audio / reverb_decay
+
+- reverb_decay_max_s
+- reverb_decay_min_s
+- vibe_cave_reverb_decay_3d
+## spatial_audio / reverb_diffusion
+
+- reverb_density_buildup_shape
+- reverb_diffusion_buildup_time_ms
+- reverb_diffusion_density
+- reverb_diffusion_directionality_bias
+- reverb_diffusion_frequency_dependency
+- reverb_diffusion_network_complexity
+- reverb_diffusion_network_size
+- reverb_diffusion_temporal_density_rate
+- reverb_late_reflection_diffusion_rate_hz
+- spatial_perception_early_reflection_diffusion_density
+- spatial_reverb_density_frequency_tilt
+- spatial_reverb_diffusion_frequency_tilt
+- spatial_reverb_vertical_diffusion_ratio
+## spatial_audio / reverb_directionality
+
+- spatial_reverb_azimuth_spread_degrees
+- spatial_reverb_ceiling_reflection_ratio
+- spatial_reverb_floor_reflection_ratio
+- spatial_reverb_horizontal_plane_tilt
+- spatial_reverb_lateral_energy_ratio
+- spatial_reverb_rear_energy_ratio
+## spatial_audio / reverb_directivity
+
+- spatial_reverb_frequency_dependent_directivity
+## spatial_audio / reverb_distance
+
+- spatial_reverb_source_distance
+## spatial_audio / reverb_effects
+
+- vibe_event_horizon_shimmer_reverb_octave_shift
+## spatial_audio / reverb_filtering
+
+- reverb_low_cut_frequency_hz
+- reverb_shelf_filter_frequency_hz
+## spatial_audio / reverb_modulation
+
+- reverb_density_modulation_depth
+- reverb_diffusion_modulation_rate_hz
+- reverb_modulation_depth_amount
+- reverb_modulation_depth_ms
+- reverb_modulation_frequency_hz
+- reverb_modulation_phase_offset_degrees
+- reverb_modulation_rate_hz
+- reverb_modulation_stereo_phase_offset
+## spatial_audio / reverb_probability
+
+- vfe_fx_rvb1_probability
+## spatial_audio / reverb_processing
+
+- clxi_reverb_cathedral_size
+- convolution_reverb_dry_wet_mix_phase_alignment
+- convolution_reverb_ir_length_seconds
+- convolution_reverb_ir_normalization_method
+- cosmic_reverb_decay_time_seconds
+## spatial_audio / reverb_rotation
+
+- spatial_reverb_tail_stereo_rotation_rate
+## spatial_audio / reverb_size
+
+- temple_ir_reverb_size_factor
+## spatial_audio / reverb_spatialization
+
+- directional_reverb_wet_increase_on_descending_ratio
+- sacred_mystical_reverb_space_warmth_ratio
+## spatial_audio / reverb_tail
+
+- adaptive_reverb_tail_prediction_sensitivity
+- fractal_emotion_reverb_tail_s
+## spatial_audio / reverb_texture
+
+- spatial_diffuse_reverb_density_ratio
+## spatial_audio / reverb
+
+- basic_reverb_damping_percent
+- basic_reverb_mix_percent
+- basic_reverb_size_parameter
+## spatial_audio / reverberation_acoustics
+
+- reverb_late_reflection_echo_density_per_sec
+- room_reflection_diffusion_network_decay_s
+- room_wall_absorption_high_frequency_ratio
+- spatial_distance_direct_to_reverberant_ratio_db
+- spatial_distance_initial_time_delay_gap_ms
+- spatial_room_boundary_reflection_coefficient
+## spatial_audio / reverberation_decay
+
+- spatial_ambient_diffuse_reverb_decay_time_ms
+## spatial_audio / reverberation_geometry
+
+- spatial_reverb_pre_delay_ms
+## spatial_audio / reverberation_mix
+
+- convolution_reverb_wet_dry_mix_ratio
+## spatial_audio / reverberation_structure
+
+- early_late_reverberation_balance
+## spatial_audio / reverberation_tail
+
+- diffuse_field_reverb_decay_seconds
+## spatial_audio / reverberation_timing
+
+- reverberation_pre_delay_time
+## spatial_audio / reverberation
+
+- spatial_reverb_predelay_time_ms
+## spatial_audio / reverb
+
+- hall_reverb_decay_duration
+- reverb_decay_frequency_dependency
+- reverb_early_late_balance
+- reverb_frequency_dependent_decay_time
+- reverb_high_frequency_damping
+- reverb_late_reflection_decay_ratio
+- reverb_pre_delay_milliseconds
+- reverb_room_size_scaling
+- reverb_stereo_width_amount
+- space_attenuation_low_shelf_cutoff
+- spatial_diffusion_coefficient
+- spatial_early_reflection_suppression
+- spatial_reverb_cross_channel_decay
+- spatial_reverb_crossfeed_amount
+- spatial_reverb_late_reflection_level_db
+- spatial_reverb_low_frequency_decay_ratio
+## spatial_audio / reverse_effect_delay
+
+- vibe_acid_wonderland_reverse_lead_delay_ms
+## spatial_audio / reverse_reverb
+
+- vibe_otherworldly_reverse_reverb_pre_delay_ms
+## spatial_audio / room_absorption
+
+- spatial_reverb_room_ceiling_absorption
+## spatial_audio / room_acoustics
+
+- early_reflection_density_ratio
+- room_acoustic_absorption_coefficient
+- spatial_room_reflection_order_count
+## spatial_audio / room_dimensions_scale
+
+- virtual_room_dimensions_scale_factor
+## spatial_audio / room_geometry_modeling
+
+- spatial_reflection_order_max_count
+## spatial_audio / room_geometry
+
+- reverb_geometric_reflection_pattern
+- spatial_reverb_ceiling_height_meters
+- spatial_reverb_room_volume_cubic_meters
+## spatial_audio / room_modeling
+
+- room_size_scale
+## spatial_audio / room_reflections
+
+- reverb_early_reflection_level
+## spatial_audio / room_shape
+
+- spatial_reverb_room_shape_ratio
+## spatial_audio / rotation_speed
+
+- scene_rotation_speed
+## spatial_audio / scene_density
+
+- scene_object_count
+## spatial_audio / self_similarity
+
+- fractal_self_similarity_scale_factor
+## spatial_audio / semantic_adaptivity
+
+- scene_semantic_adaptivity
+## spatial_audio / semantic_context
+
+- scene_semantic_label
+## spatial_audio / shape_processing
+
+- geometric_shape_morphing_speed_bpm_sync
+## spatial_audio / smoothing_between_beats
+
+- visual_fx_smoothing_between_beats
+## spatial_audio / sonar_delay
+
+- vibe_abyssal_bioluminescence_sonar_ping_pong_delay_ms
+## spatial_audio / sound_propagation
+
+- diffraction_index
+## spatial_audio / source_orientation
+
+- spatial_reverb_source_orientation_degrees
+## spatial_audio / spatial_ambience
+
+- spatial_ambient_diffuseness_index
+## spatial_audio / spatial_ascent_rate
+
+- shepard_tone_infinite_spatial_ascent_rate
+## spatial_audio / spatial_correlation
+
+- granular_diffuse_cloud_spatial_correlation_length_m
+## spatial_audio / spatial_dispersion
+
+- granular_foley_texture_spatial_dispersion_azimuth_deg
+## spatial_audio / spatial_mixing
+
+- hybrid_spatialization_mix_type
+## spatial_audio / spatial_oscillation
+
+- topological_current_j_geom_spatial_oscillation_hz
+## spatial_audio / spatial_positioning
+
+- virtual_source_elevation_angle_degrees
+## spatial_audio / spatial_residue
+
+- residue_persistence_ratio
+## spatial_audio / spatial_rotation
+
+- spatial_rotation_speed_degrees_per_second
+## spatial_audio / spatial_simulation
+
+- diffusion_matrix_rotation_speed_hz
+## spatial_audio / spectral_panning
+
+- spectral_pan_frequency_bands
+## spatial_audio / speed_of_sound
+
+- doppler_speed_of_sound_m_s
+## spatial_audio / state_inclusion
+
+- terminal_state_initial_state_subset_inclusion_ratio
+## spatial_audio / stereo_correlation
+
+- stereo_phase_correlation_target
+## spatial_audio / stereo_crossfeed_filtering
+
+- spatial_interspeaker_crossfeed_cutoff_frequency_hz
+## spatial_audio / stereo_expansion
+
+- liquid_scratch_texture_element_stereo_spread_degrees
+## spatial_audio / stereo_field
+
+- stereo_decorrelation_time_ms
+## spatial_audio / stereo_image_filtering
+
+- spatial_interspeaker_crossfeed_highpass_cutoff_hz
+- spatial_interspeaker_crossfeed_shelf_frequency_hz
+- spatial_interspeaker_crossfeed_shelf_slope_db_per_octave
+## spatial_audio / stereo_image_processing
+
+- spatial_stereo_decorrelation_filter_delay_ms
+- stereo_haas_delay_time_ms
+## spatial_audio / stereo_image_shelving
+
+- spatial_interspeaker_crossfeed_shelf_gain_db
+## spatial_audio / stereo_imaging
+
+- haas_effect_precedence_delay_ms
+- spatial_bass_mono_crossover_hz
+- spatial_perception_auto_pan_lfo_waveform_shape
+- stereo_width_coefficient_ratio
+- stereo_width_expansion_coefficient
+## spatial_audio / stereo_pan_spray
+
+- granular_pan_spray_width
+## spatial_audio / stereo_panning
+
+- spatial_pan_azimuth_smoothing_time_ms
+- spatial_pan_law_attenuation_db
+## spatial_audio / stereo_pan
+
+- stereo_pan_position_degrees
+- stereo_pan_to_horizontal_position_scale
+## spatial_audio / stereo_phase_rotation
+
+- quantum_field_helicity_stereo_phase_rotation
+## spatial_audio / stereo_phase_spread
+
+- synth_unison_stereo_phase_spread
+## spatial_audio / stereo_phase
+
+- stereo_vectorscope_phase_rotation_deg
+## spatial_audio / stereo_processing
+
+- liquid_scratch_spectral_delay_ping_pong_pan_width
+## spatial_audio / stereo_rotation
+
+- stereo_field_rotation_angle_degrees
+- stereo_rotation_angle
+## spatial_audio / stereo_speaker_imaging
+
+- spatial_interspeaker_crossfeed_attenuation_db
+## spatial_audio / stereo_split
+
+- topological_charge_chirality_stereo_split
+## spatial_audio / stereo_timing_balance
+
+- interchannel_time_difference_left_right
+## spatial_audio / stereo_widener
+
+- stereo_widener_haas_delay_max_ms
+## spatial_audio / stereo_widening
+
+- haas_effect_delay_offset_ms
+## spatial_audio / stereo_width_and_panning
+
+- mode_degree_panning_position_array
+- persian_scale_microtonal_drone_spatial_width_ratio
+## spatial_audio / stereo_width
+
+- perceived_vocal_width_degrees
+- spatial_width_compensation_frequency
+- spatial_width_frequency_dependent_amount
+- spatial_width_interaural_coherence
+- spatial_width_phase_inversion_amount
+- stereo_correlation_meter_width
+- sub_bass_stereo_decorrelation_index
+## spatial_audio / stream_segregation
+
+- stream_segregation_cross_correlation_threshold
+## spatial_audio / sub_bass_haptic_ratio
+
+- isomorph_tactile_sub_bass_haptic_transfer_ratio
+## spatial_audio / sub_bass_haptic
+
+- isomorph_proprioceptive_sub_bass_haptic_transfer
+## spatial_audio / tactile_mapping
+
+- isomorph_tactile_haptic_frequency_mapping
+## spatial_audio / tactile_transfer
+
+- isomorph_tactile_haptic_sub_bass_transfer_ratio
+## spatial_audio / timbre_interpolation
+
+- timbre_space_interpolation_dimensions
+- timbre_space_interpolation_speed_dim_1
+- timbre_space_interpolation_speed_dim_2
+## spatial_audio / translation_speed
+
+- scene_translation_speed
+## spatial_audio / vertical_localization
+
+- elevation_angle_position
+## spatial_audio / vestibular_bias
+
+- isomorph_vestibular_balance_disorientation_bias
+## spatial_audio / vestibular_disorientation
+
+- isomorph_vestibular_phase_cancellation_depth
+## spatial_audio / vibe_transition
+
+- vibe_angelic_demonic_shimmer_collapse_ratio
+## spatial_audio / visual_fog_density
+
+- reverb_tail_visual_fog_density
+## spatial_audio / visual_rotation
+
+- stereo_field_visual_rotation_speed_deg_sec
+## spatial_audio / vocal_alignment
+
+- vocal_allocation_alignment_weight
+## spatial_audio / vocal_environment
+
+- vocal_acoustic_environment_placement
+## spatial_audio / vocal_spatial
+
+- vocal_allocation_spatial_weight
+## spatial_audio / vocal_width
+
+- vocal_vector_spatial_width_s
+## spatial_audio / void_fraction
+
+- infrasonic_cavitation_void_fraction_volume
+## spatial_audio / vortex_charge_density
+
+- topological_vortex_charge_density_q0
+## spatial_audio / wall_absorption
+
+- spatial_reverb_wall_absorption_frequency_profile
+## spatial_audio / warp
+
+- spatial_warp_phase_rotation_deg
+## spatial_audio / wave_field_synthesis
+
+- wave_field_synthesis_array_spacing_m
+## spatial_audio / width_control
+
+- mono_to_stereo_width_percent
+- stereo_width_expansion_ratio
+## spatial_audio / width_expansion
+
+- scene_width_expansion
+## spatial_audio / width_modulation
+
+- dynamic_stereo_width_modulation_depth
+## spatial_audio / width
+
+- spatial_contrast_width_modulation
+## spectral_processing / abyssal_bioluminescence
+
+- vibe_abyssal_bioluminescence_hydro_lpf_cutoff_hz
+## spectral_processing / adaptive_density
+
+- adaptive_density_rho_increment_step
+## spectral_processing / ambient_filter
+
+- body_temperature_ambient_filter_cutoff
+## spectral_processing / anchor_fallback
+
+- lfe_traditional_anchor_fallback_frequency_hz
+## spectral_processing / anchor_om
+
+- lfe_traditional_anchor_om_frequency_hz
+## spectral_processing / astral_projection
+
+- vibe_astral_projection_high_shelf_air_boost_db
+## spectral_processing / band_crossfade
+
+- spectral_band_crossfade_width_octaves
+## spectral_processing / band_rejection
+
+- band_rejection_width
+- rejection_crackle_hole_boil_pressure
+## spectral_processing / bandpass_filtering
+
+- bandpass_filter_bandwidth
+## spectral_processing / blur
+
+- spectral_blur_dissolution_entropy_rate
+## spectral_processing / centroid_drift
+
+- granular_diffuse_tail_centroid_drift_hz_per_sec
+## spectral_processing / centroid_gradient
+
+- raga_rasa_ascent_centroid_vector_gradient
+## spectral_processing / centroid_pin
+
+- singularity_convergence_centroid_pin_q
+## spectral_processing / centroid
+
+- spectral_centroid_target
+## spectral_processing / cepstral_smoothing
+
+- spectral_cepstral_smoothing_amount
+## spectral_processing / clock_noise_leakage
+
+- bbd_delay_clock_noise_leakage_db
+## spectral_processing / color_mapping
+
+- light_color_hue_spectral_centroid_follow
+## spectral_processing / comb_and_resonator_filtering
+
+- microtonal_harmonic_overtone_comb_filter_frequency_hz
+## spectral_processing / comb_filter_modulation
+
+- comb_filter_damping_high_cut_frequency_hz
+## spectral_processing / comb_filter
+
+- filter_comb_notch_depth_db
+- industrial_shaft_flutter_echo_comb_q_factor
+## spectral_processing / comb_filtering
+
+- comb_filter_delay_time_ms
+- comb_filter_feedback_gain_ratio
+- comb_filter_feedback_phase_deg
+- metallic_comb_filter_metallic_sheen_resonance_db
+## spectral_processing / convolution_mix
+
+- spectral_convolution_mix_ratio
+## spectral_processing / convolve_coherence
+
+- omega_operator_convolve_coherence_threshold_index
+## spectral_processing / convolve_layer_crossfeed
+
+- omega_phase_5_convolve_layer_spectral_crossfeed
+## spectral_processing / convolve_phase_cancellation
+
+- omega_operator_convolve_phase_cancellation_depth_db
+## spectral_processing / convolve_spectral_density
+
+- omega_operator_convolve_spectral_density_scale
+## spectral_processing / cross_channel_analysis
+
+- spectral_coherence_window_length_samples
+## spectral_processing / cross_frequency_amplitude
+
+- shepard_tone_cross_frequency_amplitude_mask
+## spectral_processing / cross_spectral_analysis_dynamics
+
+- spectral_coherence_cross_spectral_density_decay_factor
+- spectral_coherence_cross_spectral_density_decay_ms
+- spectral_coherence_cross_spectral_density_decay_ratio
+- spectral_coherence_cross_spectral_density_decay_slope_db_per_ms
+- spectral_coherence_cross_spectral_density_decay_speed
+- spectral_coherence_cross_spectral_density_decay_time_constant_exponent
+- spectral_coherence_cross_spectral_density_decay_time_constant_factor
+- spectral_coherence_cross_spectral_density_decay_time_constant_ms
+- spectral_coherence_cross_spectral_density_decay_time_constant_ratio
+- spectral_coherence_cross_spectral_density_smoothing_decay_ms
+- spectral_coherence_cross_spectral_density_smoothing_decay_rate_hz
+- spectral_coherence_cross_spectral_density_smoothing_decay_ratio
+## spectral_processing / cross_spectral_analysis_kinetics
+
+- spectral_coherence_cross_spectral_density_smoothing_rate
+## spectral_processing / cross_spectral_analysis
+
+- spectral_coherence_cross_spectral_density_db
+- spectral_coherence_cross_spectral_density_smoothing_factor
+- spectral_coherence_cross_spectral_density_smoothing_multiplier
+## spectral_processing / cross_spectral_dynamics
+
+- spectral_coherence_cross_spectral_density_decay_rate
+## spectral_processing / cross_spectral_integration
+
+- spectral_coherence_cross_spectral_density_smoothing_time_ms
+## spectral_processing / cross_spectral_phase_dynamics
+
+- spectral_coherence_cross_spectral_phase_decay_rate
+## spectral_processing / cross_spectral_smoothing
+
+- spectral_coherence_cross_spectral_density_smoothing_ms
+## spectral_processing / cross_synthesis
+
+- spectral_coherence_bandwidth_hz
+- spectral_coherence_threshold_ratio
+- spectral_morphing_crossfade_position
+## spectral_processing / crossover_control
+
+- dynamic_crossover_slope_order
+## spectral_processing / crossover_frequency
+
+- crossover_low_mid_frequency
+- crossover_mid_high_frequency
+## spectral_processing / crossover_networks
+
+- crossover_phase_alignment_offset_degrees
+## spectral_processing / crossover_slope
+
+- crossover_slope_attenuation_db_octave
+## spectral_processing / crossover
+
+- spectral_crossover_filter_order
+- spectral_crossover_transition_width_octaves
+## spectral_processing / cutoff_frequency
+
+- morphing_filter_cutoff_frequency_range_min_hz
+## spectral_processing / cyberpunk_neon_slums
+
+- vibe_cyberpunk_neon_slums_rain_bpf_center_freq
+## spectral_processing / delay_bins
+
+- spectral_delay_bins_isolation
+## spectral_processing / delay_feedback
+
+- spectral_delay_feedback_shaper
+## spectral_processing / delay_frequency_tilt
+
+- spectral_delay_frequency_tilt
+## spectral_processing / delay_mix
+
+- spectral_delay_mix_matrix
+## spectral_processing / delay_pitch_feedback
+
+- spectral_delay_pitch_feedback
+## spectral_processing / density_adaptation
+
+- omega_protocol_density_adaptation_smoothing_radius
+## spectral_processing / desert_mirage
+
+- vibe_desert_mirage_cutoff_modulation_hz
+## spectral_processing / diffusion_threshold
+
+- spectral_diffusion_application_threshold
+## spectral_processing / diode_ladder_hf_resonance
+
+- tb303_diode_ladder_hf_resonance_leakage
+## spectral_processing / doppler_shift
+
+- vibe_alien_abduction_doppler_shift_cents
+## spectral_processing / dynamic_eq
+
+- dynamic_equalizer_attack_time_ms
+## spectral_processing / dynamic_equalization
+
+- spectral_deesser_center_frequency_hz
+## spectral_processing / egyptian_microtonal
+
+- vibe_egyptian_microtonal_hijaz_interval_ratio
+## spectral_processing / emotional_spectral_mapping
+
+- isomorph_emotional_valence_to_spectral_centroid_mapping
+## spectral_processing / energy_redistribution
+
+- a2_zero_flux_energy_redistribution_bias
+## spectral_processing / entropy_balance
+
+- spectral_entropy_negentropy_flux_balance_ratio
+## spectral_processing / entropy_control
+
+- liouville_spectral_entropy_damping
+## spectral_processing / entropy_decay
+
+- omega_operator_relax_spectral_entropy_decay_slope
+## spectral_processing / entropy_variance_kappa_floor
+
+- spectral_entropy_variance_kappa_threshold_floor
+## spectral_processing / entropy_variance_kappa
+
+- spectral_entropy_variance_kappa_scale
+## spectral_processing / entropy_variance
+
+- spectral_entropy_variance_ceiling
+## spectral_processing / envelope_attack
+
+- spectral_envelope_attack_factor
+## spectral_processing / envelope_decay
+
+- spectral_envelope_decay_factor
+## spectral_processing / eq
+
+- spectral_attenuation_ratio
+## spectral_processing / equalization
+
+- dynamic_eq_band_coupling_ratio
+- dynamic_eq_band_gain_smoothing_time
+- dynamic_eq_bandwidth_coupling
+- dynamic_eq_threshold
+- eq_band_q_factor
+- parametric_eq_high_shelf_frequency_hz
+## spectral_processing / evolution_centroid_drift
+
+- spectral_evolution_centroid_drift_rate
+## spectral_processing / evolution_spread
+
+- spectral_evolution_spread_rate
+## spectral_processing / exciter_frequency
+
+- harmonic_exciter_frequency_hz
+## spectral_processing / exciter
+
+- harmonic_exciter_drive_amount
+## spectral_processing / fft
+
+- spectral_accumulation_decay
+- spectral_fft_size_samples
+## spectral_processing / filter_bandwidth
+
+- resonance_frequency_peak_width
+## spectral_processing / filter_cutoff_coupling
+
+- melancholy_minor_third_darkness_attenuation_ratio
+## spectral_processing / filter_cutoff
+
+- vibe_slavic_chthonic_fm_viscous_lead_cutoff
+## spectral_processing / filter_envelope_smoothing
+
+- interval_consonance_spectral_smoothing_decay_ms
+## spectral_processing / filter_envelope
+
+- filter_cutoff_envelope_inversion
+- filter_envelope_amount
+## spectral_processing / filter_formant
+
+- filter_formant_shift_amount
+## spectral_processing / filter_gain
+
+- filter_drive_compensation

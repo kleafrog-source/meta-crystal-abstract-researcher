@@ -25,3 +25,26 @@ export function selectTextLlmSegments<T extends SegmentWindow>(segments: readonl
     selectedIndexes: unique,
   };
 }
+
+/** AM2's per-node audio descriptions sample evenly and include both endpoint nodes. */
+export function selectAm2AudioDescriptionSegments<T extends SegmentWindow>(segments: readonly T[], requestedLimit: number): {
+  limit: number;
+  selected: T[];
+  skipped: T[];
+  selectedIndexes: number[];
+} {
+  const limit = Math.max(1, Math.min(500, Math.trunc(Number.isFinite(requestedLimit) ? requestedLimit : 3)));
+  if (segments.length <= limit) return { limit, selected: [...segments], skipped: [], selectedIndexes: segments.map((_, index) => index) };
+  const indices = limit === 1
+    ? [0]
+    : Array.from(new Set([0, segments.length - 1, ...Array.from({ length: limit - 2 }, (_, index) => Math.round(((index + 1) * (segments.length - 1)) / (limit - 1)))]))
+      .sort((left, right) => left - right)
+      .slice(0, limit);
+  const selectedSet = new Set(indices);
+  return {
+    limit,
+    selected: indices.map((index) => segments[index]),
+    skipped: segments.filter((_, index) => !selectedSet.has(index)),
+    selectedIndexes: indices,
+  };
+}

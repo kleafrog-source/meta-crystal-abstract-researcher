@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { NodeRequestError, withNodeRetries } from "./node-retry";
-import { selectTextLlmSegments, type SegmentWindow } from "./segment-sampling";
+import { selectAm2AudioDescriptionSegments, selectTextLlmSegments, type SegmentWindow } from "./segment-sampling";
 
 export interface SegmentTextCheckpoint {
   [key: string]: unknown;
@@ -21,6 +21,7 @@ export async function executeSegmentTextNodes<T extends SegmentWindow, R>(option
   actionId: string;
   segments: readonly T[];
   sampleLimit: number;
+  samplingPolicy?: "text-llm" | "am2-audio-description";
   priorCheckpoints: readonly Record<string, unknown>[];
   inputArtifactId: string | null;
   promptRouteVersion: string;
@@ -30,7 +31,9 @@ export async function executeSegmentTextNodes<T extends SegmentWindow, R>(option
   persist: (checkpoint: SegmentTextCheckpoint) => Promise<void>;
   progress: (event: Record<string, unknown>) => Promise<void>;
 }): Promise<{ limit: number; selected: T[]; skipped: T[]; results: Array<{ id: string; startSeconds: number; endSeconds: number; status: "succeeded" | "not_selected"; result?: R }> }> {
-  const selection = selectTextLlmSegments(options.segments, options.sampleLimit);
+  const selection = options.samplingPolicy === "am2-audio-description"
+    ? selectAm2AudioDescriptionSegments(options.segments, options.sampleLimit)
+    : selectTextLlmSegments(options.segments, options.sampleLimit);
   const results: Array<{ id: string; startSeconds: number; endSeconds: number; status: "succeeded" | "not_selected"; result?: R }> = selection.skipped.map((segment) => ({ id: segment.id, startSeconds: segment.startSeconds, endSeconds: segment.endSeconds, status: "not_selected" }));
   for (let index = 0; index < selection.selected.length; index += 1) {
     const segment = selection.selected[index];

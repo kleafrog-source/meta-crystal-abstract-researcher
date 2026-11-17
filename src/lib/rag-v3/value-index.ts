@@ -2,8 +2,6 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { getEncoderArtifactDirectory, type TextIndexId } from "./composite-index";
 
-const ROOT = path.join(process.cwd(), "data", "combinatorial-genesis", "v3");
-
 interface ValueEntry {
   row_index: number;
   option: string | number;
@@ -36,7 +34,7 @@ function dot(left: Float32Array, right: Float32Array): number {
 }
 
 async function loadSelectIndex(indexId: TextIndexId): Promise<LoadedSelectIndex | null> {
-  const valueDir = indexId === "qwen3" ? path.join(ROOT, "value-anchors") : getEncoderArtifactDirectory(indexId, "range-anchors");
+  const valueDir = getEncoderArtifactDirectory(indexId, "range-anchors");
   const manifestPath = path.join(valueDir, "select-options.json");
   try {
     const manifest = JSON.parse(await fs.readFile(manifestPath, "utf8")) as SelectManifest;

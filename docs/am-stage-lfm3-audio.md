@@ -57,8 +57,9 @@ for the input-field caveat.
 - Manual button only; there is no startup/status model load.
 - One selected window from 0.25 to 30 seconds is prepared as mono 16 kHz PCM WAV.
 - Prompt modes are fixed and English-only: concise sound description (maximum
-  800 requested characters) or `Perform ASR in English.` Outputs are capped at
-  1,200 characters.
+  800 requested characters) or ASR. For Ollama requests the instruction is the
+  system message and the audio is the user input; this preserves the LFM3 ASR
+  prompt contract. Outputs are capped at 1,200 characters.
 - The shared model slot is acquired, existing stock Ollama models are unloaded
   before inference, and the selected model is released after the request.
 - The result is a draft until **Keep on segment** is selected. Accepted text is

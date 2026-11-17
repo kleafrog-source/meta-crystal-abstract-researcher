@@ -1,506 +1,1024 @@
 # V3 technical names · part 12
 
-Generated: 2026-10-16T06:05:21.023Z
+Generated: 2026-11-11T10:06:29.679Z
 
-## uncategorized / general
+## spectral_processing / spectral_tuning
 
-- simple_distortion_drive_amount
-- simple_highpass_filter_cutoff_hz
-- simple_lowpass_filter_cutoff_hz
-- simple_panning_lfo_depth_percent
-- simple_reverb_pre_delay_ms
-- simple_stereo_delay_feedback_percent
-- simulated_annealing_initial_temperature_kelvin
-- singular_focus_spectral_concentration_q
-- singularity_attractor_phase_lock_coherence_radius
-- singularity_attractor_phase_lock_decay_ms
-- singularity_convergence_centroid_pin_q
-- singularity_seed_recurrence_alignment_factor
-- singularity_threshold_ratio
-- sinusoidal_tracking_threshold
-- siren_industrial_resonance_feedback_ratio
-- sitar_veena_jawari_pluck_fadein_time
-- sleep_stage_rem_dream_intensity_modulator
-- slime_viscosity_fluid_density_factor
-- small_world_network_rewiring_probability
-- smart_contract_gas_limit_estimation_buffer
-- snapshot_auto_update_interval
-- soliton_amplitude_rho_decay_sustain
-- soliton_interaction_potential_lambda_coupling
-- soliton_phase_coherence
-- soliton_topological_charge_density_distribution
-- sonic_labyrinth_dynamic_panning_rate_hz
-- space_attenuation_low_shelf_cutoff
-- spatial_azimuth_elevation_coupling_tilt
-- spatial_contrast_depth_variation
-- spatial_contrast_width_modulation
-- spatial_diffusion_coefficient
-- spatial_early_reflection_suppression
-- spatial_map_depth_visualization_scale
-- spatial_map_rotation_speed
-- spatial_warp_phase_rotation_deg
-- spatial_web_xyz_coordinate_precision
-- spectral_accumulation_decay
-- spectral_attenuation_ratio
-- spectral_blur_dissolution_entropy_rate
-- spectral_centroid_lfo_phase_offset_deg
-- spectral_centroid_modulation_lfo_depth
-- spectral_centroid_target
-- spectral_centroid_tracking_filter_q
-- spectral_centroid_tracking_speed_ms
-- spectral_centroid_trajectory_shape
-- spectral_centroid_trajectory_shape_bias
-- spectral_centroid_warping_factor
-- spectral_convolution_mix_ratio
-- spectral_delay_bins_isolation
-- spectral_delay_feedback_shaper
-- spectral_delay_frequency_tilt
-- spectral_delay_mix_matrix
-- spectral_delay_pitch_feedback
-- spectral_diffusion_application_threshold
-- spectral_energy_to_3d_depth_scale
-- spectral_entropy_negentropy_flux_balance_ratio
-- spectral_entropy_variance_ceiling
-- spectral_entropy_variance_kappa_scale
-- spectral_entropy_variance_kappa_threshold_floor
-- spectral_envelope_attack_factor
-- spectral_envelope_decay_factor
-- spectral_evolution_centroid_drift_rate
-- spectral_evolution_spread_rate
-- spectral_flux_threshold_for_triggering
-- spectral_freeze_blur_window_size
-- spectral_freeze_granular_tail_decay_ms
-- spectral_frequency_to_hue_map_offset
-- spectral_fusion_cross_synthesis_depth
-- spectral_fusion_phase_coherence
-- spectral_gate_threshold
-- spectral_geometry_rotation_speed_rad_s
-- spectral_limiter_interband_link
-- spectral_masking_notch_attenuation_bandwidth
-- spectral_masking_psychoacoustic_threshold_offset
-- spectral_masking_release_ratio
-- spectral_phase_randomization_depth
-- spectral_pitch_quantization
-- spectral_recursion_feedback_gain
-- spectral_shadowing_occlusion_factor
-- spectral_shaping_target_curve_preset
-- spectral_smear_delay_feedback_decay
-- spectral_smoothing_attack_time
-- spectral_spread_increase_percent
-- spectral_transient_recovery_speed
 - spectral_tuning_harmonic_basis_partial
 - spectral_tuning_inharmonicity_coefficient
+## spectral_processing / spectral_unmasking
+
 - spectral_unmasking_transient_sensitivity_scale
+## spectral_processing / spectral_velocity_decay
+
+- granular_diffuse_tail_spectral_velocity_decay_ms
+## spectral_processing / spectral_wavelet
+
 - spectral_wavelet_centroid_tracker_inertia
 - spectral_wavelet_packet_subband_energy_entropy_ratio
+## spectral_processing / spectrogram_resolution
+
 - spectrogram_resolution_frequency_bins
 - spectrogram_time_resolution_hop_size
+## spectral_processing / spectrum_visualization
+
 - spectrum_visualization_resolution_bands
 - spectrum_visualization_smoothing_time
-- spike_latency_coding_precision_ms
-- spike_threshold_voltage_mv
-- spike_timing_dependent_plasticity_window
-- spring_decay_viscosity
-- spring_reverb_boom_low_end
-- spring_reverb_tensions_count
-- spring_twang_chirp_intensity
-- sruti_22_microtonal_field_meend_glide_inertia_ms
-- sruti_autocorrect_restoration_rate_cents_sec
-- sruti_centroid_drift_hysteresis_band
-- sruti_deval_microtonal_comma_drift_variance
-- sruti_interval_microglide_velocity_cents_ms
-- sruti_interval_ratio_purity_tolerance
-- sruti_microshift_autocorrect_window_ms
-- sruti_microtonal_deviation_cents
-- sruti_microtonal_drift_lambda_damping
-- sruti_microtonal_drift_tolerance
-- sruti_microtonal_drone_sympathetic_resonance_gain
-- sruti_microtonal_harmonic_consonance_index
-- sruti_microtonal_interval_consonance_dissonance_ratio
-- sruti_microtonal_pitch_bend_sensitivity_cents
-- sruti_microtonal_pitch_glide_meend_curve_steepness
-- sruti_microtonal_pitch_glide_smoothing_ms
-- sruti_microtonal_pitch_lattice_quantization_factor
-- sruti_raga_andolan_oscillation_depth_cents
-- sruti_raga_arohana_avarohana_asymmetry_factor
-- sruti_raga_chalan_asymmetry_weight
-- sruti_raga_nyasa_note_hold_purity_cents
-- sruti_raga_vadi_samvadi_consonance_ratio
-- stability_breach_r_depth_reduction
-- stability_threshold_curve_by_R
-- ste_straight_through_estimator_scale
-- step_probability_decay_coefficient
-- step_sequencer_pattern_length_steps
-- step_sequencer_rhythm_grid_sync
-- stereo_field_visual_rotation_speed_deg_sec
-- stereo_imager_frequency_split_point_hz
-- stereo_imager_phase_correlation_threshold
-- stereo_matrix_mid_side_balance_db
-- stereo_pan_lfo_speed
-- stereo_pan_position_degrees
-- stereo_pan_to_horizontal_position_scale
+## spectral_processing / stereo_phase_alignment
+
+- spectral_coherence_cross_spectral_phase_degrees
+## spectral_processing / stereo_phase_analysis
+
+- spectral_coherence_cross_spectral_phase_smoothing_ms
+## spectral_processing / stereo_shuffler
+
 - stereo_shuffler_frequency_crossover
-- stereo_widener_haas_delay_max_ms
-- stereo_width_chorus_flanger_depth
-- sticky_slime_squelch_friction_coeff
-- stochastic_deviation_seed_lock
-- stochastic_midi_timing_jitter_deviation_ms
-- stochastic_note_gate_probability_scale
-- strange_attractor_iteration_speed_bpm_sync
-- strange_attractor_phase_space_dimensions
-- stream_segregation_cross_correlation_threshold
+## spectral_processing / stream_segregation
+
 - stream_segregation_frequency_separation_weight
-- stream_segregation_temporal_coherence_bias
-- stress_recovery_music_tempo_deceleration
-- string_physical_tension_newtons
-- string_pluck_position_normalized
-- structural_boundary_hallucination_entropy
-- structural_density_gradient_slope
-- structural_plasticity_growth_cone_speed
-- structural_section_contrast_delta_index
-- structural_section_contrast_index
-- structural_section_contrast_ratio
-- structural_section_energy_buildup_slope_k
-- structural_tension_accumulation_slope
-- style_transfer_content_preservation
-- style_transfer_embedding_interpolation_weight
-- style_transfer_evolution_speed
-- style_transfer_preservation_timbre
-- stylistic_transfer_author_embedding_weight
-- su2_spinor_field_modulation_index
-- sub_bass_acoustic_impedance_matching_ratio
-- sub_bass_harmonic_distortion_asymmetry
-- sub_bass_harmonic_even_odd_ratio_tilt
-- sub_bass_harmonic_foldback_distortion_hz
-- sub_bass_hydraulic_fluid_compressibility_factor
-- sub_bass_hydrodynamic_turbulence_cascade_exponent
-- sub_bass_non_linear_excursion_limiter_threshold_db
-- sub_bass_phase_alignment_dispersion_deg
-- sub_bass_saturation_drive
-- sub_bass_sidechain_pumping_envelope_curve
-- sub_bass_subharmonic_dispersion_phase_delay_ms
-- sub_bass_viscous_fluid_momentum_inertia_ms
-- sub_bass_viscous_fluid_shear_rate_sec
-- sub_foundation_lowpass_cutoff_hz
-- sub_harmonic_bloom_depth
-- sub_harmonic_even_odd_phase_invert
-- sub_harmonic_ground_frequency
-- sub_harmonic_injection_frequency_hz
-- sub_mono_lock_cutoff
-- sub_oscillator_octave_offset
-- sub_oscillator_phase_alignment_lock
-- sub_surface_concrete_transmission_loss_db
-- subglottal_resonance_pitch_tracking_ratio
-- subharmonic_vocal_fold_multiplication
-- subtractive_oscillator_1_waveform_invert
-- supersaw_unison_detune_spread_exponential_curve
-- supersaw_unison_phase_randomization_degree
-- supersaw_unison_voice_pan_distribution_spread
-- supersaw_unison_voice_phase_jitter_noise_level
-- surface_roughness_diffusion_factor
-- surprise_detection_threshold
-- sustain_envelope_smoothing_window
-- sustained_percussion_fade_in_max_ms
-- sustained_percussion_fade_in_min_ms
-- swarm_communication_topology_type
-- swing_groove_shuffle_amount_percent
-- swing_phase_offset_modulation
-- swing_ratio_micro_adjustment
-- swing_shift_percentage
-- syllabic_compressor_adaptive_release_inertia
-- syllabic_compressor_envelope_follower_adaptive_hold_ms
-- syllabic_compressor_envelope_follower_deess_sidechain_filter_hz
-- syllabic_compressor_release_curvature_exponent
-- syllabic_compressor_speech_adaptive_release_time
-- syllabic_envelope_tracking_speed
-- sympathetic_resonance_decay_jawari_scale
-- sympathetic_resonance_harmonic_series_activation
-- sympathetic_resonance_threshold_ratio
-- synaptic_homeostasis_scaling_rate
-- synaptic_weight_stdp_learning_rate
-- sync_jitter_tolerance
-- syncopation_accent_shift_amount
-- synesthesia_color_saturation_by_timbre
-- syntactic_tree_depth_musical_structure_map
-- synth_glide_time
-- synth_pulse_width_lfo_modulation_speed
-- synth_unison_stereo_phase_spread
-- synth_unison_voices
-- synthesis_model_a_weight
-- synthesis_model_cross_evolution_curve
-- synthesis_model_hybrid_depth
-- synthesis_morph_path_type
-- system_d_metric_instability_penalty_weight
-- system_entropy_recursion_depth_scaling
-- system_power_saving_mode
-- system_resource_monitoring_interval_ms
-- tactile_foley_micro_grain_surface_roughness_index
-- tape_delay_head_recap_capacitance_darkening_hz
-- tape_demagnetization_high_frequency_loss
-- tape_dropout_duration_ms
-- tape_dropout_spectral_darkening_probability
-- tape_dropouts_probability_trigger
-- tape_flutter_frequency_modulation_depth_hz
-- tape_head_azimuth_alignment_error_degrees
-- tape_hiss_noise_gate_threshold
-- tape_hysteresis_non_linear_saturation_exponent
-- tape_oxide_dropout_hf_attenuation_depth_db
-- tape_scrape_flutter_frequency
-- tape_speed_frequency_response
-- tape_wow_flutter_modulation_depth_percent
-- task_priority_queue_weight_audio
-- tb303_accent_capacitive_discharge_rate
-- tb303_differential_pair_transistor_mismatch
-- tb303_diode_ladder_accent_resonance_bump_gain
-- tb303_diode_ladder_capacitor_charge_discharge_asymmetry
-- tb303_diode_ladder_capacitor_leakage_current
-- tb303_diode_ladder_cutoff_envelope_decay_coupling
-- tb303_diode_ladder_cutoff_resonance_hysteretic_lag
-- tb303_diode_ladder_cutoff_resonance_thermal_noise_floor
-- tb303_diode_ladder_dc_offset_drift
-- tb303_diode_ladder_envelope_decay_non_linearity
-- tb303_diode_ladder_envelope_reset_threshold
-- tb303_diode_ladder_hf_resonance_leakage
-- tb303_diode_ladder_temperature_drift_factor
-- tb303_envelope_modulation_depth_scale
-- tb303_power_rail_ripple_frequency_modulation
-- tb303_power_supply_voltage_sag_depth
-- tb303_resonance_bass_compensation_gain
-- tb303_resonance_envelope_attack_click_injection
-- tb303_resonance_envelope_bleed_to_cutoff
-- tb303_resonance_envelope_decay_time_constant_ms
-- tb303_resonance_feedback_phase_shift_deg
-- tb303_resonance_highpass_feedback_bleed
-- tb303_resonance_peak_asymmetric_soft_clipping
-- tb303_resonance_peak_limiting_threshold_db
-- tb303_resonance_peak_phase_cancellation_depth
-- tb303_resonance_self_oscillation_clipping_ceiling
-- tb303_square_wave_duty_cycle_asymmetry
-- temperament_wolf_interval_suppression
-- temple_ir_early_reflection_suppression_db
-- temple_ir_early_reflection_suppression_ratio
-- temple_ir_reverb_size_factor
-- tempo_arc_bpm_trajectory
-- tempo_arc_evolutionary_bpm_morph_rate
-- tempo_drift_per_iteration_percent
-- temporal_arc_samapana_closure_entropy_decay_slope
-- temporal_contrast_anticipation_factor
-- temporal_contrast_rhythm_density
-- temporal_dithering_amplitude
-- temporal_dithering_speed
-- temporal_drift_seconds
-- temporal_perception_density_contrast
-- temporal_perception_linear_cyclical
-- temporal_phase_co_evolution_layer_coupling
-- temporal_phase_commutation_frequency_hz
-- temporal_phase_emergence_chaos_entropy
-- temporal_phase_meta_question_disruption_bias
-- temporal_phase_operator_shuffle_reconstruction_speed
-- temporal_phase_shift_world_change_magnitude
-- temporal_phase_stabilization_pattern_entropy
-- temporal_shift_delta_t_ms
-- tension_accumulation_curve_exponent
-- tension_accumulation_sigmoid_inflection_point
-- tension_accumulation_sigmoid_slope
-- tension_accumulation_slope_multiplier
-- tension_peak_placement_bias
-- terminal_closure_phase_coherence_decay_rate
-- terminal_closure_phase_lock_hysteresis_ms
-- terminal_closure_recurrence_entropy_floor
-- terminal_closure_recurrence_phase_coherence_floor
-- terminal_focus_singularity_phase_coherence
+## spectral_processing / synesthetic_color_mapping
+
+- isomorph_synesthetic_color_hue_frequency_lock
+## spectral_processing / terminal_infinity_attractor
+
 - terminal_infinity_attractor_spectral_density_q
 - terminal_infinity_attractor_spectral_radius
-- terminal_resolution_decay_profile
-- terminal_state_closure_lock_gain
-- terminal_state_initial_state_subset_inclusion_ratio
-- terminal_state_reconstruction_shapley_value_weight
-- terminal_x7_transient_suppression_index
-- ternary_quantizer_dead_zone_delta
-- text_rhythm_meter_detection_accuracy
-- text_to_audio_tempo_correlation_strength
-- texture_evolution_path_style
-- texture_evolution_speed
-- texture_granular_freeze_spectral_blur
-- texture_mutation_intensity_per_step
-- texture_mutation_probability_per_grain
-- texture_noise_spectral_color_tilt_db_per_octave
-- texture_noise_spectral_correlation_stereo_width
-- texture_random_seed_renewal_frequency
-- thematic_development_recursion_depth
-- theta_alpha_cross_band_phase_sync_index
-- theta_alpha_isochronic_inter_beat_phase_offset
-- theta_binaural_entrainment_frequency_hz
-- theta_gamma_phase_coupling_bandwidth_hz
-- theta_wave_isochronic_gate_fade_time_ms
-- theta_wave_isochronic_phase_jitter_noise
-- thread_priority_level
-- tihai_cadence_resolution_downbeat_impact_weight
-- tihai_rhythmic_triplet_closure_accent_weight
-- tihai_triplet_rhythmic_acceleration_factor
-- tihai_triplet_rhythmic_accent_decay_slope
-- timbre_modulation_depth_per_oscillator
-- timbre_morphing_path_type
-- timbre_morphing_smoothness
-- timbre_morphing_source_spectral_weight
-- timbre_space_interpolation_dimensions
-- timbre_space_interpolation_speed_dim_1
-- timbre_space_interpolation_speed_dim_2
-- timbre_tracking_modulation_depth
-- timbre_tracking_smoothing_window
-- time_operator_perception_drift
-- time_stretch_auto_scale_per_r
-- time_stretch_factor
-- time_stretch_max_percent
-- time_stretch_min_percent
-- timing_modulation_depth
-- timing_modulation_randomness
-- timpani_pitch_bend_depth
-- top_p_nucleus_sampling_threshold
-- topological_charge_chirality_stereo_split
-- topological_charge_z3_conservation
-- topological_current_j_geom_spatial_oscillation_hz
-- topological_instanton_tunneling_rate_frequency
-- topological_soliton_anti_soliton_annihilation_decay_rate
-- topological_soliton_helicity_index
-- topological_vortex_charge_density_q0
-- topological_vortex_phase_singularity_radius
-- topological_vortex_string_tension_scale
-- topological_winding_number_pi3_s3_index
-- transcendental_signal_carrier_frequency_hz
-- transformer_core_saturation
-- transient_accentuation_upward_expander_threshold
-- transient_attack_suppression_enforcement
-- transient_attack_suppression_time
-- transient_bypass_gate_peak_bleed_percentage
-- transient_detection_algorithm_mode
-- transient_detection_visual_flash_intensity
-- transient_envelope_extraction_bypass_bleed
-- transient_envelope_sensitivity
-- transient_frequency_focus_high
-- transient_frequency_focus_low
-- transient_peak_to_average_uncompression_scale
-- transient_recovery_attack_envelope_shaper
-- transient_recovery_network_depth
-- transient_recovery_neural_envelope_attack_gain_dB
-- transient_recovery_neural_envelope_shaper
-- transient_shaper_curve_exponent
-- transient_shaper_sub_harmonic_punch_integration_ms
-- transient_smearing_intensity
-- transient_smearing_time_window
-- transient_sustain_balance_ratio
-- transition_density_lambda_decay
-- tube_power_amp_sag_recovery_time_ms
-- tube_resonance_length_meters
-- tuning_drift_cents
-- tuning_root_frequency_offset
-- tuning_system_base_frequency_hz
-- tuning_system_selection
-- tunnel_acoustic_impedance_mismatch_ratio
-- tunnel_air_humidity_viscosity_attenuation
-- turing_diffusion_field_coupling_coefficient
+## spectral_processing / thermal_acoustic_mapping
+
+- isomorph_thermal_acoustic_spectral_tilt_db
+- isomorph_thermal_acoustic_texture_tilt
+## spectral_processing / thermal_tilt
+
+- isomorph_thermal_spectral_tilt_index
+## spectral_processing / tilt_eq
+
+- spectral_tilt_frequency_hinge
+## spectral_processing / timbral_shaping
+
+- spectral_centroid_modulation_depth_percent
+- spectral_ineharmonicity_index
+## spectral_processing / tonic_tanpura_drone
+
+- raga_grama_tonic_tanpura_drone_coupling
+## spectral_processing / tracking_speed
+
+- spectral_centroid_tracking_speed_ms
+## spectral_processing / trajectory_shape_bias
+
+- spectral_centroid_trajectory_shape_bias
+## spectral_processing / trajectory_shape
+
+- spectral_centroid_trajectory_shape
+## spectral_processing / transient_accentuation
+
+- spectral_flux_transient_emphasis_ratio
+## spectral_processing / transient_detection
+
+- spectral_flux_accumulation_window_ms
+- spectral_flux_threshold_hysteresis_db
+- spectral_flux_threshold_level
+- spectral_flux_threshold_sensitivity
+- spectral_flux_transient_sensitivity_ratio
+- spectral_transient_detection_sensitivity
+## spectral_processing / transient_emphasis
+
+- spectral_transient_emphasis_db
+## spectral_processing / transient_processing_dynamics
+
+- spectral_flux_transient_emphasis_decay_rate
+## spectral_processing / transient_processing_smoothing
+
+- spectral_flux_transient_emphasis_smoothing_ms
+## spectral_processing / transient_processing_thresholds
+
+- spectral_flux_transient_emphasis_threshold_db
+## spectral_processing / transient_processing
+
+- spectral_subband_transient_threshold_db
+## spectral_processing / transient_shaping
+
+- spectral_transient_shaping_curve_type
+## spectral_processing / transient_smearing
+
+- spectral_transient_smearing_time_ms
+## spectral_processing / transient_spectral_analysis
+
+- spectral_flux_transient_decay_time_ms
+## spectral_processing / treble_boost
+
+- brightness
+## spectral_processing / ultrasonic
+
 - ultrasonic_layer_frequency_khz
-- unison_phase_alignment_strategy
-- unison_voice_count_integer
-- unison_voice_detune_spread_semitones
-- unison_voices
-- unison_voices_count
-- unstable_flag_recursion_rollback_depth
-- unstable_flag_recursion_rollback_depth_steps
-- upward_expander_threshold
-- upward_expander_transient_attack_isolation_gate_threshold
-- upward_expander_transient_crest_recovery_ratio
-- upward_expansion_ratio
-- upward_gate_expansion_floor
-- user_identity_anonymization_level
-- vadi_samvadi_harmonic_tension_ratio
-- validation_adaptive_density_a5_rho_clamp_min
-- validation_adaptive_density_a5_rho_minimum
-- validation_api_fail_safe_bypass_activation
-- validation_d_metric_pre_flight_ceiling
+## spectral_processing / visual_sync
+
+- isomorph_visual_strobe_transient_sync
+## spectral_processing / vocal_formant_bandpass
+
+- vocal_formant_bandpass_asymmetry_skewness
+## spectral_processing / vocal_formant_bandwidth
+
+- vocal_formant_bandwidth_q_factor_expansion
+## spectral_processing / vocal_formant_cluster
+
+- vocal_formant_cluster_singers_formant_gain_db
+## spectral_processing / vocal_harmonics
+
+- vocal_harmonic_enrichment_formant_trait
+## spectral_processing / vocal_piriform_sinus
+
+- vocal_piriform_sinus_anti_resonance_bandwidth_hz
+- vocal_piriform_sinus_anti_resonance_freq_hz
+## spectral_processing / vocoding
+
+- vocoding_bins
+- vocoding_bins_count
+## spectral_processing / warping_factor
+
+- spectral_centroid_warping_factor
+## spectral_processing / waveform_modulation
+
+- wave_geometry_asymmetry_factor
+## spectral_processing / wavelet_analysis
+
+- wavelet_basis_function_selection
+- wavelet_decomposition_bands_count
+- wavelet_decomposition_level_depth
+- wavelet_multiresolution_decomposition_stages_count
+## spectral_processing / wavelet_foldover_attenuation
+
+- wavetable_spectral_foldover_attenuation_db
+## spectral_processing / wavelet_processing
+
+- wavelet_packet_decomposition_subband_cross_masking_db
+- wavelet_spectral_centroid_drift_velocity_hz_sec
+## spectral_processing / windowing_analysis
+
+- spectral_leakage_windowing_attenuation_db
+## spectral_processing / windowing
+
+- spectral_window_type
+## spectral_processing / zero_flux_stiffness
+
+- omega_axiom_a2_zero_flux_spectral_invariant_stiffness
+## spectral_processing / zero_padding
+
+- spectral_bin_zero_padding_factor
+## stability_control / axiom_closure_verification
+
+- omega_protocol_axiom_closure_verification_index
+## stability_control / buffer_control
+
+- audio_buffer_size_samples
+## stability_control / clock_control
+
+- clock_drift_compensation_rate
+- clock_jitter_reduction_filter_strength
+## stability_control / d_metric_ceiling
+
 - validation_d_metric_pre_flight_ceiling_threshold
+## stability_control / d_metric_hard
+
 - validation_d_metric_pre_flight_hard_ceiling
-- validation_json_schema_required_fields_enforcement
-- validation_json_schema_strictness_level
-- validation_json_schema_version_lock
-- validation_lfe_meta_formula_integrity_check
-- validation_lfe_meta_formula_nan_prevention
-- validation_microtonal_22_sruti_drift_max_cents
-- validation_microtonal_integrity_22_sruti_drift_correction
-- validation_name_safety_abstract_concept_weight
-- validation_name_safety_abstraction_threshold
-- validation_name_safety_mathematical_term_blocklist
-- validation_operator_sequence_7_phase_exact_match
-- validation_operator_sequence_monotonic_path_enforcement
-- validation_operator_sequence_strictness
-- validation_r7_api_bypass_ambient_drone_enforcement
-- validation_r7_api_bypass_decay_ceiling
-- validation_r7_api_bypass_decay_limit_seconds
-- validation_r7_bypass_ambient_drone_forced_tempo
-- validation_r7_bypass_max_reverb_decay_seconds
-- validation_recursion_depth_r_max_enforcement
-- validation_recursive_closure_x7_to_d0_seamlessness
+## stability_control / decay_control
+
+- markov_memory_weight_decay_curve_exponent
+## stability_control / density_control
+
+- self_correction_adaptive_density_rho_boost
+## stability_control / energy_conservation
+
+- a2_zero_flux_spectral_energy_conservator_tolerance
+- invariant_p2_flux_balance_tolerance
+- zero_flux_energy_conservation_tolerance
+## stability_control / energy_control
+
+- omega_axiom_a2_zero_flux_energy_balance_tolerance
+- zero_flux_energy_redistribution_curve
+## stability_control / fallback_activation
+
+- fallback_model_activation_threshold
+## stability_control / feedback_control
+
+- asymmetric_delay_cross_feedback_phase_jitter_percent
+- asymmetric_feedback_cross_channel_phase_bleed
+## stability_control / feedback_loop_margin
+
+- feedback_loop_stability_margin_db
+## stability_control / filter_adaptation
+
+- adaptive_filter_adaptation_memory
+## stability_control / hysteresis_control
+
+- dynamic_controller_hysteresis_bandwidth
+## stability_control / invariant_enforcement
+
+- closure_constraint_enable
+- density_constraint_enable
+- flux_balance_constraint_enable
+- mono_init_constraint_enable
+## stability_control / jitter_reduction
+
+- sample_accurate_jitter_reduction
+## stability_control / lfe_anchor_phoneme_persistence
+
+- lfe_traditional_anchor_phoneme_persistence
+## stability_control / lfe_strength_fragmentation_penalty_factor
+
+- lfe_strength_optimization_fragmentation_penalty_factor
+## stability_control / lfe_strength_fragmentation_penalty
+
+- lfe_strength_optimization_fragmentation_penalty
+## stability_control / loop_control
+
+- markov_sequence_loop_prevention_threshold
+## stability_control / loop_safety
+
+- infinite_loop_regeneration_safety
+## stability_control / memory_control
+
+- markov_state_memory_decay_rate
+## stability_control / memory_decay
+
+- markov_chain_state_memory_decay_rate
+## stability_control / meta_g_reconstruction_error
+
+- omega_synthesis_meta_g_reconstruction_error_epsilon
+## stability_control / meta_g_trajectory_reconstruction_error
+
+- omega_synthesis_meta_g_trajectory_reconstruction_error
+## stability_control / metric_control
+
+- d_metric_stability_threshold_ceiling
+## stability_control / metric_stability
+
+- metric_stability_s_minimum
+- omega_synthesis_stability_s_min_threshold
+## stability_control / microtonal_tuning
+
+- sruti_microtonal_drift_tolerance
+## stability_control / phase_control
+
+- asymmetric_feedback_delay_cross_channel_phase_bleed
+- omega_phase_7_closure_phase_coherence_index
+- singularity_attractor_phase_lock_decay_ms
+## stability_control / phase_correction
+
+- self_correction_delta_redistribution_weight
+## stability_control / phase_initialization
+
+- invariant_p1_mono_init_strictness
+## stability_control / phase_locking
+
+- omega_operator_stabilize_phase_lock_duration_ms
+## stability_control / phase_lock
+
+- singularity_attractor_phase_lock_coherence_radius
+## stability_control / pitch_control
+
+- sruti_microtonal_drift_lambda_damping
+## stability_control / power_control
+
+- tb303_power_supply_voltage_sag_depth
+## stability_control / pre_flight_ceiling
+
+- d_metric_pre_flight_ceiling_threshold
+## stability_control / recursion_control
+
+- stability_breach_r_depth_reduction
+## stability_control / relaxation_control
+
+- markov_chain_state_entropy_relaxation_time_ms
+## stability_control / reproducibility_control
+
+- seed_lock_for_reproducibility
+## stability_control / self_correction
+
+- max_self_correction_iterations_before_halt
+- self_correction_max_iterations
+## stability_control / singular_convergence_state
+
+- omega_protocol_singular_convergence_state_tolerance
+## stability_control / singular_density_convergence
+
+- omega_protocol_singular_density_convergence_slope
+## stability_control / singularity_control
+
+- singularity_threshold_ratio
+## stability_control / singularity_threshold
+
+- d_metric_singularity_threshold
+## stability_control / soliton_annihilation
+
+- topological_soliton_anti_soliton_annihilation_decay_rate
+## stability_control / stability_flag
+
+- omega_synthesis_final_state_stability_flag_enforcement
+## stability_control / state_closure
+
+- terminal_state_closure_lock_gain
+## stability_control / status_flagging
+
+- stability_flag_select
+## stability_control / stochastic_reset
+
+- markov_chain_stochastic_reset_probability
+## stability_control / sync_control
+
+- collaboration_sync_offset_allowance
+## stability_control / threshold_control
+
+- stability_threshold_curve_by_r
+## stability_control / threshold_enforcement
+
+- d_metric_threshold_current
+## stability_control / topological_stability
+
+- topological_charge_z3_conservation
+## stability_control / traditional_anchor_phoneme
+
+- lfe_traditional_anchor_phoneme_persistence_weight
+## stability_control / trigger_control
+
+- event_trigger_hysteresis
+## stability_control / velocity_threshold
+
+- omega_synthesis_velocity_v_max_threshold_ms
+## stability_control / zero_flux_phase_entropy
+
+- omega_axiom_a2_zero_flux_phase_entropy_tolerance
+## stochastic_effects / aleatoric_reverb
+
+- stochastic_reverb_decay_randomness
+## stochastic_effects / annealing_schedule
+
+- quantum_annealing_temperature_schedule
+## stochastic_effects / artifact_probability
+
+- vinyl_crackle_pop_probability
+## stochastic_effects / buffer_management
+
+- buffer_underrun_repeat_factor
+## stochastic_effects / collapse_probability
+
+- quantum_collapse_operator_probability
+## stochastic_effects / decoherence_time
+
+- quantum_decoherence_time_constant_ms
+## stochastic_effects / density_control
+
+- axiom_a5_adapt_density_noise_variance_sigma_sq
+## stochastic_effects / diffusion_seed
+
+- diffusion_algorithm_random_seed_lock
+## stochastic_effects / dropout_duration
+
+- tape_dropout_duration_ms
+## stochastic_effects / dropouts_probability
+
+- tape_dropouts_probability_trigger
+## stochastic_effects / duration_variation
+
+- note_duration_randomization_centeredness
+## stochastic_effects / entropy_closure
+
+- omega_protocol_singularity_seed_entropy_closure_ratio
+## stochastic_effects / entropy_control
+
+- markov_chain_first_order_entropy_weight
+## stochastic_effects / entropy_source
+
+- quantum_bit_generator_entropy_source
+## stochastic_effects / entropy_threshold
+
+- wavelet_packet_entropy_threshold
+## stochastic_effects / formant_shift
+
+- vocal_formant_shift_randomization
+## stochastic_effects / fractal_rhythm
+
+- lsystem_fractal_rhythm_stochastic_mutation_rate
+## stochastic_effects / frequency_bias
+
+- frequency_penalty_repetitive_suppression
+## stochastic_effects / grain_pitch
+
+- granular_pitch_drift_randomness
+## stochastic_effects / grain_variation
+
+- texture_mutation_probability_per_grain
+## stochastic_effects / granular_reverse
+
+- granular_playback_reverse_probability
+## stochastic_effects / history_control
+
+- markov_chain_decay_weighted_history_depth
+## stochastic_effects / humanization_jitter
+
+- liquid_scratch_anti_grid_humanization_jitter_ms
+## stochastic_effects / latent_space_control
+
+- latent_space_exploration_randomness
+## stochastic_effects / lfe_processing
+
+- lfe_ambient_whisper_pan_randomization_seed
+## stochastic_effects / markov_chains
+
+- markov_transition_matrix_temperature_scaling
+## stochastic_effects / markov_randomness
+
+- markov_chain_randomness_factor
+## stochastic_effects / mutation_control
+
+- cellular_automata_state_mutation_probability
+## stochastic_effects / mutation_intensity
+
+- texture_mutation_intensity_per_step
+## stochastic_effects / noise_reduction
+
+- wavelet_packet_high_frequency_noise_gate_threshold_db
+## stochastic_effects / noise_smoothing
+
+- a5_adapt_density_high_noise_smoothing_decay
+## stochastic_effects / noise_threshold
+
+- a5_adapt_density_noise_threshold_sigma
+## stochastic_effects / noise_variance_penalty
+
+- omega_synthesis_d_metric_kappa_noise_weight
+## stochastic_effects / omega_axiom_density
+
+- omega_axiom_a5_adapt_density_noise_threshold_sigma
+## stochastic_effects / partial_jitter
+
+- additive_partial_frequency_jitter_std_dev
+## stochastic_effects / phase_jitter
+
+- theta_wave_isochronic_phase_jitter_noise
+## stochastic_effects / phase_seed
+
+- additive_partial_phase_randomization_seed
+## stochastic_effects / pitch_control
+
+- granular_delay_pitch_jitter_scatter_cents
+## stochastic_effects / pitch_drift
+
+- stochastic_pitch_drift_rate
+## stochastic_effects / playback_instability
+
+- wow_and_flutter_intensity
+## stochastic_effects / pulse_jitter
+
+- isochronic_theta_pulse_duty_cycle_jitter_ms
+## stochastic_effects / quantum_correlation
+
+- quantum_entanglement_correlation_strength
+## stochastic_effects / quantum_escape
+
+- quantum_tunneling_escape_probability
+## stochastic_effects / quantum_walk
+
+- quantum_walk_step_probability_bias
+## stochastic_effects / random_seed_offset
+
+- liquid_scratch_anti_grid_humanization_random_seed_offset
+## stochastic_effects / random_walk_modulation
+
+- random_walk_filter_cutoff_path
+## stochastic_effects / recurrence_control
+
+- a3_terminal_state_recurrence_distance_threshold
+## stochastic_effects / rhythm_generation
+
+- cellular_automata_conway_rhythm_entropy
+## stochastic_effects / section_transition
+
+- structural_boundary_hallucination_entropy
+## stochastic_effects / seed_increment
+
 - validation_seed_auto_increment_modulo_lock
-- validation_tempo_bpm_strictness_bound
-- validation_terminal_transient_suppression_enforcement
-- validation_terminal_x7_transient_suppression
-- validation_terminal_x7_transient_suppression_index
-- validation_terminal_x7_zero_transient_enforcement
-- validation_unstable_flag_recursion_rollback_depth
-- validation_voice_meta_weirdness_ceiling
+## stochastic_effects / seed_lock
+
+- stochastic_deviation_seed_lock
+## stochastic_effects / seed_renewal_rate
+
+- texture_random_seed_renewal_frequency
+## stochastic_effects / semantic_amplification
+
+- invariant_gs_semantic_gain_target
+## stochastic_effects / sensor_noise
+
+- event_based_sensor_noise_filter_threshold
+## stochastic_effects / sequence_variation
+
+- vocal_sequence_entropy_drift
+## stochastic_effects / spatial_jitter
+
+- stochastic_spatial_position_jitter
+## stochastic_effects / stochastic_gate
+
+- stochastic_note_gate_probability_scale
+## stochastic_effects / system_entropy_controls
+
+- global_generative_random_distribution_engine_mode
+## stochastic_effects / temporal_control
+
+- granular_diffuse_tail_temporal_jitter_ms
+## stochastic_effects / temporal_dither
+
+- temporal_dithering_amplitude
+- temporal_dithering_speed
+## stochastic_effects / timing_variation
+
+- timing_modulation_randomness
+## stochastic_effects / variation_probability
+
 - variation_probability_per_cycle
-- vector_synthesis_interpolation_curve
-- veena_sitar_extreme_stretch_ratio
-- velocity_to_filter_cutoff_depth
-- velopharyngeal_port_cross_section_area
-- velum_open_nasal_coupling_coefficient
-- vfe_allocation_voice_count
-- vfe_bhava_moments_count
-- vfe_compositional_mode_index
-- vfe_domain_index
-- vfe_fx_cho1_probability
-- vfe_fx_drv1_probability
-- vfe_fx_fmt1_probability
-- vfe_fx_grn1_probability
-- vfe_fx_psh1_probability
-- vfe_fx_rvb1_probability
-- vfe_meta_ED
-- vfe_meta_MFS
-- vfe_meta_NC
-- vfe_meta_weirdness
-- vfe_metric_D
-- vfe_metric_D_f
-- vfe_metric_R_T
-- vfe_metric_S
-- vfe_metric_V
-- vfe_polyglot_mix_factor
-- vfe_r_value
-- vfe_rasa_index
-- vfe_recursion_depth
-- vfe_seed
-- vfe_technique_vcho_probability
-- vfe_technique_vrit_probability
-- vfe_technique_vwsp_probability
-- vfe_vector_alignment_default
-- vfe_vector_entropy_default
-- vfe_vector_impact_default
-- vfe_vector_spatial_default
-- vibe_abyssal_bioluminescence_hydro_lpf_cutoff_hz
-- vibe_abyssal_bioluminescence_sonar_ping_pong_delay_ms
-- vibe_acid_wonderland_reverse_lead_delay_ms
-- vibe_alchemical_lab_flanger_rate_hz
-- vibe_alien_abduction_doppler_shift_cents
-- vibe_alien_abduction_phase_inversion_weight
-- vibe_alien_microtonal_pitch_bend
-- vibe_alien_microtonal_pitch_bend_cents
-- vibe_angelic_demonic_shimmer_collapse_ratio
-- vibe_astral_projection_high_shelf_air_boost_db
-- vibe_aztec_blood_ritual_death_whistle_freq
-- vibe_biogenesis_organic_layering_density
-- vibe_biogenesis_organic_layering_growth_factor
-- vibe_biomechanical_hive_phase_modulation_depth
-- vibe_cave_reverb_decay_3d
-- vibe_cave_reverb_decay_3d_seconds
-- vibe_chrono_displacement_stutter_effect_duration_ms
-- vibe_clockwork_nightmare_chromatic_distortion_ratio
-- vibe_consciousness_exploration_binaural_theta_offset_hz
+## structure / acidity
+
+- acid_base
+## structure / chaos_and_dynamics_theory
+
+- phases_interference
+- phases_interference_resonance
+- phases_resonance
+## structure / chaos_theory_and_dynamics
+
+- chaos_turbulence_resonance
+- harmonicity_rhythm_turbulence
+## structure / clusters
+
+- fractal_cluster
+## structure / complexity
+
+- complexity_cycle
+## structure / conceptualization
+
+- abstraction_level
+## structure / density_evolution
+
+- structural_density_gradient_slope
+## structure / dissonance
+
+- dissonance_improvisation
+## structure / grid_boundaries
+
+- cellular_automata_grid_wrap_torus_mode
+## structure / grid_dimensions
+
+- cellular_automata_grid_size_integer
+## structure / interference_resonance_phase
+
+- interference_resonance_phase
+## structure / layer_control
+
+- omega_synthesis_mmss_unified_layer_count_invariant
+## structure / layer_management
+
+- layer_stacking_count
+## structure / multi_band_eq
+
+- adaptive_eq_band_count
+## structure / output_length
+
+- max_generation_token_limit
+## structure / patterns
+
+- fibonacci_golden_spiral
+## structure / polyphony
+
+- polyphony_golden_spiral
+## structure / section_contrast
+
+- structural_section_contrast_delta_index
+- structural_section_contrast_index
+## structure / state_transition_logic
+
+- invariant_p3_closure_overlap_index
+## structure / structural_asymmetry
+
+- contrast_section_length_difference
+## structure / structural_contrast
+
+- structural_section_contrast_ratio
+## structure / vocal_layers
+
+- vocal_layering_count
+## synthesis / acid_filter_acoustics
+
+- acid_high_harshness_tilt_floor
+- acid_tb303_resonance_screaming_bias
+- ambient_harmonic_polyrhythmic_chaotic_resonance
+- diffuseness_attenuation_tonality_spatial_resonance
+- down_shadowing_screaming_shivering_temperature
+- liquid_psytrance_squelch_envelope_decay_ms
+- micro_psychoacoustic_glitch_asymmetric_resonance
+- microtonal_recursion_superconductive_distortion_resonance
+- modulation_tortuosity_tail_asymmetric_resonance
+- quality_acid_crescendo_wet_sharpness
+- tb303_rhythmic_glide_neurophonic_depth
+- tb303_rhythmic_glide_neurophonic_feedback
+- tb303_rhythmic_glide_neurophonic_mix
+- tb303_rhythmic_glide_neurophonic_resonance
+- tonalness_breakdown_foldback_subconscious_resonance
+- torso_fluctuation_modulation_tonalness_resonance
+## synthesis / additive_synthesis
+
+- additive_harmonic_rolloff
+- harmonic_additive_partials_count
+- synthesis_additive_harmonic_phase_randomization
+- synthesis_additive_partial_amplitude_envelope_mode
+- synthesis_additive_partial_decay_slope_db_per_sec
+- synthesis_additive_partial_inharmonicity_cents
+- synthesis_additive_spectral_tilt_db_per_octave
+## synthesis / adsr_envelope
+
+- envelope_generator_attack_time_ms
+- envelope_generator_decay_time_ms
+- envelope_generator_release_time_ms
+- envelope_generator_sustain_level_ratio
+## synthesis / amplitude_modulation
+
+- ring_modulator_carrier_frequency_hz
+## synthesis / analog_drift
+
+- analog_drift_oscillator_detune_cents
+- oscillator_drift_random_walk_step
+- oscillator_frequency_drift_correlation_amount
+## synthesis / analog_emulation
+
+- analog_oscillator_drift_cents
+- nostalgic_tape_warble_flutter_depth_percentage
+## synthesis / analog_modeling
+
+- analog_oscillator_tuning_stability
+## synthesis / anti_aliasing
+
+- oscillator_alias_suppression_amount
+## synthesis / bit_reduction
+
+- oscillator_bit_reduction_amount
+## synthesis / buffer_glitch
+
+- glitch_buffer_stutter_repeat_count
+## synthesis / chiptune_emulation
+
+- retro_arcade_chiptune_aliasing_noise_ratio
+## synthesis / circuit_modeling
+
+- analog_circuit_drift_warmth_celsius
+## synthesis / cross_synthesis
+
+- ultimate_bio_acoustic_vocal_cross_synthesis_mode
+## synthesis / detuned_oscillators
+
+- oscillator_detune_spread
+## synthesis / filter_character
+
+- tactile_velvet_filter_dampening_coefficient
+## synthesis / filter_modulation
+
+- filter_resonance_tracking_keyfollow_ratio
+## synthesis / filter_section_dynamics
+
+- synthesis_physics_filter_pass_band_configuration_mode
+- synthesis_physics_filter_topology_model_mode
+## synthesis / filter_tracking
+
+- resonant_filter_cutoff_tracking_slope
+- subtractive_filter_key_tracking
+## synthesis / fm_synthesis
+
+- fm_operator_coarse_frequency_ratio
+- fm_synthesis_modulator_feedback_ratio
+- frequency_modulation_feedback_amount_ratio
+- frequency_modulation_index_ratio
+- oscillator_fm_ratio_multiplier
+- oscillator_frequency_modulation_feedback
+- oscillator_linear_fm_amount
+- oscillator_through_zero_fm_amount
+- synthesis_fm_algorithm_routing_topology
+- synthesis_fm_modulation_index
+- synthesis_fm_operator_carrier_to_modulator_ratio
+- synthesis_fm_operator_feedback_routing_string
+- synthesis_fm_operator_output_level_db
+## synthesis / frequency_modulation
+
+- fm_feedback_modulation_index
+- fm_synthesis_modulation_index
+## synthesis / granular_processing
+
+- grain_stochastic_jitter_probability
+- granular_cloud_density_burst_rate_hz
+## synthesis / granular_synthesis
+
+- granular_cloud_density_grains_per_sec
+- granular_cloud_density_hz
+- granular_cloud_grain_pitch_shift_cents
+- granular_grain_envelope_attack_ratio
+- granular_time_stretch_jitter_ratio
+- synthesis_granular_cloud_dispersion_factor
+- synthesis_granular_grain_envelope_shape
+- synthesis_granular_grain_size_variation_percent
+- synthesis_granular_playback_time_reversal_probability
+- synthesis_granular_time_stretch_algorithm_mode
+## synthesis / granular
+
+- granular_grain_amplitude_randomization
+- granular_grain_density_modulation_hz
+- granular_grain_density_per_second
+- granular_grain_density_random_jitter_ratio
+- granular_grain_envelope_release_ratio
+- granular_grain_envelope_shape
+- granular_grain_envelope_skew
+- granular_grain_envelope_smoothing_filter_frequency_hz
+- granular_grain_frequency_shifting_amount
+- granular_grain_overlap_ratio
+- granular_grain_pan_spread_amount
+- granular_grain_panning_random_spread_ratio
+- granular_grain_phase_randomization
+- granular_grain_pitch_bend_semitones
+- granular_grain_pitch_envelope_depth
+- granular_grain_pitch_glide_time_ms
+- granular_grain_pitch_jitter_distribution_type
+- granular_grain_pitch_jitter_scale_snap_mode
+- granular_grain_pitch_quantization
+- granular_grain_pitch_scatter_cents
+- granular_grain_playback_direction_mode
+- granular_grain_playback_speed_ratio
+- granular_grain_position_jitter_ms
+- granular_grain_reverse_probability
+- granular_grain_size_milliseconds
+- granular_grain_spatial_position_randomization
+- granular_grain_spectral_blur_amount
+- granular_grain_spectral_freeze_ratio
+- granular_grain_spectral_phase_lock_amount
+- granular_grain_spectral_tilt
+- granular_grain_stereo_position_modulation_rate
+- granular_grain_stereo_width_spread_ratio
+- granular_grain_time_pitch_uncoupling_ratio
+- granular_grain_time_position_quantization
+- granular_grain_time_stretch_density_compensation_ratio
+- granular_grain_time_stretch_density_mode
+- granular_grain_time_stretch_density_smoothing_ms
+- granular_grain_time_stretch_pitch_bend_decay_curve
+- granular_grain_time_stretch_pitch_bend_decay_factor
+- granular_grain_time_stretch_pitch_bend_decay_mode
+- granular_grain_time_stretch_pitch_bend_decay_ms
+- granular_grain_time_stretch_pitch_bend_decay_ratio
+- granular_grain_time_stretch_pitch_bend_direction_mode
+- granular_grain_time_stretch_pitch_bend_range_semitones
+- granular_grain_time_stretch_pitch_bend_smoothing_ms
+- granular_grain_time_stretch_pitch_shift_cents
+- granular_grain_time_stretch_ratio
+- granular_grain_time_stretch_smoothing_ms
+- granular_grain_time_stretch_transient_decay_ms
+- granular_grain_time_stretch_transient_hold_ms
+- granular_grain_time_stretch_transient_protect_ratio
+- granular_grain_time_stretch_transient_threshold_db
+- granular_grain_transient_alignment_mode
+- granular_grain_waveform_phase_reset
+- granular_grain_window_overlap
+- granular_pitch_jitter_semitones
+- granular_position_random_jitter_ms
+- granular_spray_time_window_ms
+- granular_texture_density_hz
+- granular_waveform_grain_window_shape
+- granulator_pitch_quantization_scale_mode
+- granulator_texture_grain_density_jitter_ratio
+## synthesis / hard_sync
+
+- oscillator_sync_ratio
+## synthesis / harmonic_content
+
+- additive_synthesis_partial_count_limit
+## synthesis / harmonic_generation
+
+- sub_bass_harmonic_generator_order_ratio
+- sub_bass_harmonic_phase_alignment_deg
+## synthesis / harmonic_series_synthesis
+
+- acoustic_scale_overtone_harmonic_selection_mode
+## synthesis / lfo_modulation
+
+- hypnagogic_pitch_drift_lfo_rate_hz
+## synthesis / microtonal_tuning
+
+- microtonal_pitch_offset
+## synthesis / modulation
+
+- lfo_frequency_modulation_hz
+## synthesis / nonlinear_distortion
+
+- wavefolder_symmetry_bias_ratio
+## synthesis / nonlinear_shaping
+
+- wavefolder_threshold_voltage_volts
+## synthesis / oscillator_control
+
+- basic_oscillator_detune_cents
+- basic_oscillator_fine_tune_cents
+- basic_sine_wave_frequency_hz
+- basic_square_wave_pulse_width_percent
+- basic_wavetable_index_position
+- sub_oscillator_octave_offset
+## synthesis / oscillator_core_mechanics
+
+- synthesis_physics_oscillator_wave_profile_mode
+## synthesis / oscillator_modulation
+
+- pulse_width_modulation_depth_percentage
+- pulse_width_modulation_depth_ratio
+## synthesis / oscillator_phase
+
+- oscillator_phase_reset_on_note
+## synthesis / oscillator_sync
+
+- basic_oscillator_sync_switch
+- oscillator_hard_sync_anti_aliasing
+- oscillator_hard_sync_depth
+- oscillator_hard_sync_phase_offset_degrees
+- oscillator_hard_sync_ratio
+- oscillator_hard_sync_reset_phase
+- oscillator_hard_sync_slave_ratio
+- oscillator_hard_sync_sweep_rate_hz
+- oscillator_sync_frequency_ratio
+- oscillator_sync_modulation_envelope_amount
+- oscillator_sync_softness_amount
+## synthesis / phase_distortion
+
+- oscillator_phase_distortion_curve
+- phase_distortion_amount
+- sub_bass_phase_distortion_frequency_hz
+- synthesis_phase_distortion_feedback_amount
+## synthesis / phase_modulation
+
+- oscillator_phase_modulation_index
+## synthesis / phase_processing
+
+- sub_bass_phase_alignment_allpass_decay_ms
+- sub_bass_phase_alignment_allpass_decay_q_factor
+- sub_bass_phase_alignment_allpass_decay_rate_hz
+- sub_bass_phase_alignment_allpass_decay_smoothing_ms
+- sub_bass_phase_alignment_allpass_decay_smoothing_ms_value
+- sub_bass_phase_alignment_allpass_decay_smoothing_q_boost_db
+- sub_bass_phase_alignment_allpass_decay_smoothing_q_boost_db_value
+- sub_bass_phase_alignment_allpass_decay_smoothing_q_factor
+- sub_bass_phase_alignment_allpass_delay_ms
+- sub_bass_phase_alignment_allpass_q_factor
+- sub_bass_phase_alignment_bandwidth_hz
+- sub_bass_phase_alignment_center_frequency_hz
+- sub_bass_phase_alignment_crossfade_ms
+- sub_bass_phase_alignment_damping_q_factor
+- sub_bass_phase_alignment_damping_ratio
+- sub_bass_phase_alignment_gain_db
+- sub_bass_phase_alignment_high_pass_cutoff_hz
+- sub_bass_phase_alignment_high_pass_decay_ms
+- sub_bass_phase_alignment_high_pass_decay_q_boost
+- sub_bass_phase_alignment_high_pass_decay_q_factor
+- sub_bass_phase_alignment_high_pass_decay_smoothing_ms
+- sub_bass_phase_alignment_high_pass_q_factor
+- sub_bass_phase_alignment_high_pass_q_factor_boost
+- sub_bass_phase_alignment_high_pass_q_factor_resonance
+- sub_bass_phase_alignment_high_pass_slope_db_per_oct
+- sub_bass_phase_alignment_high_pass_smoothing_ms
+- sub_bass_phase_alignment_low_pass_cutoff_hz
+- sub_bass_phase_alignment_low_pass_q_factor
+- sub_bass_phase_alignment_low_pass_q_factor_resonance
+- sub_bass_phase_alignment_low_pass_slope_db_per_oct
+- sub_bass_phase_alignment_offset_deg
+- sub_bass_phase_alignment_order_index
+- sub_bass_phase_alignment_q_factor
+- sub_bass_phase_alignment_resonance_db
+- sub_bass_phase_alignment_slope_deg_per_hz
+- sub_bass_phase_alignment_tolerance_deg
+- sub_bass_phase_alignment_tracking_speed_ms
+- sub_bass_phase_crossover_frequency_hz
+## synthesis / phi_tuning
+
+- phi_tuning_base_freq_hz
+## synthesis / physical_modeling_synthesis
+
+- physical_membrane_tension_newtons
+## synthesis / physical_modeling
+
+- acoustic_string_pluck_position_ratio
+- brass_lip_tension_ratio
+- physical_model_bow_pressure
+- physical_modeling_bow_pressure_grams
+- physical_modeling_hammer_stiffness_factor
+- physical_modeling_membrane_tension_newtons
+- physical_modeling_pickup_position_ratio
+- physical_modeling_string_damping_coefficient
+- physical_string_stiffness_factor
+- plucked_string_stiffness_dispersion_coefficient
+- resonator_excitation_noise_mix
+- stiff_string_dispersion_coefficient
+- waveguide_bore_length_millimeters
+## synthesis / pitch_processing
+
+- pitch_quantize_scale_snap_cents
+- pitch_shift_semitones_amount
+## synthesis / pitch_tracking
+
+- phase_locked_loop_tracking_speed_ms
+## synthesis / pitch_transition
+
+- pitch_glide_duration
+## synthesis / pulse_width_modulation
+
+- oscillator_pulse_width_modulation_depth
+- oscillator_pulse_width_modulation_rate_hz
+- oscillator_pulse_width_modulation_source
+- subharmonic_pulse_width_modulation_duty_cycle
+## synthesis / pulse_width
+
+- oscillator_pulse_width_amount
+## synthesis / resonance_and_drones
+
+- tonic_drone_fundamental_octave_shift_register
+## synthesis / resonance_drones
+
+- traditional_drone_subharmonic_coupling_toggle
+## synthesis / resonance_tuning
+
+- resonance_tuning_frequency_hz
+- resonance_tuning_hz
+## synthesis / ring_modulation
+
+- oscillator_ring_modulation_depth
+- ring_modulation_depth
+- ring_modulator_carrier_freq_hz
+## synthesis / samapana_resolution
+
+- samapana_final_resolution_carrier_frequency_hz
+## synthesis / sruti_raga
+
+- sruti_raga_nyasa_note_hold_purity_cents
+## synthesis / string_synthesis
+
+- vibe_sumerian_cuneiform_microtonal_string_drone
+## synthesis / sub_bass_enhancement
+
+- sub_bass_harmonic_crossover_frequency_hz
+- sub_bass_harmonic_even_odd_ratio
+- sub_bass_harmonic_generator_drive_ratio
+- sub_bass_harmonic_saturation_drive_db
+## synthesis / sub_bass_generation
+
+- sub_bass_harmonic_envelope_attack_ms
+- sub_harmonic_synthesizer_drive_db
+## synthesis / sub_bass_processing
+
+- sub_bass_harmonic_even_order_drive_db
+- sub_bass_harmonic_quadrature_phase_balance_ratio
+## synthesis / sub_bass_synthesis
+
+- sub_bass_harmonic_synthesis_order
+- subharmonic_sub_bass_pulse_width_modulation_percentage
+## synthesis / sub_harmonic_generation
+
+- subharmonic_generator_octave_blend_ratio
+- subharmonic_oscillator_frequency_division_factor
+## synthesis / sub_harmonic_synthesis
+
+- sub_bass_harmonic_synthesizer_cutoff_hz
+## synthesis / sub_oscillator
+
+- oscillator_sub_oscillator_level_db
+## synthesis / subharmonic_feedback
+
+- subharmonic_distortion_feedback_gain_db
+## synthesis / subharmonic_filtering
+
+- subharmonic_even_harmonic_rejection_db
+## synthesis / subharmonic_generation
+
+- sub_bass_harmonic_exciter_mix_ratio
+- sub_bass_phase_alignment_frequency_hz
+- sub_bass_subharmonic_generator_tracking_speed_ms
+- sub_harmonic_synthesizer_cutoff_hz
+- subharmonic_frequency_divider_ratio
+- subharmonic_generation_level
+- subharmonic_generator_tracking_window_ms
+- subharmonic_octave_blend_ratio
+- subharmonic_oscillator_octave_blend_ratio
+- subharmonic_synthesizer_mode
+## synthesis / subharmonic_pitch_detection
+
+- subharmonic_tracking_lowpass_filter_order
+## synthesis / subharmonic_pitch_tracking
+
+- subharmonic_frequency_tracking_bandwidth_hz
+## synthesis / subharmonic_processing
+
+- subharmonic_generator_lowpass_cutoff_hz
+## synthesis / subharmonic_ring_modulation
+
+- subharmonic_ring_modulator_mix_ratio
+## synthesis / subharmonic
+
+- subharmonic_generation_division
+## synthesis / subtractive_synthesis
+
+- sub_filter_envelope_decay_time_ms

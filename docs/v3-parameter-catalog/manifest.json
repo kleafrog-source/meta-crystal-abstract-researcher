@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-16T06:05:21.023Z",
-  "parameter_count": 6663,
+  "generated_at": "2026-11-11T10:06:29.679Z",
+  "parameter_count": 6966,
   "part_size": 500,
   "part_count": 14,
   "files": [
@@ -71,7 +71,7 @@
     },
     {
       "name": "part-014.md",
-      "count": 163,
+      "count": 466,
       "raw_url": "https://raw.githubusercontent.com/kleafrog-source/meta-crystal-abstract-researcher/main/docs/v3-parameter-catalog/part-014.md"
     }
   ],

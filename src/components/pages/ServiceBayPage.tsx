@@ -3,7 +3,7 @@
 import { Database, Server } from "lucide-react";
 import { useUiText } from "@/lib/ui-i18n";
 import { ManagedRebuildPanel } from "@/components/rag-v3/ManagedRebuildPanel";
-import { ServiceBayIndexControls } from "@/components/rag-v3/ServiceBayIndexControls";
+import { V3InfoTip } from "@/components/rag-v3/V3Tooltip";
 
 export function ServiceBayPage() {
   const t = useUiText();
@@ -14,11 +14,10 @@ export function ServiceBayPage() {
         <p className="mt-1 text-xs text-muted-foreground">{t("Index status and manual maintenance")}</p>
       </div>
       <div className="flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground">
-        <Server className="size-3.5" />{t("Provider and model details are shown per index")}
+        <Server className="size-3.5" />{t("Provider and model details are shown per index")}<V3InfoTip content={t("Each artifact row reports its own encoder and provider. The runtime column identifies whether that exact artifact is currently read by the application.")} />
       </div>
     </header>
     <div className="mx-auto max-w-[1600px] space-y-4">
-      <section aria-label="CLAP and SigLIP2 index controls"><ServiceBayIndexControls /></section>
       <section id="index-coverage" aria-label="Index coverage"><ManagedRebuildPanel /></section>
     </div>
   </div>;

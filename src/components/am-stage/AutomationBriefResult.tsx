@@ -43,7 +43,7 @@ function textOf(value: unknown): string | null {
 }
 
 function sourceOf(artifact: BriefViewArtifact): BriefSourceIdentity {
-  return { runId: artifact.runId, stageId: artifact.stageId, attemptId: artifact.attemptId, artifactId: artifact.artifactId, actionId: "brief.combine_segment_texts", schemaVersion: 1, modality: "text" };
+  return { runId: artifact.runId, stageId: artifact.stageId, attemptId: artifact.attemptId, artifactId: artifact.artifactId, actionId: artifact.actionId as BriefSourceIdentity["actionId"], schemaVersion: 1, modality: "text" };
 }
 
 function sourceKeyOfSelection(selection: BriefSelectionIdentity): string {
@@ -56,7 +56,7 @@ export function AutomationBriefResult({ artifact, selection, selectionCurrent, c
   const incomingText = artifact ? textOf(artifact.data) : null;
   const valid = Boolean(artifact && incomingText && artifact.artifactContractConsistent && selectionCurrent &&
     isCurrentBriefSelection(selection, artifact) && artifact.runId && artifact.stageId && artifact.attemptId === artifact.successfulAttemptId &&
-    artifact.actionId === "brief.combine_segment_texts" && artifact.kind === "brief" && artifact.schemaVersion === 1 && artifact.modality === "text" && artifact.validity === "valid");
+    ["brief.combine_segment_texts", "text.assemble"].includes(artifact.actionId) && artifact.kind === "brief" && artifact.schemaVersion === 1 && artifact.modality === "text" && artifact.validity === "valid");
   const source = artifact && valid ? sourceOf(artifact) : null;
   const alreadyApplied = Boolean(source && importState?.appliedSources.includes(briefSourceKey(source)));
   const canExplicitlyReapply = Boolean(source && importState?.manuallyEdited && briefSourceKey(importState.source) === briefSourceKey(source));

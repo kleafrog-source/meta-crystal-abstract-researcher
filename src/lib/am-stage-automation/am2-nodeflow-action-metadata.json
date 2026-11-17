@@ -1,0 +1,1551 @@
+[
+  {
+    "actionId": "brief.from_template",
+    "title": "Brief from template",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "Produces a Brief text from a template with {{variables}}.",
+    "inputs": [],
+    "outputs": [
+      {
+        "port": "brief",
+        "kind": "brief",
+        "required": true
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": false,
+    "settings": [
+      {
+        "key": "template",
+        "label": "Template text",
+        "type": "string",
+        "default": "Ambient electronic cue with {{mood}} texture and {{space}} space",
+        "description": "Template with {{variable}} placeholders substituted from external inputs."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "brief.from_crystal",
+    "title": "Brief from crystal",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "Produces a Brief text from a seeded crystal descriptor.",
+    "inputs": [],
+    "outputs": [
+      {
+        "port": "brief",
+        "kind": "brief",
+        "required": true
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "audio.segment",
+    "title": "Segment audio (node plan)",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "Builds the segment/node plan (Work Axis nodes) for the selected audio range.",
+    "inputs": [],
+    "outputs": [
+      {
+        "port": "windows",
+        "kind": "segment-plan",
+        "required": true
+      }
+    ],
+    "needsAudio": true,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "segmentMode",
+        "label": "Segment mode",
+        "type": "select",
+        "options": [
+          "uniform",
+          "beat",
+          "transient"
+        ],
+        "default": "uniform",
+        "description": "uniform = even windows; beat/transient = boundary-aligned (deterministic emulation here)."
+      },
+      {
+        "key": "segmentCountMode",
+        "label": "Count mode",
+        "type": "select",
+        "options": [
+          "automatic",
+          "at_most",
+          "exact"
+        ],
+        "default": "automatic",
+        "description": "How segmentCount is interpreted."
+      },
+      {
+        "key": "segmentCount",
+        "label": "Segment count",
+        "type": "number",
+        "default": 6,
+        "min": 1,
+        "max": 40,
+        "description": "Target/max number of nodes."
+      },
+      {
+        "key": "intervalSeconds",
+        "label": "Interval seconds",
+        "type": "number",
+        "default": 5,
+        "min": 0.5,
+        "max": 60,
+        "description": "Uniform window length."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "text.qwen.resolved",
+    "title": "Qwen text → parameters (resolved)",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "Text retrieval over the composite index with value anchoring.",
+    "inputs": [
+      {
+        "name": "brief",
+        "kind": "brief",
+        "required": false,
+        "accepts": [
+          "brief",
+          "text"
+        ],
+        "description": "Brief text (falls back to external brief); merged text sources are accepted."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "parameter-bank",
+        "required": true
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": true,
+    "settings": [
+      {
+        "key": "topK",
+        "label": "topK",
+        "type": "number",
+        "default": 12,
+        "min": 1,
+        "max": 100,
+        "description": "Retrieval depth (clamped to 100)."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "text.gemma.awtd",
+    "title": "Gemma text → identities (awtd)",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "Identity-only text retrieval (values stay catalogue defaults).",
+    "inputs": [
+      {
+        "name": "brief",
+        "kind": "brief",
+        "required": false,
+        "accepts": [
+          "brief",
+          "text"
+        ],
+        "description": "Brief text (falls back to external brief); merged text sources are accepted."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "parameter-bank",
+        "required": true
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": true,
+    "settings": [
+      {
+        "key": "topK",
+        "label": "topK",
+        "type": "number",
+        "default": 10,
+        "min": 1,
+        "max": 100,
+        "description": "Retrieval depth (clamped to 100)."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "text.gemma.resolved",
+    "title": "Gemma text → values (resolved)",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "Value pass: same-window CLAP → Qwen anchors → catalogue default.",
+    "inputs": [
+      {
+        "name": "identityBank",
+        "kind": "parameter-bank",
+        "required": true,
+        "description": "Gemma identity (awtd) bank artifact."
+      },
+      {
+        "name": "qwenAnchors",
+        "kind": "parameter-bank",
+        "required": false,
+        "description": "Qwen resolved bank used as value anchors."
+      },
+      {
+        "name": "clapValues",
+        "kind": "parameter-bank",
+        "required": false,
+        "description": "Same-window CLAP bank for direct value hits."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "parameter-bank",
+        "required": true
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "audio.clap.resolved",
+    "title": "CLAP audio → parameters (per node)",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "Audio-similarity retrieval per segment node.",
+    "inputs": [
+      {
+        "name": "segmentPlan",
+        "kind": "segment-plan",
+        "required": true,
+        "description": "Node plan to iterate."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "parameter-bank",
+        "required": true
+      }
+    ],
+    "needsAudio": true,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "topK",
+        "label": "topK",
+        "type": "number",
+        "default": 8,
+        "min": 1,
+        "max": 100,
+        "description": "Retrieval depth (clamped to 100)."
+      },
+      {
+        "key": "testFailure",
+        "label": "Test failure injection (deterministic mode only)",
+        "type": "select",
+        "options": [
+          "none",
+          "fail_first_attempt",
+          "fail_always",
+          "fail_node_2"
+        ],
+        "default": "none",
+        "description": "Deterministic providers can reproduce failures: fail first attempt (retry succeeds), permanent failure, or per-node failure for node-fanout actions. Ignored in real mode."
+      },
+      {
+        "key": "testDelayMs",
+        "label": "Test per-node delay (ms)",
+        "type": "number",
+        "default": 0,
+        "min": 0,
+        "max": 5000,
+        "description": "Artificial delay per node (late-response / cancel simulations). Deterministic mode only."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "spec.siglip.resolved",
+    "title": "SigLIP spectrogram → parameters (per node)",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "Spectrogram-image retrieval per segment node.",
+    "inputs": [
+      {
+        "name": "segmentPlan",
+        "kind": "segment-plan",
+        "required": true,
+        "description": "Node plan to iterate."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "parameter-bank",
+        "required": true
+      }
+    ],
+    "needsAudio": true,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "topK",
+        "label": "topK",
+        "type": "number",
+        "default": 8,
+        "min": 1,
+        "max": 100,
+        "description": "Retrieval depth (clamped to 100)."
+      },
+      {
+        "key": "testFailure",
+        "label": "Test failure injection (deterministic mode only)",
+        "type": "select",
+        "options": [
+          "none",
+          "fail_first_attempt",
+          "fail_always",
+          "fail_node_2"
+        ],
+        "default": "none",
+        "description": "Deterministic providers can reproduce failures: fail first attempt (retry succeeds), permanent failure, or per-node failure for node-fanout actions. Ignored in real mode."
+      },
+      {
+        "key": "testDelayMs",
+        "label": "Test per-node delay (ms)",
+        "type": "number",
+        "default": 0,
+        "min": 0,
+        "max": 5000,
+        "description": "Artificial delay per node (late-response / cancel simulations). Deterministic mode only."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "stage2.client",
+    "title": "Client Stage-2 (consensus smooth)",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "In-process trust-weighted consensus smoothing over retrieved banks.",
+    "inputs": [
+      {
+        "name": "source",
+        "kind": "parameter-bank",
+        "required": true,
+        "multiple": true,
+        "description": "One or more parameter-bank artifacts to smooth."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "parameter-bank",
+        "required": true
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "consensusTopK",
+        "label": "Consensus topK",
+        "type": "number",
+        "default": 24,
+        "min": 1,
+        "max": 100,
+        "description": "How many keys participate in the consensus."
+      },
+      {
+        "key": "centroidPercent",
+        "label": "Centroid percent",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "description": "Weight of the centroid vs the strongest modality."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "stage2.server",
+    "title": "Server Stage-2 (second retrieval)",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "Second-pass retrieval seeded by Stage-1 hits (excludes Stage-1 names).",
+    "inputs": [
+      {
+        "name": "stage1",
+        "kind": "parameter-bank",
+        "required": true,
+        "multiple": true,
+        "description": "Stage-1 parameter banks (seeds)."
+      },
+      {
+        "name": "brief",
+        "kind": "brief",
+        "required": false,
+        "description": "Original brief as the source query."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "parameter-bank",
+        "required": true
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "topK",
+        "label": "topK",
+        "type": "number",
+        "default": 8,
+        "min": 1,
+        "max": 100,
+        "description": "Retrieval depth (clamped to 100)."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "audio.describe.lfm3",
+    "title": "LFM3 audio → description (per node)",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "Per-node natural-language audio description.",
+    "inputs": [
+      {
+        "name": "segmentPlan",
+        "kind": "segment-plan",
+        "required": true,
+        "description": "Node plan to iterate."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "description",
+        "required": true
+      }
+    ],
+    "needsAudio": true,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "sampleLimit",
+        "label": "Sample limit",
+        "type": "number",
+        "default": 4,
+        "min": 1,
+        "max": 40,
+        "description": "How many nodes get described (even spread incl. first & last)."
+      },
+      {
+        "key": "testFailure",
+        "label": "Test failure injection (deterministic mode only)",
+        "type": "select",
+        "options": [
+          "none",
+          "fail_first_attempt",
+          "fail_always",
+          "fail_node_2"
+        ],
+        "default": "none",
+        "description": "Deterministic providers can reproduce failures: fail first attempt (retry succeeds), permanent failure, or per-node failure for node-fanout actions. Ignored in real mode."
+      },
+      {
+        "key": "testDelayMs",
+        "label": "Test per-node delay (ms)",
+        "type": "number",
+        "default": 0,
+        "min": 0,
+        "max": 5000,
+        "description": "Artificial delay per node (late-response / cancel simulations). Deterministic mode only."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "text_features.build",
+    "title": "Build text-feature snapshot",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "Computes prevalence/contribution statistics for parameters over segments.",
+    "inputs": [
+      {
+        "name": "parameterBank",
+        "kind": "parameter-bank",
+        "required": true,
+        "multiple": true,
+        "description": "Bank artifacts to profile."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "text-feature-snapshot",
+        "required": true
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "result.bundle",
+    "title": "Bundle run results",
+    "titleRu": null,
+    "family": null,
+    "category": null,
+    "role": "Collects prior artifacts into a run bundle summary.",
+    "inputs": [
+      {
+        "name": "source",
+        "kind": "parameter-bank",
+        "required": false,
+        "multiple": true,
+        "description": "Banks to reference."
+      },
+      {
+        "name": "description",
+        "kind": "description",
+        "required": false,
+        "multiple": true,
+        "description": "Descriptions to reference."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "run-bundle",
+        "required": true
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "vocal_allocation.search",
+    "title": "Vocal allocation search",
+    "titleRu": "Vocal allocation: поиск и матрица",
+    "family": null,
+    "category": null,
+    "role": "Scoped vocal search: languages / TECH4 / FX4 / I,S,E,A digits → matrix (original parser contract, slot mapping 1:1).",
+    "inputs": [
+      {
+        "name": "query",
+        "kind": "brief",
+        "required": false,
+        "accepts": [
+          "brief",
+          "text",
+          "llm-advice",
+          "natural-description",
+          "reverse-query"
+        ],
+        "description": "Query text (falls back to the query setting / external brief)."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "matrix",
+        "kind": "vocal-allocation",
+        "required": true,
+        "description": "Matrix + parsed slots + parameters."
+      },
+      {
+        "port": "parameters",
+        "kind": "parameter-bank",
+        "required": true,
+        "description": "Result parameters as a bank (downstream transforms / Stage)."
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "query",
+        "label": "Описание матрицы",
+        "type": "string",
+        "default": "",
+        "description": "Например: «Три слоя: лид на латыни с VGUT и DRV1; хор на древнегреческом…»"
+      },
+      {
+        "key": "detectedLanguageTags",
+        "label": "Detected Indic language tags",
+        "type": "string",
+        "default": "",
+        "description": "Опционально: hi-IN, ta-IN …"
+      },
+      {
+        "key": "topK",
+        "label": "topK",
+        "type": "number",
+        "default": 40,
+        "min": 1,
+        "max": 100,
+        "description": "Retrieval depth (clamped to 100)."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "data.merge",
+    "title": "Merge / union",
+    "titleRu": "Объединение (union)",
+    "family": null,
+    "category": null,
+    "role": "Union of two or more compatible inputs with an explicit duplicate/conflict policy.",
+    "inputs": [
+      {
+        "name": "sources",
+        "kind": "parameter-bank",
+        "required": true,
+        "multiple": true,
+        "cardinality": {
+          "min": 2,
+          "max": 8
+        },
+        "accepts": [
+          "parameter-bank",
+          "record-set",
+          "brief",
+          "text"
+        ],
+        "description": "Two or more inputs of the SAME kind (all banks, all record-sets or all text-ish)."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "parameter-bank",
+        "required": true,
+        "description": "Same kind as inputs."
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "duplicates",
+        "label": "Политика дублей (по ключу)",
+        "type": "select",
+        "options": [
+          "keep_first",
+          "keep_last",
+          "error"
+        ],
+        "default": "keep_first",
+        "description": "Одинаковые ключи в разных входах: keep_first / keep_last / error."
+      },
+      {
+        "key": "conflicts",
+        "label": "Политика конфликтов значений",
+        "type": "select",
+        "options": [
+          "keep_first",
+          "keep_last",
+          "error"
+        ],
+        "default": "keep_first",
+        "description": "Одинаковые ключи с разными значениями."
+      },
+      {
+        "key": "textSeparator",
+        "label": "Разделитель (text)",
+        "type": "string",
+        "default": "\\n",
+        "description": "Разделитель при объединении текстов."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "data.difference",
+    "title": "Difference",
+    "titleRu": "Разность",
+    "family": null,
+    "category": null,
+    "role": "A \\ B, B \\ A or symmetric difference by a declared comparison key (parameters/records) or line semantics (text).",
+    "inputs": [
+      {
+        "name": "a",
+        "kind": "parameter-bank",
+        "required": true,
+        "accepts": [
+          "parameter-bank",
+          "record-set",
+          "brief",
+          "text"
+        ],
+        "description": "Input A."
+      },
+      {
+        "name": "b",
+        "kind": "parameter-bank",
+        "required": true,
+        "accepts": [
+          "parameter-bank",
+          "record-set",
+          "brief",
+          "text"
+        ],
+        "description": "Input B (same kind as A)."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "parameter-bank",
+        "required": true,
+        "description": "Same kind as inputs."
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "mode",
+        "label": "Режим",
+        "type": "select",
+        "options": [
+          "a_minus_b",
+          "b_minus_a",
+          "symmetric"
+        ],
+        "default": "a_minus_b",
+        "description": "A\\B / B\\A / симметричная разность."
+      },
+      {
+        "key": "key",
+        "label": "Ключ сравнения",
+        "type": "select",
+        "options": [
+          "technical_name",
+          "field"
+        ],
+        "default": "technical_name",
+        "description": "Ключ для банков параметров. record-set использует поле fieldKey."
+      },
+      {
+        "key": "fieldKey",
+        "label": "Поле-ключ (record-set)",
+        "type": "string",
+        "default": "",
+        "description": "Имя поля записи, по которому сравниваются множества."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "data.intersection",
+    "title": "Intersection",
+    "titleRu": "Пересечение",
+    "family": null,
+    "category": null,
+    "role": "Common elements of A and B by the selected key.",
+    "inputs": [
+      {
+        "name": "a",
+        "kind": "parameter-bank",
+        "required": true,
+        "accepts": [
+          "parameter-bank",
+          "record-set"
+        ],
+        "description": "Input A."
+      },
+      {
+        "name": "b",
+        "kind": "parameter-bank",
+        "required": true,
+        "accepts": [
+          "parameter-bank",
+          "record-set"
+        ],
+        "description": "Input B (same kind as A)."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "parameter-bank",
+        "required": true,
+        "description": "Same kind as inputs."
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "valuePolicy",
+        "label": "Чьи значения брать",
+        "type": "select",
+        "options": [
+          "from_a",
+          "from_b"
+        ],
+        "default": "from_a",
+        "description": "Источник значений общих элементов."
+      },
+      {
+        "key": "fieldKey",
+        "label": "Поле-ключ (record-set)",
+        "type": "string",
+        "default": "",
+        "description": "Имя поля записи для сравнения."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "text.limit",
+    "title": "Text limit",
+    "titleRu": "Ограничение текста",
+    "family": null,
+    "category": null,
+    "role": "Character limit with a declared counting unit and truncation method; reports original/final length and the truncation fact. Not an LLM summary and not a token limit.",
+    "inputs": [
+      {
+        "name": "text",
+        "kind": "brief",
+        "required": true,
+        "accepts": [
+          "brief",
+          "text",
+          "description",
+          "transcription",
+          "gap-descriptions",
+          "natural-description",
+          "reverse-query",
+          "llm-advice"
+        ],
+        "description": "Text-ish input to limit."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "text",
+        "required": true
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "maxChars",
+        "label": "Максимум",
+        "type": "number",
+        "default": 1000,
+        "min": 1,
+        "max": 100000,
+        "description": "Лимит в выбранных единицах."
+      },
+      {
+        "key": "unit",
+        "label": "Единица подсчёта",
+        "type": "select",
+        "options": [
+          "chars",
+          "codepoints",
+          "words"
+        ],
+        "default": "chars",
+        "description": "Символы JS (UTF-16 units), кодпоинты Unicode или слова."
+      },
+      {
+        "key": "truncation",
+        "label": "Способ усечения",
+        "type": "select",
+        "options": [
+          "hard",
+          "ellipsis",
+          "word_boundary"
+        ],
+        "default": "ellipsis",
+        "description": "hard — ровно до лимита; ellipsis — добавить «…»; word_boundary — до последнего целого слова."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "data.filter",
+    "title": "Filter",
+    "titleRu": "Фильтр",
+    "family": null,
+    "category": null,
+    "role": "Typed selection rules (AND-combined) over parameters or records.",
+    "inputs": [
+      {
+        "name": "input",
+        "kind": "parameter-bank",
+        "required": true,
+        "accepts": [
+          "parameter-bank",
+          "record-set"
+        ],
+        "description": "Rows/parameters to filter."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "parameter-bank",
+        "required": true,
+        "description": "Same kind as input."
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "rules",
+        "label": "Правила",
+        "type": "json",
+        "jsonEditor": "filter-rules",
+        "default": [],
+        "description": "Массив правил {field, op, value} (И-логика)."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "data.count",
+    "title": "Count / statistics",
+    "titleRu": "Подсчёт / статистика",
+    "family": null,
+    "category": null,
+    "role": "Counts parameters, records, results and statuses; scalar or structured output usable by conditions.",
+    "inputs": [
+      {
+        "name": "input",
+        "kind": "parameter-bank",
+        "required": true,
+        "accepts": [
+          "parameter-bank",
+          "record-set",
+          "segment-plan",
+          "brief",
+          "text",
+          "vocal-allocation",
+          "llm-advice"
+        ],
+        "description": "Anything countable."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "record-set",
+        "required": true,
+        "description": "Counts as record-set rows."
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "output",
+        "label": "Формат",
+        "type": "select",
+        "options": [
+          "scalar",
+          "structured"
+        ],
+        "default": "scalar",
+        "description": "scalar — одна строка total; structured — группировка по kind/validity/category."
+      },
+      {
+        "key": "groupBy",
+        "label": "Группировка (structured)",
+        "type": "select",
+        "options": [
+          "none",
+          "kind",
+          "validity",
+          "category"
+        ],
+        "default": "none",
+        "description": "Ключ группировки структурного выхода."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "text.assemble",
+    "title": "Assemble",
+    "titleRu": "Сборка текста",
+    "family": null,
+    "category": null,
+    "role": "Assembles several parts into an ordered result: template, separators, missing policy, source refs.",
+    "inputs": [
+      {
+        "name": "parts",
+        "kind": "brief",
+        "required": true,
+        "multiple": true,
+        "cardinality": {
+          "min": 1,
+          "max": 12
+        },
+        "accepts": [
+          "brief",
+          "text",
+          "description",
+          "transcription",
+          "gap-descriptions",
+          "natural-description",
+          "reverse-query",
+          "llm-advice"
+        ],
+        "description": "Text-ish parts (order = binding order)."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "text",
+        "required": true
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "template",
+        "label": "Шаблон",
+        "type": "string",
+        "default": "",
+        "description": "Шаблон с {0}, {1}… по индексам частей; пусто — склейка через разделитель."
+      },
+      {
+        "key": "separator",
+        "label": "Разделитель",
+        "type": "string",
+        "default": "\\n",
+        "description": "Разделитель между частями (если шаблон пуст)."
+      },
+      {
+        "key": "missingPolicy",
+        "label": "Пропущенная часть",
+        "type": "select",
+        "options": [
+          "skip",
+          "placeholder",
+          "error"
+        ],
+        "default": "skip",
+        "description": "skip — пропустить; placeholder — вставить «[missing]»; error — упасть."
+      },
+      {
+        "key": "includeSourceRefs",
+        "label": "Включить ссылки на источники",
+        "type": "boolean",
+        "default": false,
+        "description": "Добавить строку «Источники: …» в конец."
+      },
+      {
+        "key": "outputKind",
+        "label": "Тип результата",
+        "type": "select",
+        "options": [
+          "text",
+          "brief"
+        ],
+        "default": "text",
+        "description": "text — обычный текст; brief — артефакт Brief (применим в поле Brief сессии Stage)."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "flow.if",
+    "title": "If / else",
+    "titleRu": "Если / иначе",
+    "family": null,
+    "category": null,
+    "role": "Two branches with a deterministic typed condition; the untaken branch gets a correct skipped status; the decision is frozen into the run history.",
+    "inputs": [
+      {
+        "name": "input",
+        "kind": "parameter-bank",
+        "required": true,
+        "accepts": [
+          "parameter-bank",
+          "record-set",
+          "segment-plan",
+          "brief",
+          "text",
+          "description",
+          "transcription",
+          "vocal-allocation",
+          "llm-advice",
+          "text-feature-snapshot",
+          "flowmusic-timeline"
+        ],
+        "description": "Value evaluated by the condition and passed through to the taken branch."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "then",
+        "kind": "parameter-bank",
+        "required": false,
+        "description": "Taken when the condition holds (input passes through)."
+      },
+      {
+        "port": "else",
+        "kind": "parameter-bank",
+        "required": false,
+        "description": "Taken otherwise (input passes through)."
+      },
+      {
+        "port": "decision",
+        "kind": "decision",
+        "required": true,
+        "description": "Frozen decision record (always emitted)."
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "condition",
+        "label": "Условие",
+        "type": "json",
+        "jsonEditor": "condition",
+        "default": null,
+        "description": "Типизированное условие (без произвольного eval)."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "flow.router",
+    "title": "Algorithmic router",
+    "titleRu": "Алгоритмический маршрутизатор",
+    "family": null,
+    "category": null,
+    "role": "One or several routes by rules: first-match / all-match / fallback, with an explanation of the chosen route.",
+    "inputs": [
+      {
+        "name": "input",
+        "kind": "parameter-bank",
+        "required": true,
+        "accepts": [
+          "parameter-bank",
+          "record-set",
+          "segment-plan",
+          "brief",
+          "text",
+          "description",
+          "transcription",
+          "vocal-allocation",
+          "llm-advice",
+          "text-feature-snapshot",
+          "flowmusic-timeline"
+        ],
+        "description": "Value evaluated by the routing rules and passed to matched routes."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "decision",
+        "kind": "decision",
+        "required": true,
+        "description": "Match explanation (always emitted). Route ports are generated from rules."
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "mode",
+        "label": "Режим",
+        "type": "select",
+        "options": [
+          "first-match",
+          "all-match"
+        ],
+        "default": "first-match",
+        "description": "first-match — первый подходящий маршрут; all-match — все подходящие."
+      },
+      {
+        "key": "rules",
+        "label": "Правила маршрутов",
+        "type": "json",
+        "jsonEditor": "router-rules",
+        "default": [],
+        "description": "Массив {id, route, title, condition}."
+      },
+      {
+        "key": "fallbackRoute",
+        "label": "Маршрут по умолчанию",
+        "type": "string",
+        "default": "fallback",
+        "description": "Куда уходит вход, если ни одно правило не сработало (пусто = ошибка)."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "flow.join",
+    "title": "Join branches",
+    "titleRu": "Сборка ветвей (join)",
+    "family": null,
+    "category": null,
+    "role": "Collects branch results with explicit policies for skipped / failed / partial inputs.",
+    "inputs": [
+      {
+        "name": "inputs",
+        "kind": "parameter-bank",
+        "required": true,
+        "multiple": true,
+        "cardinality": {
+          "min": 1,
+          "max": 8
+        },
+        "accepts": [
+          "parameter-bank",
+          "record-set",
+          "brief",
+          "text",
+          "description",
+          "transcription",
+          "natural-description",
+          "reverse-query",
+          "llm-advice",
+          "vocal-allocation"
+        ],
+        "description": "Branch results to join (each binding = one branch)."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "record-set",
+        "required": true,
+        "description": "Joined result (same kind when all inputs share it, otherwise a record-set summary)."
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "policies",
+        "label": "Политики входов",
+        "type": "json",
+        "jsonEditor": "join-policies",
+        "default": [],
+        "description": "Массив {binding, onSkipped, onFailed, onPartial, defaultText} по входным привязкам."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "flow.universal_step",
+    "title": "Universal step (A→B→C)",
+    "titleRu": "Универсальный шаг (A→B→C)",
+    "family": null,
+    "category": null,
+    "role": "Configurable sequence of registry actions with explicit intermediate bindings; every intermediate result is recorded as its own artifact.",
+    "inputs": [
+      {
+        "name": "input",
+        "kind": "parameter-bank",
+        "required": false,
+        "accepts": [
+          "parameter-bank",
+          "record-set",
+          "brief",
+          "text",
+          "description",
+          "transcription",
+          "natural-description",
+          "reverse-query",
+          "llm-advice",
+          "vocal-allocation",
+          "text-feature-snapshot"
+        ],
+        "description": "Input consumed by the first step (steps may also be source-less)."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "parameter-bank",
+        "required": true,
+        "description": "Last step output. Ports step:<stepId> expose intermediate results."
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "steps",
+        "label": "Шаги",
+        "type": "json",
+        "jsonEditor": "universal-steps",
+        "default": [],
+        "description": "Массив {stepId, actionId, inputFrom, settings}."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "llm.advisor",
+    "title": "LLM advisor",
+    "titleRu": "LLM-советник",
+    "family": null,
+    "category": null,
+    "role": "Receives a bounded summary of selected previous steps plus a question; returns recommendations (and an optional validated structured proposal). Recommendations never execute automatically.",
+    "inputs": [
+      {
+        "name": "steps",
+        "kind": "parameter-bank",
+        "required": true,
+        "multiple": true,
+        "cardinality": {
+          "min": 1,
+          "max": 10
+        },
+        "accepts": [
+          "parameter-bank",
+          "record-set",
+          "brief",
+          "text",
+          "description",
+          "transcription",
+          "natural-description",
+          "reverse-query",
+          "llm-advice",
+          "vocal-allocation",
+          "text-feature-snapshot",
+          "segment-plan",
+          "flowmusic-timeline"
+        ],
+        "description": "Selected previous steps (any kind) — summarized under the context budget."
+      },
+      {
+        "name": "question",
+        "kind": "brief",
+        "required": false,
+        "accepts": [
+          "brief",
+          "text",
+          "llm-advice",
+          "natural-description",
+          "reverse-query"
+        ],
+        "description": "Question text (falls back to the question setting)."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "llm-advice",
+        "required": true,
+        "description": "Recommendation text + optional structured proposal (never auto-executed)."
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "question",
+        "label": "Вопрос",
+        "type": "string",
+        "default": "Какие следующие шаги ускорят достижение цели сценария?",
+        "description": "Вопрос советнику."
+      },
+      {
+        "key": "allowedActions",
+        "label": "Допустимые операции",
+        "type": "json",
+        "jsonEditor": "action-multiselect",
+        "default": [],
+        "description": "Список actionId из реестра, которые советник может предлагать (пусто = любые зарегистрированные)."
+      },
+      {
+        "key": "budgetChars",
+        "label": "Бюджет контекста (символов)",
+        "type": "number",
+        "default": 4000,
+        "min": 200,
+        "max": 32000,
+        "description": "Лимит сводки предыдущих шагов."
+      },
+      {
+        "key": "expectProposal",
+        "label": "Ожидать структурное предложение",
+        "type": "boolean",
+        "default": false,
+        "description": "Запросить предложение {actionId, rationale, params} (валидируется по реестру)."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  },
+  {
+    "actionId": "flowmusic.export",
+    "title": "FLOWMUSIC_PRIORITY_TIMELINE_V1 export",
+    "titleRu": "Экспорт FLOWMUSIC_PRIORITY_TIMELINE_V1",
+    "family": null,
+    "category": null,
+    "role": "Assembles and validates a FLOWMUSIC_PRIORITY_TIMELINE_V1 document from a segment plan and per-node banks (original buildPriorityTimeline contract).",
+    "inputs": [
+      {
+        "name": "segmentPlan",
+        "kind": "segment-plan",
+        "required": true,
+        "description": "Node plan (windows become timeline points)."
+      },
+      {
+        "name": "banks",
+        "kind": "parameter-bank",
+        "required": true,
+        "multiple": true,
+        "cardinality": {
+          "min": 1,
+          "max": 4
+        },
+        "description": "Per-node bank artifacts (clap/siglip/…). First bank = 'clap' modality, second = 'siglip'."
+      }
+    ],
+    "outputs": [
+      {
+        "port": "result",
+        "kind": "flowmusic-timeline",
+        "required": true,
+        "description": "Schema-validated FLOWMUSIC_PRIORITY_TIMELINE_V1 document."
+      }
+    ],
+    "needsAudio": null,
+    "needsBrief": null,
+    "settings": [
+      {
+        "key": "audioName",
+        "label": "Имя аудио",
+        "type": "string",
+        "default": "",
+        "description": "Имя для блока audio (пусто = имя ассета прогона)."
+      },
+      {
+        "key": "blend",
+        "label": "Blend CLAP+SigLIP",
+        "type": "boolean",
+        "default": false,
+        "description": "Смешивать банки (trust-adjusted fusion) вместо раздельных registries."
+      },
+      {
+        "key": "clapWeight",
+        "label": "Вес CLAP (blend)",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "description": "Базовый вес CLAP при blend."
+      },
+      {
+        "key": "vocalMatrix",
+        "label": "Флаг vocal_allocation_matrix",
+        "type": "boolean",
+        "default": false,
+        "description": "Установить vocal_allocation_matrix: true в документе."
+      }
+    ],
+    "dynamicOutputs": null,
+    "available": null,
+    "unavailableReasonRu": null
+  }
+]

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
-import { automationRoot, moveRunToTrash, purgeTrashedRun, readRunArtifact, restoreRunDirectory, writeRunArtifact } from "./storage";
+import { automationRoot, ensureAutomationDirectories, moveRunToTrash, purgeTrashedRun, readRunArtifact, restoreRunDirectory, writeRunArtifact } from "./storage";
 
 const cleanupRuns = new Set<string>();
 const cleanupTrash = new Set<string>();
@@ -16,6 +16,7 @@ afterEach(async () => {
 
 describe("automation artifact storage lifecycle", () => {
   it("writes, reads, trashes, restores and purges only the selected run", async () => {
+    await ensureAutomationDirectories();
     const runId = `storage-test-${randomUUID()}`;
     const artifactId = "result-1";
     cleanupRuns.add(runId);

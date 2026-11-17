@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { startV3AnchorsBuild } from "@/lib/rag-v3/build-jobs";
 
 export async function POST() {
-  const result = await startV3AnchorsBuild();
-  return NextResponse.json(result, { status: result.started ? 200 : 409 });
+  return NextResponse.json({ error: "Legacy anchors build is disabled because it does not consume a pinned effective-catalogue snapshot. Use the candidate workflow in Service Bay." }, { status: 410 });
 }

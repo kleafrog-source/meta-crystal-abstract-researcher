@@ -10,7 +10,7 @@ from pathlib import Path
 ENGINE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ENGINE))
 
-from v3_snapshot import load_v3_snapshot  # noqa: E402
+from v3_snapshot import ensure_snapshot_revision_current, load_v3_snapshot  # noqa: E402
 from white_space_discovery import build, stable_id, taxonomy_gaps  # noqa: E402
 
 
@@ -20,6 +20,44 @@ def write(path: Path, value: object) -> None:
 
 
 class V3SnapshotTests(unittest.TestCase):
+    def test_live_snapshot_is_available_without_historical_latest_pointer(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            write(root / "library/parameters.json", [{"technical_name": "new_live"}])
+            write(root / "registry/excluded.json", {"entries": []})
+            result = load_v3_snapshot(root)
+            self.assertEqual(result["dataset_version"], "live-catalogue")
+            self.assertEqual([row["technical_name"] for row in result["parameters"]], ["new_live"])
+
+    def test_snapshot_revision_change_aborts_activation(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "changed during build"):
+            ensure_snapshot_revision_current({"source_revision": "captured"}, {"source_revision": "later"})
+
+    def test_explicit_snapshot_is_authoritative_without_latest_or_live_reread(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            snapshot = root / "candidate" / "effective-live-snapshot.json"
+            write(snapshot, [
+                {"technical_name": "current_only", "description": "captured"},
+                {"technical_name": "removed", "description": "captured"},
+            ])
+            write(root / "library/parameters.json", [{"technical_name": "later_live", "description": "changed after capture"}])
+            write(root / "registry/excluded.json", {"entries": [{"technical_name": "current_only"}]})
+
+            result = load_v3_snapshot(root, snapshot_path=snapshot, source_revision="captured-revision")
+
+            self.assertEqual(result["dataset_version"], "captured-revision")
+            self.assertEqual([row["technical_name"] for row in result["parameters"]], ["current_only", "removed"])
+            self.assertEqual(result["source_revision"], "captured-revision")
+
+    def test_missing_explicit_snapshot_fails_without_latest_fallback(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            write(root / "datasets/latest.json", {"version_id": "historic"})
+            write(root / "datasets/historic/parameters.json", [{"technical_name": "historic_only"}])
+            with self.assertRaisesRegex(FileNotFoundError, "candidate snapshot"):
+                load_v3_snapshot(root, snapshot_path=root / "missing.json", source_revision="candidate")
+
     def test_library_wins_and_registry_excludes(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw)

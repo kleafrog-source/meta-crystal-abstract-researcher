@@ -106,10 +106,10 @@ export function parameterDivergence(first: ParameterValueEvidence, second: Param
 }
 
 export function parameterTrustEvidence(parameter: {
-  current_value: number | string;
+  current_value: number | string | undefined;
   min_value?: number;
   max_value?: number;
   ui_element?: string;
 }): ParameterValueEvidence {
-  return { value: parameter.current_value, min: parameter.min_value, max: parameter.max_value, discrete: parameter.ui_element !== undefined && parameter.ui_element !== "Range" };
+  return { value: parameter.current_value as number | string, min: parameter.min_value, max: parameter.max_value, discrete: parameter.ui_element !== undefined && parameter.ui_element !== "Range" };
 }

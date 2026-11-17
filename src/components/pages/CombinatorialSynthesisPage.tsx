@@ -65,6 +65,13 @@ interface Preview {
   query: string;
   source_count: number;
   known_source_count: number;
+  source_diagnostics?: {
+    unique_source_count: number;
+    eligible_donor_count: number;
+    rejected_source_count: number;
+    reason_counts: Record<string, number>;
+    rejected_sources: Array<{ technical_name: string; reason: string }>;
+  };
   generated_before_bge_rerank: number;
   auto_resolved_value_count: number;
   candidates: Candidate[];
@@ -86,6 +93,7 @@ interface PublishResult {
   library_before_count: number;
   simulated_after_count: number;
   collisions: string[];
+  name_conflicts?: Array<{ technical_name: string; reason: string }>;
   schema_errors: string[];
 }
 
@@ -526,7 +534,8 @@ export function CombinatorialSynthesisPage() {
         {preview ? <section className="space-y-3 rounded-lg border border-fuchsia-400/20 bg-fuchsia-950/10 p-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div><h2 className="font-mono text-sm font-semibold uppercase tracking-wide">2 · Ручная проверка и отбор</h2><p className="mt-1 text-xs text-zinc-400">Откройте «Проверить control values и metadata» в карточке. Публикация разрешается только после подтверждения полной схемы и текстовых полей.</p></div>
-            <div className="flex flex-wrap gap-2"><Badge variant="secondary">dataset: {preview.dataset_version}</Badge><Badge variant="secondary">model: {preview.embedding_model}</Badge><Badge variant="secondary">generated: {preview.generated_before_bge_rerank}</Badge><Badge variant="secondary">selected: {selected.size}</Badge></div>
+            <div className="flex flex-wrap gap-2"><Badge variant="secondary">dataset: {preview.dataset_version}</Badge><Badge variant="secondary">model: {preview.embedding_model}</Badge><Badge variant="secondary">eligible donors: {preview.source_diagnostics?.eligible_donor_count ?? "n/a"}</Badge><Badge variant="secondary">rejected refs: {preview.source_diagnostics?.rejected_source_count ?? "n/a"}</Badge><Badge variant="secondary">generated: {preview.generated_before_bge_rerank}</Badge><Badge variant="secondary">selected: {selected.size}</Badge></div>
+            {preview.source_diagnostics?.rejected_sources.length ? <details className="rounded border border-amber-400/20 bg-amber-950/10 p-2 text-xs"><summary className="cursor-pointer">Причины отклонения source refs</summary><div className="mt-2 break-all">{preview.source_diagnostics.rejected_sources.map((item) => `${item.technical_name} (${item.reason})`).join(", ")}</div></details> : null}
           </div>
           <div className="flex flex-wrap gap-2">
             <Button size="sm" onClick={() => void normalizeWithLlm()} disabled={busy !== null || preview.candidates.every((item) => item.llm_normalization)}>{busy === "llm" ? `LLM ${llmProgress.current}/${llmProgress.total}` : `Нормализовать все описания · ${textProvider} · ${chatModel}`}</Button>
@@ -582,7 +591,7 @@ export function CombinatorialSynthesisPage() {
           <div><h2 className="font-mono text-sm font-semibold uppercase tracking-wide">3 · Проверка и пополнение базы</h2><p className="mt-1 text-xs text-zinc-400">Сначала выполните dry-run. Публикация пишет только в автономную CG library; публикация в основной каталог выполняется отдельным подтверждённым этапом.</p></div>
           <div className="rounded border border-emerald-400/20 bg-black/30 p-3 text-xs"><div className="font-mono text-emerald-200">{candidatePackage.package_id}</div><div className="mt-1 text-zinc-400">publishable {candidatePackage.summary.publishable_count}/{candidatePackage.summary.candidate_count} · needs review {candidatePackage.summary.needs_review_count}</div></div>
           <div className="flex flex-wrap gap-2"><Button variant="outline" onClick={() => void publish(true)} disabled={busy !== null}><ShieldCheck className="size-4" />{busy === "check" ? "Проверка..." : "Проверить публикацию"}</Button><Button onClick={() => void publish(false)} disabled={busy !== null || !publishResult?.ready_for_library_publish}><Database className="size-4" />{busy === "publish" ? "Публикация..." : "Добавить в базу CG"}</Button></div>
-          {publishResult ? <div className={`rounded border p-3 text-xs ${publishResult.ready_for_library_publish ? "border-cyan-400/30 bg-cyan-950/20 text-cyan-100" : "border-amber-400/30 bg-amber-950/20 text-amber-100"}`}><div className="font-mono">{publishResult.published ? "published" : publishResult.already_published ? "already published" : publishResult.dry_run ? "dry-run" : "blocked"}</div><div className="mt-1">library {publishResult.library_before_count} → {publishResult.simulated_after_count} · additions {publishResult.proposed_addition_count}</div><div>collisions {publishResult.collisions.length} · schema errors {publishResult.schema_errors.length}</div>{publishResult.published ? <div className="mt-2 text-zinc-300">Параметры сохранены. Откройте Service Bay и перестройте индекс каталога и live anchors, чтобы они появились в поиске и Anchored control bank.</div> : null}</div> : null}
+          {publishResult ? <div className={`rounded border p-3 text-xs ${publishResult.ready_for_library_publish ? "border-cyan-400/30 bg-cyan-950/20 text-cyan-100" : "border-amber-400/30 bg-amber-950/20 text-amber-100"}`}><div className="font-mono">{publishResult.published ? "published" : publishResult.already_published ? "already published" : publishResult.dry_run ? "dry-run" : "blocked"}</div><div className="mt-1">library {publishResult.library_before_count} → {publishResult.simulated_after_count} · additions {publishResult.proposed_addition_count}</div><div>collisions {publishResult.collisions.length} · schema errors {publishResult.schema_errors.length}</div>{publishResult.name_conflicts?.length ? <details className="mt-1"><summary className="cursor-pointer">Причины блокировки ({publishResult.name_conflicts.length})</summary><div className="mt-1 break-all">{publishResult.name_conflicts.map((item) => `${item.technical_name} (${item.reason})`).join(", ")}</div></details> : null}{publishResult.published ? <div className="mt-2 text-zinc-300">Параметры сохранены. Откройте Service Bay и перестройте индекс каталога и live anchors, чтобы они появились в поиске и Anchored control bank.</div> : null}</div> : null}
         </section> : null}
       </div>
     </div>

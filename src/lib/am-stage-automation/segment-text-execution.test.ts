@@ -51,6 +51,28 @@ describe("executeSegmentTextNodes", () => {
     expect(checkpoints.at(-1)).toMatchObject({ segmentId: "node-1", status: "stopped" });
   });
 
+  it("does not save a late provider result as a succeeded node after stop", async () => {
+    const controller = new AbortController();
+    const checkpoints: Array<Record<string, unknown>> = [];
+    let markStarted!: () => void;
+    let release!: (value: { text: string }) => void;
+    const started = new Promise<void>((resolve) => { markStarted = resolve; });
+    const lateResponse = new Promise<{ text: string }>((resolve) => { release = resolve; });
+    const execution = executeSegmentTextNodes({
+      actionId: "text_features.reverse_query", segments: nodes.slice(0, 1), sampleLimit: 1, priorCheckpoints: [], inputArtifactId: "snapshot-1", promptRouteVersion: "test-v1",
+      payloadFor: (node) => node.snapshot,
+      request: async () => { markStarted(); return lateResponse; },
+      signal: controller.signal,
+      persist: async (checkpoint) => { checkpoints.push(checkpoint); }, progress: async () => {},
+    });
+    await started;
+    controller.abort();
+    release({ text: "late provider response" });
+    await expect(execution).rejects.toMatchObject({ name: "AbortError" });
+    expect(checkpoints.some((checkpoint) => checkpoint.status === "succeeded")).toBe(false);
+    expect(checkpoints.at(-1)).toMatchObject({ segmentId: "node-1", status: "stopped" });
+  });
+
   it("runs one explicit finite retry cycle while keeping total attempts cumulative", async () => {
     const payload = { snapshot: nodes[0].snapshot };
     const newFingerprint = createHash("sha256").update(JSON.stringify({ actionId: "text_features.reverse_query", payload, promptRouteVersion: "new" })).digest("hex");

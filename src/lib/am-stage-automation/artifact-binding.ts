@@ -5,14 +5,15 @@ export interface BoundArtifactCandidate<T> {
   value: T;
 }
 
-export function filterStageOutputArtifacts<T extends { kind: string }>(
+export function filterStageOutputArtifacts<T extends { kind: string; outputPort?: string }>(
   candidates: T[],
   outputDefinitions: Array<{ port: string; kind: string }>,
   port = "result",
 ): T[] {
   const expected = outputDefinitions.find((output) => output.port === port)?.kind;
   return candidates.filter((candidate) => candidate.kind !== "automation-node-checkpoint"
-    && (!expected || candidate.kind === expected));
+    && (!expected || candidate.kind === expected)
+    && (candidate.outputPort === port || (candidate.outputPort === undefined && port === "result")));
 }
 
 export function chooseBoundArtifact<T>(

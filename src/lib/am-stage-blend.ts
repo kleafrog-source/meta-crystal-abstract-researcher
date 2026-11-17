@@ -59,7 +59,9 @@ export function applyConsensusSmooth(
   for (const [name, peers] of values) {
     for (let left = 0; left < peers.length; left += 1) for (let right = left + 1; right < peers.length; right += 1) {
       if (peers[left].frameIndex === peers[right].frameIndex) continue;
-      const divergence = parameterDivergence(parameterTrustEvidence(peers[left].parameter), parameterTrustEvidence(peers[right].parameter));
+    const leftEvidence = parameterTrustEvidence({ ...peers[left].parameter, current_value: peers[left].parameter.current_value as number });
+    const rightEvidence = parameterTrustEvidence({ ...peers[right].parameter, current_value: peers[right].parameter.current_value as number });
+    const divergence = parameterDivergence(leftEvidence, rightEvidence);
       if (divergence > safeTrustConfig.divergenceThreshold) conflictingNames.add(name);
     }
   }

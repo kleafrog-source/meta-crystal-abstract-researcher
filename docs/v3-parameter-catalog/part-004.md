@@ -1,826 +1,994 @@
 # V3 technical names · part 4
 
-Generated: 2026-10-16T06:05:21.023Z
-
-## Organic Textures / Physical Modeling
-
-- organic_wood_surface_resonance_decay_ms
-## Organic Textures / Tape Artifacts
-
-- analog_tape_barkhausen_noise_level_db
-- analog_tape_flux_leakage_crosstalk_db
-- analog_tape_head_azimuth_phase_skew_microseconds
-- analog_tape_layer_print_through_attenuation_db
-- cassette_tape_azimuth_alignment_error_degrees
-- tape_print_through_time_offset_sec
-## Organic Textures / Tape Emulation Artifacts
-
-- tape_print_through_echo_db
-## Organic Textures / Tape Emulation Modeling
-
-- analog_magnetic_tape_coercivity_oersted
-- fry_coercivity_dust_intersample_resonance
-## Organic Textures / Tape Emulation
-
-- analog_tape_demagnetization_loss_db
-- analog_tape_head_azimuth_phase_error_degrees
-- analog_tape_head_bump_frequency_hz
-- analog_tape_head_core_permeability_henry_per_meter
-- analog_tape_head_gap_azimuth_alignment_degrees
-- analog_tape_head_gap_depth_microns
-- analog_tape_head_gap_loss_attenuation_db_per_octave
-- analog_tape_head_gap_loss_corner_frequency_hz
-- analog_tape_head_gap_loss_high_frequency_damping_db_per_octave
-- analog_tape_head_gap_loss_high_frequency_phase_dispersion
-- analog_tape_head_gap_loss_high_frequency_phase_dispersion_mode
-- analog_tape_head_gap_loss_high_frequency_phase_dispersion_scaling
-- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_rate_db_per_sec
-- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_rate_scaling
-- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_rate_scaling_mode_type
-- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_time_ms
-- analog_tape_head_gap_loss_high_frequency_phase_offset_decay_time_scaling
-- analog_tape_head_gap_loss_high_frequency_phase_offset_degrees
-- analog_tape_head_gap_loss_high_frequency_phase_offset_mode
-- analog_tape_head_gap_loss_high_frequency_phase_offset_ratio
-- analog_tape_head_gap_loss_high_frequency_phase_offset_scaling
-- analog_tape_head_gap_loss_high_frequency_phase_offset_scaling_factor
-- analog_tape_head_gap_loss_high_frequency_phase_shift_degrees
-- analog_tape_head_gap_loss_high_frequency_phase_slope
-- analog_tape_head_gap_loss_high_frequency_resonance_q
-- analog_tape_head_gap_loss_high_frequency_shelf_db
-- analog_tape_head_gap_width_azimuth_skew_ratio
-- analog_tape_head_gap_width_frequency_hz
-- analog_tape_head_gap_width_loss_db_per_khz
-- analog_tape_head_gap_width_microns
-- analog_tape_head_loss_frequency_hz
-- analog_tape_magnetic_coercivity_oersteds
-- tape_magnetic_saturation_bias_current_ma
-- tape_saturation_even_harmonic_drive_db
-- tape_saturation_odd_harmonic_drive_db
-## Organic Textures / Tape Machine Artifacts
-
-- tape_azimuth_alignment_error_microns
-## Organic Textures / Tape Modulation
-
-- tape_wow_and_flutter_frequency_hz
-## Organic Textures / Time Stretch
-
-- granular_time_stretch_ratio
-## Organic Textures / Transient Generation
-
-- percussive_transient_density_ratio
-## Organic Textures / Transient-Aware Granular Processing
-
-- granular_time_stretch_transient_preservation_ratio
-## Organic Textures / Transient-Synchronized Granular Synthesis
-
-- granular_transient_slice_threshold_db
-## Organic Textures / Vinyl Emulation
-
-- vinyl_pinch_effect_groove_radius_mm
-- vinyl_surface_crackle_density_fps
-## organic_textures / analog_emulation
-
-- tape_hiss_noise_density_db
-## organic_textures / analog_tape
-
-- tape_wow_and_flutter_rate_hz
-## organic_textures / artifact_emulation
-
-- vinyl_surface_noise_level_db
-## organic_textures / bio_inspired_generative_decay
-
-- mycelial_network_density_decay_ms
-## organic_textures / bio_luminescence
-
-- bioluminescent_enzymatic_flash_interval_ms
-## organic_textures / biomimetic_growth
-
-- mycology_hyphal_tip_extension_velocity_um_per_min
-## organic_textures / environmental_acoustics
-
-- ambient_floor_air_absorption_db
-## organic_textures / environmental_noise
-
-- organic_textures_fire_crackle_event_density_hz
-- organic_textures_rain_drop_size_distribution_skew
-- organic_textures_vinyl_crackle_impact_velocity_sensitivity
-- organic_textures_wind_noise_spectral_color
-## organic_textures / environmental_soundscapes
-
-- rain_droplet_impact_rate_per_sec
-## organic_textures / film_soundtrack_emulation
-
-- optical_dust_scratch_density_per_sec
-## organic_textures / fluid_turbulence
-
-- isotropic_turbulent_cascade_kolmogorov_scale_ms
-## organic_textures / foley_synthesis
-
-- gravel_footstep_impact_granularity_factor
-## organic_textures / fractal_variation
-
-- fractal_texture_dimension
-## organic_textures / friction_acoustics
-
-- piezoelectric_friction_stick_slip_frequency_hz
-## organic_textures / granular_synthesis
-
-- organic_texture_grain_density_modulation_rate
-- shivering_cold_grain_freeze_density_ratio
-## organic_textures / hardware_emulation
-
-- analog_circuit_thermal_noise_level_db
-- instability_tree_noise_trigger_resonance
-## organic_textures / liquid_synthesis
-
-- organic_textures_water_droplet_resonance_decay_time_ms
-## organic_textures / micro_variation
-
-- organic_texture_irregularity
-## organic_textures / modal_variation
-
-- organic_resonance_mode_variation
-## organic_textures / natural_decay
-
-- natural_decay_curve_exponent
-## organic_textures / noise_generation
-
-- noise_color_spectral_slope
-- pink_noise_generator_level_db
-## organic_textures / resonance_variation
-
-- organic_resonance_decay_variation
-## organic_textures / tape_artifacts
-
-- organic_magnetic_tape_print_through_db
-## organic_textures / tape_emulation
-
-- analog_tape_asymmetric_saturator_bias_ratio
-- analog_tape_flutter_frequency_hz
-- analog_tape_head_azimuth_jitter_amount_arcmin
-- analog_tape_head_bump_gain_db
-- analog_tape_head_bump_q_factor
-- analog_tape_head_gap_azimuth_alignment_mode
-- analog_tape_head_gap_loss_compensation_db
-- analog_tape_head_gap_loss_filter_order
-- analog_tape_head_gap_loss_q_factor
-- analog_tape_head_saturator_drive_ratio
-- analog_tape_saturation_asymmetry_dc_bias_volts
-- analog_tape_saturation_even_harmonic_asymmetry_ratio
-- analog_tape_saturation_even_harmonic_bias_volts
-- analog_tape_saturation_even_harmonic_drive_db
-- analog_tape_saturation_even_harmonic_knee_smoothing_factor
-- analog_tape_saturation_even_harmonic_knee_smoothing_mode
-- analog_tape_saturation_even_harmonic_knee_smoothing_ratio
-- analog_tape_saturation_even_harmonic_knee_smoothing_shape
-- analog_tape_saturation_even_harmonic_knee_width_db
-- analog_tape_saturation_even_harmonic_ratio
-- analog_tape_saturation_even_harmonic_threshold_db
-- analog_tape_saturation_even_harmonic_threshold_mode
-- analog_tape_saturation_knee_smoothing_factor
-- analog_tape_saturation_knee_width_db
-- analog_tape_saturation_odd_harmonic_asymmetry_ratio
-- analog_tape_saturation_odd_harmonic_asymmetry_volts
-- analog_tape_saturation_odd_harmonic_bias_ratio
-- analog_tape_saturation_odd_harmonic_bias_volts
-- analog_tape_saturation_odd_harmonic_drive_db
-- analog_tape_saturation_odd_harmonic_knee_smoothing
-- analog_tape_saturation_odd_harmonic_knee_width_db
-- analog_tape_saturation_odd_harmonic_ratio
-- analog_tape_saturation_odd_harmonic_threshold_db
-- analog_tape_transport_flutter_depth_percent
-- cassette_wow_flutter_depth_percent
-- organic_tape_head_bump_frequency_hz
-- organic_tape_scrape_flutter_gain_db
-- tape_head_azimuth_alignment_error_arcmin
-- tape_head_azimuth_alignment_error_microns
-- tape_head_azimuth_lfo_rate_hz
-- tape_head_gap_loss_frequency_hz
-- tape_head_gap_width_microns
-- tape_head_saturator_flux_hysteresis_width
-- tape_hiss_noise_floor_db
-- tape_hysteresis_magnetic_remanence_tesla
-- tape_print_through_level_db
-- tape_print_through_pre_echo_db
-- tape_saturation_high_frequency_compression_db
-- tape_transport_wow_depth_percent
-## organic_textures / vinyl_emulation
-
-- nostalgic_vinyl_surface_crackle_density_per_sec
-- organic_vinyl_dust_crackle_density_per_second
-- organic_vinyl_groove_eccentricity_hz
-- organic_vinyl_groove_noise_spectral_tilt_db
-- organic_vinyl_groove_wear_factor
-- organic_vinyl_pinch_effect_distortion_ratio
-- organic_vinyl_rumble_center_frequency_hz
-- organic_vinyl_surface_crackle_density_per_second
-- organic_vinyl_surface_crackle_gain_db
-- organic_vinyl_surface_hiss_db
-- organic_vinyl_surface_noise_level_db_factor
-- organic_vinyl_surface_noise_level_db_offset
-- organic_vinyl_surface_noise_level_db_scale
-- organic_vinyl_surface_noise_rumble_crossover_hz
-- organic_vinyl_surface_noise_tilt_db
-- organic_vinyl_surface_noise_tilt_db_scale
-- organic_vinyl_surface_noise_tilt_ratio
-- organic_vinyl_surface_noise_tilt_ratio_scale
-- organic_vinyl_surface_noise_tilt_ratio_scale_factor
-- organic_vinyl_surface_noise_tilt_ratio_scale_factor_offset
-- organic_vinyl_surface_noise_tilt_ratio_scale_factor_offset_scale
-- organic_vinyl_surface_noise_tilt_ratio_scale_factor_offset_scale_factor
-- organic_vinyl_surface_noise_tilt_scale
-- vinyl_groove_distortion_factor
-- vinyl_groove_eccentricity_depth_mm
-- vinyl_groove_vertical_horizontal_crosstalk_db
-- vinyl_groove_vertical_modulate_depth_microns
-- vinyl_record_speed_rpm
-- vinyl_stylus_cantilever_resonance_frequency_hz
-- vinyl_stylus_tracking_force_grams
-- vinyl_surface_crackle_rate_hz
-- vinyl_surface_crackle_rate_per_sec
-- vinyl_surface_noise_scratch_density_per_sec
-## organic_textures / wow_and_flutter
-
-- analog_tape_flutter_modulation_depth_cents
-- tape_flutter_frequency_rate_hz
-- tape_wow_frequency_rate_hz
-## performance_articulations / legato_transitions
-
-- legato_portamento_curvature_exponent
-## performance_expression / aftertouch_mapping
-
-- aftertouch_to_pitch_bend_range
-- aftertouch_to_vibrato_depth
-## performance_expression / mpe_control
-
-- mpe_slide_portamento_time
-- mpe_timbre_pressure_sensitivity
-## phase_control / focal_convergence
-
-- focus_convergence_sharpness
-## phase_control / transition_dynamics
-
-- phase_transition_smoothness_ratio
-## physical_modeling / resonator_excitation
-
-- physical_resonator_excitation_position
-## polyglot_fusion / mode_selection
-
-- polyglot_mix_mode_select
-## polyglot_fusion / phoneme_swapping
-
-- cross_layer_phoneme_swap_prob
-## polyglot_fusion / pool_management
-
-- language_union_pool_size
-## polyglot_fusion / spectral_density
-
-- spectral_multilingual_texture_density
-## Psychoacoustics / Auditory Illusion
-
-- shepard_tone_glissando_rate_semitones_per_sec
-- shivering_coeff_glissando_fry_resonance
-## Psychoacoustics / Auditory Masking Curves
-
-- psychoacoustic_masking_asymmetry_frequency_scaling_factor
-- psychoacoustic_masking_threshold_slope_db_per_bark
-## Psychoacoustics / Auditory Masking Decay
-
-- psychoacoustic_masking_asymmetry_frequency_decay_rate
-## Psychoacoustics / Auditory Masking Dynamics
-
-- psychoacoustic_masking_asymmetry_frequency_decay_time_ms
-- psychoacoustic_masking_asymmetry_frequency_smoothing_factor
-- psychoacoustic_masking_asymmetry_frequency_smoothing_ms
-## Psychoacoustics / Auditory Masking Geometry
-
-- psychoacoustic_masking_asymmetry_slope_db_per_bark
-## Psychoacoustics / Auditory Masking Models
-
-- psychoacoustic_masking_asymmetry_frequency_exponent
-- spectral_masking_spread_function_slope_db
-## Psychoacoustics / Auditory Masking Recovery
-
-- psychoacoustic_masking_asymmetry_frequency_decay_factor
-- psychoacoustic_masking_asymmetry_frequency_decay_ms
-- psychoacoustic_masking_asymmetry_frequency_decay_ratio
-- psychoacoustic_masking_asymmetry_frequency_decay_slope_db_per_ms
-- psychoacoustic_masking_asymmetry_frequency_decay_speed
-- psychoacoustic_masking_asymmetry_frequency_decay_time_constant_exponent
-- psychoacoustic_masking_asymmetry_frequency_decay_time_constant_factor
-- psychoacoustic_masking_asymmetry_frequency_decay_time_constant_ms
-- psychoacoustic_masking_asymmetry_frequency_decay_time_constant_ratio
-- psychoacoustic_masking_asymmetry_frequency_smoothing_decay_ms
-- psychoacoustic_masking_asymmetry_frequency_smoothing_decay_rate_hz
-- psychoacoustic_masking_asymmetry_frequency_smoothing_decay_ratio
-## Psychoacoustics / Auditory Masking Thresholds
-
-- psychoacoustic_masking_asymmetry_threshold_db
-## Psychoacoustics / Auditory Masking
-
-- perceptible_masking_threshold_offset_db
-- psychoacoustic_loudness_bark_band_masking_db
-- psychoacoustic_loudness_bark_band_snr_db
-- psychoacoustic_loudness_bark_band_snr_decay_ms
-- psychoacoustic_loudness_bark_band_snr_decay_q_boost
-- psychoacoustic_loudness_bark_band_snr_decay_q_boost_db_value
-- psychoacoustic_loudness_bark_band_snr_decay_q_factor
-- psychoacoustic_loudness_bark_band_snr_decay_q_factor_boost_db
-- psychoacoustic_loudness_bark_band_snr_decay_smoothing_ms
-- psychoacoustic_loudness_bark_band_snr_decay_smoothing_q_boost
-- psychoacoustic_loudness_bark_band_snr_decay_smoothing_q_boost_db
-- psychoacoustic_loudness_bark_band_snr_decay_smoothing_q_boost_db_absolute
-- psychoacoustic_loudness_bark_band_snr_decay_smoothing_q_boost_db_final
-- psychoacoustic_loudness_bark_band_snr_decay_smoothing_q_factor
-- psychoacoustic_loudness_bark_band_snr_q_factor
-- psychoacoustic_loudness_bark_band_snr_ratio
-- psychoacoustic_loudness_bark_band_snr_smoothing_decay_rate_hz
-- psychoacoustic_loudness_bark_band_snr_smoothing_ms
-- psychoacoustic_loudness_bark_band_snr_smoothing_q_factor
-- psychoacoustic_loudness_bark_band_snr_threshold_db
-- psychoacoustic_spectral_masking_threshold_offset_db
-- psychoacoustic_tonal_masking_noise_offset_db
-## Psychoacoustics / Auditory Perception
-
-- perceptible_roughness_index_units
-- psychoacoustic_auditory_roughness_modulation_index
-## Psychoacoustics / Auditory Sharpness Calculations
-
-- psychoacoustic_sharpness_high_frequency_weight_exponent
-## psychoacoustics / auditory_masking
-
-- psychoacoustic_masking_depth_sone
-- psychoacoustic_masking_spread_function_slope_db_bark
-- psychoacoustic_masking_threshold_offset_db
-- psychoacoustic_masking_threshold_shift_db
-- psychoacoustic_spectral_masking_spread_bark
-- psychoacoustic_tonal_to_noise_masking_ratio_db
-## Psychoacoustics / Bark Scale Dynamics
-
-- psychoacoustic_specific_loudness_bark_decay_ms
-- psychoacoustic_specific_loudness_bark_decay_rate
-## Psychoacoustics / Bark Scale Processing
-
-- psychoacoustic_specific_loudness_bark_band
-## Psychoacoustics / Bark Scale Smoothing
-
-- psychoacoustic_specific_loudness_bark_smoothing_ms
-## Psychoacoustics / Bark Scale Thresholds
-
-- psychoacoustic_specific_loudness_bark_threshold_db
-## psychoacoustics / binaural_beats
-
-- psychoacoustics_binaural_beat_carrier_frequency_hz
-- psychoacoustics_binaural_beat_carrier_pan_width_percent
-- psychoacoustics_binaural_beat_frequency_offset_hz
-## psychoacoustics / binaural_entrainment
-
-- hypnotic_binaural_beat_difference_frequency_hz
-## psychoacoustics / brainwave_synchronization
-
-- neurophonic_entrainment_alpha_ratio
-## Psychoacoustics / Chroma Analysis
-
-- psychoacoustic_pitch_chroma_salience_ratio
-## Psychoacoustics / Consonance and Dissonance
-
-- perceived_sensory_dissonance_index_units
-## Psychoacoustics / Critical Band Spectral Slope
-
-- psychoacoustic_tonal_loudness_slope_db_per_bark
-## psychoacoustics / critical_bands
-
-- critical_bandwidth_spread
-## Psychoacoustics / Fluctuation Strength
-
-- perceived_tonal_fluctuation_tonheit_units
-## psychoacoustics / fluctuation_strength
-
-- psychoacoustic_fluctuation_strength_vacil_units
-## Psychoacoustics / Harmonic Perception
-
-- psychoacoustic_pitch_salience_index
-## Psychoacoustics / Level-Dependent Auditory Masking
-
-- psychoacoustic_masking_asymmetry_level_dependence_factor
-- psychoacoustic_masking_asymmetry_level_scaling_factor
-## Psychoacoustics / Level-Dependent Masking Thresholds
-
-- psychoacoustic_masking_asymmetry_level_threshold_db
-## Psychoacoustics / Loudness and Sharpness Integration
-
-- psychoacoustic_loudness_sharpness_coupling_weight
-## Psychoacoustics / Loudness Mapping
-
-- psychoacoustic_loudness_adaptation_time_ms
-- psychoacoustic_loudness_bark_band_center_freq_hz
-- psychoacoustic_loudness_bark_band_energy_db
-- psychoacoustic_loudness_bark_band_rms_db
-- psychoacoustic_loudness_bark_band_slope_db_per_oct
-- psychoacoustic_loudness_bark_band_width_ratio
-- psychoacoustic_loudness_ratio_sone_per_lufs
-- psychoacoustic_loudness_slope_db_per_bark
-## Psychoacoustics / Loudness Metering
-
-- loudness_k_weighting_filter_mode
-## Psychoacoustics / Loudness Normalization
-
-- perceptual_loudness_target_lufs
-- psychoacoustic_loudness_exceedance_probability_ratio
-- psychoacoustic_loudness_sensation_sone
-- psychoacoustic_loudness_target_lufs
-## psychoacoustics / loudness_and_sharpness
-
-- perceptual_sharpness_sone_per_bark
-## psychoacoustics / loudness_compensation
-
-- equal_loudness_contour_compensation_db
-- psychoacoustic_loudness_compensation_bass_boost_db
-- psychoacoustic_loudness_contour_boost_db
-## psychoacoustics / loudness_matching
-
-- loudness_perceptual_loudness_lufs
-## psychoacoustics / loudness_measurement
-
-- perceptual_loudness_integration_time_seconds
-- perceptual_loudness_range_lu
-## psychoacoustics / loudness_metering
-
-- psychoacoustics_loudness_normalization_target_lufs
-- psychoacoustics_loudness_recognition_weighting_curve
-- psychoacoustics_loudness_short_term_window_seconds
-## psychoacoustics / loudness_perception
-
-- auditory_loudness_growth_rate
-- perceptual_loudness_warping_exponent
-- psychoacoustic_loudness_bark_band_integration_time_ms
-- psychoacoustic_loudness_contour_mode
-- psychoacoustic_loudness_integration_time_ms
-- psychoacoustic_loudness_level_phon_units
-- psychoacoustic_loudness_sharpness_coupling_ratio
-- psychoacoustic_loudness_slope_db_bark
-- psychoacoustic_loudness_sone_units
-- psychoacoustic_loudness_specific_bark_band_smoothing_ms
-## Psychoacoustics / Masking Perception
-
-- psychoacoustic_temporal_post_masking_duration_ms
-## psychoacoustics / masking
-
-- auditory_masking_strength
-## Psychoacoustics / Modulation Perception
-
-- psychoacoustic_roughness_asper
-## Psychoacoustics / Noise versus Tone Analysis
-
-- spectral_flatness_threshold_ratio
-## Psychoacoustics / Perceptual Loudness
-
-- psychoacoustic_equal_loudness_contour_weighting_db
-- psychoacoustic_loudness_fluctuation_index
-- psychoacoustic_loudness_level_phon
-- psychoacoustic_specific_loudness_bark_band_index
-- psychoacoustic_tonal_loudness_ratio
-## Psychoacoustics / Perceptual Metric Integration
-
-- psychoacoustic_loudness_sharpness_integration_time_ms
-## Psychoacoustics / Perceptual Scaling
-
-- psychoacoustic_loudness_growth_exponent
-## Psychoacoustics / Perceptual Thresholds
-
-- psychoacoustic_loudness_growth_threshold_db
-## Psychoacoustics / Perceptual Weighting
-
-- psychoacoustic_tonal_loudness_bark_weight
-## psychoacoustics / perceptual_coding
-
-- psychoacoustics_masking_threshold_adaptive_release_ms
-- psychoacoustics_spectral_masking_release_curve_mode
-- psychoacoustics_temporal_masking_decay_rate_db_per_ms
-- psychoacoustics_temporal_masking_window_duration_ms
-## psychoacoustics / perceptual_grouping
-
-- temporal_gestalt_closure_gap_threshold_ms
-## Psychoacoustics / Pitch Instability
-
-- stochastic_pitch_jitter_amount_cents
-## Psychoacoustics / Pitch Perception Models
-
-- psychoacoustic_pitch_strength_modifying_factor
-## Psychoacoustics / Pitch Perception
-
-- psychoacoustic_pitch_salience_ratio
-## psychoacoustics / pitch_perception
-
-- psychoacoustic_pitch_salience
-- psychoacoustic_tonalness_ratio
-- psychoacoustics_missing_fundamental_enhancement_gain_db
-## Psychoacoustics / Psychoacoustic Metrics
-
-- perceived_sharpness_din_45692_sone
-## psychoacoustics / roughness_perception
-
-- perceptual_roughness_asper_index
-## psychoacoustics / roughness
-
-- psychoacoustic_roughness_asper_units
-- roughness_modulation_depth
-## Psychoacoustics / Sharpness Calculation Standards
-
-- psychoacoustic_spectral_sharpness_weighting_mode
-## psychoacoustics / sharpness_perception
-
-- psychoacoustic_sharpness_bark_band_weight
-- psychoacoustic_sharpness_bark_weight_slope
-- psychoacoustic_sharpness_bark_weight_threshold
-- psychoacoustic_sharpness_sone_bark_bandwidth
-- psychoacoustic_sharpness_sone_bark_factor
-- psychoacoustic_sharpness_sone_bark_ratio
-- psychoacoustic_sharpness_sone_bark_ratio_scale
-- psychoacoustic_sharpness_sone_bark_scale
-- psychoacoustic_sharpness_sone_bark_slope
-- psychoacoustic_sharpness_sone_bark_slope_offset
-- psychoacoustic_sharpness_sone_bark_slope_scale
-- psychoacoustic_sharpness_sone_bark_slope_scale_factor
-- psychoacoustic_sharpness_sone_bark_slope_scale_factor_offset
-- psychoacoustic_sharpness_sone_bark_slope_scale_factor_offset_scale
-- psychoacoustic_sharpness_sone_bark_slope_scale_factor_offset_scale_factor
-- psychoacoustic_sharpness_sone_bark_weight
-- psychoacoustic_sharpness_sone_bark_weight_exponent
-- psychoacoustic_sharpness_sone_bark_weight_scale
-- psychoacoustic_sharpness_sone_level
-## psychoacoustics / sharpness
-
-- psychoacoustic_sharpness_bark_band_cutoff_hz
-- psychoacoustic_sharpness_bark_band_slope_exponent
-- psychoacoustic_sharpness_bark_band_start_index
-- psychoacoustic_sharpness_bark_weight_exponent
-- psychoacoustic_spectral_sharpness_attenuation_db
-- psychoacoustic_spectral_sharpness_slope_db_bark
-## Psychoacoustics / Signal Decomposition
-
-- psychoacoustic_tonal_to_noise_ratio_db
-## psychoacoustics / sound_quality
-
-- psychoacoustic_sensory_pleasantness_index
-## Psychoacoustics / Spatial Perception
-
-- head_related_transfer_function_pinna_notch_frequency_hz
-- interaural_cross_correlation_coefficient
-## psychoacoustics / spatial_perception
-
-- psychoacoustics_haas_precedence_effect_suppression_toggle
-## Psychoacoustics / Spectral Balance
-
-- spectral_tilt_slope_db_per_octave
-## Psychoacoustics / Spectral Contrast
-
-- psychoacoustic_spectral_contrast_ratio
-## Psychoacoustics / Spectral Processing
-
-- psychoacoustic_loudness_tonal_masking_noise_margin_db
-- spectral_masking_threshold_offset_db
-## psychoacoustics / spectral_brightness
-
-- spectral_centroid_shift_perceived
-## psychoacoustics / spectral_pruning
-
-- psychoacoustics_masking_threshold_offset_db
-## psychoacoustics / speech_intelligibility
-
-- psychoacoustic_intelligibility_presence_peak_gain_db
-## psychoacoustics / stereo_imaging
-
-- psychoacoustics_mid_side_encoder_balance_ratio
-- psychoacoustics_stereo_widening_mid_side_balance_db
-- psychoacoustics_stereo_width_frequency_crossover_hz
-- psychoacoustics_stereo_width_frequency_dependent_curve
-- psychoacoustics_stereo_width_mid_side_phase_correlation
-## psychoacoustics / subliminal_perception
-
-- subconscious_priming_auditory_subliminal_gain_db
-## psychoacoustics / synesthetic_mapping
-
-- synesthetic_chromesthesia_color_brightness_val
-## Psychoacoustics / Temporal Auditory Masking
-
-- psychoacoustic_masking_asymmetry_decay_time_ms
-## Psychoacoustics / Temporal Masking Decay Curvature
-
-- psychoacoustic_masking_asymmetry_level_decay_exponent
-## Psychoacoustics / Temporal Masking Decay Kinetics
-
-- psychoacoustic_masking_asymmetry_decay_rate
-## Psychoacoustics / Temporal Masking Decay
-
-- psychoacoustic_masking_asymmetry_level_decay_rate_db_per_ms
-## Psychoacoustics / Temporal Masking Recovery
-
-- psychoacoustic_masking_asymmetry_level_decay_ms
-## Psychoacoustics / Temporal Masking
-
-- psychoacoustic_masking_asymmetry_ratio
-## psychoacoustics / temporal_masking
-
-- psychoacoustic_pre_masking_window_ms
-## Psychoacoustics / Timbral Perception
-
-- psychoacoustic_fluctuation_strength_vacil
-- psychoacoustic_loudness_bark_band_centroid_hz
-- psychoacoustic_loudness_bark_band_entropy_bits
-- psychoacoustic_loudness_bark_band_flatness_measure
-- psychoacoustic_loudness_bark_band_flatness_ratio
-- psychoacoustic_loudness_bark_band_kurtosis_coefficient
-- psychoacoustic_loudness_bark_band_kurtosis_ratio
-- psychoacoustic_loudness_bark_band_skewness_coefficient
-- psychoacoustic_loudness_bark_band_skewness_ratio
-- psychoacoustic_loudness_bark_band_variance_ratio
-- psychoacoustic_loudness_roughness_asper
-- psychoacoustic_loudness_sharpness_acum
-- psychoacoustic_loudness_sharpness_bark_end_index
-- psychoacoustic_loudness_sharpness_bark_start_index
-- psychoacoustic_loudness_sharpness_bark_weight_decay_exponent
-- psychoacoustic_loudness_sharpness_bark_weight_decay_floor
-- psychoacoustic_loudness_sharpness_bark_weight_decay_floor_scaling_factor
-- psychoacoustic_loudness_sharpness_bark_weight_decay_rate
-- psychoacoustic_loudness_sharpness_bark_weight_decay_rate_factor
-- psychoacoustic_loudness_sharpness_bark_weight_decay_rate_scaling_factor
-- psychoacoustic_loudness_sharpness_bark_weight_decay_rate_scaling_mode
-- psychoacoustic_loudness_sharpness_bark_weight_decay_rate_scaling_mode_strategy
-- psychoacoustic_loudness_sharpness_bark_weight_decay_scaling
-- psychoacoustic_loudness_sharpness_bark_weight_decay_threshold
-- psychoacoustic_loudness_sharpness_bark_weight_exponent
-- psychoacoustic_loudness_sharpness_bark_weight_gain_db
-- psychoacoustic_loudness_sharpness_bark_weight_offset
-- psychoacoustic_loudness_sharpness_bark_weight_slope_factor
-- psychoacoustic_loudness_sharpness_bark_weight_slope_scaling
-- psychoacoustic_loudness_sharpness_bark_weight_slope_type
-- psychoacoustic_loudness_sharpness_ratio
-- psychoacoustic_loudness_sharpness_slope_db_per_bark
-- psychoacoustic_loudness_sharpness_sone_exponent
-- psychoacoustic_loudness_sharpness_sone_threshold
-- psychoacoustic_loudness_sharpness_sone_weight_factor
-- psychoacoustic_loudness_sharpness_weight_factor
-- psychoacoustic_roughness_critical_band_weight_ratio
-- psychoacoustic_roughness_modulation_frequency_center_hz
-- psychoacoustic_sensory_dissonance_index
-- psychoacoustic_sharpness_attenuation_factor
-- psychoacoustic_sharpness_sone_per_bark
-- psychoacoustic_sharpness_spectral_weighting_mode
-- psychoacoustic_spectral_sharpness_acum
-- psychoacoustic_spectral_sharpness_weight_slope
-- psychoacoustic_tonality_index_ratio
-## psychoacoustics / timbre_descriptors
-
-- perceptual_sharpness_acum_units
-## psychoacoustics / tonal_perception
-
-- psychoacoustic_tonalness_sharpness_weight
-## psychoacoustics / tonality
-
-- psychoacoustic_tonality_bark_band_min_snr_db
-- psychoacoustic_tonality_bark_band_snr_decay_ms
-- psychoacoustic_tonality_bark_band_snr_decay_rate_db_ms
-- psychoacoustic_tonality_bark_band_snr_decay_smoothing_contour
-- psychoacoustic_tonality_bark_band_snr_decay_smoothing_contour_factor
-- psychoacoustic_tonality_bark_band_snr_decay_smoothing_contour_shape
-- psychoacoustic_tonality_bark_band_snr_decay_smoothing_factor
-- psychoacoustic_tonality_bark_band_snr_decay_smoothing_mode
-- psychoacoustic_tonality_bark_band_snr_decay_smoothing_ms
-- psychoacoustic_tonality_bark_band_snr_decay_smoothing_ratio
-- psychoacoustic_tonality_bark_band_snr_decay_smoothing_time_ms
-- psychoacoustic_tonality_bark_band_snr_decay_type
-- psychoacoustic_tonality_bark_band_snr_max_limit_db
-- psychoacoustic_tonality_bark_band_snr_max_limit_mode
-- psychoacoustic_tonality_bark_band_snr_min_limit_db
-- psychoacoustic_tonality_bark_band_snr_min_threshold_db
-- psychoacoustic_tonality_bark_band_snr_smoothing_ms
-- psychoacoustic_tonality_bark_band_snr_smoothing_type
-- psychoacoustic_tonality_bark_band_snr_threshold_db
-- psychoacoustic_tonality_bark_band_snr_weight_exponent
-- psychoacoustic_tonality_bark_band_snr_weight_factor
-- psychoacoustic_tonality_bark_band_width_hz
-- psychoacoustic_tonality_index
-- psychoacoustic_tonality_spectral_flatness_inverse_ratio
-- psychoacoustic_tonality_spectral_peak_bandwidth_hz
-- psychoacoustic_tonality_spectral_peak_isolation_ratio
-- psychoacoustic_tonality_spectral_peak_prominence_db
-- psychoacoustic_tonality_spectral_peak_snr_weight
-## Psychoacoustics / Virtual Bass
-
-- psychoacoustic_bass_boost_freq_hz
-## real_time_modulation / formant_control
-
-- real_time_formant_shift_cc
-## recursion_engine / dimensional_resolution
-
-- dimensional_resolution_df
-## recursion_engine / error_handling
-
-- auto_correction_attempt_count
-## recursion_engine / recursion_counter
-
-- recursion_depth_r_value
-## Rhythm and Structure / Algorithmic Patterning
-
-- algorithmic_euclidean_step_length_count
-- euclidean_rhythm_pulse_count
-- euclidean_rhythmic_fill_density
-## Rhythm and Structure / Euclidean Rhythms
-
-- euclidean_rhythm_step_count_mode
-- generative_euclidean_rhythm_pulse_fill_count
-## Rhythm and Structure / Groove Timing
-
-- groove_microtiming_humanization_ms
-- stochastic_rhythmic_swing_percentage
-## Rhythm and Structure / Meter & Timing
-
-- polyrhythmic_subdivision_ratio
-## Rhythm and Structure / Metric Subdivision
-
-- algorithmic_polyrhythmic_beat_subdivision
-## Rhythm and Structure / Microtiming
-
-- groove_microtiming_humanize_jitter_ms
-## Rhythm and Structure / Pattern Generation
-
-- generative_rhythmic_density_events_per_bar
-- generative_rhythmic_syncopation_index
-## Rhythm and Structure / Polyrhythmic Dynamics
-
-- polyrhythmic_metric_drift_factor
-## Rhythm and Structure / Polyrhythmic Ratios
-
-- polyrhythmic_tempo_ratio_multiplier
-## Rhythm and Structure / Polyrhythmic Structure
-
-- generative_polyrhythm_phase_offset_deg
-- polyrhythmic_metric_ratio_mode
-## Rhythm and Structure / Rhythmic Swing
-
-- generative_pattern_groove_shuffle_amount_percent
-- generative_rhythmic_swing_subdivision_mode
-- groove_shuffle_amount_ratio
-## Rhythm and Structure / Tempo Modulation
-
-- tempo_rubato_acceleration_rate
-## Rhythm and Structure / Temporal Quantization
-
-- algorithmic_pattern_humanization_time_ms
-- tempo_sync_subdivision_mode
-## Rhythm and Structure / Timing and Groove
-
-- algorithmic_groove_humanization_lag_ms
-- groove_inharmonicity_spatial_shadowing_coherence
-- groove_inharmonicity_spatial_shadowing_decay
-## rhythm_and_structure / algorithmic_composition
-
-- rhythm_structure_algorithmic_walk_bias_direction_semitones
-- rhythm_structure_algorithmic_walk_step_size_semitones
-## rhythm_and_structure / algorithmic_patterning
-
-- euclidean_rhythm_pulses_count
-## rhythm_and_structure / arpeggiator
-
-- arpeggiator_gate_length_ratio
-- arpeggiator_note_order_mode
-## rhythm_and_structure / arrangement_transitions
-
-- transition_riser_pitch_bend_range_semitones
-## rhythm_and_structure / drum_machine_synthesis
-
-- analog_drum_kick_sub_boom_decay_ms
-## rhythm_and_structure / dynamics_groove
-
-- groove_accent_velocity_dynamic_range_db
-## rhythm_and_structure / envelope_shaping
-
-- sub_bass_envelope_decay_time_ms
-## rhythm_and_structure / euclidean_rhythms
-
-- rhythm_structure_euclidean_accent_velocity_curve_array
-- rhythm_structure_euclidean_accent_velocity_curve_mode
-- rhythm_structure_euclidean_gate_probability_array
-- rhythm_structure_euclidean_pulse_distribution_density
-- rhythm_structure_euclidean_rotate_offset_steps
-- rhythm_structure_euclidean_step_accent_probability
-- rhythm_structure_euclidean_step_mute_probability_array
-- rhythm_structure_euclidean_step_probability_decay
-- rhythm_structure_euclidean_step_velocity_array
-- rhythm_structure_euclidean_step_velocity_curve_string
-- rhythm_structure_euclidean_step_velocity_spread_percent
-## rhythm_and_structure / euclidean_sequencing
-
-- euclidean_rhythm_step_fill_density
-## rhythm_and_structure / expressive_timing
-
-- rubato_expressive_timing_variance_ms
-## rhythm_and_structure / generative_rhythm
-
-- rhythmic_accent_probability_ratio
-- rhythmic_pattern_ghost_note_probability_ratio
-- rhythmic_pattern_ghost_note_velocity_ratio
-- rhythmic_pattern_syncopation_accent_boost_db
-- rhythmic_pattern_syncopation_density_index
+Generated: 2026-11-11T10:06:29.679Z
+
+## dynamics / transient_attack_processing
+
+- dynamic_transient_attack_boost_db
+## dynamics / transient_clipping
+
+- sub_bass_transient_clipping_threshold_db
+## dynamics / transient_contrast
+
+- vibe_erotic_punishment_transient_contrast
+## dynamics / transient_control
+
+- transient_softening_amount
+## dynamics / transient_design
+
+- transient_shaper_attack_gain
+- transient_shaper_attack_time_ms
+- transient_shaper_hold_time_ms
+- transient_shaper_lookahead_time_ms
+- transient_shaper_sensitivity_db
+- transient_shaper_sustain_gain
+## dynamics / transient_ducking
+
+- transient_ducking_depth_db
+## dynamics / transient_envelope_processing
+
+- dynamic_transient_shaper_sustain_decay_time_ms
+- dynamic_transient_sustain_ratio
+## dynamics / transient_envelope_shaping
+
+- dynamic_transient_sustain_gain_db
+## dynamics / transient_processing
+
+- dynamic_transient_attack_time_microseconds
+- dynamic_transient_emphasis_gain_db
+- dynamic_transient_hold_time_ms
+- dynamic_transient_recovery_time_ms
+- dynamic_transient_smear_duration_ms
+- multiband_transient_split_crossover_hz
+- transient_density_event_rate_per_sec
+- transient_designer_attack_envelope_shape_ratio
+- transient_designer_hold_time_ms
+- transient_designer_sustain_gain_db
+- transient_envelope_follower_attack_knee_db
+- transient_envelope_follower_attack_slope_db_per_ms
+- transient_envelope_follower_attack_time_ms
+- transient_envelope_follower_decay_knee_curvature_ratio
+- transient_envelope_follower_decay_knee_db
+- transient_envelope_follower_decay_knee_q_boost_db_value
+- transient_envelope_follower_decay_knee_q_factor
+- transient_envelope_follower_decay_knee_q_factor_boost
+- transient_envelope_follower_decay_knee_smoothing_decay_ms
+- transient_envelope_follower_decay_knee_smoothing_decay_q_boost
+- transient_envelope_follower_decay_knee_smoothing_decay_q_factor
+- transient_envelope_follower_decay_knee_smoothing_ms
+- transient_envelope_follower_decay_knee_smoothing_q_factor
+- transient_envelope_follower_decay_slope_db_per_sec
+- transient_envelope_follower_decay_time_ms
+- transient_envelope_follower_gain_db
+- transient_envelope_follower_hold_time_ms
+- transient_envelope_follower_knee_decay_ms
+- transient_envelope_follower_knee_decay_q_factor
+- transient_envelope_follower_knee_decay_rate_hz
+- transient_envelope_follower_knee_decay_ratio
+- transient_envelope_follower_knee_decay_smoothing_q_boost_db
+- transient_envelope_follower_knee_decay_smoothing_q_factor
+- transient_envelope_follower_knee_width_db
+- transient_envelope_follower_maximum_threshold_db
+- transient_envelope_follower_minimum_threshold_db
+- transient_envelope_follower_peak_decay_slope_db_per_ms
+- transient_envelope_follower_peak_hold_ms
+- transient_envelope_follower_peak_threshold_db
+- transient_envelope_follower_release_slope_db_per_ms
+- transient_envelope_follower_release_time_ms
+- transient_envelope_follower_sensitivity_ratio
+- transient_envelope_follower_smoothing_cutoff_hz
+- transient_envelope_punch_ratio
+- transient_recovery_curve_exp
+- transient_separator_residual_noise_gain_db
+- transient_shaper_attack_decay_ms
+- transient_shaper_attack_gain_db_offset
+- transient_shaper_attack_gain_db_offset_scale
+- transient_shaper_attack_gain_db_scale
+- transient_shaper_attack_gain_factor
+- transient_shaper_attack_gain_factor_offset
+- transient_shaper_attack_gain_factor_offset_scale
+- transient_shaper_attack_gain_factor_offset_scale_factor
+- transient_shaper_attack_gain_factor_offset_scale_factor_offset
+- transient_shaper_attack_gain_factor_scale
+- transient_shaper_attack_knee_db
+- transient_shaper_attack_length_ms
+- transient_shaper_attack_sensitivity_ratio
+- transient_shaper_attack_threshold_db
+- transient_shaper_envelope_hold_ms
+- transient_shaper_envelope_release_time_ms
+- transient_shaper_punch_frequency_hz
+- transient_shaper_release_time_ms
+- transient_shaper_sustain_decay_ms
+- transient_shaper_sustain_envelope_release_ms
+- transient_shaper_sustain_gain_db
+- transient_shaper_sustain_knee_db
+- transient_shaper_sustain_length_ms
+- transient_shaper_sustain_threshold_db
+- transient_shaper_sustained_tone_decay_ms
+- transient_shaper_sustained_tone_isolation_db
+- transient_spectral_debleeding_ratio
+## dynamics / transient_shaping_thresholds
+
+- dynamic_transient_attack_shaping_threshold_db
+## dynamics / transient_shaping
+
+- dynamic_transient_spike_suppression_db
+- dynamics_transient_designer_punch_frequency_hz
+- dynamics_transient_shaper_attack_bandwidth_hz
+- dynamics_transient_shaper_release_bandwidth_hz
+- dynamics_transient_shaper_sustain_decay_ratio
+- dynamics_transient_shaper_sustain_gain_db
+- resonant_body_attack_suppression_fade_in
+- transient_attack_shaping_curve
+- transient_attack_time_ms
+- transient_preservation_ratio
+- transient_release_duration
+- transient_shaper_attack_gain_db
+- transient_spectral_tilt_db_per_octave
+## dynamics / transient_splitter
+
+- dynamics_crest_attack_crest_gain_db
+- dynamics_crest_clipping_knee_softness_gain_db
+- dynamics_crest_crest_factor_gate_gain_db
+- dynamics_crest_recovery_hysteresis_gain_db
+- dynamics_crest_recovery_hysteresis_topology
+- dynamics_crest_sustain_clamping_gain_db
+- feedforward_vca_clipping_knee_softness_active
+- feedforward_vca_crest_factor_gate_topology
+- feedforward_vca_sustain_clamping_ratio
+- impact_chisel_clipping_knee_softness_active
+- impact_chisel_clipping_knee_softness_ratio
+- impact_chisel_clipping_knee_softness_topology
+- impact_chisel_crest_factor_gate_active
+- impact_chisel_recovery_hysteresis_topology
+- impact_chisel_sustain_clamping_gain_db
+- impact_chisel_sustain_clamping_topology
+- lookahead_limiter_attack_crest_topology
+- multiband_saturator_clipping_knee_softness_active
+- multiband_saturator_crest_factor_gate_active
+- multiband_saturator_recovery_hysteresis_topology
+- multiband_saturator_sustain_clamping_topology
+- transient_envelope_attack_crest_active
+- transient_envelope_attack_crest_gain_db
+- transient_envelope_clipping_knee_softness_gain_db
+## dynamics / transient_suppression
+
+- vocal_sibilance_transient_suppression_ratio
+## dynamics / upward_compression
+
+- dynamics_upward_compression_amount
+- dynamics_upward_compressor_knee_width_db
+- upward_compression_amount
+- upward_compressor_gain_boost_db
+- upward_compressor_threshold_db
+## dynamics / upward_dynamics
+
+- upward_compression_threshold_db
+## dynamics / variation_control
+
+- energy_flow_variation_amplitude
+## dynamics / velocity_compression
+
+- random_note_velocity_compressor_gate
+## dynamics / velocity_response
+
+- midi_note_velocity_curve
+## dynamics / visual_effects
+
+- fx_decay_trail_length
+- fx_reactivity_speed_to_transients
+## dynamics / vocal_envelopes
+
+- vocal_dynamic_behavior_transient_profile
+## dynamics / vocal_mix
+
+- vocal_vector_impact_weight_i
+## dynamics / voltage_sag
+
+- high_gain_power_supply_voltage_sag_depth_volts
+## envelope_shaping / accent_discharge
+
+- tb303_accent_capacitive_discharge_rate
+## envelope_shaping / accent_resonance
+
+- tb303_diode_ladder_accent_resonance_bump_gain
+## envelope_shaping / adaptive_hold
+
+- syllabic_compressor_envelope_follower_adaptive_hold_ms
+## envelope_shaping / adaptive_release
+
+- adaptive_release_time_constant
+## envelope_shaping / additive_partial_decay
+
+- additive_partial_amplitude_envelope_decay
+## envelope_shaping / attack_click
+
+- tb303_resonance_envelope_attack_click_injection
+## envelope_shaping / attack_time
+
+- attack_min_ms
+## envelope_shaping / attack
+
+- sitar_veena_jawari_pluck_fadein_time
+## envelope_shaping / basic_adsr_decay
+
+- basic_adsr_decay_time_ms
+## envelope_shaping / basic_adsr_sustain
+
+- basic_adsr_sustain_level_percent
+## envelope_shaping / basic_amplitude_attack
+
+- basic_amplitude_envelope_attack_ms
+## envelope_shaping / basic_amplitude_release
+
+- basic_amplitude_envelope_release_ms
+## envelope_shaping / basic_filter_decay
+
+- basic_filter_envelope_decay_ms
+## envelope_shaping / crossfade_curves
+
+- crossfade_curve_shape_type
+## envelope_shaping / cutoff_decay_coupling
+
+- tb303_diode_ladder_cutoff_envelope_decay_coupling
+## envelope_shaping / decay_control
+
+- vibe_subterranean_magma_slow_decay_kick_ms
+## envelope_shaping / decay_nonlinearity
+
+- tb303_diode_ladder_envelope_decay_non_linearity
+## envelope_shaping / dynamic_envelope_interaction
+
+- hybrid_dynamics_envelope_follower_interaction
+## envelope_shaping / dynamic_growth
+
+- liquid_scratch_texture_china_cymbal_swell_time_sec
+## envelope_shaping / envelope_control
+
+- envelope_follower_attack_time
+- envelope_follower_curve_skew
+## envelope_shaping / envelope_follower
+
+- envelope_follower_release_time
+- foley_envelope_follower_modulation
+## envelope_shaping / evaporation_time
+
+- evaporation_duration_s
+## envelope_shaping / evolutionary_morphing
+
+- evolutionary_transition_curve_shape
+## envelope_shaping / exponential_decay
+
+- omega_synthesis_terminal_x7_exponential_decay_seconds
+- omega_synthesis_terminal_x7_pure_resolution_decay_sec
+## envelope_shaping / expression_control
+
+- expression_pedal_response_curve
+## envelope_shaping / fade_in
+
+- reverse_delay_fade_in_envelope_time_ms
+## envelope_shaping / filter_envelope
+
+- tb303_resonance_envelope_decay_time_constant_ms
+## envelope_shaping / filter_modulation
+
+- filter_envelope_amount_percent
+## envelope_shaping / gamma_curve
+
+- amplitude_to_brightness_gamma_curve
+## envelope_shaping / granular_envelope
+
+- granular_envelope_crossfade_length
+## envelope_shaping / granular_foley
+
+- granular_foley_drop_impact_transient_softening
+## envelope_shaping / granular_rain
+
+- granular_rain_droplet_impact_transient_dispersion_ms
+## envelope_shaping / granular_resynthesis
+
+- granular_resynthesis_envelope_attack_decay_ratio
+## envelope_shaping / impact_preparation
+
+- impact_pre_silence_ms
+## envelope_shaping / impact_trigger
+
+- impact_trigger_pre_impact_silence_ms
+## envelope_shaping / init_impulse
+
+- omega_operator_init_impulse_rise_time_ms
+## envelope_shaping / isochronic_fade
+
+- theta_wave_isochronic_gate_fade_time_ms
+## envelope_shaping / melancholy_envelope
+
+- pure_melancholy_attack_time_s
+## envelope_shaping / micro_envelope_shaping
+
+- micro_envelope_attack_curve
+- micro_envelope_decay_curve
+## envelope_shaping / morph_smoothness
+
+- timbre_morphing_smoothness
+## envelope_shaping / phase_relaxation
+
+- omega_phase_relaxation_exponential_decay_ms
+## envelope_shaping / plosive_suppression
+
+- lfe_plosive_consonant_transient_suppression_ms
+## envelope_shaping / pressure_decay
+
+- infrasonic_hydraulic_pressure_pulse_decay_ms
+## envelope_shaping / rasa_transition
+
+- rasa_transition_bhavas_crossfade_duration
+## envelope_shaping / relax_energy
+
+- omega_phase_6_relax_energy_dissipation_half_life_ms
+## envelope_shaping / release_curvature
+
+- syllabic_compressor_release_curvature_exponent
+## envelope_shaping / reset_threshold
+
+- tb303_diode_ladder_envelope_reset_threshold
+## envelope_shaping / samapana_decay
+
+- samapana_decay_tail_duration
+- samapana_exponential_release_decay_constant
+- samapana_resolution_exponential_decay_half_life_ms
+- samapana_resolution_pure_tone_decay_curvature
+- samapana_resolution_sub_harmonic_fadeout_duration_sec
+## envelope_shaping / section_transition
+
+- section_transition_smoothing_window
+## envelope_shaping / shockwave_rise
+
+- infrasonic_cavitation_shockwave_rise_time_ms
+## envelope_shaping / sigmoid_inflection
+
+- tension_accumulation_sigmoid_inflection_point
+## envelope_shaping / smoothing
+
+- sustain_envelope_smoothing_window
+## envelope_shaping / synthesis_blending
+
+- cross_synthesis_blend_curve_shape
+## envelope_shaping / tension_accumulation
+
+- tension_accumulation_slope_multiplier
+## envelope_shaping / tension_buildup
+
+- tension_accumulation_sigmoid_slope
+## envelope_shaping / tension_curve
+
+- tension_accumulation_curve_exponent
+## envelope_shaping / tension_peak
+
+- tension_peak_placement_bias
+## envelope_shaping / terminal_state_decay
+
+- terminal_resolution_decay_profile
+## envelope_shaping / terminal_validation
+
+- validation_terminal_transient_suppression_enforcement
+## envelope_shaping / tracking_speed
+
+- syllabic_envelope_tracking_speed
+## envelope_shaping / transient_bypass
+
+- envelope_follower_transient_bypass_gate
+## envelope_shaping / transient_control
+
+- vibe_punishing_whip_transient_attack_ms
+- vibe_punishing_whip_transient_attack_ms_exception
+## envelope_shaping / transient_detection
+
+- envelope_follower_attack_ms
+- envelope_follower_release_ms
+## envelope_shaping / transient_extraction
+
+- envelope_follower_transient_extraction_gate_sensitivity
+## envelope_shaping / transient_shaping
+
+- transient_recovery_attack_envelope_shaper
+- transient_recovery_neural_envelope_attack_gain_db
+- transient_recovery_neural_envelope_shaper
+- transient_shaper_curve_exponent
+- transient_shaper_sub_harmonic_punch_integration_ms
+- transient_sustain_balance_ratio
+## envelope_shaping / transient_smoothing
+
+- liquid_scratch_transient_envelope_attack_curve_type
+- liquid_scratch_transient_envelope_fade_in_exponential_curve
+- liquid_scratch_transient_envelope_fade_in_ms
+- liquid_scratch_transient_envelope_fade_out_ms
+## envelope_shaping / transient_spike
+
+- infrasonic_cavitation_bubble_collapse_transient_spike_db
+## envelope_shaping / velocity_response
+
+- velocity_to_filter_cutoff_depth
+## envelope_shaping / vocal_transition
+
+- vocal_vector_ghost_to_anchor_crossfade_speed_ms
+- vocalic_consonant_boundary_crossfade_ms
+## evolutionary_control / adaptation_rate
+
+- dynamic_context_adaptation_learning_rate
+## evolutionary_control / annealing_energy
+
+- simulated_annealing_initial_temperature_kelvin
+## evolutionary_control / complexity_evolution
+
+- pattern_complexity_evolution_speed
+## evolutionary_control / context_shift
+
+- event_context_shift_speed
+## evolutionary_control / contextual_relevance
+
+- event_contextual_relevance
+## evolutionary_control / convergence_control
+
+- evolutionary_convergence_stagnation_limit
+## evolutionary_control / convergence_threshold
+
+- f_loop_evolution_convergence_threshold
+## evolutionary_control / cooling_schedule
+
+- annealing_cooling_schedule_alpha_factor
+## evolutionary_control / cross_evolution_curve
+
+- synthesis_model_cross_evolution_curve
+## evolutionary_control / crossover_probability
+
+- evolutionary_crossover_probability
+## evolutionary_control / diversity_maintenance
+
+- pareto_front_diversity_maintenance_factor
+## evolutionary_control / elitism
+
+- elitism_preservation_count_individuals
+## evolutionary_control / eq_adaptation
+
+- adaptive_eq_learning_bias_curve
+## evolutionary_control / evolutionary_algorithm
+
+- evolutionary_mutation_rate
+## evolutionary_control / genetic_algorithm
+
+- fitness_function_complexity_weight
+## evolutionary_control / homeostasis_scaling
+
+- synaptic_homeostasis_scaling_rate
+## evolutionary_control / improvisation_control
+
+- improvisation_seed_renewal_mode
+## evolutionary_control / improvisation_memory
+
+- improvisation_memory_decay_rate
+## evolutionary_control / improvisation_seed
+
+- improvisation_seed_mutation_rate
+## evolutionary_control / inertia_weight
+
+- particle_swarm_inertia_weight_coefficient
+## evolutionary_control / learning_rate
+
+- synaptic_weight_stdp_learning_rate
+## evolutionary_control / meaning_confidence
+
+- event_meaning_confidence
+## evolutionary_control / memory_decay
+
+- dynamic_context_adaptation_memory_decay
+## evolutionary_control / morph_path_type
+
+- synthesis_morph_path_type
+## evolutionary_control / mutation_rate
+
+- digital_genesis_mutation_rate
+## evolutionary_control / mutation
+
+- mutation_rate_probability_per_gene
+## evolutionary_control / novelty
+
+- novelty_injection_interval_s
+## evolutionary_control / parameter_drift
+
+- chaotic_map_control_parameter_drift_rate
+## evolutionary_control / persistence_ratio
+
+- dna_persistence_ratio
+## evolutionary_control / pheromone_evaporation
+
+- ant_colony_pheromone_evaporation_rate
+## evolutionary_control / plasticity_rate
+
+- structural_plasticity_growth_cone_speed
+## evolutionary_control / population_dynamics
+
+- generational_gap_replacement_ratio
+- genetic_algorithm_population_size
+## evolutionary_control / preference_learning
+
+- long_term_preference_learning_rate
+## evolutionary_control / programming_control
+
+- genetic_programming_tree_max_depth
+## evolutionary_control / refinement_protocol
+
+- hyper_refinement_intensity
+## evolutionary_control / reward_scaling
+
+- neuromodulator_dopamine_level_scale
+## evolutionary_control / seed_life_duration
+
+- improvisation_seed_life_duration_bars
+## evolutionary_control / seed_renewal_rate
+
+- improvisation_seed_renewal_rate
+## evolutionary_control / stability_validation
+
+- stability_threshold_current_tier
+## evolutionary_control / variation_depth
+
+- repetition_variation_depth
+## experimental_processing / aleatoric_gating
+
+- random_noise_gate_threshold_db
+## experimental_processing / audio_degradation
+
+- erosion_curve
+- erosion_type_selection
+## experimental_processing / beam_width
+
+- light_beam_width_energy_dependent
+## experimental_processing / cellular_automata
+
+- cellular_automata_effect_rule_index
+## experimental_processing / centroid_drift
+
+- sruti_centroid_drift_hysteresis_band
+## experimental_processing / condensation
+
+- rapid_condensation_blur_radius
+## experimental_processing / decay_rate
+
+- erosion_speed
+## experimental_processing / emotional_mood_mapping
+
+- harmonic_emotional_profile_category_select
+## experimental_processing / erosion_effect
+
+- erosion_intensity
+## experimental_processing / feedback_delay
+
+- erosion_feedback_delay
+## experimental_processing / feedback
+
+- erosion_feedback_amount
+## experimental_processing / formant_scrambling
+
+- experimental_formant_scramble_intensity
+## experimental_processing / granular_entropy
+
+- experimental_grain_position_entropy
+## experimental_processing / instanton_tunneling
+
+- topological_instanton_tunneling_rate_frequency
+## experimental_processing / microtonal_drift
+
+- sruti_deval_microtonal_comma_drift_variance
+## experimental_processing / quantization
+
+- ste_straight_through_estimator_scale
+## experimental_processing / semantic_safety
+
+- validation_name_safety_abstract_concept_weight
+- validation_name_safety_abstraction_threshold
+## experimental_processing / sonification
+
+- binary_sonification_speed_bytes_per_sec
+## experimental_processing / spinor_field
+
+- su2_spinor_field_modulation_index
+## experimental_processing / topological_analysis
+
+- topological_winding_number_pi3_s3_index
+## Generative Algorithms / Algorithmic Composition
+
+- generative_lsystem_recursion_depth_limit
+## generative_algorithms / aleatoric_modulation
+
+- stochastic_pitch_drift_cents
+## generative_algorithms / algorithmic_composition
+
+- algorithmic_composition_entropy_weight
+- generative_lsystem_angle_randomization_spread_degrees
+- generative_lsystem_axiom_length_steps
+- generative_lsystem_branching_angle_degrees
+- generative_lsystem_growth_decay_factor
+- generative_lsystem_stochastic_axiom_probability
+- generative_lsystem_stochastic_rule_weight_entropy
+- generative_lsystem_turtle_step_size_semitones
+- generative_pitch_quantization_scale_mode
+- weight_boil_harshness_crackle_pressure
+## generative_algorithms / algorithmic_patterning
+
+- euclidean_rhythm_step_rotation_count
+- generative_cellular_automata_grid_width_cells
+- generative_cellular_automata_rule_number
+- generative_cellular_automata_rule_transition_entropy
+## generative_algorithms / algorithmic_quantization
+
+- double_harmonic_leading_tone_attraction_force
+## generative_algorithms / algorithmic_timing
+
+- stochastic_rhythmic_acceleration_curve
+## generative_algorithms / arpeggiator_sequencing
+
+- generative_arpeggiator_octave_jump_probability
+## generative_algorithms / boundary_conditions
+
+- cellular_automata_boundary_condition_type
+## generative_algorithms / boundary_deviation
+
+- ai_hallucination_boundary_bias
+## generative_algorithms / boundary_transition
+
+- ai_section_boundary_hysteresis_window_bars
+## generative_algorithms / branching_process
+
+- generative_branching_factor
+## generative_algorithms / burst_firing
+
+- burst_firing_threshold_potential_mv
+## generative_algorithms / cellular_automata_complexity
+
+- algorithmic_cellular_automata_neighborhood_radius
+- algorithmic_cellular_automata_rule_entropy_scalar
+## generative_algorithms / cellular_automata_sequencing
+
+- stochastic_cellular_automata_rule_number
+## generative_algorithms / cellular_automata
+
+- cellular_automata_conway_birth_survival_rule_vector
+- generative_algorithms_cellular_automata_grid_wrap_mode
+- generative_algorithms_cellular_automata_initial_state_string
+- generative_algorithms_cellular_automata_neighborhood_radius
+- generative_algorithms_cellular_automata_rule_string
+## generative_algorithms / chaos_synthesis
+
+- generative_logistic_map_bifurcation_parameter
+- lorenz_chaotic_attractor_drive_rate
+## generative_algorithms / chaotic_attractors
+
+- bifurcation_entropy_index
+## generative_algorithms / chaotic_systems
+
+- lorenz_attractor_prandtl_number_ratio
+## generative_algorithms / constraint
+
+- generative_rule_constraint_tightness
+## generative_algorithms / context_processing
+
+- ml_model_context_window_length
+## generative_algorithms / creative_deviation
+
+- ai_hallucination_bias_factor
+## generative_algorithms / creativity_control
+
+- ai_temperature_creativity_factor
+## generative_algorithms / effect_processing
+
+- generative_effect_complexity
+- generative_effect_novelty_bias
+## generative_algorithms / entropy_control
+
+- ai_structural_entropy_floor_cap
+## generative_algorithms / euclidean_rhythms
+
+- generative_algorithms_euclidean_rhythm_step_count
+## generative_algorithms / evolutionary_synthesis
+
+- generative_algorithms_genetic_algorithm_mutation_rate_percent
+## generative_algorithms / exploratory_vector
+
+- apurva_rasa_exploratory_vector_weight
+## generative_algorithms / fractal_complexity
+
+- fractal_dimension_hausdorff_index
+## generative_algorithms / fractal_generation
+
+- generative_l_system_recursion_depth
+- generative_lindenmayer_system_recursion_depth
+## generative_algorithms / fractal_music
+
+- algorithmic_fractal_dimension_scaling
+## generative_algorithms / fractal_processing
+
+- generative_self_similarity_fractal_dimension
+## generative_algorithms / grammar_based_composition
+
+- generative_algorithms_grammar_rule_expansion_depth
+## generative_algorithms / granular_pitch
+
+- stochastic_grain_pitch_spread
+## generative_algorithms / granular_positioning
+
+- granular_position_jitter
+## generative_algorithms / granular_synthesis
+
+- granular_density_grains_per_second
+- granular_grain_duration
+- granular_grain_durations_ms
+- granular_stochastic_pitch_dispersion_semitones
+## generative_algorithms / harmonic_processing
+
+- generative_scale_degree_bias_weight
+## generative_algorithms / humanization
+
+- stochastic_note_velocity_deviation
+## generative_algorithms / hybrid_complexity
+
+- ai_hybrid_generation_complexity
+## generative_algorithms / instruction_following_control
+
+- prompt_instruction_adherence_strictness
+## generative_algorithms / l_system_fractals
+
+- algorithmic_l_system_branching_angle_degrees
+- algorithmic_lindenmayer_iteration_depth
+## generative_algorithms / l_system_geometry
+
+- generative_lsystem_axiom_mutation_rate
+## generative_algorithms / l_system_grammar
+
+- cellular_automata_divergence_rate_limit
+- fractal_branching_lyapunov_exponent_entropy_ratio
+- fractal_branching_lyapunov_exponent_ruleset
+- fractal_branching_recursion_depth_entropy_ratio
+- fractal_branching_recursion_depth_expression
+- fractal_branching_recursion_depth_limit
+- fractal_branching_self_similarity_scale_entropy_ratio
+- fractal_branching_self_similarity_scale_expression
+- generative_lsystem_axiom_expression_entropy_ratio
+- generative_lsystem_divergence_rate_limit
+- generative_lsystem_lyapunov_exponent_expression
+- generative_lsystem_recursion_depth_entropy_ratio
+- mandelbrot_orbit_axiom_expression_entropy_ratio
+- mandelbrot_orbit_divergence_rate_ruleset
+- mandelbrot_orbit_lyapunov_exponent_limit
+- mandelbrot_orbit_recursion_depth_ruleset
+- mandelbrot_orbit_self_similarity_scale_ruleset
+- markov_transition_divergence_rate_limit
+## generative_algorithms / l_systems
+
+- stochastic_l_system_branching_angle_degrees
+## generative_algorithms / learning
+
+- imitation_learning_rate
+## generative_algorithms / lsystem_composition
+
+- generative_algorithms_lsystem_axiom_string
+- generative_algorithms_lsystem_iteration_count
+- generative_algorithms_lsystem_rule_definition_string
+## generative_algorithms / markov_chains
+
+- generative_algorithms_markov_chain_memory_depth
+- generative_algorithms_markov_chain_state_space_size
+- generative_algorithms_markov_chain_temperature
+- generative_algorithms_markov_transition_matrix_string
+- generative_algorithms_markov_transition_matrix_text
+## generative_algorithms / markov_dynamic_accentuation
+
+- algorithmic_markov_rhythmic_accent_probability
+## generative_algorithms / markov_dynamic_scaling
+
+- algorithmic_markov_rhythmic_accent_velocity_ratio
+## generative_algorithms / markov_dynamic_shaping
+
+- algorithmic_markov_rhythmic_accent_decay_ms
+- intersample_equalization_prosody_accent_mix
+- ir_accent_subband_ratio
+## generative_algorithms / markov_generation
+
+- generative_markov_node_pruning_threshold_ratio
+- generative_markov_order_selection
+- generative_markov_sequence_entropy_factor
+- generative_markov_sequence_entropy_level
+- generative_markov_sequence_entropy_scale
+- generative_markov_sequence_entropy_scale_factor
+- generative_markov_sequence_entropy_scale_factor_offset_scale
+- generative_markov_sequence_entropy_scale_factor_offset_scale_factor
+- generative_markov_sequence_entropy_scale_offset
+- generative_markov_sequence_entropy_weight
+- generative_markov_sequence_entropy_weight_scale
+- generative_markov_sequence_transition_bias
+- generative_markov_state_memory_depth
+- generative_markov_transition_entropy_ratio
+- generative_markov_transition_temperature
+## generative_algorithms / markov_global_rhythm_control
+
+- algorithmic_markov_rhythmic_syncopation_probability_scalar
+## generative_algorithms / markov_melodic_dynamics
+
+- algorithmic_markov_pitch_class_entropy_smoothing_ms
+## generative_algorithms / markov_melodic_generation
+
+- algorithmic_markov_pitch_entropy_ratio
+## generative_algorithms / markov_melodic_resolution
+
+- algorithmic_markov_pitch_class_entropy_decay_ms
+## generative_algorithms / markov_melodic_restraints
+
+- algorithmic_markov_pitch_entropy_penalty_scalar
+- anxious_cancellation_penalty_off_cutoff
+## generative_algorithms / markov_melodic_scaling
+
+- algorithmic_markov_pitch_class_entropy_scaling_factor
+## generative_algorithms / markov_melodic_thresholds
+
+- acceleration_harshness_boil_hole_threshold
+- algorithmic_markov_pitch_class_entropy_threshold
+## generative_algorithms / markov_modeling
+
+- generative_markov_chain_order_step
+- generative_markov_transition_probability_threshold
+## generative_algorithms / markov_pitch_class_modeling
+
+- algorithmic_markov_pitch_class_transition_probability
+## generative_algorithms / markov_probabilistic_coupling
+
+- algorithmic_markov_pitch_duration_correlation_ratio
+- ghost_breakdown_kick_freeze_duration
+## generative_algorithms / markov_probabilistic_sampling
+
+- algorithmic_markov_transition_temperature_scalar
+## generative_algorithms / markov_process_sequencing
+
+- algorithmic_markov_transition_matrix_order
+## generative_algorithms / markov_rhythm_control
+
+- algorithmic_markov_rhythmic_syncopation_probability_exponent
+- algorithmic_markov_rhythmic_syncopation_threshold
+## generative_algorithms / markov_rhythm_decay
+
+- algorithmic_markov_rhythmic_syncopation_decay_rate
+## generative_algorithms / markov_rhythmic_complexity
+
+- algorithmic_markov_rhythmic_syncopation_entropy_scalar
+## generative_algorithms / markov_rhythmic_dynamics
+
+- algorithmic_markov_rhythmic_syncopation_threshold_smoothing_factor
+- algorithmic_markov_rhythmic_syncopation_threshold_smoothing_ms
+## generative_algorithms / markov_rhythmic_generation
+
+- algorithmic_markov_rhythmic_subdivision_entropy
+## generative_algorithms / markov_rhythmic_kinetics
+
+- algorithmic_markov_rhythmic_syncopation_threshold_decay_factor
+- algorithmic_markov_rhythmic_syncopation_threshold_decay_ratio
+- algorithmic_markov_rhythmic_syncopation_threshold_decay_slope_db_per_ms
+- algorithmic_markov_rhythmic_syncopation_threshold_decay_speed
+- algorithmic_markov_rhythmic_syncopation_threshold_decay_time_constant_exponent
+- algorithmic_markov_rhythmic_syncopation_threshold_decay_time_constant_factor
+- algorithmic_markov_rhythmic_syncopation_threshold_decay_time_constant_ms
+- algorithmic_markov_rhythmic_syncopation_threshold_decay_time_constant_ratio
+- algorithmic_markov_rhythmic_syncopation_threshold_decay_time_ms
+- algorithmic_markov_rhythmic_syncopation_threshold_smoothing_decay_ms
+- algorithmic_markov_rhythmic_syncopation_threshold_smoothing_decay_rate_hz
+- algorithmic_markov_rhythmic_syncopation_threshold_smoothing_decay_ratio
+## generative_algorithms / markov_rhythmic_resolution
+
+- algorithmic_markov_rhythmic_syncopation_decay_ms
+## generative_algorithms / markov_rhythmic_syncopation
+
+- algorithmic_markov_rhythmic_syncopation_weight
+## generative_algorithms / markov_scale_weights
+
+- scale_degree_weight_vector_array
+## generative_algorithms / markov_sequence_quantization
+
+- algorithmic_markov_note_length_quantization_grid
+## generative_algorithms / markov_sub_division_control
+
+- algorithmic_markov_rhythmic_syncopation_bias_ratio
+## generative_algorithms / markov_sub_division_dynamics
+
+- algorithmic_markov_rhythmic_syncopation_probability_decay_ms
+- algorithmic_markov_rhythmic_syncopation_probability_smoothing_ms
+## generative_algorithms / markov_sub_division_kinetics
+
+- algorithmic_markov_rhythmic_syncopation_threshold_decay_ms
+- algorithmic_markov_rhythmic_syncopation_threshold_decay_rate
+## generative_algorithms / markov_sub_division_resolution
+
+- algorithmic_markov_rhythmic_syncopation_bias_decay_ms
+## generative_algorithms / melodic_entropy
+
+- generative_melodic_entropy
+## generative_algorithms / melodic_generation
+
+- algorithmic_melody_leap_probability_ratio
+- generative_pitch_class_entropy_index
+## generative_algorithms / melodic_motion_stochasticity
+
+- interval_leap_to_step_ratio
+## generative_algorithms / memory_pruning
+
+- markov_chain_higher_order_memory_pruning_threshold
+## generative_algorithms / model_training
+
+- ml_model_adaptation_speed
+## generative_algorithms / modulation_envelope
+
+- modulation_envelope_curve_shape
+- modulation_envelope_curve_tension
+- modulation_envelope_loop_count
+- modulation_envelope_loop_mode
+- modulation_envelope_step_count
+- modulation_envelope_trigger_mode
+## generative_algorithms / modulation_matrix
+
+- modulation_matrix_source_depth
+## generative_algorithms / mutation
+
+- generative_rule_mutation_probability
+## generative_algorithms / neuromorphic_synthesis
+
+- dendritic_neural_synaptic_pruning_threshold
+## generative_algorithms / noise_modulation
+
+- generative_algorithms_fractal_noise_lacunarity
+- generative_algorithms_fractal_noise_persistence_factor
+- generative_algorithms_perlin_noise_octave_count
+## generative_algorithms / nonlinear_sequence_generation
+
+- algorithmic_logistic_map_bifurcation_parameter
+## generative_algorithms / note_gate
+
+- note_probability_gate
+## generative_algorithms / note_generation
+
+- probabilistic_note_repetition
+## generative_algorithms / novelty_weight
+
+- lfe_p_survive_novelty_weight_coefficient
+## generative_algorithms / operator_fusion
+
+- omega_synthesis_operator_fusion_g_q_phi_m_weight
+## generative_algorithms / output_control
+
+- generative_output_validation_strictness
+## generative_algorithms / particle_spawn_rate
+
+- visual_particle_spawn_rate_per_db
+## generative_algorithms / pattern_generation
+
+- algorithmic_composition_entropy_level
+- generative_cellular_automata_rule_index
+- generative_cellular_automata_seed_index
+- generative_euclidean_rhythm_rotation_steps
+- generative_euclidean_rhythm_step_count
+- generative_euclidean_rhythm_step_offset
+- generative_pattern_groove_humanize_timing_decay
+- generative_pattern_groove_humanize_timing_decay_curvature_ratio
+- generative_pattern_groove_humanize_timing_decay_ms
+- generative_pattern_groove_humanize_timing_decay_ms_q_boost
+- generative_pattern_groove_humanize_timing_decay_ms_q_factor
+- generative_pattern_groove_humanize_timing_decay_q_factor
+- generative_pattern_groove_humanize_timing_decay_q_factor_boost
+- generative_pattern_groove_humanize_timing_decay_slope
+- generative_pattern_groove_humanize_timing_ms
+- generative_pattern_groove_humanize_timing_percent
+- generative_pattern_groove_humanize_timing_range_ms
+- generative_pattern_groove_humanize_timing_slope
+- generative_pattern_groove_humanize_timing_smoothing_ms
+- generative_pattern_groove_humanize_velocity_decay
+- generative_pattern_groove_humanize_velocity_decay_ms
+- generative_pattern_groove_humanize_velocity_decay_q_factor_boost
+- generative_pattern_groove_humanize_velocity_decay_q_factor_boost_db
+- generative_pattern_groove_humanize_velocity_decay_rate_hz
+- generative_pattern_groove_humanize_velocity_decay_smoothing_ms
+- generative_pattern_groove_humanize_velocity_decay_smoothing_q_boost_db_value

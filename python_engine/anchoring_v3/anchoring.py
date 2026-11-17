@@ -576,8 +576,43 @@ def _softmax(scores: list[float], temperature: float) -> list[float]:
     return [value / total for value in values]
 
 
+def _snap_to_catalog_range(value: float, minimum: float, maximum: float, step: float | None) -> float:
+    if step is not None and step > 0:
+        value = minimum + round((value - minimum) / step) * step
+    return round(_clamp(value, minimum, maximum), 12)
+
+
 def _anchor_scores(ex: list[float], entries: list[dict], vectors: Any) -> list[float]:
     return [cosine(ex, vectors[int(entry["row_index"])]) for entry in entries]
+
+
+def _catalogue_value_domain(parameter: dict, ui: str) -> list[Any] | None:
+    if ui == "Select":
+        values = parameter.get("options")
+        return values if isinstance(values, list) and values else None
+    if ui == "Toggle":
+        if (parameter.get("min_value"), parameter.get("max_value"), parameter.get("step")) == (0, 1, 1):
+            return [0, 1]
+        return None
+    for key in ("value_candidates", "published_values", "options"):
+        values = parameter.get(key)
+        if isinstance(values, list) and values:
+            return values
+    schema = parameter.get("value_schema")
+    if isinstance(schema, dict):
+        if isinstance(schema.get("enum"), list) and schema["enum"]:
+            return schema["enum"]
+        if "const" in schema:
+            return [schema["const"]]
+    return None
+
+
+def _same_catalogue_value(candidate: Any, allowed: Any) -> bool:
+    if isinstance(candidate, bool) != isinstance(allowed, bool):
+        return False
+    if isinstance(candidate, (int, float)) and not isinstance(candidate, bool) and isinstance(allowed, (int, float)) and not isinstance(allowed, bool):
+        return float(candidate) == float(allowed)
+    return type(candidate) is type(allowed) and candidate == allowed
 
 
 def _value_anchor_apply(ex: list[float], param: dict, cfg: Config,
@@ -652,7 +687,7 @@ def _value_anchor_apply(ex: list[float], param: dict, cfg: Config,
 # ---------------------------------------------------------------------------
 # Главная функция
 # ---------------------------------------------------------------------------
-def anchor_query(query: str,
+def _legacy_anchor_query(query: str,
                  scoped_params: list[dict],
                  current_values: dict[str, float | str] | None,
                  cfg: Config,
@@ -1053,6 +1088,142 @@ def anchor_query(query: str,
                 "before": result["before"],
                 "after": result["value"],
                 "detail": result["detail"],
+            })
+    return results
+
+
+# ---------------------------------------------------------------------------
+# Embedding-only value selection. Legacy lexical and axis helpers above remain
+# available to historical tooling but are deliberately not called here.
+def anchor_query(query: str,
+                 scoped_params: list[dict],
+                 current_values: dict[str, Any] | None,
+                 cfg: Config,
+                 query_embeddings: list[list[float]] | None = None,
+                 query_concepts: list[str] | None = None,
+                 relation_hints: dict[str, dict] | None = None,
+                 audit_log: list[dict] | None = None,
+                 diagnostic_context: dict[str, str] | None = None,
+                 selection_identity: dict[str, Any] | None = None) -> dict[str, dict]:
+    """Select a typed value only by comparing the query embedding to candidates."""
+    del query_concepts, relation_hints
+    current_values = current_values or {}
+    diagnostic_context = diagnostic_context or {}
+    selection_identity = selection_identity or {}
+    query_text = query.strip()
+    supplied = [vector for vector in (query_embeddings or []) if isinstance(vector, list) and vector]
+    cfg._anchors = cfg._anchors or {"stub": False}
+    results: dict[str, dict] = {}
+
+    for parameter in scoped_params:
+        name = str(parameter.get("technical_name") or "")
+        ui = str(parameter.get("ui_element") or "")
+        input_value = current_values.get(name)
+        base = {
+            "status": "not_attempted",
+            "detail": "No content was supplied; value selection was not attempted.",
+            "input_value": input_value,
+        }
+        evidence: dict[str, Any] = {**selection_identity, **diagnostic_context}
+        status = "not_attempted"
+        selected_value: Any = None
+        confidence: float | None = None
+        candidate_scores: list[dict[str, Any]] = []
+        detail = base["detail"]
+
+        if query_text and supplied:
+            query_vector, concept_index = _best_query_embedding(supplied, name, cfg)
+            evidence["query_concept_index"] = concept_index
+            if query_vector is None:
+                status, detail = "error", "Embedding query vector is missing."
+            elif ui == "Range":
+                entries = cfg._value_anchor_parameters.get(name) or []
+                vectors = cfg._value_anchor_vectors
+                expected_levels = {0.0, 0.25, 0.5, 0.75, 1.0}
+                levels = {float(entry["level"]) for entry in entries if "level" in entry}
+                if vectors is None or levels != expected_levels or any("level" not in entry for entry in entries):
+                    status, detail = "artifacts_required", "Compatible Range candidate vectors are missing or incomplete."
+                else:
+                    try:
+                        scores = _anchor_scores(query_vector, entries, vectors)
+                        for entry, score in zip(entries, scores):
+                            candidate_scores.append({"candidate": float(entry["level"]), "score": float(score), "text_sha256": entry.get("text_sha256")})
+                        confidence = max(scores, default=float("-inf"))
+                        evidence["candidate_scores"] = candidate_scores
+                        evidence["threshold"] = cfg.threshold_range
+                        if confidence < cfg.threshold_range:
+                            status, detail = "selection_uncertain", "Range candidates did not reach the configured evidence threshold."
+                        else:
+                            weights = _softmax(scores, cfg.softmax_temp_diffuse)
+                            position = sum(float(entry["level"]) * weight for entry, weight in zip(entries, weights))
+                            minimum = parameter.get("min_value")
+                            maximum = parameter.get("max_value")
+                            if not isinstance(minimum, (int, float)) or not isinstance(maximum, (int, float)) or not math.isfinite(float(minimum)) or not math.isfinite(float(maximum)) or maximum < minimum:
+                                status, detail = "error", "Catalog Range bounds are invalid."
+                            elif parameter.get("step") is not None and (not isinstance(parameter.get("step"), (int, float)) or not math.isfinite(float(parameter["step"])) or float(parameter["step"]) <= 0):
+                                status, detail = "error", "Catalog Range step is invalid."
+                            else:
+                                selected_value = _snap_to_catalog_range(float(minimum) + position * (float(maximum) - float(minimum)), float(minimum), float(maximum), float(parameter["step"]) if parameter.get("step") is not None else None)
+                                status, detail = "selected", f"Embedding candidate interpolation; position={position:.6f}; confidence={confidence:.6f}."
+                                evidence["softmax_weights"] = weights
+                                evidence["selected_position"] = position
+                    except Exception as error:
+                        status, detail = "error", f"Range candidate scoring failed: {error}"
+            else:
+                entries = cfg._select_option_parameters.get(name) or []
+                vectors = cfg._select_option_vectors
+                allowed_values = _catalogue_value_domain(parameter, ui)
+                candidates = [entry for entry in entries if "value" in entry or "option" in entry]
+                if not allowed_values:
+                    status, detail = "domain_unavailable", f"No declared value domain or candidate vectors for {ui or 'unknown'} parameter {name}."
+                elif not candidates:
+                    status, detail = "artifacts_required", f"No typed candidate vectors are present for the declared {ui} domain of {name}."
+                elif vectors is None:
+                    status, detail = "artifacts_required", "Compatible typed-value candidate vectors are missing."
+                else:
+                    try:
+                        scores = _anchor_scores(query_vector, candidates, vectors)
+                        for entry, score in zip(candidates, scores):
+                            candidate_scores.append({"candidate": entry.get("value", entry.get("option")), "score": float(score), "candidate_source": entry.get("candidate_source"), "text_sha256": entry.get("text_sha256")})
+                        best_index = max(range(len(scores)), key=scores.__getitem__)
+                        confidence = scores[best_index]
+                        evidence["candidate_scores"] = candidate_scores
+                        evidence["threshold"] = cfg.threshold_toggle if ui == "Toggle" else cfg.threshold_select
+                        if confidence < float(evidence["threshold"]):
+                            status, detail = "selection_uncertain", f"{ui} candidates did not reach the configured evidence threshold."
+                        else:
+                            candidate = candidates[best_index]
+                            selected_value = candidate["value"] if "value" in candidate else candidate.get("option")
+                            if not any(_same_catalogue_value(selected_value, allowed) for allowed in allowed_values):
+                                status, detail = "error", "Embedding candidate is not in the declared catalogue value domain."
+                                selected_value = None
+                            else:
+                                status, detail = "selected", f"Embedding candidate selected; confidence={confidence:.6f}."
+                    except Exception as error:
+                        status, detail = "error", f"{ui} candidate scoring failed: {error}"
+        elif query_text:
+            status, detail = "error", "No compatible query embedding was supplied."
+
+        row = {**base, "status": status, "detail": detail, "selection_evidence": evidence}
+        if status == "selected":
+            row["value"] = selected_value
+        if confidence is not None and math.isfinite(confidence):
+            row["confidence"] = confidence
+        results[name] = row
+        if audit_log is not None:
+            audit_log.append({
+                "technical_name": name,
+                "ui_element": ui,
+                "retrieval_rank": parameter.get("_retrieval_rank"),
+                "retrieval_similarity": parameter.get("_retrieval_similarity"),
+                "selection_status": status,
+                "selection_detail": detail,
+                "input_value": input_value,
+                "selected_value": selected_value if status == "selected" else None,
+                "confidence": confidence,
+                "candidate_scores": candidate_scores,
+                **diagnostic_context,
+                **selection_identity,
             })
     return results
 

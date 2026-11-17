@@ -16,13 +16,14 @@ vi.mock("node:fs/promises", () => ({
       if (value === undefined) throw Object.assign(new Error("not found"), { code: "ENOENT" });
       files.set(String(to), value); files.delete(String(from));
     }),
+    open: vi.fn(async () => ({ writeFile: vi.fn(async () => undefined), close: vi.fn(async () => undefined) })),
     rm: vi.fn(async () => undefined),
   },
 }));
 
 import { POST } from "./route";
 import { GET as GET_ONE } from "./[id]/route";
-import { applyQwenArtifact, qwenSessionMetadataForSnapshot, replaceQwenBank, restoreQwenMetadataFromSnapshot, restoreQwenSessionState, type QwenSessionState } from "@/lib/am-stage-automation/qwen-stage-apply";
+import { applyQwenArtifact, markQwenManual, qwenSessionMetadataForSnapshot, removeQwenParameter, replaceQwenBank, restoreQwenMetadataFromSnapshot, restoreQwenSessionState, type QwenSessionState } from "@/lib/am-stage-automation/qwen-stage-apply";
 import { restoreBriefImportState, type BriefImportState } from "@/lib/am-stage-automation/brief-stage-apply";
 import type { ActiveParameter } from "@/lib/rag-v3/types";
 
@@ -123,5 +124,40 @@ describe("Qwen metadata through штатный session API", () => {
     expect(restored.snapshot.data.banks.text_parameters_gemma).toEqual(originalBanks.gemma);
     expect(restored.snapshot.data.banks.clap_parameters).toEqual(originalBanks.clap);
     expect(restored.snapshot.data.banks.siglip_parameters).toEqual(originalBanks.siglip);
+  });
+
+  it("keeps the E re-apply result on a current revision and rejects a stale save", async () => {
+    const first = applyQwenArtifact(restoreQwenSessionState([]), [neighboring("manual"), neighboring("deleted")], source, "operation-1");
+    const initialResponse = await POST(new Request("http://localhost/api/am-stage/sessions", {
+      method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ title: "E re-apply", data: sessionData(qwenSessionMetadataForSnapshot(first), replaceQwenBank({ qwen3: [], gemma: [], clap: [], siglip: [] }, first)) }),
+    }));
+    expect(initialResponse.status).toBe(200);
+    const initial = await initialResponse.json() as { snapshot: { meta: { id: string; updated_at: string } } };
+
+    const manuallyEdited = markQwenManual(first, "manual", "human value");
+    const deleted = removeQwenParameter(manuallyEdited, "deleted");
+    const reapplied = applyQwenArtifact(deleted, [neighboring("manual"), neighboring("deleted")], source, "operation-2");
+    expect(reapplied.parameters.find((item) => item.technical_name === "manual")?.current_value).toBe("human value");
+    expect(reapplied.parameters.some((item) => item.technical_name === "deleted")).toBe(false);
+    expect(reapplied.tombstones).toContain("deleted");
+
+    const banks = replaceQwenBank({ qwen3: [], gemma: [], clap: [], siglip: [] }, reapplied);
+    const saved = await POST(new Request("http://localhost/api/am-stage/sessions", {
+      method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ id: initial.snapshot.meta.id, expectedRevision: initial.snapshot.meta.updated_at, title: "E re-apply", data: sessionData(qwenSessionMetadataForSnapshot(reapplied), banks) }),
+    }));
+    expect(saved.status).toBe(200);
+
+    const stale = await POST(new Request("http://localhost/api/am-stage/sessions", {
+      method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ id: initial.snapshot.meta.id, expectedRevision: initial.snapshot.meta.updated_at, title: "stale overwrite", data: sessionData(qwenSessionMetadataForSnapshot(first), replaceQwenBank({ qwen3: [], gemma: [], clap: [], siglip: [] }, first)) }),
+    }));
+    expect(stale.status).toBe(409);
+    expect((await stale.json()).code).toBe("STALE_SESSION_REVISION");
+
+    const restoredResponse = await GET_ONE(new Request(`http://localhost/api/am-stage/sessions/${initial.snapshot.meta.id}`), { params: Promise.resolve({ id: initial.snapshot.meta.id }) });
+    const restored = await restoredResponse.json() as { snapshot: { data: { banks: { text_parameters_qwen3: ActiveParameter[]; qwen_import: ReturnType<typeof qwenSessionMetadataForSnapshot> } } } };
+    const final = restoreQwenMetadataFromSnapshot(restored.snapshot.data.banks.text_parameters_qwen3, restored.snapshot.data.banks.qwen_import);
+    expect(restored.snapshot.data.banks.text_parameters_qwen3.find((item) => item.technical_name === "manual")?.current_value).toBe("human value");
+    expect(final.tombstones).toContain("deleted");
+    expect(final.operationReceipts).toHaveProperty("operation-2");
   });
 });

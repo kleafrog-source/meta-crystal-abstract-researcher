@@ -7,11 +7,17 @@ import {
   mergeAtomicTokens,
 } from "@/lib/combinatorial-genesis/core";
 import {
-  getFrozenRuntimeParameters,
   rankRuntimeAtoms,
   type RuntimeParameterRecord,
 } from "@/lib/combinatorial-genesis/runtime-index";
+import {
+  buildEligibleDonorMap,
+  createDonorPolicy,
+  readDonorRestrictions,
+  resolveDonorReferences,
+} from "@/lib/combinatorial-genesis/donor-policy";
 import { inferCandidateValues } from "@/lib/combinatorial-genesis/value-inference";
+import { normalizedCosine } from "@/lib/combinatorial-genesis/similarity";
 import { readGenesisLibrary } from "@/lib/combinatorial-genesis/library";
 import { embedText, embedTexts, getOllamaModel } from "@/lib/ollama-client";
 
@@ -25,20 +31,6 @@ interface PreviewRequest {
 }
 
 const CONNECTOR_ATOMS = new Set(["and", "for", "in", "of", "on", "or", "out", "over", "per", "the", "to", "with"]);
-
-function normalizedCosine(left: number[], right: number[]): number {
-  if (left.length !== right.length || left.length === 0) return Number.NEGATIVE_INFINITY;
-  let dot = 0;
-  let leftNorm = 0;
-  let rightNorm = 0;
-  for (let index = 0; index < left.length; index += 1) {
-    dot += left[index] * right[index];
-    leftNorm += left[index] * left[index];
-    rightNorm += right[index] * right[index];
-  }
-  const denominator = Math.sqrt(leftNorm) * Math.sqrt(rightNorm);
-  return denominator ? dot / denominator : Number.NEGATIVE_INFINITY;
-}
 
 function runtimeRole(role: string): GenesisAtomicToken["roles"] {
   if (role === "property") return ["property"];
@@ -124,24 +116,41 @@ export async function POST(request: Request) {
         `Runtime index model ${ranked.model} differs from active Ollama model ${getOllamaModel()}. Rebuild the runtime index.`,
       );
     }
-    const localTokens = new TokenDecomposer().decompose(sourceParameters).map((token) => ({
+    const restrictions = await readDonorRestrictions();
+    const liveParameters: RuntimeParameterRecord[] = dataset.map((parameter) => ({
+      ...parameter,
+      default: Array.isArray(parameter.default) ? undefined : parameter.default,
+    }));
+    const donorPolicy = createDonorPolicy(liveParameters, [], {
+      ...restrictions,
+    });
+    const eligibleParameterMap = buildEligibleDonorMap(donorPolicy);
+    const localTokensRaw = new TokenDecomposer().decompose(sourceParameters);
+    const localSourceResolution = resolveDonorReferences(requestedNames, donorPolicy);
+    const localSourceSet = new Set(localSourceResolution.acceptedNames);
+    const localTokens = localTokensRaw.map((token) => ({
       ...token,
+      source_parameters: token.source_parameters.filter((name) => localSourceSet.has(name)),
       semantic_score: 1,
     }));
     const usableAtoms = ranked.atoms.filter(
       (atom) => atom.role !== "unit" && !CONNECTOR_ATOMS.has(atom.atom),
     );
+    const runtimeReferences = ranked.atoms.flatMap((atom) => atom.source_parameters);
+    const runtimeSourceResolution = resolveDonorReferences(runtimeReferences, donorPolicy);
+    const runtimeSourceSet = new Set(runtimeSourceResolution.acceptedNames);
     const datasetTokens: GenesisAtomicToken[] = usableAtoms.map((atom) => ({
       token: atom.atom,
       frequency: 1,
       roles: runtimeRole(atom.role),
-      source_parameters: atom.source_parameters,
+      source_parameters: atom.source_parameters.filter((name) => runtimeSourceSet.has(name)),
       semantic_score: Number(atom.similarity.toFixed(6)),
     }));
     const tokens = mergeAtomicTokens(localTokens, datasetTokens);
     const existingNames = new Set([
       ...dataset.map((parameter) => parameter.technical_name),
-      ...ranked.frozenNames,
+      ...restrictions.tombstoneNames,
+      ...restrictions.excludedNames,
     ]);
     const generated = new CombinatorialGenerator().generate(tokens, existingNames, {
       seed: typeof body.seed === "number" ? body.seed : 0,
@@ -165,27 +174,11 @@ export async function POST(request: Request) {
           left.technical_name.localeCompare(right.technical_name),
       )
       .slice(0, Math.min(generated.length, limit * 4));
-    const frozen = await getFrozenRuntimeParameters();
-    const parameterMap = new Map<string, RuntimeParameterRecord>();
-    for (const parameter of frozen.parameters) parameterMap.set(parameter.technical_name, parameter);
-    for (const parameter of dataset) {
-      parameterMap.set(parameter.technical_name, {
-        technical_name: parameter.technical_name,
-        ui_element: parameter.ui_element,
-        unit: parameter.unit,
-        min_value: parameter.min_value,
-        max_value: parameter.max_value,
-        step: parameter.step,
-        default: Array.isArray(parameter.default) ? undefined : parameter.default,
-        options: parameter.options,
-        quantity_kind: parameter.quantity_kind,
-      });
-    }
-    const donorNames = Array.from(new Set(rankedCandidates.flatMap((candidate) => {
+    const referencedDonorNames = Array.from(new Set(rankedCandidates.flatMap((candidate) => {
       const propertyEntry = [...candidate.token_provenance].reverse().find((entry) => entry.role === "property");
-      return [...(propertyEntry?.source_parameters ?? []), ...candidate.parent_parameters]
-        .filter((name) => parameterMap.has(name));
+      return [...(propertyEntry?.source_parameters ?? []), ...candidate.parent_parameters];
     })));
+    const donorNames = resolveDonorReferences(referencedDonorNames, donorPolicy).acceptedNames;
     const donorEmbeddings = donorNames.length
       ? await embedTexts(donorNames.map((name) => name.replaceAll("_", " ")))
       : [];
@@ -196,7 +189,7 @@ export async function POST(request: Request) {
       ...candidate,
       value_inference: inferCandidateValues(
         candidate,
-        parameterMap,
+        donorPolicy,
         new Map(donorNames.flatMap((name) => {
           const candidateEmbedding = candidateEmbeddingByName.get(candidate.technical_name);
           const donorEmbedding = donorEmbeddingByName.get(name);
@@ -205,7 +198,7 @@ export async function POST(request: Request) {
             : [];
         })),
       ),
-      metadata: inferredMetadata(candidate.technical_name, candidate.parent_parameters, parameterMap),
+      metadata: inferredMetadata(candidate.technical_name, candidate.parent_parameters, eligibleParameterMap),
     }));
     const candidates = inferredCandidates
       .map((candidate) => ({
@@ -224,14 +217,34 @@ export async function POST(request: Request) {
       )
       .slice(0, limit);
 
+    const allSourceReferences = [...requestedNames, ...runtimeReferences];
+    const allSourceResolution = resolveDonorReferences(allSourceReferences, donorPolicy);
+    const persistedRuntimeDiagnostics = ranked.atoms.flatMap((atom) => atom.source_reference_diagnostics ?? []);
+    const sourceDiagnostics = Array.from(new Map(
+      [...allSourceResolution.diagnostics, ...persistedRuntimeDiagnostics.map((item) => ({
+        ...item,
+        reason: item.reason as (typeof allSourceResolution.diagnostics)[number]["reason"],
+      }))].map((item) => [`${item.technical_name}\u0000${item.reason}`, item]),
+    ).values());
+    const sourceReasonCounts = sourceDiagnostics.reduce<Record<string, number>>((counts, item) => {
+      counts[item.reason] = (counts[item.reason] ?? 0) + 1;
+      return counts;
+    }, {});
     return NextResponse.json({
-      mode: "FROZEN_DATASET_BGE_PREVIEW",
+        mode: "LIVE_CATALOGUE_PREVIEW",
       writes_performed: false,
       dataset_version: ranked.versionId,
       embedding_model: ranked.model,
       query,
       source_count: requestedNames.length,
       known_source_count: requestedNames.filter((name) => datasetMap.has(name)).length,
+      source_diagnostics: {
+        unique_source_count: new Set(allSourceReferences).size,
+        eligible_donor_count: allSourceResolution.acceptedNames.length,
+        rejected_source_count: sourceDiagnostics.length,
+        reason_counts: sourceReasonCounts,
+        rejected_sources: sourceDiagnostics,
+      },
       token_count: tokens.length,
       tokens: tokens.slice(0, 100),
       ranked_atoms: usableAtoms.slice(0, 40),
@@ -242,7 +255,7 @@ export async function POST(request: Request) {
       candidates,
       validation: {
         bge_m3_applied: true,
-        autonomous_library_and_frozen_stop_list_applied: true,
+        live_catalogue_only: true,
         values_extrapolated: candidates.some(
           (candidate) => candidate.value_inference.status === "auto_resolved",
         ),

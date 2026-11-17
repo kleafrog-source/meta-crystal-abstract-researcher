@@ -165,6 +165,8 @@ def build(data_root: Path, output: Path, minimum_group: int, maximum_atom_source
         compatibility_errors.append("dataset version")
     if str(composite.get("excluded_sha256")) != str(snapshot["excluded_sha256"]):
         compatibility_errors.append("excluded registry")
+    if str(composite.get("source_revision") or "") != str(snapshot["source_revision"]):
+        compatibility_errors.append("effective catalogue revision")
     if int(composite.get("parameter_count", -1)) != int(snapshot["parameter_count"]):
         compatibility_errors.append(
             f"parameter count ({composite.get('parameter_count')} indexed, {snapshot['parameter_count']} active)"

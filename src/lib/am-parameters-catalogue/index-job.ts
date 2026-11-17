@@ -2,8 +2,26 @@ import { getManagedJob, startManagedRebuild } from "@/lib/rag-v3/managed-rebuild
 import { getPipelineJob } from "@/lib/combinatorial-genesis/pipeline-job";
 import { readCatalogueState, readQueue, writeCatalogueState, writeQueue } from "./catalogue";
 
-export async function startCatalogueIndexJob(queueIds: string[] = []) {
+export async function reconcileCatalogueIndexJob() {
   const state = await readCatalogueState();
+  if (!state.job.running || getManagedJob().running) return state;
+  const now = new Date().toISOString();
+  const reason = "Пересборка была прервана остановкой сервера. Индексы остаются устаревшими; запустите её вручную после проверки каталога.";
+  state.job.running = false;
+  state.job.finished_at = now;
+  state.job.step = "Прервано";
+  state.job.error = reason;
+  state.job.logs = [...state.job.logs, `[recovery] ${reason}`].slice(-50);
+  state.indexes_dirty = true;
+  await writeCatalogueState(state);
+  const queue = await readQueue();
+  queue.items = queue.items.map((item) => item.status === "applying" ? { ...item, status: "failed", error: reason } : item);
+  await writeQueue(queue);
+  return state;
+}
+
+export async function startCatalogueIndexJob(queueIds: string[] = []) {
+  const state = await reconcileCatalogueIndexJob();
   if (state.job.running) return { started: false, reason: "already_running" };
   if (getPipelineJob().running) throw new Error("Дождитесь завершения inbox pipeline Combinatorial Genesis перед пересборкой каталога.");
   state.job = { running: true, started_at: new Date().toISOString(), finished_at: null, step: "Подготовка пересборки", current: 0, total: 3, error: null, logs: [] };

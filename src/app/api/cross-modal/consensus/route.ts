@@ -4,14 +4,14 @@ import { buildConsensus, type GraphSuggestion } from "@/lib/cross-modal/consensu
 import { getJournalRecord } from "@/lib/cross-modal/journal";
 import type { ConsensusResultRow } from "@/lib/cross-modal/types";
 import { loadGraph } from "@/lib/knowledge-graph/store";
-import { readV3ParameterUnion } from "@/lib/meta-crystal-v3-lab";
+import { readV3LiveParameterSnapshot } from "@/lib/meta-crystal-v3-lab";
 import type { ActiveParameter, EnrichedParameter } from "@/lib/rag-v3/types";
 
 export const runtime = "nodejs"; export const dynamic = "force-dynamic";
 
 function activeParameter(parameter: EnrichedParameter, row: ConsensusResultRow & { selected_value: number | string }): ActiveParameter {
   const fallback = Array.isArray(parameter.default) ? JSON.stringify(parameter.default) : parameter.default;
-  return { technical_name: parameter.technical_name, name_ru: parameter.name_ru, description_en: parameter.description_en, description_ru: parameter.description_ru, category: parameter.category ?? "Uncategorized", sub_category: parameter.sub_category ?? "General", ui_element: parameter.ui_element, min_value: parameter.min_value, max_value: parameter.max_value, step: parameter.step, default: fallback, suggested_value: row.selected_value, current_value: row.selected_value, before: fallback, source: "consensus", value_confidence: row.consensus_score, anchor_target: row.selected_value, detail: `${row.graph_only ? "graph depth=1" : `${row.direct_source_count} direct source(s)`}; ${row.conflict ? "value conflict resolved" : "values aligned"}`, unit: parameter.unit, options: parameter.options, min_length: parameter.min_length, max_length: parameter.max_length, lyria_prompt_tags: parameter.lyria_prompt_tags ?? [], semantic_keywords: parameter.semantic_keywords ?? [], similarity: row.consensus_score, domain: parameter.domain, quantity_kind: parameter.quantity_kind, axes: parameter.axes ?? [], retrieval_scope: parameter.retrieval_scope ?? "sound" };
+  return { technical_name: parameter.technical_name, name_ru: parameter.name_ru, description_en: parameter.description_en, description_ru: parameter.description_ru, category: parameter.category ?? "Uncategorized", sub_category: parameter.sub_category ?? "General", ui_element: parameter.ui_element, min_value: parameter.min_value, max_value: parameter.max_value, step: parameter.step, default: fallback as string | number | undefined, catalogue_default: parameter.default, suggested_value: row.selected_value, current_value: row.selected_value, before: fallback as string | number | undefined, source: "consensus", value_confidence: row.consensus_score, anchor_target: row.selected_value, detail: `${row.graph_only ? "graph depth=1" : `${row.direct_source_count} direct source(s)`}; ${row.conflict ? "value conflict resolved" : "values aligned"}`, unit: parameter.unit, options: parameter.options?.filter((option): option is string => typeof option === "string"), min_length: parameter.min_length, max_length: parameter.max_length, lyria_prompt_tags: parameter.lyria_prompt_tags ?? [], semantic_keywords: parameter.semantic_keywords ?? [], similarity: row.consensus_score, domain: parameter.domain, quantity_kind: parameter.quantity_kind, axes: parameter.axes ?? [], retrieval_scope: parameter.retrieval_scope ?? "sound" };
 }
 
 export async function POST(request: Request) {
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     const requested = Array.isArray(body.sources) ? body.sources.filter((item) => item.record_id && Number(item.weight) > 0).slice(0, 12) : [];
     if (!requested.length) return NextResponse.json({ error: "Select at least one Journal source with a positive weight" }, { status: 400 });
     const journalSources = await Promise.all(requested.map(async (item) => { const record = await getJournalRecord(item.record_id!); if (!record) throw new Error(`Journal record not found: ${item.record_id}`); return { record_id: record.id, modality: record.snapshot.modality, weight: Math.max(0, Math.min(1, Number(item.weight))), parameters: record.snapshot.parameters }; }));
-    const { records } = await readV3ParameterUnion(); const metadata = new Map<string, EnrichedParameter>(); for (const [name, value] of records) metadata.set(name, value as unknown as EnrichedParameter);
+    const { records } = await readV3LiveParameterSnapshot(); const metadata = new Map<string, EnrichedParameter>(); for (const [name, value] of records) metadata.set(name, value as unknown as EnrichedParameter);
     const graphSuggestions: GraphSuggestion[] = [];
     if (body.graph_enabled) {
       try {

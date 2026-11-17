@@ -1,10 +1,11 @@
 import type { GenesisCandidate } from "./core";
+import { resolveDonorReferences, type DonorPolicy } from "./donor-policy";
 import type { RuntimeParameterRecord } from "./runtime-index";
 
 export interface CandidateValueInference {
   status: "auto_resolved" | "needs_review";
   confidence: number;
-  quantity_kind: string;
+  quantity_kind?: string;
   ui_element: string;
   unit: string;
   min_value?: number;
@@ -13,6 +14,11 @@ export interface CandidateValueInference {
   default?: number | string | number[];
   options?: string[];
   donor_parameters: string[];
+  donor_diagnostics: Array<{
+    technical_name: string;
+    reason: "similarity_fallback" | "similarity_zero_weight" | "similarity_invalid" | "quantity_kind_missing" | "quantity_kind_invalid";
+    similarity?: number;
+  }>;
   explanation: string[];
 }
 
@@ -56,22 +62,21 @@ function rounded(value: number): number {
   return Number(value.toPrecision(10));
 }
 
-function inferQuantityKind(unit: string, property: string, uiElement: string): string {
-  if (uiElement === "Select") return "enum";
-  if (uiElement === "Toggle") return "toggle";
-  if (["hz", "bpm", "rate", "decay_rate"].includes(unit) || property.includes("frequency") || property === "rate") return "rate";
-  if (["ms", "s"].includes(unit) || ["attack", "decay", "delay", "duration", "release", "time"].includes(property)) return "duration";
-  if (["db", "lufs", "phon"].includes(unit) || ["gain", "level", "loudness"].includes(property)) return "level";
-  if (["cents", "semitones"].includes(unit)) return "detune";
-  if (["meter", "meters", "centimeters", "millimeters", "microns"].includes(unit)) return "length";
-  if (property === "density" || unit.includes("density")) return "density";
-  if (["count", "order"].includes(property) || unit.includes("count")) return "count";
-  return "amount";
-}
-
 function selectSignature(parameter: RuntimeParameterRecord): string {
   const options = Array.isArray(parameter.options) ? [...parameter.options].sort().join("\u0000") : "";
-  return `${parameter.ui_element}|${normalizeUnit(parameter.unit)}|${options}`;
+  return `${String(parameter.quantity_kind ?? "")} | ${parameter.ui_element}|${normalizeUnit(parameter.unit)}|${options}`;
+}
+
+function validQuantityKind(value: unknown): value is string {
+  // The catalogue validates a snake_case format but defines no closed enum; preserve valid labels as opaque values.
+  return typeof value === "string" && /^[a-z][a-z0-9_]*$/.test(value);
+}
+
+function similarityInfo(name: string, similarities: ReadonlyMap<string, number>) {
+  if (!similarities.has(name)) return { source: "fallback" as const, value: 0.5, weight: 0.5 ** 4 };
+  const value = similarities.get(name)!;
+  if (!Number.isFinite(value)) return { source: "invalid" as const, value, weight: 0 };
+  return { source: "measured" as const, value, weight: Math.min(1, Math.max(0, value)) ** 4 };
 }
 
 function rangeConsistency(parameters: RuntimeParameterRecord[]): number {
@@ -83,9 +88,27 @@ function rangeConsistency(parameters: RuntimeParameterRecord[]): number {
   return Math.max(...counts.values()) / signatures.length;
 }
 
+export function donorSimilarityWeight(similarity: number | undefined): number {
+  if (similarity === undefined) return 0.5 ** 4;
+  if (!Number.isFinite(similarity)) return 0;
+  return Math.min(1, Math.max(0, similarity)) ** 4;
+}
+
+function isUsableRange(parameter: RuntimeParameterRecord): boolean {
+  const { min_value: min, max_value: max, step, default: value } = parameter;
+  return finite(min) && finite(max) && finite(step) && finite(value) &&
+    min < max && step > 0 && step <= max - min && value >= min && value <= max;
+}
+
+function isUsableSelect(parameter: RuntimeParameterRecord): boolean {
+  return Array.isArray(parameter.options) && parameter.options.length > 0 &&
+    parameter.options.every((option) => typeof option === "string" && option.length > 0) &&
+    typeof parameter.default === "string" && parameter.options.includes(parameter.default);
+}
+
 export function inferCandidateValues(
   candidate: GenesisCandidate,
-  parameterMap: ReadonlyMap<string, RuntimeParameterRecord>,
+  donorPolicy: DonorPolicy,
   donorSimilarities: ReadonlyMap<string, number> = new Map(),
 ): CandidateValueInference {
   const propertyEntry = [...candidate.token_provenance].reverse().find((entry) => entry.role === "property");
@@ -94,70 +117,105 @@ export function inferCandidateValues(
     ...(propertyEntry?.source_parameters ?? []),
     ...candidate.parent_parameters,
   ]));
-  const possible = donorNames
-    .map((name) => parameterMap.get(name))
-    .filter((parameter): parameter is RuntimeParameterRecord => Boolean(parameter))
+  const resolvedDonors = resolveDonorReferences(donorNames, donorPolicy).donors;
+  const sourceMatches = resolvedDonors
     .filter((parameter) => parameter.technical_name.toLowerCase().split("_").includes(property));
+  const possible = sourceMatches.filter((parameter) =>
+    parameter.ui_element === "Range" ? isUsableRange(parameter) :
+      parameter.ui_element === "Select" ? isUsableSelect(parameter) : true,
+  );
 
   if (possible.length === 0) {
     return {
       status: "needs_review",
       confidence: 0,
-      quantity_kind: inferQuantityKind("", property, "Range"),
       ui_element: "Range",
       unit: "unresolved",
       donor_parameters: [],
+      donor_diagnostics: [],
       explanation: [`No compatible donor contains terminal property atom "${property}".`],
     };
   }
 
-  const groups = new Map<string, RuntimeParameterRecord[]>();
-  for (const parameter of possible) {
+  const donorDiagnostics: CandidateValueInference["donor_diagnostics"] = [];
+  const withEvidence = possible.flatMap((parameter) => {
+    const similarity = similarityInfo(parameter.technical_name, donorSimilarities);
+    if (similarity.source === "fallback") donorDiagnostics.push({ technical_name: parameter.technical_name, reason: "similarity_fallback", similarity: similarity.value });
+    if (similarity.source === "invalid") donorDiagnostics.push({ technical_name: parameter.technical_name, reason: "similarity_invalid" });
+    if (similarity.source === "measured" && similarity.weight === 0) donorDiagnostics.push({ technical_name: parameter.technical_name, reason: "similarity_zero_weight", similarity: similarity.value });
+    if (similarity.weight === 0) return [];
+    if (!validQuantityKind(parameter.quantity_kind)) {
+      donorDiagnostics.push({
+        technical_name: parameter.technical_name,
+        reason: parameter.quantity_kind == null || parameter.quantity_kind === "" ? "quantity_kind_missing" : "quantity_kind_invalid",
+      });
+      return [];
+    }
+    return [{ parameter, similarity }];
+  });
+  const eligible = withEvidence.filter(({ similarity }) => similarity.weight > 0);
+  const allQuantityKinds = new Set(eligible.map(({ parameter }) => parameter.quantity_kind));
+  const hasQuantityKindConflict = allQuantityKinds.size > 1;
+  const groups = new Map<string, typeof eligible>();
+  for (const item of eligible) {
+    const parameter = item.parameter;
     const signature = selectSignature(parameter);
-    groups.set(signature, [...(groups.get(signature) ?? []), parameter]);
+    groups.set(signature, [...(groups.get(signature) ?? []), item]);
   }
-  const groupWeight = (group: RuntimeParameterRecord[]) => group.reduce(
-    (sum, parameter) => sum + Math.max(0.01, donorSimilarities.get(parameter.technical_name) ?? 0.5) ** 4,
+  const groupWeight = (group: typeof eligible) => group.reduce(
+    (sum, item) => sum + item.similarity.weight,
     0,
   );
   const allGroups = Array.from(groups.values());
-  const compatible = allGroups.sort(
+  if (!allGroups.length || eligible.length < 2 || hasQuantityKindConflict || donorDiagnostics.some((item) => item.reason.startsWith("quantity_kind_"))) {
+    return {
+      status: "needs_review",
+      confidence: 0,
+      ui_element: possible[0]?.ui_element ?? "Range",
+      unit: possible[0] ? normalizeUnit(possible[0].unit) || "unitless" : "unresolved",
+      donor_parameters: [],
+      donor_diagnostics: donorDiagnostics,
+      explanation: [
+        !allGroups.length ? "No positive-weight donors with valid quantity_kind." :
+          eligible.length < 2 ? "Fewer than two positive-weight donors are available." :
+            hasQuantityKindConflict ? "Donors disagree on quantity_kind; manual review is required." :
+              "A donor has missing or invalid quantity_kind; manual review is required.",
+      ],
+    };
+  }
+  const sortedGroups = allGroups.sort(
     (left, right) =>
       groupWeight(right) - groupWeight(left) ||
       right.length - left.length ||
-      selectSignature(left[0]).localeCompare(selectSignature(right[0])),
-  )[0].sort(
-    (left, right) =>
-      (donorSimilarities.get(right.technical_name) ?? 0) -
-        (donorSimilarities.get(left.technical_name) ?? 0) ||
-      left.technical_name.localeCompare(right.technical_name),
-  ).slice(0, 8);
+      selectSignature(left[0].parameter).localeCompare(selectSignature(right[0].parameter)),
+  );
+  const compatibleGroup = sortedGroups[0];
+  const compatible = compatibleGroup.sort((left, right) =>
+    right.similarity.weight - left.similarity.weight ||
+      left.parameter.technical_name.localeCompare(right.parameter.technical_name),
+  ).slice(0, 8).map(({ parameter }) => parameter);
   const uiElement = compatible[0].ui_element;
   const unit = normalizeUnit(compatible[0].unit) || "unitless";
   const totalWeight = allGroups.reduce((sum, group) => sum + groupWeight(group), 0);
-  const share = totalWeight ? groupWeight(compatible) / totalWeight : compatible.length / possible.length;
+  const share = groupWeight(compatibleGroup) / totalWeight;
   const consistency = uiElement === "Range" ? rangeConsistency(compatible) : 1;
-  const topSimilarity = Math.max(
-    0,
-    ...compatible.map((parameter) => donorSimilarities.get(parameter.technical_name) ?? 0.5),
-  );
+  const topSimilarity = Math.max(0, ...compatible.map((parameter) => {
+    return similarityInfo(parameter.technical_name, donorSimilarities).value;
+  }));
   const confidence = Math.min(
     0.99,
     0.15 + Math.min(0.3, compatible.length * 0.08) + share * 0.25 +
       consistency * 0.15 + topSimilarity * 0.15,
   );
   const resolved = compatible.length >= 2 && confidence >= 0.72;
-  const quantityKinds = compatible.map((parameter) => parameter.quantity_kind).filter(Boolean) as string[];
-  const quantityKind = quantityKinds.length && new Set(quantityKinds).size === 1
-    ? quantityKinds[0]
-    : inferQuantityKind(unit, property, uiElement);
   const result: CandidateValueInference = {
     status: resolved ? "auto_resolved" : "needs_review",
     confidence: Number(confidence.toFixed(4)),
-    quantity_kind: quantityKind,
+    quantity_kind: compatible[0].quantity_kind!,
     ui_element: uiElement,
     unit,
     donor_parameters: compatible.map((parameter) => parameter.technical_name).sort(),
+    donor_diagnostics: donorDiagnostics,
     explanation: [
       `Terminal property atom: ${property}.`,
       `${compatible.length}/${possible.length} donors agree on UI/unit/options.`,
@@ -168,10 +226,7 @@ export function inferCandidateValues(
   };
 
   if (uiElement === "Range") {
-    const ranges = compatible.filter(
-      (parameter) => finite(parameter.min_value) && finite(parameter.max_value) &&
-        finite(parameter.step) && finite(parameter.default) && parameter.step > 0,
-    );
+    const ranges = compatible.filter(isUsableRange);
     if (ranges.length < 2) {
       result.status = "needs_review";
       result.confidence = Math.min(result.confidence, 0.69);
@@ -182,7 +237,8 @@ export function inferCandidateValues(
     result.max_value = rounded(median(ranges.map((parameter) => parameter.max_value as number)));
     result.step = rounded(median(ranges.map((parameter) => parameter.step as number)));
     result.default = rounded(median(ranges.map((parameter) => parameter.default as number)));
-    if (result.min_value >= result.max_value || result.step <= 0) {
+    if (result.min_value >= result.max_value || result.step <= 0 ||
+      result.step > result.max_value - result.min_value) {
       result.status = "needs_review";
       result.confidence = Math.min(result.confidence, 0.5);
       result.explanation.push("Aggregated numeric range is invalid.");
@@ -192,7 +248,7 @@ export function inferCandidateValues(
   } else if (uiElement === "Select") {
     result.options = compatible[0].options;
     result.default = compatible[0].default;
-    if (!result.options?.length || !result.options.includes(String(result.default))) {
+    if (!isUsableSelect(compatible[0])) {
       result.status = "needs_review";
       result.confidence = Math.min(result.confidence, 0.5);
       result.explanation.push("Select donors do not provide a valid shared option/default set.");

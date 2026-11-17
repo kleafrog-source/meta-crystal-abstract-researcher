@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Startup script for the Meta Crystal app.
-Starts the Next.js dev server and optionally opens the browser.
-"""
+"""Start the project-local Next.js production or development server on Windows."""
 
+import argparse
 import os
+import shutil
 import subprocess
 import sys
 import threading
@@ -14,66 +13,67 @@ import webbrowser
 from pathlib import Path
 
 
-if sys.platform == "win32":
-    import codecs
-
-    sys.stdout = codecs.getwriter("utf-8")(sys.stdout.buffer)
-    sys.stderr = codecs.getwriter("utf-8")(sys.stderr.buffer)
-
-
-def open_browser_delayed():
+def open_browser_delayed() -> None:
     time.sleep(5)
-    print("Opening browser...")
-    webbrowser.open("http://localhost:3000")
+    webbrowser.open("http://127.0.0.1:3000")
 
 
-def main():
-    project_root = Path(__file__).parent.resolve()
-    os.chdir(project_root)
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--production", action="store_true", help="start the production build (default)")
+    mode.add_argument("--dev", action="store_true", help="start the webpack development server")
+    args = parser.parse_args()
 
-    print("Starting Meta Crystal app...")
-    print(f"Working directory: {project_root}")
+    project_root = Path(__file__).resolve().parent
+    node = shutil.which("node")
+    python = Path(sys.executable).resolve()
+    next_cli = project_root / "node_modules" / "next" / "dist" / "bin" / "next"
 
-    print("\nChecking dependencies...")
-    try:
-        node_result = subprocess.run(
-            ["node", "--version"], capture_output=True, text=True, check=False
-        )
-        if node_result.returncode == 0:
-            print(f"Node.js: {node_result.stdout.strip()}")
-        else:
-            print("Node.js not found.")
-            return 1
-    except Exception as exc:
-        print(f"Node.js not found: {exc}")
+    if not node:
+        print("Node.js was not found in PATH.", file=sys.stderr)
+        return 1
+    if not python.is_file():
+        print(f"Python interpreter does not exist: {python}", file=sys.stderr)
+        return 1
+    if not next_cli.is_file():
+        print(f"Project-local Next.js CLI was not found: {next_cli}", file=sys.stderr)
         return 1
 
-    print(f"Python: {sys.version.split()[0]}")
+    is_dev = args.dev
+    command = [node, str(next_cli), "dev" if is_dev else "start"]
+    if is_dev:
+        command.append("--webpack")
+    command.extend(["--hostname", "127.0.0.1", "--port", "3000"])
 
-    print("\nStarting Next.js server...")
-    print("App URL: http://localhost:3000")
+    child_env = os.environ.copy()
+    child_env["NODE_ENV"] = "development" if is_dev else "production"
+    child_env["PORT"] = "3000"
+    child_env["HOSTNAME"] = "127.0.0.1"
+    # Keep Prisma and Python work bound to this checkout, regardless of inherited shell values.
+    child_env["DATABASE_URL"] = "file:./dev.db"
+    child_env["PYTHON"] = str(python)
+    child_env["PYTHON_EXECUTABLE"] = str(python)
+
+    print(f"Project: {project_root}")
+    print(f"Mode: {'development' if is_dev else 'production'}")
+    print("Database: prisma/dev.db")
+    print("Data: data/combinatorial-genesis and data/am-stage-snapshots")
+    print(f"Python: {python}")
+    print("Address: http://127.0.0.1:3000")
+    print("Press Ctrl+C to stop the server.")
+
+    if child_env.get("AM_CORE_OPEN_BROWSER") == "1":
+        threading.Thread(target=open_browser_delayed, daemon=True).start()
 
     try:
-        if os.getenv("AM_CORE_OPEN_BROWSER") == "1":
-            browser_thread = threading.Thread(target=open_browser_delayed, daemon=True)
-            browser_thread.start()
-
-        print("Press Ctrl+C to stop the server.\n")
-        process = subprocess.run(
-            ["pnpm", "exec", "next", "dev", "--webpack", "-p", "3000"],
-            check=False,
-        )
-        if process.returncode != 0:
-            print(f"Server exited with code: {process.returncode}")
-            return 1
+        return subprocess.run(command, cwd=project_root, env=child_env, check=False).returncode
     except KeyboardInterrupt:
         print("\nStopped by user.")
         return 0
-    except Exception as exc:
-        print(f"Unexpected error: {exc}")
+    except OSError as exc:
+        print(f"Could not start the server: {exc}", file=sys.stderr)
         return 1
-
-    return 0
 
 
 if __name__ == "__main__":

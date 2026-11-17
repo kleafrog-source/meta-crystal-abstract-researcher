@@ -6,6 +6,7 @@ import { listTasks, runSidecar } from "@/lib/engine/runner";
 import { acquireEmbeddingModelSlot, getEmbeddingModelSlot, releaseEmbeddingModelSlot } from "@/lib/model-slot";
 import { loadLLMSettings } from "@/lib/llm/factory";
 import { capabilityIsEnabled } from "@/lib/capability-registry";
+import { getPreparedCandidateRowInputs } from "@/lib/rag-v3/managed-rebuild";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 7200;
@@ -49,15 +50,30 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   const settings = await loadLLMSettings();
   if (!capabilityIsEnabled(settings.capabilityRegistry, "audio.clap.resolved")) return NextResponse.json({ started: false, reason: "audio.clap.resolved is disabled in Settings." }, { status: 409 });
+  let candidateId: unknown;
+  try { candidateId = (await request.json() as { candidate_id?: unknown }).candidate_id; }
+  catch { return NextResponse.json({ started: false, reason: "Prepare source files first; candidate_id is required for this row." }, { status: 400 }); }
+  if (typeof candidateId !== "string") return NextResponse.json({ started: false, reason: "Prepare source files first; candidate_id is required for this row." }, { status: 400 });
+  let rowInputs: Awaited<ReturnType<typeof getPreparedCandidateRowInputs>>;
+  try { rowInputs = await getPreparedCandidateRowInputs(candidateId); }
+  catch (error) { return NextResponse.json({ started: false, reason: error instanceof Error ? error.message : String(error) }, { status: 409 }); }
   const slotOwner = "clap-index-build";
   if (!acquireEmbeddingModelSlot(slotOwner)) return NextResponse.json({ started: false, reason: `model slot busy: ${getEmbeddingModelSlot()?.owner ?? "unknown"}` }, { status: 409 });
   try {
     const running = listTasks().find((item) => item.taskType === "audio-clap" && item.title === "Build CLAP text index" && item.status === "running");
     if (running) { releaseEmbeddingModelSlot(slotOwner); return NextResponse.json({ started: false, reason: "already_running", taskId: running.taskId }, { status: 409 }); }
-    const task = runSidecar({ command: "audio_index", extraEnv: { CLAP_MODEL: settings.capabilityRegistry.modelSlots.clap.modelId }, timeoutMs: 2 * 60 * 60_000, taskType: "audio-clap", title: "Build CLAP text index" });
+    const task = runSidecar({ command: "audio_index", extraEnv: {
+      CLAP_MODEL: settings.capabilityRegistry.modelSlots.clap.modelId,
+      CLAP_PARAMETER_SNAPSHOT: rowInputs.snapshotPath,
+      CLAP_PREPARED_INPUT: rowInputs.clapInputPath,
+      CLAP_SOURCE_REVISION: rowInputs.sourceRevision,
+      CLAP_SOURCE_SNAPSHOT_SHA256: rowInputs.sourceSnapshotSha256,
+      CLAP_EXCLUDED_SHA256: rowInputs.excludedSha256,
+      CLAP_EXCLUDED_COUNT: String(rowInputs.excludedCount),
+    }, timeoutMs: 2 * 60 * 60_000, taskType: "audio-clap", title: "Build CLAP text index" });
     void task.done.catch(() => {}).finally(() => releaseEmbeddingModelSlot(slotOwner));
     return NextResponse.json({ started: true, taskId: task.taskId }, { status: 202 });
   } catch (error) {

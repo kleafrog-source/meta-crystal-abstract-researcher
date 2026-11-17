@@ -2,6 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { db } from "@/lib/db";
 import { AUTOMATION_SCENARIOS } from "./catalog";
 import { validateScenarioDefinition } from "./planning";
+import { validateUserScenarioDefinition } from "./scenario-editor";
 import type { AutomationScenarioDefinition } from "./contracts";
 import type { AutomationActionId } from "./contracts";
 
@@ -62,6 +63,8 @@ export async function createUserScenario(input: { id?: string; title: string; de
   const definition = { ...input.definition, id, version: 1, title };
   const issues = validateScenarioDefinition(definition);
   if (issues.length) throw new Error(issues.join(" "));
+  const executableIssues = validateUserScenarioDefinition(definition);
+  if (executableIssues.length) throw new Error(executableIssues.join(" "));
   const definitionHash = hash(definition), versionId = randomUUID();
   const existing = await db.automationScenario.findUnique({ where: { id } });
   if (existing) return { created: false, scenario: existing };
@@ -78,6 +81,8 @@ export async function saveScenarioVersion(input: { id: string; expectedVersion: 
   const definition = { ...input.definition, id: scenario.id, version: current.version + 1, title };
   const issues = validateScenarioDefinition(definition);
   if (issues.length) throw new Error(issues.join(" "));
+  const executableIssues = validateUserScenarioDefinition(definition);
+  if (executableIssues.length) throw new Error(executableIssues.join(" "));
   const definitionHash = hash(definition), versionId = randomUUID();
   await db.$transaction(async (tx) => {
     const changed = await tx.automationScenario.updateMany({ where: { id: scenario.id, currentVersionId: current.id }, data: { title, description: definition.description, currentVersionId: versionId } });

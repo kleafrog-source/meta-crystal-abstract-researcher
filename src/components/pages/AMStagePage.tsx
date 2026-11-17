@@ -30,7 +30,9 @@ import { AmStageMacroRunner } from "@/components/am-stage/AmStageMacroRunner";
 import { AutomationStageHandoff } from "@/components/am-stage/AutomationStageHandoff";
 import { AutomationViewLoadingStatus } from "@/components/am-stage/AutomationViewLoadingStatus";
 import { AutomationBriefResult, type BriefApplyRequest, type BriefViewArtifact } from "@/components/am-stage/AutomationBriefResult";
-import { collectHistoricalSegmentResults, extractStageBankParameters, type HistoricalSegmentResult } from "@/lib/am-stage-automation/historical-segment-results";
+import { HistoricalAudioDescriptionsView, HistoricalAudioTextView } from "@/components/am-stage/HistoricalAudioResults";
+import { HistoricalClientStage2Results } from "@/components/am-stage/HistoricalClientStage2Results";
+import { collectHistoricalSegmentResults, extractStageBankParameters, projectHistoricalAudioText, type HistoricalSegmentResult } from "@/lib/am-stage-automation/historical-segment-results";
 import { toInstructionContext } from "@/lib/rag-v3/instruction-support";
 
 const ACTIVE_AM_STAGE_SESSION_KEY = "am-stage-active-session-v1";
@@ -66,6 +68,7 @@ import {
 import {
   applySegmentSideMeta,
   applySuccessfulSegmentResult,
+  applySuccessfulSegmentResultPreservingManualEdits,
   getIncompleteSegmentIndexes,
   prepareSegmentRun,
   type AudioAnalysisStatus,
@@ -89,6 +92,7 @@ import { buildLayerTimelineLanes, LAYER_TIMELINE_SERIES_LIMIT, UNCLASSIFIED_TIME
 import { applyConsensusSmooth, averageParameterFrames, interpolateStageFrames, parameterMatchesLayers, type BlendCurve } from "@/lib/am-stage-blend";
 import { applyQwenArtifact, isCurrentQwenSelection, markQwenManual, qwenSessionMetadataForSnapshot, qwenSourceKey, removeQwenParameter, replaceQwenBank, restoreQwenMetadataFromSnapshot, restoreQwenSessionState, validateQwenArtifact, type QwenSessionState, type QwenSourceIdentity } from "@/lib/am-stage-automation/qwen-stage-apply";
 import { applyBriefArtifact, briefArtifactContractConsistent, briefImportStateForSnapshot, isCurrentBriefSelection, markBriefManualEdit, restoreBriefImportState, validateBriefArtifact, type BriefImportState, type BriefSelectionIdentity, type BriefSourceIdentity } from "@/lib/am-stage-automation/brief-stage-apply";
+import { isStageApplyAction, restoreMergeImportState, stageArtifactMetadataConsistent, type MergeImportState } from "@/lib/am-stage-automation/merge-stage-metadata";
 import { computeModalityTrust, DEFAULT_MODALITY_TRUST_CONFIG } from "@/lib/modality-trust";
 import { getPlaybackTimeSnapshot, setPlaybackTime, subscribePlaybackTime } from "@/lib/am-stage-playback";
 
@@ -129,12 +133,15 @@ type AutomationViewResult = {
   attemptId: string;
   successfulAttemptId: string;
   artifactId: string;
+  inputRefs: string[];
   schemaVersion: number;
   kind: string;
   bankId?: string;
+  outputPort?: string;
   modality?: string;
   pass?: string;
   validity?: string;
+  effectiveSettings?: Record<string, unknown>;
   artifactContractConsistent: boolean;
   actionId: string;
   status: string;
@@ -144,6 +151,8 @@ type AutomationViewResult = {
   fragments?: HistoricalSegmentResult[];
   brief?: string;
 };
+
+type MergeApplyPreview = { target: string; counts: { added: number; updated: number; skipped: number }; changes: Array<{ technicalName: string; status: string; reason?: string; source: { sourceArtifactId: string; sourceActionId: string } }>; conflicts: Array<{ technicalName: string; reason: string }> };
 
 function HistoricalParameterBank({ title, parameters }: { title: string; parameters: ActiveParameter[] }) {
   const t = useUiText();
@@ -268,10 +277,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   }));
   const [qwenImportState, setQwenImportState] = useState<QwenSessionState>(() => restoreQwenSessionState(textBanks.qwen3));
   const qwenImportStateRef = useRef(qwenImportState);
-  qwenImportStateRef.current = qwenImportState;
   const [briefImportState, setBriefImportState] = useState<BriefImportState | null>(null);
   const briefImportStateRef = useRef<BriefImportState | null>(briefImportState);
-  briefImportStateRef.current = briefImportState;
   const suppressBriefManualEditRef = useRef(false);
   const updateBriefImportState = useCallback((next: BriefImportState | null) => {
     briefImportStateRef.current = next;
@@ -292,20 +299,38 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [macroOutputs, setMacroOutputs] = useState<AmStageAutomationOutput[]>([]);
   const [automationViewResult, setAutomationViewResult] = useState<AutomationViewResult | null>(null);
   const automationViewResultRef = useRef<AutomationViewResult | null>(automationViewResult);
-  automationViewResultRef.current = automationViewResult;
+  const updateAutomationViewResult = useCallback((next: AutomationViewResult | null) => {
+    automationViewResultRef.current = next;
+    setAutomationViewResult(next);
+  }, []);
   const [automationViewLoading, setAutomationViewLoading] = useState(false);
   const [historicalFragmentId, setHistoricalFragmentId] = useState("");
   const [automationApplyAudioOpen, setAutomationApplyAudioOpen] = useState(false);
   const [automationApplyAudioBusy, setAutomationApplyAudioBusy] = useState(false);
+  const [mergeImportState, setMergeImportState] = useState<MergeImportState | null>(null);
+  const mergeImportStateRef = useRef<MergeImportState | null>(null);
+  const pendingMergeDeletesRef = useRef(new Set<string>());
+  const [mergeApplyPreview, setMergeApplyPreview] = useState<{ preview: MergeApplyPreview; token: string; operationId: string; source: { artifactId: string } } | null>(null);
+  const [mergeApplyBusy, setMergeApplyBusy] = useState(false);
+  const [mergeApplyError, setMergeApplyError] = useState("");
   const macroAbortRef = useRef<AbortController | null>(null);
   const updateTextBank = useCallback((index: "qwen3" | "embeddinggemma2", name: string, value: number | string) => {
     setTextBanks((banks) => ({ ...banks, [index]: banks[index].map((parameter) => parameter.technical_name === name ? { ...parameter, current_value: value, suggested_value: value } : parameter) }));
-    if (index === "qwen3") setQwenImportState((state) => markQwenManual(state, name, value));
+    if (index === "qwen3") {
+      const next = markQwenManual(qwenImportStateRef.current, name, value);
+      qwenImportStateRef.current = next;
+      setQwenImportState(next);
+    }
     if (v3Session.textIndex === index) useRagV3Store.getState().updateParameterValue(name, value);
   }, [v3Session.textIndex]);
   const removeTextBankParameter = useCallback((index: "qwen3" | "embeddinggemma2", name: string) => {
     setTextBanks((banks) => ({ ...banks, [index]: banks[index].filter((parameter) => parameter.technical_name !== name) }));
-    if (index === "qwen3") setQwenImportState((state) => removeQwenParameter(state, name));
+    if (mergeImportStateRef.current?.provenance[name]) pendingMergeDeletesRef.current.add(name);
+    if (index === "qwen3") {
+      const next = removeQwenParameter(qwenImportStateRef.current, name);
+      qwenImportStateRef.current = next;
+      setQwenImportState(next);
+    }
     if (v3Session.textIndex === index) useRagV3Store.getState().removeParameter(name);
   }, [v3Session.textIndex]);
   useEffect(() => useRagV3Store.subscribe((state, previous) => {
@@ -369,6 +394,13 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [nodeInterval, setNodeInterval] = useState(20);
   const [segments, setSegments] = useState<SegmentPoint[]>([]);
   const segmentsRef = useRef<SegmentPoint[]>([]);
+  const updateSegmentsFromLatest = (update: (current: SegmentPoint[]) => SegmentPoint[]) => {
+    const next = update(segmentsRef.current);
+    // This helper is called only by user event handlers to keep in-flight requests on current edits.
+    // eslint-disable-next-line react-hooks/immutability
+    segmentsRef.current = next;
+    setSegments(next);
+  };
   useEffect(() => { segmentsRef.current = segments; }, [segments]);
   const [clapTopK, setClapTopK] = useState(20);
   const [siglipTopK, setSiglipTopK] = useState(20);
@@ -402,9 +434,12 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const [morphoStatus, setMorphoStatus] = useState<MorphoStatus | null>(null);
   const [paramTextSessionState, setParamTextSessionState] = useState<ParamTextWorkbenchSessionState | null>(null);
   const [workbenchSessionKey, setWorkbenchSessionKey] = useState(0);
-  const [activeSession, setActiveSession] = useState<{ id: string; title: string } | null>(null);
+  const [activeSession, setActiveSession] = useState<{ id: string; title: string; revision: string } | null>(null);
   const activeSessionRef = useRef(activeSession);
-  activeSessionRef.current = activeSession;
+  const updateActiveSession = useCallback((next: typeof activeSession) => {
+    activeSessionRef.current = next;
+    setActiveSession(next);
+  }, []);
   const [sessionDirty, setSessionDirty] = useState(false);
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [sessionSaveChoiceOpen, setSessionSaveChoiceOpen] = useState(false);
@@ -445,7 +480,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     window.addEventListener("am-stage-automation-import", onImport);
     if (automationRunId) {
       if (!automationApply) {
-        setAutomationViewResult(null);
+        updateAutomationViewResult(null);
       }
       const runId = automationRunId;
       const stageId = automationStageId ?? "";
@@ -469,7 +504,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
         setAutomationViewLoading(true);
         void fetch(`/api/am-stage/automation/runs/${encodeURIComponent(runId)}`, { signal: controller.signal, cache: "no-store" }).then(async (response) => {
           if (!response.ok) throw new Error("Run result could not be loaded.");
-          const result = await response.json() as { run?: { id: string; title: string; status: string; plan?: { scenarioRef?: { id: string; version: number }; externalInputs?: { assetId?: string; audioName?: string; audioDurationSeconds?: number; audioRange?: { startSeconds: number; endSeconds: number; durationSeconds: number }; brief?: string } }; stages?: Array<{ stageId: string; actionId: string; status: string; successfulAttemptId: string | null; artifacts?: Array<{ id: string; attemptId: string; kind: string; bankId?: string; modality?: string; pass?: string; validity?: string; payload?: { schemaVersion: number; kind: string; actionId: string; bankId?: string; modality?: string; pass?: string; validity?: string; data?: unknown } }> }> } };
+          const result = await response.json() as { run?: { id: string; title: string; status: string; plan?: { scenarioRef?: { id: string; version: number }; externalInputs?: { assetId?: string; audioName?: string; audioDurationSeconds?: number; audioRange?: { startSeconds: number; endSeconds: number; durationSeconds: number }; brief?: string } }; stages?: Array<{ stageId: string; actionId: string; status: string; successfulAttemptId: string | null; artifacts?: Array<{ id: string; attemptId: string; kind: string; bankId?: string; modality?: string; pass?: string; validity?: string; payload?: { schemaVersion: number; kind: string; actionId: string; bankId?: string; outputPort?: string; modality?: string; pass?: string; validity?: string; inputRefs?: string[]; effectiveSettings?: Record<string, unknown>; data?: unknown } }> }> } };
           const run = result.run;
           const stage = run?.stages?.find((item) => item.stageId === stageId);
           const artifact = stage?.artifacts?.find((item) => item.id === automationArtifactId && item.attemptId === automationAttemptId);
@@ -484,10 +519,10 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
             const segmentPayload = segmentStage?.artifacts?.[0]?.payload?.data as { windows?: Array<{ id?: string; startSeconds?: number; endSeconds?: number }> } | undefined;
             const segmentWindows = Array.isArray(segmentPayload?.windows) ? segmentPayload.windows.flatMap((window, index) => Number.isFinite(window.startSeconds) && Number.isFinite(window.endSeconds) ? [{ id: window.id ?? `segment-${index + 1}`, startSeconds: window.startSeconds!, endSeconds: window.endSeconds! }] : []) : [];
             const fragments = collectHistoricalSegmentResults(run.stages ?? []);
-            const artifactContractConsistent = stage.actionId === "brief.combine_segment_texts"
+            const artifactContractConsistent = ["brief.combine_segment_texts", "text.assemble"].includes(stage.actionId)
               ? briefArtifactContractConsistent({ artifactKind: artifact.kind, payloadKind: artifact.payload?.kind ?? "", payloadActionId: artifact.payload?.actionId ?? "", stageActionId: stage.actionId, artifactBankId: artifact.bankId, payloadBankId: artifact.payload?.bankId, artifactModality: artifact.modality, payloadModality: artifact.payload?.modality, artifactPass: artifact.pass, payloadPass: artifact.payload?.pass, artifactValidity: artifact.validity, payloadValidity: artifact.payload?.validity })
-              : artifact.payload?.kind === artifact.kind && artifact.payload?.actionId === stage.actionId && artifact.payload?.bankId === artifact.bankId && artifact.payload?.modality === artifact.modality && artifact.payload?.pass === artifact.pass && artifact.payload?.validity === artifact.validity;
-            setAutomationViewResult({ runId: run.id, runTitle: run.title, scenarioId: run.plan?.scenarioRef?.id ?? "unknown", scenarioVersion: run.plan?.scenarioRef?.version ?? 0, stageId, attemptId: artifact.attemptId, successfulAttemptId: stage.successfulAttemptId ?? "", artifactId: artifact.id, schemaVersion: artifact.payload?.schemaVersion ?? 0, kind: artifact.payload?.kind ?? artifact.kind, bankId: artifact.payload?.bankId, modality: artifact.payload?.modality ?? artifact.modality, pass: artifact.payload?.pass, validity: artifact.payload?.validity, artifactContractConsistent, actionId: stage.actionId, status: stage.status, data: artifact.payload?.data, audio: external?.assetId ? { assetId: external.assetId, name: external.audioName, durationSeconds: external.audioDurationSeconds, range: external.audioRange } : undefined, segmentWindows, fragments, brief: external?.brief });
+              : stageArtifactMetadataConsistent({ artifactKind: artifact.kind, payloadKind: artifact.payload?.kind, payloadActionId: artifact.payload?.actionId, stageActionId: stage.actionId, artifactBankId: artifact.bankId, payloadBankId: artifact.payload?.bankId, artifactModality: artifact.modality, payloadModality: artifact.payload?.modality, artifactPass: artifact.pass, payloadPass: artifact.payload?.pass, artifactValidity: artifact.validity, payloadValidity: artifact.payload?.validity });
+            updateAutomationViewResult({ runId: run.id, runTitle: run.title, scenarioId: run.plan?.scenarioRef?.id ?? "unknown", scenarioVersion: run.plan?.scenarioRef?.version ?? 0, stageId, attemptId: artifact.attemptId, successfulAttemptId: stage.successfulAttemptId ?? "", artifactId: artifact.id, inputRefs: artifact.payload?.inputRefs ?? [], schemaVersion: artifact.payload?.schemaVersion ?? 0, kind: artifact.payload?.kind ?? artifact.kind, bankId: artifact.payload?.bankId, outputPort: artifact.payload?.outputPort, modality: artifact.payload?.modality ?? artifact.modality, pass: artifact.payload?.pass, validity: artifact.payload?.validity, effectiveSettings: artifact.payload?.effectiveSettings, artifactContractConsistent, actionId: stage.actionId, status: stage.status, data: artifact.payload?.data, audio: external?.assetId ? { assetId: external.assetId, name: external.audioName, durationSeconds: external.audioDurationSeconds, range: external.audioRange } : undefined, segmentWindows, fragments, brief: external?.brief });
             setHistoricalFragmentId((current) => fragments.some((item) => item.id === current) ? current : fragments[0]?.id ?? "");
           }
           else {
@@ -498,7 +533,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       }
     }
     return () => { current = false; controller.abort(); window.removeEventListener("am-stage-automation-import", onImport); };
-  }, [automationRunId, automationStageId, automationAttemptId, automationArtifactId, automationApply]);
+  }, [automationRunId, automationStageId, automationAttemptId, automationArtifactId, automationApply, updateAutomationViewResult]);
   useEffect(() => {
     const load = () => void fetch("/api/ui-preferences", { cache: "no-store" }).then((response) => response.json()).then((data: { parameterTitleOrder?: string }) => {
       if (data.parameterTitleOrder === "en-ru" || data.parameterTitleOrder === "ru-en") setTitleOrder(data.parameterTitleOrder);
@@ -585,9 +620,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     }
   };
 
-  const selectFile = useCallback((nextFile: File) => {
+  const selectFile = useCallback((nextFile: File, options: { preservePin?: boolean } = {}) => {
     const replacingAudio = Boolean(audioUrl || file || segmentsRef.current.length);
-    setIsAxisPinned(true);
+    if (!options.preservePin) setIsAxisPinned(true);
     setAudioUrl((previous) => {
       if (previous) URL.revokeObjectURL(previous);
       return URL.createObjectURL(nextFile);
@@ -633,17 +668,61 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       const response = await fetch(`/api/am-stage/automation/assets/${encodeURIComponent(context.audio.assetId)}`);
       if (!response.ok) throw new Error("The historical run audio asset is unavailable.");
       const audio = new File([await response.blob()], context.audio.name ?? "automation-run-audio", { type: response.headers.get("content-type") ?? "application/octet-stream" });
-      selectFile(audio);
+      selectFile(audio, { preservePin: true });
+      const windows = context.segmentWindows ?? [];
+      const fragments = context.fragments ?? [];
+      const fragmentById = new Map(fragments.map((fragment) => [fragment.id, fragment]));
+      const restoredSegments: SegmentPoint[] = windows.map((window) => {
+        const fragment = fragmentById.get(window.id);
+        const clap = fragment?.banks.clap ?? [];
+        const siglip = fragment?.banks.siglip ?? [];
+        return {
+          time: (window.startSeconds + window.endSeconds) / 2,
+          offset: window.startSeconds,
+          duration: window.endSeconds - window.startSeconds,
+          clap,
+          siglip,
+          clapStatus: clap.length ? "complete" : "pending",
+          siglipStatus: siglip.length ? "complete" : "pending",
+        };
+      });
+      segmentsRef.current = restoredSegments;
+      setSegments(restoredSegments);
+      setWindowMode("uniform");
+      setWindowSourceSegments([]);
+      setGemmaAudioAwtd(fragments.flatMap((fragment) => fragment.banks.gemmaAudioAwtd.map((parameter) => ({
+        ...parameter,
+        source_window: { offset_seconds: fragment.startSeconds, duration_seconds: fragment.endSeconds - fragment.startSeconds },
+      }))));
+      setGemmaAudioResolved(fragments.flatMap((fragment) => fragment.banks.gemmaAudioResolved.map((parameter) => ({
+        ...parameter,
+        source_window: { offset_seconds: fragment.startSeconds, duration_seconds: fragment.endSeconds - fragment.startSeconds },
+      }))));
+      const firstWindow = windows[0];
+      if (firstWindow) {
+        setPlaybackTime((firstWindow.startSeconds + firstWindow.endSeconds) / 2);
+        setCurrentTime((firstWindow.startSeconds + firstWindow.endSeconds) / 2);
+        lastPlaybackSegmentRef.current = 0;
+      }
       const range = context.audio.range;
       if (range) {
         setAnalysisStart(range.startSeconds);
         setAnalysisEnd(range.endSeconds);
         setRegionOffset(range.startSeconds);
         setRegionDuration(Math.max(0.1, range.durationSeconds));
+      } else if (windows.length) {
+        const startSeconds = Math.min(...windows.map((window) => window.startSeconds));
+        const endSeconds = Math.max(...windows.map((window) => window.endSeconds));
+        setAnalysisStart(startSeconds);
+        setAnalysisEnd(endSeconds);
+        setRegionOffset(startSeconds);
+        setRegionDuration(Math.max(0.1, endSeconds - startSeconds));
       }
       if (context.brief !== undefined) setV3Query(context.brief);
       setAutomationApplyAudioOpen(false);
-      setNotice(t("Historical audio context applied to Work Axis. The saved Run and its results were not changed."));
+      const importedParameters = restoredSegments.reduce((count, segment) => count + segment.clap.length + segment.siglip.length, 0)
+        + fragments.reduce((count, fragment) => count + fragment.banks.gemmaAudioAwtd.length + fragment.banks.gemmaAudioResolved.length, 0);
+      setNotice(`Historical audio context applied to Work Axis: ${restoredSegments.length} windows and ${importedParameters} bank results. The saved Run was not changed.`);
     } catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); }
     finally { setAutomationApplyAudioBusy(false); }
   };
@@ -833,7 +912,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
           const parameters = Array.isArray(payload.parameters)
             ? payload.parameters
             : [];
-          const nextWorking = applySuccessfulSegmentResult(
+          const latestSegments = segmentsRef.current;
+          const nextWorking = applySuccessfulSegmentResultPreservingManualEdits(
+            latestSegments,
             working,
             index,
             engine,
@@ -854,12 +935,14 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
         }
       } catch (caught) {
         completed = false;
-        const active = working.find(
-          (segment) => segment[statusField] === "processing",
+        const latestSegments = segmentsRef.current;
+        const nextSegments = latestSegments.map((segment) =>
+          segment[statusField] === "processing"
+            ? { ...segment, [statusField]: "error" }
+            : segment,
         );
-        if (active) active[statusField] = "error";
-        segmentsRef.current = [...working];
-        setSegments(segmentsRef.current);
+        segmentsRef.current = nextSegments;
+        setSegments(nextSegments);
         if (controller.signal.aborted) {
           setStoppedEngine(engine);
           setNotice("Пакетный анализ остановлен. Готовые точки сохранены; продолжить можно со следующей незавершённой.");
@@ -995,9 +1078,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     interpolation: { pair: blendPair, percent: blendPercent, curve: blendCurve, blend_enabled: blendMode, clap_weight: clapWeight, trust_threshold: trustThreshold, trust_floor: trustFloor },
     vocal_matrix_mode: vocalMatrixMode,
     param_to_text: paramTextSessionState,
-    v3: { query: v3Query, query_b: v3Session.queryB, top_k: v3Session.topK, sources: v3Session.sources, scopes: v3Session.scopes, search_mode: v3Session.searchMode, transition_ratio: v3Session.transitionRatio, text_index: v3Session.textIndex, search_results: v3Session.searchResults, secondary_results: v3Session.secondaryResults, active_parameters: v3Session.activeParameters, macro: v3Session.macro, ...(briefImportState ? { brief_import: briefImportStateForSnapshot(briefImportState) } : {}) },
+    v3: { query: v3Query, query_b: v3Session.queryB, top_k: v3Session.topK, sources: v3Session.sources, scopes: v3Session.scopes, search_mode: v3Session.searchMode, transition_ratio: v3Session.transitionRatio, text_index: v3Session.textIndex, search_results: v3Session.searchResults, secondary_results: v3Session.secondaryResults, active_parameters: v3Session.activeParameters, macro: v3Session.macro, ...(briefImportState ? { brief_import: briefImportStateForSnapshot(briefImportState) } : {}), ...(mergeImportState ? { merge_import: mergeImportState } : {}) },
     workflow: { macro_profile: macroProfile, require_gemma_resolution: requireGemmaResolution, include_stage2: macroIncludeStage2, custom_steps: customMacroSteps, macro_source_bank: macroSourceBank },
-  }), [audioAssetId, audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, briefImportState, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, customMacroSteps, file, gemmaAudioAwtd, gemmaAudioResolved, gemmaTextResolved, interpolateClap, interpolateSiglip, macroIncludeStage2, macroProfile, macroSourceBank, nodeInterval, paramTextSessionState, qwenImportState, regionDuration, regionOffset, requireGemmaResolution, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, textBanks, timelineView, trustFloor, trustThreshold, v3Query, v3Session, vocalMatrixMode, windowMode, windowSourceSegments]);
+  }), [audioAssetId, audioDuration, audioReferenceName, analysisEnd, analysisStart, blendCurve, blendMode, blendPair, blendPercent, briefImportState, clapTopK, clapWeight, consensusCentroidPercent, consensusTopK, customMacroSteps, file, gemmaAudioAwtd, gemmaAudioResolved, gemmaTextResolved, interpolateClap, interpolateSiglip, macroIncludeStage2, macroProfile, macroSourceBank, mergeImportState, nodeInterval, paramTextSessionState, qwenImportState, regionDuration, regionOffset, requireGemmaResolution, selectedLayers, segments, segmentInterval, showClap, showGlobalConsensus, showSiglip, showSpectrogram, siglipSpectrogramLayout, siglipTopK, spectrogramColor, spectrogramDetail, spectrogramRenderer, textBankViewMode, textBanks, timelineView, trustFloor, trustThreshold, v3Query, v3Session, vocalMatrixMode, windowMode, windowSourceSegments]);
   useEffect(() => {
     const fingerprint = JSON.stringify(capturedSessionData);
     setSessionDirty(Boolean(activeSession) && fingerprint !== fingerprintRef.current);
@@ -1207,11 +1290,11 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     name: string,
     value: number | string,
   ) => {
-    setSegments((current) => {
+    updateSegmentsFromLatest((current) => {
       let activeIndex = 0;
       for (let index = 0; index < current.length; index += 1)
         if (current[index].time <= getPlaybackTimeSnapshot()) activeIndex = index;
-      return current.map((segment, index) => {
+      const next = current.map((segment, index) => {
         if (index !== activeIndex) return segment;
         const field = engine === "clap" ? "clap" : "siglip";
         return {
@@ -1223,15 +1306,17 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
           ),
         };
       });
+      segmentsRef.current = next;
+      return next;
     });
   };
 
   const removeValue = (engine: Engine, name: string) => {
-    setSegments((current) => {
+    updateSegmentsFromLatest((current) => {
       let activeIndex = 0;
       for (let index = 0; index < current.length; index += 1)
         if (current[index].time <= getPlaybackTimeSnapshot()) activeIndex = index;
-      return current.map((segment, index) => {
+      const next = current.map((segment, index) => {
         if (index !== activeIndex) return segment;
         const field = engine === "clap" ? "clap" : "siglip";
         return {
@@ -1241,6 +1326,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
           ),
         };
       });
+      segmentsRef.current = next;
+      return next;
     });
   };
 
@@ -1333,16 +1420,46 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setSessionRows(result.sessions ?? []);
   }, []);
 
+  const requestMergePreview = async () => {
+    if (!activeSession || !automationViewResult || sessionDirty) { setMergeApplyError("Откройте сохранённую сессию и сохраните её изменения перед preview."); return; }
+    setMergeApplyBusy(true); setMergeApplyError("");
+    try {
+      const response = await fetch(`/api/am-stage/sessions/${encodeURIComponent(activeSession.id)}/merge-apply`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "preview", artifactId: automationViewResult.artifactId, expectedRevision: activeSession.revision }) });
+      const result = await response.json() as { preview?: MergeApplyPreview; previewToken?: string; operationId?: string; source?: { artifactId: string }; error?: string };
+      if (!response.ok || !result.preview || !result.previewToken || !result.operationId || !result.source) throw new Error(result.error || `HTTP ${response.status}`);
+      setMergeApplyPreview({ preview: result.preview, token: result.previewToken, operationId: result.operationId, source: result.source });
+    } catch (cause) { setMergeApplyError(cause instanceof Error ? cause.message : String(cause)); }
+    finally { setMergeApplyBusy(false); }
+  };
+
+  const confirmMergeApply = async () => {
+    if (!activeSession || !mergeApplyPreview) return;
+    setMergeApplyBusy(true); setMergeApplyError("");
+    try {
+      const response = await fetch(`/api/am-stage/sessions/${encodeURIComponent(activeSession.id)}/merge-apply`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "apply", artifactId: mergeApplyPreview.source.artifactId, expectedRevision: activeSession.revision, previewToken: mergeApplyPreview.token }) });
+      const result = await response.json() as { error?: string; code?: string; revision?: string; snapshot?: unknown; replayed?: boolean };
+      if (!response.ok) throw new Error(result.code === "STALE_PREVIEW" || result.code === "STALE_SESSION_REVISION" ? "Сессия изменилась. Обновите preview вручную." : result.error || `HTTP ${response.status}`);
+      setMergeApplyPreview(null);
+      await openSession(activeSession.id);
+      setNotice(result.replayed ? "Результат Apply уже был сохранён; повторно не изменён." : "Параметры Automation применены к сохранённой Stage-сессии.");
+    } catch (cause) { setMergeApplyError(cause instanceof Error ? cause.message : String(cause)); }
+    finally { setMergeApplyBusy(false); }
+  };
+
   const saveSession = async (asNew: boolean): Promise<string | null> => {
     setSessionBusy(true); setSessionError("");
     try {
       const title = (asNew || !activeSession ? sessionTitleDraft : activeSession.title).trim() || audioReferenceName || "Сессия AM-Stage";
-      const response = await fetch("/api/am-stage/sessions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...(!asNew && activeSession ? { id: activeSession.id } : {}), title, data: capturedSessionData }) });
-      const result = await response.json() as { snapshot?: { meta: { id: string; title: string } }; error?: string };
+      const response = await fetch("/api/am-stage/sessions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...(!asNew && activeSession ? { id: activeSession.id } : {}), ...(activeSession ? { sourceId: activeSession.id, expectedRevision: activeSession.revision } : {}), mergeDeletedNames: [...pendingMergeDeletesRef.current], title, data: capturedSessionData }) });
+      const result = await response.json() as { snapshot?: { meta: { id: string; title: string; updated_at: string } }; mergeImportState?: MergeImportState; error?: string };
       if (!response.ok || !result.snapshot) throw new Error(result.error || `HTTP ${response.status}`);
-      const current = { id: result.snapshot.meta.id, title: result.snapshot.meta.title };
+      const current = { id: result.snapshot.meta.id, title: result.snapshot.meta.title, revision: result.snapshot.meta.updated_at };
+      mergeImportStateRef.current = result.mergeImportState ?? null;
+      setMergeImportState(result.mergeImportState ?? null);
+      pendingMergeDeletesRef.current.clear();
       window.localStorage.setItem(ACTIVE_AM_STAGE_SESSION_KEY, current.id);
-      setActiveSession(current); setSessionTitleDraft(current.title); fingerprintRef.current = JSON.stringify(capturedSessionData); setSessionDirty(false); setSessionSaveChoiceOpen(false); setSessionModalOpen(false);
+      const persistedData = { ...capturedSessionData, v3: { ...capturedSessionData.v3, ...(result.mergeImportState ? { merge_import: result.mergeImportState } : {}) } };
+      updateActiveSession(current); setSessionTitleDraft(current.title); fingerprintRef.current = JSON.stringify(persistedData); setSessionDirty(false); setSessionSaveChoiceOpen(false); setSessionModalOpen(false);
       await refreshSessionRows().catch(() => undefined);
       return current.id;
     } catch (cause) { setSessionError(cause instanceof Error ? cause.message : String(cause)); return null; }
@@ -1353,10 +1470,14 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setSessionBusy(true); setSessionError("");
     try {
       const response = await fetch(`/api/am-stage/sessions/${encodeURIComponent(id)}`, { cache: "no-store" });
-      const result = await response.json() as { snapshot?: { meta: { id: string; title: string }; data: AmStageSessionData }; error?: string };
+      const result = await response.json() as { snapshot?: { meta: { id: string; title: string; updated_at: string }; data: AmStageSessionData }; error?: string };
       if (!response.ok || !result.snapshot) throw new Error(result.error || `HTTP ${response.status}`);
       const { meta, data } = result.snapshot;
       const restoredBriefImport = restoreBriefImportState(data.v3.brief_import);
+      const restoredMergeImport = restoreMergeImportState(data.v3.merge_import);
+      mergeImportStateRef.current = restoredMergeImport;
+      setMergeImportState(restoredMergeImport);
+      pendingMergeDeletesRef.current.clear();
       if (audioUrl) URL.revokeObjectURL(audioUrl);
       setAudioUrl(null); setFile(null); setAudioAssetId(data.audio.asset_id ?? null); setAudioReferenceName(data.audio.name); setAudioDuration(data.audio.duration_seconds);
       if (data.audio.asset_id) {
@@ -1389,8 +1510,8 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       useRagV3Store.setState({ query: data.v3.query, queryB: data.v3.query_b, topK: data.v3.top_k, sources: data.v3.sources, scopes: data.v3.scopes, searchMode: data.v3.search_mode as "single" | "transition", transitionRatio: data.v3.transition_ratio, textIndex: data.v3.text_index ?? "qwen3", searchResults: data.v3.search_results, secondaryResults: data.v3.secondary_results, activeParameters: data.v3.active_parameters, macro: data.v3.macro, isSearching: false, isGeneratingMacro: false, searchError: null, macroError: null });
       suppressBriefManualEditRef.current = false;
       updateBriefImportState(restoredBriefImport);
-      const normalizedRestoredData = { ...data, banks: { ...data.banks, qwen_import: qwenSessionMetadataForSnapshot(restoredQwen) }, v3: { ...data.v3, ...(restoredBriefImport ? { brief_import: briefImportStateForSnapshot(restoredBriefImport) } : { brief_import: undefined }) }, interpolation: { ...data.interpolation, trust_threshold: data.interpolation.trust_threshold ?? DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold, trust_floor: data.interpolation.trust_floor ?? DEFAULT_MODALITY_TRUST_CONFIG.floorWeight } };
-      setActiveSession({ id: meta.id, title: meta.title }); setSessionTitleDraft(meta.title); fingerprintRef.current = JSON.stringify(normalizedRestoredData); setSessionDirty(false); setSessionModalOpen(false); setPendingSessionAction(null);
+      const normalizedRestoredData = { ...data, banks: { ...data.banks, qwen_import: qwenSessionMetadataForSnapshot(restoredQwen) }, v3: { ...data.v3, ...(restoredBriefImport ? { brief_import: briefImportStateForSnapshot(restoredBriefImport) } : { brief_import: undefined }), ...(restoredMergeImport ? { merge_import: restoredMergeImport } : { merge_import: undefined }) }, interpolation: { ...data.interpolation, trust_threshold: data.interpolation.trust_threshold ?? DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold, trust_floor: data.interpolation.trust_floor ?? DEFAULT_MODALITY_TRUST_CONFIG.floorWeight } };
+      updateActiveSession({ id: meta.id, title: meta.title, revision: meta.updated_at }); setSessionTitleDraft(meta.title); fingerprintRef.current = JSON.stringify(normalizedRestoredData); setSessionDirty(false); setSessionModalOpen(false); setPendingSessionAction(null);
       window.localStorage.setItem(ACTIVE_AM_STAGE_SESSION_KEY, meta.id);
       setNotice(data.audio.missing_on_restore ? `Сессия открыта. Результаты и таймлайн восстановлены; для воспроизведения или продолжения анализа повторно выберите ${data.audio.name ?? "исходный аудиофайл"}.` : "Сессия AM-Stage восстановлена.");
     } catch (cause) { setSessionError(cause instanceof Error ? cause.message : String(cause)); }
@@ -1410,6 +1531,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
 
   const clearSessionState = () => {
     abortRef.current?.abort();
+    mergeImportStateRef.current = null; setMergeImportState(null); pendingMergeDeletesRef.current.clear();
     updateBriefImportState(null);
     if (audioUrl) URL.revokeObjectURL(audioUrl);
     setAudioUrl(null); setFile(null); setAudioAssetId(null); setAudioReferenceName(null); setAudioDuration(0); setPlaybackTime(0); lastPlaybackSegmentRef.current = -1; setCurrentTime(0); setSeekRequest({ time: 0, token: 0 });
@@ -1420,7 +1542,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     setSpectrogramScale("mel"); setSpectrogramDetail("medium"); setSpectrogramColor("roseus"); setSpectrogramRenderer("windowed"); setSiglipSpectrogramLayout("rgb_delta"); setBlendMode(false); setClapWeight(.5); setTrustThreshold(DEFAULT_MODALITY_TRUST_CONFIG.lowTrustThreshold); setTrustFloor(DEFAULT_MODALITY_TRUST_CONFIG.floorWeight); setVocalMatrixMode(false);
     setSelectedLayers(ACOUSTIC_DOMAIN_LAYERS.map((layer) => layer.id)); setShowGlobalConsensus(false); setConsensusTopK(64); setConsensusCentroidPercent(35); setTimelineView("modality"); setBlendPair("text-clap"); setBlendPercent(50); setBlendCurve("linear");
     window.localStorage.removeItem(ACTIVE_AM_STAGE_SESSION_KEY);
-    setParamTextSessionState(null); setWorkbenchSessionKey((key) => key + 1); setActiveSession(null); setSessionDirty(false); fingerprintRef.current = ""; setSessionResetConfirmOpen(false); setPendingSessionAction(null); setSessionModalOpen(false);
+    setParamTextSessionState(null); setWorkbenchSessionKey((key) => key + 1); updateActiveSession(null); setSessionDirty(false); fingerprintRef.current = ""; setSessionResetConfirmOpen(false); setPendingSessionAction(null); setSessionModalOpen(false);
     suppressBriefManualEditRef.current = true;
     useRagV3Store.setState({ query: "", queryB: "", topK: 50, sources: { library: true, frozen: true, atoms: true, generated: true }, scopes: { sound: true, structure: true, metadata: false, provenance: false, administrative: false }, vocalMatrixMode: false, searchMode: "single", transitionRatio: 50, searchResults: [], secondaryResults: [], activeParameters: [], macro: "", isSearching: false, isGeneratingMacro: false, searchError: null, macroError: null });
     suppressBriefManualEditRef.current = false;
@@ -1438,20 +1560,22 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
 
   const renameSession = async (id: string) => {
     const title = sessionTitleDraft.trim(); if (!title) return;
-    const response = await fetch(`/api/am-stage/sessions/${encodeURIComponent(id)}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title }) });
-    const result = await response.json() as { snapshot?: { meta: { title: string } }; error?: string };
+    const expectedRevision = activeSession?.id === id ? activeSession.revision : sessionRows.find((row) => row.id === id)?.updated_at;
+    const response = await fetch(`/api/am-stage/sessions/${encodeURIComponent(id)}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title, expectedRevision }) });
+    const result = await response.json() as { snapshot?: { meta: { title: string; updated_at: string } }; error?: string };
     if (!response.ok) { setSessionError(result.error || `HTTP ${response.status}`); return; }
-    if (activeSession?.id === id) setActiveSession({ id, title: result.snapshot?.meta.title ?? title });
+    if (activeSession?.id === id) updateActiveSession({ id, title: result.snapshot?.meta.title ?? title, revision: result.snapshot?.meta.updated_at ?? activeSession.revision });
     setRenamingSessionId(null); await refreshSessionRows();
   };
 
   const deleteSession = async (id: string) => {
     const row = sessionRows.find((item) => item.id === id);
     if (!window.confirm(`Удалить сохранённый снимок «${row?.title ?? id}»? Это удалит его папку и JSON-файл.`)) return;
-    const response = await fetch(`/api/am-stage/sessions/${encodeURIComponent(id)}`, { method: "DELETE" });
+    const expectedRevision = activeSession?.id === id ? activeSession.revision : sessionRows.find((item) => item.id === id)?.updated_at;
+    const response = await fetch(`/api/am-stage/sessions/${encodeURIComponent(id)}?expectedRevision=${encodeURIComponent(expectedRevision ?? "")}`, { method: "DELETE" });
     const result = await response.json() as { error?: string };
     if (!response.ok) { setSessionError(result.error || `HTTP ${response.status}`); return; }
-    if (activeSession?.id === id) { setActiveSession(null); setSessionDirty(false); fingerprintRef.current = ""; }
+    if (activeSession?.id === id) { updateActiveSession(null); setSessionDirty(false); fingerprintRef.current = ""; }
     await refreshSessionRows();
   };
 
@@ -1472,7 +1596,7 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
     attemptId: searchParams.get("attempt") ?? "",
     artifactId: searchParams.get("artifact") ?? "",
   };
-  const briefViewArtifact = automationViewResult?.actionId === "brief.combine_segment_texts" ? automationViewResult as BriefViewArtifact : null;
+  const briefViewArtifact = automationViewResult && ["brief.combine_segment_texts", "text.assemble"].includes(automationViewResult.actionId) ? automationViewResult as BriefViewArtifact : null;
   const briefSelectionCurrent = Boolean(briefViewArtifact && isCurrentBriefSelection(briefSelection, briefViewArtifact));
   const historicalQwenParameters = automationViewResult?.actionId === "text.qwen.resolved" && Array.isArray(automationViewResult.data)
     ? automationViewResult.data as ActiveParameter[]
@@ -1480,6 +1604,9 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
   const historicalBankParameters = automationViewResult
     ? extractStageBankParameters(automationViewResult.data, historicalFragmentId)
     : [];
+  const historicalAudioText = automationViewResult
+    ? projectHistoricalAudioText(automationViewResult.actionId, automationViewResult.data)
+    : null;
   const applyViewedQwenArtifact = () => {
     const viewed = automationViewResult;
     if (!viewed || !viewed.artifactContractConsistent || viewed.actionId !== "text.qwen.resolved" || viewed.kind !== "parameter-bank" || viewed.schemaVersion !== 1 || viewed.bankId !== "qwen-text" || viewed.pass !== "resolved" || viewed.validity !== "valid" || viewed.attemptId !== viewed.successfulAttemptId || !isCurrentQwenSelection({ runId: viewed.runId, stageId: viewed.stageId, attemptId: viewed.attemptId, artifactId: viewed.artifactId }, { runId: searchParams.get("automationRun") ?? "", stageId: searchParams.get("stage") ?? "", attemptId: searchParams.get("attempt") ?? "", artifactId: searchParams.get("artifact") ?? "" }) || !Array.isArray(viewed.data)) return;
@@ -1501,12 +1628,12 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
       setNotice("Brief target or artifact selection changed. Review the current proposal and try again.");
       return;
     }
-    if (!viewed || !viewed.artifactContractConsistent || viewed.actionId !== "brief.combine_segment_texts" || !isCurrentBriefSelection(request.selection, viewed)) {
+    if (!viewed || !viewed.artifactContractConsistent || !["brief.combine_segment_texts", "text.assemble"].includes(viewed.actionId) || !isCurrentBriefSelection(request.selection, viewed)) {
       setError("The selected Brief artifact is no longer available. Select and view it again.");
       return;
     }
     const data = viewed.data && typeof viewed.data === "object" && !Array.isArray(viewed.data) ? viewed.data as { text?: unknown } : null;
-    const source: BriefSourceIdentity = { runId: viewed.runId, stageId: viewed.stageId, attemptId: viewed.attemptId, artifactId: viewed.artifactId, actionId: "brief.combine_segment_texts", schemaVersion: 1, modality: "text" };
+    const source: BriefSourceIdentity = { runId: viewed.runId, stageId: viewed.stageId, attemptId: viewed.attemptId, artifactId: viewed.artifactId, actionId: viewed.actionId as BriefSourceIdentity["actionId"], schemaVersion: 1, modality: "text" };
     const validation = validateBriefArtifact({
       ...source,
       runOwnerId: viewed.runId,
@@ -1933,14 +2060,17 @@ export function AMStagePage({ active = true }: { active?: boolean } = {}) {
                 {automationViewResult.segmentWindows?.length ? <details className="mt-1 text-[10px]"><summary className="cursor-pointer">{t("Saved segment windows")}: {automationViewResult.segmentWindows.length}</summary><ol className="mt-1 max-h-24 space-y-0.5 overflow-auto">{automationViewResult.segmentWindows.map((window) => <li key={window.id} className="font-mono">{window.id} · {window.startSeconds.toFixed(2)}–{window.endSeconds.toFixed(2)} s</li>)}</ol></details> : null}
                 <Button size="sm" variant="outline" className="mt-2 h-7 text-xs" onClick={() => setAutomationApplyAudioOpen(true)}>{t("Apply audio context to Work Axis")}</Button>
               </section>}
-              {automationApplyAudioOpen && automationViewResult?.audio && <div className="fixed inset-0 z-[88] grid place-items-center bg-black/75 p-4" role="presentation"><section role="dialog" aria-modal="true" aria-labelledby="automation-apply-audio-title" className="w-full max-w-md space-y-3 rounded-lg border border-cyan-400/40 bg-zinc-950 p-4 shadow-xl"><h2 id="automation-apply-audio-title" className="font-mono text-sm font-semibold">{t("Apply historical audio context?")}</h2><p className="text-xs text-muted-foreground">{t("This replaces the current Work Axis audio, range and Brief, and clears audio-derived segments. The saved Run and its results remain unchanged.")}</p><div className="flex justify-end gap-2"><Button size="sm" variant="ghost" onClick={() => setAutomationApplyAudioOpen(false)} disabled={automationApplyAudioBusy}>{t("Cancel")}</Button><Button size="sm" onClick={() => void applyAutomationAudioContext()} disabled={automationApplyAudioBusy}>{automationApplyAudioBusy ? t("Applying…") : t("Apply to Work Axis")}</Button></div></section></div>}
+              {automationApplyAudioOpen && automationViewResult?.audio && <div className="fixed inset-0 z-[88] grid place-items-center bg-black/75 p-4" role="presentation"><section role="dialog" aria-modal="true" aria-labelledby="automation-apply-audio-title" className="w-full max-w-md space-y-3 rounded-lg border border-cyan-400/40 bg-zinc-950 p-4 shadow-xl"><h2 id="automation-apply-audio-title" className="font-mono text-sm font-semibold">{t("Apply historical audio context?")}</h2><p className="text-xs text-muted-foreground">{t("This replaces the current Work Axis audio, range, Brief, saved segment windows and their Automation banks. Save the Stage session to persist these results. The saved Run is unchanged.")}</p><div className="flex justify-end gap-2"><Button size="sm" variant="ghost" onClick={() => setAutomationApplyAudioOpen(false)} disabled={automationApplyAudioBusy}>{t("Cancel")}</Button><Button size="sm" onClick={() => void applyAutomationAudioContext()} disabled={automationApplyAudioBusy}>{automationApplyAudioBusy ? t("Applying…") : t("Apply to Work Axis")}</Button></div></section></div>}
               <h2 className="am-stage-module-heading"><span>04</span>{t("Project")}</h2>
-              {automationViewResult && <section className="rounded-md border border-cyan-400/30 bg-cyan-950/10 p-2" aria-label={t("Automation result view")}><div className="flex flex-wrap items-center justify-between gap-2 text-xs"><strong>{t("Automation result · view only")}</strong><Link href={`/automation?run=${encodeURIComponent(automationViewResult.runId)}`} className="underline">{t("Open Automation")}</Link></div><div className="mt-1 text-[10px] text-muted-foreground">{automationViewResult.runId.slice(0, 8)} · {automationViewResult.actionId} · {automationViewResult.status}</div>{automationViewResult.actionId === "brief.combine_segment_texts" ? <AutomationBriefResult artifact={briefViewArtifact} selection={briefSelection} selectionCurrent={briefSelectionCurrent} currentText={v3Query} targetSessionId={activeSession?.id ?? null} importState={briefImportState} onApply={applyViewedBriefArtifact} /> : null}{historicalQwenParameters ? <div className="mt-2"><HistoricalParameterBank title="Qwen3 parameter bank" parameters={historicalQwenParameters} /></div> : null}{automationViewResult.fragments?.length && activeHistoricalFragment ? <div className="mt-2 space-y-2 rounded border border-border/60 p-2" data-am-stage-historical-fragments>
+              {automationViewResult && <section className="rounded-md border border-cyan-400/30 bg-cyan-950/10 p-2" aria-label={t("Automation result view")}><div className="flex flex-wrap items-center justify-between gap-2 text-xs"><strong>{t("Automation result · view only")}</strong><Link href={`/automation?run=${encodeURIComponent(automationViewResult.runId)}`} className="underline">{t("Open Automation")}</Link></div><div className="mt-1 text-[10px] text-muted-foreground">{automationViewResult.runId.slice(0, 8)} · {automationViewResult.actionId}{automationViewResult.outputPort ? ` · port ${automationViewResult.outputPort}` : ""} · {automationViewResult.status}</div>{briefViewArtifact ? <AutomationBriefResult artifact={briefViewArtifact} selection={briefSelection} selectionCurrent={briefSelectionCurrent} currentText={v3Query} targetSessionId={activeSession?.id ?? null} importState={briefImportState} onApply={applyViewedBriefArtifact} /> : null}{historicalQwenParameters ? <div className="mt-2"><HistoricalParameterBank title="Qwen3 parameter bank" parameters={historicalQwenParameters} /></div> : null}{automationViewResult.actionId === "stage2.client" && automationViewResult.artifactContractConsistent && automationViewResult.attemptId === automationViewResult.successfulAttemptId && automationViewResult.schemaVersion === 1 && automationViewResult.kind === "parameter-bank" && automationViewResult.bankId === "client-stage2" && automationViewResult.pass === "client-smooth" && automationViewResult.validity === "valid" ? <HistoricalClientStage2Results data={automationViewResult.data} artifactId={automationViewResult.artifactId} inputRefs={automationViewResult.inputRefs} labels={{ section: t("Historical client Stage-2 result"), title: t("Client Stage-2 consensus · read only"), artifact: t("Artifact"), inputs: t("Input artifacts"), parameter: t("Parameter"), segment: t("Segment"), frame: t("Source frame"), value: t("Current / suggested value"), empty: t("No valid consensus rows in this artifact") }} /> : null}{automationViewResult.fragments?.length && activeHistoricalFragment ? <div className="mt-2 space-y-2 rounded border border-border/60 p-2" data-am-stage-historical-fragments>
                   <label className="flex items-center justify-between gap-2 text-[10px]"><span>{t("Historical fragment results")}</span><select className="h-7 max-w-[70%] rounded border border-border bg-background px-2" aria-label={t("Selected fragment")} value={activeHistoricalFragment.id} onChange={(event) => setHistoricalFragmentId(event.target.value)}>{automationViewResult.fragments.map((fragment) => <option key={fragment.id} value={fragment.id}>{fragment.id} · {fragment.startSeconds.toFixed(2)}–{fragment.endSeconds.toFixed(2)} s</option>)}</select></label>
                   <div className="grid gap-1 sm:grid-cols-3"><HistoricalParameterBank title="Gemma audio bank" parameters={activeHistoricalFragment.banks.gemmaAudio} /><HistoricalParameterBank title="CLAP bank" parameters={activeHistoricalFragment.banks.clap} /><HistoricalParameterBank title="SigLIP bank" parameters={activeHistoricalFragment.banks.siglip} /></div>
+                  <HistoricalAudioDescriptionsView descriptions={activeHistoricalFragment.audioDescriptions} labels={{ section: t("Historical audio descriptions"), title: t("LFM3 audio descriptions"), artifact: t("Artifact"), unknown: t("unknown"), target: t("Target node"), evidence: t("Audio evidence window") }} />
                   <details className="rounded border border-border/70 p-2"><summary className="cursor-pointer text-[10px]">{t("Reverse query")}</summary><div className="mt-1 space-y-1 text-[10px]"><p><strong>EN</strong> · {activeHistoricalFragment.reverseQuery?.en ?? t("No results for this fragment")}</p><p><strong>RU</strong> · {activeHistoricalFragment.reverseQuery?.ru ?? t("No results for this fragment")}</p></div></details>
                   <details className="rounded border border-border/70 p-2"><summary className="cursor-pointer text-[10px]">{t("Interpretation")}</summary><div className="mt-1 space-y-1 text-[10px]"><p><strong>EN</strong> · {activeHistoricalFragment.interpretation?.en ?? t("No results for this fragment")}</p><p><strong>RU</strong> · {activeHistoricalFragment.interpretation?.ru ?? t("No results for this fragment")}</p></div></details>
-                </div> : null}<details className="mt-2 rounded border border-border/50 p-2"><summary className="cursor-pointer text-[10px]">{t("Raw result data")}</summary><pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap break-words text-[10px]">{JSON.stringify(automationViewResult.data, null, 2)}</pre></details><Button size="sm" variant="outline" className="mt-2 h-7 text-xs" disabled={!automationViewResult || !automationViewResult.artifactContractConsistent || automationViewResult.attemptId !== automationViewResult.successfulAttemptId || automationViewResult.actionId !== "text.qwen.resolved" || automationViewResult.kind !== "parameter-bank" || automationViewResult.schemaVersion !== 1 || automationViewResult.bankId !== "qwen-text" || automationViewResult.pass !== "resolved" || automationViewResult.validity !== "valid" || automationViewResult.attemptId !== automationViewResult.successfulAttemptId || !historicalQwenParameters?.length} onClick={applyViewedQwenArtifact}>Apply to Qwen3 ParameterBank</Button></section>}
+                </div> : null}<details className="mt-2 rounded border border-border/50 p-2"><summary className="cursor-pointer text-[10px]">{t("Raw result data")}</summary><pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap break-words text-[10px]">{JSON.stringify(automationViewResult.data, null, 2)}</pre></details><Button size="sm" variant="outline" className="mt-2 h-7 text-xs" disabled={!automationViewResult || !automationViewResult.artifactContractConsistent || automationViewResult.attemptId !== automationViewResult.successfulAttemptId || automationViewResult.actionId !== "text.qwen.resolved" || automationViewResult.kind !== "parameter-bank" || automationViewResult.schemaVersion !== 1 || automationViewResult.bankId !== "qwen-text" || automationViewResult.pass !== "resolved" || automationViewResult.validity !== "valid" || automationViewResult.attemptId !== automationViewResult.successfulAttemptId || !historicalQwenParameters?.length} onClick={applyViewedQwenArtifact}>Apply to Qwen3 ParameterBank</Button>
+                {isStageApplyAction(automationViewResult.actionId) ? <div className="mt-2 space-y-2 rounded border border-violet-400/30 p-2" data-merge-stage-apply><div className="text-[10px]">Цель: <code>v3.active_parameters</code> · источник artifact {automationViewResult.artifactId.slice(0, 12)} · политика: добавить отсутствующие, сохранить существующие и tombstoned значения.</div><Button size="sm" variant="outline" disabled={!activeSession || sessionDirty || mergeApplyBusy || !automationViewResult.artifactContractConsistent || automationViewResult.attemptId !== automationViewResult.successfulAttemptId || automationViewResult.kind !== "parameter-bank" || automationViewResult.schemaVersion !== 1 || (automationViewResult.actionId === "data.merge" ? automationViewResult.bankId !== "merged" || automationViewResult.pass !== "merge" : automationViewResult.actionId === "data.intersection" ? automationViewResult.bankId !== "intersection" || automationViewResult.pass !== "intersection" : automationViewResult.actionId === "data.difference" ? automationViewResult.bankId !== "difference" || automationViewResult.pass !== "difference" : automationViewResult.actionId === "data.select" ? automationViewResult.bankId != null || automationViewResult.pass != null || automationViewResult.effectiveSettings?.mode !== "parameters_by_name" : automationViewResult.actionId === "flow.join" ? automationViewResult.bankId != null || automationViewResult.pass != null : automationViewResult.actionId === "stage2.server" ? automationViewResult.bankId !== "server-stage2" || automationViewResult.pass !== "stage2" : automationViewResult.actionId === "vocal_allocation.search" ? automationViewResult.bankId !== "vocal-allocation" || automationViewResult.pass !== "explicit-assignments" : automationViewResult.actionId === "data.split" ? !automationViewResult.outputPort || !Array.isArray(automationViewResult.effectiveSettings?.channels) : false) || automationViewResult.validity !== "valid"} onClick={() => void requestMergePreview()}>{mergeApplyBusy ? "Проверяю…" : "Preview Apply в Stage"}</Button>{!activeSession ? <p className="text-[10px] text-amber-200">Сначала откройте или сохраните Stage-сессию.</p> : sessionDirty ? <p className="text-[10px] text-amber-200">Сначала сохраните текущую сессию, затем создайте preview.</p> : null}{mergeApplyError ? <p role="alert" className="text-[10px] text-rose-300">{mergeApplyError}</p> : null}{mergeApplyPreview ? <div className="space-y-1 rounded border border-border/60 p-2"><div className="text-[10px]">Источник: {mergeApplyPreview.source.artifactId} · target: {mergeApplyPreview.preview.target}</div><div className="text-[10px]">Добавлено {mergeApplyPreview.preview.counts.added} · обновлено {mergeApplyPreview.preview.counts.updated} · пропущено {mergeApplyPreview.preview.counts.skipped}</div><ul className="max-h-32 space-y-0.5 overflow-auto text-[10px]">{mergeApplyPreview.preview.changes.map((change) => <li key={change.technicalName} className="font-mono">{change.status} · {change.technicalName}{change.reason ? ` · ${change.reason}` : ""} · winner ${change.source.sourceActionId}/${change.source.sourceArtifactId.slice(0, 8)}</li>)}</ul>{mergeApplyPreview.preview.conflicts.length ? <p className="text-[10px] text-amber-200">Конфликты: {mergeApplyPreview.preview.conflicts.map((item) => `${item.technicalName} (${item.reason})`).join(", ")}</p> : null}<div className="flex gap-2"><Button size="sm" disabled={mergeApplyBusy} onClick={() => void confirmMergeApply()}>Подтвердить и Apply</Button><Button size="sm" variant="outline" disabled={mergeApplyBusy} onClick={() => void requestMergePreview()}>Обновить preview</Button></div></div> : null}{mergeImportState && v3Session.activeParameters.some((row) => mergeImportState?.provenance[row.technical_name]) ? <div className="space-y-1 border-t border-border/60 pt-2"><div className="text-[10px] font-medium">Импортированные Automation-параметры Stage</div><ul className="space-y-1 text-[10px]">{v3Session.activeParameters.filter((row) => mergeImportState?.provenance[row.technical_name]).map((row) => <li key={row.technical_name} className="flex items-center gap-2"><span className="min-w-0 flex-1 truncate font-mono">{row.technical_name} = {String(row.current_value)} · {mergeImportState?.provenance[row.technical_name]?.status}</span><Button size="sm" variant="ghost" disabled={sessionDirty || !activeSession} onClick={() => { pendingMergeDeletesRef.current.add(row.technical_name); removeV3Parameter(row.technical_name); setNotice("Параметр удалён из текущего состояния. Сохраните сессию, чтобы записать tombstone."); }}>Удалить</Button></li>)}</ul></div> : null}</div> : null}</section>}
+              {automationViewResult && historicalAudioText ? <HistoricalAudioTextView actionId={automationViewResult.actionId as "audio.describe.lfm3" | "audio.transcribe.lfm3"} text={historicalAudioText.text} model={historicalAudioText.model} runtime={historicalAudioText.runtime} labels={{ section: t("Historical audio text"), description: t("Historical audio description"), transcription: t("Historical transcription") }} /> : null}
               <AutomationViewLoadingStatus loading={automationViewLoading} />
               <AutomationStageHandoff currentAudioId={audioAssetId} rangeStart={analysisStart} rangeEnd={analysisEnd || audioDuration} brief={v3Query} textIndex={v3Session.textIndex} topK={v3Session.topK} sources={{ ...v3Session.sources }} scopes={v3Session.scopes} domainLayers={selectedLayers} vocalMatrixMode={vocalMatrixMode} searchMode={v3Session.searchMode} queryB={v3Session.queryB} transitionRatio={v3Session.transitionRatio} instructionContext={toInstructionContext(useRagV3Store.getState().instructionSlots)} initialSelection={{ runId: automationRunId ?? "", stageId: automationStageId ?? "", attemptId: automationAttemptId ?? "", artifactId: automationArtifactId ?? "" }} />
               <details className="rounded border border-border/60 p-2"><summary className="cursor-pointer text-xs">{t("Legacy Stage macro controls")}</summary><div className="mt-2"><AmStageMacroRunner isRunning={macroRunning} currentStep={macroCurrentStep} segmentCount={segments.length} topK={Math.max(clapTopK, siglipTopK, v3Session.topK)} onRun={(steps, id) => void runMacro(steps, id)} onCancel={cancelMacro} error={macroError} siglipStatus={morphoStatus} outputs={macroOutputs} onClearOutputs={() => setMacroOutputs([])} audioPresent={Boolean(file)} briefPresent={Boolean(v3Query.trim())} nodesReady={segments.length > 0} onLayerMaskChange={setSelectedLayers} onPreparePreset={prepareAutomationPreset} /></div></details>

@@ -19,7 +19,7 @@ from pathlib import Path
 
 import numpy as np
 
-from v3_snapshot import DEFAULT_DATA_ROOT, load_v3_snapshot
+from v3_snapshot import DEFAULT_DATA_ROOT, ensure_snapshot_revision_current, load_v3_snapshot
 from vector_cache import content_key, read_vector, sha256_file, write_vector
 
 MODEL_ID = "google/siglip2-base-patch16-224"
@@ -76,6 +76,11 @@ def eligible(parameter: dict[str, object]) -> bool:
         return False  # legacy rows fall back to the established acoustic scope
     blocked_prefixes = ("validation_json_", "provenance_", "descriptive_metadata_", "classification_", "semantic_concept_", "smart_contract_", "licensing_", "contract_address_")
     return not name.startswith(blocked_prefixes) and "ownership_proof" not in name
+
+
+def build_parameter_rows(snapshot: dict[str, object]) -> list[dict[str, str]]:
+    parameters = [item for item in snapshot["parameters"] if eligible(item)]  # type: ignore[index,union-attr]
+    return [{"technical_name": str(item["technical_name"]), "text": retrieval_text(item)} for item in parameters]
 
 
 def write_vectors(path: Path, vectors: np.ndarray) -> None:
@@ -295,10 +300,26 @@ def anchor_values(parameters: list[dict[str, object]], image_vector: np.ndarray,
     return result
 
 
-def build_index(data_root: Path, index_dir: Path, model_path: Path, batch_size: int) -> dict[str, object]:
-    snapshot = load_v3_snapshot(data_root)
-    parameters = [item for item in snapshot["parameters"] if eligible(item)]
-    rows = [{"technical_name": item["technical_name"], "text": retrieval_text(item)} for item in parameters]
+def build_index(
+    data_root: Path, index_dir: Path, model_path: Path, batch_size: int,
+    snapshot_path: Path | None = None, prepared_input_path: Path | None = None,
+    source_revision: str | None = None, source_snapshot_sha256: str | None = None,
+    excluded_sha256: str | None = None, excluded_count: int = 0,
+) -> dict[str, object]:
+    snapshot = load_v3_snapshot(
+        data_root, snapshot_path=snapshot_path, source_revision=source_revision,
+        source_snapshot_sha256=source_snapshot_sha256, excluded_sha256=excluded_sha256,
+        excluded_count=excluded_count,
+    ) if snapshot_path else load_v3_snapshot(data_root)
+    if prepared_input_path:
+        prepared = read_json(prepared_input_path)
+        if (prepared.get("source_revision") != snapshot["source_revision"]
+                or prepared.get("source_snapshot_sha256") != snapshot["content_sha256"]
+                or not isinstance(prepared.get("rows"), list)):
+            raise ValueError("Prepared SigLIP input does not match the selected source snapshot.")
+        rows = prepared["rows"]
+    else:
+        rows = build_parameter_rows(snapshot)
     old_rows_path, old_vectors_path = index_dir / "rows.json", index_dir / "embeddings.f32"
     old_vectors_by_hash: dict[str, np.ndarray] = {}
     cache_dir = index_dir.parent / "morpho-siglip-row-cache"
@@ -344,8 +365,9 @@ def build_index(data_root: Path, index_dir: Path, model_path: Path, batch_size: 
     stored_rows = [{"technical_name": row["technical_name"], "text_sha256": value} for row, value in zip(rows, hashes)]
     atomic_json(staging / "rows.json", stored_rows)
     vector_fingerprint = hashlib.sha256((MODEL_REVISION + "\0" + "\n".join(hashes)).encode("utf-8")).hexdigest()
-    manifest = {"schema_version": 1, "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "model_id": MODEL_ID, "model_revision": MODEL_REVISION, "model_path": str(model_path), "device": "cpu", "dtype": "float32", "normalization": "l2", "parameter_count": len(rows), "dimensions": int(matrix.shape[1]), "source_snapshot_sha256": snapshot["content_sha256"], "vector_fingerprint": vector_fingerprint, "dataset_version": snapshot["dataset_version"], "excluded_sha256": snapshot["excluded_sha256"], "encoded": encoded, "reused": len(rows) - encoded, "scopes": ["sound", "structure"]}
+    manifest = {"schema_version": 1, "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "model_id": MODEL_ID, "model_revision": MODEL_REVISION, "model_path": str(model_path), "device": "cpu", "dtype": "float32", "normalization": "l2", "parameter_count": len(rows), "dimensions": int(matrix.shape[1]), "source_snapshot_sha256": snapshot["content_sha256"], "source_revision": snapshot["source_revision"], "vector_fingerprint": vector_fingerprint, "dataset_version": snapshot["dataset_version"], "excluded_sha256": snapshot["excluded_sha256"], "encoded": encoded, "reused": len(rows) - encoded, "scopes": ["sound", "structure"]}
     atomic_json(staging / "manifest.json", manifest)
+    ensure_snapshot_revision_current(snapshot, load_v3_snapshot(data_root))
     backup = index_dir.with_name(f"{index_dir.name}.previous")
     shutil.rmtree(backup, ignore_errors=True)
     if index_dir.exists(): index_dir.replace(backup)
@@ -561,6 +583,12 @@ def main() -> int:
     parser.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
     parser.add_argument("--index-dir", type=Path, default=DEFAULT_INDEX_DIR)
     parser.add_argument("--batch-size", type=int, default=24)
+    parser.add_argument("--parameter-snapshot", type=Path)
+    parser.add_argument("--prepared-input", type=Path)
+    parser.add_argument("--source-revision")
+    parser.add_argument("--source-snapshot-sha256")
+    parser.add_argument("--excluded-sha256")
+    parser.add_argument("--excluded-count", type=int, default=0)
     parser.add_argument("--image", type=Path)
     parser.add_argument("--audio", type=Path)
     parser.add_argument("--offset", type=float, default=0.0)
@@ -575,7 +603,12 @@ def main() -> int:
     elif args.command == "status":
         print(json.dumps(index_status(args.data_root.resolve(), args.index_dir.resolve()), ensure_ascii=False), flush=True)
     elif args.command == "build-index":
-        print(json.dumps({"event": "completed", **build_index(args.data_root.resolve(), args.index_dir.resolve(), args.model_path.resolve(), max(1, min(128, args.batch_size)))}, ensure_ascii=False), flush=True)
+        print(json.dumps({"event": "completed", **build_index(
+            args.data_root.resolve(), args.index_dir.resolve(), args.model_path.resolve(), max(1, min(128, args.batch_size)),
+            args.parameter_snapshot.resolve() if args.parameter_snapshot else None,
+            args.prepared_input.resolve() if args.prepared_input else None,
+            args.source_revision, args.source_snapshot_sha256, args.excluded_sha256, args.excluded_count,
+        )}, ensure_ascii=False), flush=True)
     elif args.command == "search":
         if not args.image: parser.error("--image is required for search")
         print(json.dumps(search_image(args.image.resolve(), args.data_root.resolve(), args.index_dir.resolve(), args.model_path.resolve(), max(1, min(100, args.top_k)), args.value_mode), ensure_ascii=False), flush=True)

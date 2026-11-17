@@ -96,7 +96,7 @@ const PRIMARY_NAV_ITEMS: NavItem[] = [
     id: "servicebay",
     label: "Service Bay",
     icon: <AMIcon name="engine" size="sm" className="sidebar-icon sidebar-icon-c3" />,
-    description: "Index status, providers, logs and manual rebuilds",
+    description: "Service Bay: index status, providers, logs and manual rebuilds",
   },
   {
     id: "audiotoparameter",

@@ -5,6 +5,7 @@ import type { BlendCurve } from "@/lib/am-stage-blend";
 import type { AudioWindowMode, Stage7RhythmSource } from "@/lib/audio-window-modes";
 import type { AmStageMacroId, AmStageMacroStep } from "@/lib/am-stage-macros";
 import type { BriefImportState } from "@/lib/am-stage-automation/brief-stage-apply";
+import type { MergeImportState } from "@/lib/am-stage-automation/merge-stage-apply";
 
 export type GemmaSessionParameter = ActiveParameter & { source_window?: { offset_seconds: number; duration_seconds: number } };
 
@@ -48,6 +49,7 @@ export interface AmStageSessionData {
     scopes: { sound: boolean; structure: boolean; metadata: boolean; provenance: boolean; administrative: boolean }; search_mode: string; transition_ratio: number; text_index?: "qwen3" | "embeddinggemma2"; search_results: ActiveParameter[];
     secondary_results: ActiveParameter[]; active_parameters: ActiveParameter[]; macro: string;
     brief_import?: BriefImportState;
+    merge_import?: MergeImportState;
   };
   workflow?: { macro_profile: AmStageMacroId; require_gemma_resolution: boolean; include_stage2: boolean; custom_steps: AmStageMacroStep[]; macro_source_bank?: string };
 }

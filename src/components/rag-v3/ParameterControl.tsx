@@ -13,6 +13,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import type { ActiveParameter, UiElement } from "@/lib/rag-v3/types";
+import type { ParameterValue } from "@/lib/rag-v3/types";
 import { cn } from "@/lib/utils";
 import { useRagV3Store } from "@/store/rag-v3-store";
 import { resolveDomainStyle } from "./domain-style";
@@ -36,12 +37,25 @@ export function ParameterControl(props: {
   const storeUpdateParameterValue = useRagV3Store(
     (state) => state.updateParameterValue,
   );
-  const updateParameterValue = props.onChange ?? storeUpdateParameterValue;
-  const numericValue =
-    typeof props.param.current_value === "number"
-      ? props.param.current_value
-      : Number(props.param.current_value) || 0;
-  const textValue = String(props.param.current_value ?? "");
+  const updateParameterValue = (technicalName: string, value: ParameterValue) => {
+    if (props.onChange) {
+      if (typeof value === "string" || typeof value === "number") props.onChange(technicalName, value);
+      return;
+    }
+    storeUpdateParameterValue(technicalName, value);
+  };
+  const hasSelection = props.param.value_status === "selected" || props.param.value_status === "selected_matches_default";
+  const hasExplicitStatus = props.param.value_status !== undefined;
+  const hasValue = hasSelection
+    ? props.param.selected_value !== undefined
+    : hasExplicitStatus ? false : props.param.current_value !== undefined || props.param.suggested_value !== undefined;
+  const displayValue = props.param.selected_value !== undefined
+    ? props.param.selected_value
+    : props.param.current_value !== undefined ? props.param.current_value : props.param.suggested_value;
+  const formatValue = (value: ParameterValue | undefined) => value === undefined ? "—" : value !== null && typeof value === "object" ? JSON.stringify(value) : String(value);
+  const numericValue = typeof displayValue === "number" ? displayValue : Number(displayValue) || 0;
+  const textValue = hasValue ? formatValue(displayValue) : "—";
+  const selectionLabel = props.param.value_status ?? "value_not_selected";
   const rawNames = props.param as ActiveParameter & { name_en?: string; name?: string };
   const englishName = rawNames.name_en?.trim() || rawNames.name?.trim() || props.param.technical_name.replace(/_/g, " ");
   const russianName = props.param.name_ru?.trim() || "";
@@ -72,8 +86,8 @@ export function ParameterControl(props: {
     const percent = props.param.ui_element === "Select" && options.length > 1
       ? Math.max(0, selected) / (options.length - 1) * 100
       : Math.max(0, Math.min(100, (numericValue - min) / Math.max(1e-9, max - min) * 100));
-    const fullInfo = [props.param.technical_name, props.param.name_ru, props.param.category, props.param.ui_element, props.param.unit, props.param.source, `default ${String(props.param.default)}`, props.param.detail].filter(Boolean).join(" · ");
-    const compactControl = props.param.ui_element === "Range" ? <div className="console-knob-wrap"><div className="console-knob" style={{ "--knob-pct": `${percent}%`, "--knob-sweep": `${percent * 2.7}deg`, "--knob-rotation": `${percent * 2.7 - 135}deg`, "--domain-accent": layerColor } as React.CSSProperties} aria-hidden="true"><span /></div><input data-am-stage-fader={props.dataScope ? props.param.technical_name : undefined} aria-label={`${props.param.technical_name}: ${textValue}`} className="console-knob-input" type="range" min={min} max={max} step={step} value={Math.max(min, Math.min(max, numericValue))} onChange={(event) => updateParameterValue(props.param.technical_name, roundToStep(Number(event.target.value), min, step))} /></div>
+    const fullInfo = [props.param.technical_name, props.param.name_ru, props.param.category, props.param.ui_element, props.param.unit, props.param.source, `catalogue default ${formatValue(props.param.catalogue_default ?? props.param.default)} (metadata)`, `selection ${selectionLabel}`, props.param.selection_detail ?? props.param.detail].filter(Boolean).join(" · ");
+    const compactControl = !hasValue ? <div role="status" className="px-1 text-center text-[9px] text-amber-300">No selected value · {selectionLabel}</div> : props.param.ui_element === "Range" ? <div className="console-knob-wrap"><div className="console-knob" style={{ "--knob-pct": `${percent}%`, "--knob-sweep": `${percent * 2.7}deg`, "--knob-rotation": `${percent * 2.7 - 135}deg`, "--domain-accent": layerColor } as React.CSSProperties} aria-hidden="true"><span /></div><input data-am-stage-fader={props.dataScope ? props.param.technical_name : undefined} aria-label={`${props.param.technical_name}: ${textValue}`} className="console-knob-input" type="range" min={min} max={max} step={step} value={Math.max(min, Math.min(max, numericValue))} onChange={(event) => updateParameterValue(props.param.technical_name, roundToStep(Number(event.target.value), min, step))} /></div>
       : props.param.ui_element === "Toggle" ? <RangeControl param={props.param} value={numericValue} accentColor={props.useDomainLayerColors ? layerColor : undefined} onChange={(value) => updateParameterValue(props.param.technical_name, value)} />
       : props.param.ui_element === "Select" ? <SelectControl param={props.param} value={textValue} displayMode="standard" accentColor={props.useDomainLayerColors ? layerColor : undefined} onChange={(value) => updateParameterValue(props.param.technical_name, value)} />
       : <TextControl param={props.param} value={textValue} accentColor={props.useDomainLayerColors ? layerColor : undefined} onChange={(value) => updateParameterValue(props.param.technical_name, parseTextValue(value, props.param.ui_element))} />;
@@ -81,7 +95,7 @@ export function ParameterControl(props: {
       <span className="line-clamp-3 min-h-7 break-words text-[13px] leading-4 font-semibold text-[#d2dde5]" title={props.param.technical_name}>{primaryName}</span>
       {showSecondaryName ? <span className="line-clamp-2 break-words text-[10px] leading-3 text-muted-foreground">{secondaryName}</span> : null}
       <div className="console-compact-control">{compactControl}</div><output style={props.useDomainLayerColors ? { color: layerColor } : undefined} className="block truncate text-center font-mono text-[10px]">{textValue}</output>
-      <div className="console-compact-actions" onClick={(event) => event.stopPropagation()}><V3InfoTip content={<div className="space-y-1 text-[11px]"><b>{props.param.technical_name}</b><div>{resolveRussianDescription(props.param)}</div><div>{props.param.category} · {props.param.source}</div></div>} /></div>
+      <div className="console-compact-actions" onClick={(event) => event.stopPropagation()}><V3InfoTip content={<div className="space-y-1 text-[11px]"><b>{props.param.technical_name}</b><div>{resolveRussianDescription(props.param)}</div><div>{props.param.category} · {props.param.source} · {selectionLabel}</div><div>{props.param.selection_detail ?? props.param.detail}</div></div>} /></div>
     </div>;
   }
   return (
@@ -117,11 +131,11 @@ export function ParameterControl(props: {
                   </div>
                   <div>{resolveRussianDescription(props.param)}</div>
                   <div className="text-muted-foreground">
-                    {props.param.domain ?? "General"} | {props.param.source} |
+                    {props.param.domain ?? "General"} | {props.param.source} | {selectionLabel} |
                     sim {Math.round(props.param.similarity * 100)}%
                   </div>
                   <div className="text-muted-foreground">
-                    {props.param.detail}
+                    {props.param.selection_detail ?? props.param.detail}
                   </div>
                 </div>
               }
@@ -141,11 +155,13 @@ export function ParameterControl(props: {
         {props.displayMode === "detail" ? <div className="console-param-meta mb-2 text-[9px] leading-4 text-muted-foreground">
           {showSecondaryName ? <div>{secondaryName}</div> : null}
           <div>sim {Math.round(props.param.similarity * 100)}% · {props.param.category}</div>
-          <div>{[props.param.ui_element, props.param.unit, props.param.source, `default ${String(props.param.default)}`, props.param.detail].filter(Boolean).join(" · ")}</div>
+          <div>{[props.param.ui_element, props.param.unit, props.param.source, `catalogue default ${formatValue(props.param.catalogue_default ?? props.param.default)} (metadata)`, `selection ${selectionLabel}`, props.param.selection_detail ?? props.param.detail].filter(Boolean).join(" · ")}</div>
         </div> : null}
         {props.displayMode === "standard" ? <div className="mb-2 flex flex-wrap items-center gap-1 text-[9px] text-muted-foreground">{showSecondaryName ? <span>{secondaryName}</span> : null}<span>sim {Math.round(props.param.similarity * 100)}%</span><span>{props.param.category}</span></div> : null}
 
-        {props.param.ui_element === "Range" ||
+        {!hasValue ? <p role="status" className="rounded border border-amber-400/20 bg-amber-950/10 p-2 text-[10px] text-amber-200">No value selected · {selectionLabel}{props.param.selection_detail ? ` · ${props.param.selection_detail}` : ""}</p> : null}
+
+        {hasValue && (props.param.ui_element === "Range" ||
         props.param.ui_element === "Toggle" ? (
           <RangeControl
             param={props.param}
@@ -156,9 +172,9 @@ export function ParameterControl(props: {
               updateParameterValue(props.param.technical_name, value)
             }
           />
-        ) : null}
+        ) : null)}
 
-        {props.param.ui_element === "Select" ? (
+        {hasValue && props.param.ui_element === "Select" ? (
           <SelectControl
             param={props.param}
             value={textValue}
@@ -173,7 +189,7 @@ export function ParameterControl(props: {
           />
         ) : null}
 
-        {props.param.ui_element !== "Range" &&
+        {hasValue && props.param.ui_element !== "Range" &&
         props.param.ui_element !== "Toggle" &&
         props.param.ui_element !== "Select" ? (
           <TextControl
@@ -324,7 +340,7 @@ function TextControl(props: {
           id={`text-${props.param.technical_name}`}
           value={props.value}
           type="text"
-          placeholder={String(props.param.default)}
+          placeholder={props.param.catalogue_default === undefined ? String(props.param.default ?? "") : props.param.catalogue_default !== null && typeof props.param.catalogue_default === "object" ? JSON.stringify(props.param.catalogue_default) : String(props.param.catalogue_default)}
           minLength={props.param.min_length}
           maxLength={props.param.max_length}
           style={props.accentColor ? { borderColor: `${props.accentColor}b3`, color: props.accentColor } : undefined}

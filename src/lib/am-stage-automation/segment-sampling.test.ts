@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { selectTextLlmSegments } from "./segment-sampling";
+import { selectAm2AudioDescriptionSegments, selectTextLlmSegments } from "./segment-sampling";
 
 const windows = (count: number) => Array.from({ length: count }, (_, index) => ({ id: `segment-${index + 1}`, startSeconds: index * 10, endSeconds: (index + 1) * 10 }));
 
@@ -18,5 +18,15 @@ describe("selectTextLlmSegments", () => {
   it("uses the first node when K=1 and clamps invalid limits", () => {
     expect(selectTextLlmSegments(windows(4), 1).selected.map((item) => item.id)).toEqual(["segment-1"]);
     expect(selectTextLlmSegments(windows(4), 0).limit).toBe(1);
+  });
+});
+
+describe("selectAm2AudioDescriptionSegments", () => {
+  it("matches AM2's round-based endpoint-inclusive sample for six nodes at limit three", () => {
+    expect(selectAm2AudioDescriptionSegments(windows(6), 3).selected.map((item) => item.id)).toEqual(["segment-1", "segment-4", "segment-6"]);
+  });
+  it("selects only the first node for limit one and keeps all nodes below the limit", () => {
+    expect(selectAm2AudioDescriptionSegments(windows(6), 1).selected.map((item) => item.id)).toEqual(["segment-1"]);
+    expect(selectAm2AudioDescriptionSegments(windows(2), 3).selected).toEqual(windows(2));
   });
 });

@@ -2,13 +2,14 @@ import type { ActiveParameter } from "@/lib/rag-v3/types";
 import type { AmStageMacroStep } from "@/lib/am-stage-macros";
 
 export const AUTOMATION_ACTION_IDS = [
-  "brief.from_crystal", "brief.from_template", "audio.analyze", "audio.segment",
+  "brief.from_crystal", "brief.from_template", "text.limit", "text.assemble", "audio.analyze", "audio.segment",
   "text.qwen.resolved", "text.gemma.awtd", "text.gemma.resolved",
   "audio.clap.resolved", "spec.siglip.resolved", "audio.gemma.awtd", "audio.gemma.resolved",
-  "stage2.client", "stage2.server", "audio.describe.lfm3", "audio.describe_gaps.lfm3", "audio.transcribe.lfm3",
+  "stage2.client", "stage2.server", "audio.describe.lfm3", "audio.describe_segments.lfm3", "audio.describe_gaps.lfm3", "audio.transcribe.lfm3",
   "audio.extract_acoustics", "audio.detect_indic_language", "audio.assess_vocal_timbre", "audio.analyze_helm",
-  "text_features.build", "text_features.compare_rankings", "text_features.describe_llm", "text_features.reverse_query", "brief.combine_segment_texts",
-  "vocal_allocation.search", "result.bundle",
+  "text_features.build", "text_features.compare_rankings", "text_features.describe_llm", "text_features.reverse_query", "llm.advisor", "brief.combine_segment_texts",
+  "vocal_allocation.search", "flowmusic.export", "data.merge", "data.intersection", "data.difference", "result.bundle",
+  "data.filter", "data.count", "data.select", "data.split", "flow.if", "flow.router", "flow.join",
 ] as const;
 
 export type AutomationActionId = (typeof AUTOMATION_ACTION_IDS)[number];
@@ -88,6 +89,11 @@ export interface AutomationScenarioDefinition {
   optionalResults: string[];
   resultDestinations: string[];
   sourceLegacyPresetId?: string;
+  /** Optional visual editor metadata. It never participates in planning or execution. */
+  editorLayout?: {
+    schemaVersion: 1;
+    positions: Record<string, { x: number; y: number }>;
+  };
 }
 
 export interface AutomationPlanDocument {
@@ -113,6 +119,7 @@ export interface AutomationArtifactPayload {
   schemaVersion: number;
   kind: string;
   actionId: AutomationActionId;
+  outputPort?: string;
   bankId?: string;
   modality?: string;
   pass?: string;
@@ -141,7 +148,7 @@ export interface AutomationAdapterContext {
 }
 
 export interface AutomationAdapterResult {
-  artifacts: Array<{ kind: string; bankId?: string; modality?: string; pass?: string; modelBinding?: Record<string, unknown>; effectiveSettings?: Record<string, unknown>; segmentRefs?: Array<{ id: string; startSeconds: number; endSeconds: number }>; validity?: AutomationArtifactPayload["validity"]; warnings?: string[]; data: unknown }>;
+  artifacts: Array<{ kind: string; outputPort?: string; bankId?: string; modality?: string; pass?: string; modelBinding?: Record<string, unknown>; effectiveSettings?: Record<string, unknown>; segmentRefs?: Array<{ id: string; startSeconds: number; endSeconds: number }>; validity?: AutomationArtifactPayload["validity"]; warnings?: string[]; data: unknown }>;
   metrics?: Record<string, unknown>;
   warnings?: string[];
   assessment?: string;

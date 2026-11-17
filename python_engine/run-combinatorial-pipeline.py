@@ -73,6 +73,12 @@ def write_report(payload: dict[str, object]) -> None:
 
 
 def main() -> int:
+    print(json.dumps({
+        "error": "Legacy inbox-to-runtime pipeline is disabled. It does not build from a pinned current-catalogue candidate; use Service Bay instead."
+    }), file=sys.stderr)
+    return 2
+
+    # Kept below for historical reference only; the public entry point fails closed.
     try:
         lock_fd = acquire_lock()
     except RuntimeError as error:

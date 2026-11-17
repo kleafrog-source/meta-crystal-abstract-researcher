@@ -232,7 +232,7 @@ function stemEvents(segments: AudioTimelineSegment[], blend: boolean, clapWeight
   let previous = new Map<string, string | number>();
   for (const segment of segments) {
     const frame = blend ? blendParameterFrames(segment.clap, segment.siglip, clapWeight, trustConfig) : [...segment.clap, ...segment.siglip];
-    const current = new Map(frame.filter((item) => /^(iso_language_|technique_|fx_chain_)|^vocal_(delivery_archetype|layer_count|layering_count|allocation_)|vocal_spectral_masking|parallel_vocal_spectral/.test(item.technical_name)).map((item) => [item.technical_name, item.current_value]));
+    const current = new Map(frame.filter((item) => /^(iso_language_|technique_|fx_chain_)|^vocal_(delivery_archetype|layer_count|layering_count|allocation_)|vocal_spectral_masking|parallel_vocal_spectral/.test(item.technical_name)).map((item) => [item.technical_name, item.current_value as string | number]));
     for (const [name, value] of current) if (!previous.has(name) || previous.get(name) !== value) events.push({ t: segment.time, stem: "VOCAL_MAIN", action: previous.has(name) ? (name.includes("layer") || name.includes("language") ? "SET_LAYER_ROUTING" : "SWITCH_FX_CHAIN") : "INITIALIZE_VOCAL_LAYER", parameter: name, value });
     previous = current;
   }
@@ -254,7 +254,7 @@ export function buildPriorityTimeline(segments: AudioTimelineSegment[], options:
     const siglipByName = new Map(segment.siglip.map((item) => [item.technical_name, item]));
     const divergences = segment.clap.flatMap((item) => {
       const peer = siglipByName.get(item.technical_name);
-      return peer ? [parameterDivergence(parameterTrustEvidence(item), parameterTrustEvidence(peer))] : [];
+      return peer ? [parameterDivergence(parameterTrustEvidence({ ...item, current_value: item.current_value as string | number }), parameterTrustEvidence({ ...peer, current_value: peer.current_value as string | number }))] : [];
     });
     return {
       t: segment.time,
@@ -264,7 +264,7 @@ export function buildPriorityTimeline(segments: AudioTimelineSegment[], options:
       high_divergence_names: divergences.length
         ? segment.clap.filter((item) => {
           const peer = siglipByName.get(item.technical_name);
-          return peer && parameterDivergence(parameterTrustEvidence(item), parameterTrustEvidence(peer)) > trustConfig.divergenceThreshold;
+          return Boolean(peer && parameterDivergence(parameterTrustEvidence({ ...item, current_value: item.current_value as string | number }), parameterTrustEvidence({ ...peer, current_value: peer.current_value as string | number })) > trustConfig.divergenceThreshold);
         }).map((item) => item.technical_name)
         : [],
     };

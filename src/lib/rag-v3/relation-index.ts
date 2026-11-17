@@ -2,8 +2,6 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { getEncoderArtifactDirectory, type TextIndexId } from "./composite-index";
 
-const ROOT = path.join(process.cwd(), "data", "combinatorial-genesis", "v3");
-
 interface RelationRow {
   id: string;
   text: string;
@@ -52,7 +50,7 @@ function dot(left: Float32Array, right: Float32Array): number {
 }
 
 async function loadRelations(indexId: TextIndexId): Promise<LoadedRelations | null> {
-  const relationsDir = indexId === "qwen3" ? path.join(ROOT, "relations") : getEncoderArtifactDirectory(indexId, "relations");
+  const relationsDir = getEncoderArtifactDirectory(indexId, "relations");
   try {
     const manifest = JSON.parse(await fs.readFile(path.join(relationsDir, "manifest.json"), "utf8")) as RelationManifest;
     if (cached.get(indexId)?.manifest.created_at === manifest.created_at) return cached.get(indexId)!;

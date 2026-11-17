@@ -2,6 +2,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 
 import { NextResponse } from "next/server";
+import { resolveRuntimeAtomIndexDirectory } from "@/lib/combinatorial-genesis/runtime-index-path";
 
 import { ensureGenesisLibrary } from "@/lib/combinatorial-genesis/library";
 
@@ -48,7 +49,7 @@ export async function GET() {
       ? await readOptionalJson(path.join(DATA_ROOT, "datasets", versionId, "manifest.json"))
       : null;
     const runtimeIndex = versionId
-      ? await readOptionalJson(path.join(DATA_ROOT, "indexes", versionId, "manifest.json"))
+      ? await readOptionalJson(path.join(resolveRuntimeAtomIndexDirectory(DATA_ROOT, versionId, latest?.runtime_atom_index_path), "manifest.json"))
       : null;
     if (!report) {
       return NextResponse.json({ available: false });

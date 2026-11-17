@@ -134,8 +134,20 @@ function start(kind: Kind, args: string[], modelPath = MODEL_PATH) {
   });
   return { started: true, job: getMorphoJob(kind) };
 }
-export function startMorphoIndex(modelPath = MODEL_PATH) {
-  return start("index", ["build-index"], modelPath);
+export function startMorphoIndex(modelPath = MODEL_PATH, input?: {
+  snapshotPath: string; preparedInputPath: string; sourceRevision: string;
+  sourceSnapshotSha256: string; excludedSha256: string; excludedCount: number;
+}) {
+  const args = ["build-index"];
+  if (input) args.push(
+    "--parameter-snapshot", input.snapshotPath,
+    "--prepared-input", input.preparedInputPath,
+    "--source-revision", input.sourceRevision,
+    "--source-snapshot-sha256", input.sourceSnapshotSha256,
+    "--excluded-sha256", input.excludedSha256,
+    "--excluded-count", String(input.excludedCount),
+  );
+  return start("index", args, modelPath);
 }
 export async function stopMorpho(kind: Kind) {
   const child = shared.__morphoChildren![kind],

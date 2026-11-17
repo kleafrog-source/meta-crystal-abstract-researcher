@@ -1,10 +1,6 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
-
 import { inspectCollectionResponse } from "@/lib/combinatorial-genesis/collection";
-import { readGenesisLibrary, type GenesisLibraryParameter } from "@/lib/combinatorial-genesis/library";
-
-const DATA_ROOT = path.join(process.cwd(), "data", "combinatorial-genesis");
+import { readEffectiveLiveCatalogue } from "@/lib/combinatorial-genesis/donor-policy";
+import type { GenesisLibraryParameter } from "@/lib/combinatorial-genesis/library";
 
 export interface LabPackageCandidate {
   technical_name: string;
@@ -22,17 +18,15 @@ export interface ValidatedLabCandidate {
   warnings: string[];
 }
 
-export async function readV3ParameterUnion(): Promise<{
+export async function readV3LiveParameterSnapshot(): Promise<{
   datasetVersion: string;
   records: Map<string, GenesisLibraryParameter>;
+  reservedNames: Set<string>;
 }> {
-  const latest = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "datasets", "latest.json"), "utf8")) as { version_id: string };
-  const frozen = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "datasets", latest.version_id, "parameters.json"), "utf8")) as GenesisLibraryParameter[];
-  const library = await readGenesisLibrary();
+  const { parameters, tombstoneNames, excludedNames } = await readEffectiveLiveCatalogue();
   const records = new Map<string, GenesisLibraryParameter>();
-  for (const parameter of frozen) if (parameter.technical_name) records.set(parameter.technical_name, parameter);
-  for (const parameter of library) if (parameter.technical_name) records.set(parameter.technical_name, parameter);
-  return { datasetVersion: latest.version_id, records };
+  for (const parameter of parameters) if (parameter.technical_name) records.set(parameter.technical_name, parameter);
+  return { datasetVersion: "live-catalogue", records, reservedNames: new Set([...tombstoneNames, ...excludedNames]) };
 }
 
 function candidateErrors(allErrors: string[], index: number): string[] {

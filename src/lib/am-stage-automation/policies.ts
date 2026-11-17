@@ -30,6 +30,39 @@ export function parseBriefTemplateVariables(source: string) {
   return variables;
 }
 
+export function briefTemplateVariables(input: { variables?: Record<string, string>; variablesText?: string }): Record<string, string> {
+  return input.variables ?? parseBriefTemplateVariables(input.variablesText ?? "");
+}
+
+export function resolveAutomationTemplateSettings(input: {
+  origin: string;
+  stageTemplate?: unknown;
+  stageVariables?: unknown;
+  workspaceTemplate?: unknown;
+  workspaceVariables?: unknown;
+  workspaceVariablesText?: unknown;
+}): { template: string; variables: Record<string, string> } {
+  const stageTemplate = typeof input.stageTemplate === "string" ? input.stageTemplate.trim() : "";
+  const workspaceTemplate = typeof input.workspaceTemplate === "string" ? input.workspaceTemplate.trim() : "";
+  const manual = input.origin === "manual";
+  const template = (manual ? stageTemplate || workspaceTemplate : workspaceTemplate || stageTemplate).trim();
+  const stageVariables = input.stageVariables && typeof input.stageVariables === "object" && !Array.isArray(input.stageVariables)
+    ? input.stageVariables as Record<string, string>
+    : {};
+  const workspaceVariables = input.workspaceVariables && typeof input.workspaceVariables === "object" && !Array.isArray(input.workspaceVariables)
+    ? input.workspaceVariables as Record<string, string>
+    : {};
+  const textVariables = typeof input.workspaceVariablesText === "string" && input.workspaceVariablesText.trim()
+    ? parseBriefTemplateVariables(input.workspaceVariablesText)
+    : {};
+  return {
+    template,
+    variables: manual
+      ? { ...textVariables, ...workspaceVariables, ...stageVariables }
+      : { ...stageVariables, ...textVariables, ...workspaceVariables },
+  };
+}
+
 export function resolveAutomationTopK(input: { requested: number; automatic: boolean; requestCount: number; candidateCount?: number | null }) {
   const requested = Math.max(1, Math.min(AUTOMATION_POLICY.adapterTopKLimit, Math.trunc(input.requested || AUTOMATION_POLICY.defaultTopK)));
   if (!input.automatic) return { requested, effective: requested, origin: "manual" as const, reason: null };

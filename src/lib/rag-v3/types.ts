@@ -7,6 +7,8 @@ export type UiElement =
   | "String";
 
 export type RetrievalScope = "sound" | "structure" | "metadata" | "provenance" | "administrative";
+export type ParameterValue = string | number | boolean | null | ParameterValue[] | { [key: string]: ParameterValue };
+export type ValueSelectionStatus = "selected" | "selected_matches_default" | "selection_uncertain" | "domain_unavailable" | "artifacts_required" | "not_attempted" | "error" | "legacy_unknown";
 
 export interface EnrichedParameter {
   technical_name: string;
@@ -19,9 +21,13 @@ export interface EnrichedParameter {
   min_value?: number;
   max_value?: number;
   step?: number;
-  default: number | string | number[];
+  default: ParameterValue | undefined;
+  value_candidates?: ParameterValue[];
+  published_values?: ParameterValue[];
+  value_schema?: Record<string, ParameterValue>;
+  item_schema?: Record<string, ParameterValue>;
   unit?: string;
-  options?: string[];
+  options?: ParameterValue[];
   min_length?: number;
   max_length?: number;
   lyria_prompt_tags: string[];
@@ -49,16 +55,26 @@ export interface ActiveParameter {
   min_value?: number;
   max_value?: number;
   step?: number;
-  default: number | string;
-  suggested_value: number | string;
-  current_value: number | string;
-  before: number | string;
-  source: "numeric" | "value_anchor" | "morpho_value_anchor" | "lexical" | "relation" | "axis" | "retrieval" | "not_generated" | "default" | "neutral" | "audio_similarity" | "consensus" | "transition" | "stage2";
+  default: string | number | undefined;
+  catalogue_default?: ParameterValue;
+  suggested_value: string | number | undefined;
+  selected_value?: ParameterValue;
+  input_value?: ParameterValue;
+  current_value: string | number | undefined;
+  before?: ParameterValue;
+  value_status?: ValueSelectionStatus;
+  selection_detail?: string;
+  selection_evidence?: Record<string, ParameterValue>;
+  source: "numeric" | "value_anchor" | "morpho_value_anchor" | "embedding_candidate" | "lexical" | "relation" | "axis" | "retrieval" | "not_generated" | "unselected" | "default" | "neutral" | "audio_similarity" | "consensus" | "transition" | "stage2" | "manual";
   value_confidence?: number;
-  anchor_target?: number | string | null;
+  anchor_target?: ParameterValue | undefined;
   detail: string;
   unit?: string;
   options?: string[];
+  value_candidates?: ParameterValue[];
+  published_values?: ParameterValue[];
+  value_schema?: Record<string, ParameterValue>;
+  item_schema?: Record<string, ParameterValue>;
   min_length?: number;
   max_length?: number;
   lyria_prompt_tags: string[];
@@ -131,7 +147,7 @@ export interface StatusResponse {
 export interface ProposeParametersRequest {
   query: string;
   top_k?: number;
-  current_values?: Record<string, number | string>;
+  current_values?: Record<string, ParameterValue>;
   instruction_context?: InstructionContextEntry[];
   scopes?: Partial<Record<RetrievalScope, boolean>>;
   domain_layers?: string[];

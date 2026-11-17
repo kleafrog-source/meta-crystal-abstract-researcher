@@ -1,16 +1,12 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
-
 import { NextResponse } from "next/server";
 
-import { readGenesisLibrary } from "@/lib/combinatorial-genesis/library";
+import { readEffectiveLiveCatalogue } from "@/lib/combinatorial-genesis/donor-policy";
 import { getActiveProvider } from "@/lib/llm/factory";
 import { FreeLLMAPIError } from "@/lib/llm/freellmapi";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
-const DATA_ROOT = path.join(process.cwd(), "data", "combinatorial-genesis");
 interface CandidateInput {
   technical_name?: unknown;
   parent_parameters?: unknown;
@@ -99,10 +95,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Provide between 1 and 3 candidates per normalization batch." }, { status: 400 });
     }
 
-    const latest = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "datasets", "latest.json"), "utf8")) as { version_id: string };
-    const frozen = JSON.parse(await fs.readFile(path.join(DATA_ROOT, "datasets", latest.version_id, "parameters.json"), "utf8")) as Array<Record<string, unknown>>;
-    const library = await readGenesisLibrary() as Array<Record<string, unknown>>;
-    const byName = new Map([...library, ...frozen].map((parameter) => [String(parameter.technical_name), parameter]));
+    const effective = await readEffectiveLiveCatalogue();
+    const byName = new Map(effective.parameters.map((parameter) => [String(parameter.technical_name), parameter]));
     const context = candidates.map((candidate) => {
       const technicalName = typeof candidate.technical_name === "string" ? candidate.technical_name : "";
       const parentNames = Array.isArray(candidate.parent_parameters) ? candidate.parent_parameters.map(String).slice(0, 6) : [];
@@ -121,6 +115,10 @@ export async function POST(request: Request) {
           description_ru: (candidate.metadata as Record<string, unknown> | undefined)?.description_ru,
         },
         donors: parentNames.flatMap((name) => byName.get(name) ? [compactDonor(byName.get(name)!)] : []),
+        source_reference_diagnostics: parentNames.flatMap((name) => byName.has(name) ? [] : [{
+          technical_name: name,
+          reason: effective.tombstoneNames.has(name) ? "tombstoned" : effective.excludedNames.has(name) ? "excluded" : "unresolved",
+        }]),
       };
     });
     if (context.some((candidate) => !candidate.technical_name)) {
@@ -234,7 +232,15 @@ recommended is true only if the candidate is coherent, source evidence supports 
 
     normalized = context.map((candidate) => collected.get(candidate.technical_name)!);
     if (normalized.some((item) => !item)) throw new Error("Chat model normalization failed.");
-    return NextResponse.json({ model: resultModel, provider: resultProvider, ...routing, candidates: normalized });
+    return NextResponse.json({
+      model: resultModel,
+      provider: resultProvider,
+      ...routing,
+      candidates: normalized.map((item) => ({
+        ...item,
+        source_reference_diagnostics: context.find((candidate) => candidate.technical_name === item.technical_name)?.source_reference_diagnostics ?? [],
+      })),
+    });
   } catch (error) {
     if (error instanceof FreeLLMAPIError) {
       return NextResponse.json({ error: error.message, provider: "freellmapi", upstreamStatus: error.status }, { status: error.status });

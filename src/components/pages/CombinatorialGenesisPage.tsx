@@ -55,6 +55,13 @@ interface PreviewResponse {
   query: string;
   source_count: number;
   known_source_count: number;
+  source_diagnostics?: {
+    unique_source_count: number;
+    eligible_donor_count: number;
+    rejected_source_count: number;
+    reason_counts: Record<string, number>;
+    rejected_sources: Array<{ technical_name: string; reason: string }>;
+  };
   token_count: number;
   tokens: Array<{ token: string; frequency: number; roles: string[]; semantic_score?: number }>;
   ranked_atoms: Array<{ atom: string; role: string; similarity: number }>;
@@ -152,6 +159,7 @@ interface PublishResult {
   proposed_addition_count: number;
   simulated_after_count: number;
   collisions: string[];
+  name_conflicts?: Array<{ technical_name: string; reason: string }>;
   schema_errors: string[];
   ready_for_library_publish: boolean;
   export_dir: string;
@@ -524,8 +532,8 @@ export function CombinatorialGenesisPage() {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <div className="font-mono text-xs text-emerald-100">Flowmusic inbox → Genesis snapshot → embedding index</div>
-                <div className="mt-1 text-xs text-zinc-500">
-                  Добавьте .txt/.md в data/combinatorial-genesis/flowmusic-inbox и запустите все этапы одной кнопкой.
+                <div className="mt-1 text-xs text-amber-300" role="status">
+                  Старый inbox pipeline отключён: он может активировать corpus вне current-catalog snapshot. Для обновления каталога используйте Service Bay → Build current-catalog candidate.
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -535,7 +543,7 @@ export function CombinatorialGenesisPage() {
               <Button type="button" variant="outline" onClick={() => void repairInbox(true)} disabled={Boolean(pipelineJob?.running) || repairingInbox !== null || !repairResult || repairResult.changed_file_count === 0}>
                 <ShieldCheck className="size-4" />{repairingInbox === "apply" ? "Исправление..." : "Применить с бэкапом"}
               </Button>
-              <Button type="button" onClick={() => void runInboxPipeline()} disabled={Boolean(pipelineJob?.running)}>
+              <Button type="button" onClick={() => void runInboxPipeline()} disabled>
                 <Play className="size-4" />
                 {pipelineJob?.running ? "Обработка данных..." : "Обработать inbox"}
               </Button>
@@ -543,7 +551,7 @@ export function CombinatorialGenesisPage() {
                 <Square className="size-4" />
                 Остановить
               </Button>
-              <Button type="button" variant="outline" onClick={() => void restartInboxPipeline()}>
+              <Button type="button" variant="outline" onClick={() => void restartInboxPipeline()} disabled>
                 <RotateCcw className="size-4" />
                 Перезапустить
               </Button>
@@ -744,6 +752,8 @@ export function CombinatorialGenesisPage() {
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary">sources: {preview.source_count}</Badge>
               <Badge variant="secondary">known: {preview.known_source_count}</Badge>
+              <Badge variant="secondary">eligible donors: {preview.source_diagnostics?.eligible_donor_count ?? "n/a"}</Badge>
+              <Badge variant="secondary">rejected refs: {preview.source_diagnostics?.rejected_source_count ?? "n/a"}</Badge>
               <Badge variant="secondary">tokens: {preview.token_count}</Badge>
               <Badge variant="secondary">version: {preview.dataset_version}</Badge>
               <Badge variant="secondary">model: {preview.embedding_model}</Badge>
@@ -751,6 +761,7 @@ export function CombinatorialGenesisPage() {
               <Badge variant="secondary">candidates: {preview.candidates.length}</Badge>
               <Badge variant="secondary">values resolved: {preview.auto_resolved_value_count}/{preview.candidates.length}</Badge>
             </div>
+            {preview.source_diagnostics?.rejected_sources.length ? <details className="rounded border border-amber-400/20 bg-amber-950/10 p-2 text-xs"><summary className="cursor-pointer">Причины отклонения source refs</summary><div className="mt-2 break-all">{preview.source_diagnostics.rejected_sources.map((item) => `${item.technical_name} (${item.reason})`).join(", ")}</div></details> : null}
             <div className="flex flex-wrap items-center gap-2">
               <Button type="button" variant="outline" onClick={() => void saveCandidatePackage()} disabled={savingPackage}>
                 <PackageCheck className="size-4" />
@@ -784,6 +795,7 @@ export function CombinatorialGenesisPage() {
                 </div>
                 <div className="mt-1">CG library: {publishResult.library_before_count} → {publishResult.simulated_after_count} · additions {publishResult.proposed_addition_count}</div>
                 <div>collisions: {publishResult.collisions.length} · schema errors: {publishResult.schema_errors.length} · writes to library: {String(publishResult.writes_to_library)}</div>
+                {publishResult.name_conflicts?.length ? <details className="mt-1"><summary className="cursor-pointer">Причины блокировки ({publishResult.name_conflicts.length})</summary><div className="mt-1 break-all">{publishResult.name_conflicts.map((item) => `${item.technical_name} (${item.reason})`).join(", ")}</div></details> : null}
                 <div className="mt-1 break-all opacity-60">{publishResult.export_dir}</div>
               </div>
             ) : null}
